@@ -1,0 +1,1321 @@
+</div>
+<!-- ./wrapper -->
+
+
+<!-- jQuery 3 -->
+<script src="{{ asset('ext/bower_components/jquery/dist/jquery.min.js') }}"></script>
+<script src="https://raw.githubusercontent.com/HubSpot/pace/v1.0.0/pace.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<!-- DataTables -->
+<script src="{{ asset('ext/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('ext/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+
+
+
+
+<!-- CK Editor -->
+<script src="{{ asset('ext/bower_components/ckeditor/ckeditor.js') }}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="{{ asset('ext/bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.7 -->
+<script src="{{ asset('ext/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+
+<!-- Select2 -->
+<script src="{{ asset('ext/bower_components/select2/dist/js/select2.full.min.js') }}"></script>
+<!-- InputMask -->
+<script src="{{ asset('ext/plugins/input-mask/jquery.inputmask.js') }}"></script>
+<script src="{{ asset('ext/plugins/input-mask/jquery.inputmask.date.extensions.js') }}"></script>
+<script src="{{ asset('ext/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
+
+<!-- bootstrap color picker -->
+<script src="{{ asset('ext/bower_components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js') }}"></script>
+<!-- bootstrap time picker -->
+<script src="{{ asset('ext/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
+
+<!-- iCheck 1.0.1 -->
+<script src="{{ asset('ext/plugins/iCheck/icheck.min.js') }}"></script>
+<!-- FastClick -->
+<script src="{{ asset('ext/bower_components/fastclick/lib/fastclick.js') }}"></script>
+<!-- AdminLTE App -->
+<script src="{{ asset('ext/dist/js/adminlte.min.js') }}"></script>
+
+<!-- Morris.js charts -->
+<script src="{{ asset('ext/bower_components/raphael/raphael.min.js') }}"></script>
+<script src="{{ asset('ext/bower_components/morris.js/morris.min.js') }}"></script>
+<!-- Sparkline -->
+<script src="{{ asset('ext/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js') }}"></script>
+<!-- jvectormap -->
+<script src="{{ asset('ext/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js') }}"></script>
+<script src="{{ asset('ext/plugins/jvectormap/jquery-jvectormap-world-mill-en.js') }}"></script>
+<!-- jQuery Knob Chart -->
+<script src="{{ asset('ext/bower_components/jquery-knob/dist/jquery.knob.min.js') }}"></script>
+<!-- daterangepicker -->
+<script src="{{ asset('ext/bower_components/moment/min/moment.min.js') }}"></script>
+<script src="{{ asset('ext/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+<!-- datepicker -->
+<script src="{{ asset('ext/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
+<!-- Bootstrap WYSIHTML5 -->
+<script src="{{ asset('ext/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}"></script>
+<!-- Slimscroll -->
+<script src="{{ asset('ext/bower_components/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
+<!-- FastClick -->
+<script src="{{ asset('ext/bower_components/fastclick/lib/fastclick.js') }}"></script>
+
+<script src="{{ asset('pace/pace.min.js') }}"></script>
+<!-- AdminLTE App -->
+<script src="{{ asset('ext/dist/js/adminlte.min.js') }}"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="{{ asset('ext/dist/js/pages/dashboard.js') }}"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="{{ asset('ext/dist/js/demo.js') }}"></script>
+
+<script>
+  $(document).ready(function(){
+    $('#example4').DataTable();
+  });
+</script>
+
+<script>
+  $(function () {
+    $('#example1').DataTable();
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    });
+
+    $('#example3').DataTable( {
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false,
+        dom: 'Bfrtip',
+        buttons: [
+            'copyHtml5',
+            'excelHtml5',
+            'csvHtml5',
+            'pdfHtml5'
+        ]
+    } );
+
+
+
+    //Initialize Select2 Elements
+    $('.select2').select2();
+    // CKEDITOR.replace('event_description');
+    // CKEDITOR.replace('single_description');
+
+    //Date picker
+    $('#datepicker_start, #datepicker_end').datepicker({
+      autoclose: true,
+    });
+     //Timepicker
+    $('.timepicker').timepicker({
+      showInputs: false,
+    });
+
+  });
+
+
+
+$('#single_invoice_generate').change(function(){
+  if($('#single_invoice_generate').val() == "Manual"){
+      $('#single_invoiceno').removeAttr('readonly');
+      $('#single_invoiceno').val('');
+  }
+  else if($('#single_invoice_generate').val() == "Auto Generate"){
+    var gen_inv = "{{ 'PAYca_'.date('Ymds') }}";
+      $('#single_invoiceno').attr('readonly', true);
+      $('#single_invoiceno').val(gen_inv);
+  }
+  else{
+    $('#single_invoiceno').attr('readonly', true);
+      $('#single_invoiceno').val('');
+    swal('Oops!', 'Kindly select invoice option', 'error');
+    return false;
+  }
+});
+
+
+$('#single_recurring_service').change(function(){
+
+  if($('#single_recurring_service').val() == "One Time" || $('#single_recurring_service').val() == ""){
+      $('.recuring_time').addClass('disp-0');
+  }
+  else{
+    $('.recuring_time').removeClass('disp-0');
+  }
+
+});
+
+$('#recurring_service').change(function(){
+
+  if($('#recurring_service').val() == "One Time" || $('#recurring_service').val() == ""){
+      $('.recuring_time_2').addClass('disp-0');
+  }
+  else{
+    $('.recuring_time_2').removeClass('disp-0');
+  }
+
+});
+
+
+$('#single_service').change(function(){
+  if($('#single_service').val() == "Others"){
+      $('.specific').removeClass('disp-0');
+  }
+  else{
+      $('.specific').addClass('disp-0');
+  }
+});
+
+
+$('#single_installpay').change(function(){
+  if($('#single_installpay').val() == "Yes"){
+      $('.instlim').removeClass('disp-0');
+  }
+  else{
+      $('.instlim').addClass('disp-0');
+  }
+});
+
+$('#installpay').change(function(){
+  if($('#installpay').val() == "Yes"){
+      $('.instlim').removeClass('disp-0');
+  }
+  else{
+      $('.instlim').addClass('disp-0');
+  }
+});
+
+
+function creatEvent(id, purpose){
+var route = "{{ URL('Ajax/CreateEvent') }}";
+var formData = new FormData();
+  if(purpose == "ticket"){
+    var desccription = $('#event_description').val();
+    var desc_val = desccription;
+
+
+    if($("#event_title").val() ==  "" || $("#event_location").val() == "" || $("#datepicker_start").val() == "" || $("#ticket_timeStarts").val() == "" || $("#datepicker_end").val() == "" || $("#ticket_timeEnds").val() == ""){
+        swal("Oops!", 'Kindly make sure you fill the required fields', 'warning');
+    }
+    else{
+
+      var fileSelect = document.getElementById("event_file");
+      if(fileSelect.files && fileSelect.files.length == 1){
+         var file = fileSelect.files[0]
+         formData.set("event_file", file , file.name);
+       }
+
+      formData.append("ticket_id", id);
+      formData.append("purpose", purpose);
+      formData.append("user_id", $("#user_id").val());
+      formData.append("event_title", $("#event_title").val());
+      formData.append("event_location", $("#event_location").val());
+      formData.append("datepicker_start", $("#datepicker_start").val());
+      formData.append("ticket_timeStarts", $("#ticket_timeStarts").val());
+      formData.append("datepicker_end", $("#datepicker_end").val());
+      formData.append("ticket_timeEnds", $("#ticket_timeEnds").val());
+      formData.append("event_description", desc_val);
+      formData.append("ticket_free_name", $("#ticket_free_name").val());
+      formData.append("ticket_free_qty", $("#ticket_free_qty").val());
+      formData.append("ticket_free_price", $("#ticket_free_price").val());
+      formData.append("ticket_paid_name", $("#ticket_paid_name").val());
+      formData.append("ticket_paid_qty", $("#ticket_paid_qty").val());
+      formData.append("ticket_paid_price", $("#ticket_paid_price").val());
+      formData.append("ticket_donate_name", $("#ticket_donate_name").val());
+      formData.append("ticket_donate_qty", $("#ticket_donate_qty").val());
+      formData.append("ticket_donate_price", $("#ticket_donate_price").val());
+
+      $('#savefreeTicket').click();
+      $('#savepaidTicket').click();
+      $('#savedonateTicket').click();
+
+    }
+  }
+  else if(purpose == "uploadExcel"){
+
+
+      var fileSelect = document.getElementById("excel_file");
+      if(fileSelect.files && fileSelect.files.length == 1){
+         var file = fileSelect.files[0]
+         formData.set("excel_file", file , file.name);
+       }
+
+      formData.append("invoice_id", id);
+      formData.append("purpose", purpose);
+      formData.append("user_id", $('#user_id').val());
+      formData.append("service", $('#service').val());
+      formData.append("installpay", $('#installpay').val());
+      formData.append("installlimit", $('#installlimit').val());
+
+  }
+  else if(purpose == "setRecur"){
+
+      formData.append("invoice_id", id);
+      formData.append("purpose", purpose);
+      formData.append("user_id", $('#recur_user_id').val());
+      formData.append("recurring", $('#recurring_service').val());
+      formData.append("reminder", $('#reminder_service').val());
+
+  }
+  else if(purpose == "single1_upload"){
+
+      formData.append("invoice_id", id);
+      formData.append("purpose", purpose);
+      formData.append("user_id", $('#single_user_id').val());
+      formData.append("firstname", $('#single_firstname').val());
+      formData.append("lastname", $('#single_lastname').val());
+      formData.append("payee_email", $('#single_email').val());
+      formData.append("service", $('#single_service').val());
+      formData.append("service_specify", $('#single_service_specify').val());
+      formData.append("invoice_no", $('#single_invoiceno').val());
+      formData.append("installpay", $('#single_installpay').val());
+      formData.append("installlimit", $('#single_installlimit').val());
+
+  }
+  else if(purpose == "single2_upload"){
+
+      var desccription = $('#single_description').val();
+    var desc_val = desccription;
+
+        formData.append("invoice_id", id);
+      formData.append("purpose", purpose);
+      formData.append("user_id", $('#single2_user_id').val());
+      formData.append("payee_email", $('#single2_payee_email').val());
+      formData.append("invoice_no", $('#single2_invoiceno').val());
+      formData.append("payee_ref_no", $('#single_payee_ref_no').val());
+      formData.append("transaction_ref", $('#single_transaction_ref').val());
+      formData.append("transaction_date", $('#single_transaction_date').val());
+      formData.append("description", desc_val);
+  }
+  else if(purpose == "single3_upload"){
+    formData.append("invoice_id", id);
+      formData.append("purpose", purpose);
+      formData.append("user_id", $('#single3_user_id').val());
+      formData.append("invoice_no", $('#single3_invoiceno').val());
+      formData.append("payee_email", $('#single3_payee_email').val());
+      formData.append("amount", $('#single_amount').val());
+      formData.append("payment_due_date", $('#single_payment_due_date').val());
+      formData.append("recurring", $('#single_recurring_service').val());
+      formData.append("reminder", $('#single_reminder_service').val());
+
+  }
+
+
+          Pace.restart();
+      Pace.track(function(){
+          setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: formData,
+            cache: false,
+            processData: false,
+            contentType: false,
+            dataType: 'JSON',
+            beforeSend: function(){
+              $(".spinner").removeClass('disp-0');
+            },
+            success: function(result){
+
+                if(result.message == 'success' && result.action == 'ticket'){
+                    $("#event_title").val('');
+                    $("#event_location").val('');
+                    $("#datepicker_start").val('');
+                    $("#ticket_timeStarts").val('');
+                    $("#datepicker_end").val('');
+                    $("#ticket_timeEnds").val('');
+                    $("#event_description").val('');
+                    $("#ticket_free_name").val('');
+                    $("#ticket_free_qty").val('');
+                    $("#ticket_free_price").val('');
+                    $("#ticket_paid_name").val('');
+                    $("#ticket_paid_qty").val('');
+                    $("#ticket_paid_price").val('');
+                    $("#ticket_donate_name").val('');
+                    $("#ticket_donate_qty").val('');
+                    $("#ticket_donate_price").val('');
+                    $("#event_file").val('');
+                    $(".freeTicket").addClass('disp-0');
+                    $(".paidTicket").addClass('disp-0');
+                    $(".donateTicket").addClass('disp-0');
+                    $(".spinner").addClass('disp-0');
+                    swal("Saved!", result.res, result.message);
+
+                    setTimeout(function(){ location.href = result.link; }, 2000);
+                }
+                else if(result.message == 'success' && result.action == 'uploadExcel'){
+                    $(".spinner").addClass('disp-0');
+                    // Close Modal & Pop up the next
+                    $('#close_step1').click();
+                    $('#uploadDoc2').click();
+                }
+                else if(result.message == 'success' && result.action == 'setRecur'){
+                    $(".spinner").addClass('disp-0');
+                    swal("Great!", result.res, result.message);
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else if(result.message == 'success' && result.action == 'single1_upload'){
+                    $(".spinner").addClass('disp-0');
+                    // Close Modal & Pop up the next
+                    $('#close_single_step1').click();
+                    $('#single2_payee_email').val(result.email);
+                    $('#single2_invoiceno').val(result.invoice_no);
+                    $('#singleDoc2').click();
+                }
+                else if(result.message == 'success' && result.action == 'single2_upload'){
+                    $(".spinner").addClass('disp-0');
+                    // Close Modal & Pop up the next
+                    $('#close_single_step2').click();
+                    $('#single3_payee_email').val(result.email);
+                    $('#single3_invoiceno').val(result.invoice_no);
+                    $('#singleDoc3').click();
+                }
+                else if(result.message == 'success' && result.action == 'single3_upload'){
+                    $(".spinner").addClass('disp-0');
+                    swal("Great!", result.res, result.message);
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else if(result.message == 'response'){
+                    $('.responseMessage').text(result.res);
+                    $('.responseMessage').show().fadeIn().hide(5000);;
+                }
+                else{
+                    $(".spinner").addClass('disp-0');
+                    swal("Oops!", result.res, result.message);
+                }
+
+            }
+
+          });
+      });
+
+}
+
+
+  function opennewTicket(val){
+    if(val == 'free'){
+        $('.freeTicket').removeClass('disp-0');
+        return false;
+    }
+    if(val == 'paid'){
+        $('.paidTicket').removeClass('disp-0');
+        return false;
+    }
+    if(val == 'donate'){
+        $('.donateTicket').removeClass('disp-0');
+        return false;
+    }
+}
+
+// Logout
+function logout(val){
+   var route = "{{ URL('Ajax/Adminlogout') }}";
+    var thisdata = {
+      username: val,
+    }
+
+          setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: thisdata,
+        dataType: 'JSON',
+        success: function(result){
+            if (result.message == "success") {
+            setTimeout(function(){ location.reload(); }, 1000);
+            }
+
+
+        }
+
+      });
+}
+
+
+
+function checkStatement(){
+  var service = $('#statement_service').val();
+  var start_date = $('#statement_start').val();
+  var end_date = $('#statement_end').val();
+
+  $('tbody#statementtab').html("");
+
+  var route = "{{ URL('Ajax/getmyStatement') }}";
+    var thisdata = {
+      service: service,
+      start_date: start_date,
+      end_date: end_date
+    }
+
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: thisdata,
+        dataType: 'JSON',
+        beforeSend: function(){
+          $('.spinner').removeClass('disp-0');
+        },
+        success: function(result){
+          $('.spinner').addClass('disp-0');
+            if (result.message == "success") {
+
+
+
+              var res = JSON.parse(result.data);
+                        var status = result.status;
+
+                        var invoices = "";
+                        var payments = "";
+                        var invoice;
+                        var payment;
+
+
+                        if(res[0].error == "No statement record"){
+                            $('tbody#statementtab').append("<tr><td colspan='7' align='center'>"+res[0].error+"</td></tr>");
+                        }
+                        else{
+
+                            $.each(res, function (v, k) {
+
+                              var rem = parseInt(k.invoice_amount) - parseInt(k.amount_paid);
+
+                                invoice = "<tr><td>"+(v+1)+"</td><td>"+k.transaction_date+"</td><td>"+k.description+"</td><td>"+k.transactionid+"</td><td>"+k.invoice_amount+"</td><td>"+k.amount_paid+"</td><td>"+rem+"</td></tr>";
+                                 // Fetch data
+
+                                 invoices += invoice;
+                            });
+                            
+                            $('tbody#statementtab').append("<tr>"+invoices+"</tr>");
+                            
+                        }
+
+
+            }
+            else{
+              swal(result.title, result.res, result.message);
+            }
+
+
+        }
+
+      });
+
+
+}
+
+
+function checkreportStatement(val){
+
+  if(val == "payca"){
+    var service = $('#statement_service').val();
+  var start_date = $('#statement_start').val();
+  var end_date = $('#statement_end').val();
+
+
+  $('tbody#statementtab').html("");
+
+  var route = "{{ URL('Ajax/getmyreportStatement') }}";
+    var thisdata = {
+      service: service,
+      start_date: start_date,
+      end_date: end_date,
+      val: 'payca'
+    }
+
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: thisdata,
+        dataType: 'JSON',
+        beforeSend: function(){
+          $('.spinner').removeClass('disp-0');
+        },
+        success: function(result){
+          $('.spinner').addClass('disp-0');
+            if (result.message == "success") {
+
+
+
+              var res = JSON.parse(result.data);
+              // console.log(res);
+                        var status = result.status;
+
+                        var invoices = "";
+                        var payments = "";
+                        var invoice;
+                        var payment;
+
+
+                        if(res[0].error == "No statement record"){
+                            $('tbody#statementtab').append("<tr><td colspan='11' align='center'>"+res[0].error+"</td></tr>");
+                        }
+                        else{
+
+                            $.each(res, function (v, k) {
+
+                              var rem;
+                              var amtpaid;
+                              var openbal;
+
+                              if(k.opening_balance != undefined){
+                                openbal = k.opening_balance;
+                              }
+                              else{
+                                openbal = 0;
+                              }
+
+                              if(k.amount_paid != undefined){
+                                amtpaid = k.amount_paid;
+                              }
+                              else{
+                                amtpaid = 0;
+                              }
+
+                              rem = parseInt(k.invoice_amount) - parseInt(amtpaid);
+
+
+                                invoice = "<tr><td>"+(v+1)+"</td><td>"+k.name+"</td><td>"+k.address+"</td><td>"+k.transaction_ref+"</td><td>"+k.invoice_no+"</td><td>"+k.due_date+"</td><td style='color: red; font-weight: bold;'>"+k.invoice_amount+"</td><td style='color: blue; font-weight: bold;'>"+openbal+"</td><td style='color: green; font-weight: bold;'>"+amtpaid+"</td><td style='color: black; font-weight: bold;'>"+rem+"</td><td>"+k.description+"</td></tr>";
+                                 // Fetch data
+
+                                 invoices += invoice;
+                            });
+                            
+                            $('tbody#statementtab').append("<tr>"+invoices+"</tr>");
+                            
+                        }
+
+
+            }
+            else{
+              swal(result.title, result.res, result.message);
+            }
+
+
+        }
+
+      });
+  }
+
+  
+
+
+}
+
+
+function checkremittance(val){
+
+  if(val == "payca"){
+    var client_id = $('#statement_client_name').val();
+    var service = $('#statement_service').val();
+    var start_date = $('#statement_start').val();
+    var end_date = $('#statement_end').val();
+
+
+  $('tbody#statementtab').html("");
+
+  var route = "{{ URL('Ajax/getmremittance') }}";
+    var thisdata = {
+      client_id: client_id,
+      service: service,
+      start_date: start_date,
+      end_date: end_date,
+      val: 'payca'
+    }
+
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: thisdata,
+        dataType: 'JSON',
+        beforeSend: function(){
+          $('.spinner').removeClass('disp-0');
+        },
+        success: function(result){
+          $('.spinner').addClass('disp-0');
+          $('#reportTable').removeClass('disp-0')
+            if (result.message == "success") {
+
+
+
+
+              var res = JSON.parse(result.data);
+                        var invoices = "";
+                        var invoice;
+
+                        var total = 0;
+                        $.each(res, function (v, k) {
+
+                          if(result.action == "payca"){
+                            invoice = "<tr><td>"+(v+1)+"</td><td>"+k.name+"</td><td>"+k.address+"</td><td>"+k.payee_ref_no+"</td><td>"+k.service+"</td><td>"+k.invoice_no+"</td><td>"+k.payment_due_date+"</td><td>"+k.transaction_date+"</td><td>"+k.transactionid+"</td><td colspan='2' align='center' style='color:green; font-weight:bold;'>$"+k.amount_paid+"</td></tr>";
+                           // Fetch data
+                           total += parseInt(k.amount_paid);
+
+                             invoices += invoice;
+
+                          }
+                          
+                      });
+
+                        $('#no_of_records').text("No of Records - "+res.length);
+
+                        $('#tableaction').html("<button class='btn btn-danger' onclick='closeTable()'>Close</button>");
+
+                        var lengthCount = res.length;
+                        var fixed = total * (result.fixed / 100);
+                        var variable = parseFloat(result.variable) * lengthCount;
+                        var collection = parseFloat(variable) + parseFloat(fixed);
+
+                        var net = (total - collection);
+
+                      $('tbody#statementtab').append("<tr>"+invoices+"</tr><tr><td colspan='3'></td><td colspan='3'></td><td colspan='3' style='color:green; font-weight:bold;'>Total: <br> Less collection fee: <hr> Net Remittance: </td><td colspan='2' style='color:green; font-weight:bold;' align='center'>$"+total.toFixed(2)+" <br>$"+collection.toFixed(2)+"<hr>$"+net.toFixed(2)+"<br><br><input type='hidden' id='amount' value='"+net.toFixed(2)+"'><input type='hidden' id='action' value='payca'><button class='btn btn-success btn-block' onclick=remittance('"+result.withdraw_id+"')>Remit <img src='https://i.ya-webdesign.com/images/loading-gif-png-5.gif' class='spin"+result.withdraw_id+" disp-0' style='width: 30px; height: 30px;'></button></td></tr>");
+
+
+            }
+            else{
+              swal(result.title, result.res, result.message);
+            }
+
+
+        }
+
+      });
+  }
+
+  else if(val == "comission"){
+    var client_id = $('#statement_client_name').val();
+    var service = $('#statement_service').val();
+    var start_date = $('#statement_start').val();
+    var end_date = $('#statement_end').val();
+
+
+  $('tbody#statementtab').html("");
+
+  var route = "{{ URL('Ajax/getmremittance') }}";
+    var thisdata = {
+      client_id: client_id,
+      service: service,
+      start_date: start_date,
+      end_date: end_date,
+      val: 'comission'
+    }
+
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: thisdata,
+        dataType: 'JSON',
+        beforeSend: function(){
+          $('.spinner').removeClass('disp-0');
+        },
+        success: function(result){
+          $('.spinner').addClass('disp-0');
+            if (result.message == "success") {
+
+              var res = JSON.parse(result.data);
+                        var invoices = "";
+                        var invoice;
+
+                        var total = 0;
+                        var totalAmount = 0;
+                        $.each(res, function (v, k) {
+
+                        var fixed = k.amount_paid * (result.fixed / 100);
+                        var variable = parseFloat(result.variable) * res.length;
+                        var collection = parseFloat(variable) + parseFloat(fixed);
+                        
+                       
+
+                          if(result.action == "comission"){
+                            invoice = "<tr><td>"+(v+1)+"</td><td>"+k.name+"</td><td>"+k.payee_ref_no+"</td><td>"+k.service+"</td><td>"+k.invoice_no+"</td><td align='center' style='color:green; font-weight:bold;'>$"+k.amount_paid+"</td></tr>";
+                           // Fetch data
+                           total += parseFloat(collection);
+                           totalAmount += parseInt(k.amount_paid);
+    
+                            
+
+                             invoices += invoice;
+
+                          }
+                          
+                      });
+
+                        $('#no_of_records').text("No of Records - "+res.length);
+
+
+                        var new_fixed = totalAmount * (result.fixed / 100);
+                        var new_variable = parseFloat(result.variable) * res.length;
+                        var new_collection = parseFloat(new_variable) + parseFloat(new_fixed);
+                        
+
+                      $('tbody#statementtab').append("<tr>"+invoices+"</tr><tr><td colspan='2'></td><td colspan='2' align='right' style='color:black; font-weight:bold;'>Total Amount: <br># of Records: <hr> Fixed: <br> Variable: <br>Commission: </td><td style='color:navy; font-weight:bold;' align='center'><br><br><hr></td><td style='color:green; font-weight:bold;' align='center'> $"+totalAmount.toFixed(2)+" <br>"+res.length+" <hr> <br><br>$"+new_collection.toFixed(2)+"</td></tr>");
+
+
+            }
+            else{
+              swal(result.title, result.res, result.message);
+            }
+
+
+        }
+
+      });
+  }
+  else if(val == "epayca"){
+
+    var client_id = $('#statement_client_name').val();
+    var service = $('#statement_service').val();
+    var start_date = $('#statement_start').val();
+    var end_date = $('#statement_end').val();
+
+
+  $('tbody#statementtab').html("");
+
+  var route = "{{ URL('Ajax/getmremittance') }}";
+    var thisdata = {
+      client_id: client_id,
+      service: service,
+      start_date: start_date,
+      end_date: end_date,
+      val: 'epayca'
+    }
+
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: thisdata,
+        dataType: 'JSON',
+        beforeSend: function(){
+          $('.spinner').removeClass('disp-0');
+        },
+        success: function(result){
+          $('.spinner').addClass('disp-0');
+            if (result.message == "success") {
+
+
+
+
+              var res = JSON.parse(result.data);
+                        var invoices = "";
+                        var invoice;
+
+                        var total = 0;
+                        $.each(res, function (v, k) {
+
+                          if(result.action == "epayca"){
+                            invoice = "<tr><td>"+(v+1)+"</td><td>"+k.client_name+"</td><td>"+k.client_email+"</td><td style='color:green; font-weight:bold;' align='center'>$"+k.amount_to_withdraw+"</td><td>"+k.card_method+"</td><td>"+k.created_at+"</td></tr>";
+                           // Fetch data
+                           total += parseInt(k.amount_to_withdraw);
+
+                             invoices += invoice;
+
+                          }
+                          
+                      });
+
+                        $('#no_of_records').text("No of Records - "+res.length);
+
+                        var lengthCount = res.length;
+                        var fixed = total * (result.fixed / 100);
+                        var variable = parseFloat(result.variable) * lengthCount;
+                        var collection = parseFloat(variable) + parseFloat(fixed);
+
+                        var net = (total - collection);
+
+                      $('tbody#statementtab').append("<tr>"+invoices+"</tr><tr><td colspan='3'></td><td colspan='2' style='color:green; font-weight:bold;'>Total: <br> Less collection fee: <hr> Net Remittance: </td><td colspan='2' style='color:green; font-weight:bold;' align='center'>$"+total.toFixed(2)+" <br>$"+collection.toFixed(2)+"<hr>$"+net.toFixed(2)+"<br><br><input type='hidden' id='amount' value='"+net.toFixed(2)+"'><input type='hidden' id='action' value='epayca'><button class='btn btn-success btn-block' onclick=remittance('"+result.withdraw_id+"')>Remit <img src='https://i.ya-webdesign.com/images/loading-gif-png-5.gif' class='spin"+result.withdraw_id+" disp-0' style='width: 30px; height: 30px;'></button></td></tr>");
+
+
+            }
+            else{
+              swal(result.title, result.res, result.message);
+            }
+
+
+        }
+
+      });
+
+  }
+
+  
+
+
+}
+
+
+function closeTable(){
+  $('#reportTable').addClass('disp-0')
+}
+
+function WithdrawCash(user_id, amount){
+  var thisdata = {user_id: user_id, amount: amount};
+  var route = "{{ URL('Ajax/WithdrawCash') }}";
+
+    setHeaders();
+    jQuery.ajax({
+    url: route,
+    method: 'post',
+    data: thisdata,
+    dataType: 'JSON',
+    beforeSend: function(){
+      $('.spinner').removeClass('disp-0');
+    },
+    success: function(result){
+      $('.spinner').addClass('disp-0');
+        if (result.message == "success") {
+          swal(result.title, result.res, result.message);
+          setTimeout(function(){ location.reload(); }, 2000);
+        }
+        else{
+          swal(result.title, result.res, result.message);
+        }
+
+
+    }
+
+  });
+
+}
+
+
+function withdrawCashopen(user_id, amount){
+  openModal('paymethod');
+  $('#my_id').val(user_id);
+  $('#amountWithdraw').val(amount);
+}
+
+function makePayment(){
+  var amount = $('#amountWithdraw').val();
+  var user_id = $('#my_id').val();
+  var card_method = $('#card_method').val();
+  var thisdata = {user_id: user_id, amount: amount, card_method: card_method};
+  var route = "{{ URL('Ajax/epaywithdraw') }}";
+
+    setHeaders();
+    jQuery.ajax({
+    url: route,
+    method: 'post',
+    data: thisdata,
+    dataType: 'JSON',
+    beforeSend: function(){
+      $('.spinner').removeClass('disp-0');
+    },
+    success: function(result){
+      $('.spinner').addClass('disp-0');
+        if (result.message == "success") {
+          swal(result.title, result.res, result.message);
+          setTimeout(function(){ location.reload(); }, 2000);
+        }
+        else{
+          swal(result.title, result.res, result.message);
+        }
+
+
+    }
+
+  });
+
+}
+
+
+function remitdetailsCash(user_id, withdraw_id, amount, val){
+  $('tbody#remittancedetails').html('');
+  $('tbody#remittancecalcdetails').html('');
+
+  var route = "{{ URL('Ajax/remitdetailsCash') }}";
+  var thisdata = {user_id: user_id, withdraw_id: withdraw_id, amount: amount, val: val};
+  var spinner = $('.spinner'+withdraw_id);
+  setHeaders();
+    jQuery.ajax({
+    url: route,
+    method: 'post',
+    data: thisdata,
+    dataType: 'JSON',
+    beforeSend: function(){
+      spinner.removeClass('disp-0');
+    },
+    success: function(result){
+      spinner.addClass('disp-0');
+        if (result.message == "success") {
+          var res = JSON.parse(result.data);
+          var client = JSON.parse(result.client);
+          var total = 0;
+          $.each(res, function(v,k){
+
+              total += parseInt(k.amount_paid);
+
+            if(result.action == 'epayca'){
+               // Open Modal
+            // $("tbody#remittancedetails").append("<tr><td>"+(v+1)+"</td><td align='justify'>"+k.purpose+"</td><td align='center' style='color:green; font-weight: bold;'>$"+k.amount+"</td><td align='justify'>"+k.created_at+"</td><hr></tr>");
+
+            $("tbody#remittancedetails").append("<tr><td>"+(v+1)+"</td><td align='justify'>"+k.name+"</td><td align='justify'>"+k.client_id+"</td><td align='justify'>"+k.service+"</td><td align='justify'>-</td><td align='center' style='color:green; font-weight: bold;'>-</td><td align='center' style='color:green; font-weight: bold;'>$"+k.amount_paid+"</td><td align='justify'>"+k.transactionid+"</td><td align='justify'>"+k.transaction_date+"</td><hr></tr>");
+            }
+            else if(result.action == 'payca'){
+               // Open Modal
+            $("tbody#remittancedetails").append("<tr><td>"+(v+1)+"</td><td align='justify'>"+k.name+"</td><td align='justify'>"+k.payee_ref_no+"</td><td align='justify'>"+k.service+"</td><td align='justify'>"+k.invoice_no+"</td><td align='center' style='color:green; font-weight: bold;'>$"+k.invoice_amount+"</td><td align='center' style='color:green; font-weight: bold;'>$"+k.amount_paid+"</td><td align='justify'>"+k.transactionid+"</td><td align='justify'>"+k.transaction_date+"</td><hr></tr>");
+            }
+          });
+
+          // Add Up Net Calculation
+          var last = res.length - 1;
+
+          $('#clientfullname').text("Client Name: "+client[0].firstname+" "+client[0].lastname);
+          $('#period_start').text("Start Date: "+res[0].transaction_date);
+          $('#period_end').text("End Date: "+res[last].transaction_date);
+
+
+          var lengthCount = res.length;
+          var fixed = total * (result.fixed / 100);
+          var variable = parseFloat(result.variable) * lengthCount;
+          var collection = parseFloat(variable) + parseFloat(fixed);
+
+          var net = (total - collection);
+
+            $('tbody#remittancecalcdetails').html("<tr><td></td><td align='justify' style='font-weight: 600; color: navy'>$"+total.toFixed(2)+"</td><td align='justify' style='font-weight: 600; color: red'>$"+collection.toFixed(2)+"</td><td align='justify' style='font-weight: 600; color: green'>$"+net.toFixed(2)+"</td></tr>");
+
+            $('#view_remittance').click();
+          
+        }
+        else{
+          swal(result.title, result.res, result.message);
+        }
+
+
+    }
+
+  });
+
+}
+
+
+function checkfeereport(){
+  $('tbody#fee_report').html('');
+  var client_email = $('#feereport_client_name').val(); 
+  var platform = $('#feereport_service').val(); 
+  var start_date = $('#period_start').val(); 
+  var end_date = $('#period_end').val(); 
+  var thisdata;
+  var route = "{{ URL('Ajax/checkfeeReport') }}";
+  var spinner = $('.spinner');
+
+  if(client_email == ""){
+    swal('Oops!', 'Please select client name', 'info');
+    return false;
+  }
+  else if(platform == ""){
+    swal('Oops!', 'Please select where you would like to search', 'info');
+    return false;
+  }
+  else if(start_date == ""){
+    swal('Oops!', 'Please select start date', 'info');
+    return false;
+  }
+  else if(end_date == ""){
+    swal('Oops!', 'Please select end date', 'info');
+    return false;
+  }
+  else{
+    thisdata = {
+      client_email: client_email,
+      platform: platform,
+      start_date: start_date,
+      end_date: end_date
+    };
+
+      setHeaders();
+    jQuery.ajax({
+    url: route,
+    method: 'post',
+    data: thisdata,
+    dataType: 'JSON',
+    beforeSend: function(){
+      spinner.removeClass('disp-0');
+    },
+    success: function(result){
+      spinner.addClass('disp-0');
+        if (result.message == "success") {
+          var res = JSON.parse(result.data);
+
+          $('#feeperiod_start').text("Start Date: "+result.start_date);
+          $('#feeperiod_end').text("End Date: "+result.end_date);
+
+
+
+          $.each(res, function(v,k){
+            var total = k.total_fee;
+
+            var lengthCount = res.length;
+          var fixed = total * (result.fixed / 100);
+          var variable = parseFloat(result.variable) * lengthCount;
+          var collection = parseFloat(variable) + parseFloat(fixed);
+
+          var net = (total - collection);
+
+            $("tbody#fee_report").append("<tr><td>"+(v+1)+"</td><td align='justify'>"+k.remittance_date+"</td><td align='justify'>"+k.client_name+"</td><td align='center' style='color:green; font-weight: bold;'>$"+k.total_amount+"</td><td align='center' style='color:green; font-weight: bold;'>$"+k.total_remittance+"</td><td align='center' style='color:green; font-weight: bold;'>$"+net.toFixed(2)+"</td><td align='justify'>"+k.platform+"</td><hr></tr>");
+          });
+
+                      
+        }
+        else{
+          swal(result.title, result.res, result.message);
+        }
+
+
+    }
+
+  });
+
+  }
+
+
+}
+
+function remittance(withdraw_id){
+  var route = "{{ URL('Ajax/remitCash') }}";
+  var amount = $('#amount').val();
+  var val = $('#action').val();
+  var thisdata = {withdraw_id: withdraw_id, amount: amount, val: val};
+  var spinner = $('.spin'+withdraw_id);
+  setHeaders();
+    jQuery.ajax({
+    url: route,
+    method: 'post',
+    data: thisdata,
+    dataType: 'JSON',
+    beforeSend: function(){
+      spinner.removeClass('disp-0');
+    },
+    success: function(result){
+      spinner.addClass('disp-0');
+        if (result.message == "success") {
+          swal(result.title, result.res, result.message);
+          setTimeout(function(){ location.reload(); }, 2000);
+        }
+        else{
+          swal(result.title, result.res, result.message);
+        }
+
+
+    }
+
+  });
+
+}
+
+
+function setTrans(){
+  var route = "{{ URL('Ajax/setupTrans') }}";
+  var variable = $('#variable').val();
+  var fixed = $('#fixed').val();
+  var spinner = $('#trans_btn'); 
+  var thisdata;
+  if(variable == ""){
+    swal('Oops!', 'Please provide the cost variable', 'info');
+    return false;
+  }
+  else if(fixed == ""){
+    swal('Oops!', 'Please provide the fixed price', 'info');
+    return false;
+  }
+  else{
+
+    thisdata = {
+      variable: variable,
+      fixed: fixed
+    };
+
+      setHeaders();
+      jQuery.ajax({
+      url: route,
+      method: 'post',
+      data: thisdata,
+      dataType: 'JSON',
+      beforeSend: function(){
+        spinner.text('Please wait...');
+      },
+      success: function(result){
+        spinner.text('Update');
+
+          if (result.message == "success") {
+            swal(result.title, result.res, result.message);
+            $('#variable').val('');
+            $('#fixed').val('');
+            $('#close_trans').click();
+            setTimeout(function(){ location.reload(); }, 2000);
+          }
+
+          else{
+            swal(result.title, result.res, result.message);
+          }
+
+
+      }
+
+    });
+
+  }
+}
+
+
+function PrintDiv2(val) {
+        var divToPrint2 = document.getElementById(val);
+        var popupWin = window.open('', '_blank', 'width=800,height=1000');
+        popupWin.document.open();
+        popupWin.document.write('<html><body onload="window.print()">' + divToPrint2.innerHTML + '</html>');
+        popupWin.document.close();
+    }
+
+
+
+function invoiceVisit(id, val){
+
+  var route = "{{ URL('Ajax/invoiceVisit') }}";
+  var thisdata;
+  var spinner = $('.spinner'+val);
+
+  if(val == "delete"){
+
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this invoice!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        thisdata = {id: id, val: val};
+          setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: thisdata,
+            dataType: 'JSON',
+            beforeSend: function(){
+              spinner.removeClass('disp-0');
+            },
+            success: function(result){
+              spinner.addClass('disp-0');
+
+                if (result.message == "success") {
+                  // Route to another page
+                  swal(result.title, result.res, result.message);
+                  setTimeout(function(){ location.href = location.origin+"/Admin"; }, 2000);
+                }
+
+                else{
+                  swal(result.title, result.res, result.message);
+                }
+
+
+            }
+
+          });
+
+      } 
+      else {
+
+      }
+    });
+
+
+  }
+  else{
+    $('.mainText').addClass('disp-0');
+    $('.mainInput').removeClass('disp-0');
+    $('.edit').addClass('disp-0');
+    $('.updt').removeClass('disp-0');
+  }
+
+
+}
+
+
+
+function confirmPay(transactionid, user_id, coy_id){
+  var thisdata;
+  var spinner = $('.spin'+transactionid);
+  var route = "{{ URL('Ajax/confirmpayment') }}";
+
+  swal({
+      title: "Ready to Confirm!",
+      text: "",
+      icon: "info",
+      buttons: true,
+      dangerMode: false,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        thisdata = {transactionid: transactionid, user_id: user_id, coy_id: coy_id};
+          setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: thisdata,
+            dataType: 'JSON',
+            beforeSend: function(){
+              spinner.removeClass('disp-0');
+            },
+            success: function(result){
+              spinner.addClass('disp-0');
+                
+                if (result.message == "success") {
+
+                  swal(result.title, result.res, result.message);
+                  setTimeout(function(){ location.reload(); }, 2000);
+
+                }
+
+                else{
+                  swal(result.title, result.res, result.message);
+                }
+
+
+            }
+
+          });
+
+      } 
+      else {
+
+      }
+    });
+}
+
+function openModal(val){
+  $('#'+val).click();
+}
+
+ function setHeaders(){
+    $.ajaxSetup({
+      headers: {
+          'X-CSRF-TOKEN': "{{csrf_token()}}"
+      }
+    });
+ }
+</script>
+
+</body>
+</html>

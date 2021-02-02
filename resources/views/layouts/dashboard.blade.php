@@ -1,0 +1,8 @@
+@include('include.admintop')
+@include('include.adminheader')
+@include('include.adminaside')
+@yield('dashContent')
+@include('include.message')
+@include('include.adminmodal')
+@include('include.adminfooter')
+@include('include.adminbottom')
