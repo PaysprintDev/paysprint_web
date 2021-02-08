@@ -87,6 +87,7 @@ class HomeController extends Controller
     {
         // dd($req->session());
 
+
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
                 $this->page = 'Landing';
@@ -1523,28 +1524,35 @@ class HomeController extends Controller
 
     public function getOrganization(Request $req){
 
-        // Get Users
-        $data = User::where('ref_code', $req->user_id)->orWhere('ref_code', $req->code.'-'.$req->user_id)->first();
-
-        // Get Organization
-        // $orgDetail = ClientInfo::where('user_id', $req->user_id)->get();
-
-        // if(count($orgDetail) > 0){
-
-        //     $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($orgDetail), 'title' => 'Good'];
-        // }
-        // else{
-        //     $resData = ['res' => 'Organization information not found', 'message' => 'error'];
-        // }
-
-
-        if(isset($data)){
-
-            $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($data), 'title' => 'Good'];
+        if($req->user_id == Auth::user()->ref_code){
+            $resData = ['res' => 'You can not send money to yourself', 'message' => 'error'];
         }
         else{
-            $resData = ['res' => 'Receiver not found', 'message' => 'error'];
+            // Get Users
+            $data = User::where('ref_code', $req->user_id)->orWhere('ref_code', $req->code.'-'.$req->user_id)->first();
+
+            // Get Organization
+            // $orgDetail = ClientInfo::where('user_id', $req->user_id)->get();
+
+            // if(count($orgDetail) > 0){
+
+            //     $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($orgDetail), 'title' => 'Good'];
+            // }
+            // else{
+            //     $resData = ['res' => 'Organization information not found', 'message' => 'error'];
+            // }
+
+
+            if(isset($data)){
+
+                $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($data), 'title' => 'Good'];
+            }
+            else{
+                $resData = ['res' => 'Receiver not found', 'message' => 'error'];
+            }
         }
+
+        
 
 
         return $this->returnJSON($resData);
@@ -2049,40 +2057,44 @@ class HomeController extends Controller
     public function loginApi(Request $req){
 
         // Check user if exist
-        $getUser = User::where('email', $req->email)->get();
+        $getUser = User::where('email', $req->email)->first();
 
         if($req->action == "login"){
-            if(count($getUser) > 0){
+            if(isset($getUser) == true){
                 // Set session
-                $req->session()->put(['email' => $getUser[0]['email'], 'name' => $getUser[0]['name'], 'ref_code' => $getUser[0]->ref_code]);
+                $req->session()->put(['email' => $getUser->email, 'name' => $getUser->name, 'ref_code' => $getUser->ref_code]);
 
-                $resData = ['res' => 'Welcome '.$getUser[0]['name'], 'message' => 'success', 'link' => '/'];
+                $resData = ['res' => 'Welcome '.$getUser->name, 'message' => 'success', 'link' => '/'];
             }
         }
         elseif($req->action == "rpm_tenant"){
-            if(count($getUser) > 0){
+            if(isset($getUser) == true){
                 // Set session
-                $req->session()->put(['email' => $getUser[0]['email'], 'name' => $getUser[0]['name'], 'ref_code' => $getUser[0]->ref_code]);
+                $req->session()->put(['email' => $getUser->email, 'name' => $getUser->name, 'ref_code' => $getUser->ref_code]);
 
-                $resData = ['res' => 'Welcome '.$getUser[0]['name'], 'message' => 'success', 'link' => 'rentalmanagement'];
+                $resData = ['res' => 'Welcome '.$getUser->name, 'message' => 'success', 'link' => 'rentalmanagement'];
             }
         }
         elseif($req->action == "rpm_property_owner"){
-            if(count($getUser) > 0){
+            if(isset($getUser) == true){
                 // Set session
-                $req->session()->put(['email' => $getUser[0]['email'], 'name' => $getUser[0]['name'], 'ref_code' => $getUser[0]->ref_code]);
+                $req->session()->put(['email' => $getUser->email, 'name' => $getUser->name, 'ref_code' => $getUser->ref_code]);
 
-                $resData = ['res' => 'Welcome '.$getUser[0]['name'], 'message' => 'success', 'link' => 'rentalmanagement/admin'];
+                $resData = ['res' => 'Welcome '.$getUser->name, 'message' => 'success', 'link' => 'rentalmanagement/admin'];
             }
         }
         elseif($req->action == "rpm_service_provider"){
-            if(count($getUser) > 0){
+            if(isset($getUser) == true){
                 // Set session
-                $req->session()->put(['email' => $getUser[0]['email'], 'name' => $getUser[0]['name'], 'ref_code' => $getUser[0]->ref_code]);
+                $req->session()->put(['email' => $getUser->email, 'name' => $getUser->name, 'ref_code' => $getUser->ref_code]);
 
-                $resData = ['res' => 'Welcome '.$getUser[0]['name'], 'message' => 'success', 'link' => 'rentalmanagement/consultant'];
+                $resData = ['res' => 'Welcome '.$getUser->name, 'message' => 'success', 'link' => 'rentalmanagement/consultant'];
             }
         }
+
+
+        // Do Auth here
+        Auth::login($getUser);
 
 
 

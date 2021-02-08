@@ -138,7 +138,7 @@ input[type="radio"] {
                                             <select name="payment_method" id="make_payment_method" class="form-control" required>
                                                 <option value="Credit Card">Credit Card</option>
                                                 {{--  <option value="Debit Card">Debit Card</option>  --}}
-                                                <option value="EXBC Card">EXBC Card</option>
+                                                {{-- <option value="EXBC Card">EXBC Card</option> --}}
                                             </select>
                                             
                                         </div>
@@ -155,21 +155,37 @@ input[type="radio"] {
                                         </div>
                                     </div>
                                     <div class="form-group"> <label for="orgpayamount">
-                                            <h6>Amount to Pay</h6>
+                                            <h6>Amount to Send</h6>
                                         </label>
                                         <div class="input-group"> <input type="number" name="amount" id="orgpayamount" placeholder="50.00" class="form-control" maxlength="16" required>
-                                            <input type="hidden" name="amounttosend" id="amounttosend" value="">
-                                            <input type="hidden" name="commissiondeduct" id="commissiondeduct" value="">
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fas fa-money-check mx-1"></i> <i class="fab fa-cc-mastercard mx-1"></i> <i class="fab fa-cc-amex mx-1"></i> </span> </div>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                     <div class="input-group"> 
-                                        <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission"> Payment with commission</p>
+                                        <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission"> Payment include commission</p>
                                         
                                     </div>
                                 </div>
+
+                                <div class="form-group"> <label for="netwmount">
+                                    <h6>Net Amount</h6>
+                                </label>
+                                <div class="input-group"> 
+                                    <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
+                                </div>
+                            </div>
+                                <div class="form-group"> <label for="netwmount">
+                                    <h6>Net Amount to be deducted</h6>
+                                </label>
+                                <div class="input-group"> 
+                                    <input type="text" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
+
+                                </div>
+                            </div>
+
+
 
                                 <div class="form-group">
                                     <div class="commissionInfo"></div>
@@ -378,7 +394,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-success');
                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Amount to send: "+result.data+"</span></li><li><span style='font-weight: bold;'>Commission: "+result.collection+"</span></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Amount to send: "+result.data+"</span></li><li><span style='font-weight: bold;'>Net amount to be deducted: "+result.collection+"</span></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
@@ -388,7 +404,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-danger');
                     $('.commissionInfo').removeClass('alert alert-success');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a commission charge of: "+result.collection+" will be deducted from your credit card.</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a net amount of: "+result.collection+" will be deducted from your credit card.</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);

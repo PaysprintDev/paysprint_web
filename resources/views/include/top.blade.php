@@ -151,7 +151,12 @@
                         </li>
 
                         <li class="dropdown submenu">
+                            <a href="#">Account Number: {{ Auth::user()->ref_code }}</a>
+                        </li>
+
+                        <li class="dropdown submenu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ $name }}<span class="caret"></span></a>
+                            
                             <ul class="dropdown-menu other_dropdwn">
                                 <li><a href="https://exbc.ca/Product">Goto EXBC</a></li>
                                 {{-- <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</a></li>
