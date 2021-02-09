@@ -53,6 +53,7 @@
                   <th>Amt. to send</th>
                   <th>Comssn. charge</th>
                   <th>Include comssn.</th>
+                  <th>Date</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -109,6 +110,7 @@
 
 
                             <td style="color: navy; font-weight: bold; font-size: 11px;" align="center">{{ $items->approve_commission }}</td>
+                            <td>{{ date('d/M/Y', strtotime($items->created_at)) }}</td>
                             
                             <td style="color: red; font-weight: bold; font-size: 11px;" align="center">PENDING APPROVAL</td>
                             

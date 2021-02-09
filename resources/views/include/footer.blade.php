@@ -826,15 +826,68 @@ $('#installmental').change(function(){
 });
 
 
-function checkDetail(){
-    $('tbody#orgRec').html("");
-    if($('#orgInfo').val() == ""){
+function checkDetail(val){
+
+    $('tbody#recorgRec').html("");
+
+
+    if(val == 'rec'){
+        if($('#recorgInfo').val() == ""){
+        $('tbody#recorgRec').html("");
+        swal("Oops!", "Enter receivers code", "info");
+    }
+    else{
+    route = "{{ URL('Ajax/getOrganization') }}";
+    thisdata = {user_id: $('#recorgInfo').val(), code: $('#reccountryCode').val(), action: val};
+
+        Pace.restart();
+        Pace.track(function(){
+                setHeaders();
+                jQuery.ajax({
+                url: route,
+                method: 'post',
+                data: thisdata,
+                dataType: 'JSON',
+                beforeSend: function(){
+                    $('tbody#recorgRec').html("<tr><td colspan='7' align='center'>Please wait...</td></tr>");
+                },
+                success: function(result){
+
+                    if(result.message == "success"){
+                        var datainfo = "";
+                        var datarec;
+                        var res = JSON.parse(result.data);
+
+                        $.each(res, function(v, k){
+                           var datarec = "<tr><td>"+k.name+"</td><td>"+k.address+"</td><td>"+k.city+"</td><td>"+k.state+"</td><td>"+k.country+"</td><td>"+k.amount_to_send+"</td><td><button class='btn btn-primary' onclick=receiveMoney('"+k.orgId+"')>Receive Money</button></td></tr>";
+
+                           datainfo += datarec;
+                        });
+
+                        
+
+                        $('tbody#recorgRec').html(datainfo);
+                    }
+                    else{
+                        $('tbody#recorgRec').html("<tr><td colspan='7' align='center'>"+result.res+"</td></tr>");
+                    }
+
+
+                }
+
+            });
+        });
+    }
+    }
+    else{
+
+        if($('#orgInfo').val() == ""){
         $('tbody#orgRec').html("");
         swal("Oops!", "Enter receivers code", "info");
     }
     else{
     route = "{{ URL('Ajax/getOrganization') }}";
-    thisdata = {user_id: $('#orgInfo').val(), code: $('#countryCode').val()};
+    thisdata = {user_id: $('#orgInfo').val(), code: $('#countryCode').val(), action: val};
 
         Pace.restart();
         Pace.track(function(){
@@ -867,6 +920,8 @@ function checkDetail(){
             });
         });
     }
+    }
+
 }
 
 $('#orgInfo').change(function(){
@@ -982,6 +1037,10 @@ function payOrg(user_id){
 
     // Take to payment route
     location.href = location.origin+"/payment/sendmoney/"+user_id;
+}
+
+function receiveMoney(user_id){
+    location.href = location.origin+"/payment/receivemoney/"+user_id;
 }
 
 $('#orgpayservice').change(function(){

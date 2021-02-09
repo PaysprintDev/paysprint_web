@@ -39,6 +39,8 @@ use App\Epaywithdraw as Epaywithdraw;
 
 use App\Statement as Statement;
 
+use App\ReceivePay as ReceivePay;
+
 use App\Classes\mpgGlobals;
 use App\Classes\httpsPost;
 use App\Classes\mpgHttpsPost;
@@ -407,7 +409,7 @@ $month = $req->month;
 $pan= $req->creditcard_no;
 $expiry_date= $req->expirydate.$month;
 $crypt='7';
-$dynamic_descriptor= 'Payment to Organization';
+$dynamic_descriptor= 'PaySprint Send Money';
 $status_check = 'false';
 
 
@@ -596,6 +598,23 @@ else{
 
     // return $this->returnJSON($resData);
 
+
+}
+
+
+public function receivemoneyProcess(Request $req){
+
+    // Insert Record
+    $data = ReceivePay::updateOrInsert(['pay_id' => $req->pay_id], $req->all());
+
+    // Update OrganozationPay
+
+    OrganizationPay::where('id', $req->pay_id)->update(['request_receive' => 1]);
+
+    $response = 'Request Sent!';
+    $action = 'success';
+
+    return redirect()->route('payorganization')->with($action, $response);
 
 }
 

@@ -40,6 +40,7 @@ Route::get('Ticket', ['uses' => 'HomeController@ticket', 'as' => 'ticket']);
 Route::get('payment/{invoice}', ['uses' => 'HomeController@payment', 'as' => 'payment']);
 
 Route::get('payment/sendmoney/{user_id}', ['uses' => 'HomeController@paymentOrganization', 'as' => 'sendmoney payment']);
+Route::get('payment/receivemoney/{id}', ['uses' => 'HomeController@receiveMoney', 'as' => 'receivemoney payment']);
 
 
 
@@ -184,6 +185,7 @@ Route::post('getOrganization', ['uses' => 'HomeController@getOrganization', 'as'
 
 Route::post('PaymentInvoice', ['uses' => 'MonerisController@purchase', 'as' => 'PaymentInvoice']);
 Route::post('orgPaymentInvoice', ['uses' => 'MonerisController@orgPaymentInvoice', 'as' => 'orgPaymentInvoice']);
+Route::post('receivemoneyProcess', ['uses' => 'MonerisController@receivemoneyProcess', 'as' => 'receivemoneyProcess']);
 
 // External Source
 Route::post('loginApi', ['uses' => 'HomeController@loginApi', 'as' => 'loginApi']);

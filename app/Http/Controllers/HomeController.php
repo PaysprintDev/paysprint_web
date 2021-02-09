@@ -193,6 +193,44 @@ class HomeController extends Controller
     }
 
 
+    public function receiveMoney(Request $req, $id)
+    {
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'Receive Money';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            }
+            else{
+                $this->page = 'Receive Money';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'Receive Money';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+        $data = $this->getthispayment($id);
+
+        // dd($data);
+
+        return view('main.receivepayment')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+    public function getthispayment($id){
+
+        $data = DB::table('organization_pay')
+        ->select(DB::raw('organization_pay.id as orgId, organization_pay.purpose, organization_pay.amount_to_send, users.*'))
+        ->join('users', 'organization_pay.payer_id', '=', 'users.ref_code')->where('organization_pay.id', $id)->where('organization_pay.request_receive', '!=', 2)->first();
+
+        return $data;
+    }
+
+
     public function getthisOrganization($user_id){
 
         // Get User
@@ -1525,31 +1563,69 @@ class HomeController extends Controller
     public function getOrganization(Request $req){
 
         if($req->user_id == Auth::user()->ref_code){
-            $resData = ['res' => 'You can not send money to yourself', 'message' => 'error'];
-        }
-        else{
-            // Get Users
-            $data = User::where('ref_code', $req->user_id)->orWhere('ref_code', $req->code.'-'.$req->user_id)->first();
 
-            // Get Organization
-            // $orgDetail = ClientInfo::where('user_id', $req->user_id)->get();
-
-            // if(count($orgDetail) > 0){
-
-            //     $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($orgDetail), 'title' => 'Good'];
-            // }
-            // else{
-            //     $resData = ['res' => 'Organization information not found', 'message' => 'error'];
-            // }
-
-
-            if(isset($data)){
-
-                $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($data), 'title' => 'Good'];
+            if($req->action == "rec"){
+                $res = 'You can not receive money from yourself';
             }
             else{
-                $resData = ['res' => 'Receiver not found', 'message' => 'error'];
+                $res = 'You can not send money to yourself';
             }
+
+            $resData = ['res' => $res, 'message' => 'error'];
+        }
+        else{
+
+
+            if($req->action == "rec"){
+
+                            // Get Users
+                $data = DB::table('organization_pay')
+                ->select(DB::raw('organization_pay.id as orgId, organization_pay.purpose, organization_pay.amount_to_send, users.*'))
+                ->join('users', 'organization_pay.payer_id', '=', 'users.ref_code')->
+                where('organization_pay.payer_id', $req->user_id)->orWhere('organization_pay.payer_id', $req->code.'-'.$req->user_id)->where('organization_pay.coy_id', Auth::user()->ref_code)->where('organization_pay.state', 1)->where('organization_pay.request_receive', '!=', 2)->get();
+
+                
+
+                if(isset($data)){
+                    // Get Sender Details
+
+
+                    $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($data), 'title' => 'Good'];
+                }
+                else{
+                    $resData = ['res' => 'Receiver not found', 'message' => 'error'];
+                }
+                
+            }
+            else{
+                            // Get Users
+                $data = User::where('ref_code', $req->user_id)->orWhere('ref_code', $req->code.'-'.$req->user_id)->first();
+
+                // Get Organization
+                // $orgDetail = ClientInfo::where('user_id', $req->user_id)->get();
+
+                // if(count($orgDetail) > 0){
+
+                //     $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($orgDetail), 'title' => 'Good'];
+                // }
+                // else{
+                //     $resData = ['res' => 'Organization information not found', 'message' => 'error'];
+                // }
+
+
+                if(isset($data)){
+
+                    $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($data), 'title' => 'Good'];
+                }
+                else{
+                    $resData = ['res' => 'Receiver not found', 'message' => 'error'];
+                }
+            }
+
+
+
+
+
         }
 
         

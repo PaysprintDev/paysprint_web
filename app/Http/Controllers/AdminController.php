@@ -1979,7 +1979,7 @@ class AdminController extends Controller
             $receiver = User::where('ref_code', $req->coy_id)->get();
 
             // Update Record
-            OrganizationPay::where('transactionid', $req->transactionid)->update(['state' => 0]);
+            OrganizationPay::where('transactionid', $req->transactionid)->update(['state' => 0, 'request_receive' => 2]);
 
         
             
@@ -2141,7 +2141,7 @@ class AdminController extends Controller
     }
 
     public function getxpayTrans(){
-        $getxpayrec = OrganizationPay::where('state', 1)->orderBy('created_at', 'DESC')->get();
+        $getxpayrec = OrganizationPay::where('state', 1)->where('request_receive', '!=', 2)->orderBy('created_at', 'DESC')->get();
 
         return $getxpayrec;
     }
