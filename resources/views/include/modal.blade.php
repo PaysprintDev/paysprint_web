@@ -11,12 +11,12 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
-          <h5 class="modal-title" id="exampleModalCenterTitle">Send Money</h5>
+          <h5 class="modal-title" id="exampleModalCenterTitle">Money Transfer</h5>
           
         </div>
-        <div class="modal-body">
+        {{--  <div class="modal-body">
           <center><h4>How would you like to send Money</h4></center>
-        </div>
+        </div>  --}}
         <div class="modal-footer">
           {{-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> --}}
           <a type="button" class="btn btn-primary btn btn-block" href="{{ url('payorganization?type=local') }}">Local</a>

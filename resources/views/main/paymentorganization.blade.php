@@ -13,7 +13,7 @@
 
 <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
 
-    <title>PaySprint | Payment</title>
+    <title>PaySprint | Money Transfer</title>
 
     <style>
         body {
@@ -50,7 +50,7 @@ input[type="radio"] {
         <!-- For demo purpose -->
         <div class="row mb-4">
             <div class="col-lg-8 mx-auto text-center">
-                <h1 class="display-4">Send Money</h1>
+                <h1 class="display-4">Money Transfer</h1>
             </div>
         </div> <!-- End -->
         <div class="row">
@@ -60,7 +60,7 @@ input[type="radio"] {
                         <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
                             <!-- Credit card form tabs -->
                             <ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
-                                <li class="nav-item"> <a data-toggle="pill" href="#credit-card" class="nav-link active "> <i class="fas fa-credit-card mr-2"></i> Be Payment Ready... </a> </li>
+                                <li class="nav-item"> <a data-toggle="pill" href="#credit-card" class="nav-link active "> <i class="fas fa-credit-card mr-2"></i> It's Fast and Safe... </a> </li>
                                 {{-- <li class="nav-item"> <a data-toggle="pill" href="#paypal" class="nav-link "> <i class="fab fa-paypal mr-2"></i> Debit Card </a> </li>
                                 <li class="nav-item"> <a data-toggle="pill" href="#net-banking" class="nav-link "> <i class="fas fa-mobile-alt mr-2"></i> EXBC Card </a> </li> --}}
                             </ul>
@@ -170,14 +170,14 @@ input[type="radio"] {
                                 </div>
 
                                 <div class="form-group"> <label for="netwmount">
-                                    <h6>Net Amount</h6>
+                                    <h6>Net Amount <br><small class="text-success"><b>This is the total amount to be sent to the receiver</b></small></h6>
                                 </label>
                                 <div class="input-group"> 
                                     <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
                                 </div>
                             </div>
                                 <div class="form-group"> <label for="netwmount">
-                                    <h6>Net Amount to be deducted</h6>
+                                    <h6>Commission</h6>
                                 </label>
                                 <div class="input-group"> 
                                     <input type="text" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
@@ -394,7 +394,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-success');
                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Amount to send: "+result.data+"</span></li><li><span style='font-weight: bold;'>Net amount to be deducted: "+result.collection+"</span></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: "+$('#orgpayamount').val()+" will be charged from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
@@ -404,7 +404,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-danger');
                     $('.commissionInfo').removeClass('alert alert-success');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a net amount of: "+result.collection+" will be deducted from your credit card.</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: "+(+result.data + +result.collection)+" will be charged from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);

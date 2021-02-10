@@ -67,8 +67,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="{{ route('paycaremittance') }}"><i class="fa fa-circle-o text-green"></i> PaySprint </a></li>
-            <li><a href="{{ route('remittance') }}"><i class="fa fa-circle-o text-red"></i> Send Money</a></li>
+            <li><a href="{{ route('paycaremittance') }}"><i class="fa fa-circle-o text-green"></i> Invoice </a></li>
+            <li><a href="{{ route('remittance') }}"><i class="fa fa-circle-o text-red"></i> Money Transfer</a></li>
             {{-- <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
           </ul>
         </li>
@@ -82,8 +82,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="{{ route('remittancepaycareport') }}"><i class="fa fa-circle-o text-green"></i> PaySprint </a></li>
-            <li><a href="{{ route('remittanceepayreport') }}"><i class="fa fa-circle-o text-red"></i> Send Money</a></li>
+            <li><a href="{{ route('remittancepaycareport') }}"><i class="fa fa-circle-o text-green"></i> Invoice </a></li>
+            <li><a href="{{ route('remittanceepayreport') }}"><i class="fa fa-circle-o text-red"></i> Money Transfer</a></li>
 
             {{-- <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
           </ul>
@@ -113,12 +113,27 @@
           </a>
         </li>
 
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-laptop"></i>
+            <span>Money Transfer Trans...</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="{{ route('xreceivemoney') }}"><i class="fa fa-circle-o text-red"></i> Receive Money</a></li>
+            <li><a href="{{ route('xpaytrans') }}"><i class="fa fa-circle-o text-red"></i> Send Money</a></li>
+
+          </ul>
+        </li>
+{{-- 
         <li>
           <a href="{{ route('xpaytrans') }}">
             <i class="fa fa-laptop"></i>
-            <span>Send Money Transactions</span>
+            <span>Money Transfer Trans...</span>
           </a>
-        </li>
+        </li> --}}
 
 
 

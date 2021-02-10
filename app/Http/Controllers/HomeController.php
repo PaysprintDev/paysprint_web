@@ -1186,18 +1186,18 @@ class HomeController extends Controller
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Pay Organization';
+                $this->page = 'Money Transfer';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
             }
             else{
-                $this->page = 'Pay Organization';
+                $this->page = 'Money Transfer';
                 $this->name = '';
             }
 
         }
         else{
-            $this->page = 'Pay Organization';
+            $this->page = 'Money Transfer';
             $this->name = session('name');
             $this->email = session('email');
         }

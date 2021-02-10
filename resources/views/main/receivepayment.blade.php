@@ -60,7 +60,7 @@ input[type="radio"] {
                         <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
                             <!-- Credit card form tabs -->
                             <ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
-                                <li class="nav-item"> <a data-toggle="pill" href="#credit-card" class="nav-link active "> <i class="fas fa-credit-card mr-2"></i> Be Payment Ready... </a> </li>
+                                <li class="nav-item"> <a data-toggle="pill" href="#credit-card" class="nav-link active "> <i class="fas fa-credit-card mr-2"></i> It's Fast and Safe... </a> </li>
                                 {{-- <li class="nav-item"> <a data-toggle="pill" href="#paypal" class="nav-link "> <i class="fab fa-paypal mr-2"></i> Debit Card </a> </li>
                                 <li class="nav-item"> <a data-toggle="pill" href="#net-banking" class="nav-link "> <i class="fas fa-mobile-alt mr-2"></i> EXBC Card </a> </li> --}}
                             </ul>
@@ -114,16 +114,21 @@ input[type="radio"] {
                                         
                                     
                                     <div class="form-group"> <label for="payment_method">
-                                            <h6>Payment to Card</h6>
+                                            <h6>Payment Method</h6>
                                         </label>
                                         <div class="input-group"> 
                                             <select name="payment_method" id="payment_method" class="form-control" required>
-                                                <option value="Credit Card">Credit Card</option>
+                                                <option value="Bank">Direct Bank Transfer</option>
                                                 <option value="EXBC Card">EXBC Card</option>
                                             </select>
                                             
                                         </div>
                                     </div>
+
+                                    <div class="form-group disp-0 bizInfo">
+                                        <small class="text-danger"><b>It may take up to two (2) business days for money to reflect in your card</b></small>
+                                    </div>
+
                                     <div class="form-group"> <label for="currency">
                                             <h6>Currency</h6>
                                         </label>
@@ -135,6 +140,9 @@ input[type="radio"] {
                                             
                                         </div>
                                     </div>
+
+                                    
+
                                     <div class="form-group"> <label for="amount_to_receive">
                                             <h6>Amount to Receive</h6>
                                         </label>
@@ -142,52 +150,58 @@ input[type="radio"] {
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fas fa-money-check mx-1"></i> <i class="fab fa-cc-mastercard mx-1"></i> <i class="fab fa-cc-amex mx-1"></i> </span> </div>
                                         </div>
                                     </div>
+                                    
+                                    <div class="bank_info">
+                                        <hr>
+                                            <h5 class="text-primary">Bank Information</h5>
+                                            <hr>
 
-                                    <hr>
-                                    <h5 class="text-primary">Bank Information</h5>
-                                    <hr>
+                                            <div class="form-group"> <label for="accountname">
+                                                <h6>Account Name</h6>
+                                            </label>
+                                            <div class="input-group"> 
+                                                <input type="text" name="accountname" id="accountname" placeholder="Bank Account Name" class="form-control" required>
+                                            </div>
+                                        </div>
 
-                                    <div class="form-group"> <label for="accountname">
-                                        <h6>Account Name</h6>
-                                    </label>
-                                    <div class="input-group"> 
-                                        <input type="text" name="accountname" id="accountname" placeholder="Bank Account Name" class="form-control" required>
-                                    </div>
-                                </div>
+                                        <div class="form-group">
+                                            <span class="text-danger">Please ensure the name on the card is the same as the <b>Account Name</b></span>
+                                        </div>
 
-                                <div class="form-group">
-                                    <span class="text-danger">Please ensure the name on the card is the same as the <b>Account Name</b></span>
-                                </div>
-
-                                    <div class="form-group"> <label for="account_number">
-                                        <h6>Account Number</h6>
-                                    </label>
-                                    <div class="input-group"> 
-                                        <input type="number" name="account_number" id="account_number" placeholder="Bank Account Number" class="form-control" required>
-                                    </div>
-                                </div>
-                                    <div class="form-group"> <label for="bank_name">
-                                        <h6>Bank Name</h6>
-                                    </label>
-                                    <div class="input-group"> 
-                                        <input type="text" name="bank_name" id="bank_name" placeholder="Bank Name" class="form-control" required>
-                                    </div>
-                                </div>
-
-                                
-
-
-                                    <hr>
-                                    <h5 class="text-primary">Card Information</h5>
-                                    <hr>
-
-                                    <div class="form-group"> <label for="orgpaycreditcard">
-                                            <h6>Card number</h6>
-                                        </label>
-                                        <div class="input-group"> <input type="number" name="creditcard_no" id="orgpaycreditcard" placeholder="5199 - 3924 - 2100 - 5430" class="form-control" maxlength="16" required>
-                                            <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fab fa-cc-visa mx-1"></i> <i class="fab fa-cc-mastercard mx-1"></i> <i class="fab fa-cc-amex mx-1"></i> </span> </div>
+                                            <div class="form-group"> <label for="account_number">
+                                                <h6>Account Number</h6>
+                                            </label>
+                                            <div class="input-group"> 
+                                                <input type="number" name="account_number" id="account_number" placeholder="Bank Account Number" class="form-control" required>
+                                            </div>
+                                        </div>
+                                            <div class="form-group"> <label for="bank_name">
+                                                <h6>Bank Name</h6>
+                                            </label>
+                                            <div class="input-group"> 
+                                                <input type="text" name="bank_name" id="bank_name" placeholder="Bank Name" class="form-control" required>
+                                            </div>
                                         </div>
                                     </div>
+
+                                    
+
+                                    <div class="card_info disp-0">
+                                        <hr>
+                                        <h5 class="text-primary">Card Information</h5>
+                                        <hr>
+
+                                        <div class="form-group"> <label for="orgpaycreditcard">
+                                                <h6>Card number</h6>
+                                            </label>
+                                            <div class="input-group"> <input type="number" name="creditcard_no" id="orgpaycreditcard" placeholder="5199 - 3924 - 2100 - 5430" class="form-control" maxlength="16" required>
+                                                <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fab fa-cc-visa mx-1"></i> <i class="fab fa-cc-mastercard mx-1"></i> <i class="fab fa-cc-amex mx-1"></i> </span> </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    
                                     
                                     <div class="card-footer"> <button type="submit" class="subscribe btn btn-primary btn-block shadow-sm"> Receive Payment </button>
                                 </form>
@@ -219,6 +233,41 @@ input[type="radio"] {
 
     <script src="{{ asset('pace/pace.min.js') }}"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+
+    <script>
+
+        $(document).ready(function(){
+
+            $('#orgpaycreditcard').attr('value', '0');
+        });
+
+        $("#payment_method").change(function(){
+
+            if($("#payment_method").val() == "EXBC Card"){
+                $(".bizInfo").removeClass('disp-0');
+                
+
+                $(".bank_info").addClass('disp-0');
+                $(".card_info").removeClass('disp-0');
+
+                $("#accountname").val("NILL");
+                $('#account_number').attr('value', '0');
+                $("#bank_name").val("NILL");
+
+            }
+            else{
+                $(".bizInfo").addClass('disp-0');
+
+                $(".bank_info").removeClass('disp-0');
+                $(".card_info").addClass('disp-0');
+
+                $('#orgpaycreditcard').attr('value', '0');
+
+            }
+        });
+    </script>
 
   </body>
 </html>

@@ -518,10 +518,10 @@ if($mpgResponse->responseData['Message'] == "APPROVED           *               
             $regards = $req->user_id;
 
             // Senders statement
-            $this->insStatement($req->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1);
+            $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1);
             
             // Receiver Statement
-            $this->insStatement($client->email, $reference_code, "Received Payment for ".$service." from ".$user->name, $req->amount, 0, $balance, $trans_date, $status, $action, $client->ref_code, 1);
+            $this->insStatement($client->email, $reference_code, "Received money for ".$service." from ".$user->name, $req->amount, 0, $balance, $trans_date, $status, "Invoice", $client->ref_code, 1);
 
             // $this->url = "";
             // $this->curl_data = array(
@@ -611,7 +611,7 @@ public function receivemoneyProcess(Request $req){
 
     OrganizationPay::where('id', $req->pay_id)->update(['request_receive' => 1]);
 
-    $response = 'Request Sent!';
+    $response = 'It may take up to two (2) business days for money to reflect in your '.$req->payment_method;
     $action = 'success';
 
     return redirect()->route('payorganization')->with($action, $response);

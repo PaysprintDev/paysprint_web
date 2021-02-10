@@ -72,6 +72,11 @@ li.dropdown.submenu > a {
 .disp-0{
   display: none !important;
 }
+
+.modal{
+  z-index: 10500;
+}
+
     </style>
 
 </head>

@@ -451,6 +451,57 @@ class AdminController extends Controller
 
     }
 
+
+
+    public function xreceivemoney(Request $req){
+
+        if($req->session()->has('username') == true){
+
+            if(session('role') == "Super"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+
+            $getxPay = $this->getxReceive();
+
+            // dd($getxPay);
+
+
+            return view('admin.xreceivemoney')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'status' => '', 'message' => '', 'xpayRec' => $getxPay]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
     public function updateinvoice(Request $req){
         if(session('role') == "Super"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
@@ -1970,6 +2021,7 @@ class AdminController extends Controller
     }
 
     public function ajaxconfirmpayment(Request $req){
+
         
         // Get Transaction
         $getTrans = OrganizationPay::where('transactionid', $req->transactionid)->get();
@@ -1995,7 +2047,7 @@ class AdminController extends Controller
             // Receiver Statement for remaining amount
             $rem = $getTrans[0]->amount_to_send;
 
-            $this->insStatement($receiver[0]->email, $req->transactionid, "Received Payment for ".$getTrans[0]->purpose." from ".$sender[0]->name, $rem, 0, 0, date('Y-m-d'), "Processed", "Payment", $req->coy_id, 0);
+            $this->insStatement($receiver[0]->email, $req->transactionid, "Received Payment for ".$getTrans[0]->purpose." from ".$sender[0]->name, $rem, 0, 0, date('Y-m-d'), "Processed", "Invoice", $req->coy_id, 0);
 
 
             // Send Mail to Receiver
@@ -2004,7 +2056,7 @@ class AdminController extends Controller
             // $this->email = "bambo@vimfile.com";
             $this->info = "Fund remittance";
 
-            $this->message = "You have received a payment on PaySprint via send money. <br> Payment made by ".$sender[0]->name." for the purpose of ".$getTrans[0]->purpose.". <br><br> Below is the transaction details; <br><br> Amount sent: $".number_format($getTrans[0]->amount_to_send, 2)." <br><br> Admin Charge: $".$getTrans[0]->commission." <br><br> Amount received: ".number_format($rem, 2)." <br><br> Thanks <br> PaySprint Team" ;
+            $this->message = "You have received a payment on PaySprint via send money. <br> Payment made by ".$sender[0]->name." for the purpose of ".$getTrans[0]->purpose.". <br><br> Below is the transaction details; <br><br> Amount sent: ".number_format($getTrans[0]->amount_to_send, 2)." <br><br> Admin Charge: ".$getTrans[0]->commission." <br><br> Amount received: ".number_format($rem, 2)." <br><br> Thanks <br> PaySprint Team" ;
             
 
 
@@ -2144,6 +2196,13 @@ class AdminController extends Controller
         $getxpayrec = OrganizationPay::where('state', 1)->where('request_receive', '!=', 2)->orderBy('created_at', 'DESC')->get();
 
         return $getxpayrec;
+    }
+
+
+    public function getxReceive(){
+        $data = OrganizationPay::select('organization_pay.*','receive_pay.*')->join('receive_pay', 'receive_pay.pay_id', '=', 'organization_pay.id')->where('organization_pay.request_receive', '!=', 0)->orderBy('organization_pay.created_at', 'DESC')->get();
+
+        return $data;
     }
 
 

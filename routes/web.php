@@ -135,6 +135,8 @@ Route::get('Admin/customer/{id}', ['uses' => 'AdminController@customer', 'as' =>
 
 Route::get('Admin/xpaytrans', ['uses' => 'AdminController@xpaytrans', 'as' => 'xpaytrans']);
 
+Route::get('Admin/xreceivemoney', ['uses' => 'AdminController@xreceivemoney', 'as' => 'xreceivemoney']);
+
 
 Route::post('updateinvoice', ['uses' => 'AdminController@updateinvoice', 'as' => 'updateinvoice']);
 
@@ -173,6 +175,10 @@ Route::group(['prefix' => 'Ajax'], function(){
 Route::post('Ajaxregister', ['uses' => 'HomeController@ajaxregister', 'as' => 'Ajaxregister']);
 Route::post('Ajaxlogin', ['uses' => 'HomeController@ajaxlogin', 'as' => 'Ajaxlogin']);
 Route::post('contactus', ['uses' => 'HomeController@contactus', 'as' => 'contactus']);
+
+
+// Logout
+Route::get('logout', 'LoginController@logout');
 
 
 // Setup Billing

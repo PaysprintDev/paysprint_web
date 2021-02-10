@@ -30,10 +30,10 @@
 @section('content')
     <!-- Banner area -->
     <section class="banner_area" data-stellar-background-ratio="0.5">
-        <h2>SEND MONEY</h2>
+        <h2>MONEY TRANSFER</h2>
         <ol class="breadcrumb">
             <li><a href="{{ route('home') }}">Home</a></li>
-            <li><a href="{{ route('statement') }}" class="active">SEND MONEY</a></li>
+            <li><a href="{{ route('statement') }}" class="active">MONEY TRANSFER</a></li>
         </ol>
     </section>
     <!-- End Banner area -->
@@ -44,7 +44,7 @@
             <div class="architecture_area services_pages">
                 <div class="portfolio_filter portfolio_filter_2">
                     <ul>
-                        <li data-filter="*" class="active"><a href=""><i class="fa fa-file" aria-hidden="true"></i>PaySprint Send/Receive</a></li>
+                        <li data-filter="*" class="active"><a href=""><i class="fa fa-file" aria-hidden="true"></i>Send & Receive</a></li>
                     </ul>
                 </div>
                 <div class="portfolio_item portfolio_2">
@@ -54,17 +54,17 @@
 
 
                         <ul class="nav nav-tabs">
-                            <li class="tab-menu active"><a data-toggle="tab" href="#home">Send Money</a></li>
-                            <li class="tab-menu"><a data-toggle="tab" href="#menu1">Receive Money</a></li>
+                            <li class="tab-menu active"><a data-toggle="tab" href="#home">Send</a></li>
+                            <li class="tab-menu"><a data-toggle="tab" href="#menu1">Receive</a></li>
                         </ul>
 
                         <div class="tab-content">
                             <div id="home" class="tab-pane fade in active">
                                 <div class="who_we_area">
                                     <br>
-                                    <div class="subtittle">
+                                    {{--  <div class="subtittle">
                                         <h2>SEND MONEY</h2>
-                                    </div>
+                                    </div>  --}}
                                     <div class="billingIns">
                                         <input type="hidden" name="myname" id="myname" value="{{ $name }}">
                                         <input type="hidden" name="myemail" id="myemail" value="{{ $email }}">
@@ -308,7 +308,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-6">
-                                                <label for="orgInfo">Enter receivers code</label>
+                                                <label for="orgInfo">Enter receivers account number</label>
                                                     <input type="text" name="orgInfo" class="form-control billinginput_box" id="orgInfo" placeholder="8172">
         
                                             </div>
@@ -323,7 +323,7 @@
         
                                         <div class="row">
                                             <div class="col-md-9">
-                                                <label for="orgInfo">Enter receivers code</label>
+                                                <label for="orgInfo">Enter receivers account number</label>
                                                     <input type="text" name="orgInfo" class="form-control billinginput_box" id="orgInfo" placeholder="8172">
         
                                             </div>
@@ -335,6 +335,9 @@
                                         </div>
                                             
                                         @endif
+
+                                        {{-- Kindly note that a total sum of 20.12 will be charged to  your [credit card]. --}}
+
         
                                         
         
@@ -357,6 +360,9 @@
 
                                                 </tbody>
                                             </table>
+
+                                            <br><br>
+
                                         </div>
         
                                         
@@ -373,9 +379,9 @@
                                 <div class="selector">
                                 <div class="subtittle">
                                     <div class="who_we_area">
-                                        <div class="subtittle">
+                                        {{--  <div class="subtittle">
                                             <h2>RECEIVE MONEY</h2>
-                                        </div>
+                                        </div>  --}}
                                         <div class="billingIns">
                                             
             
@@ -602,7 +608,7 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label for="recorgInfo">Enter receivers code</label>
+                                                    <label for="recorgInfo">Enter sender's account number</label>
                                                         <input type="text" name="orgInfo" class="form-control billinginput_box" id="recorgInfo" placeholder="8172">
             
                                                 </div>
@@ -617,7 +623,7 @@
             
                                             <div class="row">
                                                 <div class="col-md-9">
-                                                    <label for="recorgInfo">Enter receivers code</label>
+                                                    <label for="recorgInfo">Enter sender's account number</label>
                                                         <input type="text" name="orgInfo" class="form-control billinginput_box" id="recorgInfo" placeholder="8172">
             
                                                 </div>
@@ -650,9 +656,10 @@
 
                                                 </tbody>
                                             </table>
+                                        <br><br>
+
                                         </div>
                                             
-            
                                             
             
                                         </div>
