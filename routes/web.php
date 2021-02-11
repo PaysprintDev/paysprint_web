@@ -234,6 +234,9 @@ Route::post('getFacility', ['uses' => 'HomeController@ajaxgetFacility', 'as' => 
 Route::post('getbuildingaddress', ['uses' => 'HomeController@ajaxgetbuildingaddress', 'as' => 'Ajaxgetbuildingaddress']);
 
 
+Route::post('notifyupdate', ['uses' => 'HomeController@ajaxnotifyupdate', 'as' => 'Ajaxnotifyupdate']);
+
+
 // Get Commision and payment
 Route::post('getCommission', ['uses' => 'HomeController@ajaxgetCommission', 'as' => 'AjaxgetCommission']);
 

@@ -1205,8 +1205,26 @@ class HomeController extends Controller
         // Get Organization & Business
         $clientInfo = $this->clientsInformation();
         $location = $this->myLocation();
+        $data = array(
+            'newnotification' => $this->notification($this->email),
+            'allnotification' => $this->allnotification($this->email),
+        );
 
-        return view('main.payorganization')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'clientInfo' => $clientInfo, 'location' => $location]);
+        return view('main.payorganization')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'clientInfo' => $clientInfo, 'location' => $location, 'data' => $data]);
+    }
+
+    public function notification($email){
+
+        $data = Statement::where('user_id', $email)->where('notify', 0)->count();
+
+        return $data;
+    }
+
+    public function allnotification($email){
+
+        $data = Statement::where('user_id', $email)->orderBy('notify', 'ASC')->orderBy('created_at', 'DESC')->get();
+
+        return $data;
     }
 
 
@@ -1909,6 +1927,25 @@ class HomeController extends Controller
         if(count($getfacility) > 0){
             // Get Facility
             $resData = ['data' => json_encode($getfacility), 'message' => 'success'];
+
+        }
+        else{
+            $resData = ['message' => 'error', 'data' => 'No record'];
+        }
+
+
+        return $this->returnJSON($resData);
+    }
+
+
+    public function ajaxnotifyupdate(Request $req, Statement $statement){
+
+        $data = $statement->where('user_id', $req->user_id)->update(['notify' => 1]);
+
+        if(count($data) > 0){
+
+            // Get Facility
+            $resData = ['data' => 1, 'message' => 'success'];
 
         }
         else{

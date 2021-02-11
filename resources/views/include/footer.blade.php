@@ -1703,6 +1703,38 @@ $('#property_facility').on('keydown keyup change', function(){
 });
 
 
+function notifyForm(email){
+    var route = "{{ URL('Ajax/notifyupdate') }}";
+    var formData = new FormData();
+    formData.append("user_id", email);
+
+    Pace.restart();
+        Pace.track(function(){
+            setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: formData,
+            cache: false,
+            processData: false,
+            contentType: false,
+            dataType: 'JSON',
+            success: function(result){
+                if(result.message == "success"){
+
+
+                }
+                else{
+                    
+                }
+            }
+
+            });
+        });
+
+}
+
+
     //Set CSRF HEADERS
  function setHeaders(){
     $.ajaxSetup({

@@ -22,6 +22,12 @@
     font-weight: bold;
     color: navy;
 }
+
+.invoice{
+  position: relative !important;
+  top: 0 !important;
+}
+
 </style>
 
 @show
@@ -56,6 +62,7 @@
                         <ul class="nav nav-tabs">
                             <li class="tab-menu active"><a data-toggle="tab" href="#home">Send</a></li>
                             <li class="tab-menu"><a data-toggle="tab" href="#menu1">Receive</a></li>
+                            <li class="tab-menu" onclick="notifyForm('{{ $email }}')"><a data-toggle="tab" href="#menu2">Notification @if(isset($data)) <span class="badge badge-danger">{{ $data['newnotification'] }}</span> @else 0 @endif</a></li>
                         </ul>
 
                         <div class="tab-content">
@@ -669,8 +676,65 @@
                             </div>
 
 
-                        </div>
+                            <div id="menu2" class="tab-pane fade">
+                                <br>
+                                <div class="table table-responsive" style="height: 150vh; overflow-y:auto; ">
+                                    <table class="table table-striped">
+                                        <tbody>
+                                            @if (isset($data))
+                                                @foreach ($data['allnotification'] as $notify)
+                                                @if ($notify->notify == 1)
+                                                <tr>
+                                                    <td><img src="https://img.icons8.com/emoji/20/000000/check-box-with-check-emoji.png"/></td>
+                                                    <td>{{ $notify->activity }}<br><small style="color: navy;">
+                                                        @if ($notify->action == "Payment")
+                                                            <span style="color: red">Amount: {{ number_format($notify->debit, 2) }}</span>
+                                                        @else
 
+                                                            <span style="color: green">Amount: {{ number_format($notify->credit, 2) }}</span>
+                                                            
+                                                        @endif
+
+                                                        <br>
+
+                                                        {{ $notify->created_at->diffForHumans() }}</small></td>
+                                                </tr>
+
+                                                @else
+
+                                                <tr>
+                                                    <td><img src="https://img.icons8.com/color/30/000000/push-notifications.png"/></td>
+                                                    <td style="font-weight: bold;">{{ $notify->activity }}<br><small style="color: navy; font-weight: bold;">
+                                                        @if ($notify->action == "Payment")
+                                                            <span style="color: red">Amount: {{ number_format($notify->debit, 2) }}</span>
+                                                        @else
+
+                                                            <span style="color: green">Amount: {{ number_format($notify->credit, 2) }}</span>
+                                                            
+                                                        @endif
+
+                                                        <br>
+
+                                                        {{ $notify->created_at->diffForHumans() }}</small></td>
+                                                </tr>
+                                                    
+                                                @endif
+                                                
+                                                @endforeach
+                                            @else
+                                                <tr>
+                                                    <td><img src="https://img.icons8.com/emoji/20/000000/check-box-with-check-emoji.png"/></td>
+                                                    <td>You have no new notifications</td>
+                                                </tr>
+                                            @endif
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+
+                        </div>
 
                         
                     </div>
