@@ -37,6 +37,9 @@ Route::get('Service', ['uses' => 'HomeController@service', 'as' => 'service']);
 Route::get('Ticket', ['uses' => 'HomeController@ticket', 'as' => 'ticket']);
 
 
+Route::get('profile', ['uses' => 'HomeController@profile', 'as' => 'profile']);
+
+
 Route::get('payment/{invoice}', ['uses' => 'HomeController@payment', 'as' => 'payment']);
 
 Route::get('payment/sendmoney/{user_id}', ['uses' => 'HomeController@paymentOrganization', 'as' => 'sendmoney payment']);
@@ -114,6 +117,10 @@ Route::get('Myreceipt/{key}', ['uses' => 'HomeController@myreceipt', 'as' => 'My
 
 // Client Admin ROute
 Route::get('Admin', ['uses' => 'AdminController@index', 'as' => 'Admin']);
+
+Route::get('allusers', ['uses' => 'AdminController@allPlatformUsers', 'as' => 'allusers']);
+
+
 Route::get('AdminLogin', ['uses' => 'AdminController@adminlogin', 'as' => 'AdminLogin']);
 Route::get('AdminRegister', ['uses' => 'AdminController@adminregister', 'as' => 'AdminRegister']);
 Route::get('otherpay', ['uses' => 'AdminController@Otherpay', 'as' => 'Otherpay']);
@@ -219,6 +226,8 @@ Route::post('setupTrans', ['uses' => 'AdminController@ajaxsetupTrans', 'as' => '
 Route::post('checkfeeReport', ['uses' => 'AdminController@ajaxcheckfeeReport', 'as' => 'AjaxcheckfeeReport']);
 Route::post('invoiceVisit', ['uses' => 'AdminController@ajaxinvoiceVisit', 'as' => 'AjaxinvoiceVisit']);
 Route::post('confirmpayment', ['uses' => 'AdminController@ajaxconfirmpayment', 'as' => 'Ajaxconfirmpayment']);
+
+Route::post('approveUser', ['uses' => 'AdminController@ajaxapproveUser', 'as' => 'AjaxapproveUser']);
 
 
 Route::post('quotedecision', ['uses' => 'ConsultantController@ajaxquotedecision', 'as' => 'Ajaxquotedecision']);

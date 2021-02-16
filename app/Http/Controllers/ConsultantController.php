@@ -492,7 +492,7 @@ class ConsultantController extends Controller
         }
 
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
 
@@ -530,7 +530,7 @@ class ConsultantController extends Controller
         }
 
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
 
@@ -609,9 +609,7 @@ class ConsultantController extends Controller
 
 
 
-    public function returnJSON($data){
-        return response()->json($data);
-    }
+
 
 
     public function sendEmail($objDemoa, $purpose){

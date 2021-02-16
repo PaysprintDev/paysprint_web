@@ -352,7 +352,7 @@ else{
     $action = 'error';
 }
 
-    // return $this->returnJSON($resData);
+    // return $this->returnJSON($resData, 200);
 
     return redirect()->route('invoice')->with($action, $response);
 
@@ -596,7 +596,7 @@ else{
 
 }
 
-    // return $this->returnJSON($resData);
+    // return $this->returnJSON($resData, 200);
 
 
 }
@@ -618,9 +618,7 @@ public function receivemoneyProcess(Request $req){
 
 }
 
-	public function returnJSON($data){
-        return response()->json($data);
-    }
+
 
 
     public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state){

@@ -109,8 +109,9 @@ class AdminController extends Controller
 
             $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
             $transCost = $this->transactionCost();
+            $allusers = $this->allUsers();
 
-            return view('admin.index')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost]);
+            return view('admin.index')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'allusers' => $allusers]);
         }
         else{
             return redirect()->route('AdminLogin');
@@ -444,6 +445,62 @@ class AdminController extends Controller
 
 
             return view('admin.xpaytrans')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
+    public function allPlatformUsers(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+
+            return view('admin.allusers')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
         }
         else{
             return redirect()->route('AdminLogin');
@@ -1287,7 +1344,7 @@ class AdminController extends Controller
             }
         }
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
 
@@ -1330,7 +1387,7 @@ class AdminController extends Controller
 
         }
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
     // Client Login
@@ -1349,7 +1406,7 @@ class AdminController extends Controller
             $resData = ['res' => 'Unrecognized login!', 'message' => 'info'];
         }
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
     // Client Register
@@ -1383,7 +1440,7 @@ class AdminController extends Controller
 
             }
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
 
@@ -1438,7 +1495,7 @@ class AdminController extends Controller
 
 
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
     
 
@@ -1494,7 +1551,7 @@ class AdminController extends Controller
 
 
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
 
@@ -1545,7 +1602,7 @@ class AdminController extends Controller
 
         
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
 
@@ -1592,7 +1649,7 @@ class AdminController extends Controller
         }
 
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
         
     }
 
@@ -1673,7 +1730,7 @@ class AdminController extends Controller
         }
         
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
     public function ajaxgetmremittance(Request $req){
@@ -1847,7 +1904,7 @@ class AdminController extends Controller
 
         
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
 
@@ -1929,7 +1986,7 @@ class AdminController extends Controller
         
         
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
 
@@ -1977,7 +2034,7 @@ class AdminController extends Controller
             $resData = ['res' => 'No record found', 'message' => 'info', 'title' => 'Oops!'];
         }
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
 
@@ -1999,7 +2056,7 @@ class AdminController extends Controller
             $resData = ['res' => 'Something went wrong', 'message' => 'error', 'title' => 'Oops!'];
         }
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
     public function ajaxinvoiceVisit(Request $req){
@@ -2017,7 +2074,7 @@ class AdminController extends Controller
             }
         }
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
     public function ajaxconfirmpayment(Request $req){
@@ -2068,7 +2125,28 @@ class AdminController extends Controller
             $resData = ['res' => 'Transaction not found', 'message' => 'error', 'title' => 'Oops!'];
         } 
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
+    }
+
+
+    public function ajaxapproveUser(Request $req, User $user){
+
+        $data = $user->where('id', $req->id)->first();
+
+        if($data->approval == 1){
+            $user->where('id', $req->id)->update(['approval' => 0]);
+
+            $resData = ['res' => 'Account information disapproved', 'message' => 'success', 'title' => 'Great'];
+        }
+        else{
+            $user->where('id', $req->id)->update(['approval' => 1]);
+
+            $resData = ['res' => 'Account information approved', 'message' => 'success', 'title' => 'Great'];
+        }
+
+
+        return $this->returnJSON($resData, 200);
+
     }
 
     
@@ -2099,7 +2177,7 @@ class AdminController extends Controller
 
         }
 
-          return $this->returnJSON($resData);
+          return $this->returnJSON($resData, 200);
 
     }
 
@@ -2211,6 +2289,11 @@ class AdminController extends Controller
         $getCost = TransactionCost::all();
 
         return $getCost;
+    }
+    public function allUsers(){
+        $data = User::orderBy('created_at', 'DESC')->get();
+
+        return $data;
     }
 
 
@@ -2415,7 +2498,5 @@ class AdminController extends Controller
    }
 
 
-    public function returnJSON($data){
-        return response()->json($data);
-    }
+
 }

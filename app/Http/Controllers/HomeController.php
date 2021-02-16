@@ -1409,6 +1409,34 @@ class HomeController extends Controller
         return view('main.ticket')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'getTickets' => $this->getTickets]);
     }
 
+    
+
+    public function profile(Request $req)
+    {
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'Profile Information';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+
+            }
+            else{
+                $this->page = 'Profile Information';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'Profile Information';
+            $this->name = session('name');
+            $this->email = session('email');
+
+        }
+
+        return view('main.profile')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email]);
+    }
+
 
     // Custom Ajax Request
     public function ajaxregister(Request $req){
@@ -1436,7 +1464,7 @@ class HomeController extends Controller
            $resData = ['res' => 'Hello '.$name.' you will be redirected in 5sec', 'message' => 'success', 'link' => '/'];
         }
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
     public function ajaxlogin(Request $req){
@@ -1454,7 +1482,7 @@ class HomeController extends Controller
             $resData = ['res' => 'Your credential does not match our record', 'message' => 'error'];
         }
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
 
@@ -1478,7 +1506,7 @@ class HomeController extends Controller
 
         }
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
     public function checkmyBills(Request $req){
@@ -1491,7 +1519,7 @@ class HomeController extends Controller
         else{
             $resData = ['res' => 'Something went wrong', 'message' => 'error', 'title' => 'Oops!'];
         }
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
     public function getmyInvoice(Request $req){
@@ -1518,7 +1546,7 @@ class HomeController extends Controller
         }
 
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
 
@@ -1574,7 +1602,7 @@ class HomeController extends Controller
         }
 
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
 
@@ -1583,11 +1611,17 @@ class HomeController extends Controller
         if($req->user_id == Auth::user()->ref_code){
 
             if($req->action == "rec"){
-                $res = 'You can not receive money from yourself';
+                $res = '<b style="color: red">You can not receive money from yourself</b>';
             }
             else{
-                $res = 'You can not send money to yourself';
+                $res = '<b style="color: red">You can not send money to yourself</b>';
             }
+
+            $resData = ['res' => $res, 'message' => 'error'];
+        }
+        elseif(Auth::user()->approval == 0){
+
+            $res = '<small><b class="text-danger">You cannot send or receive money now, because your account is not yet approved, Kindly update means of identification in your <a href='.route('profile').' class="text-primary" style="text-decoration: underline">profile</a></b></small>';
 
             $resData = ['res' => $res, 'message' => 'error'];
         }
@@ -1649,7 +1683,7 @@ class HomeController extends Controller
         
 
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
     public function ajaxgetBronchure(Request $req){
@@ -1688,7 +1722,7 @@ class HomeController extends Controller
             }
         }
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
 
@@ -1719,7 +1753,7 @@ class HomeController extends Controller
 
         }
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
 
@@ -1743,7 +1777,7 @@ class HomeController extends Controller
             $resData = ['res' => 'Something went wrong', 'message' => 'error'];
         }
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
 
     }
 
@@ -1888,7 +1922,7 @@ class HomeController extends Controller
         }
 
 
-        // return $this->returnJSON($resData);
+        // return $this->returnJSON($resData, 200);
 
         return redirect('maintenance/status?s=submitted')->with($resp, $resData);
     }
@@ -1916,7 +1950,7 @@ class HomeController extends Controller
         }
 
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
 
@@ -1934,7 +1968,7 @@ class HomeController extends Controller
         }
 
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
 
@@ -1953,7 +1987,7 @@ class HomeController extends Controller
         }
 
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
 
@@ -1986,7 +2020,7 @@ class HomeController extends Controller
 
         $resData = ['data' => number_format($amountReceive, 2), 'message' => 'success', 'state' => $state, 'collection' => number_format($collection, 2)];
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
 
     }
 
@@ -2213,7 +2247,7 @@ class HomeController extends Controller
 
 
 
-        return $this->returnJSON($resData);
+        return $this->returnJSON($resData, 200);
     }
 
 
@@ -2356,8 +2390,6 @@ class HomeController extends Controller
 
 
 
-    public function returnJSON($data){
-        return response()->json($data);
-    }
+    
 }
 

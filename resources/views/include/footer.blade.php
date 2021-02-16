@@ -1735,13 +1735,80 @@ function notifyForm(email){
 }
 
 
+function handShake(val){
+
+    var route = "{{ URL('/api/v1/profile') }}";
+
+
+    if(val == "updateprofile"){
+
+        var formData = new FormData(formElem);
+
+
+        Pace.restart();
+        Pace.track(function(){
+            setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: formData,
+            cache: false,
+            processData: false,
+            contentType: false,
+            dataType: 'JSON',
+            beforeSend: function(){
+                $('#updateBtn').text('Updating Profile...');
+            },
+            success: function(result){
+
+                $('#updateBtn').text('Update Profile');
+
+                try {
+
+                    if(result.status == 200){
+                        swal("Success", result.message, "success");
+                        setTimeout(function(){ location.reload(); }, 2000);
+                    }
+                    else{
+                        swal("Oops", result.message, "error");
+                    }
+                } 
+                catch (error) {
+                    swal("Oops!", error.message, "error");
+                }
+
+
+
+            }
+
+        });
+        });
+
+    }
+
+}
+
+
     //Set CSRF HEADERS
  function setHeaders(){
-    $.ajaxSetup({
-      headers: {
-          'X-CSRF-TOKEN': "{{csrf_token()}}"
-      }
-    });
+
+    if("{{ Auth::check() }}" == true){
+        $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': "{{csrf_token()}}",
+            'Authorization': "Bearer "+"{{ Auth::user()->api_token }}"
+        }
+        });
+    }
+    else{
+        $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': "{{csrf_token()}}"
+        }
+        });
+    }
+
+    
  }
 
 

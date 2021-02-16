@@ -178,7 +178,7 @@ class ExbcController extends Controller
 
             }
 
-            return $this->returnJSON($result);
+            return $this->returnJSON($result, 200);
 
         }
 
@@ -395,7 +395,7 @@ class ExbcController extends Controller
             }
 
 
-            return $this->returnJSON($result);
+            return $this->returnJSON($result, 200);
 
         }
 
@@ -450,7 +450,7 @@ class ExbcController extends Controller
             }
 
 
-            return $this->returnJSON($result);
+            return $this->returnJSON($result, 200);
         }
 
 
@@ -466,7 +466,7 @@ class ExbcController extends Controller
                 $result = array('action' => "You do not have record for this service", 'data' => 0);
             }
 
-            return $this->returnJSON($result);
+            return $this->returnJSON($result, 200);
         }
         
 
@@ -495,7 +495,5 @@ class ExbcController extends Controller
     
 
 
-    public function returnJSON($data){
-      return response()->json($data);
-    }
+
 }
