@@ -2239,9 +2239,11 @@ class HomeController extends Controller
             }
         }
 
-
+        User::where('email', $req->email)->update(['api_token' => uniqid().time()]);
         // Do Auth here
         Auth::login($getUser);
+
+        
 
 
 
