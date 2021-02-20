@@ -197,7 +197,9 @@ input[type="radio"] {
                                                 </label> <input type="number" required class="form-control" name="cvv" placeholder="435"> </div>
                                         </div>
                                     </div>
-                                    <div class="card-footer"> <button type="button" onclick="monerisPay()" class="subscribe btn btn-primary btn-block shadow-sm"> Confirm Payment </button>
+                                    <div class="card-footer"> <button type="button" onclick="monerisPay()" class="subscribe btn btn-primary btn-block shadow-sm"> Confirm Payment </button></div>
+
+                                    
                                 </form>
                             </div>
 

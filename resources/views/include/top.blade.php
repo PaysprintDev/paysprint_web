@@ -159,7 +159,7 @@
                         
 
                         <li class="dropdown submenu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ $name }}<span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ (strlen($name) < 10) ? $name : substr($name, 0, 10)."..." }}<span class="caret"></span></a>
                             
                             <ul class="dropdown-menu other_dropdwn">
                                 <li><a href="{{ route('profile') }}">Profile detail</a></li>
