@@ -197,7 +197,8 @@ Route::post('getmystatement', ['uses' => 'HomeController@getmystatement', 'as' =
 Route::post('getOrganization', ['uses' => 'HomeController@getOrganization', 'as' => 'getOrganization']);
 
 Route::post('PaymentInvoice', ['uses' => 'MonerisController@purchase', 'as' => 'PaymentInvoice']);
-Route::post('orgPaymentInvoice', ['uses' => 'MonerisController@orgPaymentInvoice', 'as' => 'orgPaymentInvoice']);
+// Route::post('orgPaymentInvoice', ['uses' => 'MonerisController@orgPaymentInvoice', 'as' => 'orgPaymentInvoice']);
+Route::post('orgPaymentInvoice', ['uses' => 'GooglePaymentController@orgPaymentInvoice', 'as' => 'orgPaymentInvoice']);
 Route::post('receivemoneyProcess', ['uses' => 'MonerisController@receivemoneyProcess', 'as' => 'receivemoneyProcess']);
 
 // External Source

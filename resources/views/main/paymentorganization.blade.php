@@ -80,6 +80,8 @@ input[type="radio"] {
 
                                     <input type="hidden" name="orgpayemail" id="orgpayemail" value="{{ $email }}">
 
+                                    <input type="hidden" name="paymentToken" id="paymentToken" value="">
+
                                     <div class="form-group">
                                         <div class="alert alert-info">
                                             <ul>
@@ -131,7 +133,7 @@ input[type="radio"] {
                                     </div>
                                         
                                     
-                                    <div class="form-group"> <label for="make_payment_method">
+                                    <div class="form-group disp-0"> <label for="make_payment_method">
                                             <h6>Payment Method</h6>
                                         </label>
                                         <div class="input-group"> 
@@ -194,14 +196,14 @@ input[type="radio"] {
                                     <div class="commissionInfo"></div>
                                 </div>
 
-                                    <div class="form-group"> <label for="orgpaycreditcard">
+                                    <div class="form-group disp-0"> <label for="orgpaycreditcard">
                                             <h6>Card number</h6>
                                         </label>
                                         <div class="input-group"> <input type="number" name="creditcard_no" id="orgpaycreditcard" placeholder="5199 - 3924 - 2100 - 5430" class="form-control" maxlength="16" required>
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fab fa-cc-visa mx-1"></i> <i class="fab fa-cc-mastercard mx-1"></i> <i class="fab fa-cc-amex mx-1"></i> </span> </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row disp-0">
                                         <div class="col-sm-4">
                                             <div class="form-group"> <label><span class="hidden-xs">
                                                         <h6>Month</h6>
@@ -248,9 +250,14 @@ input[type="radio"] {
                                                 </label> <input type="number" required class="form-control" name="cvv" placeholder="435"> </div>
                                         </div>
                                     </div>
-                                    <div class="card-footer"> <button type="button" onclick="orgmonerisPay()" class="subscribe btn btn-primary btn-block shadow-sm"> Confirm Payment </button></div>
+                                    <div class="card-footer"> 
+                                        
+                                        {{--  <button type="button" onclick="orgmonerisPay()" class="subscribe btn btn-primary btn-block shadow-sm disp-0"> Confirm Payment </button>  --}}
+                                    
+                                        <center><div id="container"></div></center>
+                                    
+                                    </div>
 
-                                    <center><div id="container"></div></center>
                                 </form>
                             </div>
 
@@ -547,7 +554,7 @@ function runCommission(){
             // @todo a merchant ID is available for a production environment after approval by Google
             // See {@link https://developers.google.com/pay/api/web/guides/test-and-deploy/integration-checklist|Integration checklist}
             merchantId: 'BCR2DN6T2PJ3FJ37',
-            merchantName: "Olusegun Adebiyi",
+            merchantName: "PaySprint",
           };
           return paymentDataRequest;
         }
@@ -560,7 +567,7 @@ function runCommission(){
          */
         function getGooglePaymentsClient() {
           if ( paymentsClient === null ) {
-            paymentsClient = new google.payments.api.PaymentsClient({environment: 'TEST'});
+            paymentsClient = new google.payments.api.PaymentsClient({environment: 'PRODUCTION'});
           }
           return paymentsClient;
         }
@@ -584,6 +591,7 @@ function runCommission(){
               .catch(function(err) {
                 // show error in developer console for debugging
                 console.error(err);
+                alert(err.statusMessage);
               });
         }
         
@@ -648,6 +656,7 @@ function runCommission(){
               .catch(function(err) {
                 // show error in developer console for debugging
                 console.error(err);
+                alert(err.statusMessage);
               });
         }
         /**
@@ -657,12 +666,41 @@ function runCommission(){
          * @see {@link https://developers.google.com/pay/api/web/reference/response-objects#PaymentData|PaymentData object reference}
          */
         function processPayment(paymentData) {
-          // show returned data in developer console for debugging
-            console.log(paymentData);
-          // @todo pass payment token to your gateway to process payment
-          paymentToken = paymentData.paymentMethodData.tokenizationData.token;
 
             // Run System Payment Complete
+            $('#paymentToken').val('');
+
+    var name = $('#orgpayname').val();
+    var email = $('#orgpayemail').val();
+    var user_id = $('#orgpayuser_id').val();
+    var service = $('#orgpayservice').val();
+    var purpose = $('#orgpaypurpose').val();
+    var amount = $('#orgpayamount').val();
+
+
+    if(service == ""){
+        swal('Oops!', 'Please select payment purpose', 'info');
+        return false;
+    }
+    else if(amount == ""){
+        swal('Oops!', 'Please enter amount', 'info');
+        return false;
+    }
+    
+    else{
+
+        // show returned data in developer console for debugging
+        console.log(paymentData);
+          // @todo pass payment token to your gateway to process payment
+        paymentToken = paymentData.paymentMethodData.tokenizationData.token;
+
+        $('#paymentToken').val(paymentToken);
+
+
+        $("#paymentForm").submit();
+
+            
+    }
 
         }
 
