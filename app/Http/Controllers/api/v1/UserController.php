@@ -4,6 +4,9 @@ namespace App\Http\Controllers\api\v1;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 use App\User as User;
 
@@ -15,11 +18,47 @@ class UserController extends Controller
 
     public function userRegistration(Request $request, User $user){
 
-        $data = 1;
-        $message = "success";
-        $status = 200;
+        $validator = Validator::make($request->all(), [
+            'ref_code' => 'unique:users',
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required',
+            'telephone' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'country' => 'required',
+        ]);
 
-        $resData = ['data' => $data, 'message' => $message];
+        if($validator->passes()){
+
+            $mycode = $this->getCountryCode($request->country);
+
+            $user = User::create([
+                'ref_code' => $mycode[0]->callingCodes[0].'-'.mt_rand(00000, 99999),
+                'name' => $request->firstname.' '.$request->lastname,
+                'email' => $request->email,
+                'telephone' => $request->telephone,
+                'city' => $request->city,
+                'state' => $request->state,
+                'country' => $request->country,
+                'api_token' => uniqid().md5($request->email),
+                'password' => Hash::make($request->password),
+            ]);
+
+            $resData = ['data' => $user, 'message' => 'Registration successful'];
+            $status = 200;
+
+        }
+        else{
+
+            $error = implode(",",$validator->messages()->all());
+            
+            $resData = ['message' => $error, 'status' => 400];
+            $status = 400;
+        }
+
+        
         
         return $this->returnJSON($resData, $status);
     }
@@ -27,9 +66,45 @@ class UserController extends Controller
 
     public function userLogin(Request $request, User $user){
 
-        $data = 1;
-        $message = "success";
-        $status = 200;
+        // Validate Login
+
+        $validator = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if(!Auth::attempt($validator)){
+            $status = 201;
+            $data = [];
+            $message = 'Invalid login credential';
+        }
+        else{
+            $token = Auth::user()->createToken('authToken')->accessToken;
+
+
+            $getUser = User::select('id', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken')->where('email', $request->email)->first();
+
+            if(Hash::check($request->password, $getUser->password)){
+
+                // Update User API Token
+                User::where('email', $request->email)->update(['api_token' => $token]);
+
+                $data = $getUser;
+                $status = 200;
+                $message = 'Login successful';
+
+
+            }
+            else{
+                $data = [];
+                $status = 201;
+                $message = 'Invalid password';
+            }
+
+
+        }
+
+        
 
         $resData = ['data' => $data, 'message' => $message];
 
@@ -39,7 +114,7 @@ class UserController extends Controller
 
     public function updateProfile(Request $request, User $user){
 
-        $user = User::where('api_token', $request->bearerToken())->first();
+        $user = User::select('id', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken')->where('api_token', $request->bearerToken())->first();
 
 
         User::where('id', $user->id)->update($request->all());
@@ -97,6 +172,33 @@ class UserController extends Controller
 
 
         User::where('id', $id)->update([''.$rowName.'' => $docPath]);
+
+    }
+
+
+    public function getCountryCode($country){
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://restcountries.eu/rest/v2/name/'.$country,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Cookie: __cfduid=d423c6237ed02a0f8118fec1c27419ab81613795899'
+        ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        return json_decode($response);
 
     }
 

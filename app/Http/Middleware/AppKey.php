@@ -19,7 +19,6 @@ class AppKey
 
         if(isset($token) == true){
 
-
             if($token != env('APP_KEY')){
                 
                 return response()->json(['message' => 'Invalid Authorization Key'], 401);
