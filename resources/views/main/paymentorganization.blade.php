@@ -253,8 +253,16 @@ input[type="radio"] {
                                     <div class="card-footer"> 
                                         
                                         {{--  <button type="button" onclick="orgmonerisPay()" class="subscribe btn btn-primary btn-block shadow-sm disp-0"> Confirm Payment </button>  --}}
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                            <center><div id="container"></div></center>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <button type="button" onclick="beginApplePay()" class="subscribe btn btn-primary btn-block shadow-sm disp-0"> Apple Pay </button>
+                                            </div>
+                                        </div>
                                     
-                                        <center><div id="container"></div></center>
                                     
                                     </div>
 
@@ -296,6 +304,16 @@ input[type="radio"] {
                 $("#orgpayamount").on("keyup", function() {
                     runCommission();
                 });
+
+
+                if (window.ApplePaySession) {
+                var merchantIdentifier = 'simple.moneris.paysprint.exbc.ca';
+                var promise = ApplePaySession.canMakePaymentsWithActiveCard(merchantIdentifier);
+                promise.then(function (canMakePayments) {
+                    if (canMakePayments)
+                        // Display Apple Pay button here.
+                        $(".shadow-sm").removeClass('disp-0');
+                }); }
 
                 });
 
@@ -713,7 +731,17 @@ function runCommission(){
 
 
 
-
+function beginApplePay() {
+  var paymentRequest = {
+    countryCode: 'US',
+    currencyCode: 'USD',
+    total: {
+      label: 'Stripe.com',
+      amount: '19.99'
+    }
+  };
+//   var session = ...; // continued below
+}
 
 
 

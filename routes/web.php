@@ -250,6 +250,8 @@ Route::post('notifyupdate', ['uses' => 'HomeController@ajaxnotifyupdate', 'as' =
 // Get Commision and payment
 Route::post('getCommission', ['uses' => 'HomeController@ajaxgetCommission', 'as' => 'AjaxgetCommission']);
 
+Route::post('charges', ['uses' => 'ApplePayController@ajaxcharges', 'as' => 'charges']);
+
 });
 
 
