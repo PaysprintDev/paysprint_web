@@ -588,7 +588,7 @@ function runCommission(){
          */
         function getGooglePaymentsClient() {
           if ( paymentsClient === null ) {
-            paymentsClient = new google.payments.api.PaymentsClient({environment: 'TEST'});
+            paymentsClient = new google.payments.api.PaymentsClient({environment: 'PRODUCTION'});
           }
           return paymentsClient;
         }
