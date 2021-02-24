@@ -73,6 +73,7 @@ input[type="radio"] {
                             <!-- credit card info-->
                             <div id="credit-card" class="tab-pane fade show active pt-3">
                                 <form role="form" action="{{ route('receivemoneyProcess') }}" method="POST">
+                                    
 
                                     @csrf
                                     <input type="hidden" class="form-control" name="pay_id" id="pay_id" value="{{ $data->orgId }}">

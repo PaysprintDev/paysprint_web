@@ -32,11 +32,33 @@ class UserController extends Controller
 
         if($validator->passes()){
 
+            $ref_code = mt_rand(00000, 99999);
+
             $mycode = $this->getCountryCode($request->country);
 
+
+            // Get all ref_codes
+            $ref = User::all();
+
+            if(count($ref) > 0){
+                foreach($ref as $key => $value){
+                    if($value->ref_code == $ref_code){
+                        $newRefcode = mt_rand(000000, 999999);
+                    }
+                    else{
+                        $newRefcode = $ref_code;
+                    }
+                }
+            }
+            else{
+                $newRefcode = $ref_code;
+            }
+
+
             $user = User::create([
-                'ref_code' => $mycode[0]->callingCodes[0].'-'.mt_rand(00000, 99999),
+                'ref_code' => $mycode[0]->callingCodes[0].'-'.$newRefcode,
                 'name' => $request->firstname.' '.$request->lastname,
+                'code' => $mycode[0]->callingCodes[0],
                 'email' => $request->email,
                 'telephone' => $request->telephone,
                 'city' => $request->city,

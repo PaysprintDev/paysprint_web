@@ -68,7 +68,9 @@ input[type="radio"] {
                         <!-- Credit card form content -->
                         <div class="tab-content">
 
-                            @if (isset($data))
+                            @if (isset($data) && isset($data['paymentorg']))
+
+                            {{-- 234-90695 --}}
                                 
                             <!-- credit card info-->
                             <div id="credit-card" class="tab-pane fade show active pt-3">
@@ -79,6 +81,8 @@ input[type="radio"] {
                                     <input type="hidden" name="orgpayname" id="orgpayname" value="{{ $name }}"> 
 
                                     <input type="hidden" name="orgpayemail" id="orgpayemail" value="{{ $email }}">
+
+                                    <input type="hidden" name="code" id="code" value="{{ $data['currencyCode'][0]->callingCodes[0] }}">
 
                                     <input type="hidden" name="paymentToken" id="paymentToken" value="">
 
@@ -111,7 +115,6 @@ input[type="radio"] {
                                         </label>
                                         <div class="input-group"> 
                                             <select name="service" id="orgpayservice" class="form-control" required>
-                                                <option value="">Select Option</option>
                                                 <option value="Offering">Offering</option>
                                                 <option value="Tithe">Tithe</option>
                                                 <option value="Seed">Seed</option>
@@ -585,7 +588,7 @@ function runCommission(){
          */
         function getGooglePaymentsClient() {
           if ( paymentsClient === null ) {
-            paymentsClient = new google.payments.api.PaymentsClient({environment: 'PRODUCTION'});
+            paymentsClient = new google.payments.api.PaymentsClient({environment: 'TEST'});
           }
           return paymentsClient;
         }

@@ -13,7 +13,8 @@
         "lcobucci/jwt": "3.3.3",
         "rap2hpoutre/fast-excel": "^1.7",
         "rap2hpoutre/laravel-log-viewer": "^1.7",
-        "spatie/laravel-permission": "^2.29"
+        "spatie/laravel-permission": "^2.29",
+        "braintree/braintree_php" : "5.5.0"
     },
     "require-dev": {
         "filp/whoops": "^2.0",

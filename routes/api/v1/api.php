@@ -40,6 +40,20 @@ Route::prefix('/v1')->group(function () {
     Route::post('profile',  ['uses' => 'api\v1\UserController@updateProfile'])->name('update profile');
 
 
+    Route::post('sendmoney',  ['uses' => 'api\v1\MoneyTransferController@sendMoney'])->name('send money');
+
+
+    Route::post('receivemoney',  ['uses' => 'api\v1\MoneyTransferController@receiveMoney'])->name('receive money');
+
+
+    Route::get('getreceiver',  ['uses' => 'api\v1\MoneyTransferController@getReceiver'])->name('get receiver');
+
+    Route::get('getsender',  ['uses' => 'api\v1\MoneyTransferController@getSender'])->name('get sender');
+
+
+    Route::get('commissionfee',  ['uses' => 'api\v1\MoneyTransferController@commissionFee'])->name('commission fee');
+
+
     });
 
 });

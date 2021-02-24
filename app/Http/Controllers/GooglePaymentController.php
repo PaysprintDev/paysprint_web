@@ -41,6 +41,32 @@ use App\ReceivePay as ReceivePay;
 
 class GooglePaymentController extends Controller
 {
+
+
+    public $to;
+    public $name;
+    public $email;
+    public $transaction_date;
+    public $invoice_no;
+    public $payee_ref_no;
+    public $transaction_ref;
+    public $description;
+    public $payment_due_date;
+    public $amount;
+    public $address;
+    public $clientname;
+    public $subject;
+    public $paypurpose;
+    public $service;
+    public $city;
+    public $state;
+    public $zipcode;
+    public $coy_name;
+    public $url = "https://exbc.ca/api/v1/points/earnpoint";
+    // public $url = "http://localhost:4000/api/v1/points/earnpoint";
+    public $curl_data;
+
+
     public function orgPaymentInvoice(Request $req){
 
     // Get User Info
