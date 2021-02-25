@@ -54,6 +54,14 @@ Route::prefix('/v1')->group(function () {
     Route::get('commissionfee',  ['uses' => 'api\v1\MoneyTransferController@commissionFee'])->name('commission fee');
 
 
+
+    Route::get('getallstatement',  ['uses' => 'api\v1\StatementController@getAllStatement'])->name('get all statement');
+
+
+    Route::get('getstatementbydate',  ['uses' => 'api\v1\StatementController@getStatementByDate'])->name('get statement by date');
+
+
+
     });
 
 });

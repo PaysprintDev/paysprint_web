@@ -1584,6 +1584,7 @@ class HomeController extends Controller
 
     public function getmystatement(Request $req){
 
+        
 
 
         $from = $req->start_date;
