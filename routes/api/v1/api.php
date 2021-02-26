@@ -61,6 +61,18 @@ Route::prefix('/v1')->group(function () {
     Route::get('getstatementbydate',  ['uses' => 'api\v1\StatementController@getStatementByDate'])->name('get statement by date');
 
 
+    Route::get('getallinvoice',  ['uses' => 'api\v1\InvoiceController@getAllInvoices'])->name('get all invoices');
+
+
+    Route::get('getspecificinvoice',  ['uses' => 'api\v1\InvoiceController@getSpecificInvoices'])->name('get specific invoices');
+
+
+    Route::get('getinvoicebyservice',  ['uses' => 'api\v1\InvoiceController@getInvoiceByService'])->name('get invoice by service');
+
+
+    Route::get('notification',  ['uses' => 'api\v1\NotificationController@getNotifications'])->name('get notification');
+
+
 
     });
 
