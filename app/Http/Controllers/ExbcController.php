@@ -53,48 +53,49 @@ class ExbcController extends Controller
     }
 
     public function index(Request $req){
+        // return 1;
     // dd(12);
     // return $this->returnJSON($req->all());
     // return $req->action;
     
     // if($this->valid != 0)
     // {
-        // return 1;
+        
         //Proceed
         switch($req->action){
             case 'fetch_all':
-                return $this->returnJSON($this->getUser($req->email, $req->platform, $req->username, $req->firstname, $req->lastname, $req->address, $req->city, $req->province, $req->country, $req->postal_code, $req->ref_code, $req->accountType, $req->password, $req->companyname, $req->phone, $req->card_balance));
+                return $this->returnJSON($this->getUser($req->email, $req->platform, $req->username, $req->firstname, $req->lastname, $req->address, $req->city, $req->province, $req->country, $req->postal_code, $req->ref_code, $req->accountType, $req->password, $req->companyname, $req->phone, $req->card_balance), 200);
                 
-                return $this->returnJSON($this->getstatement($req->email, $req->platform, $req->username, $req->ref_code, $req->accountType, $req->start_date, $req->end_date));
+                return $this->returnJSON($this->getstatement($req->email, $req->platform, $req->username, $req->ref_code, $req->accountType, $req->start_date, $req->end_date), 200);
             break;
 
             case 'rpm_tenant':
 
 
-                return $this->returnJSON($this->getRPM($req->email, $req->platform, $req->username, $req->firstname, $req->lastname, $req->address, $req->city, $req->province, $req->country, $req->postal_code, $req->ref_code, $req->accountType, $req->password, $req->companyname, $req->phone, $req->card_balance));
+                return $this->returnJSON($this->getRPM($req->email, $req->platform, $req->username, $req->firstname, $req->lastname, $req->address, $req->city, $req->province, $req->country, $req->postal_code, $req->ref_code, $req->accountType, $req->password, $req->companyname, $req->phone, $req->card_balance), 200);
             break;
 
             case 'rpm_property_owner':
-                return $this->returnJSON($this->getRPM($req->email, $req->platform, $req->username, $req->firstname, $req->lastname, $req->address, $req->city, $req->province, $req->country, $req->postal_code, $req->ref_code, $req->accountType, $req->password, $req->companyname, $req->phone, $req->card_balance));
+                return $this->returnJSON($this->getRPM($req->email, $req->platform, $req->username, $req->firstname, $req->lastname, $req->address, $req->city, $req->province, $req->country, $req->postal_code, $req->ref_code, $req->accountType, $req->password, $req->companyname, $req->phone, $req->card_balance), 200);
             break;
 
             case 'rpm_service_provider':
-                return $this->returnJSON($this->getRPM($req->email, $req->platform, $req->username, $req->firstname, $req->lastname, $req->address, $req->city, $req->province, $req->country, $req->postal_code, $req->ref_code, $req->accountType, $req->password, $req->companyname, $req->phone, $req->card_balance));
+                return $this->returnJSON($this->getRPM($req->email, $req->platform, $req->username, $req->firstname, $req->lastname, $req->address, $req->city, $req->province, $req->country, $req->postal_code, $req->ref_code, $req->accountType, $req->password, $req->companyname, $req->phone, $req->card_balance), 200);
             break;
 
 
             case 'getstatement':
                 
-                return $this->returnJSON($this->getstatement($req->email, $req->platform, $req->username, $req->ref_code, $req->accountType, $req->start_date, $req->end_date));
+                return $this->returnJSON($this->getstatement($req->email, $req->platform, $req->username, $req->ref_code, $req->accountType, $req->start_date, $req->end_date), 200);
             break;
 
             case 'getinvoice':
                 
-                return $this->returnJSON($this->getinvoice($req->email, $req->platform, $req->invoice_no));
+                return $this->returnJSON($this->getinvoice($req->email, $req->platform, $req->invoice_no), 200);
             break;
 
             default:
-                return $this->returnJSON($req->all());
+                return $this->returnJSON($req->all(), 200);
                 break;
         }
     // }
@@ -107,6 +108,7 @@ class ExbcController extends Controller
     
         
         public function getUser($email, $platform, $username, $firstname, $lastname, $address, $city, $state, $country, $postal_code, $ref_code, $accountType, $password, $companyname, $phone, $card_balance){
+            
             // return($ref_code);
             
             // return $platform;

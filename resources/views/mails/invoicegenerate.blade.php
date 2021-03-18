@@ -351,7 +351,7 @@
                               <table border="0" cellpadding="30" cellspacing="0" width="100%">
                                 <tbody><tr>
                                   <td align="center" valign="top" class="textContent">
-                                    <h1 style="color:#000;line-height:100%;font-family:Helvetica,Arial,sans-serif;font-size:35px;font-weight:normal;margin-bottom:5px;text-align:center;"><img src="https://res.cloudinary.com/pilstech/image/upload/v1602675914/paysprint_with_name_black_and_yellow_png_ur7bli.png" style="width: 100px; height: 100px;"></h1><br>
+                                    <h1 style="color:#000;line-height:100%;font-family:Helvetica,Arial,sans-serif;font-size:35px;font-weight:normal;margin-bottom:5px;text-align:center;"><img src="https://res.cloudinary.com/pilstech/image/upload/v1602675914/paysprint_with_name_black_and_yellow_png_ur7bli.png" style="height: 100px;"></h1><br>
                                   </td>
                                 </tr>
                               </tbody></table>

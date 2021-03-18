@@ -21,7 +21,11 @@
 </IfModule>
 RewriteCond %{HTTPS} off
 RewriteCond %{HTTP:X-Forwarded-SSL} !on
-RewriteCond %{HTTP_HOST} ^paysprint\.exbc\.ca$ [OR]
-RewriteCond %{HTTP_HOST} ^www\.paysprint\.exbc\.ca$
-RewriteRule ^/?$ "https\:\/\/paysprint\.exbc\.ca\/" [R=301,L]
+RewriteCond %{HTTP_HOST} ^paysprint\.net$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.paysprint\.net$
+RewriteRule ^/?$ "https\:\/\/paysprint\.net\/" [R=301,L]
+
+#PHP Version Upgrade
+AddHandler application/x-httpd-php74 .php
+
 

@@ -126,17 +126,13 @@ body::-webkit-scrollbar-thumb:hover {
                             </ul>
                         </li> --}}
 
+                        
                         <li class="dropdown submenu">
-                            <a href="#">Services</a>
+                            <a href="{{ route('about') }}">About Us</a>
                         </li>
+                        
                         <li class="dropdown submenu">
-                            <a href="#">About Us</a>
-                        </li>
-                        <li class="dropdown submenu">
-                            <a href="#">What We Offer</a>
-                        </li>
-                        <li class="dropdown submenu">
-                            <a href="#">Contact</a>
+                            <a href="{{ route('contact') }}">Contact</a>
                         </li>
 
                         <li class="dropdown submenu">
@@ -178,7 +174,7 @@ body::-webkit-scrollbar-thumb:hover {
                         <select class="form-control input_box" style="color: #000 !important;" name="services" id="services">
                             <option value="">--Select type of Service--</option>
                             <option value="User">User</option>
-                            <option value="Client">Client</option>
+                            <option value="Client">Merchant</option>
                         </select>
 
                     <div class="indForm animated fadeIn choice disp-0">

@@ -185,7 +185,7 @@ Route::post('contactus', ['uses' => 'HomeController@contactus', 'as' => 'contact
 
 
 // Logout
-Route::get('logout', 'LoginController@logout');
+// Route::get('logout', 'LoginController@logout');
 
 
 // Setup Billing

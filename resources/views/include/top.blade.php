@@ -9,13 +9,13 @@
                 @if($name == '')
 
                 <li>
-                    <a href="https://exbc.ca/login">
+                    <a href="{{ route('login') }}">
                        {{ __('Login') }}
                     </a>
                 </li>
 
                 <li>
-                    <a href="https://exbc.ca/Newaccount">
+                    <a href="{{ route('register') }}">
                        {{ __('Register') }}
                     </a>
                 </li>
@@ -110,12 +110,12 @@
                         </li>
 
                         <li class="dropdown submenu">
-                            {{-- <a href="{{ route('login') }}">Login</a> --}}
-                            <a href="https://exbc.ca/login">Login</a>
+                            <a href="{{ route('login') }}">Login</a>
+                            {{-- <a href="https://exbc.ca/login">Login</a> --}}
                         </li>
                         <li class="dropdown submenu">
-                            {{-- <a href="{{ route('register') }}">Sign Up for FREE</a> --}}
-                            <a href="https://exbc.ca/Newaccount">Sign Up for FREE</a>
+                            <a href="{{ route('register') }}">Sign Up for FREE</a>
+                            {{-- <a href="https://exbc.ca/Newaccount">Sign Up for FREE</a> --}}
                         </li>
 
                         @else
@@ -163,7 +163,7 @@
                             
                             <ul class="dropdown-menu other_dropdwn">
                                 <li><a href="{{ route('profile') }}">Profile detail</a></li>
-                                <li><a href="https://exbc.ca/Product">Goto EXBC</a></li>
+                                {{-- <li><a href="https://exbc.ca/Product">Goto EXBC</a></li> --}}
                                 <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</a></li>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     @csrf

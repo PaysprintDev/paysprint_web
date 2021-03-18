@@ -42,9 +42,9 @@ class LoginController extends Controller
     }
 
 
-    public function logout(Request $request) {
-        Auth::logout();
-        Session::flush();
-        return redirect()->away('https://exbc.ca');
-      }
+    // public function logout(Request $request) {
+    //     Auth::logout();
+    //     Session::flush();
+    //     return redirect()->away('https://exbc.ca');
+    //   }
 }
