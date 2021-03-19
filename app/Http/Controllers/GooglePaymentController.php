@@ -109,7 +109,7 @@ class GooglePaymentController extends Controller
             $service = $req->purpose;
         }
 
-        $insertPay = OrganizationPay::insert(['transactionid' => $req->paymentToken, 'coy_id' => $req->user_id, 'user_id' => $userID, 'purpose' => $service, 'amount' => $req->amount, 'withdraws' => $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $req->amounttosend, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission]);
+        $insertPay = OrganizationPay::insert(['transactionid' => $req->paymentToken, 'coy_id' => $req->user_id, 'user_id' => $userID, 'purpose' => $service, 'amount' => $req->amount, 'withdraws' => $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $req->amounttosend, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission, 'amountindollars' => $req->conversionamount]);
 
         if($insertPay == true){
             // Send mail to both parties

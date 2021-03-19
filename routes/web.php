@@ -252,6 +252,8 @@ Route::post('getCommission', ['uses' => 'HomeController@ajaxgetCommission', 'as'
 
 Route::post('charges', ['uses' => 'ApplePayController@ajaxcharges', 'as' => 'charges']);
 
+Route::post('getconversion', ['uses' => 'CurrencyConverterApiController@currencyConvert', 'as' => 'getconversion']);
+
 });
 
 

@@ -390,7 +390,7 @@
                                         <td valign="top" class="textContent">
                                           <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:left;">Hello {{ $maildata->name }},</h3>
 
-<br /><b>{{ $maildata->clientname }}</b> sent you an invoice on PaySprint. <br><br> <b>Below are the details:</b>
+<br /><br> <b>You have an invoice for payment on PaySprint. Below are the details:</b>
 <br /><br />
 
  <table>
@@ -457,17 +457,21 @@
 
 <br />
 
-<p>Payment can be made on <a href="https://exbc.ca/login" style="color: navy; font-weight: bold;">EXBC</a></p>. Click <a href="https://exbc.ca/login" style="color: navy; font-weight: bold;">here</a> to login or open an account<br>
 
-<h4>HOW TO PAY INVOICE</h4><hr>
-<p>1. Login / Register on <a href="https://exbc.ca/login">EXBC</a></p>
-<p>2. Goto Product page</p>
-<p>3. On Consumer Services Menu</p>
-<p>4. Click on Bulk Invoicing & Payments</p>
-<p>5. Click on proceed to site</p>
-<p>6. You are redirected to PaySprint platform</p>
-<p>7. On page redirection to PaySprint platform, click on the Invoice menu, and proceed to payment. </p>
 
+<h4>Pay Invoice by following these steps on PaySprint:</h4><hr>
+<p>a. Click the link beklow to download Paysprint Mobile App on Google Play Store or App Store or visit <a href="{{ route('home') }}">www.paysprint.net</a> to open an account</p>
+<p>b. Click on Invoince menu and go to "View Invoice"</p>
+<p>c. Type this invoice reference number menu to view invoice details</p>
+<p>d. Click on Pay Invoice link to make payment from your PaySprint Wallet or from a Credit/Debit card or Bank Account</p>
+
+
+<p>
+  PaySprint provides fastest money transfer and invoice payment solution. 
+Download PaySprint App today on <img src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/google-play-soon_miudnn.png" alt="Play Store" style="width: 150px;"> <img src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/Coming_Soon_to_the_App_Store_izz7ir.png" alt="App Store" style="width: 150px;">
+Visit our website, <a href="{{ route('home') }}">www.paysprint.net</a> to open an Merchant account.
+</p>
+<br>
 
 Best <br><br>
 PaySprint Support Team.<br>

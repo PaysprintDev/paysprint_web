@@ -245,7 +245,11 @@ class HomeController extends Controller
             $this->email = session('email');
         }
 
-        $data = $this->getthispayment($id);
+
+        $data = array(
+            'getpay' => $this->getthispayment($id),
+            'currencyCode' => $this->getCurrencyCode($this->myLocation()->country)
+        );
 
         // dd($data);
 
@@ -255,7 +259,7 @@ class HomeController extends Controller
     public function getthispayment($id){
 
         $data = DB::table('organization_pay')
-        ->select(DB::raw('organization_pay.id as orgId, organization_pay.purpose, organization_pay.amount_to_send, users.*'))
+        ->select(DB::raw('organization_pay.id as orgId, organization_pay.purpose, organization_pay.amount_to_send, organization_pay.amountindollars, users.*'))
         ->join('users', 'organization_pay.payer_id', '=', 'users.ref_code')->where('organization_pay.id', $id)->where('organization_pay.request_receive', '!=', 2)->first();
 
         return $data;
@@ -1668,11 +1672,11 @@ class HomeController extends Controller
                 ->join('users', 'organization_pay.payer_id', '=', 'users.ref_code')->
                 where('organization_pay.payer_id', $req->user_id)->orWhere('organization_pay.payer_id', $req->code.'-'.$req->user_id)->where('organization_pay.coy_id', Auth::user()->ref_code)->where('organization_pay.state', 1)->where('organization_pay.request_receive', '!=', 2)->get();
 
+
                 
 
-                if(isset($data)){
+                if(count($data) > 0){
                     // Get Sender Details
-
 
                     $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($data), 'title' => 'Good'];
                 }
@@ -1683,26 +1687,29 @@ class HomeController extends Controller
             }
             else{
                             // Get Users
-                $data = User::where('ref_code', $req->user_id)->orWhere('ref_code', $req->code.'-'.$req->user_id)->first();
+                $data = User::where('ref_code', $req->user_id)->orWhere('ref_code', $req->code.'-'.$req->user_id)->get();
 
-                // Get Organization
-                // $orgDetail = ClientInfo::where('user_id', $req->user_id)->get();
-
-                // if(count($orgDetail) > 0){
-
-                //     $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($orgDetail), 'title' => 'Good'];
-                // }
-                // else{
-                //     $resData = ['res' => 'Organization information not found', 'message' => 'error'];
-                // }
-
-
-                if(isset($data)){
+                
+                if(count($data) > 0){
 
                     $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($data), 'title' => 'Good'];
                 }
                 else{
+
+                    // Get Users
+                    $result = User::where('name', 'LIKE', '%'.$req->user_id.'%')->where('name', 'NOT LIKE', '%'.Auth::user()->name.'%')->get();
+
+
+
+                    if(count($result)){
+
+                        $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($result), 'title' => 'Good'];
+                    }
+                    else{
                     $resData = ['res' => 'Receiver not found', 'message' => 'error'];
+
+                    }
+
                 }
             }
 
@@ -2050,7 +2057,7 @@ class HomeController extends Controller
 
         
 
-        $resData = ['data' => number_format($amountReceive, 2), 'message' => 'success', 'state' => $state, 'collection' => number_format($collection, 2)];
+        $resData = ['data' => $amountReceive, 'message' => 'success', 'state' => $state, 'collection' => $collection];
 
         return $this->returnJSON($resData, 200);
 

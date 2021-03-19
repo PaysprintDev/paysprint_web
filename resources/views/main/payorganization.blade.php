@@ -315,7 +315,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-6">
-                                                <label for="orgInfo">Enter receivers account number</label>
+                                                <label for="orgInfo">Enter receivers account number or name</label>
                                                     <input type="text" name="orgInfo" class="form-control billinginput_box" id="orgInfo" placeholder="8172">
         
                                             </div>
@@ -330,7 +330,7 @@
         
                                         <div class="row">
                                             <div class="col-md-9">
-                                                <label for="orgInfo">Enter receivers account number</label>
+                                                <label for="orgInfo">Enter receivers account number or name</label>
                                                     <input type="text" name="orgInfo" class="form-control billinginput_box" id="orgInfo" placeholder="8172">
         
                                             </div>
@@ -356,7 +356,7 @@
                                                     <tr>
                                                         <th>Name</th>
                                                         <th>Address</th>
-                                                        <th>Corporate Type</th>
+                                                        <th>Account No.</th>
                                                         <th>City</th>
                                                         <th>State</th>
                                                         <th>Country</th>

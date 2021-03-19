@@ -154,8 +154,6 @@ input[type="radio"] {
                                         <div class="input-group"> 
                                             <select name="currency" id="currency" class="form-control">
                                                 <option value="{{ $data['currencyCode'][0]->currencies[0]->code }}" selected>{{ $data['currencyCode'][0]->currencies[0]->code }}</option>
-                                                <option value="CAD">CAD</option>
-                                                <option value="USD">USD</option>
                                             </select>
                                             
                                         </div>
@@ -175,6 +173,7 @@ input[type="radio"] {
                                     </div>
                                 </div>
 
+
                                 <div class="form-group"> <label for="netwmount">
                                     <h6>Net Amount <br><small class="text-success"><b>This is the total amount to be sent to the receiver</b></small></h6>
                                 </label>
@@ -191,6 +190,21 @@ input[type="radio"] {
                                     <input type="hidden" name="totalcharge" class="form-control" id="totalcharge" value="" placeholder="0.00" readonly>
 
                                 </div>
+                            </div>
+
+                            <div class="form-group"> <label for="netwmount">
+                                    <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small></h6>
+                                    <p style="font-weight: bold;">
+                                        {{ $data['currencyCode'][0]->currencies[0]->code }} <=> USD
+                                    </p>
+                                </label>
+                                <div class="input-group"> 
+                                    <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <span class="text-danger">Please note that International transfer are sent in USD conversion</span>
                             </div>
 
 
@@ -427,23 +441,27 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-success');
                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: "+$('#orgpayamount').val()+" will be charged from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+$('#orgpayamount').val()+" will be charged from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
 
                     $("#totalcharge").val($('#orgpayamount').val());
+
+                    currencyConvert($('#orgpayamount').val());
                 }
                 else{
 
                     $('.commissionInfo').addClass('alert alert-danger');
                     $('.commissionInfo').removeClass('alert alert-success');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: "+(+result.data + +result.collection)+" will be charged from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+(+result.data + +result.collection)+" will be charged from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
                     $("#totalcharge").val((+result.data + +result.collection));
+
+                    currencyConvert((+result.data + +result.collection));
 
                 }
 
@@ -457,6 +475,35 @@ function runCommission(){
 
     });
     }
+}
+
+function currencyConvert(amount){
+
+    $("#conversionamount").val("");
+
+    var currency = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
+    var route = "{{ URL('Ajax/getconversion') }}";
+    var thisdata = {currency: currency, amount: amount, val: "send"};
+
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: thisdata,
+        dataType: 'JSON',
+        success: function(result){
+
+            if(result.message == "success"){
+                $("#conversionamount").val(result.data);
+            }
+            else{
+                $("#conversionamount").val("");
+            }
+
+
+        }
+
+    });
 }
 
 // GPay Starts

@@ -390,7 +390,7 @@
                                         <td valign="top" class="textContent">
                                           <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:left;">Hello {{ $maildata->coy_name }},</h3>
 
-<br /><b>{{ $maildata->name }}</b> just made payment on PaySprint. <br><br> <b>Below are the user details:</b>
+<br /><br> <b>We have a payment for you from:</b>
 <br /><br />
 Name: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $maildata->name }} <br><br>
 
@@ -399,6 +399,13 @@ Amount #: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $maild
 Purpose: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $maildata->paypurpose }} <br><br>
 
 <br />
+
+<p>
+  PaySprint provides fastest money transfer and invoice payment solution. 
+Download PaySprint App today on <img src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/google-play-soon_miudnn.png" alt="Play Store" style="width: 150px;"> <img src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/Coming_Soon_to_the_App_Store_izz7ir.png" alt="App Store" style="width: 150px;">
+Visit our website, <a href="{{ route('home') }}">www.paysprint.net</a> to open an Merchant account.
+</p>
+
 
 Best <br><br>
 PaySprint Support Team.<br>

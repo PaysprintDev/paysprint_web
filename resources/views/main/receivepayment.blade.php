@@ -76,24 +76,24 @@ input[type="radio"] {
                                     
 
                                     @csrf
-                                    <input type="hidden" class="form-control" name="pay_id" id="pay_id" value="{{ $data->orgId }}">
-                                    <input type="hidden" class="form-control" name="sender_id" id="sender_id" value="{{ $data->ref_code }}">
+                                    <input type="hidden" class="form-control" name="pay_id" id="pay_id" value="{{ $data['getpay']->orgId }}">
+                                    <input type="hidden" class="form-control" name="sender_id" id="sender_id" value="{{ $data['getpay']->ref_code }}">
                                     <input type="hidden" class="form-control" name="receiver_id" id="receiver_id" value="{{ Auth::user()->ref_code }}">
 
                                     <div class="form-group">
                                         <div class="alert alert-info">
                                             <ul>
                                                 <li>
-                                                    Sender's Name: <b>{{ $data->name }}</b>
+                                                    Sender's Name: <b>{{ $data['getpay']->name }}</b>
                                                 </li>
                                                 <li>
-                                                    Address: <b>{{ $data->address }}</b>
+                                                    Address: <b>{{ $data['getpay']->address }}</b>
                                                 </li>
                                                 <li>
-                                                    City: <b>{{ $data->city }}</b> | State/Province: <b>{{ $data->state }}</b>
+                                                    City: <b>{{ $data['getpay']->city }}</b> | State/Province: <b>{{ $data['getpay']->state }}</b>
                                                 </li>
                                                 <li>
-                                                    Country: <b>{{ $data->country }}</b>
+                                                    Country: <b>{{ $data['getpay']->country }}</b>
                                                 </li>
                                             </ul>
                                         </div>
@@ -108,7 +108,7 @@ input[type="radio"] {
                                             <h6>Purpose of Payment</h6>
                                         </label>
                                         <div class="input-group"> 
-                                            <input type="text" name="purpose" id="purpose" value="{{ $data->purpose }}" readonly class="form-control">
+                                            <input type="text" name="purpose" id="purpose" value="{{ $data['getpay']->purpose }}" readonly class="form-control">
                                         </div>
                                     </div>
 
@@ -119,7 +119,8 @@ input[type="radio"] {
                                         </label>
                                         <div class="input-group"> 
                                             <select name="payment_method" id="payment_method" class="form-control" required>
-                                                <option value="Bank">Direct Bank Transfer</option>
+                                                {{--  <option value="Bank">Direct Bank Transfer</option>  --}}
+                                                <option value="Bank">My Wallet</option>
                                                 <option value="EXBC Card">EXBC Card</option>
                                             </select>
                                             
@@ -135,8 +136,7 @@ input[type="radio"] {
                                         </label>
                                         <div class="input-group"> 
                                             <select name="currency" id="currency" class="form-control">
-                                                <option value="CAD">CAD</option>
-                                                <option value="USD">USD</option>
+                                                <option value="{{ $data['currencyCode'][0]->currencies[0]->code }}" selected>{{ $data['currencyCode'][0]->currencies[0]->code }}</option>
                                             </select>
                                             
                                         </div>
@@ -145,12 +145,28 @@ input[type="radio"] {
                                     
 
                                     <div class="form-group"> <label for="amount_to_receive">
-                                            <h6>Amount to Receive</h6>
+                                            <h6>Amount to Receive (USD)</h6>
                                         </label>
-                                        <div class="input-group"> <input type="number" name="amount_to_receive" id="amount_to_receive" value="{{ $data->amount_to_send }}" class="form-control" maxlength="16" readonly>
+                                        <div class="input-group"> <input type="text" name="amount_to_receive" id="amount_to_receive" value="{{ $data['getpay']->amountindollars }}" class="form-control" maxlength="16" readonly>
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fas fa-money-check mx-1"></i> <i class="fab fa-cc-mastercard mx-1"></i> <i class="fab fa-cc-amex mx-1"></i> </span> </div>
                                         </div>
                                     </div>
+
+
+                                    <div class="form-group"> <label for="netwmount">
+                                            <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small></h6>
+                                            <p style="font-weight: bold;">
+                                                USD <=> {{ $data['currencyCode'][0]->currencies[0]->code }}
+                                            </p>
+                                        </label>
+                                        <div class="input-group"> 
+                                            <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                            <span class="text-danger" style="font-weight: 800">International transfers are received in USD{{ $data['currencyCode'][0]->currencies[0]->code }} rates</span>
+                                        </div>
                                     
                                     <div class="bank_info">
                                         <hr>
@@ -242,6 +258,8 @@ input[type="radio"] {
         $(document).ready(function(){
 
             $('#orgpaycreditcard').attr('value', '0');
+            // Run Ajax
+            currencyConvert();
         });
 
         $("#payment_method").change(function(){
@@ -268,6 +286,46 @@ input[type="radio"] {
 
             }
         });
+
+
+        function currencyConvert(){
+
+        $("#conversionamount").val("");
+
+        var currency = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
+        var route = "{{ URL('Ajax/getconversion') }}";
+        var thisdata = {currency: currency, amount: $("#amount_to_receive").val(), val: "receive"};
+
+            setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: thisdata,
+            dataType: 'JSON',
+            success: function(result){
+
+                if(result.message == "success"){
+                    $("#conversionamount").val(result.data);
+                }
+                else{
+                    $("#conversionamount").val("");
+                }
+
+
+            }
+
+        });
+    }
+
+        //Set CSRF HEADERS
+    function setHeaders(){
+    jQuery.ajaxSetup({
+      headers: {
+          'X-CSRF-TOKEN': "{{csrf_token()}}"
+      }
+    });
+ }
+
     </script>
 
   </body>

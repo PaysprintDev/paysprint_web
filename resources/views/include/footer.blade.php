@@ -833,7 +833,9 @@ $('#installmental').change(function(){
 });
 
 
+
 function checkDetail(val){
+
 
     $('tbody#recorgRec').html("");
 
@@ -864,6 +866,9 @@ function checkDetail(val){
                         var datainfo = "";
                         var datarec;
                         var res = JSON.parse(result.data);
+
+                        // console.log(res);
+
 
                         $.each(res, function(v, k){
                            var datarec = "<tr><td>"+k.name+"</td><td>"+k.address+"</td><td>"+k.city+"</td><td>"+k.state+"</td><td>"+k.country+"</td><td>"+k.amount_to_send+"</td><td><button class='btn btn-primary' onclick=receiveMoney('"+k.orgId+"')>Receive Money</button></td></tr>";
@@ -911,10 +916,29 @@ function checkDetail(val){
 
                     if(result.message == "success"){
                         var res = JSON.parse(result.data);
+
+                        // console.log(res);
+
                         // Result
                         // $('tbody#orgRec').html("<tr><td>"+res[0].business_name+"</td><td>"+res[0].address+"</td><td>"+res[0].corporate_type+"</td><td>"+res[0].city+"</td><td>"+res[0].state+"</td><td>"+res[0].country+"</td><td><button class='btn btn-primary' onclick=payOrg('"+res[0].user_id+"')>Send Money</button></td></tr>");
 
-                        $('tbody#orgRec').html("<tr><td>"+res.name+"</td><td>"+res.address+"</td><td>"+res.corporationType+"</td><td>"+res.city+"</td><td>"+res.state+"</td><td>"+res.country+"</td><td><button class='btn btn-primary' onclick=payOrg('"+res.ref_code+"')>Send Money</button></td></tr>");
+
+                        var datainfo = "";
+                        var datarec;
+
+
+                        $.each(res, function(v, k){
+                           datarec = "<tr><td>"+k.name+"</td><td>"+k.address+"</td><td>"+k.ref_code+"</td><td>"+k.city+"</td><td>"+k.state+"</td><td>"+k.country+"</td><td><button class='btn btn-primary' onclick=payOrg('"+k.ref_code+"')>Send Money</button></td></tr>";
+
+                           datainfo += datarec;
+                        });
+
+                        
+
+                        $('tbody#orgRec').html(datainfo);
+
+
+                        // $('tbody#orgRec').html("<tr><td>"+res.name+"</td><td>"+res.address+"</td><td>"+res.ref_code+"</td><td>"+res.city+"</td><td>"+res.state+"</td><td>"+res.country+"</td><td><button class='btn btn-primary' onclick=payOrg('"+res.ref_code+"')>Send Money</button></td></tr>");
                     }
                     else{
                         $('tbody#orgRec').html("<tr><td colspan='7' align='center'>"+result.res+"</td></tr>");
@@ -955,10 +979,30 @@ $('#orgInfo').change(function(){
 
                     if(result.message == "success"){
                         var res = JSON.parse(result.data);
+
+
                         // Result
                         // $('tbody#orgRec').html("<tr><td>"+res[0].business_name+"</td><td>"+res[0].address+"</td><td>"+res[0].corporate_type+"</td><td>"+res[0].city+"</td><td>"+res[0].state+"</td><td>"+res[0].country+"</td><td><button class='btn btn-primary' onclick=payOrg('"+res[0].user_id+"')>Send Money</button></td></tr>");
 
-                        $('tbody#orgRec').html("<tr><td>"+res.name+"</td><td>"+res.address+"</td><td>"+res.corporationType+"</td><td>"+res.city+"</td><td>"+res.state+"</td><td>"+res.country+"</td><td><button class='btn btn-primary' onclick=payOrg('"+res.ref_code+"')>Send Money</button></td></tr>");
+
+                        var datainfo = "";
+                        var datarec;
+
+                        // console.log(res);
+
+
+                        $.each(res, function(v, k){
+                           datarec = "<tr><td>"+k.name+"</td><td>"+k.address+"</td><td>"+k.ref_code+"</td><td>"+k.city+"</td><td>"+k.state+"</td><td>"+k.country+"</td><td><button class='btn btn-primary' onclick=payOrg('"+k.ref_code+"')>Send Money</button></td></tr>";
+
+                           datainfo += datarec;
+                        });
+
+                        
+
+                        $('tbody#orgRec').html(datainfo);
+
+
+                        // $('tbody#orgRec').html("<tr><td>"+res.name+"</td><td>"+res.address+"</td><td>"+res.ref_code+"</td><td>"+res.city+"</td><td>"+res.state+"</td><td>"+res.country+"</td><td><button class='btn btn-primary' onclick=payOrg('"+res.ref_code+"')>Send Money</button></td></tr>");
                     }
                     else{
                         $('tbody#orgRec').html("<tr><td colspan='7' align='center'>"+result.res+"</td></tr>");

@@ -1583,7 +1583,7 @@ class AdminController extends Controller
                 
 
                 $this->info = "Account is credited";
-                $this->message = 'We are glad to notify you that your withdrawal request of <b>$'.$req->amount.'</b> has been received. Your money is transferred to your EXBC account where you can withdraw to you EXBC Card. Thanks';
+                $this->message = 'We are glad to notify you that your withdrawal request of <b>$'.$req->amount.'</b> has been received. Your money has been  transferred to your PaySprint Wallet where you can withdraw by available method. Thanks';
 
                 $this->sendEmail($this->to, "Account is credited");
 
@@ -1629,7 +1629,7 @@ class AdminController extends Controller
 
 
 
-                $this->message = 'You request for funds withdrawal is being processed. You will receive fund through the payment option selected within the next 24 hours';
+                $this->message = 'Your request for funds withdrawal is being processed. You will receive fund through the payment option selected within the next 24 hours';
                 
                 // dd($this->to);
 

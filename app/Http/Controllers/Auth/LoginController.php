@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
+use App\User as User;
+
 class LoginController extends Controller
 {
     /*
@@ -39,6 +41,18 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+
+        $this->updateToken();
+
+    }
+
+    // Update Token
+    public function updateToken(){
+
+        $email = request()->input('email');
+
+        User::where()->update(['api_token' => uniqid().time().md5($email)]);
+        
     }
 
 

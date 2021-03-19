@@ -484,7 +484,7 @@ if($mpgResponse->responseData['Message'] == "APPROVED           *               
             $service = $req->purpose;
         }
 
-        $insertPay = OrganizationPay::insert(['transactionid' => $mpgResponse->responseData['ReceiptId'], 'coy_id' => $req->user_id, 'user_id' => $userID, 'purpose' => $service, 'amount' => $req->amount, 'withdraws' => $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $req->amounttosend, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission]);
+        $insertPay = OrganizationPay::insert(['transactionid' => $mpgResponse->responseData['ReceiptId'], 'coy_id' => $req->user_id, 'user_id' => $userID, 'purpose' => $service, 'amount' => $req->amount, 'withdraws' => $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $req->amounttosend, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission, 'amountindollars' => $req->conversionamount]);
 
         if($insertPay == true){
             // Send mail to both parties
@@ -605,7 +605,12 @@ else{
 public function receivemoneyProcess(Request $req){
 
     // Insert Record
-    $data = ReceivePay::updateOrInsert(['pay_id' => $req->pay_id], $req->all());
+    $data = ReceivePay::updateOrInsert(['pay_id' => $req->pay_id], ['_token' => $req->_token, 'pay_id' => $req->pay_id, 'sender_id' => $req->sender_id, 'receiver_id' => $req->receiver_id, 'payment_method' => $req->payment_method, 'account_number' => $req->account_number, 'accountname' => $req->accountname, 'amount_to_receive' => $req->conversionamount, 'bank_name' => $req->bank_name, 'creditcard_no' => $req->creditcard_no, 'currency' => $req->currency, 'purpose' => $req->purpose]);
+
+    // Update WALLET
+    $wallet = Auth::user()->wallet + $req->conversionamount;
+
+    User::where('api_token', Auth::user()->api_token)->update(['wallet_balance' => $wallet]);
 
     // Update OrganozationPay
 
