@@ -2055,9 +2055,21 @@ class HomeController extends Controller
 
         }
 
+
+        // Check if Wallet is chosen
+        $walletCheck = "";
+
+        if($req->pay_method == "Wallet"){
+            $wallet = Auth::user()->wallet_balance;
+
+            if($wallet < $req->amount){
+                $walletCheck = 'Wallet Balance: <strong>'.$wallet.'</strong>. Insufficient balance. <a href="#">Add money <i class="fa fa-plus" style="font-size: 15px;border-radius: 100%;border: 1px solid grey;padding: 3px;" aria-hidden="true"></i></a>';
+            }
+        }
+
         
 
-        $resData = ['data' => $amountReceive, 'message' => 'success', 'state' => $state, 'collection' => $collection];
+        $resData = ['data' => $amountReceive, 'message' => 'success', 'state' => $state, 'collection' => $collection, 'walletCheck' => $walletCheck];
 
         return $this->returnJSON($resData, 200);
 

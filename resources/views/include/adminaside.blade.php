@@ -106,6 +106,13 @@
           </ul>
         </li>
 
+        <li>
+          <a href="#">
+            <i class="fa fa-laptop"></i>
+            <span>Wallet Report</span>
+          </a>
+        </li>
+
         <li onclick="openModal('transactioncost')">
           <a href="#">
             <i class="fa fa-laptop"></i>

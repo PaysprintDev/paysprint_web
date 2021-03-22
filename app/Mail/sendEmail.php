@@ -46,7 +46,7 @@ class sendEmail extends Mailable
         return $this->subject($this->mail->purpose)->view('mails.bronchure')
                     ->with('maildata', $this->mail);
         }
-        elseif($this->mail->purpose == "Account is credited"){
+        elseif($this->mail->purpose == "Account is credited" || $this->mail->purpose == "Password Reset"){
         return $this->subject($this->mail->purpose)->view('mails.cardupdate')
                     ->with('maildata', $this->mail);
         }

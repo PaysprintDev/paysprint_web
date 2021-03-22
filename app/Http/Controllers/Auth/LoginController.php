@@ -42,18 +42,18 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
 
-        $this->updateToken();
+        // $this->updateToken();
 
     }
 
     // Update Token
-    public function updateToken(){
+    // public function updateToken(){
 
-        $email = request()->input('email');
+    //     $email = request()->input('email');
 
-        User::where()->update(['api_token' => uniqid().time().md5($email)]);
+    //     User::where()->update(['api_token' => uniqid().time().md5($email)]);
         
-    }
+    // }
 
 
     // public function logout(Request $request) {

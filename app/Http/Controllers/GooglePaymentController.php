@@ -109,9 +109,21 @@ class GooglePaymentController extends Controller
             $service = $req->purpose;
         }
 
-        $insertPay = OrganizationPay::insert(['transactionid' => $req->paymentToken, 'coy_id' => $req->user_id, 'user_id' => $userID, 'purpose' => $service, 'amount' => $req->amount, 'withdraws' => $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $req->amounttosend, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission, 'amountindollars' => $req->conversionamount]);
+        if($req->payment_method == "Wallet"){
+            $wallet_balance = Auth::user()->wallet_balance - $req->amount;
+            $paymentToken = "wallet-".date('dmY').time();
+        }
+        else{
+            $wallet_balance = Auth::user()->wallet_balance;
+            $paymentToken = $req->paymentToken;
+        }
+
+        $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $req->user_id, 'user_id' => $userID, 'purpose' => $service, 'amount' => $req->amount, 'withdraws' => $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $req->amounttosend, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission, 'amountindollars' => $req->conversionamount]);
 
         if($insertPay == true){
+
+            // Update Wallet
+            User::where('email', Auth::user()->email)->update(['wallet_balance' => $wallet_balance]);
             // Send mail to both parties
 
             // $this->to = "bambo@vimfile.com";
@@ -135,7 +147,7 @@ class GooglePaymentController extends Controller
             $activity = "Payment to ".$client->name." on ".$service;
             $credit = 0;
             $debit = $req->amount + $req->commissiondeduct;
-            $reference_code = $req->paymentToken;
+            $reference_code = $paymentToken;
             $balance = 0;
             $trans_date = date('Y-m-d');
             $status = "Pending";

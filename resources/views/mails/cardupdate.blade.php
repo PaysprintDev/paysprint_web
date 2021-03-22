@@ -259,7 +259,7 @@
                                 <tbody><tr>
                                   <td align="center" valign="top" class="textContent">
                                     <h1 style="color:#000;line-height:100%;font-family:Helvetica,Arial,sans-serif;font-size:35px;font-weight:normal;margin-bottom:5px;text-align:center;"><img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png" style="height: 100px"></h1><br>
-                                    <h2 style="text-align:center;font-weight:normal;font-family:Helvetica,Arial,sans-serif;font-size:23px;margin-bottom:10px;color: #1ab7dcc9;line-height:135%;font-weight: bold;">NEW ENQUIRY ON PAYSPRINT</h2>
+                                    <h2 style="text-align:center;font-weight:normal;font-family:Helvetica,Arial,sans-serif;font-size:23px;margin-bottom:10px;color: #1ab7dcc9;line-height:135%;font-weight: bold;">NEW MESSAGE ON PAYSPRINT</h2>
                                     
                                   </td>
                                 </tr>

@@ -1,3 +1,6 @@
+
+<html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -180,8 +183,17 @@ body::-webkit-scrollbar-thumb:hover {
 
                             <input type="password" name="password" id="loginpassword" class="form-control input_box" placeholder="Password *" required>
 
+
+
                             <button type="button" class="btn btn-default loginBtn" onclick="login()">Login</button>
                             <img src="https://cdn.dribbble.com/users/608059/screenshots/2032455/spinner.gif" class="spinner disp-0" style="width: auto; height: 50px;">
+
+                            @if (Route::has('password.request'))
+                                <a class="btn btn-link" href="{{ route('password.request') }}">
+                                    {{ __('Forgot Your Password?') }}
+                                </a>
+                            @endif
+
                         </div>
 
 

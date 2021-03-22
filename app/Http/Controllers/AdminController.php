@@ -195,6 +195,7 @@ class AdminController extends Controller
             $transCost = $this->transactionCost();
 
             $getwithdraw = $this->withdrawRemittance();
+            
             return view('admin.remittance')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost]);
         }
         else{
@@ -973,6 +974,8 @@ class AdminController extends Controller
 
         return view('admin.adminlogin');
     }
+
+
     public function adminregister(){
         return view('admin.adminregister');
     }

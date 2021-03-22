@@ -484,9 +484,21 @@ if($mpgResponse->responseData['Message'] == "APPROVED           *               
             $service = $req->purpose;
         }
 
+        if($req->payment_method == "Wallet"){
+            $wallet_balance = Auth::user()->wallet_balance - $req->amount;
+        }
+        else{
+            $wallet_balance = Auth::user()->wallet_balance;
+        }
+
+
         $insertPay = OrganizationPay::insert(['transactionid' => $mpgResponse->responseData['ReceiptId'], 'coy_id' => $req->user_id, 'user_id' => $userID, 'purpose' => $service, 'amount' => $req->amount, 'withdraws' => $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $req->amounttosend, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission, 'amountindollars' => $req->conversionamount]);
 
         if($insertPay == true){
+
+            // Update Wallet
+            User::where('email', Auth::user()->email)->update(['wallet_balance' => $wallet_balance]);
+
             // Send mail to both parties
 
             // $this->to = "bambo@vimfile.com";
@@ -610,13 +622,13 @@ public function receivemoneyProcess(Request $req){
     // Update WALLET
     $wallet = Auth::user()->wallet + $req->conversionamount;
 
-    User::where('api_token', Auth::user()->api_token)->update(['wallet_balance' => $wallet]);
+    User::where('email', Auth::user()->email)->update(['wallet_balance' => $wallet]);
 
     // Update OrganozationPay
 
     OrganizationPay::where('id', $req->pay_id)->update(['request_receive' => 1]);
 
-    $response = 'It may take up to two (2) business days for money to reflect in your '.$req->payment_method;
+    $response = 'Money successfully transferred to your '.$req->payment_method;
     $action = 'success';
 
     return redirect()->route('payorganization')->with($action, $response);

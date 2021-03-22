@@ -10,11 +10,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         xPAY Remittance Report
+         Money Transfer Report
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">xPAY Remittance Report</li>
+        <li class="active">Money Transfer Report</li>
       </ol>
     </section>
 
@@ -24,7 +24,7 @@
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">xPAY Remittance Report</h3>
+              <h3 class="box-title">Money Transfer Report</h3>
               <br>
               <div class="row">
                 <div class="col-md-12">

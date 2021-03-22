@@ -71,6 +71,19 @@
   <div class="login-box-body">
     <p class="login-box-msg">Sign in</p>
 
+    @if (session('success'))
+        <div class="alert alert-success">
+            <span style="font-size: 14px; text-align: center">{{ session('success') }}</span>
+        </div>
+
+    @elseif(session('error'))
+
+        <div class="alert alert-danger">
+            <span style="font-size: 14px; text-align: center">{{ session('error') }}</span>
+        </div>
+
+    @endif
+
     <form action="#" method="post">
       <div class="form-group has-feedback">
         <input type="username" id="username" class="form-control" placeholder="Username">
@@ -99,8 +112,8 @@
       </div>
     </form>
 
-    <a href="#">I forgot my password</a><br>
-    <a href="{{ route('AdminRegister') }}" class="text-center">Register</a>
+    <a href="{{ route('adminpasswordreset') }}">I forgot my password</a><br><br>
+    <a href="{{ route('AdminRegister') }}" class="text-center btn btn-danger btn-block" type="button">I don't have an account. Register</a>
 
   </div>
   <!-- /.login-box-body -->

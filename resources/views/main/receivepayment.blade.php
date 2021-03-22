@@ -13,6 +13,8 @@
 
 <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
 
+<script src="https://kit.fontawesome.com/384ade21a6.js"></script>
+
     <title>PaySprint | Receive Money</title>
 
     <style>
@@ -98,6 +100,21 @@ input[type="radio"] {
                                             </ul>
                                         </div>
 
+                                        <div class="alert alert-warning">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h4>
+                                                        Wallet Balance
+                                                    </h4>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <h4>
+                                                        {{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format(Auth::user()->wallet_balance, 2) }}
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         
                                     </div>
 
@@ -114,13 +131,13 @@ input[type="radio"] {
 
                                         
                                     
-                                    <div class="form-group"> <label for="payment_method">
+                                    <div class="form-group disp-0"> <label for="payment_method">
                                             <h6>Payment Method</h6>
                                         </label>
                                         <div class="input-group"> 
                                             <select name="payment_method" id="payment_method" class="form-control" required>
                                                 {{--  <option value="Bank">Direct Bank Transfer</option>  --}}
-                                                <option value="Bank">My Wallet</option>
+                                                <option value="Wallet">My Wallet</option>
                                                 <option value="EXBC Card">EXBC Card</option>
                                             </select>
                                             
@@ -168,7 +185,7 @@ input[type="radio"] {
                                             <span class="text-danger" style="font-weight: 800">International transfers are received in USD{{ $data['currencyCode'][0]->currencies[0]->code }} rates</span>
                                         </div>
                                     
-                                    <div class="bank_info">
+                                    <div class="bank_info disp-0">
                                         <hr>
                                             <h5 class="text-primary">Bank Information</h5>
                                             <hr>
@@ -177,7 +194,7 @@ input[type="radio"] {
                                                 <h6>Account Name</h6>
                                             </label>
                                             <div class="input-group"> 
-                                                <input type="text" name="accountname" id="accountname" placeholder="Bank Account Name" class="form-control" required>
+                                                <input type="text" name="accountname" id="accountname" placeholder="Bank Account Name" class="form-control" >
                                             </div>
                                         </div>
 
@@ -189,14 +206,14 @@ input[type="radio"] {
                                                 <h6>Account Number</h6>
                                             </label>
                                             <div class="input-group"> 
-                                                <input type="number" name="account_number" id="account_number" placeholder="Bank Account Number" class="form-control" required>
+                                                <input type="number" name="account_number" id="account_number" placeholder="Bank Account Number" class="form-control" >
                                             </div>
                                         </div>
                                             <div class="form-group"> <label for="bank_name">
                                                 <h6>Bank Name</h6>
                                             </label>
                                             <div class="input-group"> 
-                                                <input type="text" name="bank_name" id="bank_name" placeholder="Bank Name" class="form-control" required>
+                                                <input type="text" name="bank_name" id="bank_name" placeholder="Bank Name" class="form-control" >
                                             </div>
                                         </div>
                                     </div>
@@ -211,7 +228,7 @@ input[type="radio"] {
                                         <div class="form-group"> <label for="orgpaycreditcard">
                                                 <h6>Card number</h6>
                                             </label>
-                                            <div class="input-group"> <input type="number" name="creditcard_no" id="orgpaycreditcard" placeholder="5199 - 3924 - 2100 - 5430" class="form-control" maxlength="16" required>
+                                            <div class="input-group"> <input type="number" name="creditcard_no" id="orgpaycreditcard" placeholder="5199 - 3924 - 2100 - 5430" class="form-control" maxlength="16">
                                                 <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fab fa-cc-visa mx-1"></i> <i class="fab fa-cc-mastercard mx-1"></i> <i class="fab fa-cc-amex mx-1"></i> </span> </div>
                                             </div>
                                         </div>
@@ -220,7 +237,7 @@ input[type="radio"] {
 
                                     
                                     
-                                    <div class="card-footer"> <button type="submit" class="subscribe btn btn-primary btn-block shadow-sm"> Receive Payment </button>
+                                    <div class="card-footer"> <button type="submit" class="subscribe btn btn-primary btn-block shadow-sm"> Receive Money </button>
                                 </form>
                             </div>
 

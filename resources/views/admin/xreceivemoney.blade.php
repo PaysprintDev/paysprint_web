@@ -46,13 +46,12 @@
                 <tr>
                   <th>S/N</th>
                   <th>Trans. ID</th>
-                  <th>Paymt. From</th>
+                  <th>Payment By</th>
                   {{-- <th>Purpose</th> --}}
-                  <th>Amt. Sent</th>
-                  <th>Amt. to receive</th>
+                  <th>Amount Sent</th>
+                  <th>Amount to receive</th>
                   <th>Commission</th>
-                  <th>Pay. Method & Info</th>
-                  <th>Currency</th>
+                  <th>Pay. Method</th>
                   <th>Date</th>
                   <th>Status</th>
                   <th>Action</th>
@@ -87,20 +86,21 @@
 
                             {{-- <td>{{ $items->purpose }}</td> --}}
 
-                            <td style="color: green; font-weight: bold;" align="center">${{ number_format($items->amount, 2) }}</td>
+                            <td style="color: green; font-weight: bold;" align="center">{{ number_format($items->amount, 2) }}</td>
                             
-                            <td style="color: darkorange; font-weight: bold;" align="center">${{ number_format($items->amount_to_receive, 2) }}</td>
+                            <td style="color: darkorange; font-weight: bold;" align="center">{{ $items->currency." ".number_format($items->amount_to_receive, 2) }}</td>
 
-                            <td style="color: purple; font-weight: bold;" align="center">${{ number_format($items->commission, 2) }}</td>
+                            <td style="color: purple; font-weight: bold;" align="center">{{ number_format($items->commission, 2) }}</td>
 
                             <td>
-                                <p style="color: darkorange; font-weight: bold;">{{ $items->payment_method }}</p> <hr>
+                                <p style="color: darkorange; font-weight: bold;">{{ ($items->payment_method = "Bank" || $items->payment_method = "Wallet") ? "Wallet" : "Credit Card"  }}</p> <hr>
 
-                                @if ($items->payment_method == "Bank")
+                                @if ($items->payment_method == "Bank" || $items->payment_method == "Wallet")
 
-                                <small style="color: green;">
+                                
+                                {{--  <small style="color: green;">
                                     Bank Name: <b>{{ $items->bank_name }}</b> <hr> Acct. Name: <b>{{ $items->accountname }}</b> <hr> Acct. No: <b>{{ $items->account_number }}</b>
-                                </small>
+                                </small>  --}}
                                     
                                 @else
 
@@ -112,7 +112,7 @@
                             
                             </td>
 
-                            <td>{{ $items->currency }}</td>
+                            {{--  <td>{{ $items->currency }}</td>  --}}
 
                             
                             <td>{{ date('d/M/Y', strtotime($items->created_at)) }}</td>

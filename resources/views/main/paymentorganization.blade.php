@@ -13,6 +13,8 @@
 
 <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
 
+<script src="https://kit.fontawesome.com/384ade21a6.js"></script>
+
     <title>PaySprint | Money Transfer</title>
 
     <style>
@@ -103,6 +105,20 @@ input[type="radio"] {
                                                 </li>
                                             </ul>
                                         </div>
+                                        <div class="alert alert-warning">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h4>
+                                                        Wallet Balance
+                                                    </h4>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <h4>
+                                                        {{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format(Auth::user()->wallet_balance, 2) }}
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                         
                                     </div>
@@ -136,23 +152,12 @@ input[type="radio"] {
                                     </div>
                                         
                                     
-                                    <div class="form-group disp-0"> <label for="make_payment_method">
-                                            <h6>Payment Method</h6>
-                                        </label>
-                                        <div class="input-group"> 
-                                            <select name="payment_method" id="make_payment_method" class="form-control" required>
-                                                <option value="Credit Card">Credit Card</option>
-                                                {{--  <option value="Debit Card">Debit Card</option>  --}}
-                                                {{-- <option value="EXBC Card">EXBC Card</option> --}}
-                                            </select>
-                                            
-                                        </div>
-                                    </div>
+                                    
                                     <div class="form-group"> <label for="currency">
                                             <h6>Currency</h6>
                                         </label>
                                         <div class="input-group"> 
-                                            <select name="currency" id="currency" class="form-control">
+                                            <select name="currency" id="currency" class="form-control" readonly>
                                                 <option value="{{ $data['currencyCode'][0]->currencies[0]->code }}" selected>{{ $data['currencyCode'][0]->currencies[0]->code }}</option>
                                             </select>
                                             
@@ -167,11 +172,26 @@ input[type="radio"] {
                                     </div>
 
                                     <div class="form-group">
-                                    <div class="input-group"> 
-                                        <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission"> Payment include commission</p>
-                                        
+                                        <div class="input-group"> 
+                                            <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission"> Payment include commission</p>
+                                            
+                                        </div>
                                     </div>
-                                </div>
+
+                                    <div class="form-group"> <label for="make_payment_method">
+                                            <h6>Payment Method</h6>
+                                        </label>
+                                        <div class="input-group"> 
+                                            <select name="payment_method" id="make_payment_method" class="form-control" required>
+                                                <option value="">Select Payment Method</option>
+                                                <option value="Wallet">Wallet</option>
+                                                <option value="Credit Card">Credit Card</option>
+                                                {{--  <option value="Debit Card">Debit Card</option>  --}}
+                                                {{-- <option value="EXBC Card">EXBC Card</option> --}}
+                                            </select>
+                                            
+                                        </div>
+                                    </div>
 
 
                                 <div class="form-group"> <label for="netwmount">
@@ -204,7 +224,13 @@ input[type="radio"] {
                             </div>
 
                             <div class="form-group">
-                                <span class="text-danger">Please note that International transfer are sent in USD conversion</span>
+                                <span class="text-success">Please note that International transfer are sent in USD conversion</span>
+                            </div>
+
+                            <hr>
+
+                            <div class="form-group">
+                                <strong><span class="text-danger wallet-info"></span></strong>
                             </div>
 
 
@@ -269,15 +295,20 @@ input[type="radio"] {
                                     </div>
                                     <div class="card-footer"> 
                                         
-                                        {{--  <button type="button" onclick="orgmonerisPay()" class="subscribe btn btn-primary btn-block shadow-sm disp-0"> Confirm Payment </button>  --}}
+                                        
 
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-12 withCard disp-0">
                                             <center><div id="container"></div></center>
                                             </div>
-                                            <div class="col-md-6">
-                                                <button type="button" onclick="beginApplePay()" class="subscribe btn btn-primary btn-block shadow-sm disp-0"> Apple Pay </button>
+
+                                            <div class="col-md-12 withWallet disp-0">
+                                                <button type="button" onclick="orgmonerisPay()" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Send Money </button>
                                             </div>
+
+                                            {{--  <div class="col-md-6">
+                                                <button type="button" onclick="beginApplePay()" class="subscribe btn btn-primary btn-block shadow-sm disp-0"> Apple Pay </button>
+                                            </div>  --}}
                                         </div>
                                     
                                     
@@ -343,6 +374,25 @@ $('#orgpayservice').change(function(){
     }
 });
 
+
+$('#make_payment_method').change(function(){
+    if($('#make_payment_method').val() == "Wallet"){
+        $('.withWallet').removeClass('disp-0');
+        $('.withCard').addClass('disp-0');
+        
+    }
+    else if($('#make_payment_method').val() == "Credit Card"){
+        $('.withWallet').addClass('disp-0');
+        $('.withCard').removeClass('disp-0');
+    }
+    else{
+        $('.withWallet').addClass('disp-0');
+        $('.withCard').addClass('disp-0');
+    }
+
+    runCommission();
+});
+
 // Moneris Payment
 function orgmonerisPay(){
     var name = $('#orgpayname').val();
@@ -364,28 +414,28 @@ function orgmonerisPay(){
         swal('Oops!', 'Please enter amount', 'info');
         return false;
     }
-    else if(month == ""){
-        swal('Oops!', 'Please select month', 'info');
-        return false;
-    }
+    // else if(month == ""){
+    //     swal('Oops!', 'Please select month', 'info');
+    //     return false;
+    // }
 
     else if(payment_method == ""){
         swal('Oops!', 'Please select payment method', 'info');
         return false;
     }
-    else if(creditcard_no == ""){
-        swal('Oops!', 'Please insert card number', 'info');
-        return false;
-    }
+    // else if(creditcard_no == ""){
+    //     swal('Oops!', 'Please insert card number', 'info');
+    //     return false;
+    // }
 
-    else if(creditcard_no.length != 16){
-        swal('Oops!', 'Invalid card number', 'info');
-        return false;
-    }
-    else if(expirydate == ""){
-        swal('Oops!', 'Please select year', 'info');
-        return false;
-    }
+    // else if(creditcard_no.length != 16){
+    //     swal('Oops!', 'Invalid card number', 'info');
+    //     return false;
+    // }
+    // else if(expirydate == ""){
+    //     swal('Oops!', 'Please select year', 'info');
+    //     return false;
+    // }
     else{
 
 
@@ -410,8 +460,9 @@ function runCommission(){
     
     $('.commissionInfo').html("");
 
+
     var route = "{{ URL('Ajax/getCommission') }}";
-    var thisdata = {check: $('#commission').prop("checked"), amount: $('#orgpayamount').val()};
+    var thisdata = {check: $('#commission').prop("checked"), amount: $('#orgpayamount').val(), pay_method: $("#make_payment_method").val()};
 
     if($('#orgpayamount').val() == ""){
         swal("Oops", "Please provide amount to send", "info");
@@ -434,7 +485,20 @@ function runCommission(){
         
         success: function(result){
 
+            console.log(result.walletCheck);
+
             if(result.message == "success"){
+
+                $(".wallet-info").html(result.walletCheck);
+
+                if(result.walletCheck != ""){
+                    $(".sendmoneyBtn").attr("disabled", true);
+
+                }
+                else{
+                    $(".sendmoneyBtn").attr("disabled", false);
+                }
+
 
                 if(result.state == "commission available"){
 
@@ -449,6 +513,7 @@ function runCommission(){
                     $("#totalcharge").val($('#orgpayamount').val());
 
                     currencyConvert($('#orgpayamount').val());
+
                 }
                 else{
 

@@ -155,6 +155,14 @@ Route::post('updatemaintenance', ['uses' => 'HomeController@updatemaintenance', 
 
 
 
+// PASSWORD RESET FOR ADMIN
+Route::get('reset/mypassword', ['uses' => 'PasswordResetController@index', 'as' => 'adminpasswordreset']);
+Route::post('adminpasswordreset', ['uses' => 'PasswordResetController@adminpasswordreset', 'as' => 'mypasswordreset']);
+Route::post('changepassword', ['uses' => 'PasswordResetController@changepassword', 'as' => 'changepassword']);
+Route::get('reset/newpassword/{userid}', ['uses' => 'PasswordResetController@adminpasswordresetnew', 'as' => 'newpasswordreset']);
+
+
+
 // Create consultan
 Route::post('saveconsultant', ['uses' => 'ConsultantController@store', 'as' => 'saveconsultant']);
 Route::post('assignconsultant', ['uses' => 'ConsultantController@assignConsultant', 'as' => 'assignconsultant']);
