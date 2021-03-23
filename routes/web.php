@@ -46,6 +46,10 @@ Route::get('payment/sendmoney/{user_id}', ['uses' => 'HomeController@paymentOrga
 Route::get('payment/receivemoney/{id}', ['uses' => 'HomeController@receiveMoney', 'as' => 'receivemoney payment']);
 
 
+// Wallet Page
+Route::get('myaccount', ['uses' => 'HomeController@myAccount', 'as' => 'my account']);
+ 
+
 
 
 // General Rental Management PAGE

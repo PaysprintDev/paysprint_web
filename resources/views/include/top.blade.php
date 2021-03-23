@@ -152,7 +152,7 @@
 
                         @auth
                         <li class="dropdown submenu">
-                            <a href="#">Account NO: {{ Auth::user()->ref_code }}</a>
+                            <a href="{{ route('my account') }}">Account NO: {{ Auth::user()->ref_code }}</a>
                         </li>
                         @endauth
 
@@ -162,6 +162,7 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ (strlen($name) < 10) ? $name : substr($name, 0, 10)."..." }}<span class="caret"></span></a>
                             
                             <ul class="dropdown-menu other_dropdwn">
+                                <li><a href="{{ route('my account') }}">My Account</a></li>
                                 <li><a href="{{ route('profile') }}">Profile detail</a></li>
                                 {{-- <li><a href="https://exbc.ca/Product">Goto EXBC</a></li> --}}
                                 <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</a></li>

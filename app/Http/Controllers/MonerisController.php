@@ -626,7 +626,7 @@ public function receivemoneyProcess(Request $req){
 
     // Update OrganozationPay
 
-    OrganizationPay::where('id', $req->pay_id)->update(['request_receive' => 1]);
+    OrganizationPay::where('id', $req->pay_id)->update(['request_receive' => 2]);
 
     $response = 'Money successfully transferred to your '.$req->payment_method;
     $action = 'success';

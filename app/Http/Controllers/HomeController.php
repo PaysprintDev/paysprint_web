@@ -256,6 +256,39 @@ class HomeController extends Controller
         return view('main.receivepayment')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
+
+
+    public function myAccount(Request $req)
+    {
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'My Account';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            }
+            else{
+                $this->page = 'My Account';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'My Account';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+
+        $data = array(
+            'currencyCode' => $this->getCurrencyCode($this->myLocation()->country)
+        );
+
+        // dd($data);
+
+        return view('main.myaccount')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
     public function getthispayment($id){
 
         $data = DB::table('organization_pay')
@@ -1669,11 +1702,10 @@ class HomeController extends Controller
                             // Get Users
                 $data = DB::table('organization_pay')
                 ->select(DB::raw('organization_pay.id as orgId, organization_pay.purpose, organization_pay.amount_to_send, users.*'))
-                ->join('users', 'organization_pay.payer_id', '=', 'users.ref_code')->
-                where('organization_pay.payer_id', $req->user_id)->orWhere('organization_pay.payer_id', $req->code.'-'.$req->user_id)->where('organization_pay.coy_id', Auth::user()->ref_code)->where('organization_pay.state', 1)->where('organization_pay.request_receive', '!=', 2)->get();
+                ->join('users', 'organization_pay.payer_id', '=', 'users.ref_code')->where('organization_pay.state', 1)->where('organization_pay.request_receive', '!=', 2)->
+                where('organization_pay.payer_id', $req->user_id)->orWhere('organization_pay.payer_id', $req->code.'-'.$req->user_id)->where('organization_pay.coy_id', Auth::user()->ref_code)->get();
 
 
-                
 
                 if(count($data) > 0){
                     // Get Sender Details

@@ -44,6 +44,22 @@
     </section>
     <!-- End Slider area -->
 
+            <!-- Coming Soon to PlayStore and App Store -->
+    <section class="about_us_area row">
+        <div class="container">
+
+            <div class="row about_row">
+                <div class="col-md-6 col-sm-6 about_client">
+                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/google-play-soon_miudnn.png" alt="Coming Soon To Play Store" style="height: auto; width: auto;">
+                </div>
+                <div class="col-md-6 col-sm-6 about_client">
+                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1616497940/png-clipart-apple-app-store-advertisement-iphone-app-store-android-coming-soon-electronics-text_lwp53w.png" alt="Coming Soon to App Store" style="height: auto; width: auto;">
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Coming Soon to PlayStore and App Store -->
+
     <!-- Professional Builde -->
     <section class="professional_builder row">
         <div class="container">
@@ -105,6 +121,8 @@
         </div>
     </section>
     <!-- End About Us Area -->
+
+    
 
     <!-- What ew offer Area -->
     <section class="what_we_area row">
@@ -175,6 +193,9 @@
         </div>
     </section>
     <!-- End What ew offer Area -->
+
+
+
 
 
     <!-- Our Services Area -->
