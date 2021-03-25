@@ -52,6 +52,8 @@ use App\Building as Building;
 
 use App\TransactionCost as TransactionCost;
 
+use App\AddCard as AddCard;
+
 use App\Traits\RpmApp;
 
 class HomeController extends Controller
@@ -224,6 +226,32 @@ class HomeController extends Controller
     }
 
 
+    public function getUserCard(){
+
+        $data = AddCard::where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+
+    }
+
+    public function getthisCard($id){
+
+        $data = AddCard::where('id', $id)->first();
+
+        return $data;
+
+    }
+
+
+    public function walletStatement(){
+
+        $data = Statement::where('user_id', Auth::user()->email)->where('statement_route', 'wallet')->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+
+    }
+
+
     public function receiveMoney(Request $req, $id)
     {
 
@@ -263,30 +291,158 @@ class HomeController extends Controller
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'My Account';
+                $this->page = 'My Wallet';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
             }
             else{
-                $this->page = 'My Account';
+                $this->page = 'My Wallet';
                 $this->name = '';
             }
 
         }
         else{
-            $this->page = 'My Account';
+            $this->page = 'My Wallet';
             $this->name = session('name');
             $this->email = session('email');
         }
 
 
         $data = array(
-            'currencyCode' => $this->getCurrencyCode($this->myLocation()->country)
+            'currencyCode' => $this->getCurrencyCode($this->myLocation()->country),
+            'getCard' => $this->getUserCard(),
+            'walletStatement' => $this->walletStatement(),
         );
 
         // dd($data);
 
         return view('main.myaccount')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function addCard(Request $req)
+    {
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'My Card';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            }
+            else{
+                $this->page = 'My Card';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'My Card';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+
+        $data = array(
+            'getCard' => $this->getUserCard(),
+        );
+
+
+        return view('main.mycard')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function editCard(Request $req, $id)
+    {
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'My Card';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            }
+            else{
+                $this->page = 'My Card';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'My Card';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+
+        $data = array(
+            'getthisCard' => $this->getthisCard($id),
+        );
+
+
+        return view('main.editcard')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function addMoney(Request $req)
+    {
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'Add Money To Wallet';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            }
+            else{
+                $this->page = 'Add Money To Wallet';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'Add Money To Wallet';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+
+        $data = array(
+            'currencyCode' => $this->getCurrencyCode($this->myLocation()->country),
+            'getCard' => $this->getUserCard(),
+        );
+
+
+        return view('main.addmoneytowallet')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function withdrawMoney(Request $req)
+    {
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'Withdraw Money';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            }
+            else{
+                $this->page = 'Withdraw Money';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'Withdraw Money';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+
+        $data = array(
+            'currencyCode' => $this->getCurrencyCode($this->myLocation()->country),
+            'getCard' => $this->getUserCard(),
+        );
+
+
+        return view('main.withdrawmoney')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
     public function getthispayment($id){

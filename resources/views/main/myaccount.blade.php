@@ -55,7 +55,7 @@ input[type="radio"] {
         <!-- For demo purpose -->
         <div class="row mb-4">
             <div class="col-lg-8 mx-auto text-center">
-                <h1 class="display-4">My Account</h1>
+                <h1 class="display-4">My Wallet</h1>
             </div>
         </div> <!-- End -->
         <div class="row">
@@ -90,9 +90,9 @@ input[type="radio"] {
                                                 <div class="alert alert-warning">
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <h4>
+                                                            <h6 class="font-sm">
                                                                 Wallet Balance
-                                                            </h4>
+                                                            </h6>
                                                         </div>
                                                         <div class="col-md-12">
                                                             <h4>
@@ -101,14 +101,85 @@ input[type="radio"] {
                                                         </div>
                                                     </div>
                                             </div>
+
+                                            <p>
+
+                                                @if (isset($data['getCard']) && count($data['getCard']) > 0)
+
+                                                @php
+                                                    $others = count($data['getCard']) - 1;
+                                                    $cardNo = wordwrap($data['getCard'][0]->card_number, 4, '-', true);
+                                                @endphp
+
+                                                @switch($data['getCard'][0]->card_type)
+                                                @case("Mastercard")
+                                                    @php
+                                                        $alertInfo = "alert-danger";
+                                                        $cardImage = '<img src="https://img.icons8.com/color/30/000000/mastercard.png"/>';
+                                                    @endphp
+                                                    @break
+                                                @case("Visa")
+                                                    @php
+                                                        $alertInfo = "alert-info";
+                                                        $cardImage = '<img src="https://img.icons8.com/color/30/000000/visa.png"/>';
+                                                    @endphp
+                                                    @break
+                                                @default
+                                                    @php
+                                                        $alertInfo = "alert-success";
+                                                        $cardImage = '<img src="https://img.icons8.com/fluent/30/000000/bank-card-back-side.png"/>';
+                                                    @endphp
+                                            @endswitch
+
+                                                <div class="alert {{ $alertInfo }}">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <h6 class="font-sm">
+                                                                {{ (strlen($cardNo) < 10) ? $cardNo : substr($cardNo, 0, 10)."***" }} {{ ($others > 0) ? "& ".$others." others" : "" }}
+                                                            </h6>
+                                                        </div>
+                                                        <br>
+                                                        <div class="col-md-6">
+                                                            <h6>
+                                                               Expiry: {{ $data['getCard'][0]->month."/".$data['getCard'][0]->year }}
+                                                            </h6>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <h6>
+                                                               CVV: ***
+                                                            </h6>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            {!! $cardImage !!}
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                                    
+                                                <strong>
+                                                 <a href="{{ route('Add card') }}"> Add a new card <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: darkorange"></i></a>
+                                                </strong>
+
+                                                @else
+
+                                                <strong>
+                                                    <a href="{{ route('Add card') }}">Add a new card <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: darkorange"></i></a>
+                                                </strong>
+                                                    
+                                                @endif
+
+                                                
+                                            </p>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="alert alert-info">
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <h4>
+                                                            <h6 class="font-sm">
                                                                 Total Withdrawals
-                                                            </h4>
+                                                            </h6>
                                                         </div>
                                                         <div class="col-md-12">
                                                             <h4>
@@ -127,10 +198,10 @@ input[type="radio"] {
                                     
                                     <div class="form-group row"> 
                                         <div class="col-md-6">
-                                            <button class="btn btn-info btn-block">Add Money <i class="fa fa-plus"></i></button>
+                                            <a type="button" href="{{ route('Add Money') }}" class="btn btn-info btn-block">Add Money <i class="fa fa-plus"></i></a>
                                         </div>
                                         <div class="col-md-6">
-                                            <button class="btn btn-secondary btn-block">Withdraw Money <i class="fa fa-credit-card"></i></button>
+                                            <a type="button" href="{{ route('Withdraw Money') }}" class="btn btn-secondary btn-block">Withdraw Money <i class="fa fa-credit-card"></i></a>
                                         </div>
                                     </div>
 
@@ -146,51 +217,161 @@ input[type="radio"] {
                                         </nav>
                                         <br>
                                         <div class="tab-content" id="nav-tabContent">
+
+                                            @if (count($data['walletStatement']) > 0)
+
+                                            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                                                <div class="container">
+                                                    <div class="table table-responsive">
+                                                        <table class="table table-striped">
+                                                            <tbody>
+                                                                @foreach ($data['walletStatement'] as $walletstatements)
+
+                                                                
+                                                                    <tr>
+                                                                        <td><i class="fas fa-circle {{ ($walletstatements->credit != 0) ? "text-success" : "text-danger" }}"></i></td>
+                                                                        <td>
+
+                                                                                <div class="row">
+                                                                                    <div class="col-md-12">
+                                                                                        {!! $walletstatements->activity !!}
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <small>
+                                                                                            {{ date('d/m/Y h:i a', strtotime($walletstatements->created_at)) }}
+                                                                                        </small>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </td>
+                                                                        <td style="font-weight: 700" class="{{ ($walletstatements->credit != 0) ? "text-success" : "text-danger" }}">{{ ($walletstatements->credit != 0) ? "+ ".$data['currencyCode'][0]->currencies[0]->symbol.$walletstatements->credit : "- ".$data['currencyCode'][0]->currencies[0]->symbol.$walletstatements->debit }}</td>
+                                                                    </tr>
+                                                
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                                                <div class="container">
+                                                    <div class="table table-responsive">
+                                                        <table class="table table-striped">
+                                                            <tbody>
+                                                                @foreach ($data['walletStatement'] as $walletstatements)
+
+                                                                    @if ($walletstatements->credit != 0)
+                                                                        <tr>
+                                                                            <td><i class="fas fa-circle text-success"></i></td>
+                                                                            <td>
+
+                                                                                <div class="row">
+                                                                                    <div class="col-md-12">
+                                                                                        {!! $walletstatements->activity !!}
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <small>
+                                                                                            {{ date('d/m/Y h:i a', strtotime($walletstatements->created_at)) }}
+                                                                                        </small>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </td>
+                                                                            <td style="font-weight: 700" class="text-success">{{ "+ ".$data['currencyCode'][0]->currencies[0]->symbol.$walletstatements->credit }}</td>
+                                                                        </tr>
+
+                                                                    @endif
+                                                                
+                                                                    
+                                                
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                                                <div class="container">
+                                                    <div class="table table-responsive">
+                                                        <table class="table table-striped">
+                                                            <tbody>
+
+                                                                @foreach ($data['walletStatement'] as $walletstatements)
+
+                                                                    @if ($walletstatements->debit != 0)
+                                                                        <tr>
+                                                                            <td><i class="fas fa-circle text-danger"></i></td>
+                                                                            <td>
+
+                                                                                <div class="row">
+                                                                                    <div class="col-md-12">
+                                                                                        {!! $walletstatements->activity !!}
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <small>
+                                                                                            {{ date('d/m/Y h:i a', strtotime($walletstatements->created_at)) }}
+                                                                                        </small>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </td>
+                                                                            <td style="font-weight: 700" class="text-danger">
+                                                                                {{ "- ".$data['currencyCode'][0]->currencies[0]->symbol.$walletstatements->debit }}
+                                                                            </td>
+                                                                        </tr>
+
+                                                                    @endif
+                                                                
+                                                                    
+                                                
+                                                                @endforeach
+                                                                
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+                                                
+                                            @else
+
                                             <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                                                 <div class="container">
                                                     <div class="table table-responsive">
                                                         <table class="table table-striped">
                                                             <tbody>
                                                                 <tr>
-                                                                    <td><i class="fas fa-circle text-success"></i></td>
-                                                                    <td>Received credit from Jane Doe</td>
-                                                                    <td>+500.00</td>
+                                                                    <td colspan="3">No record</td>
                                                                 </tr>
-                                                                <tr>
-                                                                    <td><i class="fas fa-circle text-danger"></i></td>
-                                                                    <td>Transfered to Jane Doe</td>
-                                                                    <td>-200.00</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><i class="fas fa-circle text-success"></i></td>
-                                                                    <td>Credit to wallet</td>
-                                                                    <td>+20.00</td>
-                                                                </tr>
+                                                                
                                                             </tbody>
                                                         </table>
                                                     </div>
                                                 </div>
                                             </div>
+
+
                                             <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                                                 <div class="container">
                                                     <div class="table table-responsive">
                                                         <table class="table table-striped">
                                                             <tbody>
                                                                 <tr>
-                                                                    <td><i class="fas fa-circle text-success"></i></td>
-                                                                    <td>Received credit from Jane Doe</td>
-                                                                    <td>+500.00</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><i class="fas fa-circle text-success"></i></td>
-                                                                    <td>Credit to wallet</td>
-                                                                    <td>+20.00</td>
+                                                                    <td colspan="3">No record</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
                                                 </div>
                                             </div>
+
                                             <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
                                                 <div class="container">
                                                     <div class="table table-responsive">
@@ -198,9 +379,7 @@ input[type="radio"] {
                                                             <tbody>
                                                                 
                                                                 <tr>
-                                                                    <td><i class="fas fa-circle text-danger"></i></td>
-                                                                    <td>Transfered to Jane Doe</td>
-                                                                    <td>-200.00</td>
+                                                                    <td colspan="3">No record</td>
                                                                 </tr>
                                                                 
                                                             </tbody>
@@ -208,6 +387,12 @@ input[type="radio"] {
                                                     </div>
                                                 </div>
                                             </div>
+
+                                                
+                                            @endif
+
+                                            
+                                            
                                         </div>
                                     </div>
 

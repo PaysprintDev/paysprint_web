@@ -28,9 +28,10 @@
 
             </ul>
             <ul class="nav navbar-nav navbar-right social_nav">
-                <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
-                <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+                <li><a href="https://www.facebook.com/EXPRESSCANADA2014/?modal=admin_todo_tour" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                <li><a href="https://twitter.com/EXBC2" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                <li><a href="https://instagram.com/exbc2014" target="_blank"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                <li><a href="https://www.linkedin.com/company/exbc-canada/?viewAsMember=true" target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
 
             </ul>
 	    </div>
@@ -121,11 +122,11 @@
                         @else
 
                         <li class="dropdown submenu">
-                            <a href="{{ route('invoice') }}">Invoices</a>
+                            <a href="{{ route('invoice') }}">Invoice</a>
                         </li>
 
                         <li class="dropdown submenu">
-                            <a href="{{ route('statement') }}">Statements</a>
+                            <a href="{{ route('statement') }}">Statement</a>
                         </li>
 
                         <li class="dropdown submenu">
@@ -146,23 +147,24 @@
                         </li>
                         <a href="{{ url('/bronchure/PAYca_Brochure.pdf') }}" download="" id="downloaddoc" style="display: none;">Brochure</a>
  --}}
-                        <li class="dropdown submenu">
+                        {{-- <li class="dropdown submenu">
                             <a href="{{ route('contact') }}">Contact Us</a>
-                        </li>
+                        </li> --}}
 
                         @auth
                         <li class="dropdown submenu">
-                            <a href="{{ route('my account') }}">Account NO: {{ Auth::user()->ref_code }}</a>
+                            
+                            <a href="{{ route('my account') }}">My Wallet</a>
                         </li>
                         @endauth
 
                         
 
                         <li class="dropdown submenu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ (strlen($name) < 10) ? $name : substr($name, 0, 10)."..." }}<span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ (strlen($name) < 20) ? $name : substr($name, 0, 20)."..." }}<span class="caret"></span></a>
                             
                             <ul class="dropdown-menu other_dropdwn">
-                                <li><a href="{{ route('my account') }}">My Account</a></li>
+                                <li><a href="{{ route('my account') }}">Account NO: {{ Auth::user()->ref_code }}</a></li>
                                 <li><a href="{{ route('profile') }}">Profile detail</a></li>
                                 {{-- <li><a href="https://exbc.ca/Product">Goto EXBC</a></li> --}}
                                 <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</a></li>

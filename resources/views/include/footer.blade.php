@@ -1820,12 +1820,14 @@ function notifyForm(email){
 
 function handShake(val){
 
-var route = "{{ URL('/api/v1/profile') }}";
+var route;
+
+var formData = new FormData(formElem);
+
 
 
 if(val == "updateprofile"){
-
-    var formData = new FormData(formElem);
+    route = "{{ URL('/api/v1/profile') }}";
 
 
     Pace.restart();
@@ -1868,7 +1870,57 @@ if(val == "updateprofile"){
     });
 
 }
+else if('addcard'){
 
+    route = "{{ URL('/api/v1/addnewcard') }}";
+
+        Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#cardSubmit').text('Please wait...');
+        },
+        success: function(result){
+
+            $('#cardSubmit').text('Submit');
+
+            try {
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+            } 
+            catch (error) {
+                swal("Oops!", error.message, "error");
+            }
+
+
+
+        }
+
+    });
+    });
+
+}
+
+}
+
+
+function showForm(val){
+    $(".cardform").removeClass('disp-0');
+    $(".pickCard").addClass('disp-0');
 }
 
 function setHeaders(){

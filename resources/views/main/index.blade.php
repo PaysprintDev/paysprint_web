@@ -11,29 +11,47 @@
     <style>
         .slider_area .slider_inner .camera_caption div{background: #141414; }
 
+        .slider_inner.camera_wrap{
+            height: 300px !important;
+            display: block;
+            background-color: black !important;
+        }
+
+        
     </style>
 
 
     <!-- Slider area -->
-    <section class="slider_area row m0">
+    <section class="slider_area row m0" style="background-color: #11202A">
         <div class="slider_inner">
 
-            <div data-thumb="https://dlior9lx1k7r2.cloudfront.net/companylogo/9412847d-0e77-409b-8174-f1abde8e3f30.jpg" data-src="https://dlior9lx1k7r2.cloudfront.net/companylogo/9412847d-0e77-409b-8174-f1abde8e3f30.jpg">
+            <div data-thumb="https://res.cloudinary.com/pilstech/image/upload/v1616688527/Send_and_Receive_q3pm2g.png" data-src="https://res.cloudinary.com/pilstech/image/upload/v1616688527/Send_and_Receive_q3pm2g.png">
                 <div class="camera_caption">
                    <div class="container">
-                        <h5 class=" wow fadeInUp animated">Welcome to our</h5>
-                        <h3 class=" wow fadeInUp animated" data-wow-delay="0.5s">SAFE AND SECURE INVOICING AND PAYMENT SOLUTIONS</h3>
+                        {{--  <h5 class=" wow fadeInUp animated">Welcome to our</h5>
+                        <h3 class=" wow fadeInUp animated" data-wow-delay="0.5s">SAFE AND SECURE MONEY TRANSFER SOLUTION</h3>  --}}
                         {{-- <p class=" wow fadeInUp animated" data-wow-delay="0.8s">fastest way to collect money from customers</p> --}}
                         {{-- <a class=" wow fadeInUp animated" data-wow-delay="1s" href="#">Read More</a> --}}
                    </div>
                 </div>
             </div>
 
-            <div data-thumb="https://dlior9lx1k7r2.cloudfront.net/companylogo/9412847d-0e77-409b-8174-f1abde8e3f30.jpg" data-src="https://dlior9lx1k7r2.cloudfront.net/companylogo/9412847d-0e77-409b-8174-f1abde8e3f30.jpg">
+            <div data-thumb="https://res.cloudinary.com/pilstech/image/upload/v1616688527/Make_Payment_v0smkl.png" data-src="https://res.cloudinary.com/pilstech/image/upload/v1616688527/Make_Payment_v0smkl.png">
                 <div class="camera_caption">
                    <div class="container">
-                        <h5 class=" wow fadeInUp animated">Welcome to our</h5>
-                        <h3 class=" wow fadeInUp animated" data-wow-delay="0.5s">SAFE AND SECURE INVOICING AND PAYMENT SOLUTIONS</h3>
+                        {{--  <h5 class=" wow fadeInUp animated">Welcome to our</h5>
+                        <h3 class=" wow fadeInUp animated" data-wow-delay="0.5s">SAFE AND SECURE INVOICING AND PAYMENT SOLUTIONS</h3>  --}}
+                        {{-- <p class=" wow fadeInUp animated" data-wow-delay="0.8s">fastest way to collect money from customers</p> --}}
+                        {{-- <a class=" wow fadeInUp animated" data-wow-delay="1s" href="#">Read More</a> --}}
+                   </div>
+                </div>
+            </div>
+
+            <div data-thumb="https://res.cloudinary.com/pilstech/image/upload/v1616688527/Safe_and_Secured_wwiznn.png" data-src="https://res.cloudinary.com/pilstech/image/upload/v1616688527/Safe_and_Secured_wwiznn.png">
+                <div class="camera_caption">
+                   <div class="container">
+                        {{--  <h5 class=" wow fadeInUp animated">Welcome to our</h5>
+                        <h3 class=" wow fadeInUp animated" data-wow-delay="0.5s">BANKING MADE EASY WITH WALLET</h3>  --}}
                         {{-- <p class=" wow fadeInUp animated" data-wow-delay="0.8s">fastest way to collect money from customers</p> --}}
                         {{-- <a class=" wow fadeInUp animated" data-wow-delay="1s" href="#">Read More</a> --}}
                    </div>
@@ -50,10 +68,14 @@
 
             <div class="row about_row">
                 <div class="col-md-6 col-sm-6 about_client">
-                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/google-play-soon_miudnn.png" alt="Coming Soon To Play Store" style="height: auto; width: auto;">
+                    <center>
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/google-play-soon_miudnn.png" alt="Coming Soon To Play Store" style="height: auto; width: 350px;">
+                    </center>
                 </div>
                 <div class="col-md-6 col-sm-6 about_client">
-                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1616497940/png-clipart-apple-app-store-advertisement-iphone-app-store-android-coming-soon-electronics-text_lwp53w.png" alt="Coming Soon to App Store" style="height: auto; width: auto;">
+                    <center>
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1616497940/png-clipart-apple-app-store-advertisement-iphone-app-store-android-coming-soon-electronics-text_lwp53w.png" alt="Coming Soon to App Store" style="height: auto; width: 350px;">
+                    </center>
                 </div>
             </div>
         </div>
@@ -98,7 +120,7 @@
     <!-- End Professional Builde -->
 
     <!-- About Us Area -->
-    <section class="about_us_area row">
+    <section class="about_us_area row disp-0">
         <div class="container">
             <div class="tittle wow fadeInUp">
                 <h2>ABOUT US</h2>
@@ -125,7 +147,7 @@
     
 
     <!-- What ew offer Area -->
-    <section class="what_we_area row">
+    <section class="what_we_area row disp-0">
         <div class="container">
             <div class="tittle wow fadeInUp">
                 <h2>WHAT WE OFFER</h2>

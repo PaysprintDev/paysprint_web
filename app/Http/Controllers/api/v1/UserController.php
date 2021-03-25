@@ -56,7 +56,7 @@ class UserController extends Controller
 
 
             $user = User::create([
-                'ref_code' => $mycode[0]->callingCodes[0].'-'.$newRefcode,
+                'ref_code' => $newRefcode,
                 'name' => $request->firstname.' '.$request->lastname,
                 'code' => $mycode[0]->callingCodes[0],
                 'email' => $request->email,
@@ -96,9 +96,9 @@ class UserController extends Controller
         ]);
 
         if(!Auth::attempt($validator)){
-            $status = 201;
+            $status = 400;
             $data = [];
-            $message = 'Invalid login credential';
+            $message = 'Invalid email or password';
         }
         else{
             $token = Auth::user()->createToken('authToken')->accessToken;
@@ -111,7 +111,9 @@ class UserController extends Controller
                 // Update User API Token
                 User::where('email', $request->email)->update(['api_token' => $token]);
 
-                $data = $getUser;
+                $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken')->where('email', $request->email)->first();
+
+                $data = $userData;
                 $status = 200;
                 $message = 'Login successful';
 
@@ -119,8 +121,8 @@ class UserController extends Controller
             }
             else{
                 $data = [];
-                $status = 201;
-                $message = 'Invalid password';
+                $status = 400;
+                $message = 'Incorrect password';
             }
 
 

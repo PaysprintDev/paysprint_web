@@ -26,6 +26,12 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+
+    public function usercard()
+    {
+        return $this->hasOne('App\AddCard', 'user_id');
+    }
+
     protected $table = "users";
 }
 

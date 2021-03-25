@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Mail;
 
+use Illuminate\Support\Facades\Validator;
+
 use App\User as User;
 
 use App\Mail\sendEmail;
@@ -40,6 +42,8 @@ use App\Epaywithdraw as Epaywithdraw;
 use App\Statement as Statement;
 
 use App\ReceivePay as ReceivePay;
+
+use App\AddCard as AddCard;
 
 use App\Classes\mpgGlobals;
 use App\Classes\httpsPost;
@@ -116,21 +120,7 @@ class MonerisController extends Controller
 
 	public function __construct(Request $request){
 
-		// $id = 'monca04155';
-		// $token = 'KvTMr066FKlJm9rD3i71';
-
-		// optional
-		// $params = [
-		//   'environment' => Moneris::ENV_TESTING, // default: Moneris::ENV_LIVE
-		//   'avs' => true, // default: false
-		//   'cvd' => true, // default: false
-		//   'cof' => true, // default: false
-		// ];
-
-		// (new Moneris($id, $token, $params))->connect();
-		// $gateway = Moneris::create($id, $token, $params);
-
-		// dd($gateway);
+		
 	}
 
 
@@ -272,8 +262,9 @@ if($mpgResponse->responseData['Message'] == "APPROVED           *               
                         $regards = $req->user_id;
                         $reference_code = $mpgResponse->responseData['ReceiptId'];
                         $trans_date = date('Y-m-d');
+                        $statement_route = "invoice";
                         
-                        $this->insStatement($req->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0);
+                        $this->insStatement($req->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route);
 
 
                         // $this->url = "";
@@ -357,6 +348,378 @@ else{
     return redirect()->route('invoice')->with($action, $response);
 
 }
+
+
+    // Add Money to Wallet
+    public function addMoneyToWallet(Request $req){
+
+
+        $validator = Validator::make($req->all(), [
+                     'card_id' => 'required|string',
+                     'amount' => 'required|string',
+                     'currencyCode' => 'required|string',
+                ]);
+
+            if($validator->passes()){
+
+                $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+                $monerisDeductamount = $this->currencyConvert($req->currencyCode, $req->amount);
+
+
+                $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "purchase", "PaySprint Add Money to the Wallet of ".$thisuser->name);
+
+
+                    if($response->responseData['Message'] == "APPROVED           *                    ="){
+
+                        $reference_code = $response->responseData['ReceiptId'];
+                        
+                        // Update Wallet Balance
+                        $walletBal = $thisuser->wallet_balance + $req->amount;
+                        User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal]);
+
+                        $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance')->where('api_token', $req->bearerToken())->first();
+
+                        $activity = "Added ".$req->amount." to Wallet";
+                        $credit = $req->amount;
+                        $debit = 0;
+                        $reference_code = $response->responseData['ReceiptId'];
+                        $balance = 0;
+                        $trans_date = date('Y-m-d');
+                        $status = "Delivered";
+                        $action = "Payment";
+                        $regards = $thisuser->ref_code;
+                        $statement_route = "wallet";
+
+                        // Senders statement
+                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
+
+                        $data = $userData;
+                        $status = 200;
+                        $message = 'You have successfully added '.$req->currencyCode.' '.number_format($req->amount, 2).' to your wallet';
+                        
+
+                    }
+                    else{
+                        $data = [];
+                        $message = $response->responseData['Message'];
+                        $status = 400;
+                    }
+                
+
+            }
+            else{
+
+                $error = implode(",",$validator->messages()->all());
+
+                $data = [];
+                $status = 400;
+                $message = $error;
+            }
+
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+
+    }
+
+
+
+    public function moneyWithdrawal(Request $req){
+
+        $validator = Validator::make($req->all(), [
+                     'card_id' => 'required|string',
+                     'amount' => 'required|string',
+                     'transaction_pin' => 'required|string',
+                     'currencyCode' => 'required|string',
+                ]);
+
+                if($validator->passes()){
+
+                    $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+
+                    // Check amount in wallet
+                    if($req->amount > $thisuser->wallet_balance){
+                        // Insufficient amount for withdrawal
+
+                        $data = [];
+                        $message = "Insufficient amount to withdraw";
+                        $status = 400;
+                    }
+                    else{
+
+                            // Do convert amount to dollars
+
+                                $monerisDeductamount = $this->currencyConvert($req->currencyCode, $req->amount);
+
+
+                                // Check Transaction PIn
+                                if($thisuser->transaction_pin != null){
+                                    // Validate Transaction PIN
+                                    if(Hash::check($req->transaction_pin, $thisuser->transaction_pin)){
+
+                                        // Proceed to Withdrawal
+
+                                        $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "ind_refund", "PaySprint Withdraw from Wallet to ".$thisuser->name);
+
+                                        if($response->responseData['Message'] == "APPROVED           *                    ="){
+
+                                                $walletBal = $thisuser->wallet_balance - $req->amount;
+                                                $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
+
+                                                User::where('api_token', $req->bearerToken())->update([
+                                                    'wallet_balance' => $walletBal,
+                                                    'number_of_withdrawals' => $no_of_withdraw
+                                                ]);
+
+                                                // Update Statement
+
+                                                $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance')->where('api_token', $req->bearerToken())->first();
+
+                                                $activity = "Debited ".$req->amount." from Wallet";
+                                                $credit = 0;
+                                                $debit = $req->amount;
+                                                $reference_code = $response->responseData['ReceiptId'];
+                                                $balance = 0;
+                                                $trans_date = date('Y-m-d');
+                                                $status = "Delivered";
+                                                $action = "Payment";
+                                                $regards = $thisuser->ref_code;
+                                                $statement_route = "wallet";
+
+                                                // Senders statement
+                                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
+
+                                                $data = $userData;
+                                                $status = 200;
+                                                $message = $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet';
+
+                                        }
+                                        else{
+                                            $data = [];
+                                                $message = $response->responseData['Message'];
+                                                $status = 400;
+                                        }
+
+                                        
+
+                                    }
+                                    else{
+                                        $data = [];
+                                        $message = "Invalid transaction pin";
+                                        $status = 400;
+                                    }
+
+                                }
+                                else{
+                                    // Set new transaction pin and validate
+
+                                    if(Hash::check($req->password, $thisuser->password)){
+
+                                        if($req->transaction_pin != $req->confirm_transaction_pin){
+
+                                            $data = [];
+                                            $message = "Transaction pin does not match";
+                                            $status = 400;
+
+                                        }else{
+
+                                            // Update Transaction pin
+                                            User::where('api_token', $req->bearerToken())->update(['transaction_pin' => Hash::make($req->transaction_pin)]);
+
+                                            // Proceed to Withdrawal
+
+                                        $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "ind_refund", "PaySprint Withdraw from Wallet to ".$thisuser->name);
+
+
+                                        if($response->responseData['Message'] == "APPROVED           *                    ="){
+
+                                            $walletBal = $thisuser->wallet_balance - $req->amount;
+                                                $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
+
+                                                User::where('api_token', $req->bearerToken())->update([
+                                                    'wallet_balance' => $walletBal,
+                                                    'number_of_withdrawals' => $no_of_withdraw
+                                                ]);
+
+                                                // Update Statement
+
+                                                $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance')->where('api_token', $req->bearerToken())->first();
+
+                                                $activity = "Debited ".$req->amount." from Wallet";
+                                                $credit = 0;
+                                                $debit = $req->amount;
+                                                $reference_code = $response->responseData['ReceiptId'];
+                                                $balance = 0;
+                                                $trans_date = date('Y-m-d');
+                                                $status = "Delivered";
+                                                $action = "Payment";
+                                                $regards = $thisuser->ref_code;
+                                                $statement_route = "wallet";
+
+                                                // Senders statement
+                                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
+
+                                                $data = $userData;
+                                                $status = 200;
+                                                $message = $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet';
+
+                                        }
+                                        else{
+                                            $data = [];
+                                                $message = $response->responseData['Message'];
+                                                $status = 400;
+                                        }
+                                        
+
+                                        }
+
+                                    }
+                                    else{
+                                        $data = [];
+                                        $message = "Invalid login password";
+                                        $status = 400;
+                                    }
+
+                                }
+
+                    }
+                    
+                }
+            
+            else{
+
+                $error = implode(",",$validator->messages()->all());
+
+                $data = [];
+                $status = 400;
+                $message = $error;
+            }
+
+
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+
+
+    }
+
+
+    public function monerisWalletProcess($bearer, $card_id, $dollaramount, $type, $description){
+
+        // if($type == "purchase"){
+        //     // Test API
+        //     $store_id='monca04155';
+        //     $api_token='KvTMr066FKlJm9rD3i71';
+        // }
+        // else{
+        //     // Test API
+        //     $store_id='store5';
+        //     $api_token='yesguy';
+        // }
+
+
+        // Live API
+        $store_id='gwca026583';
+        $api_token='sssLFi2U8VFO0oWvPWax';
+
+
+        $thisuser = User::where('api_token', $bearer)->first();
+
+        // Get Card Details
+        $cardDetails = AddCard::where('id', $card_id)->where('user_id', $thisuser->id)->first();
+
+
+        $type=$type;
+        $cust_id= $thisuser->ref_code;
+        $order_id='ord-'.date("dmy-Gis");
+        $amount= number_format($dollaramount, 2);
+
+        $month = $cardDetails->month;
+
+        $pan= $cardDetails->card_number;
+        $expiry_date= $cardDetails->year.$month;
+        $crypt='7';
+        $dynamic_descriptor= $description;
+        $status_check = 'false';
+
+        /*********************** Transactional Associative Array **********************/
+        $txnArray=array('type'=>$type,
+                'order_id'=>$order_id,
+                'cust_id'=>$cust_id,
+                'amount'=>$amount,
+                'pan'=>$pan,
+                'expdate'=>$expiry_date,
+                'crypt_type'=>$crypt,
+                'dynamic_descriptor'=>$dynamic_descriptor
+            );
+
+        // dd($txnArray);
+        /**************************** Transaction Object *****************************/
+        $mpgTxn = new mpgTransaction($txnArray);
+
+
+        /******************* Credential on File **********************************/
+        $cof = new CofInfo();
+        $cof->setPaymentIndicator("U");
+        $cof->setPaymentInformation("2");
+        $cof->setIssuerId("168451306048014");
+        $mpgTxn->setCofInfo($cof);
+
+        /****************************** Request Object *******************************/
+        $mpgRequest = new mpgRequest($mpgTxn);
+        $mpgRequest->setProcCountryCode("CA"); //"US" for sending transaction to US environment
+        $mpgRequest->setTestMode(false); //false or comment out this line for production transactions
+        /***************************** HTTPS Post Object *****************************/
+        /* Status Check Example
+        $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgRequest);
+        */
+        $mpgHttpPost = new mpgHttpsPost($store_id,$api_token,$mpgRequest);
+        /******************************* Response ************************************/
+        $mpgResponse=$mpgHttpPost->getMpgResponse();
+
+        return $mpgResponse;
+    }
+
+
+        public function currencyConvert($curCurrency, $curAmount){
+
+        $currency = 'USD'.$curCurrency;
+        $amount = $curAmount;
+
+        $access_key = 'c9e62dd9e7af596a2e955a8d324f0ca6';
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'http://api.currencylayer.com/live?access_key='.$access_key,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Cookie: __cfduid=d430682460804be329186d07b6e90ef2f1616160177'
+        ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        $result = json_decode($response);
+
+        $convRate = $amount / $result->quotes->$currency;
+        
+
+        return $convRate;
+
+    }
 
 
 
@@ -528,12 +891,13 @@ if($mpgResponse->responseData['Message'] == "APPROVED           *               
             $status = "Pending";
             $action = "Payment";
             $regards = $req->user_id;
+            $statement_route = "invoice";
 
             // Senders statement
-            $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1);
+            $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
             
             // Receiver Statement
-            $this->insStatement($client->email, $reference_code, "Received money for ".$service." from ".$user->name, $req->amount, 0, $balance, $trans_date, $status, "Invoice", $client->ref_code, 1);
+            $this->insStatement($client->email, $reference_code, "Received money for ".$service." from ".$user->name, $req->amount, 0, $balance, $trans_date, $status, "Invoice", $client->ref_code, 1, $statement_route);
 
             // $this->url = "";
             // $this->curl_data = array(
@@ -638,8 +1002,11 @@ public function receivemoneyProcess(Request $req){
 
 
 
-    public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state){
-        Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state]);
+
+
+
+    public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route){
+        Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route]);
     }
 
 

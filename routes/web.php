@@ -47,7 +47,18 @@ Route::get('payment/receivemoney/{id}', ['uses' => 'HomeController@receiveMoney'
 
 
 // Wallet Page
-Route::get('myaccount', ['uses' => 'HomeController@myAccount', 'as' => 'my account']);
+
+Route::prefix('mywallet')->group(function () {
+
+	Route::get('/', ['uses' => 'HomeController@myAccount', 'as' => 'my account']);
+	Route::get('card', ['uses' => 'HomeController@addCard', 'as' => 'Add card']);
+	Route::get('editcard/{id}', ['uses' => 'HomeController@editCard', 'as' => 'Edit card']);
+	Route::get('addmoney', ['uses' => 'HomeController@addMoney', 'as' => 'Add Money']);
+	Route::get('withdrawmoney', ['uses' => 'HomeController@withdrawMoney', 'as' => 'Withdraw Money']);
+	
+});
+
+
  
 
 
