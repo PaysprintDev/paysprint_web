@@ -62,6 +62,51 @@ class Controller extends BaseController
     }
 
 
+
+    public function currencyConvert($curCurrency, $curAmount){
+
+        $currency = 'USD'.$curCurrency;
+        $amount = $curAmount;
+
+        $access_key = '6173fa628b16d8ce1e0db5cfa25092ac';
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'http://api.currencylayer.com/live?access_key='.$access_key,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Cookie: __cfduid=d430682460804be329186d07b6e90ef2f1616160177'
+        ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        $result = json_decode($response);
+
+        if($result->success == true){
+            $convRate = $amount / $result->quotes->$currency;
+
+        }
+        else{
+            $convRate = "Sorry we can not process your transaction this time, try again later!.";
+        }
+
+        
+
+        return $convRate;
+
+    }
+
+
     public function returnJSON($data, $status){
         return response()->json($data, $status);
     }

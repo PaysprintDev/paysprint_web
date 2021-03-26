@@ -190,6 +190,8 @@ input[type="radio"] {
 
                                     <input type="hidden" name="currencyCode" class="form-control" id="curCurrency" value="{{ $data['currencyCode'][0]->currencies[0]->code }}" readonly>
 
+                                    <input type="hidden" name="mode" class="form-control" id="mode" value="live" readonly>
+
                                     <div class="card-footer"> 
                                         
                                         <div class="row">

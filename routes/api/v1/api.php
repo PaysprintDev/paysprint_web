@@ -80,7 +80,7 @@ Route::prefix('/v1')->group(function () {
 
     Route::post('editcard',  ['uses' => 'api\v1\CardController@editCard'])->name('edit card');
 
-    Route::delete('deletecard',  ['uses' => 'api\v1\CardController@deleteCard'])->name('delete card');
+    Route::post('deletecard',  ['uses' => 'api\v1\CardController@deleteCard'])->name('delete card');
 
     Route::post('addmoneytowallet',  ['uses' => 'MonerisController@addMoneyToWallet'])->name('add money to wallet');
 

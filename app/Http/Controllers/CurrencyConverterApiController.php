@@ -11,7 +11,7 @@ class CurrencyConverterApiController extends Controller
         $currency = 'USD'.$req->currency;
         $amount = $req->amount;
 
-        $access_key = 'c9e62dd9e7af596a2e955a8d324f0ca6';
+        $access_key = '6173fa628b16d8ce1e0db5cfa25092ac';
 
         $curl = curl_init();
 
@@ -35,23 +35,35 @@ class CurrencyConverterApiController extends Controller
 
         $result = json_decode($response);
 
-        if($req->val == "send"){
-            // Conversion Rate USD to Local currency
-            $convRate = $amount / $result->quotes->$currency;
+        
+
+
+        if($result->success == true){
+        
+            if($req->val == "send"){
+                // Conversion Rate USD to Local currency
+                $convRate = $amount / $result->quotes->$currency;
+            }
+            else{
+                // This amount is the amount in dollars
+                $convRate = $result->quotes->$currency * $amount;
+            }
+
+            $message = 'success';
+
         }
         else{
-            // This amount is the amount in dollars
-            $convRate = $result->quotes->$currency * $amount;
+            $convRate = "Sorry we can not process your transaction this time, try again later!.";
+            $message = 'failed';
         }
-
 
         
 
-        $amountConvert = number_format($convRate, 2);
+        $amountConvert = $convRate;
 
 
 
-        $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => $amountConvert];
+        $resData = ['res' => 'Fetching Data', 'message' => $message, 'data' => $amountConvert];
 
 
         return $this->returnJSON($resData, 200);

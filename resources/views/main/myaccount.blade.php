@@ -13,6 +13,8 @@
 
 <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+
 <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
 
     <title>PaySprint | Wallet</title>
@@ -223,7 +225,14 @@ input[type="radio"] {
                                             <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                                                 <div class="container">
                                                     <div class="table table-responsive">
-                                                        <table class="table table-striped">
+                                                        <table class="table table-striped" id="myTableAll">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Description</th>
+                                                                    <th>Amount</th>
+                                                                </tr>
+                                                            </thead>
                                                             <tbody>
                                                                 @foreach ($data['walletStatement'] as $walletstatements)
 
@@ -238,13 +247,16 @@ input[type="radio"] {
                                                                                     </div>
                                                                                     <div class="col-md-12">
                                                                                         <small>
+                                                                                            {{ $walletstatements->reference_code }}
+                                                                                        </small><br>
+                                                                                        <small>
                                                                                             {{ date('d/m/Y h:i a', strtotime($walletstatements->created_at)) }}
                                                                                         </small>
                                                                                     </div>
                                                                                 </div>
 
                                                                             </td>
-                                                                        <td style="font-weight: 700" class="{{ ($walletstatements->credit != 0) ? "text-success" : "text-danger" }}">{{ ($walletstatements->credit != 0) ? "+ ".$data['currencyCode'][0]->currencies[0]->symbol.$walletstatements->credit : "- ".$data['currencyCode'][0]->currencies[0]->symbol.$walletstatements->debit }}</td>
+                                                                        <td style="font-weight: 700" class="{{ ($walletstatements->credit != 0) ? "text-success" : "text-danger" }}">{{ ($walletstatements->credit != 0) ? "+".$data['currencyCode'][0]->currencies[0]->symbol.$walletstatements->credit : "-".$data['currencyCode'][0]->currencies[0]->symbol.$walletstatements->debit }}</td>
                                                                     </tr>
                                                 
                                                                 @endforeach
@@ -258,7 +270,14 @@ input[type="radio"] {
                                             <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                                                 <div class="container">
                                                     <div class="table table-responsive">
-                                                        <table class="table table-striped">
+                                                        <table class="table table-striped" id="myTableCredit">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Description</th>
+                                                                    <th>Amount</th>
+                                                                </tr>
+                                                            </thead>
                                                             <tbody>
                                                                 @foreach ($data['walletStatement'] as $walletstatements)
 
@@ -273,13 +292,16 @@ input[type="radio"] {
                                                                                     </div>
                                                                                     <div class="col-md-12">
                                                                                         <small>
+                                                                                            {{ $walletstatements->reference_code }}
+                                                                                        </small><br>
+                                                                                        <small>
                                                                                             {{ date('d/m/Y h:i a', strtotime($walletstatements->created_at)) }}
                                                                                         </small>
                                                                                     </div>
                                                                                 </div>
 
                                                                             </td>
-                                                                            <td style="font-weight: 700" class="text-success">{{ "+ ".$data['currencyCode'][0]->currencies[0]->symbol.$walletstatements->credit }}</td>
+                                                                            <td style="font-weight: 700" class="text-success">{{ "+".$data['currencyCode'][0]->currencies[0]->symbol.$walletstatements->credit }}</td>
                                                                         </tr>
 
                                                                     @endif
@@ -297,7 +319,14 @@ input[type="radio"] {
                                             <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
                                                 <div class="container">
                                                     <div class="table table-responsive">
-                                                        <table class="table table-striped">
+                                                        <table class="table table-striped" id="myTableDebit">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Description</th>
+                                                                    <th>Amount</th>
+                                                                </tr>
+                                                            </thead>
                                                             <tbody>
 
                                                                 @foreach ($data['walletStatement'] as $walletstatements)
@@ -313,6 +342,9 @@ input[type="radio"] {
                                                                                     </div>
                                                                                     <div class="col-md-12">
                                                                                         <small>
+                                                                                            {{ $walletstatements->reference_code }}
+                                                                                        </small><br>
+                                                                                        <small>
                                                                                             {{ date('d/m/Y h:i a', strtotime($walletstatements->created_at)) }}
                                                                                         </small>
                                                                                     </div>
@@ -320,7 +352,7 @@ input[type="radio"] {
 
                                                                             </td>
                                                                             <td style="font-weight: 700" class="text-danger">
-                                                                                {{ "- ".$data['currencyCode'][0]->currencies[0]->symbol.$walletstatements->debit }}
+                                                                                {{ "-".$data['currencyCode'][0]->currencies[0]->symbol.$walletstatements->debit }}
                                                                             </td>
                                                                         </tr>
 
@@ -414,6 +446,8 @@ input[type="radio"] {
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js" integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous"></script>
 
+        <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
     <script src="{{ asset('pace/pace.min.js') }}"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
@@ -422,6 +456,9 @@ input[type="radio"] {
     <script>
 
         $(document).ready(function(){
+            $('#myTableAll').DataTable();
+            $('#myTableCredit').DataTable();
+            $('#myTableDebit').DataTable();
 
             $('#orgpaycreditcard').attr('value', '0');
             // Run Ajax

@@ -158,7 +158,11 @@ class HomeController extends Controller
             $this->email = session('email');
         }
 
-        $data = $this->getthisInvoice($invoice);
+
+        $data = array(
+            'getinvoice' => $this->getthisInvoice($invoice),
+            'currencyCode' => $this->getCurrencyCode($this->myLocation()->country)
+        );
 
         // dd($data);
 
@@ -1555,6 +1559,36 @@ class HomeController extends Controller
         return view('main.myreceipt')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'invoice' => $getBilling]);
     }
 
+
+    
+    public function mywalletStatement(Request $req, $id)
+    {
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'My Receipt';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            }
+            else{
+                $this->page = 'My Receipt';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'My Receipt';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+        $getStatement = Statement::where('reference_code', $id)->first();
+
+        // dd($getStatement);
+
+        return view('main.mywalletreceipt')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'walletTrans' => $getStatement]);
+    }
+
     public function contact(Request $req)
     {
 
@@ -1777,7 +1811,6 @@ class HomeController extends Controller
 
     public function getmystatement(Request $req){
 
-        
 
 
         $from = $req->start_date;
@@ -1792,7 +1825,7 @@ class HomeController extends Controller
         //             ->orderBy('invoice_payment.created_at', 'DESC')->get();
 
 
-            $getInvs = Statement::where('user_id', $req->email)->whereBetween('trans_date', [$from, $nextDay])->orderBy('created_at', 'DESC')->get();
+            $getInvs = Statement::where('user_id', $req->email)->where('activity', 'LIKE', '%'.$req->service.'%')->whereBetween('trans_date', [$from, $nextDay])->orderBy('created_at', 'DESC')->get();
 
 
            if(count($getInvs) > 0){
@@ -1815,6 +1848,7 @@ class HomeController extends Controller
                 //     $status = "none";
                 // }
            }
+
 
 
 

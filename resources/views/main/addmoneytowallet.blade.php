@@ -98,6 +98,8 @@ input[type="radio"] {
                                         <div class="input-group"> <div class="input-group-append"> <span class="input-group-text text-muted"> {{ $data['currencyCode'][0]->currencies[0]->symbol }} </span> </div> <input type="number" name="amount" id="amount" class="form-control" required>
 
                                         <input type="hidden" name="currencyCode" class="form-control" id="curCurrency" value="{{ $data['currencyCode'][0]->currencies[0]->code }}" readonly>
+
+                                        <input type="hidden" name="mode" class="form-control" id="mode" value="live" readonly>
                                             
                                         </div>
                                     </div>

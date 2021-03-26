@@ -41,8 +41,8 @@
                 <div class="portfolio_filter portfolio_filter_2">
                     <ul>
                         {{-- <li data-filter="*" class="active"><a href=""><i class="fa fa-money" aria-hidden="true"></i>Set Up e-Billing</a></li> --}}
-                        <li data-filter="*" class="active"><a href=""><i class="fa fa-file" aria-hidden="true"></i>Print Invoice</a></li>
-                        <li data-filter=".payment"><a href=""><img src="https://res.cloudinary.com/pilstech/image/upload/v1602676968/paysprint_uh3bux.png" style="width: 150px; height: 50px"><br>Make Payment</a></li>
+                        <li data-filter=".payment" class="active"><a href=""><i class="fa fa-file" aria-hidden="true"></i>Print/View Invoice</a></li>
+                        <li data-filter=".payinvoice" onclick="$('.payinvoice').removeClass('disp-0')"><a href=""><img src="https://res.cloudinary.com/pilstech/image/upload/v1602676968/paysprint_uh3bux.png" style="width: 150px; height: 50px"><br>Pay Invoice</a></li>
                     </ul>
                 </div>
                 <div class="portfolio_item portfolio_2">
@@ -51,16 +51,16 @@
 
 
                    <div class="grid-sizer-2"></div>
-                    <div class="single_facilities col-sm-6 payment">
+                    <div class="single_facilities col-sm-12 payment">
                         <div class="who_we_area">
                             <div class="subtittle">
-                                <h2>1. PRINT INVOICE</h2>
+                                <h2>1. PRINT/VIEW INVOICE</h2>
                             </div>
                             <div class="billingIns">
                                 <input type="hidden" name="invname" id="invname" value="{{ $name }}">
                                 <input type="hidden" name="invemail" id="invemail" value="{{ $email }}">
                                 <select name="invoiceService" class="form-control billinginput_box" id="invoiceService">
-                                    <option value="">--Select Service--</option>
+                                    <option value="">--Select Invoice--</option>
                                     @if(count($service) > 0)
                                         @foreach($service as $services)
                                             <option value="{{ $services->name }}">{{ $services->name }}</option>
@@ -76,46 +76,20 @@
                         </div>
                     </div>
 
-                    {{-- <div class="single_facilities col-sm-4 payment">
+                    <div class="single_facilities col-sm-12 payinvoice disp-0">
                         <div class="who_we_area">
                             <div class="subtittle">
-                                <h2>PRINT INVOICE</h2>
-                            </div>
-                            <div class="billingIns">
-                                <input type="hidden" name="invname" id="invname" value="{{ $name }}">
-                                <input type="hidden" name="invemail" id="invemail" value="{{ $email }}">
-                                <select name="invoiceService" class="form-control billinginput_box" id="invoiceService">
-                                    <option value="">--Select Service--</option>
-                                    <option value="Property Tax">Property Tax</option>
-                                    <option value="Utility Bills">Utility Bills</option>
-                                    <option value="Traffic Ticket">Traffic Ticket</option>
-                                    <option value="Tax Bills">Tax Bills</option>
-                                    <option value="Others"> Others</option>
-                                </select>
-                            </div>
-                            <div class="billingIns">
-                                <input type="text" name="reference" id="invoiceReference" class="form-control billinginput_box" placeholder="Type Invoice Reference Number*">
-                            </div>
-                            <button class="button_all" onclick="getInvoice()" id="invoice_check">Submit</button>
-                        </div>
-                    </div> --}}
-
-                    <div class="single_facilities col-sm-6 payment">
-                        <div class="who_we_area">
-                            <div class="subtittle">
-                                <h2>2. MAKE PAYMENT</h2>
+                                <h2>2. PAY INVOICE</h2>
                             </div>
 
                             <div class="billingIns">
                                 <input type="hidden" name="payemail" id="payemail" value="{{ $email }}">
-                                <input type="text" name="invoiceNumber" id="invoiceNumber" class="form-control billinginput_box" placeholder="Type Invoice # *">
+                                <input type="text" name="invoiceNumber" id="invoiceNumber" class="form-control billinginput_box" placeholder="Type Invoice Reference Number*">
                             </div>
                             <button class="button_all" onclick="makePay()" id="pay_invoice">Submit</button>
                         </div>
                     </div>
-                    {{-- <div class="single_facilities col-sm-5 painting webdesign">
-                        <img src="images/feature-man-4.jpg" alt="">
-                    </div> --}}
+
                 </div>
             </div>
         </div>

@@ -65,41 +65,55 @@ input[type="radio"] {
                         <!-- Credit card form content -->
                         <div class="tab-content">
 
-                            @if (count($data) > 0)
+                            @if (count($data['getinvoice']) > 0)
                                 
                             <!-- credit card info-->
                             <div id="credit-card" class="tab-pane fade show active pt-3">
                                 <form role="form" action="{{ route('PaymentInvoice') }}" method="POST" id="paymentForm">
                                     @csrf
-                                    <input type="hidden" name="invoice_no" id="payinvoiceRef" value="{{ $data[0]->invoice_no }}">
-                                    <input type="hidden" name="amount" id="payamount" value="{{ number_format($data[0]->amount, 2) }}">
-                                    <input type="hidden" name="invoice_balance" value="{{ $data[0]->remaining_balance }}">
-                                    <input type="hidden" name="user_id" id="payuser_id" value="{{ $data[0]->uploaded_by }}">
+                                    <input type="hidden" name="invoice_no" id="payinvoiceRef" value="{{ $data['getinvoice'][0]->invoice_no }}">
+                                    <input type="hidden" name="amount" id="payamount" value="{{ number_format($data['getinvoice'][0]->amount, 2) }}">
+                                    <input type="hidden" name="invoice_balance" value="{{ $data['getinvoice'][0]->remaining_balance }}">
+                                    <input type="hidden" name="user_id" id="payuser_id" value="{{ $data['getinvoice'][0]->uploaded_by }}">
                                     <input type="hidden" name="email" id="payemail" value="{{ $email }}">
-                                    <input type="hidden" name="service" id="payservice" value="{{ $data[0]->service }}">
+                                    <input type="hidden" name="service" id="payservice" value="{{ $data['getinvoice'][0]->service }}">
 
                                     <div class="form-group">
                                         <div class="alert alert-info">
                                             <ul>
                                                 <li>
-                                                    Reference Number: <b>{{ $data[0]->invoice_no }}</b>
+                                                    Reference Number: <b>{{ $data['getinvoice'][0]->invoice_no }}</b>
                                                 </li>
                                                 <li>
-                                                    Invoice Amount: <b>{{ number_format($data[0]->amount, 2) }}</b>
+                                                    Invoice Amount: <b>{{ number_format($data['getinvoice'][0]->amount, 2) }}</b>
                                                 </li>
                                                 <li>
-                                                    Invoice Balance: <b>{{ number_format($data[0]->remaining_balance, 2) }}</b>
+                                                    Invoice Balance: <b>{{ number_format($data['getinvoice'][0]->remaining_balance, 2) }}</b>
                                                 </li>
                                                 <li>
-                                                    Service: <b>{{ $data[0]->service }}</b>
+                                                    Service: <b>{{ $data['getinvoice'][0]->service }}</b>
                                                 </li>
                                             </ul>
                                         </div>
+                                        <div class="alert alert-warning">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h4>
+                                                        Wallet Balance
+                                                    </h4>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <h4>
+                                                        {{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format(Auth::user()->wallet_balance, 2) }}
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                        @if (isset($data[0]->installpay))
+                                        @if (isset($data['getinvoice'][0]->installpay))
 
 
-                                            @if ($data[0]->installpay == "Yes" && $data[0]->installlimit == $data[0]->installcount)
+                                            @if ($data['getinvoice'][0]->installpay == "Yes" && $data['getinvoice'][0]->installlimit == $data['getinvoice'][0]->installcount)
                                                 
                                             <div class='alert alert-danger'>You can not pay installmentally as you have exceeded the limit</div>
 
@@ -107,6 +121,7 @@ input[type="radio"] {
                                             
                                         @endif
                                     </div>
+
 
                                     <div class="form-group"> <label for="name">
                                             <h6>Card Owner</h6>

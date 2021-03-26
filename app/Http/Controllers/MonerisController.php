@@ -354,6 +354,7 @@ else{
     public function addMoneyToWallet(Request $req){
 
 
+
         $validator = Validator::make($req->all(), [
                      'card_id' => 'required|string',
                      'amount' => 'required|string',
@@ -366,8 +367,10 @@ else{
 
                 $monerisDeductamount = $this->currencyConvert($req->currencyCode, $req->amount);
 
+                
 
-                $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "purchase", "PaySprint Add Money to the Wallet of ".$thisuser->name);
+
+                $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "purchase", "PaySprint Add Money to the Wallet of ".$thisuser->name, $req->mode);
 
 
                     if($response->responseData['Message'] == "APPROVED           *                    ="){
@@ -378,7 +381,7 @@ else{
                         $walletBal = $thisuser->wallet_balance + $req->amount;
                         User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal]);
 
-                        $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance')->where('api_token', $req->bearerToken())->first();
+                        $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
                         $activity = "Added ".$req->amount." to Wallet";
                         $credit = $req->amount;
@@ -387,7 +390,7 @@ else{
                         $balance = 0;
                         $trans_date = date('Y-m-d');
                         $status = "Delivered";
-                        $action = "Payment";
+                        $action = "Wallet credit";
                         $regards = $thisuser->ref_code;
                         $statement_route = "wallet";
 
@@ -439,6 +442,8 @@ else{
 
                     $thisuser = User::where('api_token', $req->bearerToken())->first();
 
+                    
+
 
                     // Check amount in wallet
                     if($req->amount > $thisuser->wallet_balance){
@@ -462,7 +467,7 @@ else{
 
                                         // Proceed to Withdrawal
 
-                                        $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "ind_refund", "PaySprint Withdraw from Wallet to ".$thisuser->name);
+                                        $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "ind_refund", "PaySprint Withdraw from Wallet to ".$thisuser->name, $req->mode);
 
                                         if($response->responseData['Message'] == "APPROVED           *                    ="){
 
@@ -476,7 +481,7 @@ else{
 
                                                 // Update Statement
 
-                                                $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance')->where('api_token', $req->bearerToken())->first();
+                                                $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
                                                 $activity = "Debited ".$req->amount." from Wallet";
                                                 $credit = 0;
@@ -485,7 +490,7 @@ else{
                                                 $balance = 0;
                                                 $trans_date = date('Y-m-d');
                                                 $status = "Delivered";
-                                                $action = "Payment";
+                                                $action = "Wallet debit";
                                                 $regards = $thisuser->ref_code;
                                                 $statement_route = "wallet";
 
@@ -531,7 +536,7 @@ else{
 
                                             // Proceed to Withdrawal
 
-                                        $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "ind_refund", "PaySprint Withdraw from Wallet to ".$thisuser->name);
+                                        $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "ind_refund", "PaySprint Withdraw from Wallet to ".$thisuser->name, $req->mode);
 
 
                                         if($response->responseData['Message'] == "APPROVED           *                    ="){
@@ -546,7 +551,7 @@ else{
 
                                                 // Update Statement
 
-                                                $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance')->where('api_token', $req->bearerToken())->first();
+                                                $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
                                                 $activity = "Debited ".$req->amount." from Wallet";
                                                 $credit = 0;
@@ -555,7 +560,7 @@ else{
                                                 $balance = 0;
                                                 $trans_date = date('Y-m-d');
                                                 $status = "Delivered";
-                                                $action = "Payment";
+                                                $action = "Wallet debit";
                                                 $regards = $thisuser->ref_code;
                                                 $statement_route = "wallet";
 
@@ -608,23 +613,35 @@ else{
     }
 
 
-    public function monerisWalletProcess($bearer, $card_id, $dollaramount, $type, $description){
-
-        // if($type == "purchase"){
-        //     // Test API
-        //     $store_id='monca04155';
-        //     $api_token='KvTMr066FKlJm9rD3i71';
-        // }
-        // else{
-        //     // Test API
-        //     $store_id='store5';
-        //     $api_token='yesguy';
-        // }
+    public function monerisWalletProcess($bearer, $card_id, $dollaramount, $type, $description, $mode){
 
 
-        // Live API
-        $store_id='gwca026583';
-        $api_token='sssLFi2U8VFO0oWvPWax';
+        if($mode == "test"){
+            if($type == "purchase"){
+                // Test API
+                $store_id='monca04155';
+                $api_token='KvTMr066FKlJm9rD3i71';
+            }
+            else{
+                // Test API
+                $store_id='store5';
+                $api_token='yesguy';
+            }
+
+            $setMode = true;
+        }
+        else{
+            // Live API
+            $store_id='gwca026583';
+            $api_token='sssLFi2U8VFO0oWvPWax';
+
+            $setMode = false;
+        }
+
+        
+
+
+        
 
 
         $thisuser = User::where('api_token', $bearer)->first();
@@ -636,7 +653,10 @@ else{
         $type=$type;
         $cust_id= $thisuser->ref_code;
         $order_id='ord-'.date("dmy-Gis");
-        $amount= number_format($dollaramount, 2);
+        // $amount= number_format($dollaramount, 2);
+        $amount= $dollaramount;
+
+        
 
         $month = $cardDetails->month;
 
@@ -672,7 +692,7 @@ else{
         /****************************** Request Object *******************************/
         $mpgRequest = new mpgRequest($mpgTxn);
         $mpgRequest->setProcCountryCode("CA"); //"US" for sending transaction to US environment
-        $mpgRequest->setTestMode(false); //false or comment out this line for production transactions
+        $mpgRequest->setTestMode($setMode); //false or comment out this line for production transactions
         /***************************** HTTPS Post Object *****************************/
         /* Status Check Example
         $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgRequest);
@@ -682,43 +702,6 @@ else{
         $mpgResponse=$mpgHttpPost->getMpgResponse();
 
         return $mpgResponse;
-    }
-
-
-        public function currencyConvert($curCurrency, $curAmount){
-
-        $currency = 'USD'.$curCurrency;
-        $amount = $curAmount;
-
-        $access_key = 'c9e62dd9e7af596a2e955a8d324f0ca6';
-
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://api.currencylayer.com/live?access_key='.$access_key,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'GET',
-        CURLOPT_HTTPHEADER => array(
-            'Cookie: __cfduid=d430682460804be329186d07b6e90ef2f1616160177'
-        ),
-        ));
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-
-        $result = json_decode($response);
-
-        $convRate = $amount / $result->quotes->$currency;
-        
-
-        return $convRate;
-
     }
 
 

@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>PaySprint | Print/View Invoice</title>
+    <title>PaySprint | Wallet Receipt</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap" rel="stylesheet">
@@ -105,11 +105,9 @@
 </head>
 
 <body>
-    @if(count($invoice) > 0)
+    <br><br><br>
+    @if(isset($walletTrans))
     <div class="container invoice-box" id="divToPrint">
-
-        @foreach ($invoice as $invoices)
-
 
 
         <table class="table table-bordered" cellpadding="0" cellspacing="0">
@@ -117,23 +115,10 @@
                 <td colspan="2">
                     <table>
                         <tr>
-                            <td class="title">
-                                @if($clientInfo = \App\ClientInfo::where('user_id', $invoices->uploaded_by)->get())
 
-                                @if(count($clientInfo) > 0)
-
-                                <span style="font-size: 20px;"> {{ $clientInfo[0]->firstname.' '.$clientInfo[0]->lastname }}</span>
-                                @endif
-
-                                @endif
-                                <br>
-                                <span style="font-size: 17px;">Powered By</span><br>
-                            <img src="{{ asset('images/logo2.png') }}" style="width:30%; max-width:300px;" align="left">
-                            </td>
                             <td>
-                                Invoice #: {{ $invoices->paidinvoice_no }}<br>
-                                Created: {{ date('F d, Y', strtotime($invoices->created_at)) }}<br>
-                                Pay Due Date: {{ date('F d, Y', strtotime($invoices->payment_due_date)) }}
+                                Transaction #: {{ $walletTrans->reference_code }}<br>
+                                Created: {{ date('F d, Y', strtotime($walletTrans->created_at)) }}<br>
                             </td>
                         </tr>
                     </table>
@@ -145,31 +130,11 @@
                     <table>
                         <tr>
                             <td>
-                                <b>{{ $invoices->name }}</b>, <br>
-                                {{ $invoices->address }} <br>
-                                {{ $invoices->city.', '.$invoices->state.', '.$invoices->zip }}<br>
-                                {{ $invoices->country }} <br>
-                                Payee Ref #: {{ $invoices->payee_ref_no }}
+                                <b>{{ Auth::user()->name }}</b>, <br>
+                                {{ Auth::user()->address }} <br>
+                                {{ Auth::user()->city.', '.Auth::user()->state.', '.Auth::user()->zip }}<br>
+                                {{ Auth::user()->country }}
                             </td>
-
-
-                            <td>
-                                <b>{{ $invoices->email }}</b><br>
-                                @if($clientInfo = \App\ClientInfo::where('user_id', $invoices->uploaded_by)->get())
-
-                                @if(count($clientInfo) > 0)
-
-                                    Client Name: {{ $clientInfo[0]->firstname.' '.$clientInfo[0]->lastname }} <br>
-                                Business Name: {{ $clientInfo[0]->business_name }} <br>
-                                Client Address: {{ $clientInfo[0]->address }}
-
-                                @endif
-                                
-
-
-                                @endif
-                            </td>
-
                         </tr>
                     </table>
                 </td>
@@ -177,89 +142,62 @@
 
             <tr class="heading">
                 <td colspan="2" align="center">
-                    INVOICE INFORMATION for {{ $invoices->paidservice }}
-                </td>
-
-            </tr>
-
-            <tr class="item">
-                <td>
-                   Transaction Ref
-                </td>
-
-                <td>
-                    {{ $invoices->transaction_ref }}
+                    {{ $walletTrans->activity }}
                 </td>
             </tr>
 
             <tr class="item">
                 <td>
-                    Opening Balance
+                   Trans. #
                 </td>
 
-                <td style="color: navy;">
-                    ${{ number_format($invoices->invoice_amount) }}
+                <td>
+                    {{ $walletTrans->reference_code }}
                 </td>
             </tr>
+
             
             <tr class="item">
                 <td>
-                    Amount Paid
+                    Amount
                 </td>
+
+                @if ($walletTrans->credit != 0)
 
                 <td style="color: green;">
-                    @if(isset($invoices->payedAmount))${{ number_format($invoices->payedAmount) }}@else ${{ number_format(0, 2) }} @endif
+                    ${{ number_format($walletTrans->credit, 2) }}
                 </td>
+
+                @else
+                <td style="color: red;">
+                    {{ number_format($walletTrans->debit, 2) }}
+                </td>
+                    
+                @endif
+
+                
             </tr>
 
-            @if($invoices->remaining_balance != "" || $invoices->remaining_balance != null)
-            <tr class="item">
-                <td>
-                    Balance on Invoice
-                </td>
-
-                <td style="color: tomato;">
-                    <?php if(isset($invoices->invoice_amount)){$opening = $invoices->invoice_amount;}else{$opening = 0;}
-                    if(isset($invoices->payedAmount)){$paid = $invoices->payedAmount;}else{$paid = 0;} $bal = $opening -  $paid;?>
-                    ${{ number_format($bal) }}
-                </td>
-            </tr>
-            @endif
-
-            
-            
 
             <tr class="item last">
                 <td>
                     Note
                 </td>
 
-                <td style="font-size: 10px; width: 100% !important">
-                    {!! $invoices->description !!}
+                <td style="font-size: 13px; width: 100% !important">
+                    {!! $walletTrans->activity." | Reference no.: ".$walletTrans->reference_code." | Status: ".$walletTrans->status !!}
                 </td>
             </tr>
         </table>
-        <hr><br>
-
+        <hr>
 
             
-        @endforeach
         
-    </div>
-    <br><br>
-    <center><button type="button" class="btn btn-danger" onclick="printInvoice()">Print Invoice</button></center>
-
-    @else
-
-    <div class="container invoice-box">
-        Invoice details not found
     </div>
 
     @endif
     <br>
-
-    
-    
+    <center><button type="button" class="btn btn-danger btn-lg" onclick="printInvoice()" >Print Receipt</button></center>
 
 
     <script>

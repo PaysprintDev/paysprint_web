@@ -378,6 +378,7 @@ function getStatement(){
                             var statements;
 
 
+
                             $.each(res, function(v,k){
 
                                 var transform;
@@ -391,11 +392,22 @@ function getStatement(){
                                     price = "-"+k.debit;
                                     urlRoute = "/Myreceipt";
 
+                                }
+                                else if(k.action == "Wallet credit"){
+                                    transform = 'green';
+                                    price = "+"+k.credit;
+                                    urlRoute = "/walletstatement";
+
+                                }
+                                else if(k.action == "Wallet debit"){
+                                    transform = 'red';
+                                    price = "-"+k.debit;
+                                    urlRoute = "/walletstatement";
 
                                 }
                                 else{
                                     transform = 'green';
-                                    price = k.credit;
+                                    price = "+"+k.credit;
                                     urlRoute = "/Myinvoice";
 
                                 }

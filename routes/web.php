@@ -130,6 +130,9 @@ Route::get('Myinvoice/{key}', ['uses' => 'HomeController@myinvoice', 'as' => 'My
 Route::get('Myreceipt/{key}', ['uses' => 'HomeController@myreceipt', 'as' => 'Myreceipt']);
 
 
+Route::get('walletstatement/{key}', ['uses' => 'HomeController@mywalletStatement', 'as' => 'My Wallet Statement']);
+
+
 // Client Admin ROute
 Route::get('Admin', ['uses' => 'AdminController@index', 'as' => 'Admin']);
 

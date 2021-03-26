@@ -47,7 +47,7 @@
                 <div class="portfolio_item portfolio_2">
                    <div class="grid-sizer-2"></div>
 
-                    <div class="single_facilities col-sm-7 invoice">
+                    <div class="single_facilities col-sm-12 invoice">
                         <div class="who_we_area">
                             <div class="subtittle">
                                 <h2>GENERATE STATEMENT</h2>
@@ -55,9 +55,10 @@
                             <div class="billingIns">
                                 <input type="hidden" name="invname" id="invname" value="{{ $name }}">
                                 <input type="hidden" name="invemail" id="invemail" value="{{ $email }}">
-                                <label for="invoiceService">Type of Service</label>
+                                <label for="invoiceService">Type of Statement</label>
                                 <select name="invoiceService" class="form-control billinginput_box" id="invoiceService">
-                                    <option value="">--Select Service--</option>
+                                    <option value="">--Select Statement--</option>
+                                    <option value="Wallet">Wallet</option>
                                     <option value="Rent">Rent</option>
                                     <option value="Property Tax">Property Tax</option>
                                     <option value="Utility Bills">Utility Bills</option>
