@@ -51,7 +51,7 @@ class sendEmail extends Mailable
                     ->with('maildata', $this->mail);
         }
         elseif($this->mail->purpose == "Fund remittance"){
-        return $this->subject($this->mail->purpose)->view('mails.epay')
+        return $this->subject($this->mail->subject)->view('mails.epay')
                     ->with('maildata', $this->mail);
         }
         elseif($this->mail->purpose == "Cash withdrawal request"){

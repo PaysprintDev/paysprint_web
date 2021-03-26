@@ -297,14 +297,13 @@
                                           <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:left;"></h3>
 
                                             {!! $maildata->message !!}
-<br>
 
+                                            <hr>
 <p>
   PaySprint provides fastest money transfer and invoice payment solution. 
-Download PaySprint App today on <img src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/google-play-soon_miudnn.png" alt="Play Store" style="width: 150px;"> <img src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/Coming_Soon_to_the_App_Store_izz7ir.png" alt="App Store" style="width: 150px;">
+Download PaySprint App today on <br> <img src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/google-play-soon_miudnn.png" alt="Play Store" style="width: 150px;"> <img src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/Coming_Soon_to_the_App_Store_izz7ir.png" alt="App Store" style="width: 120px;"> <br>
 Visit our website, <a href="{{ route('home') }}">www.paysprint.net</a> to open an Merchant account.
 </p>
-<br>
 PaySprint&reg;<br>
                                         </td>
                                       </tr>

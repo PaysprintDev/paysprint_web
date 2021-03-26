@@ -397,6 +397,17 @@ else{
                         // Senders statement
                         $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
 
+                        // Notification
+
+
+                            $this->name = $thisuser->name;
+                            $this->email = $thisuser->email;
+                            $this->subject = "Transaction Notification";
+
+                            $this->message = '<p>You just added <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong> to your wallet. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> in your account</p>';
+
+                            $this->sendEmail($this->email, "Fund remittance");
+
                         $data = $userData;
                         $status = 200;
                         $message = 'You have successfully added '.$req->currencyCode.' '.number_format($req->amount, 2).' to your wallet';
@@ -497,6 +508,17 @@ else{
                                                 // Senders statement
                                                 $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
 
+
+                                                // Notification
+
+                                                $this->name = $thisuser->name;
+                                                $this->email = $thisuser->email;
+                                                $this->subject = "Transaction Notification";
+
+                                                $this->message = '<p>You just sent <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong> to your card. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> in your account</p>';
+
+                                                $this->sendEmail($this->email, "Fund remittance");
+
                                                 $data = $userData;
                                                 $status = 200;
                                                 $message = $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet';
@@ -566,6 +588,17 @@ else{
 
                                                 // Senders statement
                                                 $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
+
+
+                                                // Notification
+
+                                                $this->name = $thisuser->name;
+                                                $this->email = $thisuser->email;
+                                                $this->subject = "Transaction Notification";
+
+                                                $this->message = '<p>You just sent <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong> to your card. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> in your account</p>';
+
+                                                $this->sendEmail($this->email, "Fund remittance");
 
                                                 $data = $userData;
                                                 $status = 200;

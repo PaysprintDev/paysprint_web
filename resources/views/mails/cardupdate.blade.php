@@ -301,9 +301,13 @@
 
                                             {!! $maildata->message !!}
 
-<br><br>
 
-
+                                            <hr>
+<p>
+  PaySprint provides fastest money transfer and invoice payment solution. 
+Download PaySprint App today on <br> <img src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/google-play-soon_miudnn.png" alt="Play Store" style="width: 150px;"> <img src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/Coming_Soon_to_the_App_Store_izz7ir.png" alt="App Store" style="width: 120px;"> <br>
+Visit our website, <a href="{{ route('home') }}">www.paysprint.net</a> to open an Merchant account.
+</p>
 
 Best <br><br>
 
