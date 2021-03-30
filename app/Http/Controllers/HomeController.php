@@ -77,7 +77,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'invoice', 'statement', 'myinvoice', 'setupBills', 'checkmyBills', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'payOrganization', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'payment', 'paymentOrganization', 'ajaxgetCommission']]);
+        $this->middleware('auth', ['except' => ['index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'invoice', 'statement', 'myinvoice', 'setupBills', 'checkmyBills', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'payOrganization', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'payment', 'paymentOrganization', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy']]);
     }
 
     /**
@@ -137,6 +137,57 @@ class HomeController extends Controller
     }
 
 
+
+    public function termsOfUse(Request $req)
+    {
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'Terms of Use';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            }
+            else{
+                $this->page = 'Terms of Use';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'Terms of Use';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+        return view('main.termofuse')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email]);
+    }
+
+
+    public function privacyPolicy(Request $req)
+    {
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'Privacy Policy';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            }
+            else{
+                $this->page = 'Privacy Policy';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'Privacy Policy';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+        return view('main.privacy')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email]);
+    }
+
+
     public function payment(Request $req, $invoice)
     {
 
@@ -161,7 +212,7 @@ class HomeController extends Controller
 
         $data = array(
             'getinvoice' => $this->getthisInvoice($invoice),
-            'currencyCode' => $this->getCurrencyCode($this->myLocation()->country)
+            'currencyCode' => $this->getCurrencyCode(Auth::user()->country)
         );
 
         // dd($data);
@@ -194,7 +245,9 @@ class HomeController extends Controller
 
         $data = array(
             'paymentorg' => $this->getthisOrganization($user_id),
-            'currencyCode' => $this->getCurrencyCode($this->myLocation()->country)
+            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'othercurrencyCode' => $this->otherCurrencyCode($user_id),
+            'getCard' => $this->getUserCard(),
         );
 
         // dd($data);
@@ -280,7 +333,7 @@ class HomeController extends Controller
 
         $data = array(
             'getpay' => $this->getthispayment($id),
-            'currencyCode' => $this->getCurrencyCode($this->myLocation()->country)
+            'currencyCode' => $this->getCurrencyCode(Auth::user()->country)
         );
 
         // dd($data);
@@ -313,7 +366,7 @@ class HomeController extends Controller
 
 
         $data = array(
-            'currencyCode' => $this->getCurrencyCode($this->myLocation()->country),
+            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
             'getCard' => $this->getUserCard(),
             'walletStatement' => $this->walletStatement(),
         );
@@ -409,7 +462,7 @@ class HomeController extends Controller
 
 
         $data = array(
-            'currencyCode' => $this->getCurrencyCode($this->myLocation()->country),
+            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
             'getCard' => $this->getUserCard(),
         );
 
@@ -441,7 +494,7 @@ class HomeController extends Controller
 
 
         $data = array(
-            'currencyCode' => $this->getCurrencyCode($this->myLocation()->country),
+            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
             'getCard' => $this->getUserCard(),
         );
 
@@ -467,6 +520,15 @@ class HomeController extends Controller
         $orgDetail = User::where('ref_code', $user_id)->first();
 
         return $orgDetail;
+    }
+
+    public function otherCurrencyCode($user_id){
+        $userData = User::where('ref_code', $user_id)->first();
+
+        $data = $this->getCurrencyCode($userData->country);
+
+        return $data;
+        
     }
 
 
@@ -1705,21 +1767,54 @@ class HomeController extends Controller
             $resData = ['res' => 'User with email: '.$req->email.' already exist', 'message' => 'error'];
         }else{
             $name = $req->fname.' '.$req->lname;
+
+            $ref_code = mt_rand(00000, 99999);
+
+            $mycode = $this->getCountryCode($req->country);
+
+                        // Get all ref_codes
+            $ref = User::all();
+
+            if(count($ref) > 0){
+                foreach($ref as $key => $value){
+                    if($value->ref_code == $ref_code){
+                        $newRefcode = mt_rand(000000, 999999);
+                    }
+                    else{
+                        $newRefcode = $ref_code;
+                    }
+                }
+            }
+            else{
+                $newRefcode = $ref_code;
+            }
+
             // Insert User record
             if($req->accountType == "Individual"){
                 // Insert Information for Individual user
-                $insInd = User::insert(['name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode]);
+                $insInd = User::insert(['ref_code' => $newRefcode, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email)]);
 
-                $req->session()->put(['name' => $name, 'email' => $req->email, 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType]);
+                // $req->session()->put(['name' => $name, 'email' => $req->email, 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType]);
             }
             elseif($req->accountType == "Business"){
                 // Insert Information for Business user
-                $insBus = User::insert(['businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype]);
+                $insBus = User::insert(['ref_code' => $newRefcode, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email)]);
 
-                $req->session()->put(['businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype]);
+                // $req->session()->put(['businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype]);
 
             }
-           $resData = ['res' => 'Hello '.$name.' you will be redirected in 5sec', 'message' => 'success', 'link' => '/'];
+
+            $credentials = $req->only('email', 'password');
+
+            if (Auth::attempt($credentials)) {
+                $resData = ['res' => 'Hello '.$name.' you will be redirected in 5sec', 'message' => 'success', 'link' => '/'];
+            }
+            else{
+                $resData = ['res' => 'Credential failed', 'message' => 'error'];
+            }
+
+
+           
         }
 
         return $this->returnJSON($resData, 200);
@@ -1731,6 +1826,10 @@ class HomeController extends Controller
         if(count($userExists) > 0){
             // Check User Password if match
             if(Hash::check($req->password, $userExists[0]['password'])){
+
+                // Update API Token
+                 User::where('email', $req->email)->update(['api_token' => uniqid().md5($req->email)]);
+
                 $resData = ['res' => 'Welcome back '.$userExists[0]['name'], 'message' => 'success'];
             }else{
                 $resData = ['res' => 'Your password is not correct', 'message' => 'info'];
@@ -1859,6 +1958,7 @@ class HomeController extends Controller
         else{
             $resData = ['res' => 'You do not have record for this service', 'message' => 'error', 'title' => 'Oops!', 'info' => 'no_exist'];
         }
+        
 
 
         return $this->returnJSON($resData, 200);
@@ -1893,9 +1993,10 @@ class HomeController extends Controller
                 $data = DB::table('organization_pay')
                 ->select(DB::raw('organization_pay.id as orgId, organization_pay.purpose, organization_pay.amount_to_send, users.*'))
                 ->join('users', 'organization_pay.payer_id', '=', 'users.ref_code')->where('organization_pay.state', 1)->where('organization_pay.request_receive', '!=', 2)->
-                where('organization_pay.payer_id', $req->user_id)->orWhere('organization_pay.payer_id', $req->code.'-'.$req->user_id)->where('organization_pay.coy_id', Auth::user()->ref_code)->get();
+                where('organization_pay.payer_id', $req->user_id)->orWhere('organization_pay.payer_id', $req->code.'-'.$req->user_id)->where('organization_pay.coy_id', Auth::user()->ref_code)->orderBy('organization_pay.created_at', 'DESC')->get();
 
 
+                
 
                 if(count($data) > 0){
                     // Get Sender Details
@@ -2254,9 +2355,15 @@ class HomeController extends Controller
 
     public function ajaxgetCommission(Request $req){
 
+        if($req->pay_method != "Wallet"){
+            $dataInfo = $this->convertCurrencyRate($req->foreigncurrency, $req->localcurrency, $req->amount);
+
+            
+        // dd($dataInfo);
+
         $data = TransactionCost::first();
 
-        $fixed = $req->amount * ($data->fixed / 100);
+        $fixed = $dataInfo * ($data->fixed / 100);
 
         $variable = $data->fixed * 1;
 
@@ -2266,16 +2373,24 @@ class HomeController extends Controller
 
         if($req->check == "true"){
 
-            $amountReceive = $req->amount - $collection;
+            $amountReceive = $dataInfo - $collection;
 
             $state = "commission available";
         }
 
         else{
-            $amountReceive = $req->amount;
+            $amountReceive = $dataInfo;
             $state = "commission unavailable";
 
         }
+
+        }
+        else{
+            $amountReceive = $req->amount;
+            $state = "commission free";
+            $collection = 0;
+        }
+
 
 
         // Check if Wallet is chosen
@@ -2284,8 +2399,8 @@ class HomeController extends Controller
         if($req->pay_method == "Wallet"){
             $wallet = Auth::user()->wallet_balance;
 
-            if($wallet < $req->amount){
-                $walletCheck = 'Wallet Balance: <strong>'.$wallet.'</strong>. Insufficient balance. <a href="#">Add money <i class="fa fa-plus" style="font-size: 15px;border-radius: 100%;border: 1px solid grey;padding: 3px;" aria-hidden="true"></i></a>';
+            if($wallet < $amountReceive){
+                $walletCheck = 'Wallet Balance: <strong>'.$req->localcurrency. number_format($wallet,2).'</strong>. <br> Insufficient balance. <a href="'.route('Add Money').'">Add money <i class="fa fa-plus" style="font-size: 15px;border-radius: 100%;border: 1px solid grey;padding: 3px;" aria-hidden="true"></i></a>';
             }
         }
 
@@ -2294,6 +2409,55 @@ class HomeController extends Controller
         $resData = ['data' => $amountReceive, 'message' => 'success', 'state' => $state, 'collection' => $collection, 'walletCheck' => $walletCheck];
 
         return $this->returnJSON($resData, 200);
+
+    }
+
+        public function convertCurrencyRate($foreigncurrency, $localcurrency, $amount){
+
+        $currency = 'USD'.$foreigncurrency;
+        $amount = $amount;
+        $localCurrency = 'USD'.$localcurrency;
+
+        $access_key = '89e3a2b081fb2b9d188d22516553545c';
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'http://api.currencylayer.com/live?access_key='.$access_key,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Cookie: __cfduid=d430682460804be329186d07b6e90ef2f1616160177'
+        ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        $result = json_decode($response);
+
+
+        if($result->success == true){
+        
+            // Conversion Rate USD to Local currency
+            $convertLocal = $amount / $result->quotes->$currency;
+
+            $convRate = $result->quotes->$localCurrency * $convertLocal;
+
+        }
+        else{
+            $convRate = "Sorry we can not process your transaction this time, try again later!.";
+        }
+
+        
+
+        return $convRate;
 
     }
 

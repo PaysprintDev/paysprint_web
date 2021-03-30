@@ -168,36 +168,70 @@ body::-webkit-scrollbar-thumb:hover {
                 </div>
                 <div class="col-sm-6 contact_info send_message">
                     <h2>Login</h2>
-                    <form class="form-inline contact_box" action="{{ route('login') }}" method="POST" id="form-login">
-                        @csrf
-
-                        <select class="form-control input_box" style="color: #000 !important;" name="services" id="services">
-                            <option value="">--Select type of Service--</option>
-                            <option value="User">User</option>
-                            <option value="Client">Merchant</option>
-                        </select>
-
-                        <div class="loginForm animated disp-0 SlideIn">
-
-                            <input type="email" name="email" id="loginemail" class="form-control input_box" value="{{ old('email') }}" required autocomplete="email" placeholder="Type your email *" autofocus>
-
-                            <input type="password" name="password" id="loginpassword" class="form-control input_box" placeholder="Password *" required>
 
 
+<ul class="nav nav-tabs" id="myTab" role="tablist">
 
-                            <button type="button" class="btn btn-default loginBtn" onclick="login()">Login</button>
-                            <img src="https://cdn.dribbble.com/users/608059/screenshots/2032455/spinner.gif" class="spinner disp-0" style="width: auto; height: 50px;">
+  <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Individual</a></li>
 
-                            @if (Route::has('password.request'))
-                                <a class="btn btn-link" href="{{ route('password.request') }}">
-                                    {{ __('Forgot Your Password?') }}
-                                </a>
-                            @endif
+  <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Merchant</a></li>
+</ul>
 
-                        </div>
+<div class="tab-content" id="myTabContent">
+  <div role="tabpanel" class="tab-pane active" id="home">
+      <form class="form-inline contact_box" action="{{ route('login') }}" method="POST" id="form-login">
+        @csrf
+
+        <div class="loginForm animated SlideIn">
+
+            <input type="email" name="email" id="loginemail" class="form-control input_box" value="{{ old('email') }}" required autocomplete="email" placeholder="Type your email *" autofocus>
+
+            <input type="password" name="password" id="loginpassword" class="form-control input_box" placeholder="Password *" required>
 
 
-                    </form>
+
+            <button type="button" class="btn btn-default loginBtn" onclick="login()">Login</button>
+            <img src="https://cdn.dribbble.com/users/608059/screenshots/2032455/spinner.gif" class="spinner disp-0" style="width: auto; height: 50px;">
+
+            @if (Route::has('password.request'))
+                <a class="btn btn-link" href="{{ route('password.request') }}">
+                    {{ __('Forgot Your Password?') }}
+                </a>
+            @endif
+
+            <a class="btn btn-link" href="{{ route('register') }}">
+                    {{ __('Don\'t have an account? Register now') }}
+                </a>
+
+        </div>
+
+
+    </form>
+  </div>
+  <div role="tabpanel" class="tab-pane" id="profile">
+      <br>
+        <div class="display-3">
+          <h4 class="text-center">Click the button to login as Merchant.</h4>
+      </div>
+
+      <br>
+
+      <button class="btn btn-danger btn-block" onclick="gotoMerchant()">Login as a Merchant</button>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+                    
+                    
                 </div>
             </div>
         </div>
@@ -439,8 +473,26 @@ body::-webkit-scrollbar-thumb:hover {
 
 
     });
+    
 
 
+
+function gotoMerchant(){
+    swal({
+    title: "Hello",
+    text: "We shall be redirecting you to your login environment. Click OK to accept",
+    icon: "success",
+    buttons: true,
+    dangerMode: true,
+    })
+    .then((willDelete) => {
+    if (willDelete) {
+        location.href = "AdminLogin";
+    } else {
+
+    }
+    });
+}
 
 
 // User Registration

@@ -53,6 +53,11 @@ body::-webkit-scrollbar-thumb:hover {
 .input_box{
     color: #000 !important;
 }
+.form-control{
+    border-color: #f6b60d !important;
+    width: 100% !important;
+}
+
     </style>
 
 </head>
@@ -169,17 +174,22 @@ body::-webkit-scrollbar-thumb:hover {
                 </div>
                 <div class="col-sm-6 contact_info send_message">
                     <h2>Register for FREE</h2>
+
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+  <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Individual</a></li>
+
+  <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Merchant</a></li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+  <div role="tabpanel" class="tab-pane active" id="home">
                     <form class="form-inline contact_box" action="#" method="POST">
                         @csrf
-                        <select class="form-control input_box" style="color: #000 !important;" name="services" id="services">
-                            <option value="">--Select type of Service--</option>
-                            <option value="User">User</option>
-                            <option value="Client">Merchant</option>
-                        </select>
 
-                    <div class="indForm animated fadeIn choice disp-0">
+                    <div class="indselectForm animated fadeIn choice">
                         <select class="form-control input_box" style="color: #000 !important;" name="account" id="accountType">
-                            <option value="">--Select a choice--</option>
+                            <option value="">--Select account type--</option>
                             <option value="Individual">Individual</option>
                             <option value="Business">Business</option>
                         </select>
@@ -188,100 +198,189 @@ body::-webkit-scrollbar-thumb:hover {
                         <div class="indForm animated rollIn disp-0">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <input type="text" id="fname" name="firstname" class="form-control input_box" placeholder="First Name *" required>
+                                    <div class="form-group">
+                                        <label for="fname">First Name</label>
+                                        <input type="text" id="fname" name="firstname" class="form-control input_box" placeholder="First Name *" required>
+                                    </div>
                                 </div>
                                 <div class="col-sm-6">
-                                    <input type="text" id="lname" name="lastname" class="form-control input_box" placeholder="Last Name *" required>
+                                    <div class="form-group">
+                                        <label for="lname">Last Name</label>
+                                        <input type="text" id="lname" name="lastname" class="form-control input_box" placeholder="Last Name *" required>
+                                    </div>
                                 </div>
                             </div>
-                            <input type="email" name="email" id="email" class="form-control input_box" placeholder="Your Email *" required>
 
-                            <input type="email" name="cemail" id="cemail" class="form-control input_box" placeholder="Confirm Your Email *" required>
+                            <label for="email">Email Address</label>
+                                        <input type="email" name="email" id="email" class="form-control input_box" placeholder="Your Email *" required>
+                            
+                            <label for="cemail">Confirm Email Address</label>
+                                        <input type="email" name="cemail" id="cemail" class="form-control input_box" placeholder="Confirm Your Email *" required>
+                            
+
+                            
 
                             <div class="row">
-                                <div class="col-sm-4">
-                                    <input type="text" name="country" id="country" class="form-control input_box countries" placeholder="Country *" required>
-                                </div>
-                                <div class="col-sm-4">
-                                    <input type="text" name="state" id="state" class="form-control input_box" placeholder="Province/State *" required>
-                                </div>
-                                <div class="col-sm-4">
-                                    <input type="text" name="city" id="city" class="form-control input_box" placeholder="City *" required>
-                                </div>
-                            </div>
-                            <input type="text" name="address" id="address" class="form-control input_box" placeholder="Address *" required>
-                            <div class="row">
                                 <div class="col-sm-6">
-                                    <input type="password" name="password" id="password" class="form-control input_box" placeholder="Password *" required>
-
+                                    <div class="form-group">
+                                        <label for="city">City</label>
+                                        <input type="text" name="city" id="city" class="form-control input_box" placeholder="City *" required>
+                                    </div>
                                 </div>
                                 <div class="col-sm-6">
-                                    <input type="password" name="confirmpassword" id="password-confirm" class="form-control input_box" placeholder="Confirm Password *" required>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <input type="text" name="zipcode" id="zipcode" class="form-control input_box" placeholder="Postal/Zip code">
+                                    <div class="form-group">
+                                        <label for="zipcode">Postal/Zip code</label>
+                                        <input type="text" name="zipcode" id="zipcode" class="form-control input_box" placeholder="Postal/Zip code">
+                                    </div>
                                 </div>
                             </div>
 
-                            <button type="button" class="btn btn-default submitBtn" onclick="register('Individual')">Sign Up</button>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label for="country">Country</label>
+
+                                        <select name="country" id="country" class="form-control input_box countries" required></select>
+                                        {{-- <input type="text" name="country" id="country" class="form-control input_box countries" placeholder="Country *" required> --}}
+                                </div>
+                                <div class="col-sm-6">
+
+                                    <label for="state">Province/State</label>
+                                        <select name="state" id="state" class="form-control input_box" required></select>
+                                    {{-- <input type="text" name="state" id="state" class="form-control input_box" placeholder="Province/State *" required> --}}
+
+                                    
+                                </div>
+                                
+                            </div>
+
+
+                            <label for="address">Address</label>
+                                <input type="text" name="address" id="address" class="form-control input_box" placeholder="Address *" required>
+
+                            <div class="row">
+
+                                <div class="col-sm-6">
+
+                                    <div class="form-group">
+                                        <label for="password">Password</label>
+                                        <input type="password" name="password" id="password" class="form-control input_box" placeholder="Password *" required>
+                                    </div>
+
+                                    
+
+                                </div>
+                                <div class="col-sm-6">
+
+                                    <div class="form-group">
+                                        <label for="password-confirm">Confirm Password</label>
+                                        <input type="password" name="confirmpassword" id="password-confirm" class="form-control input_box" placeholder="Confirm Password *" required>
+                                    </div>
+
+                                    
+                                </div>
+                            </div>
+                            
+
+                            <button type="button" class="btn btn-default submitBtn" onclick="register('Individual')" style="width: 100% !important">Sign Up</button>
                             <img src="https://cdn.dribbble.com/users/608059/screenshots/2032455/spinner.gif" class="spinner disp-0" style="width: auto; height: 50px;">
                         </div>
 
 
                         <div class="busForm animated rollIn disp-0">
+                            <label for="busname">Business Name</label>
                             <input type="text" name="businessname" id="busname" class="form-control input_box" placeholder="Business Name *" required>
-
+                            
+                            <label for="busaddress">Business Address</label>
                             <input type="text" name="address" id="busaddress" class="form-control input_box" placeholder="Address *" required>
 
+                            <label for="buscorporationtype">Corporation Type</label>
                             <input type="text" name="corporationtype" id="buscorporationtype" class="form-control input_box" placeholder="Corporation Type *" required>
 
                             <div class="row">
                                 <div class="col-sm-6">
+                                    <label for="busfname">First Name</label>
                                     <input type="text" id="busfname" name="firstname" class="form-control input_box" placeholder="First Name *" required>
                                 </div>
                                 <div class="col-sm-6">
+                                    <label for="buslname">Last Name</label>
                                     <input type="text" id="buslname" name="lastname" class="form-control input_box" placeholder="Last Name *" required>
                                 </div>
                             </div>
+
+                            <label for="busemail">Email Address</label>
                             <input type="email" name="email" id="busemail" class="form-control input_box" placeholder="Your Email *" required>
 
+                            <label for="buscemail">Confirm Email Address</label>
                             <input type="email" name="cemail" id="buscemail" class="form-control input_box" placeholder="Confirm Your Email *" required>
 
                             <div class="row">
-                                <div class="col-sm-4">
-                                    <input type="text" name="country" id="buscountry" class="form-control input_box countries" placeholder="Country *" required>
-                                </div>
-                                <div class="col-sm-4">
-                                    <input type="text" name="state" id="busstate" class="form-control input_box" placeholder="Province/State *" required>
-                                </div>
-                                <div class="col-sm-4">
+
+                                <div class="col-sm-6">
+                                    <label for="buscity">City</label>
                                     <input type="text" name="city" id="buscity" class="form-control input_box" placeholder="City *" required>
                                 </div>
-                            </div>
 
-                            <div class="row">
                                 <div class="col-sm-6">
-                                    <input type="password" name="password" id="buspassword" class="form-control input_box" placeholder="Password *" required>
-
-                                </div>
-                                <div class="col-sm-6">
-                                    <input type="password" name="confirmpassword" id="buspassword-confirm" class="form-control input_box" placeholder="Confirm Password *" required>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6">
+                                    <label for="buszipcode">Postal/Zip code</label>
                                     <input type="text" name="zipcode" id="buszipcode" class="form-control input_box" placeholder="Postal/Zip code">
                                 </div>
                             </div>
 
-                            <button type="button" class="btn btn-default submitBtn" onclick="register('Business')">Sign Up</button>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label for="buscountry">Country</label>
+                                    <select name="country" id="buscountry" class="form-control input_box countries" required></select>
+                                    {{-- <input type="text" name="country" id="buscountry" class="form-control input_box countries" placeholder="Country *" required> --}}
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="busstate">Province/State</label>
+                                    <select name="state" id="busstate" class="form-control input_box" required></select>
+                                    {{-- <input type="text" name="state" id="busstate" class="form-control input_box" placeholder="Province/State *" required> --}}
+                                </div>
+                            </div>
+
+                            
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label for="buspassword">Password</label>
+                                    <input type="password" name="password" id="buspassword" class="form-control input_box" placeholder="Password *" required>
+
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="buspassword-confirm">Confirm Password</label>
+                                    <input type="password" name="confirmpassword" id="buspassword-confirm" class="form-control input_box" placeholder="Confirm Password *" required>
+                                </div>
+                            </div>
+                            
+
+                            <button type="button" class="btn btn-default submitBtn" onclick="register('Business')" style="width: 100% !important">Sign Up</button>
                             <img src="https://cdn.dribbble.com/users/608059/screenshots/2032455/spinner.gif" class="spinner disp-0" style="width: auto; height: 50px;">
                         </div>
 
 
                     </form>
+  </div>
+  <div role="tabpanel" class="tab-pane" id="profile">
+      <br>
+        <div class="display-3">
+          <h4 class="text-center">Click the button to register as Merchant.</h4>
+      </div>
+
+      <br>
+
+      <button class="btn btn-danger btn-block" onclick="gotoMerchant()">Register as a Merchant</button>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
                 </div>
             </div>
         </div>
@@ -344,6 +443,7 @@ body::-webkit-scrollbar-thumb:hover {
 
     <!-- jQuery JS -->
     <script src="{{ asset('js/jquery-1.12.0.min.js') }}"></script>
+    <script src="{{ asset('js/country-state-select.js') }}"></script>
     <script src="{{ asset('pace/pace.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -369,6 +469,11 @@ body::-webkit-scrollbar-thumb:hover {
     <script src="{{ asset('js/theme.js') }}"></script>
 
 
+<script language="javascript">
+    populateCountries("country", "state");
+    populateCountries("buscountry", "busstate");
+
+</script>
 
 {{-- Ajax --}}
 
@@ -376,28 +481,7 @@ body::-webkit-scrollbar-thumb:hover {
 
     $(document).ready(function(){
 
-        $('#services').change(function(){
-            if($('#services').val() == 'Client'){
-
-                swal({
-                title: "Hello",
-                text: "We shall be redirecting you to your registration environment. Click OK to accept",
-                icon: "success",
-                buttons: true,
-                dangerMode: true,
-                })
-                .then((willDelete) => {
-                if (willDelete) {
-                    location.href = "AdminRegister";
-                } else {
-
-                }
-                });
-            }
-            else if($('#services').val() == 'User'){
-                $('.choice').removeClass('disp-0');
-
-            $('#accountType').change(function(){
+        $('#accountType').change(function(){
 
             if($('#accountType').val() == 'Individual'){
                 $('.indForm').removeClass('disp-0');
@@ -412,17 +496,28 @@ body::-webkit-scrollbar-thumb:hover {
                 $('.busForm').addClass('disp-0');
             }
         });
-            }
-            else{
-                $('.indForm').addClass('disp-0');
-                $('.busForm').addClass('disp-0');
-                $('.choice').addClass('disp-0');
-            }
-        });
-
 
 
     });
+
+
+    function gotoMerchant(){
+
+        swal({
+        title: "Hello",
+        text: "We shall be redirecting you to your registration environment. Click OK to accept",
+        icon: "success",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            location.href = "AdminRegister";
+        } else {
+
+        }
+        });
+    }
 
 
 // User Registration
@@ -596,7 +691,11 @@ var corporationtype
                 submitBtn.removeClass('disp-0');
                 swal('Oops', result.res, result.message);
             }
-            }
+            },
+            error: function(err) {
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
 
       });
     });

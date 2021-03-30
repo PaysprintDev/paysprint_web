@@ -39,6 +39,12 @@ Route::get('Ticket', ['uses' => 'HomeController@ticket', 'as' => 'ticket']);
 
 Route::get('profile', ['uses' => 'HomeController@profile', 'as' => 'profile']);
 
+// Terms or USE
+Route::get('terms-of-service', ['uses' => 'HomeController@termsOfUse', 'as' => 'terms of use']);
+
+// Privacy Policy
+Route::get('privacy-policy', ['uses' => 'HomeController@privacyPolicy', 'as' => 'privacy policy']);
+
 
 Route::get('payment/{invoice}', ['uses' => 'HomeController@payment', 'as' => 'payment']);
 
@@ -278,7 +284,7 @@ Route::post('getCommission', ['uses' => 'HomeController@ajaxgetCommission', 'as'
 
 Route::post('charges', ['uses' => 'ApplePayController@ajaxcharges', 'as' => 'charges']);
 
-Route::post('getconversion', ['uses' => 'CurrencyConverterApiController@currencyConvert', 'as' => 'getconversion']);
+Route::post('getconversion', ['uses' => 'CurrencyConverterApiController@currencyConverter', 'as' => 'getconversion']);
 
 });
 

@@ -23,35 +23,35 @@
 
     <!-- Slider area -->
     <section class="slider_area row m0" style="background-color: #11202A">
-        <div class="slider_inner">
+        <div class="slider_inner" style="height: 300px !important;">
 
-            <div data-thumb="https://res.cloudinary.com/pilstech/image/upload/v1616688527/Send_and_Receive_q3pm2g.png" data-src="https://res.cloudinary.com/pilstech/image/upload/v1616688527/Send_and_Receive_q3pm2g.png">
+            <div data-thumb="https://res.cloudinary.com/pilstech/image/upload/v1617005875/Image1_fucmgy.png" data-src="https://res.cloudinary.com/pilstech/image/upload/v1617005875/Image1_fucmgy.png">
                 <div class="camera_caption">
                    <div class="container">
-                        {{--  <h5 class=" wow fadeInUp animated">Welcome to our</h5>
-                        <h3 class=" wow fadeInUp animated" data-wow-delay="0.5s">SAFE AND SECURE MONEY TRANSFER SOLUTION</h3>  --}}
+                         {{-- <h5 class=" wow fadeInUp animated">Welcome to our</h5> --}}
+                        <h3 class=" wow fadeInUp animated" data-wow-delay="0.5s">PAYSPRINT....INVOICE</h3>
+                        {{-- <p class=" wow fadeInUp animated" data-wow-delay="0.8s">fastest way to collect money from customers</p> --}}
+                        {{-- <a class=" wow fadeInUp animated" data-wow-delay="1s" href="#">Read More</a>--}}
+                   </div>
+                </div>
+            </div>
+
+            <div data-thumb="https://res.cloudinary.com/pilstech/image/upload/v1617005875/Image2_a51ufr.png" data-src="https://res.cloudinary.com/pilstech/image/upload/v1617005875/Image2_a51ufr.png">
+                <div class="camera_caption">
+                   <div class="container">
+                         {{-- <h5 class=" wow fadeInUp animated">Welcome to our</h5> --}}
+                        <h3 class=" wow fadeInUp animated" data-wow-delay="0.5s">PAYSPRINT....WALLET</h3> 
                         {{-- <p class=" wow fadeInUp animated" data-wow-delay="0.8s">fastest way to collect money from customers</p> --}}
                         {{-- <a class=" wow fadeInUp animated" data-wow-delay="1s" href="#">Read More</a> --}}
                    </div>
                 </div>
             </div>
 
-            <div data-thumb="https://res.cloudinary.com/pilstech/image/upload/v1616688527/Make_Payment_v0smkl.png" data-src="https://res.cloudinary.com/pilstech/image/upload/v1616688527/Make_Payment_v0smkl.png">
+            <div data-thumb="https://res.cloudinary.com/pilstech/image/upload/v1617005875/Image3_bucbbn.png" data-src="https://res.cloudinary.com/pilstech/image/upload/v1617005875/Image3_bucbbn.png">
                 <div class="camera_caption">
                    <div class="container">
-                        {{--  <h5 class=" wow fadeInUp animated">Welcome to our</h5>
-                        <h3 class=" wow fadeInUp animated" data-wow-delay="0.5s">SAFE AND SECURE INVOICING AND PAYMENT SOLUTIONS</h3>  --}}
-                        {{-- <p class=" wow fadeInUp animated" data-wow-delay="0.8s">fastest way to collect money from customers</p> --}}
-                        {{-- <a class=" wow fadeInUp animated" data-wow-delay="1s" href="#">Read More</a> --}}
-                   </div>
-                </div>
-            </div>
-
-            <div data-thumb="https://res.cloudinary.com/pilstech/image/upload/v1616688527/Safe_and_Secured_wwiznn.png" data-src="https://res.cloudinary.com/pilstech/image/upload/v1616688527/Safe_and_Secured_wwiznn.png">
-                <div class="camera_caption">
-                   <div class="container">
-                        {{--  <h5 class=" wow fadeInUp animated">Welcome to our</h5>
-                        <h3 class=" wow fadeInUp animated" data-wow-delay="0.5s">BANKING MADE EASY WITH WALLET</h3>  --}}
+                         {{-- <h5 class=" wow fadeInUp animated">Welcome to our</h5> --}}
+                        <h3 class=" wow fadeInUp animated" data-wow-delay="0.5s">PAYSPRINT....MONEY TRANSFER</h3> 
                         {{-- <p class=" wow fadeInUp animated" data-wow-delay="0.8s">fastest way to collect money from customers</p> --}}
                         {{-- <a class=" wow fadeInUp animated" data-wow-delay="1s" href="#">Read More</a> --}}
                    </div>

@@ -62,6 +62,7 @@
                         <ul class="nav nav-tabs">
                             <li class="tab-menu active"><a data-toggle="tab" href="#home">Send</a></li>
                             <li class="tab-menu"><a data-toggle="tab" href="#menu1">Receive</a></li>
+                            <li class="tab-menu"><a data-toggle="tab" href="#menu3">Search</a></li>
                             <li class="tab-menu" onclick="notifyForm('{{ $email }}')"><a data-toggle="tab" href="#menu2">Notification @if(isset($data)) <span class="badge badge-danger">{{ $data['newnotification'] }}</span> @else 0 @endif</a></li>
                         </ul>
 
@@ -315,7 +316,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-6">
-                                                <label for="orgInfo">Enter receivers account number or name</label>
+                                                <label for="orgInfo">Enter receivers account number</label>
                                                     <input type="text" name="orgInfo" class="form-control billinginput_box" id="orgInfo" placeholder="8172">
         
                                             </div>
@@ -330,7 +331,7 @@
         
                                         <div class="row">
                                             <div class="col-md-9">
-                                                <label for="orgInfo">Enter receivers account number or name</label>
+                                                <label for="orgInfo">Enter receivers account number</label>
                                                     <input type="text" name="orgInfo" class="form-control billinginput_box" id="orgInfo" placeholder="8172">
         
                                             </div>
@@ -674,6 +675,45 @@
                                     </div>
                                 </div>
                             </div>
+                            </div>
+
+                            <div id="menu3" class="tab-pane fade">
+                                <br>
+
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <label for="orgInfo">Search receivers name</label>
+                                            <input type="text" name="orgInfosearch" class="form-control billinginput_box" id="orgInfosearch" placeholder="John Doe">
+
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="orgInfo">&nbsp;</label><br>
+                                            <button class="btn btn-primary" onclick="checkDetail('search')">Check details</button>
+
+                                    </div>
+                                </div>
+                                <hr>
+                                        <div class="table table-responsive">
+                                            {{-- <label>Sender Information/Detail</label> --}}
+                                            <table class="table table-responsive table-striped table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Address</th>
+                                                        <th>Account No.</th>
+                                                        <th>City</th>
+                                                        <th>State</th>
+                                                        <th>Country</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="searchorgRec">
+
+                                                </tbody>
+                                            </table>
+                                        <br><br>
+
+                                        </div>
+
                             </div>
 
 

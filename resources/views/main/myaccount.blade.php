@@ -256,7 +256,7 @@ input[type="radio"] {
                                                                                 </div>
 
                                                                             </td>
-                                                                        <td style="font-weight: 700" class="{{ ($walletstatements->credit != 0) ? "text-success" : "text-danger" }}">{{ ($walletstatements->credit != 0) ? "+".$data['currencyCode'][0]->currencies[0]->symbol.$walletstatements->credit : "-".$data['currencyCode'][0]->currencies[0]->symbol.$walletstatements->debit }}</td>
+                                                                        <td style="font-weight: 700" class="{{ ($walletstatements->credit != 0) ? "text-success" : "text-danger" }}">{{ ($walletstatements->credit != 0) ? "+".$data['currencyCode'][0]->currencies[0]->symbol.number_format($walletstatements->credit, 2) : "-".$data['currencyCode'][0]->currencies[0]->symbol.number_format($walletstatements->debit, 2) }}</td>
                                                                     </tr>
                                                 
                                                                 @endforeach
@@ -301,7 +301,7 @@ input[type="radio"] {
                                                                                 </div>
 
                                                                             </td>
-                                                                            <td style="font-weight: 700" class="text-success">{{ "+".$data['currencyCode'][0]->currencies[0]->symbol.$walletstatements->credit }}</td>
+                                                                            <td style="font-weight: 700" class="text-success">{{ "+".$data['currencyCode'][0]->currencies[0]->symbol.number_format($walletstatements->credit, 2) }}</td>
                                                                         </tr>
 
                                                                     @endif
@@ -352,7 +352,7 @@ input[type="radio"] {
 
                                                                             </td>
                                                                             <td style="font-weight: 700" class="text-danger">
-                                                                                {{ "-".$data['currencyCode'][0]->currencies[0]->symbol.$walletstatements->debit }}
+                                                                                {{ "-".$data['currencyCode'][0]->currencies[0]->symbol.number_format($walletstatements->debit, 2) }}
                                                                             </td>
                                                                         </tr>
 

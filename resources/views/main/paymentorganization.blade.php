@@ -62,13 +62,15 @@ input[type="radio"] {
                         <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
                             <!-- Credit card form tabs -->
                             <ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
-                                <li class="nav-item"> <a data-toggle="pill" href="#credit-card" class="nav-link active "> <i class="fas fa-credit-card mr-2"></i> It's Fast and Safe... </a> </li>
+                                <li class="nav-item" onclick="location.href='{{ route('payorganization') }}'"> <a data-toggle="pill" href="{{ route('payorganization') }}" class="nav-link active "> <i class="fas fa-home"></i> Go Back </a> </li>
                                 {{-- <li class="nav-item"> <a data-toggle="pill" href="#paypal" class="nav-link "> <i class="fab fa-paypal mr-2"></i> Debit Card </a> </li>
                                 <li class="nav-item"> <a data-toggle="pill" href="#net-banking" class="nav-link "> <i class="fas fa-mobile-alt mr-2"></i> EXBC Card </a> </li> --}}
                             </ul>
                         </div> <!-- End -->
                         <!-- Credit card form content -->
                         <div class="tab-content">
+
+
 
                             @if (isset($data) && isset($data['paymentorg']))
 
@@ -123,11 +125,47 @@ input[type="radio"] {
                                         
                                     </div>
 
+                                    <div class="form-group disp-0"> <label for="make_payment_method">
+                                            <h6>Transfer Method</h6>
+                                        </label>
+                                        <div class="input-group"> 
+                                            <select name="payment_method" id="make_payment_method" class="form-control" required>
+                                                <option value="">Select Payment Method</option>
+                                                <option value="Wallet" selected>Wallet</option>
+                                                {{-- <option value="Credit Card">Credit Card</option> --}}
+                                                {{--  <option value="Debit Card">Debit Card</option>  --}}
+                                                {{-- <option value="EXBC Card">EXBC Card</option> --}}
+                                            </select>
+                                            
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group creditcard disp-0"> <label for="card_id">
+                                            <h6>Select Card</h6>
+                                        </label>
+                                        <div class="input-group"> 
+                                            <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/fluent/20/000000/bank-card-back-side.png"/> </span> </div>
+                                            <select name="card_id" id="card_id" class="form-control" required>
+                                                @if (count($data['getCard']) > 0)
+                                                    @foreach ($data['getCard'] as $mycard)
+
+
+                                                        <option value="{{ $mycard->id }}">{!! wordwrap($mycard->card_number, 4, '-', true) !!}</option>
+                                                    @endforeach
+                                                @else
+                                                    <option value="">Add a new card</option>
+                                                @endif
+                                            </select>
+                                            
+                                        </div>
+                                    </div>
+
                                     
                                     
                                     
                                         <div class="form-group"> <label for="orgpayservice">
-                                            <h6>Purpose of Payment</h6>
+                                            <h6>Purpose of Transfer</h6>
                                         </label>
                                         <div class="input-group"> 
                                             <select name="service" id="orgpayservice" class="form-control" required>
@@ -150,59 +188,89 @@ input[type="radio"] {
                                             
                                         </div>
                                     </div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group"> <label for="currency">
+                                                    <h6>Currency</h6>
+                                                </label>
+                                                <input type="hidden" name="localcurrency" value="{{ $data['currencyCode'][0]->currencies[0]->code }}">
+                                                <div class="input-group"> 
+                                                    <select name="currency" id="currency" class="form-control" readonly>
+                                                        <option value="{{ $data['othercurrencyCode'][0]->currencies[0]->code }}" selected>{{ $data['othercurrencyCode'][0]->currencies[0]->code }}</option>
+                                                    </select>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group"> <label for="orgpayamount">
+                                                    <h6>Amount to Send</h6>
+                                                </label>
+                                                <div class="input-group"> <input type="number" name="amount" id="orgpayamount" placeholder="50.00" class="form-control" maxlength="16" required>
+                                                    <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fas fa-money-check mx-1"></i> <i class="fab fa-cc-mastercard mx-1"></i> <i class="fab fa-cc-amex mx-1"></i> </span> </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                         
                                     
                                     
-                                    <div class="form-group"> <label for="currency">
-                                            <h6>Currency</h6>
-                                        </label>
-                                        <div class="input-group"> 
-                                            <select name="currency" id="currency" class="form-control" readonly>
-                                                <option value="{{ $data['currencyCode'][0]->currencies[0]->code }}" selected>{{ $data['currencyCode'][0]->currencies[0]->code }}</option>
-                                            </select>
-                                            
-                                        </div>
-                                    </div>
-                                    <div class="form-group"> <label for="orgpayamount">
-                                            <h6>Amount to Send</h6>
-                                        </label>
-                                        <div class="input-group"> <input type="number" name="amount" id="orgpayamount" placeholder="50.00" class="form-control" maxlength="16" required>
-                                            <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fas fa-money-check mx-1"></i> <i class="fab fa-cc-mastercard mx-1"></i> <i class="fab fa-cc-amex mx-1"></i> </span> </div>
-                                        </div>
-                                    </div>
+                                    
+                                    
 
-                                    <div class="form-group">
+                                    <div class="form-group disp-0">
                                         <div class="input-group"> 
-                                            <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission"> Payment include commission</p>
+                                            <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission"> Transfer include commission</p>
                                             
                                         </div>
                                     </div>
 
-                                    <div class="form-group"> <label for="make_payment_method">
-                                            <h6>Payment Method</h6>
-                                        </label>
-                                        <div class="input-group"> 
-                                            <select name="payment_method" id="make_payment_method" class="form-control" required>
-                                                <option value="">Select Payment Method</option>
-                                                <option value="Wallet">Wallet</option>
-                                                <option value="Credit Card">Credit Card</option>
-                                                {{--  <option value="Debit Card">Debit Card</option>  --}}
-                                                {{-- <option value="EXBC Card">EXBC Card</option> --}}
-                                            </select>
-                                            
+                                    @if (Request::get('country') != $data['paymentorg']->country)
+
+                                        <div class="form-group"> <label for="netwmount">
+                                                <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small></h6>
+                                                <p style="font-weight: bold;">
+                                                    {{ $data['currencyCode'][0]->currencies[0]->code }} <=> {{ $data['othercurrencyCode'][0]->currencies[0]->code }}
+                                                </p>
+                                            </label>
+                                            <div class="input-group"> 
+                                                <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
+                                            </div>
                                         </div>
-                                    </div>
+
+
+                                        @else
+
+                                        <div class="form-group disp-0"> <label for="netwmount">
+                                                <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small></h6>
+                                                <p style="font-weight: bold;">
+                                                    {{ $data['currencyCode'][0]->currencies[0]->code }} <=> {{ $data['othercurrencyCode'][0]->currencies[0]->code }}
+                                                </p>
+                                            </label>
+                                            <div class="input-group"> 
+                                                <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
+                                            </div>
+                                        </div>
+
+
+                                        
+                                    @endif
+
+
+                                    
 
 
                                 <div class="form-group"> <label for="netwmount">
-                                    <h6>Net Amount <br><small class="text-success"><b>This is the total amount to be sent to the receiver</b></small></h6>
+                                    <h6>Net Amount <br><small class="text-success"><b>This is the total amount to be received</b></small></h6>
+                                    
                                 </label>
                                 <div class="input-group"> 
                                     <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
                                 </div>
                             </div>
                                 <div class="form-group"> <label for="netwmount">
-                                    <h6>Commission</h6>
+                                    <h6>Commission <small class="text-success"><b>(FREE)</b></small></h6>
                                 </label>
                                 <div class="input-group"> 
                                     <input type="text" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
@@ -212,21 +280,15 @@ input[type="radio"] {
                                 </div>
                             </div>
 
-                            <div class="form-group"> <label for="netwmount">
-                                    <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small></h6>
-                                    <p style="font-weight: bold;">
-                                        {{ $data['currencyCode'][0]->currencies[0]->code }} <=> USD
-                                    </p>
-                                </label>
-                                <div class="input-group"> 
-                                    <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
-                                </div>
-                            </div>
 
+                            @if (Request::get('country') != $data['paymentorg']->country)
                             <div class="form-group">
                                 <span class="text-success">Please note that International transfer are sent in USD conversion</span>
                             </div>
 
+                            @endif
+
+                            
                             <hr>
 
                             <div class="form-group">
@@ -299,10 +361,13 @@ input[type="radio"] {
                                         
 
                                         <div class="row">
-                                            <div class="col-md-12 withCard disp-0">
+                                            <div class="col-md-12 withCardGoogle disp-0">
                                             <center><div id="container"></div></center>
                                             </div>
 
+                                            <div class="col-md-12 withCard disp-0">
+                                                <button type="button" onclick="orgmonerisPay()" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Send Money </button>
+                                            </div>
                                             <div class="col-md-12 withWallet disp-0">
                                                 <button type="button" onclick="orgmonerisPay()" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Send Money </button>
                                             </div>
@@ -380,15 +445,18 @@ $('#make_payment_method').change(function(){
     if($('#make_payment_method').val() == "Wallet"){
         $('.withWallet').removeClass('disp-0');
         $('.withCard').addClass('disp-0');
+        $('.creditcard').addClass('disp-0');
         
     }
     else if($('#make_payment_method').val() == "Credit Card"){
         $('.withWallet').addClass('disp-0');
         $('.withCard').removeClass('disp-0');
+        $('.creditcard').removeClass('disp-0');
     }
     else{
         $('.withWallet').addClass('disp-0');
         $('.withCard').addClass('disp-0');
+        $('.creditcard').addClass('disp-0');
     }
 
     runCommission();
@@ -404,8 +472,9 @@ function orgmonerisPay(){
     var amount = $('#orgpayamount').val();
     var month = $('#orgmonth').val();
     var expirydate = $('#orgpayyear').val();
-    var payment_method = $('#payment_method').val();
+    var payment_method = $('#make_payment_method').val();
     var creditcard_no = $('#orgpaycreditcard').val();
+    
 
     if(service == ""){
         swal('Oops!', 'Please select payment purpose', 'info');
@@ -460,16 +529,14 @@ $('#commission').click(function(){
 function runCommission(){
     
     $('.commissionInfo').html("");
+    var amount = $("#orgpayamount").val();
+    // var amount = $("#conversionamount").val();
 
 
     var route = "{{ URL('Ajax/getCommission') }}";
-    var thisdata = {check: $('#commission').prop("checked"), amount: $('#orgpayamount').val(), pay_method: $("#make_payment_method").val()};
+    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $("#make_payment_method").val(), localcurrency: "{{ $data['currencyCode'][0]->currencies[0]->code }}", foreigncurrency: "{{ $data['othercurrencyCode'][0]->currencies[0]->code }}"};
 
-    if($('#orgpayamount').val() == ""){
-        swal("Oops", "Please provide amount to send", "info");
-    }
-    else{
-        
+
     Pace.restart();
     Pace.track(function(){
 
@@ -491,9 +558,11 @@ function runCommission(){
             if(result.message == "success"){
 
                 $(".wallet-info").html(result.walletCheck);
+                $('.withWallet').removeClass('disp-0');
 
                 if(result.walletCheck != ""){
                     $(".sendmoneyBtn").attr("disabled", true);
+                    
 
                 }
                 else{
@@ -506,28 +575,31 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-success');
                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+$('#orgpayamount').val()+" will be charged from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.toFixed(2)+" will be deducted from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
 
-                    $("#totalcharge").val($('#orgpayamount').val());
+                    $("#totalcharge").val($('#conversionamount').val());
 
                     currencyConvert($('#orgpayamount').val());
 
                 }
                 else{
 
-                    $('.commissionInfo').addClass('alert alert-danger');
-                    $('.commissionInfo').removeClass('alert alert-success');
+                    // $('.commissionInfo').addClass('alert alert-danger');
+                    // $('.commissionInfo').removeClass('alert alert-success');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+(+result.data + +result.collection)+" will be charged from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
+                    $('.commissionInfo').addClass('alert alert-success');
+                    $('.commissionInfo').removeClass('alert alert-danger');
+
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+(+result.data + +result.collection).toFixed(2)+" will be deducted from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
                     $("#totalcharge").val((+result.data + +result.collection));
 
-                    currencyConvert((+result.data + +result.collection));
+                    currencyConvert($('#orgpayamount').val());
 
                 }
 
@@ -540,16 +612,16 @@ function runCommission(){
     });
 
     });
-    }
 }
 
 function currencyConvert(amount){
 
     $("#conversionamount").val("");
 
-    var currency = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
+    var currency = "{{ $data['othercurrencyCode'][0]->currencies[0]->code }}";
+    var localcurrency = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
     var route = "{{ URL('Ajax/getconversion') }}";
-    var thisdata = {currency: currency, amount: amount, val: "send"};
+    var thisdata = {currency: currency, amount: amount, val: "send", localcurrency: localcurrency};
 
         setHeaders();
         jQuery.ajax({

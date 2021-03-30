@@ -37,6 +37,23 @@
 
 {{-- Ajax --}}
 
+@auth
+    
+<script>
+
+    function payOrg(user_id){
+
+    location.href = location.origin+"/payment/sendmoney/"+user_id+"?country={{ Auth::user()->country }}";
+}
+
+function receiveMoney(user_id){
+    location.href = location.origin+"/payment/receivemoney/"+user_id+"?country={{ Auth::user()->country }}";
+}
+
+</script>
+
+@endauth
+
 
 
 
@@ -420,7 +437,7 @@ function getStatement(){
                                     today = new Date(today.getTime() - 3000000);
                                     var date_format_str = (today.getDate().toString().length==2?today.getDate().toString():"0"+today.getDate().toString())+"/"+((today.getMonth()+1).toString().length==2?(today.getMonth()+1).toString():"0"+(today.getMonth()+1).toString())+"/"+today.getFullYear().toString()+" "+(today.getHours().toString().length==2?today.getHours().toString():"0"+today.getHours().toString())+":"+((parseInt(today.getMinutes()/5)*5).toString().length==2?(parseInt(today.getMinutes()/5)*5).toString():"0"+(parseInt(today.getMinutes()/5)*5).toString())+":00";
 
-                                    statement = "<tr><td style='font-weight:bold; font-size: 11px;'>"+date_format_str+"</td><td>"+k.activity+"</td><td>"+k.reference_code+"</td><td><span style='color:"+transform+"; font-weight:bold;'>"+price+"</span></td><td>"+k.balance+"</td><td><a type='button' class='btn btn-default' href='"+urlRoute+"/"+k.reference_code+"' target='_blank' style='border:1px solid grey'>View Payment Receipt</a></td></tr>";
+                                    statement = "<tr><td style='font-weight:bold; font-size: 11px;'>"+date_format_str+"</td><td>"+k.activity+"</td><td>"+k.reference_code+"</td><td><span style='color:"+transform+"; font-weight:bold;'>"+price+"</span></td><td><a type='button' class='btn btn-default' href='"+urlRoute+"/"+k.reference_code+"' target='_blank' style='border:1px solid grey'>View Payment Receipt</a></td></tr>";
 
 
 
@@ -903,7 +920,7 @@ function checkDetail(val){
         });
     }
     }
-    else{
+    else if(val == "send"){
 
         if($('#orgInfo').val() == ""){
         $('tbody#orgRec').html("");
@@ -955,6 +972,58 @@ function checkDetail(val){
                     else{
                         $('tbody#orgRec').html("<tr><td colspan='7' align='center'>"+result.res+"</td></tr>");
                         // swal(result.title, result.res, result.message);
+                    }
+
+
+                }
+
+            });
+        });
+    }
+    }
+    else if(val == "search"){
+
+        if($('#orgInfosearch').val() == ""){
+        $('tbody#searchorgRec').html("");
+        swal("Oops!", "Enter receivers code", "info");
+    }
+    else{
+    route = "{{ URL('Ajax/getOrganization') }}";
+    thisdata = {user_id: $('#orgInfosearch').val(), action: val};
+
+        Pace.restart();
+        Pace.track(function(){
+                setHeaders();
+                jQuery.ajax({
+                url: route,
+                method: 'post',
+                data: thisdata,
+                dataType: 'JSON',
+                beforeSend: function(){
+                    $('tbody#searchorgRec').html("<tr><td colspan='6' align='center'>Please wait...</td></tr>");
+                },
+                success: function(result){
+
+                    if(result.message == "success"){
+                        var res = JSON.parse(result.data);
+
+
+                        var datainfo = "";
+                        var datarec;
+
+
+                        $.each(res, function(v, k){
+                           datarec = "<tr><td>"+k.name+"</td><td>"+k.address+"</td><td>"+k.ref_code+"</td><td>"+k.city+"</td><td>"+k.state+"</td><td>"+k.country+"</td></tr>";
+
+                           datainfo += datarec;
+                        });
+
+                        
+
+                        $('tbody#searchorgRec').html(datainfo);
+                    }
+                    else{
+                        $('tbody#searchorgRec').html("<tr><td colspan='6' align='center'>"+result.res+"</td></tr>");
                     }
 
 
@@ -1093,18 +1162,7 @@ function downloadBronchure(){
 }
 
 
-function payOrg(user_id){
-    // Click Modal
-    // $('#pay_for_organization').click();
-    // $('#orgpayuser_id').val(user_id);
 
-    // Take to payment route
-    location.href = location.origin+"/payment/sendmoney/"+user_id;
-}
-
-function receiveMoney(user_id){
-    location.href = location.origin+"/payment/receivemoney/"+user_id;
-}
 
 $('#orgpayservice').change(function(){
     if($('#orgpayservice').val() == "Others"){

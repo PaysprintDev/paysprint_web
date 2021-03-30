@@ -6,12 +6,17 @@ use Illuminate\Http\Request;
 
 class CurrencyConverterApiController extends Controller
 {
-    public function currencyConvert(Request $req){
+
+
+
+
+    public function currencyConverter(Request $req){
 
         $currency = 'USD'.$req->currency;
         $amount = $req->amount;
+        $localCurrency = 'USD'.$req->localcurrency;
 
-        $access_key = '6173fa628b16d8ce1e0db5cfa25092ac';
+        $access_key = '89e3a2b081fb2b9d188d22516553545c';
 
         $curl = curl_init();
 
@@ -35,6 +40,7 @@ class CurrencyConverterApiController extends Controller
 
         $result = json_decode($response);
 
+
         
 
 
@@ -42,7 +48,9 @@ class CurrencyConverterApiController extends Controller
         
             if($req->val == "send"){
                 // Conversion Rate USD to Local currency
-                $convRate = $amount / $result->quotes->$currency;
+                $convertLocal = $amount / $result->quotes->$currency;
+
+                $convRate = $result->quotes->$localCurrency * $convertLocal;
             }
             else{
                 // This amount is the amount in dollars

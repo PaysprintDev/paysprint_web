@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Mail;
 
+use Illuminate\Support\Facades\Validator;
+
 use App\User as User;
 
 use App\Mail\sendEmail;
@@ -38,6 +40,54 @@ use App\Epaywithdraw as Epaywithdraw;
 use App\Statement as Statement;
 
 use App\ReceivePay as ReceivePay;
+
+use App\AddCard as AddCard;
+
+use App\Classes\mpgGlobals;
+use App\Classes\httpsPost;
+use App\Classes\mpgHttpsPost;
+use App\Classes\mpgHttpsPostStatus;
+use App\Classes\mpgResponse;
+use App\Classes\mpgRequest;
+use App\Classes\mpgCustInfo;
+use App\Classes\mpgRecur;
+use App\Classes\mpgAvsInfo;
+use App\Classes\mpgCvdInfo;
+use App\Classes\mpgAchInfo;
+use App\Classes\mpgConvFeeInfo;
+use App\Classes\mpgTransaction;
+use App\Classes\MpiHttpsPost;
+use App\Classes\MpiResponse;
+use App\Classes\MpiRequest;
+use App\Classes\MpiTransaction;
+use App\Classes\riskHttpsPost;
+use App\Classes\riskResponse;
+use App\Classes\riskRequest;
+use App\Classes\mpgSessionAccountInfo;
+use App\Classes\mpgAttributeAccountInfo;
+use App\Classes\riskTransaction;
+use App\Classes\mpgAxLevel23;
+use App\Classes\axN1Loop;
+use App\Classes\axRef;
+use App\Classes\axIt1Loop;
+use App\Classes\axIt106s;
+use App\Classes\axTxi;
+use App\Classes\mpgAxRaLevel23;
+use App\Classes\mpgVsLevel23;
+use App\Classes\vsPurcha;
+use App\Classes\vsPurchl;
+use App\Classes\vsCorpai;
+use App\Classes\vsCorpas;
+use App\Classes\vsTripLegInfo;
+use App\Classes\mpgMcLevel23;
+use App\Classes\mcCorpac;
+use App\Classes\mcCorpai;
+use App\Classes\mcCorpas;
+use App\Classes\mcCorpal;
+use App\Classes\mcCorpar;
+use App\Classes\mcTax;
+use App\Classes\CofInfo;
+use App\Classes\MCPRate;
 
 class GooglePaymentController extends Controller
 {
@@ -69,11 +119,18 @@ class GooglePaymentController extends Controller
 
     public function orgPaymentInvoice(Request $req){
 
+        // dd($req->all());
+
+        $validator = Validator::make($req->all(), [
+            'payment_method' => 'required',
+            'service' => 'required',
+            'amount' => 'required',
+        ]);
+
+    if($validator->passes()){
+            
     // Get User Info
     $user = User::where('email', $req->orgpayemail)->first();
-
-    
-    
 
     
 
@@ -109,18 +166,83 @@ class GooglePaymentController extends Controller
             $service = $req->purpose;
         }
 
+            $statement_route = "wallet";
+
+            if($req->localcurrency != $req->currency){
+                $dataInfo = $this->convertCurrencyRate($req->localcurrency, $req->currency, $req->amounttosend);
+            }
+            else{
+                $dataInfo = $req->amounttosend;
+            }
+
+
+
+            if(env('APP_ENV') == "local"){
+                $mode = "test";
+            }
+            else{
+                $mode = "live";
+            }
+
+            
+
         if($req->payment_method == "Wallet"){
-            $wallet_balance = Auth::user()->wallet_balance - $req->amount;
+
+            $wallet_balance = Auth::user()->wallet_balance - $req->totalcharge;
             $paymentToken = "wallet-".date('dmY').time();
+            $status = "Delivered";
+            $action = "Wallet debit";
+            $requestReceive = 2;
+
+            
         }
         else{
-            $wallet_balance = Auth::user()->wallet_balance;
-            $paymentToken = $req->paymentToken;
+
+            if($req->localcurrency != $req->currency){
+                
+            $monerisDeductamount = $this->currencyConvert($req->localcurrency, $req->totalcharge);
+
+            }   
+            else{
+
+                $monerisDeductamount = $req->totalcharge;
+
+            }
+
+
+
+            $response = $this->monerisWalletProcess(Auth::user()->api_token, $req->card_id, $monerisDeductamount, "purchase", "PaySprint Send Money to the Wallet of ".$client->name, $mode);
+
+            if($response->responseData['Message'] == "APPROVED           *                    ="){
+
+                $reference_code = $response->responseData['ReceiptId'];
+
+                $wallet_balance = Auth::user()->wallet_balance;
+                $paymentToken = $reference_code;
+                $status = "Delivered";
+                $action = "Payment";
+                $requestReceive = 0;
+
+            }
+            else{
+
+                $message = $response->responseData['Message'];
+
+                $resData = ['res' => $message, 'message' => 'info', 'title' => 'Oops!'];
+
+                $response = $message;
+                $respaction = 'error';
+
+                return redirect()->back()->with($respaction, $response);
+            }
+
+            
         }
 
-        $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $req->user_id, 'user_id' => $userID, 'purpose' => $service, 'amount' => $req->amount, 'withdraws' => $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $req->amounttosend, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission, 'amountindollars' => $req->conversionamount]);
+        $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $req->user_id, 'user_id' => $userID, 'purpose' => $service, 'amount' => $req->currency.' '.$req->amount, 'withdraws' => $req->currency.' '.$req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $dataInfo, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission, 'amountindollars' => $req->localcurrency.' '.$req->conversionamount, 'request_receive' => $requestReceive]);
 
         if($insertPay == true){
+
 
             // Update Wallet
             User::where('email', Auth::user()->email)->update(['wallet_balance' => $wallet_balance]);
@@ -132,7 +254,7 @@ class GooglePaymentController extends Controller
             $this->coy_name = $client->name;
             // $this->email = "bambo@vimfile.com";
             $this->email = $user->email;
-            $this->amount = $req->amounttosend;
+            $this->amount = $req->currency.' '.$dataInfo;
             $this->paypurpose = $service;
 
             // Mail to receiver
@@ -144,39 +266,48 @@ class GooglePaymentController extends Controller
 
 
             // Insert Statement
-            $activity = "Payment to ".$client->name." on ".$service;
+            $activity = $req->payment_method." transfer of ".$req->currency.''.$req->amount." to ".$client->name." for ".$service;
             $credit = 0;
-            $debit = $req->amount + $req->commissiondeduct;
+            $debit = $req->conversionamount + $req->commissiondeduct;
             $reference_code = $paymentToken;
             $balance = 0;
             $trans_date = date('Y-m-d');
-            $status = "Pending";
-            $action = "Payment";
+            
             $regards = $req->user_id;
 
+
+            
+
+            $recWallet = $client->wallet_balance + $dataInfo;
+
+
+
+            User::where('ref_code', $req->user_id)->update(['wallet_balance' => $recWallet]);
+
             // Senders statement
-            $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1);
+            $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
             
             // Receiver Statement
-            $this->insStatement($client->email, $reference_code, "Received money for ".$service." from ".$user->name, $req->amount, 0, $balance, $trans_date, $status, "Invoice", $client->ref_code, 1);
+            $this->insStatement($client->email, $reference_code, "Received ".$req->currency.''.$dataInfo." in wallet for ".$service." from ".$user->name, $req->conversionamount, 0, $balance, $trans_date, $status, "Wallet credit", $client->ref_code, 1, $statement_route);
 
             
 
-            $resData = ['res' => 'Payment Sent Successfully', 'message' => 'success', 'title' => 'Good!'];
+            $resData = ['res' => 'Money sent successfully', 'message' => 'success', 'title' => 'Good!'];
 
-            $response = 'Payment Sent Successfully';
-            $action = 'success';
+            $response = 'Money sent successfully';
+            $respaction = 'success';
 
-            return redirect()->route('payorganization')->with($action, $response);
+
+            return redirect()->route('payorganization')->with($respaction, $response);
 
         }
         else{
             $resData = ['res' => 'Something went wrong', 'message' => 'info', 'title' => 'Oops!'];
 
             $response = 'Something went wrong';
-            $action = 'error';
+            $respaction = 'error';
 
-            return redirect()->back()->with($action, $response);
+            return redirect()->back()->with($respaction, $response);
         }
     }
     
@@ -184,17 +315,82 @@ class GooglePaymentController extends Controller
         $resData = ['res' => 'Cannot find your account record, to confirm payment.', 'message' => 'error', 'title' => 'Oops!'];
 
         $response = 'Cannot find your account record, to confirm payment.';
-        $action = 'error';
+        $respaction = 'error';
 
-        return redirect()->back()->with($action, $response);
+        return redirect()->back()->with($respaction, $response);
+    }
+
+        }
+        else{
+
+            $error = implode(",",$validator->messages()->all());
+
+            $resData = ['res' => $error, 'message' => 'error', 'title' => 'Oops!'];
+
+        $response = $error;
+        $respaction = 'error';
+
+        return redirect()->back()->with($respaction, $response);
+        }
+
+
+
+
     }
 
 
+    public function convertCurrencyRate($foreigncurrency, $localcurrency, $amount){
+
+        $currency = 'USD'.$foreigncurrency;
+        $amount = $amount;
+        $localCurrency = 'USD'.$localcurrency;
+
+        $access_key = '89e3a2b081fb2b9d188d22516553545c';
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'http://api.currencylayer.com/live?access_key='.$access_key,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Cookie: __cfduid=d430682460804be329186d07b6e90ef2f1616160177'
+        ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        $result = json_decode($response);
+
+
+        if($result->success == true){
+        
+            // Conversion Rate USD to Local currency
+            $convertLocal = $amount / $result->quotes->$currency;
+
+            $convRate = $result->quotes->$localCurrency * $convertLocal;
+
+        }
+        else{
+            $convRate = "Sorry we can not process your transaction this time, try again later!.";
+        }
+
+        
+
+        return $convRate;
+
     }
 
 
-    public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state){
-        Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state]);
+    public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route){
+        Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route]);
     }
 
 
@@ -229,5 +425,100 @@ class GooglePaymentController extends Controller
   
         Mail::to($objDemoa)
               ->send(new sendEmail($objDemo));
-     }
+    }
+
+
+    public function monerisWalletProcess($bearer, $card_id, $dollaramount, $type, $description, $mode){
+
+
+        if($mode == "test"){
+            if($type == "purchase"){
+                // Test API
+                $store_id='monca04155';
+                $api_token='KvTMr066FKlJm9rD3i71';
+            }
+            else{
+                // Test API
+                $store_id='store5';
+                $api_token='yesguy';
+            }
+
+            $setMode = true;
+        }
+        else{
+            // Live API
+            $store_id='gwca026583';
+            $api_token='sssLFi2U8VFO0oWvPWax';
+
+            $setMode = false;
+        }
+
+        
+
+
+        
+
+
+        $thisuser = User::where('api_token', $bearer)->first();
+
+        // Get Card Details
+        $cardDetails = AddCard::where('id', $card_id)->where('user_id', $thisuser->id)->first();
+
+
+        $type=$type;
+        $cust_id= $thisuser->ref_code;
+        $order_id='ord-'.date("dmy-Gis");
+        // $amount= number_format($dollaramount, 2);
+        $amount= $dollaramount;
+
+        
+
+        $month = $cardDetails->month;
+
+        $pan= $cardDetails->card_number;
+        $expiry_date= $cardDetails->year.$month;
+        $crypt='7';
+        $dynamic_descriptor= $description;
+        $status_check = 'false';
+
+        /*********************** Transactional Associative Array **********************/
+        $txnArray=array('type'=>$type,
+                'order_id'=>$order_id,
+                'cust_id'=>$cust_id,
+                'amount'=>$amount,
+                'pan'=>$pan,
+                'expdate'=>$expiry_date,
+                'crypt_type'=>$crypt,
+                'dynamic_descriptor'=>$dynamic_descriptor
+            );
+
+        // dd($txnArray);
+        /**************************** Transaction Object *****************************/
+        $mpgTxn = new mpgTransaction($txnArray);
+
+
+        /******************* Credential on File **********************************/
+        $cof = new CofInfo();
+        $cof->setPaymentIndicator("U");
+        $cof->setPaymentInformation("2");
+        $cof->setIssuerId("168451306048014");
+        $mpgTxn->setCofInfo($cof);
+
+        /****************************** Request Object *******************************/
+        $mpgRequest = new mpgRequest($mpgTxn);
+        $mpgRequest->setProcCountryCode("CA"); //"US" for sending transaction to US environment
+        $mpgRequest->setTestMode($setMode); //false or comment out this line for production transactions
+        /***************************** HTTPS Post Object *****************************/
+        /* Status Check Example
+        $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgRequest);
+        */
+        $mpgHttpPost = new mpgHttpsPost($store_id,$api_token,$mpgRequest);
+        /******************************* Response ************************************/
+        $mpgResponse=$mpgHttpPost->getMpgResponse();
+
+        return $mpgResponse;
+    }
+
+
+
 }

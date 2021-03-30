@@ -105,6 +105,7 @@
                 </div>
 
 
+
                 <br>
                 <div class="table table-responsive">
                     <table class="table table-striped table-bordered">
@@ -114,7 +115,6 @@
                                 <th>Description</th>
                                 <th>Reference Code</th>
                                 <th>Amount</th>
-                                <th>Running Balance</th>
                                 <th>Click to View</th>
                             </tr>
                         </thead>

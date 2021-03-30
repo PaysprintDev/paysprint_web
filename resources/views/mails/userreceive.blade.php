@@ -392,9 +392,9 @@
 
 <br /><br> <b>Your payment to the receiver is successful. Below are the details:</b>
 <br /><br />
-Company Name: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $maildata->coy_name }} <br><br>
+Name: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $maildata->coy_name }} <br><br>
 
-Amount Paid: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ number_format($maildata->amount, 2) }} <br><br>
+Amount Sent: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $maildata->amount}} <br><br>
 
 Purpose: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $maildata->paypurpose }} <br><br>
 

@@ -16,7 +16,7 @@
 
                 <li>
                     <a href="{{ route('register') }}">
-                       {{ __('Register') }}
+                       {{ __('Sign Up for FREE') }}
                     </a>
                 </li>
 
@@ -122,6 +122,13 @@
                         @else
 
                         <li class="dropdown submenu">
+                            {{-- <a href="{{ route('payorganization') }}">Send Money</a> --}}
+                            {{-- COnver to Modal popup --}}
+                            <a href="javascript:void()" onclick="$('#sendMoney').click()">Money Transfer</a>
+
+                        </li>
+
+                        <li class="dropdown submenu">
                             <a href="{{ route('invoice') }}">Invoice</a>
                         </li>
 
@@ -129,12 +136,7 @@
                             <a href="{{ route('statement') }}">Statement</a>
                         </li>
 
-                        <li class="dropdown submenu">
-                            {{-- <a href="{{ route('payorganization') }}">Send Money</a> --}}
-                            {{-- COnver to Modal popup --}}
-                            <a href="javascript:void()" onclick="$('#sendMoney').click()">Money Transfer</a>
-
-                        </li>
+                        
 
                         {{-- <li class="dropdown submenu">
                             <a style="cursor: pointer;" onclick="openModal('access_maintenance')">Rental Management</a>

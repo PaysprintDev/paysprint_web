@@ -126,7 +126,7 @@
 
                     @else
                     <tr>
-                        <td colspan="8" align="center">No record available</td>
+                        <td colspan="12" align="center">No record available</td>
                     </tr>
                     @endif
                 </tbody>

@@ -62,13 +62,14 @@ input[type="radio"] {
                         <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
                             <!-- Credit card form tabs -->
                             <ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
-                                <li class="nav-item"> <a data-toggle="pill" href="#credit-card" class="nav-link active "> <i class="fas fa-credit-card mr-2"></i> It's Fast and Safe... </a> </li>
+                                <li class="nav-item" onclick="location.href='{{ route('payorganization') }}'"> <a data-toggle="pill" href="{{ route('payorganization') }}" class="nav-link active "> <i class="fas fa-home"></i> Go Back </a> </li>
                                 {{-- <li class="nav-item"> <a data-toggle="pill" href="#paypal" class="nav-link "> <i class="fab fa-paypal mr-2"></i> Debit Card </a> </li>
                                 <li class="nav-item"> <a data-toggle="pill" href="#net-banking" class="nav-link "> <i class="fas fa-mobile-alt mr-2"></i> EXBC Card </a> </li> --}}
                             </ul>
                         </div> <!-- End -->
                         <!-- Credit card form content -->
                         <div class="tab-content">
+
 
                             @if (isset($data))
                                 
@@ -162,12 +163,14 @@ input[type="radio"] {
                                     
 
                                     <div class="form-group"> <label for="amount_to_receive">
-                                            <h6>Amount to Receive (USD)</h6>
+                                            <h6>Amount to Receive</h6>
                                         </label>
-                                        <div class="input-group"> <input type="text" name="amount_to_receive" id="amount_to_receive" value="{{ $data['getpay']->amountindollars }}" class="form-control" maxlength="16" readonly>
+                                        <div class="input-group"> <input type="text" name="amount_to_receive" id="amount_to_receive" value="{{ $data['getpay']->amount_to_send }}" class="form-control" maxlength="16" readonly>
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fas fa-money-check mx-1"></i> <i class="fab fa-cc-mastercard mx-1"></i> <i class="fab fa-cc-amex mx-1"></i> </span> </div>
                                         </div>
                                     </div>
+
+                                    @if (Request::get('country') != $data['getpay']->country)
 
 
                                     <div class="form-group"> <label for="netwmount">
@@ -184,6 +187,8 @@ input[type="radio"] {
                                     <div class="form-group">
                                             <span class="text-danger" style="font-weight: 800">International transfers are received in USD{{ $data['currencyCode'][0]->currencies[0]->code }} rates</span>
                                         </div>
+
+                                        @endif
                                     
                                     <div class="bank_info disp-0">
                                         <hr>

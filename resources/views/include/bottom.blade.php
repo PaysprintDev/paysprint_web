@@ -33,6 +33,8 @@
                     <ul class="quick_link">
                         <li><a href="{{ route('about') }}"><i class="fa fa-chevron-right"></i>About Us</a></li>
                         <li><a href="{{ route('contact') }}"><i class="fa fa-chevron-right"></i>Contact Us</a></li>
+                        <li><a href="{{ route('terms of use') }}"><i class="fa fa-chevron-right"></i>Terms of Use</a></li>
+                        <li><a href="{{ route('privacy policy') }}"><i class="fa fa-chevron-right"></i>Privacy Policy</a></li>
                         @guest
                             <li><a href="{{ route('login') }}"><i class="fa fa-chevron-right"></i>Login</a></li>
                         <li><a href="{{ route('register') }}"><i class="fa fa-chevron-right"></i>Sign Up for FREE</a></li>

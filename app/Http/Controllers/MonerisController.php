@@ -383,7 +383,7 @@ else{
 
                         $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                        $activity = "Added ".$req->amount." to Wallet";
+                        $activity = "Added ".$req->currencyCode.''.$req->amount." to Wallet";
                         $credit = $req->amount;
                         $debit = 0;
                         $reference_code = $response->responseData['ReceiptId'];
@@ -648,6 +648,15 @@ else{
 
     public function monerisWalletProcess($bearer, $card_id, $dollaramount, $type, $description, $mode){
 
+        if(env('APP_ENV') == 'local'){
+            $mode = "test";
+        }
+        else{
+            $mode = "live";
+        }
+
+
+
 
         if($mode == "test"){
             if($type == "purchase"){
@@ -670,9 +679,6 @@ else{
 
             $setMode = false;
         }
-
-        
-
 
         
 
@@ -996,11 +1002,14 @@ else{
 
 public function receivemoneyProcess(Request $req){
 
+
+    // Explode Currency
+
     // Insert Record
-    $data = ReceivePay::updateOrInsert(['pay_id' => $req->pay_id], ['_token' => $req->_token, 'pay_id' => $req->pay_id, 'sender_id' => $req->sender_id, 'receiver_id' => $req->receiver_id, 'payment_method' => $req->payment_method, 'account_number' => $req->account_number, 'accountname' => $req->accountname, 'amount_to_receive' => $req->conversionamount, 'bank_name' => $req->bank_name, 'creditcard_no' => $req->creditcard_no, 'currency' => $req->currency, 'purpose' => $req->purpose]);
+    $data = ReceivePay::updateOrInsert(['pay_id' => $req->pay_id], ['_token' => $req->_token, 'pay_id' => $req->pay_id, 'sender_id' => $req->sender_id, 'receiver_id' => $req->receiver_id, 'payment_method' => $req->payment_method, 'account_number' => $req->account_number, 'accountname' => $req->accountname, 'amount_to_receive' => $req->amount_to_receive, 'bank_name' => $req->bank_name, 'creditcard_no' => $req->creditcard_no, 'currency' => $req->currency, 'purpose' => $req->purpose]);
 
     // Update WALLET
-    $wallet = Auth::user()->wallet + $req->conversionamount;
+    $wallet = Auth::user()->wallet + $req->amount_to_receive;
 
     User::where('email', Auth::user()->email)->update(['wallet_balance' => $wallet]);
 

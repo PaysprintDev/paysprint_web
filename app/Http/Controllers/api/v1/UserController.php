@@ -66,6 +66,7 @@ class UserController extends Controller
                 'country' => $request->country,
                 'api_token' => uniqid().md5($request->email),
                 'password' => Hash::make($request->password),
+                'approval' => 0
             ]);
 
             $resData = ['data' => $user, 'message' => 'Registration successful'];
@@ -104,14 +105,14 @@ class UserController extends Controller
             $token = Auth::user()->createToken('authToken')->accessToken;
 
 
-            $getUser = User::select('id', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken')->where('email', $request->email)->first();
+            $getUser = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal')->where('email', $request->email)->first();
 
             if(Hash::check($request->password, $getUser->password)){
 
                 // Update User API Token
                 User::where('email', $request->email)->update(['api_token' => $token]);
 
-                $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken')->where('email', $request->email)->first();
+                $userData = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal')->where('email', $request->email)->first();
 
                 $data = $userData;
                 $status = 200;
@@ -138,7 +139,7 @@ class UserController extends Controller
 
     public function updateProfile(Request $request, User $user){
 
-        $user = User::select('id', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken')->where('api_token', $request->bearerToken())->first();
+        $user = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal')->where('api_token', $request->bearerToken())->first();
 
 
         User::where('id', $user->id)->update($request->all());
@@ -200,31 +201,7 @@ class UserController extends Controller
     }
 
 
-    public function getCountryCode($country){
 
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://restcountries.eu/rest/v2/name/'.$country,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'GET',
-        CURLOPT_HTTPHEADER => array(
-            'Cookie: __cfduid=d423c6237ed02a0f8118fec1c27419ab81613795899'
-        ),
-        ));
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-
-        return json_decode($response);
-
-    }
 
 
 

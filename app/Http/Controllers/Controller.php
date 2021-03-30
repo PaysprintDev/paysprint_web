@@ -68,7 +68,7 @@ class Controller extends BaseController
         $currency = 'USD'.$curCurrency;
         $amount = $curAmount;
 
-        $access_key = '6173fa628b16d8ce1e0db5cfa25092ac';
+        $access_key = '89e3a2b081fb2b9d188d22516553545c';
 
         $curl = curl_init();
 
@@ -103,6 +103,33 @@ class Controller extends BaseController
         
 
         return $convRate;
+
+    }
+
+
+    public function getCountryCode($country){
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://restcountries.eu/rest/v2/name/'.$country,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Cookie: __cfduid=d423c6237ed02a0f8118fec1c27419ab81613795899'
+        ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        return json_decode($response);
 
     }
 
