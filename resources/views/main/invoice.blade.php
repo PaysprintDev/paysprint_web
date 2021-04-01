@@ -42,7 +42,7 @@
                     <ul>
                         {{-- <li data-filter="*" class="active"><a href=""><i class="fa fa-money" aria-hidden="true"></i>Set Up e-Billing</a></li> --}}
                         <li data-filter=".payment" class="active"><a href=""><i class="fa fa-file" aria-hidden="true"></i>Print/View Invoice</a></li>
-                        <li data-filter=".payinvoice" onclick="$('.payinvoice').removeClass('disp-0')"><a href=""><img src="https://res.cloudinary.com/pilstech/image/upload/v1602676968/paysprint_uh3bux.png" style="width: 150px; height: 50px"><br>Pay Invoice</a></li>
+                        <li data-filter=".payinvoice" onclick="showPayinvoice()"><a href=""><img src="https://res.cloudinary.com/pilstech/image/upload/v1602676968/paysprint_uh3bux.png" style="width: 150px; height: 50px"><br>Pay Invoice</a></li>
                     </ul>
                 </div>
                 <div class="portfolio_item portfolio_2">
@@ -72,7 +72,12 @@
                             <div class="billingIns">
                                 <input type="text" name="reference" id="invoiceReference" class="form-control billinginput_box" placeholder="Type Invoice Reference Number*">
                             </div>
-                            <button class="button_all" onclick="getInvoice()" id="invoice_check">Submit</button>
+
+                            <div class="row billingIns">
+                                <div class="col-md-6"><button class="button_all" onclick="getInvoice()" id="invoice_check" style="width: 100% !important;">View Invoice</button></div>
+                                <div class="col-md-6"><button class="button_all" onclick="payInv()" id="payment_check" style="width: 100% !important; background: green; color: white;">Pay Invoice</button></div>
+                            </div>
+
                         </div>
                     </div>
 

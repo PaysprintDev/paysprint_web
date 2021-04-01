@@ -534,7 +534,7 @@ function runCommission(){
 
 
     var route = "{{ URL('Ajax/getCommission') }}";
-    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $("#make_payment_method").val(), localcurrency: "{{ $data['currencyCode'][0]->currencies[0]->code }}", foreigncurrency: "{{ $data['othercurrencyCode'][0]->currencies[0]->code }}"};
+    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $("#make_payment_method").val(), localcurrency: "{{ $data['currencyCode'][0]->currencies[0]->code }}", foreigncurrency: "{{ $data['othercurrencyCode'][0]->currencies[0]->code }}", structure: "Send Money/Pay Invoice", structureMethod: "Wallet"};
 
 
     Pace.restart();
@@ -553,7 +553,6 @@ function runCommission(){
         
         success: function(result){
 
-            console.log(result.walletCheck);
 
             if(result.message == "success"){
 

@@ -39,6 +39,10 @@ Route::prefix('/v1')->group(function () {
 
     Route::post('profile',  ['uses' => 'api\v1\UserController@updateProfile'])->name('update profile');
 
+    Route::post('updatetransactionpin',  ['uses' => 'api\v1\UserController@updateTransactionPin'])->name('update transaction pin');
+
+    Route::post('updatepassword',  ['uses' => 'api\v1\UserController@updatePassword'])->name('update password');
+
 
     Route::post('sendmoney',  ['uses' => 'api\v1\MoneyTransferController@sendMoney'])->name('send money');
 
@@ -85,6 +89,14 @@ Route::prefix('/v1')->group(function () {
     Route::post('addmoneytowallet',  ['uses' => 'MonerisController@addMoneyToWallet'])->name('add money to wallet');
 
     Route::post('moneywithdrawal',  ['uses' => 'MonerisController@moneyWithdrawal'])->name('withdraw from wallet');
+
+
+
+    // pay Invoice
+    Route::post('payinvoice',  ['uses' => 'MonerisController@payInvoice'])->name('pay invoice from wallet');
+
+    // Send Money to User not on PS
+    Route::post('sendmoneytoanonymous',  ['uses' => 'GooglePaymentController@sendMoneyToAnonymous'])->name('send money to user not on ps');
 
 
     });

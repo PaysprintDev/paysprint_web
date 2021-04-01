@@ -537,6 +537,27 @@ function contactUs(){
     }
 }
 
+function payInv(){
+   if($('#invoiceService').val() == ""){
+        swal('Oops', 'Please select a service', 'error');
+        return false;
+    }
+    else if($('#invoiceReference').val() == ""){
+        swal('Oops', 'Please enter your reference number', 'error');
+        return false;
+    }
+    else{
+        // CLick Pay Invoice and Paste the Invoice number
+        var refNo = $('#invoiceReference').val();
+        $("#invoiceNumber").val(refNo);
+        location.href = location.origin+"/payment/"+refNo;
+    } 
+}
+
+function showPayinvoice(){
+    $('.payinvoice').removeClass('disp-0');
+}
+
 function getInvoice(){
     if($('#invoiceService').val() == ""){
         swal('Oops', 'Please select a service', 'error');
@@ -985,7 +1006,7 @@ function checkDetail(val){
 
         if($('#orgInfosearch').val() == ""){
         $('tbody#searchorgRec').html("");
-        swal("Oops!", "Enter receivers code", "info");
+        swal("Oops!", "Enter receivers name", "info");
     }
     else{
     route = "{{ URL('Ajax/getOrganization') }}";
@@ -1894,6 +1915,8 @@ var route;
 
 var formData = new FormData(formElem);
 
+console.log(val);
+
 
 
 if(val == "updateprofile"){
@@ -1918,7 +1941,6 @@ if(val == "updateprofile"){
 
             $('#updateBtn').text('Update Profile');
 
-            try {
 
                 if(result.status == 200){
                     swal("Success", result.message, "success");
@@ -1927,19 +1949,117 @@ if(val == "updateprofile"){
                 else{
                     swal("Oops", result.message, "error");
                 }
-            } 
-            catch (error) {
-                swal("Oops!", error.message, "error");
-            }
 
 
+        },
+        error: function(err) {
+            $('#updateBtn').text('Update Profile');
+            swal("Oops", err.responseJSON.message, "error");
 
-        }
+        } 
 
     });
     });
 
 }
+
+
+else if(val == "transactionpinsettings"){
+
+    formData = new FormData(formElemtransactionpinsettings);
+
+        route = "{{ URL('/api/v1/updatetransactionpin') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#transactionBtn').text('Please wait...');
+        },
+        success: function(result){
+
+            $('#transactionBtn').text('Save');
+
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $('#transactionBtn').text('Save');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+else if(val == "passwordsettings"){
+
+    formData = new FormData(formElempasswordsettings);
+
+    route = "{{ URL('/api/v1/updatepassword') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#passwordBtn').text('Please wait...');
+        },
+        success: function(result){
+
+            $('#passwordBtn').text('Save');
+
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $('#passwordBtn').text('Save');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+
+
 else if('addcard'){
 
     route = "{{ URL('/api/v1/addnewcard') }}";
@@ -1962,7 +2082,6 @@ else if('addcard'){
 
             $('#cardSubmit').text('Submit');
 
-            try {
 
                 if(result.status == 200){
                     swal("Success", result.message, "success");
@@ -1971,19 +2090,21 @@ else if('addcard'){
                 else{
                     swal("Oops", result.message, "error");
                 }
-            } 
-            catch (error) {
-                swal("Oops!", error.message, "error");
-            }
 
 
+        },
+        error: function(err) {
+            $('.cardSubmit').text('Confirm');
+            swal("Oops", err.responseJSON.message, "error");
 
-        }
+        } 
 
     });
     });
 
 }
+
+
 
 }
 

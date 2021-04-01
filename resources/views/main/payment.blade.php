@@ -13,6 +13,8 @@
 
 <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
 
+<script src="https://kit.fontawesome.com/384ade21a6.js"></script>
+
     <title>PaySprint | Payment</title>
 
     <style>
@@ -39,6 +41,9 @@ input[type="radio"] {
 .bold {
     font-weight: bold
 }
+.disp-0{
+    display: none !important;
+}
     </style>
 
   </head>
@@ -57,7 +62,9 @@ input[type="radio"] {
                         <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
                             <!-- Credit card form tabs -->
                             <ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
-                                <li class="nav-item"> <a data-toggle="pill" href="#credit-card" class="nav-link active "> <i class="fas fa-credit-card mr-2"></i> Be Payment Ready... </a> </li>
+                                <li class="nav-item"> <a data-toggle="pill" href="{{ route('invoice') }}" class="nav-link active "> <i class="fas fa-home"></i> Go Back </a> </li>
+                                {{-- <li class="nav-item"> <a data-toggle="pill" href="#credit-card" class="nav-link active "> <i class="fas fa-credit-card mr-2"></i> Be Payment Ready... </a> </li> --}}
+                                
                                 {{-- <li class="nav-item"> <a data-toggle="pill" href="#paypal" class="nav-link "> <i class="fab fa-paypal mr-2"></i> Debit Card </a> </li>
                                 <li class="nav-item"> <a data-toggle="pill" href="#net-banking" class="nav-link "> <i class="fas fa-mobile-alt mr-2"></i> EXBC Card </a> </li> --}}
                             </ul>
@@ -69,12 +76,13 @@ input[type="radio"] {
                                 
                             <!-- credit card info-->
                             <div id="credit-card" class="tab-pane fade show active pt-3">
-                                <form role="form" action="{{ route('PaymentInvoice') }}" method="POST" id="paymentForm">
+                                {{-- <form role="form" action="{{ route('PaymentInvoice') }}" method="POST" id="paymentForm"> --}}
+                                <form role="form" action="#" method="POST" id="formElem">
                                     @csrf
                                     <input type="hidden" name="invoice_no" id="payinvoiceRef" value="{{ $data['getinvoice'][0]->invoice_no }}">
                                     <input type="hidden" name="amount" id="payamount" value="{{ number_format($data['getinvoice'][0]->amount, 2) }}">
                                     <input type="hidden" name="invoice_balance" value="{{ $data['getinvoice'][0]->remaining_balance }}">
-                                    <input type="hidden" name="user_id" id="payuser_id" value="{{ $data['getinvoice'][0]->uploaded_by }}">
+                                    <input type="hidden" name="merchant_id" id="payuser_id" value="{{ $data['getinvoice'][0]->uploaded_by }}">
                                     <input type="hidden" name="email" id="payemail" value="{{ $email }}">
                                     <input type="hidden" name="service" id="payservice" value="{{ $data['getinvoice'][0]->service }}">
 
@@ -123,30 +131,28 @@ input[type="radio"] {
                                     </div>
 
 
-                                    <div class="form-group"> <label for="name">
+                                    <div class="form-group disp-0"> <label for="name">
                                             <h6>Card Owner</h6>
                                         </label> <input type="text" name="name" id="payname" placeholder="Card Owner Name" required class="form-control" value="{{ $name }}" readonly> 
                                     </div>
                                     
-                                        <div class="form-group"> <label for="make_payment_method">
+                                        <div class="form-group disp-0"> <label for="make_payment_method">
                                             <h6>Payment Method</h6>
                                         </label>
                                         <div class="input-group"> 
                                             <select name="payment_method" id="make_payment_method" class="form-control" required>
-                                                <option value="Credit Card">Credit Card</option>
-                                                {{--  <option value="Debit Card">Debit Card</option>  --}}
-                                                <option value="EXBC Card">EXBC Card</option>
+                                                <option value="Wallet">Wallet</option>
+                                                {{-- <option value="EXBC Card">EXBC Card</option> --}}
                                             </select>
                                             
                                         </div>
                                     </div>
-                                    <div class="form-group"> <label for="currency">
+                                    <div class="form-group disp-0"> <label for="currency">
                                             <h6>Currency</h6>
                                         </label>
                                         <div class="input-group"> 
                                             <select name="currency" id="currency" class="form-control">
-                                                <option value="CAD">CAD</option>
-                                                <option value="USD">USD</option>
+                                                <option value="{{ $data['currencyCode'][0]->currencies[0]->symbol }}">{{ $data['currencyCode'][0]->currencies[0]->symbol }}</option>
                                             </select>
                                             
                                         </div>
@@ -154,18 +160,30 @@ input[type="radio"] {
                                     <div class="form-group"> <label for="currency">
                                             <h6>Amount to Pay</h6>
                                         </label>
-                                        <div class="input-group"> <input type="number" name="typepayamount" id="typepayamount" placeholder="50.00" class="form-control" maxlength="16" required>
-                                            <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fas fa-money-check mx-1"></i> <i class="fab fa-cc-mastercard mx-1"></i> <i class="fab fa-cc-amex mx-1"></i> </span> </div>
+                                        <input type="hidden" value="{{ $data['currencyCode'][0]->currencies[0]->code }}" name="currencyCode">
+                                        <div class="input-group"> <span class="input-group-text text-muted"> {{ $data['currencyCode'][0]->currencies[0]->symbol }} </span> <input type="number" min="0.00" step="0.01" name="typepayamount" id="typepayamount" placeholder="50.00" class="form-control" value="{{ number_format($data['getinvoice'][0]->amount, 2) }}" readonly>
+                                            <div class="input-group-append">  </div>
                                         </div>
                                     </div>
-                                    <div class="form-group"> <label for="paycreditcard">
+
+                                    <hr>
+
+                                    <div class="form-group">
+                                        <strong><span class="text-danger wallet-info"></span></strong>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="commissionInfo"></div>
+                                    </div>
+
+                                    <div class="form-group disp-0"> <label for="paycreditcard">
                                             <h6>Card number</h6>
                                         </label>
                                         <div class="input-group"> <input type="number" name="creditcard_no" id="paycreditcard" placeholder="5199 - 3924 - 2100 - 5430" class="form-control" maxlength="16" required>
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fab fa-cc-visa mx-1"></i> <i class="fab fa-cc-mastercard mx-1"></i> <i class="fab fa-cc-amex mx-1"></i> </span> </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row disp-0">
                                         <div class="col-sm-4">
                                             <div class="form-group"> <label><span class="hidden-xs">
                                                         <h6>Month</h6>
@@ -212,7 +230,8 @@ input[type="radio"] {
                                                 </label> <input type="number" required class="form-control" name="cvv" placeholder="435"> </div>
                                         </div>
                                     </div>
-                                    <div class="card-footer"> <button type="button" onclick="monerisPay()" class="subscribe btn btn-primary btn-block shadow-sm"> Confirm Payment </button></div>
+                                    {{-- onclick="monerisPay()" --}}
+                                    <div class="card-footer"> <button type="button" onclick="handShake('payinvoice')" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Pay Invoice </button></div>
 
                                     
                                 </form>
@@ -235,7 +254,11 @@ input[type="radio"] {
         </div>
 
     
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="{{ asset('js/jquery-1.12.0.min.js') }}"></script>
+
+        @include('include.message')
+
+    {{-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 
     <script src="{{ asset('pace/pace.min.js') }}"></script>
@@ -243,9 +266,126 @@ input[type="radio"] {
 
         <script>
             $(function() {
-                $('[data-toggle="tooltip"]').tooltip()
+                $('[data-toggle="tooltip"]').tooltip();
+
+                if($("#typepayamount").val() != ""){
+                    runCommission();
+                }
+
+                // $("#typepayamount").on("keyup", function() {
+                //     runCommission();
+                // });
+
                 })
 
+
+function handShake(val){
+
+var route;
+
+var formData = new FormData(formElem);
+
+if('payinvoice'){
+
+    route = "{{ URL('/api/v1/payinvoice') }}";
+
+        Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('.sendmoneyBtn').text('Please wait...');
+        },
+        success: function(result){
+            console.log(result);
+
+            $('.sendmoneyBtn').text('Pay Invoice');
+
+            if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.href="{{ route('invoice') }}"; }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+        },
+        error: function(err) {
+            $('.sendmoneyBtn').text('Pay Invoice');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+}
+
+
+function runCommission(){
+    
+    $('.commissionInfo').html("");
+    var amount = $("#typepayamount").val();
+
+    var route = "{{ URL('Ajax/getwalletBalance') }}";
+    var thisdata = {amount: amount, pay_method: $("#make_payment_method").val(), currency: $("#currency").val()};
+
+
+    Pace.restart();
+    Pace.track(function(){
+
+        setHeaders();
+        
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: thisdata,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('.commissionInfo').addClass('');
+        },
+        
+        success: function(result){
+
+
+            if(result.message == "success"){
+
+                $(".wallet-info").html(result.walletCheck);
+
+                if(result.walletCheck != ""){
+                    $(".sendmoneyBtn").attr("disabled", true);
+
+                }
+                else{
+                    $(".sendmoneyBtn").attr("disabled", false);
+                }
+
+                    $('.commissionInfo').addClass('alert alert-success');
+                    $('.commissionInfo').removeClass('alert alert-danger');
+
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+$("#typepayamount").val()+" will be deducted from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
+
+            }
+
+
+        },
+        error: function(err) {
+            swal("Oops", err.responseJSON.message, "error");
+        } 
+
+    });
+
+    });
+}
 
                 // Moneris Payment
 function monerisPay(){
@@ -333,7 +473,8 @@ function monerisPay(){
     function setHeaders(){
     $.ajaxSetup({
       headers: {
-          'X-CSRF-TOKEN': "{{csrf_token()}}"
+          'X-CSRF-TOKEN': "{{csrf_token()}}",
+        'Authorization': "Bearer "+"{{ Auth::user()->api_token }}"
       }
     });
  }

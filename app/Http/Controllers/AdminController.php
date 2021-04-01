@@ -454,6 +454,128 @@ class AdminController extends Controller
     }
 
 
+    public function feeStructure(Request $req){
+
+                if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+
+
+
+            return view('admin.feestructure')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
+    public function editFee(Request $req, $id){
+
+                if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $getTransfee = $this->getTransfee($id);
+
+
+
+            return view('admin.editfeestructure')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'getTransfee' => $getTransfee]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
+    public function getTransfee($id){
+        $data = TransactionCost::where('id', $id)->first();
+
+        return $data;
+    }
+    
+    
+
+
     public function allPlatformUsers(Request $req){
 
         if($req->session()->has('username') == true){
@@ -617,6 +739,41 @@ class AdminController extends Controller
 
         
     } 
+
+
+    public function createFeeStructure(Request $req){
+        // Insert Record
+        $rec = TransactionCost::insert($req->all());
+
+        $resData = "Saved";
+        $resp = "success";
+
+        return redirect()->back()->with($resp, $resData);
+        
+    }
+
+
+    public function editFeeStructure(Request $req, $id){
+        // Insert Record
+        $rec = TransactionCost::where('id', $id)->update($req->all());
+
+        $resData = "Updated successfully";
+        $resp = "success";
+
+        return redirect()->back()->with($resp, $resData);
+        
+    }
+
+    public function deletefee(Request $req, $id){
+
+        $rec = TransactionCost::where('id', $id)->delete();
+
+        $resData = "Deleted";
+        $resp = "success";
+
+        return redirect()->back()->with($resp, $resData);
+
+    }
 
 
     public function paycaremittance(Request $req){
@@ -2289,7 +2446,7 @@ class AdminController extends Controller
 
     // Get Tranasaction cost
     public function transactionCost(){
-        $getCost = TransactionCost::all();
+        $getCost = TransactionCost::orderBy('created_at', 'DESC')->get();
 
         return $getCost;
     }

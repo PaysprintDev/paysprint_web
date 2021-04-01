@@ -176,6 +176,113 @@ class UserController extends Controller
     }
 
 
+    public function updatePassword(Request $req){
+
+
+        $validator = Validator::make($req->all(), [
+                     'oldpassword' => 'required|string',
+                     'newpassword' => 'required|string',
+                     'confirmpassword' => 'required|string',
+                ]);
+
+                if($validator->passes()){
+
+                    if($req->newpassword != $req->confirmpassword){
+                        $data = [];
+                        $message = "Confirm password does not match";
+                        $status = 400;
+                    }
+                    else{
+                        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+
+                        if(Hash::check($req->oldpassword, $thisuser->password)){
+                            // Update
+                            $resp = User::where('api_token', $req->bearerToken())->update(['password' => Hash::make($req->newpassword)]);
+
+                            $data = $resp;
+                            $message = "Saved";
+                            $status = 200;
+                        }
+                        else{
+                            $data = [];
+                            $message = "Your old password is incorrect";
+                            $status = 400;
+                        }
+                    }
+
+                    
+
+                }
+                else{
+
+                    $error = implode(",",$validator->messages()->all());
+
+                    $data = [];
+                    $status = 400;
+                    $message = $error;
+                }
+
+                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                return $this->returnJSON($resData, $status);
+
+    }
+
+
+    public function updateTransactionPin(Request $req){
+        
+
+        $validator = Validator::make($req->all(), [
+                     'oldpin' => 'required|string',
+                     'newpin' => 'required|string',
+                     'confirmpin' => 'required|string',
+                ]);
+
+                if($validator->passes()){
+
+                    if($req->newpin != $req->confirmpin){
+                        $data = [];
+                        $message = "The confirm pin does not match";
+                        $status = 400;
+                    }
+                    else{
+                        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+                    if(Hash::check($req->oldpin, $thisuser->transaction_pin)){
+                        // Update
+                        $resp = User::where('api_token', $req->bearerToken())->update(['transaction_pin' => Hash::make($req->newpin)]);
+
+                        $data = $resp;
+                        $message = "Saved";
+                        $status = 200;
+                    }
+                    else{
+                        $data = [];
+                        $message = "Your old transaction pin is incorrect";
+                        $status = 400;
+                    }
+                    }
+
+                    
+
+                }
+                else{
+
+                    $error = implode(",",$validator->messages()->all());
+
+                    $data = [];
+                    $status = 400;
+                    $message = $error;
+                }
+
+                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                return $this->returnJSON($resData, $status);
+
+    }
+
+
 
     public function uploadDocument($id, $file, $pathWay, $rowName){
 

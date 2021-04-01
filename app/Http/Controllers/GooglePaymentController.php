@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Validator;
 
 use App\User as User;
 
+use App\AnonUsers as AnonUsers;
+
 use App\Mail\sendEmail;
 
 use App\CreateEvent as CreateEvent;
@@ -199,7 +201,7 @@ class GooglePaymentController extends Controller
         else{
 
             if($req->localcurrency != $req->currency){
-                
+
             $monerisDeductamount = $this->currencyConvert($req->localcurrency, $req->totalcharge);
 
             }   
@@ -339,6 +341,202 @@ class GooglePaymentController extends Controller
     }
 
 
+    // Send Money to Anonymous
+    public function sendMoneyToAnonymous(Request $req){
+        // dd($req->all());
+
+        $validator = Validator::make($req->all(), [
+            'fname' => 'required',
+            'lname' => 'required',
+            'email' => 'required',
+            'countryCode' => 'required',
+            'phone' => 'required',
+            'country' => 'required',
+            'payment_method' => 'required',
+            'service' => 'required',
+            'amount' => 'required',
+        ]);
+
+
+            if($validator->passes()){
+            
+                // Get User Info
+                $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+                if(isset($thisuser)){
+
+                    $ref_code = mt_rand(00000, 99999);
+
+                    // Get all ref_codes
+                    $ref = User::all();
+
+                    if(count($ref) > 0){
+                        foreach($ref as $key => $value){
+                            if($value->ref_code == $ref_code){
+                                $newRefcode = mt_rand(000000, 999999);
+                            }
+                            else{
+                                $newRefcode = $ref_code;
+                            }
+                        }
+                    }
+                    else{
+                        $newRefcode = $ref_code;
+                    }
+                    
+                    $newcustomer = AnonUsers::where('email', $req->email)->first();
+
+                    
+                    $approve_commission = "No";
+
+                        $foreigncurrency = $this->getCountryCode($req->country);
+
+
+                    if($thisuser->country != $req->country){
+
+                        // Get Country Currency code
+
+                        
+                        // COnvert Currency for Wallet credit to receiver
+                        $amount = $this->convertCurrencyRate($foreigncurrency[0]->currencies[0]->code, $req->currency, $req->amount);
+
+
+                    }
+                    else{
+                        $amount = $req->amount;
+                    }
+
+
+                    // Getting the payer
+                    $userID = $thisuser->email;
+                    $payerID = $thisuser->ref_code;
+
+                    // $req->user_id is for the receiver::
+
+                    // Do Insert
+                    if($req->service != "Others"){
+                        $service = $req->service;
+                    }
+                    else{
+                        $service = $req->purpose;
+                    }
+
+                        $statement_route = "wallet";
+
+
+                        $wallet_balance = $thisuser->wallet_balance - $req->amount;
+                        $paymentToken = "wallet-".date('dmY').time();
+                        $status = "Delivered";
+                        $action = "Wallet debit";
+                        $requestReceive = 2;
+
+
+                    $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $newRefcode, 'user_id' => $userID, 'purpose' => $service, 'amount' => $req->currency.' '.$req->amount, 'withdraws' => $req->currency.' '.$req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $amount, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission, 'amountindollars' => $foreigncurrency[0]->currencies[0]->code.' '.$amount, 'request_receive' => $requestReceive]);
+
+                    if($insertPay == true){
+
+
+                        // Update Wallet
+                        User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $wallet_balance]);
+
+
+                        // Create or update Other party account
+                        if(isset($newcustomer)){
+                            // Update account
+                            $newwalletBal = $newcustomer->wallet_balance + $amount;
+                            AnonUsers::where('email', $newcustomer->email)->update(['wallet_balance' => $newwalletBal]);
+                        }
+                        else{
+                            // Create account
+                            $newwalletBal = $amount;
+                            AnonUsers::insert(['code' => $req->countryCode, 'ref_code' => $newRefcode, 'name' => $req->fname.' '.$req->lname, 'email' => $req->email, 'telephone' => $req->phone, 'country' => $req->country, 'wallet_balance' => $newwalletBal]);
+                        }
+
+
+                        // Send mail to both parties
+
+                        // Notification to Sender
+                        $this->name = $thisuser->name;
+                        // $this->email = "bambo@vimfile.com";
+                        $this->email = $thisuser->email;
+                        $this->subject = "Transaction Notification";
+
+                        $this->message = '<p>You just sent <strong>'.$req->currency.' '.number_format($req->amount, 2).'</strong> to '.$req->fname.' '.$req->lname.'. You now have <strong>'.$req->currency.' '.number_format($wallet_balance, 2).'</strong> in your account</p>';
+
+                        $this->sendEmail($this->email, "Fund remittance");
+
+                        // Notification for receiver
+                        $this->name = $req->fname.' '.$req->lname;
+                        // $this->to = "bambo@vimfile.com";
+                        $this->to = $req->email;
+                        $this->subject = "Transaction Notification from ".$thisuser->name;
+
+                        $this->message = '<p>You just received <strong>'.$foreigncurrency[0]->currencies[0]->code.' '.number_format($amount, 2).'</strong> from '.$thisuser->name.'. You now have <strong>'.$foreigncurrency[0]->currencies[0]->code.' '.number_format($newwalletBal, 2).'</strong> in your account</p><hr><p>Click on the link below to register your account to withdraw money</p><p><a href="'.route('register', 'user='.$newRefcode).'">'.route('register', 'user='.$newRefcode).'</a></p>';
+
+                        $this->sendEmail($this->to, "Fund remittance");
+
+
+                        // Insert Statement
+                        $activity = $req->payment_method." transfer of ".$req->currency.''.$req->amount." to ".$req->fname.' '.$req->lname." for ".$service;
+                        $credit = 0;
+                        $debit = $req->conversionamount + $req->commissiondeduct;
+                        $reference_code = $paymentToken;
+                        $balance = 0;
+                        $trans_date = date('Y-m-d');
+                        
+                        $regards = $newRefcode;
+
+                        // Senders statement
+                        $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
+                        
+                        // Receiver Statement
+                        $this->insStatement($req->email, $reference_code, "Received ".$foreigncurrency[0]->currencies[0]->code.''.$amount." in wallet for ".$service." from ".$thisuser->name, $amount, 0, $balance, $trans_date, $status, "Wallet credit", $newRefcode, 1, $statement_route);
+
+                        
+
+                        $response = 'Money sent successfully';
+
+                        $data = $insertPay;
+                        $status = 200;
+                        $message = $response;
+
+                    }
+                    else{
+
+                        $response = 'Something went wrong';
+                        $data = [];
+                        $message = $response;
+                        $status = 400;
+                    }
+                }
+                
+                else{
+                    $response = 'Cannot find your account record, to continue payment.';
+
+                    $data = [];
+                    $message = $response;
+                    $status = 400;
+                }
+
+        }
+        else{
+
+            $error = implode(",",$validator->messages()->all());
+
+            $data = [];
+            $status = 400;
+            $message = $error;
+        }
+
+
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+        
+    }
+
+
     public function convertCurrencyRate($foreigncurrency, $localcurrency, $amount){
 
         $currency = 'USD'.$foreigncurrency;
@@ -373,9 +571,10 @@ class GooglePaymentController extends Controller
         if($result->success == true){
         
             // Conversion Rate USD to Local currency
-            $convertLocal = $amount / $result->quotes->$currency;
+            $convertLocal = $amount / $result->quotes->$localCurrency;
 
-            $convRate = $result->quotes->$localCurrency * $convertLocal;
+
+            $convRate = $result->quotes->$currency * $convertLocal;
 
         }
         else{
@@ -419,6 +618,7 @@ class GooglePaymentController extends Controller
           elseif($purpose == 'Fund remittance'){
               $objDemo->name = $this->name;
               $objDemo->email = $this->email;
+              $objDemo->to = $this->to;
               $objDemo->subject = $this->subject;
               $objDemo->message = $this->message;
           }

@@ -16,7 +16,7 @@ class CurrencyConverterApiController extends Controller
         $amount = $req->amount;
         $localCurrency = 'USD'.$req->localcurrency;
 
-        $access_key = '89e3a2b081fb2b9d188d22516553545c';
+        $access_key = '3755c94ab8bc3a28513e616a6b47305c';
 
         $curl = curl_init();
 
@@ -47,10 +47,12 @@ class CurrencyConverterApiController extends Controller
         if($result->success == true){
         
             if($req->val == "send"){
-                // Conversion Rate USD to Local currency
-                $convertLocal = $amount / $result->quotes->$currency;
+                // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
+                $convertLocal = $amount / $result->quotes->$localCurrency;
 
-                $convRate = $result->quotes->$localCurrency * $convertLocal;
+                // Converting your USD value to other currency ie CAD * Y 
+                $convRate = $result->quotes->$currency * $convertLocal;
+
             }
             else{
                 // This amount is the amount in dollars
@@ -68,6 +70,9 @@ class CurrencyConverterApiController extends Controller
         
 
         $amountConvert = $convRate;
+
+
+
 
 
 

@@ -124,7 +124,7 @@ class MonerisController extends Controller
 	}
 
 
-	public function purchase(Request $req){
+public function purchase(Request $req){
 
 		/**************************** Request Variables *******************************/
 
@@ -253,7 +253,7 @@ if($mpgResponse->responseData['Message'] == "APPROVED           *               
 
 
                     // Insert Statement
-                        $activity = "Payment on ".$req->service;
+                        $activity = "Payment for ".$req->service;
                         $credit = 0;
                         $debit = $req->amount;
                         $balance = $newAmount;
@@ -350,8 +350,195 @@ else{
 }
 
 
+    // Pay Invoice from Wallet
+    public function payInvoice(Request $req){
+
+        // dd($req->all());
+
+        $validator = Validator::make($req->all(), [
+                     'invoice_no' => 'required|string',
+                     'amount' => 'required|string',
+                     'merchant_id' => 'required|string',
+                     'service' => 'required|string',
+                     'payment_method' => 'required|string',
+                     'currencyCode' => 'required|string',
+                ]);
+
+            if($validator->passes()){
+
+                try {
+                    $transactionID = "wallet-".date('dmY').time();
+
+                            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+                            // Get My Wallet Balance
+                            $walletBalance = $thisuser->wallet_balance - $req->amount;
+
+                            User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBalance]);
+
+                            // Update Merchant Wallet 
+
+                            $thismerchant = User::where('ref_code', $req->merchant_id)->first();
+
+                            // Update Merchant Wallet Balance
+                            $merchantwalletBalance = $thismerchant->wallet_balance + $req->amount;
+
+                            User::where('ref_code', $req->merchant_id)->update(['wallet_balance' => $merchantwalletBalance]);
+
+                    $insPay = InvoicePayment::updateOrCreate(['invoice_no' => $req->invoice_no],['transactionid' => $transactionID, 'name' => $thisuser->name, 'email' => $thisuser->email, 'amount' => $req->amount, 'invoice_no' => $req->invoice_no, 'service'=> $req->service, 'client_id' => $req->merchant_id, 'payment_method' => $req->payment_method]);
+
+
+                    if($insPay){
+                        // Update Import Excel Record
+                        $getInv = ImportExcel::where('invoice_no', $req->invoice_no)->get();
+
+                        if(count($getInv) > 0){
+                            // Get Amount
+                            $prevAmount = $getInv[0]->amount;
+
+                            $paidAmount = $req->amount;
+
+                            $newAmount = $prevAmount - $paidAmount;
+
+                            $instcount = $getInv[0]->installcount + 1;
+
+                            if($getInv[0]->installlimit > $instcount){
+                                $installcounter = $getInv[0]->installlimit;
+                            }
+                            else{
+                                $installcounter = $instcount;
+                            }
+
+                            ImportExcel::where('invoice_no', $req->invoice_no)->update(['installcount' => $installcounter, 'payment_status' => 1]);
+
+                            // Update Price Record
+                            $updtPrice = InvoicePayment::where('transactionid', $transactionID)->update(['remaining_balance' => $newAmount, 'opening_balance' => $prevAmount, 'payment_method' => $req->payment_method]);
+
+                            if(isset($updtPrice)){
+
+                                $client = ClientInfo::where('user_id', $req->merchant_id)->get();
+
+                                // Insert PAYCAWithdraw
+                                PaycaWithdraw::insert(['withdraw_id' => $transactionID, 'client_id' => $req->merchant_id, 'client_name' => $req->name, 'card_method' => $req->payment_method, 'client_email' => $req->email, 'amount_to_withdraw' => $req->amount, 'remittance' => 0]);
+
+
+                                    $activity = "Payment for ".$req->service." from ".$req->payment_method;
+                                    $credit = 0;
+                                    $debit = $req->amount;
+                                    $balance = $newAmount;
+                                    $status = "Delivered";
+                                    $action = "Wallet debit";
+                                    $regards = $req->merchant_id;
+                                    $reference_code = $transactionID;
+                                    $trans_date = date('Y-m-d');
+                                    $statement_route = "wallet";
+
+
+                                    // My Statement
+                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route); 
+
+                                    $this->name = $thisuser->name;
+                                    $this->email = $thisuser->email;
+                                    // $this->email = "bambo@vimfile.com";
+                                    $this->subject = "Transaction Notification";
+
+                                    $this->message = '<p>You have successfully paid invoice of <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong>. You now have <strong>'.$req->currencyCode.' '.number_format($walletBalance, 2).'</strong> in your account</p>';
+
+                                    $this->sendEmail($this->email, "Fund remittance");
+                                    
+                                    /*---------------------------------------------------------------------------------------------------------------------*/ 
+
+                                    // Merchant Statement
+
+                                    $activity = "Added ".$req->currencyCode.''.$req->amount." to Wallet";
+                                    $credit = $req->amount;
+                                    $debit = 0;
+                                    $reference_code = $transactionID;
+                                    $balance = 0;
+                                    $trans_date = date('Y-m-d');
+                                    $status = "Delivered";
+                                    $action = "Wallet credit";
+                                    $regards = $thismerchant->ref_code;
+                                    $statement_route = "wallet";
+
+                                    // Senders statement
+                                    $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
+
+
+                                    $this->name = $thismerchant->name;
+                                    $this->email = $thismerchant->email;
+                                    // $this->email = "bambo@vimfile.com";
+                                    $this->subject = "Transaction Notification";
+
+                                    $this->message = '<p>You just received <strong>'.$req->currencyCode.''.number_format($req->amount, 2).'</strong> for <b>INVOICE: '.$req->invoice_no.'</b>. Payment made by <b>'.$thisuser->name.'</b>.</p> <p>You now have <strong>'.$req->currencyCode.''.number_format($merchantwalletBalance, 2).'</strong> in your wallet account</p>';
+
+                                    $this->sendEmail($this->email, "Fund remittance");
+
+
+                                $data = $insPay;
+                                $status = 200;
+                                $message = 'You have successfully paid invoice of '.$req->currencyCode.' '.number_format($req->amount, 2);
+                            }
+                            else{
+                                
+                                $response = 'Something went wrong';
+
+                                $data = [];
+                                $status = 400;
+                                $message = $response;
+
+                            }
+
+                        }
+                        else{
+                            
+                            $response = 'Invoice not found';
+                            $data = [];
+                            $status = 400;
+                            $message = $response;
+
+                        }
+
+                    }
+                    else{
+                        $response = 'Information not documented, contact Admin';
+
+                        $data = [];
+                        $status = 400;
+                        $message = $response;
+
+                    }
+                } catch (\Throwable $th) {
+                    $data = [];
+                    $status = 400;
+                    $message = "Error: ".$th;
+                }
+
+
+            }
+            else{
+
+                $error = implode(",",$validator->messages()->all());
+
+                $data = [];
+                $status = 400;
+                $message = $error;
+            }
+
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+
+    }
+
+
+
+
     // Add Money to Wallet
     public function addMoneyToWallet(Request $req){
+
+        // dd($req->all());
 
 
 
@@ -359,13 +546,15 @@ else{
                      'card_id' => 'required|string',
                      'amount' => 'required|string',
                      'currencyCode' => 'required|string',
+                     'conversionamount' => 'required|string',
                 ]);
 
             if($validator->passes()){
 
                 $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                $monerisDeductamount = $this->currencyConvert($req->currencyCode, $req->amount);
+                $monerisDeductamount = $req->conversionamount;
+                // $monerisDeductamount = $this->currencyConvert($req->currencyCode, $req->amount);
 
                 
 
@@ -442,11 +631,14 @@ else{
 
     public function moneyWithdrawal(Request $req){
 
+        // dd($req->all());
+
         $validator = Validator::make($req->all(), [
                      'card_id' => 'required|string',
                      'amount' => 'required|string',
                      'transaction_pin' => 'required|string',
                      'currencyCode' => 'required|string',
+                     'conversionamount' => 'required|string',
                 ]);
 
                 if($validator->passes()){
@@ -468,7 +660,9 @@ else{
 
                             // Do convert amount to dollars
 
-                                $monerisDeductamount = $this->currencyConvert($req->currencyCode, $req->amount);
+                            // This 1.35 is commission charge, kindly calculate again
+
+                                $monerisDeductamount = $req->conversionamount - 1.35;
 
 
                                 // Check Transaction PIn
@@ -494,7 +688,7 @@ else{
 
                                                 $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                                                $activity = "Debited ".$req->amount." from Wallet";
+                                                $activity = "Debited ".$req->currencyCode.''.$req->amount." from Wallet";
                                                 $credit = 0;
                                                 $debit = $req->amount;
                                                 $reference_code = $response->responseData['ReceiptId'];
@@ -654,7 +848,6 @@ else{
         else{
             $mode = "live";
         }
-
 
 
 

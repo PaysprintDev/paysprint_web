@@ -6,7 +6,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'PaySprint') }} | Register</title>
+    <title>{{ config('app.name', 'PaySprint') }} | Sign Up for RFEE</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -82,7 +82,7 @@ body::-webkit-scrollbar-thumb:hover {
 
                 <li>
                     <a href="{{ route('register') }}">
-                       {{ __('Register') }}
+                       {{ __('Sign Up for FREE') }}
                     </a>
                 </li>
             </ul>
@@ -157,10 +157,10 @@ body::-webkit-scrollbar-thumb:hover {
 
     <!-- Banner area -->
     <section class="banner_area" data-stellar-background-ratio="0.5">
-        <h2>Register</h2>
+        <h2>Sign Up for FREE</h2>
         <ol class="breadcrumb">
             <li><a href="{{ route('home') }}">Home</a></li>
-            <li><a href="{{ route('register') }}" class="active">Register</a></li>
+            <li><a href="{{ route('register') }}" class="active">Sign Up for FREE</a></li>
         </ol>
     </section>
     <!-- End Banner area -->
@@ -173,7 +173,7 @@ body::-webkit-scrollbar-thumb:hover {
                     <img src="https://thumbs.gfycat.com/GlossyAdoredJapanesebeetle-small.gif" style="width: 100%;">
                 </div>
                 <div class="col-sm-6 contact_info send_message">
-                    <h2>Register for FREE</h2>
+                    <h2>Sign Up for FREE</h2>
 
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
 
@@ -184,6 +184,15 @@ body::-webkit-scrollbar-thumb:hover {
 
 <div class="tab-content" id="myTabContent">
   <div role="tabpanel" class="tab-pane active" id="home">
+
+    {{-- Include Controller --}}
+
+    {{-- {{ Request::get('user') }} --}}
+    <?php use \App\Http\Controllers\AnonUsers; ?>
+
+
+{{-- http://localhost:9090/register?user=12873 --}}
+
                     <form class="form-inline contact_box" action="#" method="POST">
                         @csrf
 
@@ -195,27 +204,54 @@ body::-webkit-scrollbar-thumb:hover {
                         </select>
                         </div>
 
+                        @if (Request::get('user') != null)
+                            @if($newuser = \App\AnonUsers::where('ref_code', Request::get('user'))->first())
+
+                                @php
+                                    $name = explode(" ", $newuser->name);
+                                    $ref_code = Request::get('user');
+                                    $fname = $name[0];
+                                    $lname = $name[1];
+                                    $email = $newuser->email;
+                                @endphp
+
+                            @endif
+                        @else
+
+                            @php
+                                $ref_code = "";
+                                $fname = "";
+                                $lname = "";
+                                $email = "";
+                            @endphp
+                            
+                        @endif
+
+                        <input type="hidden" name="ref_code" id="ref_code" @if($ref_code != "") value="{{ $ref_code }}" readonly @else placeholder="Ref code" @endif>
+
                         <div class="indForm animated rollIn disp-0">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="fname">First Name</label>
-                                        <input type="text" id="fname" name="firstname" class="form-control input_box" placeholder="First Name *" required>
+                                        
+
+                                        <input type="text" id="fname" name="firstname" class="form-control input_box" @if($fname != "") value="{{ $fname }}" readonly @else placeholder="First Name *" required @endif >
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="lname">Last Name</label>
-                                        <input type="text" id="lname" name="lastname" class="form-control input_box" placeholder="Last Name *" required>
+                                        <input type="text" id="lname" name="lastname" class="form-control input_box" @if($lname != "") value="{{ $lname }}" readonly @else placeholder="Last Name *" required @endif>
                                     </div>
                                 </div>
                             </div>
 
                             <label for="email">Email Address</label>
-                                        <input type="email" name="email" id="email" class="form-control input_box" placeholder="Your Email *" required>
+                                        <input type="email" name="email" id="email" class="form-control input_box" @if($email != "") value="{{ $email }}" readonly @else placeholder="Your Email *" required @endif>
                             
                             <label for="cemail">Confirm Email Address</label>
-                                        <input type="email" name="cemail" id="cemail" class="form-control input_box" placeholder="Confirm Your Email *" required>
+                                        <input type="email" name="cemail" id="cemail" class="form-control input_box" @if($email != "") value="{{ $email }}" readonly @else placeholder="Confirm Your Email *" required @endif>
                             
 
                             
@@ -299,19 +335,19 @@ body::-webkit-scrollbar-thumb:hover {
                             <div class="row">
                                 <div class="col-sm-6">
                                     <label for="busfname">First Name</label>
-                                    <input type="text" id="busfname" name="firstname" class="form-control input_box" placeholder="First Name *" required>
+                                    <input type="text" id="busfname" name="firstname" class="form-control input_box" @if($fname != "") value="{{ $fname }}" readonly @else placeholder="First Name *" required @endif>
                                 </div>
                                 <div class="col-sm-6">
                                     <label for="buslname">Last Name</label>
-                                    <input type="text" id="buslname" name="lastname" class="form-control input_box" placeholder="Last Name *" required>
+                                    <input type="text" id="buslname" name="lastname" class="form-control input_box" @if($lname != "") value="{{ $lname }}" readonly @else placeholder="Last Name *" required @endif>
                                 </div>
                             </div>
 
                             <label for="busemail">Email Address</label>
-                            <input type="email" name="email" id="busemail" class="form-control input_box" placeholder="Your Email *" required>
+                            <input type="email" name="email" id="busemail" class="form-control input_box" @if($email != "") value="{{ $email }}" readonly @else placeholder="Your Email *" required @endif>
 
                             <label for="buscemail">Confirm Email Address</label>
-                            <input type="email" name="cemail" id="buscemail" class="form-control input_box" placeholder="Confirm Your Email *" required>
+                            <input type="email" name="cemail" id="buscemail" class="form-control input_box" @if($email != "") value="{{ $email }}" readonly @else placeholder="Confirm Your Email *" required @endif>
 
                             <div class="row">
 
@@ -364,12 +400,12 @@ body::-webkit-scrollbar-thumb:hover {
   <div role="tabpanel" class="tab-pane" id="profile">
       <br>
         <div class="display-3">
-          <h4 class="text-center">Click the button to register as Merchant.</h4>
+          <h4 class="text-center">Click the button to sign up as Merchant.</h4>
       </div>
 
       <br>
 
-      <button class="btn btn-danger btn-block" onclick="gotoMerchant()">Register as a Merchant</button>
+      <button class="btn btn-danger btn-block" onclick="gotoMerchant()">Sign Up for FREE as a Merchant</button>
 
   </div>
 </div>
@@ -530,8 +566,10 @@ var spinner = $('.spinner');
 var submitBtn = $('.submitBtn');
 var fname; var lname; var email; var cemail; var city; var country;
 var state; var address; var password; var cpassword; var zipcode; var busname;
-var corporationtype
+var corporationtype;
+var ref_code;
     if(accountType == "Individual"){
+        ref_code = $('#ref_code').val();
         fname = $('#fname').val();
         lname = $('#lname').val();
         email = $('#email').val();
@@ -591,10 +629,11 @@ var corporationtype
             fname: fname, lname: lname, email: email,
             country: country, state: state, city: city,
             address: address, password: password, zipcode: zipcode,
-            accountType: accountType
+            accountType: accountType, ref_code: ref_code
         };
     }
     else if(accountType == "Business"){
+        ref_code = $('#ref_code').val();
         busname = $('#busname').val();
         address = $('#busaddress').val();
         corporationtype = $('#buscorporationtype').val();
@@ -661,7 +700,7 @@ var corporationtype
            busname: busname, corporationtype: corporationtype, fname: fname,
            lname: lname, email: email, country: country,
            state: state, city: city, address: address, password: password, zipcode: zipcode,
-           accountType: accountType
+           accountType: accountType, ref_code: ref_code
         };
 
     }
@@ -681,18 +720,19 @@ var corporationtype
             submitBtn.addClass('disp-0');
           },
           success: function(result){
-            if(result.message == 'success'){
-                spinner.addClass('disp-0');
+              spinner.addClass('disp-0');
                 submitBtn.removeClass('disp-0');
+            if(result.message == 'success'){
+                
             swal('Welcome', result.res, result.message);
             setTimeout(function(){ location.href = result.link; }, 5000);
             }else{
-                spinner.addClass('disp-0');
-                submitBtn.removeClass('disp-0');
                 swal('Oops', result.res, result.message);
             }
             },
             error: function(err) {
+                spinner.addClass('disp-0');
+                submitBtn.removeClass('disp-0');
             swal("Oops", err.responseJSON.message, "error");
 
         } 

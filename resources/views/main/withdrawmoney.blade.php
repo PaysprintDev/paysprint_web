@@ -134,6 +134,49 @@ input[type="radio"] {
                                         </div>
                                     </div>
 
+
+                                    <div class="form-group disp-0">
+                                        <div class="input-group"> 
+                                            <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission" checked> Include commission</p>
+                                            
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group"> <label for="netwmount">
+                                        <h6>Net Amount <br><small class="text-success disp-0"><b>This is the total amount to be received</b></small></h6>
+                                        
+                                    </label>
+                                    <div class="input-group"> 
+                                        <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
+                                    </div>
+                                </div>
+                                    <div class="form-group"> <label for="netwmount">
+                                        <h6>Commission</h6>
+                                    </label>
+                                    <div class="input-group"> 
+                                        <input type="text" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
+
+                                        <input type="hidden" name="totalcharge" class="form-control" id="totalcharge" value="" placeholder="0.00" readonly>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group disp-0"> <label for="netwmount">
+                                        <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small></h6>
+                                        <p style="font-weight: bold;">
+                                            {{ $data['currencyCode'][0]->currencies[0]->code }} <=> CAD
+                                        </p>
+                                    </label>
+                                    <div class="input-group"> 
+                                        <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="commissionInfo"></div>
+                                </div>
+
                                     @if (Auth::user()->transaction_pin != null)
 
                                     <div class="form-group"> <label for="transaction_pin">
@@ -174,7 +217,7 @@ input[type="radio"] {
 
                                             <div class="col-md-12">
                                                 <div class="form-group"> <label for="password">
-                                                        <h6>Login Password <br> <small class="text-danger">We need to be sure it's you</small></h6>
+                                                        <h6>Provide Your Login Password <br> <small class="text-danger">We need to be sure it's you</small></h6>
                                                     </label>
                                                     <div class="input-group"> <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fas fa-lock"></i> </span> </div> <input type="password" name="password" id="password" class="form-control" required>
                                                         
@@ -234,6 +277,144 @@ input[type="radio"] {
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
         <script>
+
+
+$(function() {
+
+$("#amount").on("keyup", function() {
+    runCommission();
+});
+
+
+
+
+});
+
+
+
+function runCommission(){
+    
+    $('.commissionInfo').html("");
+    var amount = $("#amount").val();
+    // var amount = $("#conversionamount").val();
+
+
+    var route = "{{ URL('Ajax/getCommission') }}";
+    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: "Credit Card", localcurrency: "{{ $data['currencyCode'][0]->currencies[0]->code }}", foreigncurrency: "USD", structure: "Withdrawal", structureMethod: "CC/Bank"};
+
+
+    Pace.restart();
+    Pace.track(function(){
+
+        setHeaders();
+        
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: thisdata,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('.commissionInfo').addClass('');
+        },
+        
+        success: function(result){
+
+            var totalCharge;
+
+            if(result.message == "success"){
+
+                $(".wallet-info").html(result.walletCheck);
+                $('.withWallet').removeClass('disp-0');
+
+                if(result.walletCheck != ""){
+                    $(".sendmoneyBtn").attr("disabled", true);
+                    
+
+                }
+                else{
+                    $(".sendmoneyBtn").attr("disabled", false);
+                }
+
+
+                if(result.state == "commission available"){
+
+                    $('.commissionInfo').addClass('alert alert-success');
+                    $('.commissionInfo').removeClass('alert alert-danger');
+
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.toFixed(2)+" will be credited to your Credit/Debit Card. Commission charge inclusive</span></li></li></ul>");
+
+                    $("#amounttosend").val(result.data);
+                    $("#commissiondeduct").val(result.collection);
+
+                    $("#totalcharge").val(result.data);
+
+                    totalCharge = $("#amount").val();
+
+                    currencyConvert(totalCharge);
+
+
+                }
+                else{
+
+                    $('.commissionInfo').addClass('alert alert-danger');
+                    $('.commissionInfo').removeClass('alert alert-success');
+
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+(+result.data + +result.collection).toFixed(2)+" will be charged from your Credit/Debit Card.</span></li></li></ul>");
+
+                    $("#amounttosend").val(result.data);
+                    $("#commissiondeduct").val(result.collection);
+                    $("#totalcharge").val((+result.data + +result.collection));
+
+                    totalCharge = $("#amount").val();
+
+
+                    currencyConvert(totalCharge);
+
+                }
+
+
+            }
+
+
+        }
+
+    });
+
+    });
+}
+
+
+function currencyConvert(amount){
+
+    $("#conversionamount").val("");
+
+    var currency = "CAD";
+    var localcurrency = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
+    var route = "{{ URL('Ajax/getconversion') }}";
+    var thisdata = {currency: currency, amount: amount, val: "send", localcurrency: localcurrency};
+
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: thisdata,
+        dataType: 'JSON',
+        success: function(result){
+
+            if(result.message == "success"){
+                $("#conversionamount").val(result.data);
+            }
+            else{
+                $("#conversionamount").val("");
+            }
+
+
+        }
+
+    });
+}
+
+
 function handShake(val){
 
 var route;

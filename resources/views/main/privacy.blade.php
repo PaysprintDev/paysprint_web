@@ -636,7 +636,7 @@
                         <br>
                         <strong>
                             Privacy Officer <br>
-                            PaySprint by Express Ca CorpTithe.ly  <br>
+                            PaySprint by Express Ca Corp  <br>
                             10 George St. North, Brampton. ON <br>
                             L6X1R2. ON. Canada
                         </strong>

@@ -305,7 +305,16 @@
                                             <hr>
 <p>
   PaySprint provides fastest money transfer and invoice payment solution. 
-Download PaySprint App today on <br> <img src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/google-play-soon_miudnn.png" alt="Play Store" style="width: 150px;"> <img src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/Coming_Soon_to_the_App_Store_izz7ir.png" alt="App Store" style="width: 120px;"> <br>
+Download PaySprint App today on <br> <ul style="
+    display: inline-flex;
+    list-style: none;
+">
+    
+    <li><img id="1617200960035100001_imgsrc_url_1" alt="Play Store" style="width :  150px; " src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/google-play-soon_miudnn.png"></li>
+
+    <li>
+<img id="1617200960035100001_imgsrc_url_2" alt="App Store" style="width :  125px; " src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/Coming_Soon_to_the_App_Store_izz7ir.png"></li>
+</ul> <br>
 Visit our website, <a href="{{ route('home') }}">www.paysprint.net</a> to open an Merchant account.
 </p>
 

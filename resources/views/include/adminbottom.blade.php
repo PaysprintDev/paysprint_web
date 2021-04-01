@@ -1252,6 +1252,28 @@ function invoiceVisit(id, val){
 
 }
 
+function del(val){
+if(val == "deletefee"){
+      swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this fee structure!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+
+        $("#"+val).submit();
+
+      } 
+      else {
+
+      }
+    });
+}
+}
+
 
 
 function confirmPay(transactionid, user_id, coy_id){

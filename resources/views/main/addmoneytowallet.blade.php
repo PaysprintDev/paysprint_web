@@ -39,6 +39,11 @@ input[type="radio"] {
 .bold {
     font-weight: bold
 }
+
+.disp-0{
+    display: none !important;
+}
+
     </style>
 
   </head>
@@ -95,7 +100,7 @@ input[type="radio"] {
                                     <div class="form-group"> <label for="amount">
                                             <h6>Amount</h6>
                                         </label>
-                                        <div class="input-group"> <div class="input-group-append"> <span class="input-group-text text-muted"> {{ $data['currencyCode'][0]->currencies[0]->symbol }} </span> </div> <input type="number" name="amount" id="amount" class="form-control" required>
+                                        <div class="input-group"> <div class="input-group-append"> <span class="input-group-text text-muted"> {{ $data['currencyCode'][0]->currencies[0]->symbol }} </span> </div> <input type="number" min="0.00" step="0.01" name="amount" id="amount" class="form-control" required>
 
                                         <input type="hidden" name="currencyCode" class="form-control" id="curCurrency" value="{{ $data['currencyCode'][0]->currencies[0]->code }}" readonly>
 
@@ -103,6 +108,55 @@ input[type="radio"] {
                                             
                                         </div>
                                     </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group"> 
+                                            <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission"> Include commission</p>
+                                            
+                                        </div>
+                                    </div>
+
+
+                                    
+
+
+                                    <div class="form-group"> <label for="netwmount">
+                                        <h6>Net Amount <br><small class="text-success disp-0"><b>This is the total amount to be received</b></small></h6>
+                                        
+                                    </label>
+                                    <div class="input-group"> 
+                                        <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
+                                    </div>
+                                </div>
+                                    <div class="form-group"> <label for="netwmount">
+                                        <h6>Commission</h6>
+                                    </label>
+                                    <div class="input-group"> 
+                                        <input type="text" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
+
+                                        <input type="hidden" name="totalcharge" class="form-control" id="totalcharge" value="" placeholder="0.00" readonly>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group disp-0"> <label for="netwmount">
+                                        <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small></h6>
+                                        <p style="font-weight: bold;">
+                                            {{ $data['currencyCode'][0]->currencies[0]->code }} <=> CAD
+                                        </p>
+                                    </label>
+                                    <div class="input-group"> 
+                                        <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="commissionInfo"></div>
+                                </div>
+
+                                
                                     
                                     
                                     <div class="card-footer"> <button type="button" onclick="handShake('addmoney')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </button></div>
@@ -132,6 +186,144 @@ input[type="radio"] {
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
         <script>
+
+            $(function() {
+
+                $("#amount").on("keyup", function() {
+                    runCommission();
+                });
+
+                });
+
+
+$('#commission').click(function(){
+    runCommission();
+});
+
+
+function runCommission(){
+    
+    $('.commissionInfo').html("");
+    var amount = $("#amount").val();
+    // var amount = $("#conversionamount").val();
+
+
+    var route = "{{ URL('Ajax/getCommission') }}";
+    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: "Credit Card", localcurrency: "{{ $data['currencyCode'][0]->currencies[0]->code }}", foreigncurrency: "USD", structure: "Send Money/Pay Invoice", structureMethod: "CC/Bank"};
+
+
+    Pace.restart();
+    Pace.track(function(){
+
+        setHeaders();
+        
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: thisdata,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('.commissionInfo').addClass('');
+        },
+        
+        success: function(result){
+
+            var totalCharge;
+
+            if(result.message == "success"){
+
+                $(".wallet-info").html(result.walletCheck);
+                $('.withWallet').removeClass('disp-0');
+
+                if(result.walletCheck != ""){
+                    $(".sendmoneyBtn").attr("disabled", true);
+                    
+
+                }
+                else{
+                    $(".sendmoneyBtn").attr("disabled", false);
+                }
+
+
+                if(result.state == "commission available"){
+
+                    $('.commissionInfo').addClass('alert alert-success');
+                    $('.commissionInfo').removeClass('alert alert-danger');
+
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.toFixed(2)+" will be charged from your Credit/Debit Card.</span></li></li></ul>");
+
+                    $("#amounttosend").val(result.data);
+                    $("#commissiondeduct").val(result.collection);
+
+                    $("#totalcharge").val(result.data);
+
+                    totalCharge = $("#totalcharge").val();
+
+                    currencyConvert(totalCharge);
+
+
+                }
+                else{
+
+                    $('.commissionInfo').addClass('alert alert-danger');
+                    $('.commissionInfo').removeClass('alert alert-success');
+
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+(+result.data + +result.collection).toFixed(2)+" will be charged from your Credit/Debit Card.</span></li></li></ul>");
+
+                    $("#amounttosend").val(result.data);
+                    $("#commissiondeduct").val(result.collection);
+                    $("#totalcharge").val((+result.data + +result.collection));
+
+                    totalCharge = $("#totalcharge").val();
+
+
+                    currencyConvert(totalCharge);
+
+                }
+
+
+            }
+
+
+        }
+
+    });
+
+    });
+}
+
+
+function currencyConvert(amount){
+
+    $("#conversionamount").val("");
+
+    var currency = "CAD";
+    var localcurrency = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
+    var route = "{{ URL('Ajax/getconversion') }}";
+    var thisdata = {currency: currency, amount: amount, val: "send", localcurrency: localcurrency};
+
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: thisdata,
+        dataType: 'JSON',
+        success: function(result){
+
+            if(result.message == "success"){
+                $("#conversionamount").val(result.data);
+            }
+            else{
+                $("#conversionamount").val("");
+            }
+
+
+        }
+
+    });
+}
+
+
 function handShake(val){
 
 var route;

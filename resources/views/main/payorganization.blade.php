@@ -50,7 +50,7 @@
             <div class="architecture_area services_pages">
                 <div class="portfolio_filter portfolio_filter_2">
                     <ul>
-                        <li data-filter="*" class="active"><a href=""><i class="fa fa-file" aria-hidden="true"></i>Send & Receive</a></li>
+                        <li data-filter="*" class="active"><a href=""><i class="fa fa-file" aria-hidden="true"></i>Send Money</a></li>
                     </ul>
                 </div>
                 <div class="portfolio_item portfolio_2">
@@ -60,8 +60,8 @@
 
 
                         <ul class="nav nav-tabs">
-                            <li class="tab-menu active"><a data-toggle="tab" href="#home">Send</a></li>
-                            <li class="tab-menu"><a data-toggle="tab" href="#menu1">Receive</a></li>
+                            <li class="tab-menu active"><a data-toggle="tab" href="#home">Send Money</a></li>
+                            {{-- <li class="tab-menu"><a data-toggle="tab" href="#menu1">Receive</a></li> --}}
                             <li class="tab-menu"><a data-toggle="tab" href="#menu3">Search</a></li>
                             <li class="tab-menu" onclick="notifyForm('{{ $email }}')"><a data-toggle="tab" href="#menu2">Notification @if(isset($data)) <span class="badge badge-danger">{{ $data['newnotification'] }}</span> @else 0 @endif</a></li>
                         </ul>
@@ -383,7 +383,7 @@
 
 
 
-                            <div id="menu1" class="tab-pane fade">
+                            <div id="menu1" class="tab-pane fade disp-0">
                                 <br>
                                 <div class="selector">
                                 <div class="subtittle">

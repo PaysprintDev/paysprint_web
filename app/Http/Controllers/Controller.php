@@ -68,7 +68,7 @@ class Controller extends BaseController
         $currency = 'USD'.$curCurrency;
         $amount = $curAmount;
 
-        $access_key = '89e3a2b081fb2b9d188d22516553545c';
+        $access_key = '3755c94ab8bc3a28513e616a6b47305c';
 
         $curl = curl_init();
 

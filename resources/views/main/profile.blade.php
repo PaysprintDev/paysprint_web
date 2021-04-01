@@ -119,8 +119,81 @@
                                     
                                 
                             </div>
+                            
                         </div>
+
+                        
                     </div>
+
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Transaction Pin Settings
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+        <form action="#" method="post" id="formElemtransactionpinsettings">
+            
+
+            <div class="form-group">
+                <label for="oldpin">Old Pin</label>
+                <input type="password" name="oldpin" id="oldpin" class="form-control" placeholder="Pin" maxlength="4">
+            </div>
+            <div class="form-group">
+                <label for="newpin">New Pin</label>
+                <input type="password" name="newpin" id="newpin" class="form-control" placeholder="New Pin" maxlength="4">
+            </div>
+            <div class="form-group">
+                <label for="confirmpin">Confirm Pin</label>
+                <input type="password" name="confirmpin" id="confirmpin" class="form-control" placeholder="Confirm Pin" maxlength="4">
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary btn-block" id="transactionBtn" onclick="handShake('transactionpinsettings')">Save</button>
+            </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingTwo">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Password Settings
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="panel-body">
+        <form action="#" method="post" id="formElempasswordsettings">
+
+            <div class="form-group">
+                <label for="oldpassword">Old Password</label>
+                <input type="password" name="oldpassword" id="oldpassword" class="form-control" placeholder="Password">
+            </div>
+            <div class="form-group">
+                <label for="newpin">New Password</label>
+                <input type="password" name="newpassword" id="newpassword" class="form-control" placeholder="New Password">
+            </div>
+            <div class="form-group">
+                <label for="confirmpin">Confirm Password</label>
+                <input type="password" name="confirmpassword" id="confirmpassword" class="form-control" placeholder="Confirm Password">
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary btn-block" id="passwordBtn" onclick="handShake('passwordsettings')">Save</button>
+            </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+
                 </div>
 
                 <div class="col-xs-12 col-sm-6 col-md-6">

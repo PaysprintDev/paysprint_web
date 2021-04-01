@@ -107,13 +107,20 @@
         </li>
 
         <li>
+          <a href="{{ route('fee structure') }}">
+            <i class="fa fa-laptop"></i>
+            <span>Fee Structure</span>
+          </a>
+        </li>
+
+        <li class="disp-0">
           <a href="#">
             <i class="fa fa-laptop"></i>
             <span>Wallet Report</span>
           </a>
         </li>
 
-        <li onclick="openModal('transactioncost')">
+        <li onclick="openModal('transactioncost')" class="disp-0">
           <a href="#">
             <i class="fa fa-laptop"></i>
             <span>Transaction Cost</span>

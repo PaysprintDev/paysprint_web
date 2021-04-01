@@ -105,7 +105,18 @@
 </head>
 
 <body>
+
+    <br>
+    <div class="container invoice-box">
+        <center>
+            <a type="button" href="{{ route('invoice') }}" class="btn btn-primary btn-block">Go back</a>
+        </center>
+    </div>
+
+    <br>
+
     @if(count($invoice) > 0)
+    <br>
     <div class="container invoice-box" id="divToPrint">
 
         @foreach ($invoice as $invoices)
@@ -241,13 +252,27 @@
         </table>
         <hr><br>
 
+        @if (preg_match("/ord-/", $invoices->trans_id))
 
+        <div class="col-md-12"><button type="button" class="btn btn-success btn-block" disabled>Invoice Paid</button></div>
+            
+        @else
+
+        <div class="col-md-12"><button type="button" class="btn btn-success btn-block" onclick="location.href='{{ route('payment', $invoices->paidinvoice_no) }}'">Pay Invoice</button></div>
+            
+        @endif
+
+        
             
         @endforeach
         
     </div>
     <br><br>
-    <center><button type="button" class="btn btn-danger" onclick="printInvoice()">Print Invoice</button></center>
+    <center>
+            <button type="button" class="btn btn-danger" onclick="printInvoice()">Print Invoice</button>
+            
+    </center>
+
 
     @else
 

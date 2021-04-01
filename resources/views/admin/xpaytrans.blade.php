@@ -102,11 +102,11 @@
 
                             <td>{{ $items->purpose }}</td>
 
-                            <td style="color: green; font-weight: bold;" align="center">${{ number_format($items->amount, 2) }}</td>
+                            <td style="color: green; font-weight: bold;" align="center">{{ $items->amount }}</td>
                             
-                            <td style="color: darkorange; font-weight: bold;" align="center">${{ number_format($items->amount_to_send, 2) }}</td>
+                            <td style="color: darkorange; font-weight: bold;" align="center">{{ $items->amount_to_send }}</td>
 
-                            <td style="color: purple; font-weight: bold;" align="center">${{ number_format($items->commission, 2) }}</td>
+                            <td style="color: purple; font-weight: bold;" align="center">{{ $items->commission }}</td>
 
 
                             <td style="color: navy; font-weight: bold; font-size: 11px;" align="center">{{ $items->approve_commission }}</td>

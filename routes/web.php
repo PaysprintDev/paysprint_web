@@ -49,6 +49,7 @@ Route::get('privacy-policy', ['uses' => 'HomeController@privacyPolicy', 'as' => 
 Route::get('payment/{invoice}', ['uses' => 'HomeController@payment', 'as' => 'payment']);
 
 Route::get('payment/sendmoney/{user_id}', ['uses' => 'HomeController@paymentOrganization', 'as' => 'sendmoney payment']);
+Route::get('new/payment/createuser', ['uses' => 'HomeController@createnewPayment', 'as' => 'create new payment']);
 Route::get('payment/receivemoney/{id}', ['uses' => 'HomeController@receiveMoney', 'as' => 'receivemoney payment']);
 
 
@@ -164,6 +165,13 @@ Route::get('Admin/comissionreport', ['uses' => 'AdminController@comissionreport'
 Route::get('Admin/customer/{id}', ['uses' => 'AdminController@customer', 'as' => 'customer']);
 
 
+Route::get('Admin/feestructure', ['uses' => 'AdminController@feeStructure', 'as' => 'fee structure']);
+Route::get('editfee/{id}', ['uses' => 'AdminController@editFee', 'as' => 'editfee']);
+Route::post('createfeestructure', ['uses' => 'AdminController@createFeeStructure', 'as' => 'create fee structure']);
+Route::post('editfeestructure/{id}', ['uses' => 'AdminController@editFeeStructure', 'as' => 'edit fee structure']);
+Route::post('deletefee/{id}', ['uses' => 'AdminController@deleteFee', 'as' => 'deletefee']);
+
+
 Route::get('Admin/xpaytrans', ['uses' => 'AdminController@xpaytrans', 'as' => 'xpaytrans']);
 
 Route::get('Admin/xreceivemoney', ['uses' => 'AdminController@xreceivemoney', 'as' => 'xreceivemoney']);
@@ -176,6 +184,7 @@ Route::post('updateinvoice', ['uses' => 'AdminController@updateinvoice', 'as' =>
 // Post Routes
 Route::post('maintenancedelete', ['uses' => 'HomeController@maintenancedelete', 'as' => 'maintenancedelete']);
 Route::post('updatemaintenance', ['uses' => 'HomeController@updatemaintenance', 'as' => 'updatemaintenance']);
+
 
 
 
@@ -281,6 +290,7 @@ Route::post('notifyupdate', ['uses' => 'HomeController@ajaxnotifyupdate', 'as' =
 
 // Get Commision and payment
 Route::post('getCommission', ['uses' => 'HomeController@ajaxgetCommission', 'as' => 'AjaxgetCommission']);
+Route::post('getwalletBalance', ['uses' => 'HomeController@ajaxgetwalletBalance', 'as' => 'AjaxgetwalletBalance']);
 
 Route::post('charges', ['uses' => 'ApplePayController@ajaxcharges', 'as' => 'charges']);
 

@@ -77,7 +77,7 @@ body::-webkit-scrollbar-thumb:hover {
 
                 <li>
                     <a href="{{ route('register') }}">
-                       {{ __('Register') }}
+                       {{ __('Sign Up for FREE') }}
                     </a>
                 </li>
             </ul>
@@ -200,7 +200,7 @@ body::-webkit-scrollbar-thumb:hover {
             @endif
 
             <a class="btn btn-link" href="{{ route('register') }}">
-                    {{ __('Don\'t have an account? Register now') }}
+                    {{ __('Don\'t have an account? Sign Up for FREE now') }}
                 </a>
 
         </div>
