@@ -91,27 +91,61 @@ class HomeController extends Controller
     {
         // dd($req->session());
 
-
-        if($req->session()->has('email') == false){
             if(Auth::check() == true){
                 $this->page = 'Landing';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'sendReceive' => $this->sendAndReceive(Auth::user()->email),
+                    'payInvoice' => $this->payInvoice(Auth::user()->email),
+                    'walletTrans' => $this->sendAndReceive(Auth::user()->email),
+                    'urgentnotification' => $this->urgentNotification(Auth::user()->email),
+                    'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+                );
+
+                $view = 'home';
             }
             else{
                 $this->page = 'Home';
                 $this->name = '';
+                $view = 'main.index';
+                $data = [];
             }
 
-        }
-        else{
-            $this->page = 'Landing';
-            $this->name = session('name');
-            $this->email = session('email');
-        }
-
-        return view('main.index')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email]);
+        return view($view)->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
+
+
+    public function authIndex(Request $req)
+    {
+        // dd($req->session());
+
+            if(Auth::check() == true){
+                $this->page = 'Landing';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'sendReceive' => $this->sendAndReceive(Auth::user()->email),
+                    'payInvoice' => $this->payInvoice(Auth::user()->email),
+                    'walletTrans' => $this->sendAndReceive(Auth::user()->email),
+                    'urgentnotification' => $this->urgentNotification(Auth::user()->email),
+                    'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+                );
+            }
+            else{
+                $this->page = 'Home';
+                $this->name = '';
+                $this->email = '';
+                $data = [];
+            }
+
+            // dd($data);
+
+
+        return view('home')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
 
 
     public function about(Request $req)
@@ -1801,6 +1835,21 @@ class HomeController extends Controller
         }
 
         return view('main.profile')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email]);
+    }
+
+
+
+    public function sendAndReceive($email){
+        $data = Statement::where('user_id', $email)->where('statement_route', 'wallet')->orderBy('created_at', 'DESC')->limit(5)->get();
+        return $data;
+    }
+    public function payInvoice($email){
+        $data = Statement::where('user_id', $email)->where('statement_route', 'invoice')->orderBy('created_at', 'DESC')->limit(5)->get();
+        return $data;
+    }
+    public function urgentNotification($email){
+        $data = Statement::where('user_id', $email)->orderBy('created_at', 'DESC')->limit(5)->get();
+        return $data;
     }
 
 

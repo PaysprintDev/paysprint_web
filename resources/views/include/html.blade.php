@@ -39,6 +39,8 @@
 
     <link rel="stylesheet" href="{{ asset('ext/plugins/countrycode/css/jquery.ccpicker.css') }}">
 
+    <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
+
     <style>
     /* width */
 body::-webkit-scrollbar {
@@ -78,7 +80,36 @@ li.dropdown.submenu > a {
 }
 
 
+
     </style>
+
+    @if (Auth::check() == true)
+        <style>
+              .col-md-6.col-sm-6.builder {
+                background-color: #fff !important;
+                border-radius: 10px !important;
+                margin-bottom: 20px !important;
+                height: 450px !important;
+            }
+              .col-md-6.col-sm-6.builder.walletInformation {
+                background-color: #fff !important;
+                border-radius: 10px !important;
+                height: 100px !important;
+            }
+            ..professional_builders{
+              background: #f5f5f5 !important;
+              padding-top: 80px !important;
+              padding-bottom: 20px !important;
+            }
+            .infoRec{
+              height: 300px;
+              overflow-y: auto;
+            }
+            .fas.fa-circle{
+      font-size: 12px !important;
+  }
+        </style>
+    @endif
 
 </head>
 <body>

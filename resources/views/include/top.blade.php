@@ -61,7 +61,7 @@
                     <span class="icon-bar"></span>
                     </button>
                     {{-- <a class="navbar-brand" href="{{ route('home') }}"><p style="font-weight: bold; font-size: 30px; color: #f6b60b;"><span style="color: #111f29">Pay</span>Sprint</p></a> --}}
-                    <a class="navbar-brand" href="{{ route('home') }}"><img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png" style="top: -13px; position: relative;  width: 200px; height: inherit;"></a>
+                    <a class="navbar-brand" @guest href="{{ route('home') }}" @endguest  @auth href="{{ route('user home') }}" @endauth><img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png" style="top: -13px; position: relative;  width: 200px; height: inherit;"></a>
 
                 </div>
             </div>
@@ -71,7 +71,13 @@
                 <div class="collapse navbar-collapse" id="min_navbar">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown submenu">
-                            <a href="{{ route('home') }}">Home</a>
+                            @guest
+                                <a href="{{ route('home') }}">Home</a>
+                            @endguest
+
+                            @auth
+                                <a href="{{ route('user home') }}">Home</a>
+                            @endauth
 
                         </li>
 

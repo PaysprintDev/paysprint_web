@@ -22,6 +22,8 @@ Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
 Route::get('/', ['uses' => 'HomeController@index', 'as' => 'home']);
 
+Route::get('/home', ['uses' => 'HomeController@authIndex', 'as' => 'user home']);
+
 Route::get('about', ['uses' => 'HomeController@about', 'as' => 'about']);
 
 Route::get('Invoice', ['uses' => 'HomeController@invoice', 'as' => 'invoice']);
