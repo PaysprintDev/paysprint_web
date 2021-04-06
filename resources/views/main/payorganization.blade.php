@@ -728,7 +728,7 @@
                                                 <tr>
                                                     <td><img src="https://img.icons8.com/emoji/20/000000/check-box-with-check-emoji.png"/></td>
                                                     <td>{{ $notify->activity }}<br><small style="color: navy;">
-                                                        @if ($notify->action == "Payment")
+                                                        @if ($notify->action == "Payment" || $notify->action == "Wallet debit")
                                                             <span style="color: red">Amount: {{ number_format($notify->debit, 2) }}</span>
                                                         @else
 
@@ -746,7 +746,7 @@
                                                 <tr>
                                                     <td><img src="https://img.icons8.com/color/30/000000/push-notifications.png"/></td>
                                                     <td style="font-weight: bold;">{{ $notify->activity }}<br><small style="color: navy; font-weight: bold;">
-                                                        @if ($notify->action == "Payment")
+                                                        @if ($notify->action == "Payment" || $notify->action == "Wallet debit")
                                                             <span style="color: red">Amount: {{ number_format($notify->debit, 2) }}</span>
                                                         @else
 

@@ -7,6 +7,9 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use Twilio\Rest\Client;
+use App\Notifications as Notifications;
+
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -93,7 +96,9 @@ class Controller extends BaseController
         $result = json_decode($response);
 
         if($result->success == true){
+            // This amount is in dollars
             $convRate = $amount / $result->quotes->$currency;
+            
 
         }
         else{
@@ -130,6 +135,26 @@ class Controller extends BaseController
         curl_close($curl);
 
         return json_decode($response);
+
+    }
+
+    public function sendMessage($message, $recipients)
+    {
+
+        
+        $account_sid = env("TWILIO_SID");
+        $auth_token = env("TWILIO_AUTH_TOKEN");
+        $twilio_number = env("TWILIO_NUMBER");
+        $client = new Client($account_sid, $auth_token);
+        $client->messages->create($recipients, 
+                ['from' => $twilio_number, 'body' => $message] );
+
+    }
+
+
+    public function createNotification($ref_code, $activity){
+
+        Notifications::insert(['ref_code' => $ref_code, 'activity' => $activity, 'notify' => 0]);
 
     }
 

@@ -21,6 +21,7 @@ class CardController extends Controller
         $data = AddCard::where('user_id', $thisuser->id)->orderBy('created_at', 'DESC')->get();
 
         if(count($data) > 0){
+
             $data = $data;
             $status = 200;
             $message = 'Success';
@@ -63,6 +64,9 @@ class CardController extends Controller
                     $data = $insertRecord;
                     $status = 200;
                     $message = 'You have successfully added a card';
+
+                    $this->createNotification($thisuser->ref_code, "Great!, you added a new card");
+
                 }
                 else{
                     $data = [];
@@ -121,6 +125,8 @@ class CardController extends Controller
                     $data = $updateRecord;
                     $status = 200;
                     $message = 'You have successfully updated your card';
+
+                    $this->createNotification($thisuser->ref_code, "Great!, you have updated your card detail");
                 }
                 else{
                     $data = [];
@@ -155,11 +161,15 @@ class CardController extends Controller
 
     public function deleteCard(Request $req){
 
+        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
        $query = AddCard::where('id', $req->id)->delete();
 
         $data = $query;
         $status = 200;
         $message = 'Deleted successfully';
+
+        $this->createNotification($thisuser->ref_code, "You deleted a card");
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 

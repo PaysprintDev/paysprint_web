@@ -63,13 +63,26 @@ class MoneyTransferController extends Controller
     public $curl_data;
 
 
-    public function commissionFee(Request $req){
-        $amount = $req->get('amount');
 
-        if($amount != ""){
+
+
+    public function getTransactionStructure(){
+        $resp = TransactionCost::select('id','structure', 'method')->get();
+
+        $data = $resp;
+        $status = 200;
+
+        $resData = ['data' => $data,'message' => 'success', 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+    public function commissionFee(Request $req){
+        $amount = $req->amount;
             // Get Commission
 
-            $data = TransactionCost::first();
+            $data = TransactionCost::where('structure', $req->structure)->where('method', $req->method)->first();
+
 
             $fixed = $amount * ($data->fixed / 100);
 
@@ -81,12 +94,6 @@ class MoneyTransferController extends Controller
 
             $resData = ['data' => $collection,'message' => 'success', 'status' => $status];
 
-        }
-        else{
-            $status = 400;
-
-            $resData = ['message' => 'Type an amount', 'status' => $status];
-        }
 
 
         return $this->returnJSON($resData, $status);
@@ -105,7 +112,7 @@ class MoneyTransferController extends Controller
 
                 $status = 400;
     
-                $resData = ['message' => 'You cannot send or receive money now, because your account is not yet approved. Kindly update means of identification in your profile', 'status' => $status];
+                $resData = ['data' => [], 'message' => 'You cannot send or receive money now, because your account is not yet approved. Kindly update means of identification in your profile', 'status' => $status];
             }
             else{
                 if($user->ref_code != $accountno){
@@ -120,14 +127,14 @@ class MoneyTransferController extends Controller
                     else{
                         $status = 404;
     
-                        $resData = ['message' => 'No record found', 'status' => $status];
+                        $resData = ['data' => [], 'message' => 'No record found', 'status' => $status];
                     }
     
                 }
                 else{
                     $status = 400;
     
-                    $resData = ['message' => 'You cannot send money to yourself', 'status' => $status];
+                    $resData = ['data' => [], 'message' => 'You cannot send money to yourself', 'status' => $status];
                 }
             }
 
@@ -136,7 +143,7 @@ class MoneyTransferController extends Controller
         else{
             $status = 400;
 
-            $resData = ['message' => 'Token mismatch', 'status' => $status];
+            $resData = ['data' => [], 'message' => 'Token mismatch', 'status' => $status];
         }
 
         return $this->returnJSON($resData, $status);
@@ -154,7 +161,7 @@ class MoneyTransferController extends Controller
 
                 $status = 400;
     
-                $resData = ['message' => 'You cannot send or receive money now, because your account is not yet approved. Kindly update means of identification in your profile', 'status' => $status];
+                $resData = ['data' => [], 'message' => 'You cannot send or receive money now, because your account is not yet approved. Kindly update means of identification in your profile', 'status' => $status];
             }
             else{
                 if($user->ref_code != $accountno){
@@ -172,14 +179,14 @@ class MoneyTransferController extends Controller
                     else{
                         $status = 404;
     
-                        $resData = ['message' => 'No record found', 'status' => $status];
+                        $resData = ['data' => [], 'message' => 'No record found', 'status' => $status];
                     }
     
                 }
                 else{
                     $status = 400;
     
-                    $resData = ['message' => 'You can not receive money from yourself', 'status' => $status];
+                    $resData = ['data' => [], 'message' => 'You can not receive money from yourself', 'status' => $status];
                 }
             }
 
@@ -188,7 +195,7 @@ class MoneyTransferController extends Controller
         else{
             $status = 400;
 
-            $resData = ['message' => 'Token mismatch', 'status' => $status];
+            $resData = ['data' => [], 'message' => 'Token mismatch', 'status' => $status];
         }
 
         return $this->returnJSON($resData, $status);
@@ -256,7 +263,7 @@ class MoneyTransferController extends Controller
 
 
                 // Insert Statement
-                $activity = "Payment to ".$receiver->name." on ".$service;
+                $activity = "Money sent to ".$receiver->name." for ".$service;
                 $credit = 0;
                 $debit = $req->amount + $req->commission;
                 $reference_code = $req->paymentToken;
@@ -276,12 +283,14 @@ class MoneyTransferController extends Controller
 
                 $status = 200;
 
-                $resData = ['data' => $data, 'message' => 'Payment Sent Successfully', 'status' => $status];
+                $resData = ['data' => $data, 'message' => 'Money Sent Successfully', 'status' => $status];
+
+                $this->createNotification($sender->ref_code, "Money sent to ".$receiver->name." for ".$service);
                     
                 } catch (\Throwable $th) {
                     $status = 400;
 
-                $resData = ['message' => 'Error: '.$th, 'status' => $status];
+                $resData = ['data' => [], 'message' => 'Error: '.$th, 'status' => $status];
                 }
 
             }
@@ -290,7 +299,7 @@ class MoneyTransferController extends Controller
         else{
             $status = 404;
 
-            $resData = ['message' => 'Receiver not found', 'status' => $status];
+            $resData = ['data' => [], 'message' => 'Receiver not found', 'status' => $status];
         }
 
 
@@ -298,7 +307,7 @@ class MoneyTransferController extends Controller
         else{
             $status = 400;
 
-            $resData = ['message' => 'Token mismatch', 'status' => $status];
+            $resData = ['data' => [], 'message' => 'Token mismatch', 'status' => $status];
         }
 
 
@@ -348,14 +357,14 @@ class MoneyTransferController extends Controller
             else{
                 $status = 400;
 
-                $resData = ['message' => 'Payment detail not found', 'status' => $status];
+                $resData = ['data' => [], 'message' => 'Payment detail not found', 'status' => $status];
             }
 
         }
         else{
             $status = 400;
 
-            $resData = ['message' => 'Token mismatch', 'status' => $status];
+            $resData = ['data' => [], 'message' => 'Token mismatch', 'status' => $status];
         }
 
 

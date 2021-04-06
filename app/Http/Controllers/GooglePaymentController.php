@@ -299,6 +299,8 @@ class GooglePaymentController extends Controller
             $response = 'Money sent successfully';
             $respaction = 'success';
 
+            $this->createNotification($user->ref_code, $req->payment_method." transfer of ".$req->currency.''.$req->amount." to ".$client->name." for ".$service);
+
 
             return redirect()->route('payorganization')->with($respaction, $response);
 
@@ -461,9 +463,15 @@ class GooglePaymentController extends Controller
                         $this->email = $thisuser->email;
                         $this->subject = "Transaction Notification";
 
-                        $this->message = '<p>You just sent <strong>'.$req->currency.' '.number_format($req->amount, 2).'</strong> to '.$req->fname.' '.$req->lname.'. You now have <strong>'.$req->currency.' '.number_format($wallet_balance, 2).'</strong> in your account</p>';
+                        $this->message = '<p>You sent <strong>'.$req->currency.' '.number_format($req->amount, 2).'</strong> to '.$req->fname.' '.$req->lname.'. You now have <strong>'.$req->currency.' '.number_format($wallet_balance, 2).'</strong> in your account</p>';
+
+                        $sendMsg = 'You sent '.$req->currency.' '.number_format($req->amount, 2).' to '.$req->fname.' '.$req->lname.'. You now have '.$req->currency.' '.number_format($wallet_balance, 2).' in your account';
+                        $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+                        
 
                         $this->sendEmail($this->email, "Fund remittance");
+
+                        $this->sendMessage($sendMsg, $sendPhone);
 
                         // Notification for receiver
                         $this->name = $req->fname.' '.$req->lname;
@@ -471,9 +479,15 @@ class GooglePaymentController extends Controller
                         $this->to = $req->email;
                         $this->subject = "Transaction Notification from ".$thisuser->name;
 
-                        $this->message = '<p>You just received <strong>'.$foreigncurrency[0]->currencies[0]->code.' '.number_format($amount, 2).'</strong> from '.$thisuser->name.'. You now have <strong>'.$foreigncurrency[0]->currencies[0]->code.' '.number_format($newwalletBal, 2).'</strong> in your account</p><hr><p>Click on the link below to register your account to withdraw money</p><p><a href="'.route('register', 'user='.$newRefcode).'">'.route('register', 'user='.$newRefcode).'</a></p>';
+                        $this->message = '<p>You received <strong>'.$foreigncurrency[0]->currencies[0]->code.' '.number_format($amount, 2).'</strong> from '.$thisuser->name.'. You now have <strong>'.$foreigncurrency[0]->currencies[0]->code.' '.number_format($newwalletBal, 2).'</strong> in your account</p><hr><p>Click on the link below to register your account to withdraw money</p><p><a href="'.route('register', 'user='.$newRefcode).'">'.route('register', 'user='.$newRefcode).'</a></p>';
+
+                        $recMesg = 'You received '.$foreigncurrency[0]->currencies[0]->code.' '.number_format($amount, 2).' from '.$thisuser->name.'. You now have '.$foreigncurrency[0]->currencies[0]->code.' '.number_format($newwalletBal, 2).' in your account. Click on the link below to register your account to withdraw money '.route('register', 'user='.$newRefcode);
+                        $recPhone = "+".$req->countryCode.$req->phone;
+                        
 
                         $this->sendEmail($this->to, "Fund remittance");
+
+                        $this->sendMessage($recMesg, $recPhone);
 
 
                         // Insert Statement
@@ -499,6 +513,9 @@ class GooglePaymentController extends Controller
                         $data = $insertPay;
                         $status = 200;
                         $message = $response;
+
+
+                        $this->createNotification($thisuser->ref_code, $req->payment_method." transfer of ".$req->currency.''.$req->amount." to ".$req->fname.' '.$req->lname." for ".$service);
 
                     }
                     else{

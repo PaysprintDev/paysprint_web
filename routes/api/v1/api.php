@@ -29,6 +29,15 @@ Route::prefix('/v1')->group(function () {
         // Login
         Route::post('login',  ['uses' => 'api\v1\UserController@userLogin']);
 
+        // Get Service Types
+        Route::get('getservicestypes',  ['uses' => 'api\v1\ServiceController@getServicetype']);
+
+        // Get Tranasaction Structure
+        Route::get('get-transaction-structure',  ['uses' => 'api\v1\MoneyTransferController@getTransactionStructure']);
+
+
+        Route::post('currencyconversion',  ['uses' => 'CurrencyConverterApiController@mycurrencyConvert']);
+
 
     });
 
@@ -38,6 +47,8 @@ Route::prefix('/v1')->group(function () {
     Route::group(['middleware' => ['apitoken']], function () {
 
     Route::post('profile',  ['uses' => 'api\v1\UserController@updateProfile'])->name('update profile');
+
+    Route::post('createtransactionpin',  ['uses' => 'api\v1\UserController@createTransactionPin'])->name('create transaction pin');
 
     Route::post('updatetransactionpin',  ['uses' => 'api\v1\UserController@updateTransactionPin'])->name('update transaction pin');
 
@@ -55,20 +66,31 @@ Route::prefix('/v1')->group(function () {
     Route::get('getsender',  ['uses' => 'api\v1\MoneyTransferController@getSender'])->name('get sender');
 
 
-    Route::get('commissionfee',  ['uses' => 'api\v1\MoneyTransferController@commissionFee'])->name('commission fee');
+    Route::post('commissionfee',  ['uses' => 'api\v1\MoneyTransferController@commissionFee'])->name('commission fee');
 
 
 
     Route::get('getallstatement',  ['uses' => 'api\v1\StatementController@getAllStatement'])->name('get all statement');
 
+    Route::get('getmystatement',  ['uses' => 'api\v1\StatementController@getMyStatement'])->name('get my statement');
+
 
     Route::get('getstatementbydate',  ['uses' => 'api\v1\StatementController@getStatementByDate'])->name('get statement by date');
+
+
+    Route::get('getspecificstatement',  ['uses' => 'api\v1\StatementController@getSpecificStatement'])->name('get specific statetement');
+
+    Route::get('getspecificstatementbydate',  ['uses' => 'api\v1\StatementController@getSpecificStatementByDate'])->name('get specific statetement by date');
 
 
     Route::get('getallinvoice',  ['uses' => 'api\v1\InvoiceController@getAllInvoices'])->name('get all invoices');
 
 
     Route::get('getspecificinvoice',  ['uses' => 'api\v1\InvoiceController@getSpecificInvoices'])->name('get specific invoices');
+
+    Route::get('getmyinvoice',  ['uses' => 'api\v1\InvoiceController@getMyInvoices'])->name('get my invoices');
+
+
 
 
     Route::get('getinvoicebyservice',  ['uses' => 'api\v1\InvoiceController@getInvoiceByService'])->name('get invoice by service');

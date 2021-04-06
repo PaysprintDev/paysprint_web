@@ -300,13 +300,15 @@ if($mpgResponse->responseData['Message'] == "APPROVED           *               
 
 
                         
-
+                            $thisuser = User::where('email', $req->email)->first();
 
 
                     $resData = ['res' => 'Payment Successful', 'message' => 'success', 'title' => 'Good!'];
                     
                     $response = 'Payment Successful';
                     $action = 'success';
+
+                    $this->createNotification($thisuser->ref_code, "Payment successfully made for ".$req->service);
 				}
 				else{
                     $resData = ['res' => 'Something went wrong', 'message' => 'info', 'title' => 'Oops!'];
@@ -445,6 +447,12 @@ else{
                                     $this->message = '<p>You have successfully paid invoice of <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong>. You now have <strong>'.$req->currencyCode.' '.number_format($walletBalance, 2).'</strong> in your account</p>';
 
                                     $this->sendEmail($this->email, "Fund remittance");
+
+                                    $sendMsg = 'You have successfully paid invoice of '.$req->currencyCode.' '.number_format($req->amount, 2).'. You now have '.$req->currencyCode.' '.number_format($walletBalance, 2).' in your account';
+                                    $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+
+                                    $this->sendMessage($sendMsg, $sendPhone);
+
                                     
                                     /*---------------------------------------------------------------------------------------------------------------------*/ 
 
@@ -470,14 +478,21 @@ else{
                                     // $this->email = "bambo@vimfile.com";
                                     $this->subject = "Transaction Notification";
 
-                                    $this->message = '<p>You just received <strong>'.$req->currencyCode.''.number_format($req->amount, 2).'</strong> for <b>INVOICE: '.$req->invoice_no.'</b>. Payment made by <b>'.$thisuser->name.'</b>.</p> <p>You now have <strong>'.$req->currencyCode.''.number_format($merchantwalletBalance, 2).'</strong> in your wallet account</p>';
+                                    $this->message = '<p>You received <strong>'.$req->currencyCode.''.number_format($req->amount, 2).'</strong> for <b>INVOICE: '.$req->invoice_no.'</b>. Payment made by <b>'.$thisuser->name.'</b>.</p> <p>You now have <strong>'.$req->currencyCode.''.number_format($merchantwalletBalance, 2).'</strong> in your wallet account</p>';
 
                                     $this->sendEmail($this->email, "Fund remittance");
+
+                                    $recMesg = 'You received '.$req->currencyCode.' '.number_format($req->amount, 2).' for INVOICE: '.$req->invoice_no.'. Payment made by '.$thisuser->name.'. You now have '.$req->currencyCode.' '.number_format($merchantwalletBalance, 2).' in your wallet account';
+                                    $recPhone = "+".$thismerchant->code.$thismerchant->telephone;
+
+                                    $this->sendMessage($recMesg, $recPhone);
 
 
                                 $data = $insPay;
                                 $status = 200;
                                 $message = 'You have successfully paid invoice of '.$req->currencyCode.' '.number_format($req->amount, 2);
+
+                                $this->createNotification($thisuser->ref_code, 'You have successfully paid invoice of '.$req->currencyCode.' '.number_format($req->amount, 2));
                             }
                             else{
                                 
@@ -593,13 +608,23 @@ else{
                             $this->email = $thisuser->email;
                             $this->subject = "Transaction Notification";
 
-                            $this->message = '<p>You just added <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong> to your wallet. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> in your account</p>';
+                            $this->message = '<p>You added <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong> to your wallet. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> in your account</p>';
+
+                            $sendMsg = 'You added '.$req->currencyCode.' '.number_format($req->amount, 2).' to your wallet. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' in your account';
+                            $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+
+
+                            $this->sendMessage($sendMsg, $sendPhone);
 
                             $this->sendEmail($this->email, "Fund remittance");
+
+                            
 
                         $data = $userData;
                         $status = 200;
                         $message = 'You have successfully added '.$req->currencyCode.' '.number_format($req->amount, 2).' to your wallet';
+
+                        $this->createNotification($thisuser->ref_code, 'You have successfully added '.$req->currencyCode.' '.number_format($req->amount, 2).' to your wallet');
                         
 
                     }
@@ -709,13 +734,21 @@ else{
                                                 $this->email = $thisuser->email;
                                                 $this->subject = "Transaction Notification";
 
-                                                $this->message = '<p>You just sent <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong> to your card. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> in your account</p>';
+                                                $this->message = '<p>You sent <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong> to your card. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> in your account</p>';
+
+                                                $sendMsg = 'You sent '.$req->currencyCode.' '.number_format($req->amount, 2).' to your card. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' in your account';
+                                                $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+
+
+                                                $this->sendMessage($sendMsg, $sendPhone);
 
                                                 $this->sendEmail($this->email, "Fund remittance");
 
                                                 $data = $userData;
                                                 $status = 200;
                                                 $message = $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet';
+
+                                                $this->createNotification($thisuser->ref_code, $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet');
 
                                         }
                                         else{
@@ -790,13 +823,20 @@ else{
                                                 $this->email = $thisuser->email;
                                                 $this->subject = "Transaction Notification";
 
-                                                $this->message = '<p>You just sent <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong> to your card. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> in your account</p>';
+                                                $this->message = '<p>You sent <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong> to your card. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> in your account</p>';
+
+                                                $sendMsg = 'You sent '.$req->currencyCode.' '.number_format($req->amount, 2).' to your card. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' in your account';
+                                                $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+
+                                                $this->sendMessage($sendMsg, $sendPhone);
 
                                                 $this->sendEmail($this->email, "Fund remittance");
 
                                                 $data = $userData;
                                                 $status = 200;
                                                 $message = $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet';
+
+                                                $this->createNotification($thisuser->ref_code, $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet');
 
                                         }
                                         else{

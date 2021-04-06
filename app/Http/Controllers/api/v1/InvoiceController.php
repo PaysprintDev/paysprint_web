@@ -29,14 +29,14 @@ class InvoiceController extends Controller
            else{
                 $status = 404;
         
-                $resData = ['message' => 'No record found', 'status' => $status];
+                $resData = ['data' => [], 'message' => 'No record found', 'status' => $status];
            }
 
         }
         else{
             $status = 400;
 
-            $resData = ['message' => 'Token mismatch', 'status' => $status];
+            $resData = ['data' => [], 'message' => 'Token mismatch', 'status' => $status];
         }
 
     return $this->returnJSON($resData, $status);
@@ -71,7 +71,7 @@ class InvoiceController extends Controller
        else{
         $status = 404;
     
-            $resData = ['message' => 'No record found', 'status' => $status];
+            $resData = ['data' => [], 'message' => 'No record found', 'status' => $status];
        }
 
             
@@ -86,6 +86,8 @@ class InvoiceController extends Controller
 
         return $this->returnJSON($resData, $status);
     }
+
+
 
 
     public function getInvoiceByService(Request $req){
@@ -104,14 +106,14 @@ class InvoiceController extends Controller
        else{
             $status = 404;
     
-            $resData = ['message' => 'No record found', 'status' => $status];
+            $resData = ['data' => [], 'message' => 'No record found', 'status' => $status];
        }
 
         }
         else{
             $status = 400;
 
-            $resData = ['message' => 'Token mismatch', 'status' => $status];
+            $resData = ['data' => [], 'message' => 'Token mismatch', 'status' => $status];
         }
 
         return $this->returnJSON($resData, $status);

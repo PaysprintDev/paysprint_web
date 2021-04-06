@@ -107,7 +107,7 @@
                             </tbody>
                         </table>
 
-                            <a href="#" type="button" class="btn btn-primary">View More</a>
+                            <a href="javascript:void(0)" type="button" class="btn btn-primary" onclick="$('#sendMoney').click()">Send Money</a>
 
                     </div>
                 </div>
@@ -158,7 +158,7 @@
                             </tbody>
                         </table>
 
-                                    <a href="#" type="button" class="btn btn-primary">View More</a>
+                                    <a href="{{ route('invoice') }}" type="button" class="btn btn-primary">Pay Invoice</a>
 
                     </div>
                 </div>
@@ -211,7 +211,7 @@
                                 @endif
                             </tbody>
                         </table>
-                                    <a href="#" type="button" class="btn btn-primary">View More</a>
+                                    <a href="{{ route('my account') }}" type="button" class="btn btn-primary">My Wallet</a>
 
                     </div>
                 </div>
@@ -260,7 +260,6 @@
                                 @endif
                             </tbody>
                         </table>
-                                    <a href="#" type="button" class="btn btn-primary">View More</a>
 
                     </div>
                 </div>

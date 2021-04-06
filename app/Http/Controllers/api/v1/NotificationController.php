@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\User as User;
 use App\Statement as Statement;
+use App\Notifications as Notifications;
 
 class NotificationController extends Controller
 {
@@ -19,7 +20,7 @@ class NotificationController extends Controller
 
         if(isset($user)){
 
-           $data = Statement::where('user_id', $user->email)->orderBy('notify', 'ASC')->orderBy('created_at', 'DESC')->get();
+           $data = Notifications::where('ref_code', $user->ref_code)->orderBy('notify', 'ASC')->orderBy('created_at', 'DESC')->get();
 
            if(count($data) > 0){
                
@@ -30,14 +31,14 @@ class NotificationController extends Controller
            else{
                 $status = 404;
         
-                $resData = ['message' => 'No new notification', 'status' => $status];
+                $resData = ['data' => [], 'message' => 'No new notification', 'status' => $status];
            }
 
         }
         else{
             $status = 400;
 
-            $resData = ['message' => 'Token mismatch', 'status' => $status];
+            $resData = ['data' => [], 'message' => 'Token mismatch', 'status' => $status];
         }
 
         return $this->returnJSON($resData, $status);

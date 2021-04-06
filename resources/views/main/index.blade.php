@@ -11,11 +11,7 @@
     <style>
         .slider_area .slider_inner .camera_caption div{background: #141414; }
 
-        .slider_inner.camera_wrap{
-            height: 300px !important;
-            display: block;
-            background-color: black !important;
-        }
+
 
         
     </style>
@@ -25,7 +21,7 @@
     <section class="slider_area row m0" style="background-color: #11202A">
         <div class="slider_inner" style="height: 300px !important;">
 
-            <div data-thumb="https://res.cloudinary.com/pilstech/image/upload/v1617005875/Image1_fucmgy.png" data-src="https://res.cloudinary.com/pilstech/image/upload/v1617005875/Image1_fucmgy.png">
+            <div data-thumb="https://res.cloudinary.com/pilstech/image/upload/v1617301359/undraw_online_transactions_02ka_zmpyeh.png" data-src="https://res.cloudinary.com/pilstech/image/upload/v1617301359/undraw_online_transactions_02ka_zmpyeh.png">
                 <div class="camera_caption">
                    <div class="container">
                          {{-- <h5 class=" wow fadeInUp animated">Welcome to our</h5> --}}
@@ -36,7 +32,7 @@
                 </div>
             </div>
 
-            <div data-thumb="https://res.cloudinary.com/pilstech/image/upload/v1617005875/Image2_a51ufr.png" data-src="https://res.cloudinary.com/pilstech/image/upload/v1617005875/Image2_a51ufr.png">
+            <div data-thumb="https://res.cloudinary.com/pilstech/image/upload/v1617301225/undraw_wallet_aym5_grzyz7.png" data-src="https://res.cloudinary.com/pilstech/image/upload/v1617301225/undraw_wallet_aym5_grzyz7.png">
                 <div class="camera_caption">
                    <div class="container">
                          {{-- <h5 class=" wow fadeInUp animated">Welcome to our</h5> --}}
@@ -47,7 +43,7 @@
                 </div>
             </div>
 
-            <div data-thumb="https://res.cloudinary.com/pilstech/image/upload/v1617005875/Image3_bucbbn.png" data-src="https://res.cloudinary.com/pilstech/image/upload/v1617005875/Image3_bucbbn.png">
+            <div data-thumb="https://res.cloudinary.com/pilstech/image/upload/v1617301360/undraw_transfer_money_rywa_axhq9j.png" data-src="https://res.cloudinary.com/pilstech/image/upload/v1617301360/undraw_transfer_money_rywa_axhq9j.png">
                 <div class="camera_caption">
                    <div class="container">
                          {{-- <h5 class=" wow fadeInUp animated">Welcome to our</h5> --}}
@@ -62,25 +58,7 @@
     </section>
     <!-- End Slider area -->
 
-            <!-- Coming Soon to PlayStore and App Store -->
-    <section class="about_us_area row">
-        <div class="container">
 
-            <div class="row about_row">
-                <div class="col-md-6 col-sm-6 about_client">
-                    <center>
-                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/google-play-soon_miudnn.png" alt="Coming Soon To Play Store" style="height: auto; width: 350px;">
-                    </center>
-                </div>
-                <div class="col-md-6 col-sm-6 about_client">
-                    <center>
-                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1616497940/png-clipart-apple-app-store-advertisement-iphone-app-store-android-coming-soon-electronics-text_lwp53w.png" alt="Coming Soon to App Store" style="height: auto; width: 350px;">
-                    </center>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- End Coming Soon to PlayStore and App Store -->
 
     <!-- Professional Builde -->
     <section class="professional_builder row">
@@ -118,6 +96,26 @@
         </div>
     </section>
     <!-- End Professional Builde -->
+
+                <!-- Coming Soon to PlayStore and App Store -->
+    <section class="about_us_area row">
+        <div class="container">
+
+            <div class="row about_row">
+                <div class="col-md-6 col-sm-6 about_client">
+                    <center>
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/google-play-soon_miudnn.png" alt="Coming Soon To Play Store" style="height: auto; width: 350px;">
+                    </center>
+                </div>
+                <div class="col-md-6 col-sm-6 about_client">
+                    <center>
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1616497940/png-clipart-apple-app-store-advertisement-iphone-app-store-android-coming-soon-electronics-text_lwp53w.png" alt="Coming Soon to App Store" style="height: auto; width: 350px;">
+                    </center>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Coming Soon to PlayStore and App Store -->
 
     <!-- About Us Area -->
     <section class="about_us_area row disp-0">

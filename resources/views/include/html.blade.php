@@ -79,6 +79,11 @@ li.dropdown.submenu > a {
   z-index: 10500;
 }
 
+        /* .slider_inner.camera_wrap{
+            height: 400px !important;
+            display: block;
+            background-color: black !important;
+        } */
 
 
     </style>
