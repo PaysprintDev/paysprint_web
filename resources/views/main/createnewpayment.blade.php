@@ -142,30 +142,32 @@ input[type="radio"] {
                                         </div>
                                     </div>
 
+                                        <h4>Receiver's Information</h4>
+                                        <hr>
 
                                             <div class="form-group"> <label for="fname">
-                                                    <h6>Receiver's First Name</h6>
+                                                    <h6>First Name</h6>
                                                 </label>
                                                 <div class="input-group"> 
                                                     <input type="text" name="fname" id="fname" placeholder="First Name" class="form-control">
                                                 </div>
                                             </div>
                                             <div class="form-group"> <label for="lname">
-                                                    <h6>Receiver's Last Name</h6>
+                                                    <h6>Last Name</h6>
                                                 </label>
                                                 <div class="input-group"> 
                                                     <input type="text" name="lname" id="lname" placeholder="Last Name" class="form-control">
                                                 </div>
                                             </div>
                                             <div class="form-group"> <label for="email">
-                                                    <h6>Receiver's Email Address</h6>
+                                                    <h6>Email Address</h6>
                                                 </label>
                                                 <div class="input-group"> 
                                                     <input type="email" name="email" id="email" placeholder="Email Address" class="form-control">
                                                 </div>
                                             </div>
                                             <div class="form-group"> <label for="phone">
-                                                    <h6>Receiver's Telephone</h6>
+                                                    <h6>Telephone</h6>
                                                 </label>
                                                 <div class="input-group">
                                                     <select name="countryCode" id="reccountryCode" class="form-control billinginput_box">
@@ -391,7 +393,7 @@ input[type="radio"] {
                                     
                                     
                                         <div class="form-group"> <label for="orgpayservice">
-                                            <h6>Receiver's Country</h6>
+                                            <h6>Country</h6>
                                         </label>
                                         <div class="input-group"> 
                                             <select id="country" name="country" class="form-control">

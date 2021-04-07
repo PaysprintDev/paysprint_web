@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Support\Facades\Validator;
 
+
+use Illuminate\Support\Facades\Log;
+
 use App\User as User;
 
 use App\AnonUsers as AnonUsers;
@@ -132,9 +135,9 @@ class GooglePaymentController extends Controller
     if($validator->passes()){
             
     // Get User Info
-    $user = User::where('email', $req->orgpayemail)->first();
+    $user = User::where('email', Auth::user()->email)->first();
 
-    
+    Log::info($user);
 
     if(isset($user)){
         
@@ -202,7 +205,7 @@ class GooglePaymentController extends Controller
 
             if($req->localcurrency != $req->currency){
 
-            $monerisDeductamount = $this->currencyConvert($req->localcurrency, $req->totalcharge);
+                $monerisDeductamount = $this->currencyConvert($req->localcurrency, $req->totalcharge);
 
             }   
             else{
@@ -259,6 +262,8 @@ class GooglePaymentController extends Controller
             $this->amount = $req->currency.' '.$dataInfo;
             $this->paypurpose = $service;
 
+            
+
             // Mail to receiver
             $this->sendEmail($this->to, "Payment Received");
 
@@ -277,6 +282,8 @@ class GooglePaymentController extends Controller
             
             $regards = $req->user_id;
 
+            
+
 
             
 
@@ -292,6 +299,17 @@ class GooglePaymentController extends Controller
             // Receiver Statement
             $this->insStatement($client->email, $reference_code, "Received ".$req->currency.''.$dataInfo." in wallet for ".$service." from ".$user->name, $req->conversionamount, 0, $balance, $trans_date, $status, "Wallet credit", $client->ref_code, 1, $statement_route);
 
+            $this->createNotification($user->ref_code, $req->payment_method." transfer of ".$req->currency.''.$req->amount." to ".$client->name." for ".$service);
+
+            $this->createNotification($client->ref_code, "Received ".$req->currency.''.$req->amount." to your wallet from ".$user->name." for ".$service);
+
+            $sendMsg = "You made a ".$activity.". You now have ".$wallet_balance." in your account";
+            $sendPhone = "+".Auth::user()->code.Auth::user()->telephone;
+
+
+            $recMsg = "Received ".$req->currency.''.$dataInfo." in wallet for ".$service." from ".$user->name.". You now have ".$recWallet." in your wallet.";
+            $recPhone = "+".$client->code.$client->telephone;
+
             
 
             $resData = ['res' => 'Money sent successfully', 'message' => 'success', 'title' => 'Good!'];
@@ -299,10 +317,35 @@ class GooglePaymentController extends Controller
             $response = 'Money sent successfully';
             $respaction = 'success';
 
-            $this->createNotification($user->ref_code, $req->payment_method." transfer of ".$req->currency.''.$req->amount." to ".$client->name." for ".$service);
+            
 
 
-            return redirect()->route('payorganization')->with($respaction, $response);
+            $this->sendMessage($sendMsg, $sendPhone);
+
+            $this->sendMessage($recMsg, $recPhone);
+
+
+            try {
+
+                $resData = ['res' => 'Money sent successfully', 'message' => 'success', 'title' => 'Good!'];
+
+                $response = 'Money sent successfully';
+                $respaction = 'success';
+
+                return redirect()->route('payorganization')->with($respaction, $response);
+
+            } catch (\Throwable $th) {
+
+                $resData = ['res' => 'Money sent successfully. However, we are unable to send you a notification through a text message because we detected there is no phone number or you have an invalid phone number on your PaySprint Account. Kindly update your phone number to receive notification via text on your next transaction.', 'message' => 'success', 'title' => 'Good!'];
+
+                $response = 'Money sent successfully. However, we are unable to send you a notification through a text message because we detected there is no phone number or you have an invalid phone number on your PaySprint Account. Kindly update your phone number to receive notification via text on your next transaction.';
+                $respaction = 'success';
+
+                return redirect()->route('payorganization')->with($respaction, $response);
+            }
+
+
+            
 
         }
         else{

@@ -177,7 +177,7 @@ body::-webkit-scrollbar-thumb:hover {
 
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
 
-  <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Individual</a></li>
+  <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">User</a></li>
 
   <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Merchant</a></li>
 </ul>
@@ -199,7 +199,7 @@ body::-webkit-scrollbar-thumb:hover {
                     <div class="indselectForm animated fadeIn choice">
                         <select class="form-control input_box" style="color: #000 !important;" name="account" id="accountType">
                             <option value="">--Select account type--</option>
-                            <option value="Individual">Individual</option>
+                            <option value="Individual">Personal</option>
                             <option value="Business">Business</option>
                         </select>
                         </div>
@@ -247,14 +247,11 @@ body::-webkit-scrollbar-thumb:hover {
                                 </div>
                             </div>
 
-                            <label for="email">Email Address</label>
-                                        <input type="email" name="email" id="email" class="form-control input_box" @if($email != "") value="{{ $email }}" readonly @else placeholder="Your Email *" required @endif>
                             
-                            <label for="cemail">Confirm Email Address</label>
-                                        <input type="email" name="cemail" id="cemail" class="form-control input_box" @if($email != "") value="{{ $email }}" readonly @else placeholder="Confirm Your Email *" required @endif>
                             
 
-                            
+                            <label for="address">Address</label>
+                                <input type="text" name="address" id="address" class="form-control input_box" placeholder="Address *" required>
 
                             <div class="row">
                                 <div class="col-sm-6">
@@ -289,9 +286,13 @@ body::-webkit-scrollbar-thumb:hover {
                                 
                             </div>
 
+                            <label for="email">Email Address</label>
+                                        <input type="email" name="email" id="email" class="form-control input_box" @if($email != "") value="{{ $email }}" readonly @else placeholder="Your Email *" required @endif>
+                            
+                            <label for="cemail">Confirm Email Address</label>
+                                        <input type="email" name="cemail" id="cemail" class="form-control input_box" @if($email != "") value="{{ $email }}" readonly @else placeholder="Confirm Your Email *" required @endif>
 
-                            <label for="address">Address</label>
-                                <input type="text" name="address" id="address" class="form-control input_box" placeholder="Address *" required>
+                            
 
                             <div class="row">
 
@@ -323,32 +324,31 @@ body::-webkit-scrollbar-thumb:hover {
 
 
                         <div class="busForm animated rollIn disp-0">
+
+                            <h4><strong>Business Information</strong></h4>
+                            <hr>
+
                             <label for="busname">Business Name</label>
                             <input type="text" name="businessname" id="busname" class="form-control input_box" placeholder="Business Name *" required>
+                            
+                            
+                            <label for="buscorporationtype">Corporation Type</label>
+                            <select name="corporationtype" id="buscorporationtype" class="form-control input_box" required>
+                                <option value="">Select Corporation Type</option>
+                                <option value="Sole Proprietorship">Sole Proprietorship</option>
+                                <option value="Partnership">Partnership</option>
+                                <option value="Limited Liability Company">Limited Liability Company</option>
+                                <option value="Public Company">Public Company</option>
+                                <option value="Trust and Estate">Trust and Estate</option>
+                            </select>
+                            {{-- <input type="text" name="corporationtype" id="buscorporationtype" class="form-control input_box" placeholder="Corporation Type *" required> --}}
+
+
                             
                             <label for="busaddress">Business Address</label>
                             <input type="text" name="address" id="busaddress" class="form-control input_box" placeholder="Address *" required>
 
-                            <label for="buscorporationtype">Corporation Type</label>
-                            <input type="text" name="corporationtype" id="buscorporationtype" class="form-control input_box" placeholder="Corporation Type *" required>
-
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <label for="busfname">First Name</label>
-                                    <input type="text" id="busfname" name="firstname" class="form-control input_box" @if($fname != "") value="{{ $fname }}" readonly @else placeholder="First Name *" required @endif>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label for="buslname">Last Name</label>
-                                    <input type="text" id="buslname" name="lastname" class="form-control input_box" @if($lname != "") value="{{ $lname }}" readonly @else placeholder="Last Name *" required @endif>
-                                </div>
-                            </div>
-
-                            <label for="busemail">Email Address</label>
-                            <input type="email" name="email" id="busemail" class="form-control input_box" @if($email != "") value="{{ $email }}" readonly @else placeholder="Your Email *" required @endif>
-
-                            <label for="buscemail">Confirm Email Address</label>
-                            <input type="email" name="cemail" id="buscemail" class="form-control input_box" @if($email != "") value="{{ $email }}" readonly @else placeholder="Confirm Your Email *" required @endif>
-
+                            
                             <div class="row">
 
                                 <div class="col-sm-6">
@@ -374,6 +374,28 @@ body::-webkit-scrollbar-thumb:hover {
                                     {{-- <input type="text" name="state" id="busstate" class="form-control input_box" placeholder="Province/State *" required> --}}
                                 </div>
                             </div>
+                            <h4><strong>Contact Person</strong></h4>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label for="busfname">First Name</label>
+                                    <input type="text" id="busfname" name="firstname" class="form-control input_box" @if($fname != "") value="{{ $fname }}" readonly @else placeholder="First Name *" required @endif>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="buslname">Last Name</label>
+                                    <input type="text" id="buslname" name="lastname" class="form-control input_box" @if($lname != "") value="{{ $lname }}" readonly @else placeholder="Last Name *" required @endif>
+                                </div>
+                            </div>
+
+                            
+
+                            
+
+                            <label for="busemail">Email Address</label>
+                            <input type="email" name="email" id="busemail" class="form-control input_box" @if($email != "") value="{{ $email }}" readonly @else placeholder="Your Email *" required @endif>
+
+                            <label for="buscemail">Confirm Email Address</label>
+                            <input type="email" name="cemail" id="buscemail" class="form-control input_box" @if($email != "") value="{{ $email }}" readonly @else placeholder="Confirm Your Email *" required @endif>
 
                             
 
@@ -429,22 +451,26 @@ body::-webkit-scrollbar-thumb:hover {
             <div class="footer_row row">
                 <div class="col-md-3 col-sm-6 footer_about">
                     <h2>ABOUT OUR COMPANY</h2>
-                    <p style="font-weight: bold; font-size: 30px; color: #111f29 font-family: tahoma"><span style="color: #f6b60b">E-</span>BILLING</p>
-                    <p>Electronic billing or electronic bill payment and presentment, is when a seller such as company, organization, or group sends its bills or invoices over the internet, and customers pay the bills electronically.</p>
+                    {{-- <p style="font-weight: bold; font-size: 30px;">Pay<span style="color: #f6b60b">Sprint</span></p> --}}
+                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_white_horizotal_mb5ouw.png" style="position: relative; left: -40px;">
+                    {{-- <p>Payca or electronic bill payment, is when a seller such as company, organization, or group sends its bills or invoices over the internet, and customers pay the bills electronically.</p> --}}
+                    <p>PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!</p>
                     <ul class="socail_icon">
-                        <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                        <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.facebook.com/EXPRESSCANADA2014/?modal=admin_todo_tour" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                        <li><a href="https://twitter.com/EXBC2" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
 
-                        <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+                        <li><a href="https://instagram.com/exbc2014" target="_blank"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+
+                        <li><a href="https://www.linkedin.com/company/exbc-canada/?viewAsMember=true" target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
                     </ul>
                 </div>
                 <div class="col-md-3 col-sm-6 footer_about quick">
                     <h2>Services</h2>
                     <ul class="quick_link">
-                        <li><a href="#"><i class="fa fa-chevron-right"></i>Property tax</a></li>
-                        <li><a href="#"><i class="fa fa-chevron-right"></i>Utility Bill</a></li>
-                        <li><a href="#"><i class="fa fa-chevron-right"></i>Tickets</a></li>
-                        <li><a href="#"><i class="fa fa-chevron-right"></i>Others</a></li>
+                        <li><a href="#"><i class="fa fa-chevron-right"></i>Money Transfer</a></li>
+                        <li><a href="#"><i class="fa fa-chevron-right"></i>Pay Invoice</a></li>
+                        <li><a href="#"><i class="fa fa-chevron-right"></i>Wallet</a></li>
+                        {{-- <li><a href="#"><i class="fa fa-chevron-right"></i>Parking Tickets</a></li> --}}
                         {{-- <li><a href="#"><i class="fa fa-chevron-right"></i>Commercial Construction</a></li> --}}
                         {{-- <li><a href="#"><i class="fa fa-chevron-right"></i>Concreate Transport</a></li> --}}
                     </ul>
@@ -452,30 +478,36 @@ body::-webkit-scrollbar-thumb:hover {
                 <div class="col-md-3 col-sm-6 footer_about">
                     <h2>Quick link</h2>
                     <ul class="quick_link">
-                        <li><a href="{{ route('home') }}"><i class="fa fa-chevron-right"></i>Home</a></li>
-                        <li><a href="{{ route('invoice') }}"><i class="fa fa-chevron-right"></i>Invoices</a></li>
-                        <li><a href="{{ route('statement') }}"><i class="fa fa-chevron-right"></i>Statement</a></li>
+                        <li><a href="{{ route('about') }}"><i class="fa fa-chevron-right"></i>About Us</a></li>
+                        <li><a href="{{ route('contact') }}"><i class="fa fa-chevron-right"></i>Contact Us</a></li>
+                        <li><a href="{{ route('terms of use') }}"><i class="fa fa-chevron-right"></i>Terms of Use</a></li>
+                        <li><a href="{{ route('privacy policy') }}"><i class="fa fa-chevron-right"></i>Privacy Policy</a></li>
+                        @guest
+                            <li><a href="{{ route('login') }}"><i class="fa fa-chevron-right"></i>Login</a></li>
+                        <li><a href="{{ route('register') }}"><i class="fa fa-chevron-right"></i>Sign Up for FREE</a></li>
+                        @endguest
+                        
+
 
                     </ul>
                 </div>
                 <div class="col-md-3 col-sm-6 footer_about">
                     <h2>CONTACT US</h2>
                     <address>
-                        <p>Have questions, comments or just want to say hello:</p>
                         <ul class="my_address">
-                            <li><a href="#"><i class="fa fa-envelope" aria-hidden="true"></i>info@e-billing.com</a></li>
-                            <li><a href="#"><i class="fa fa-phone" aria-hidden="true"></i>+123-456-789</a></li>
-                            <li><a href="#"><i class="fa fa-map-marker" aria-hidden="true"></i><span> Ontario, Canada </span></a></li>
+                            <li><a href="#"><i class="fa fa-envelope" aria-hidden="true"></i>info@paysprint.net</a></li><br>
+                            <li><a href="#"><i class="fa fa-map-marker" aria-hidden="true"></i><span> PaySprint by Express Ca Corp, <br> 10 George St. North, Brampton. ON. L6X1R2. Canada </span></a></li>
                         </ul>
                     </address>
                 </div>
             </div>
         </div>
         <div class="copyright_area">
-            Copyright 2019 All rights reserved.
+            Copyright 2019 - {{ date('Y') }} All rights reserved.
         </div>
     </footer>
     <!-- End Footer Area -->
+
 
     <!-- jQuery JS -->
     <script src="{{ asset('js/jquery-1.12.0.min.js') }}"></script>

@@ -63,6 +63,7 @@
                             <li class="tab-menu active"><a data-toggle="tab" href="#home">Send Money</a></li>
                             {{-- <li class="tab-menu"><a data-toggle="tab" href="#menu1">Receive</a></li> --}}
                             <li class="tab-menu"><a data-toggle="tab" href="#menu3">Search</a></li>
+                            <li class="tab-menu" onclick="location.href='{{ route('create new payment', 'country='.Auth::user()->country) }}'"><a data-toggle="tab" href="{{ route('create new payment', 'country='.Auth::user()->country) }}">Send money by Text/Email</a></li>
                             <li class="tab-menu" onclick="notifyForm('{{ $email }}')"><a data-toggle="tab" href="#menu2">Notification @if(isset($data)) <span class="badge badge-danger">{{ $data['newnotification'] }}</span> @else 0 @endif</a></li>
                         </ul>
 
@@ -317,7 +318,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="orgInfo">Enter receivers account number</label>
-                                                    <input type="text" name="orgInfo" class="form-control billinginput_box" id="orgInfo" placeholder="8172">
+                                                    <input type="text" name="orgInfo" class="form-control billinginput_box" id="orgInfo" placeholder="e.g 81702">
         
                                             </div>
                                             <div class="col-md-3">
@@ -332,7 +333,7 @@
                                         <div class="row">
                                             <div class="col-md-9">
                                                 <label for="orgInfo">Enter receivers account number</label>
-                                                    <input type="text" name="orgInfo" class="form-control billinginput_box" id="orgInfo" placeholder="8172">
+                                                    <input type="text" name="orgInfo" class="form-control billinginput_box" id="orgInfo" placeholder="e.g 81702">
         
                                             </div>
                                             <div class="col-md-3">
@@ -618,7 +619,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="recorgInfo">Enter sender's account number</label>
-                                                        <input type="text" name="orgInfo" class="form-control billinginput_box" id="recorgInfo" placeholder="8172">
+                                                        <input type="text" name="orgInfo" class="form-control billinginput_box" id="recorgInfo" placeholder="e.g 81702">
             
                                                 </div>
                                                 <div class="col-md-3">
@@ -633,7 +634,7 @@
                                             <div class="row">
                                                 <div class="col-md-9">
                                                     <label for="recorgInfo">Enter sender's account number</label>
-                                                        <input type="text" name="orgInfo" class="form-control billinginput_box" id="recorgInfo" placeholder="8172">
+                                                        <input type="text" name="orgInfo" class="form-control billinginput_box" id="recorgInfo" placeholder="e.g 81702">
             
                                                 </div>
                                                 <div class="col-md-3">
@@ -682,7 +683,7 @@
 
                                 <div class="row">
                                     <div class="col-md-9">
-                                        <label for="orgInfo">Search receivers name</label>
+                                        <label for="orgInfo">Search receiver by name</label>
                                             <input type="text" name="orgInfosearch" class="form-control billinginput_box" id="orgInfosearch" placeholder="John Doe">
 
                                     </div>

@@ -306,6 +306,7 @@ Name: {{$maildata->name}} <br><br>
 Email: {{$maildata->email}} <br><br>
 
 
+
 <a href="mailto:{{$maildata->email}}">reply {{$maildata->email}}</a>
 
 <hr>

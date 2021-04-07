@@ -29,6 +29,7 @@ class sendEmail extends Mailable
     public function build()
     {
 
+        
 
         if($this->mail->purpose == "Payment Received"){
         return $this->subject($this->mail->purpose)->view('mails.clientreceive')

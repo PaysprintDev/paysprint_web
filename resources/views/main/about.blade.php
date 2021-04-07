@@ -20,7 +20,7 @@
                     <div class="subtittle">
                         <h2>WHO WE ARE</h2>
                     </div>
-                    <p>PaySprint is a method of sending bills and collecting electronic payments in which bills are delivered over the internet and customers can pay electronically. We generally involves integrating multiple systems including a billing system, banking system, a customer’s bank bill pay system, and an online interface for the PaySprint system.</p>
+                    <p>PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!</p>
                     <a href="{{ route('contact') }}" class="button_all">Contact Now</a>
                 </div>
                 <div class="col-md-5 our_skill_inner">
@@ -167,7 +167,7 @@
     <!-- End Our Features Area -->
 
     <!-- Our Partners Area -->
-    <section class="our_partners_area">
+    <section class="our_partners_area disp-0">
         <div class="book_now_aera">
             <div class="container">
                 <div class="row book_now">

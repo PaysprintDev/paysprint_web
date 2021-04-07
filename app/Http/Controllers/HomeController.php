@@ -538,6 +538,7 @@ class HomeController extends Controller
             'getCard' => $this->getUserCard(),
         );
 
+        
 
         return view('main.addmoneytowallet')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }

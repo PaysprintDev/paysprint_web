@@ -19,13 +19,14 @@
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <h3 class="font-sm">
-                                                                Wallet Balance
+                                                                Balance
                                                             </h6>
                                                         </div>
+                                                        <br>
                                                         <div class="col-md-12">
-                                                            <h4>
+                                                            <h3>
                                                                 {{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format(Auth::user()->wallet_balance, 2) }}
-                                                            </h4>
+                                                            </h3>
                                                         </div>
                                                     </div>
                                             </div>
@@ -35,13 +36,13 @@
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <h3 class="font-sm">
-                                                                Total Withdrawals
+                                                                Withdrawals
                                                             </h3>
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <h4>
+                                                            <h3>
                                                                 {{ number_format(Auth::user()->number_of_withdrawals) }}
-                                                            </h4>
+                                                            </h3>
                                                         </div>
                                                     </div>
                                             </div>
@@ -60,7 +61,8 @@
                     <br>
                     <div class="row">
                         <div class="col-md-8">
-                            <h2>Send & Receive</h2>
+                            <h3 style="text-align: left !important;">5 most recent transactions</h3>
+                            <h4 style="text-align: left !important;">Send & Receive</h4>
                         </div>
                         <div class="col-md-4">
                             <i class="far fa-paper-plane"></i>
@@ -115,7 +117,8 @@
                     <br>
                     <div class="row">
                         <div class="col-md-8">
-                            <h2>Pay Invoice</h2>
+                            <h3 style="text-align: left !important;">5 most recent transactions</h3>
+                            <h4 style="text-align: left !important;">Pay Invoice</h4>
                         </div>
                         <div class="col-md-4">
                             <i class="fas fa-file-invoice"></i>
@@ -170,7 +173,8 @@
                     <br>
                     <div class="row">
                         <div class="col-md-8">
-                            <h2>Wallet Transactions</h2>
+                            <h3 style="text-align: left !important;">5 most recent transactions</h3>
+                            <h4 style="text-align: left !important;">Wallet Transactions</h4>
                         </div>
                         <div class="col-md-4">
                             <i class="fas fa-wallet"></i>
@@ -219,7 +223,8 @@
                     <br>
                     <div class="row">
                         <div class="col-md-8">
-                            <h2>Notifications</h2>
+                            <h3 style="text-align: left !important;">5 most recent transactions</h3>
+                            <h4 style="text-align: left !important;">Notifications</h4>
                         </div>
                         <div class="col-md-4">
                             <i class="far fa-bell"></i>

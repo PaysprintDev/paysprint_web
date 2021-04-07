@@ -161,13 +161,13 @@ input[type="radio"] {
                                             </div>
                                                     
                                                 <strong>
-                                                 <a href="{{ route('Add card') }}"> Add a new card <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: darkorange"></i></a>
+                                                 <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff3cd !important; border-color: #fff3cd !important;" href="{{ route('Add card') }}"> Add a new card <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>
                                                 </strong>
 
                                                 @else
 
                                                 <strong>
-                                                    <a href="{{ route('Add card') }}">Add a new card <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: darkorange"></i></a>
+                                                    <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff3cd !important; border-color: #fff3cd !important;" href="{{ route('Add card') }}">Add a new card <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>
                                                 </strong>
                                                     
                                                 @endif

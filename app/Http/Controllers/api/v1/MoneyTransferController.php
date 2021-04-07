@@ -214,16 +214,10 @@ class MoneyTransferController extends Controller
 
         if(isset($receiver)){
 
-            if($req->approveCommission == "Yes"){
-                $amount= number_format($req->amount, 2);
-                $approve_commission = "Yes";
-            }
-            else{
-            
-                $amount= number_format($req->amount+$req->commission, 2);
-                $approve_commission = "No";
-            
-            }
+            $amount= number_format($req->amount, 2);
+
+            $approve_commission = "Yes";
+
 
             if($req->purposeOfPayment != "Others"){
                 $service = $req->purposeOfPayment;
@@ -236,12 +230,19 @@ class MoneyTransferController extends Controller
             $userID = $sender->email;
             $payerID = $sender->ref_code;
 
-            $insertPay = OrganizationPay::insert(['transactionid' => $req->paymentToken, 'coy_id' => $req->accountNumber, 'user_id' => $userID, 'purpose' => $service, 'amount' => $req->amount, 'withdraws' => $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $req->amountToSend, 'commission' => $req->commission, 'approve_commission' => $approve_commission]);
+            $paymentToken = "wallet-".date('dmY').time();
+
+            $wallet_balance = $sender->wallet_balance - $req->amount;
+
+            $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $req->accountNumber, 'user_id' => $userID, 'purpose' => $service, 'amount' => $req->amount, 'withdraws' => $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $req->amount, 'commission' => 0, 'approve_commission' => $approve_commission, 'request_receive' => 0]);
 
 
             if($insertPay == true){
 
                 try {
+
+                    // Update Wallet
+                    User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $wallet_balance]);
 
                 // Send mail to both parties
 
@@ -251,7 +252,7 @@ class MoneyTransferController extends Controller
                 $this->coy_name = $receiver->name;
                 // $this->email = "bambo@vimfile.com";
                 $this->email = $sender->email;
-                $this->amount = $req->amountToSend;
+                $this->amount = $req->currency." ".$req->amount;
                 $this->paypurpose = $service;
 
                 // Mail to receiver
@@ -263,29 +264,50 @@ class MoneyTransferController extends Controller
 
 
                 // Insert Statement
-                $activity = "Money sent to ".$receiver->name." for ".$service;
+                $activity = "Wallet transfer of ".$req->currency."".$req->amount." to ".$receiver->name." for ".$service;
                 $credit = 0;
-                $debit = $req->amount + $req->commission;
-                $reference_code = $req->paymentToken;
+                $debit = $req->amount;
+                $reference_code = $paymentToken;
                 $balance = 0;
                 $trans_date = date('Y-m-d');
-                $status = "Pending";
+                $status = "Delivered";
                 $action = "Payment";
                 $regards = $receiver->ref_code;
 
+
+                $statement_route = "wallet";
+
+                $recWallet = $receiver->wallet_balance + $req->amount;
+
+                User::where('ref_code', $req->accountNumber)->update(['wallet_balance' => $recWallet]);
+
+
+                $sendMsg = "You made a ".$activity.". You now have ".$wallet_balance." in your account";
+                $sendPhone = "+".$sender->code.$sender->telephone;
+
+                $this->sendMessage($sendMsg, $sendPhone);
+
+
+                $recMsg = "Received ".$req->currency.''.$req->amount." in wallet for ".$service." from ".$sender->name.". You now have ".$recWallet." in your wallet.";
+                $recPhone = "+".$receiver->code.$receiver->telephone;
+
+                $this->sendMessage($recMsg, $recPhone);
+
                 // Senders statement
-                $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1);
+                $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
                 
                 // Receiver Statement
-                $this->insStatement($receiver->email, $reference_code, "Received money for ".$service." from ".$sender->name, $req->amount, 0, $balance, $trans_date, $status, "Invoice", $receiver->ref_code, 1);
+                $this->insStatement($receiver->email, $reference_code, "Received ".$req->currency.''.$req->amount." in wallet for ".$service." from ".$sender->name, $req->amount, 0, $balance, $trans_date, $status, "Invoice", $receiver->ref_code, 1, $statement_route);
 
-                $data = OrganizationPay::where('transactionid', $req->paymentToken)->first();
+                $data = OrganizationPay::where('transactionid', $paymentToken)->first();
 
                 $status = 200;
 
                 $resData = ['data' => $data, 'message' => 'Money Sent Successfully', 'status' => $status];
 
-                $this->createNotification($sender->ref_code, "Money sent to ".$receiver->name." for ".$service);
+                $this->createNotification($receiver->ref_code, "Received ".$req->currency.''.$req->amount." to your wallet from ".$sender->name." for ".$service);
+
+                $this->createNotification($sender->ref_code, "Wallet transfer of ".$req->currency.''.$req->amount." to ".$receiver->name." for ".$service);
                     
                 } catch (\Throwable $th) {
                     $status = 400;
@@ -373,8 +395,8 @@ class MoneyTransferController extends Controller
 
     }
 
-    public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state){
-        Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state]);
+    public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route){
+        Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route]);
     }
 
 

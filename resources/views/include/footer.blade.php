@@ -437,7 +437,7 @@ function getStatement(){
                                     today = new Date(today.getTime() - 3000000);
                                     var date_format_str = (today.getDate().toString().length==2?today.getDate().toString():"0"+today.getDate().toString())+"/"+((today.getMonth()+1).toString().length==2?(today.getMonth()+1).toString():"0"+(today.getMonth()+1).toString())+"/"+today.getFullYear().toString()+" "+(today.getHours().toString().length==2?today.getHours().toString():"0"+today.getHours().toString())+":"+((parseInt(today.getMinutes()/5)*5).toString().length==2?(parseInt(today.getMinutes()/5)*5).toString():"0"+(parseInt(today.getMinutes()/5)*5).toString())+":00";
 
-                                    statement = "<tr><td style='font-weight:bold; font-size: 11px;'>"+date_format_str+"</td><td>"+k.activity+"</td><td>"+k.reference_code+"</td><td><span style='color:"+transform+"; font-weight:bold;'>"+price+"</span></td><td><a type='button' class='btn btn-default' href='"+urlRoute+"/"+k.reference_code+"' target='_blank' style='border:1px solid grey'>View Payment Receipt</a></td></tr>";
+                                    statement = "<tr><td style='font-weight:bold; font-size: 11px;'>"+date_format_str+"</td><td>"+k.activity+"</td><td>"+k.reference_code+"</td><td><span style='color:"+transform+"; font-weight:bold;'>"+price+"</span></td><td><a type='button' class='btn btn-default' href='"+urlRoute+"/"+k.reference_code+"' target='_blank' style='border:1px solid grey'>View Receipt</a></td></tr>";
 
 
 

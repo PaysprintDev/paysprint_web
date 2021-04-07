@@ -56,7 +56,7 @@ input[type="radio"] {
             </div>
         </div> <!-- End -->
         <div class="row">
-            <div class="col-lg-6 mx-auto">
+            <div class="col-lg-8 mx-auto">
                 <div class="card ">
                     <div class="card-header">
                         <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
@@ -101,26 +101,106 @@ input[type="radio"] {
 
                                     
                                     
-                                    
+                                    @if (count($data['getCard']) > 0)
                                     <div class="form-group"> <label for="card_id">
                                             <h6>Select Card</h6>
                                         </label>
                                         <div class="input-group"> 
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/fluent/20/000000/bank-card-back-side.png"/> </span> </div>
                                             <select name="card_id" id="card_id" class="form-control" required>
-                                                @if (count($data['getCard']) > 0)
-                                                    @foreach ($data['getCard'] as $mycard)
-
-
-                                                        <option value="{{ $mycard->id }}">{!! wordwrap($mycard->card_number, 4, '-', true) !!}</option>
-                                                    @endforeach
-                                                @else
-                                                    <option value="">Add a new card</option>
-                                                @endif
+                                                @foreach ($data['getCard'] as $mycard)
+                                                    <option value="{{ $mycard->id }}">{!! wordwrap($mycard->card_number, 4, '-', true) !!}</option>
+                                                @endforeach
                                             </select>
                                             
                                         </div>
                                     </div>
+
+                                    @else
+
+                                    <div class="form-group"> <label for="amount">
+                                                <h5>Add a new card</h5>
+                                            </label>
+
+                                            <form action="#" method="POST" id="formCardElem">
+                                           @csrf
+
+                                           <div class="form-group">
+                                               <label for="card_number">Card Number</label>
+
+                                            <div class="input-group"> <input type="text" name="card_number" id="card_number" class="form-control" maxlength="16" required>
+                                                <div class="input-group-append"> 
+                                                    <span class="input-group-text text-muted"> <i class="fas fa-money-check mx-1"></i> <i class="fab fa-cc-mastercard mx-1"></i> <i class="fab fa-cc-amex mx-1"></i> </span> 
+                                                </div>
+                                            </div>
+
+                                           </div>
+                                           <div class="form-group">
+
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <label for="month">Month</label>
+
+                                                    <div class="input-group"> 
+                                                        <select name="month" id="month" class="form-control" required>
+                                                            <option value="01">January</option>
+                                                            <option value="02">February</option>
+                                                            <option value="03">March</option>
+                                                            <option value="04">April</option>
+                                                            <option value="05">May</option>
+                                                            <option value="06">June</option>
+                                                            <option value="07">July</option>
+                                                            <option value="08">August</option>
+                                                            <option value="09">September</option>
+                                                            <option value="10">October</option>
+                                                            <option value="11">November</option>
+                                                            <option value="12">December</option>
+                                                        </select>
+                                                        <div class="input-group-append"> 
+                                                            <span class="input-group-text text-muted"> <i class="fas fa-table"></i> </span> 
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="year">Year</label>
+
+                                                    <div class="input-group"> 
+                                                        <select name="year" id="year" class="form-control" required>
+                                                            @for ($i = date('y'); $i <= date('y')+10; $i++)
+                                                                <option value="{{ $i }}">{{ "20".$i }}</option>
+                                                            @endfor
+                                                        </select>
+                                                        <div class="input-group-append"> 
+                                                            <span class="input-group-text text-muted"> <i class="fas fa-calendar-week"></i> </span> 
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="month">CVV <small class="text-danger">3 digit at the back of your card</small></label>
+
+                                                    <div class="input-group"> 
+                                                        <input type="password" name="cvv" id="cvv" class="form-control" maxlength="3" required>
+                                                        <div class="input-group-append"> 
+                                                            <span class="input-group-text text-muted"> <i class="fas fa-closed-captioning"></i> </span> 
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                               
+
+                                           </div>
+
+
+                                           <div class="form-group">
+                                               <button type="button" class="btn btn-primary btn-block" onclick="handShake('addcard')" id="cardSubmit">Submit</button>
+                                           </div>
+
+                                       </form>
+                                        </div>
+
+
+                                    @endif
 
 
                                         
@@ -137,7 +217,7 @@ input[type="radio"] {
 
                                     <div class="form-group disp-0">
                                         <div class="input-group"> 
-                                            <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission" checked> Include commission</p>
+                                            <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission" checked> Include fee</p>
                                             
                                         </div>
                                     </div>
@@ -151,7 +231,7 @@ input[type="radio"] {
                                     </div>
                                 </div>
                                     <div class="form-group"> <label for="netwmount">
-                                        <h6>Commission</h6>
+                                        <h6>Fee</h6>
                                     </label>
                                     <div class="input-group"> 
                                         <input type="text" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
@@ -419,9 +499,11 @@ function handShake(val){
 
 var route;
 
-var formData = new FormData(formElem);
+var formData;
 
-if('withdrawmoney'){
+if(val == 'withdrawmoney'){
+
+    formData = new FormData(formElem);
 
     route = "{{ URL('/api/v1/moneywithdrawal') }}";
 
@@ -455,6 +537,54 @@ if('withdrawmoney'){
         },
         error: function(err) {
             $('.withdrawmoneyBtn').text('Withdraw Money');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+else if(val == 'addcard'){
+    formData = new FormData();
+
+    formData.append('card_number', $("#card_number").val());
+    formData.append('month', $("#month").val());
+    formData.append('year', $("#year").val());
+    formData.append('cvv', $("#cvv").val());
+
+        route = "{{ URL('/api/v1/addnewcard') }}";
+
+        Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#cardSubmit').text('Please wait...');
+        },
+        success: function(result){
+            console.log(result);
+
+            $('#cardSubmit').text('Submit');
+
+            if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+        },
+        error: function(err) {
             swal("Oops", err.responseJSON.message, "error");
 
         } 

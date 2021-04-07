@@ -7,6 +7,8 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+use Illuminate\Support\Facades\Log;
+
 use Twilio\Rest\Client;
 use App\Notifications as Notifications;
 
@@ -141,13 +143,24 @@ class Controller extends BaseController
     public function sendMessage($message, $recipients)
     {
 
-        
-        $account_sid = env("TWILIO_SID");
+        try {
+            $account_sid = env("TWILIO_SID");
         $auth_token = env("TWILIO_AUTH_TOKEN");
         $twilio_number = env("TWILIO_NUMBER");
         $client = new Client($account_sid, $auth_token);
         $client->messages->create($recipients, 
                 ['from' => $twilio_number, 'body' => $message] );
+
+        } catch (\Throwable $th) {
+            Log::error('Error: '.$th);
+
+            $response = 'Money sent successfully. However, we are unable to send you a notification through a text message because we detected there is no phone number or you have an invalid phone number on your PaySprint Account. Kindly update your phone number to receive notification via text on your next transaction.';
+            $respaction = 'success';
+
+            return redirect()->route('payorganization')->with($respaction, $response);
+        }
+        
+        
 
     }
 

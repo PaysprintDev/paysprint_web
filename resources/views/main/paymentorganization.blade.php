@@ -368,7 +368,7 @@ input[type="radio"] {
                                             <div class="col-md-12 withCard disp-0">
                                                 <button type="button" onclick="orgmonerisPay()" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Send Money </button>
                                             </div>
-                                            <div class="col-md-12 withWallet disp-0">
+                                            <div class="col-md-12 withWallet">
                                                 <button type="button" onclick="orgmonerisPay()" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Send Money </button>
                                             </div>
 

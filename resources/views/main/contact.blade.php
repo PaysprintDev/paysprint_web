@@ -23,7 +23,7 @@
         <div class="container">
             <div class="row contact_row">
                 <div class="col-sm-6 contact_info">
-                    <h2>Contact Info</h2>
+                    <h2>Contact</h2>
                     {{-- <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text.</p>
                     <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text.</p> --}}
                     <div class="location">
@@ -32,13 +32,13 @@
                             <a href="#">email</a>
                         </div>
                         <div class="address">
-                            <a href="#">EXBC, by Express Ca Corp, <br>10 George St. North, Brampton. ON. L6X1R2. Canada </a>
+                            <a href="#">PaySprint by Express Ca Corp, <br>10 George St. North, Brampton. ON. L6X1R2. Canada </a>
                             <a href="#">info@paysprint.net</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-6 contact_info send_message">
-                    <h2>Send Us a Message / Request for Demo</h2>
+                    <h2>Send Us a Message</h2>
                     <form class="form-inline contact_box">
                         <input id="name" type="text" class="form-control input_box" @if($name != "") value="{{ $name }}" readonly @else placeholder="Name *" @endif>
                         <input id="email" type="text" class="form-control input_box" @if($email != "") value="{{ $email }}" readonly @else placeholder="Your Email *" @endif>

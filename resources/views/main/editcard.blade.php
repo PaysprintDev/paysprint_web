@@ -166,7 +166,7 @@ input[type="radio"] {
                                     </div>
 
                                     
-
+                                    @if (isset($data['getthisCard']))
                                     <div class="form-group"> 
                                        <form action="#" method="POST" id="formElem">
                                            @csrf
@@ -318,6 +318,11 @@ input[type="radio"] {
 
                                        </form>
                                     </div>
+
+
+
+
+                                    @endif
 
 
                             
