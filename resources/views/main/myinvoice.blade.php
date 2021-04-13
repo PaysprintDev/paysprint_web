@@ -1,4 +1,5 @@
 <?php use \App\Http\Controllers\ClientInfo; ?>
+<?php use \SimpleSoftwareIO\QrCode\Facades\QrCode; ?>
 <!doctype html>
 <html>
 <head>
@@ -119,9 +120,10 @@
     <br>
     <div class="container invoice-box" id="divToPrint">
 
+
         @foreach ($invoice as $invoices)
 
-
+        
 
         <table class="table table-bordered" cellpadding="0" cellspacing="0">
             <tr class="top">
@@ -140,6 +142,12 @@
                                 <br>
                                 <span style="font-size: 17px;">Powered By</span><br>
                             <img src="{{ asset('images/logo2.png') }}" style="width:30%; max-width:300px;" align="left">
+                            </td>
+                            <td align="center">
+                                <center>
+                                    {!! QrCode::size(150)->generate('INVOICE NUMBER: '.$invoices->paidinvoice_no); !!}
+                                </center>
+
                             </td>
                             <td>
                                 Invoice #: {{ $invoices->paidinvoice_no }}<br>

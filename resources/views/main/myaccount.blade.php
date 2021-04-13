@@ -49,6 +49,10 @@ input[type="radio"] {
 .fas{
     font-size: 12px;
 }
+.nav-tabs .nav-link{
+    border: 1px solid #6c757d !important;
+    width: 20%;
+}
     </style>
 
   </head>
@@ -61,7 +65,7 @@ input[type="radio"] {
             </div>
         </div> <!-- End -->
         <div class="row">
-            <div class="col-lg-8 mx-auto">
+            <div class="col-lg-12 mx-auto">
                 <div class="card ">
                     <div class="card-header">
                         <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
@@ -138,6 +142,8 @@ input[type="radio"] {
                                                         <div class="col-md-12">
                                                             <h6 class="font-sm">
                                                                 {{ (strlen($cardNo) < 10) ? $cardNo : substr($cardNo, 0, 10)."***" }} {{ ($others > 0) ? "& ".$others." others" : "" }}
+
+                                                                
                                                             </h6>
                                                         </div>
                                                         <br>
@@ -152,7 +158,13 @@ input[type="radio"] {
                                                             </h6>
                                                         </div>
                                                     </div>
-                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <h6>
+                                                                {{ (strlen($data['getCard'][0]->card_name) < 18) ? strtoupper($data['getCard'][0]->card_name) : substr(strtoupper($data['getCard'][0]->card_name), 0, 18)."..." }}
+                                                            </h6>
+                                                        </div>
+                                                    </div>
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             {!! $cardImage !!}
@@ -160,15 +172,48 @@ input[type="radio"] {
                                                     </div>
                                             </div>
                                                     
-                                                <strong>
-                                                 <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff3cd !important; border-color: #fff3cd !important;" href="{{ route('Add card') }}"> Add a new card <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>
-                                                </strong>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <strong>
+                                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff3cd !important; border-color: #fff3cd !important;" href="{{ route('Add card', 'card=Credit Card') }}">Add a new Credit Card <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>
+                                                        </strong>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <strong>
+                                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #d1ecf1 !important; border-color: #d1ecf1 !important;" href="{{ route('Add card', 'card=Prepaid Card') }}"> Add a new Prepaid Card <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>
+                                                        </strong>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <strong>
+                                                            <a type="button" class="btn btn-warning" style="color: #f7f7f7; font-weight: bold; background-color: #6c757d !important; border-color: #6c757d !important;" href="javascript:void()"> Add a new Bank Account <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>
+                                                        </strong>
+                                                    </div>
+                                                </div>
 
                                                 @else
 
-                                                <strong>
-                                                    <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff3cd !important; border-color: #fff3cd !important;" href="{{ route('Add card') }}">Add a new card <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>
-                                                </strong>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <strong>
+                                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff3cd !important; border-color: #fff3cd !important;" href="{{ route('Add card', 'card=Credit Card') }}">Add a new Credit Card <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>
+                                                        </strong>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <strong>
+                                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #d1ecf1 !important; border-color: #d1ecf1 !important;" href="{{ route('Add card', 'card=Prepaid Card') }}"> Add a new Prepaid Card <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>
+                                                        </strong>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        {{-- {{ route('Add card', 'card=Bank Detail') }} --}}
+                                                        <strong>
+                                                            <a type="button" class="btn btn-warning" style="color: #f7f7f7; font-weight: bold; background-color: #6c757d !important; border-color: #6c757d !important;" href="javascript:void()"> Add a new Bank Account <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>
+                                                        </strong>
+                                                    </div>
+                                                </div>
+
+                                                
+                                                
+                                                
                                                     
                                                 @endif
 
@@ -190,6 +235,25 @@ input[type="radio"] {
                                                         </div>
                                                     </div>
                                             </div>
+                                            <div class="alert alert-success">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <h6 class="font-sm">
+                                                                Bank Account
+                                                            </h6>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <h4>
+                                                                Feature available soon
+                                                            </h4>
+                                                        </div>
+                                                        <div class="row">
+                                                        <div class="col-md-6">
+                                                            <img src="https://img.icons8.com/emoji/48/000000/bank-emoji.png"/>
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                            </div>
                                         </div>
 
                                         
@@ -202,9 +266,20 @@ input[type="radio"] {
                                         <div class="col-md-6">
                                             <a type="button" href="{{ route('Add Money') }}" class="btn btn-info btn-block">Add Money <i class="fa fa-plus"></i></a>
                                         </div>
+
+                                        @if (Auth::user()->approval == 1)
+                                            <div class="col-md-6">
+                                                <a type="button" href="{{ route('Withdraw Money') }}" class="btn btn-secondary btn-block">Withdraw Money <i class="fa fa-credit-card"></i></a>
+                                            </div>
+                                        @else
+
                                         <div class="col-md-6">
-                                            <a type="button" href="{{ route('Withdraw Money') }}" class="btn btn-secondary btn-block">Withdraw Money <i class="fa fa-credit-card"></i></a>
-                                        </div>
+                                                <a type="button" href="javascript:void()" class="btn btn-secondary btn-block" onclick="restriction('withdrawal', '{{ Auth::user()->name }}')">Withdraw Money <i class="fa fa-credit-card"></i></a>
+                                            </div>
+                                            
+                                        @endif
+
+                                        
                                     </div>
 
                                     
@@ -215,6 +290,13 @@ input[type="radio"] {
                                                     <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Wallet Statement <i class="fas fa-circle text-secondary"></i></button>
                                                     <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Credit <i class="fas fa-circle text-success"></i></button>
                                                     <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Debit <i class="fas fa-circle text-danger"></i></button>
+                                                    <button class="nav-link" data-bs-toggle="tab" type="button" role="tab" aria-selected="false" onclick="location.href='{{ url('payorganization?type=local') }}'">Send Money <i class="fas fa-circle text-warning"></i></button>
+
+                                                    @if (Auth::user()->country == "Canada")
+                                                        <button class="nav-link" data-bs-toggle="tab" type="button" role="tab" aria-selected="false" onclick="location.href='{{ route('request exbc card') }}'">Get a Prepaid Card <i class="fas fa-circle text-info"></i></button>
+                                                    @endif
+
+                                                    
                                                 </div>
                                         </nav>
                                         <br>
@@ -519,6 +601,18 @@ input[type="radio"] {
 
         });
     }
+
+
+     function comingSoon(){
+     swal('Hey', 'This feature is coming soon', 'info');
+ }
+
+ function restriction(val, name){
+    if(val == "withdrawal"){
+        swal('Hello '+name, 'Your account need to be verified before you can make withdrawal', 'info');
+    }
+ }
+
 
         //Set CSRF HEADERS
     function setHeaders(){

@@ -16,7 +16,7 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
 
     <!-- Favicon -->
-    <link rel="icon" href="https://img.icons8.com/nolan/64/000000/paycheque.png" type="image/x-icon" />
+<link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" type="image/x-icon" />
     <!-- Bootstrap CSS -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- Animate CSS -->
@@ -52,6 +52,13 @@ body::-webkit-scrollbar-thumb {
 /* Handle on hover */
 body::-webkit-scrollbar-thumb:hover {
   background: #f6b60b;
+}
+.input_box{
+    color: #000 !important;
+}
+.form-control{
+    border-color: #f6b60d !important;
+    width: 100% !important;
 }
     </style>
 
@@ -164,7 +171,7 @@ body::-webkit-scrollbar-thumb:hover {
         <div class="container">
             <div class="row contact_row">
                 <div class="col-sm-6 contact_info">
-                    <img src="https://thumbs.gfycat.com/GlossyAdoredJapanesebeetle-small.gif" style="width: 100%;">
+                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg" style="width: 100%;">
                 </div>
                 <div class="col-sm-6 contact_info send_message">
                     <h2>Login</h2>
@@ -243,11 +250,11 @@ body::-webkit-scrollbar-thumb:hover {
         <div class="container">
             <div class="footer_row row">
                 <div class="col-md-3 col-sm-6 footer_about">
-                    <h2>ABOUT OUR COMPANY</h2>
+                    <h2 style="padding-bottom: 0px !important;">ABOUT OUR COMPANY</h2>
                     {{-- <p style="font-weight: bold; font-size: 30px;">Pay<span style="color: #f6b60b">Sprint</span></p> --}}
                     <img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_white_horizotal_mb5ouw.png" style="position: relative; left: -40px;">
                     {{-- <p>Payca or electronic bill payment, is when a seller such as company, organization, or group sends its bills or invoices over the internet, and customers pay the bills electronically.</p> --}}
-                    <p>PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!</p>
+                    <p style="padding-top: 0px !important;">PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!</p>
                     <ul class="socail_icon">
                         <li><a href="https://www.facebook.com/EXPRESSCANADA2014/?modal=admin_todo_tour" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
                         <li><a href="https://twitter.com/EXBC2" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
@@ -260,9 +267,16 @@ body::-webkit-scrollbar-thumb:hover {
                 <div class="col-md-3 col-sm-6 footer_about quick">
                     <h2>Services</h2>
                     <ul class="quick_link">
-                        <li><a href="#"><i class="fa fa-chevron-right"></i>Money Transfer</a></li>
-                        <li><a href="#"><i class="fa fa-chevron-right"></i>Pay Invoice</a></li>
-                        <li><a href="#"><i class="fa fa-chevron-right"></i>Wallet</a></li>
+                        @guest
+                        <li><a href="{{ route('my account') }}"><i class="fa fa-chevron-right"></i>Money Transfer</a></li>
+                        @endguest
+
+                        @auth
+                            <li onclick="$('#sendMoney').click()"><a href="javascript:void()"><i class="fa fa-chevron-right"></i>Money Transfer</a></li>
+                            
+                        @endauth
+                        <li><a href="{{ route('invoice') }}"><i class="fa fa-chevron-right"></i>Pay Invoice</a></li>
+                        <li><a href="{{ route('my account') }}"><i class="fa fa-chevron-right"></i>Wallet</a></li>
                         {{-- <li><a href="#"><i class="fa fa-chevron-right"></i>Parking Tickets</a></li> --}}
                         {{-- <li><a href="#"><i class="fa fa-chevron-right"></i>Commercial Construction</a></li> --}}
                         {{-- <li><a href="#"><i class="fa fa-chevron-right"></i>Concreate Transport</a></li> --}}
@@ -300,6 +314,7 @@ body::-webkit-scrollbar-thumb:hover {
         </div>
     </footer>
     <!-- End Footer Area -->
+
 
 
     <!-- jQuery JS -->
@@ -539,6 +554,8 @@ thisdata = {email: email, password: password}
             submitBtn.addClass('disp-0');
           },
           success: function(result){
+              spinner.addClass('disp-0');
+            submitBtn.removeClass('disp-0');
             if(result.message == 'success'){
                 swal('Hello', result.res, result.message);
                 $('#form-login').submit();
@@ -548,7 +565,12 @@ thisdata = {email: email, password: password}
                 submitBtn.removeClass('disp-0');
                 swal('Oops', result.res, result.message);
             }
-            }
+            },
+            error: function(err) {
+                
+                swal("Oops", err.responseJSON.message, "error");
+
+            } 
 
       });
     });

@@ -27,7 +27,7 @@ class InvoiceController extends Controller
                 $resData = ['data' => $data, 'message' => 'success', 'status' => $status];
            }
            else{
-                $status = 404;
+                $status = 400;
         
                 $resData = ['data' => [], 'message' => 'No record found', 'status' => $status];
            }
@@ -69,7 +69,7 @@ class InvoiceController extends Controller
             $resData = ['data' => $data, 'message' => 'success', 'status' => $status];
        }
        else{
-        $status = 404;
+        $status = 400;
     
             $resData = ['data' => [], 'message' => 'No record found', 'status' => $status];
        }
@@ -81,7 +81,7 @@ class InvoiceController extends Controller
         else{
             $status = 400;
 
-            $resData = ['message' => 'Token mismatch', 'status' => $status];
+            $resData = ['data' => [], 'message' => 'Token mismatch', 'status' => $status];
         }
 
         return $this->returnJSON($resData, $status);
@@ -104,7 +104,7 @@ class InvoiceController extends Controller
             $resData = ['data' => $data, 'message' => 'success', 'status' => $status];
        }
        else{
-            $status = 404;
+            $status = 400;
     
             $resData = ['data' => [], 'message' => 'No record found', 'status' => $status];
        }

@@ -510,6 +510,120 @@ class AdminController extends Controller
     }
 
 
+    public function feeStructureByCountry(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCostByCountry();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+
+            // dd($transCost);
+
+
+
+            return view('admin.feestructurebycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
+    public function structureByCountry(Request $req, $country){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->gettransactionCostByCountry($country);
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+
+
+
+            return view('admin.structurebycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
     public function editFee(Request $req, $id){
 
                 if($req->session()->has('username') == true){
@@ -1212,7 +1326,7 @@ class AdminController extends Controller
                     else{
                         $clientname = "PaySprint (EXBC)";
                         $client_realname = "PaySprint (EXBC)";
-                        $clientaddress = "EXBC, by Express Ca Corp, 10 George St. North, Brampton. ON. L6X1R2. Canada";
+                        $clientaddress = "PaySprint by Express Ca Corp, 10 George St. North, Brampton. ON. L6X1R2. Canada";
                         $city = "Brampton";
                         $state = "Ontario";
                         $zipcode = "L6X1R2";
@@ -1277,7 +1391,8 @@ class AdminController extends Controller
                                     'service' => $req->service,
                                     'installpay' => $req->installpay,
                                     'installlimit' => $req->installlimit,
-                                    'uploaded_by' => $req->user_id
+                                    'uploaded_by' => $req->user_id,
+                                    'merchantName' => $client_realname
                                 );
 
                                     // Insert Statement
@@ -1314,7 +1429,7 @@ class AdminController extends Controller
                                 $this->state = $state;
                                 $this->zipcode = $zipcode;
 
-                                $this->subject = $this->clientname.' sends you an invoice on PaySprint';
+                                $this->subject = 'You have an invoice from  '.$this->clientname.' on PaySprint';
 
                                 $this->sendEmail($this->to, $this->subject);
 
@@ -1427,7 +1542,7 @@ class AdminController extends Controller
 
             if(count($getData) > 0){
                 // Update
-                $updateData = ImportExcel::where('invoice_no', $req->invoice_no)->update(['amount' => $req->amount, 'payment_due_date' => $req->payment_due_date, 'recurring' => $req->recurring, 'reminder' => $req->reminder, 'customer_id' => session('user_id')]);
+                $updateData = ImportExcel::where('invoice_no', $req->invoice_no)->update(['amount' => $req->amount, 'payment_due_date' => $req->payment_due_date, 'recurring' => $req->recurring, 'reminder' => $req->reminder, 'customer_id' => session('user_id'), 'merchantName' => session('firstname').' '.session('lastname')]);
                 
                 // dd($updateData);
 
@@ -1446,7 +1561,7 @@ class AdminController extends Controller
                     else{
                         $clientname = "PaySprint (EXBC)";
                         $client_realname = "PaySprint (EXBC)";
-                        $clientaddress = "EXBC, by Express Ca Corp, 10 George St. North, Brampton. ON. L6X1R2. Canada";
+                        $clientaddress = "PaySprint by Express Ca Corp, 10 George St. North, Brampton. ON. L6X1R2. Canada";
                         $city = "Brampton";
                         $state = "Ontario";
                         $zipcode = "L6X1R2";
@@ -1488,7 +1603,7 @@ class AdminController extends Controller
                     $this->zipcode = $zipcode;
                     $this->customer_id = session('user_id');
 
-                    $this->subject = $this->clientname.' sends you an invoice on PaySprint';
+                    $this->subject = 'You have an invoice from  '.$this->clientname.' on PaySprint';
 
                     $this->sendEmail($this->to, $this->subject);
 
@@ -2450,6 +2565,16 @@ class AdminController extends Controller
 
         return $getCost;
     }
+    public function transactionCostByCountry(){
+        $data = TransactionCost::where('country', '!=', null)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+
+        return $data;
+    }
+    public function gettransactionCostByCountry($country){
+        $data = TransactionCost::where('country', $country)->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
     public function allUsers(){
         $data = User::orderBy('created_at', 'DESC')->get();
 
@@ -2561,7 +2686,7 @@ class AdminController extends Controller
                     else{
                         $clientname = "PaySprint (EXBC)";
                         $client_realname = "PaySprint (EXBC)";
-                        $clientaddress = "EXBC, by Express Ca Corp, 10 George St. North, Brampton. ON. L6X1R2. Canada";
+                        $clientaddress = "PaySprint by Express Ca Corp, 10 George St. North, Brampton. ON. L6X1R2. Canada";
                         $city = "Brampton";
                         $state = "Ontario";
                         $zipcode = "L6X1R2";
@@ -2589,7 +2714,6 @@ class AdminController extends Controller
                     $this->subject = $this->clientname.' sends you recurring invoice on PaySprint';
 
                     $this->sendEmail($this->to, $this->subject);
-
 
 
                 }

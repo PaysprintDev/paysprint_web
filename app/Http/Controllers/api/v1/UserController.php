@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 use App\User as User;
+use App\AnonUsers as AnonUsers;
 
 
 class UserController extends Controller
@@ -55,7 +56,18 @@ class UserController extends Controller
             }
 
 
-            $user = User::create([
+            // Check Anon Users
+            $newcustomer = AnonUsers::where('email', $request->email)->first();
+
+            if(isset($newcustomer)){
+
+                    $user = User::create(['code' => $newcustomer->code, 'ref_code' => $newcustomer->ref_code, 'name' => $newcustomer->name, 'email' => $newcustomer->email, 'password' => Hash::make($request->password), 'address' => $newcustomer->address, 'city' => $request->city, 'state' => $request->state, 'country' => $newcustomer->country, 'accountType' => 'Individual', 'api_token' => uniqid().md5($request->email), 'telephone' => $newcustomer->telephone, 'wallet_balance' => $newcustomer->wallet_balance, 'approval' => 0, 'currencyCode' => $mycode[0]->currencies[0]->code, 'currencySymbol' => $mycode[0]->currencies[0]->symbol]);
+
+                    AnonUsers::where('ref_code', $newcustomer->ref_code)->delete();
+
+            }
+            else{
+                $user = User::create([
                 'ref_code' => $newRefcode,
                 'name' => $request->firstname.' '.$request->lastname,
                 'code' => $mycode[0]->callingCodes[0],
@@ -64,10 +76,17 @@ class UserController extends Controller
                 'city' => $request->city,
                 'state' => $request->state,
                 'country' => $request->country,
+                'accountType' => 'Individual',
+                'currencyCode' => $mycode[0]->currencies[0]->code,
+                'currencySymbol' => $mycode[0]->currencies[0]->symbol,
                 'api_token' => uniqid().md5($request->email),
                 'password' => Hash::make($request->password),
                 'approval' => 0
             ]);
+            }
+
+
+            
 
             $resData = ['data' => $user, 'message' => 'Registration successful'];
             $status = 200;
@@ -107,14 +126,20 @@ class UserController extends Controller
             $token = Auth::user()->createToken('authToken')->accessToken;
 
 
-            $getUser = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin')->where('email', $request->email)->first();
+            $getUser = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('email', $request->email)->first();
 
             if(Hash::check($request->password, $getUser->password)){
 
-                // Update User API Token
-                User::where('email', $request->email)->update(['api_token' => $token]);
+                $countryInfo = $this->getCountryCode($getUser->country);
 
-                $userData = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin')->where('email', $request->email)->first();
+                $currencyCode = $countryInfo[0]->currencies[0]->code;
+                $currencySymbol = $countryInfo[0]->currencies[0]->symbol;
+
+
+                // Update User API Token
+                User::where('email', $request->email)->update(['api_token' => $token, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
+
+                $userData = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('email', $request->email)->first();
 
                 $data = $userData;
                 $status = 200;
@@ -145,43 +170,51 @@ class UserController extends Controller
 
     public function updateProfile(Request $request, User $user){
 
-        $user = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin')->where('api_token', $request->bearerToken())->first();
-
+        $user = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $request->bearerToken())->first();
+        
 
         User::where('id', $user->id)->update($request->all());
 
         if($request->hasFile('nin_front')){
             $this->uploadDocument($user->id, $request->file('nin_front'), 'document/nin_front', 'nin_front');
 
-            $this->createNotification($user->refCode, "Front page of your national identity card successfully uploded");
+            $this->createNotification($user->refCode, "Front page of your national identity card successfully uploaded");
         }
         if($request->hasFile('nin_back')){
             $this->uploadDocument($user->id, $request->file('nin_back'), 'document/nin_back', 'nin_back');
-            $this->createNotification($user->refCode, "Back page of your national identity card successfully uploded");
+            $this->createNotification($user->refCode, "Back page of your national identity card successfully uploaded");
         }
         if($request->hasFile('drivers_license_front')){
             $this->uploadDocument($user->id, $request->file('drivers_license_front'), 'document/drivers_license_front', 'drivers_license_front');
-            $this->createNotification($user->refCode, "Front page of your drivers license successfully uploded");
+            $this->createNotification($user->refCode, "Front page of your drivers license successfully uploaded");
         }
         if($request->hasFile('drivers_license_back')){
             $this->uploadDocument($user->id, $request->file('drivers_license_back'), 'document/drivers_license_back', 'drivers_license_back');
-            $this->createNotification($user->refCode, "Back page of your drivers license successfully uploded");
+            $this->createNotification($user->refCode, "Back page of your drivers license successfully uploaded");
         }
         if($request->hasFile('international_passport_front')){
             $this->uploadDocument($user->id, $request->file('international_passport_front'), 'document/international_passport_front', 'international_passport_front');
-            $this->createNotification($user->refCode, "International Passport successfully uploded");
+            $this->createNotification($user->refCode, "International Passport successfully uploaded");
         }
         if($request->hasFile('international_passport_back')){
             $this->uploadDocument($user->id, $request->file('international_passport_back'), 'document/international_passport_back', 'international_passport_back');
-            $this->createNotification($user->refCode, "International Passport successfully uploded");
+            $this->createNotification($user->refCode, "International Passport successfully uploaded");
+        }
+        if($request->hasFile('incorporation_doc_front')){
+            $this->uploadDocument($user->id, $request->file('incorporation_doc_front'), 'document/incorporation_doc_front', 'incorporation_doc_front');
+            $this->createNotification($user->refCode, "Incorporation document successfully uploaded");
+        }
+        if($request->hasFile('incorporation_doc_back')){
+            $this->uploadDocument($user->id, $request->file('incorporation_doc_back'), 'document/incorporation_doc_back', 'incorporation_doc_back');
+            $this->createNotification($user->refCode, "Incorporation document successfully uploaded");
         }
         if($request->hasFile('avatar')){
             $this->uploadDocument($user->id, $request->file('avatar'), 'profilepic/avatar', 'avatar');
-            $this->createNotification($user->refCode, "Profile picture successfully uploded");
+            $this->createNotification($user->refCode, "Profile picture successfully uploaded");
         }
 
 
-        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin')->where('api_token', $request->bearerToken())->first();
+        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $request->bearerToken())->first();
 
         $status = 200;
 
@@ -295,6 +328,178 @@ class UserController extends Controller
     }
 
 
+    public function updateSecurity(Request $req){
+        
+
+        $validator = Validator::make($req->all(), [
+                     'securityQuestion' => 'required|string',
+                     'securityAnswer' => 'required|string',
+                ]);
+
+                if($validator->passes()){
+
+                        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+                        // Update
+                        $resp = User::where('api_token', $req->bearerToken())->update(['securityQuestion' => $req->securityQuestion, 'securityAnswer' => $req->securityAnswer]);
+
+                        $data = $resp;
+                        $message = "Saved";
+                        $status = 200;
+
+                        $this->createNotification($thisuser->ref_code, "Your security information saved");
+
+                }
+                else{
+
+                    $error = implode(",",$validator->messages()->all());
+
+                    $data = [];
+                    $status = 400;
+                    $message = $error;
+                }
+
+                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                return $this->returnJSON($resData, $status);
+
+    }
+
+
+
+    public function resetPassword(Request $req){
+        
+
+        $validator = Validator::make($req->all(), [
+                     'securityQuestion' => 'required|string',
+                     'securityAnswer' => 'required|string',
+                     'newpassword' => 'required|string',
+                     'confirmpassword' => 'required|string',
+                ]);
+
+                if($validator->passes()){
+
+                        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+                        // Check if Security Answer is correct
+                        if($req->securityAnswer != $thisuser->securityAnswer){
+                            // You have provided a wrong answer to your security question
+
+                            $error = "You have provided a wrong answer to your security question";
+
+                            $data = [];
+                            $status = 400;
+                            $message = $error;
+                        }
+                        else{
+
+                            // Check Password Match
+
+                            if($req->newpassword != $req->confirmpassword){
+                                $data = [];
+                                $message = "Confirm password does not match";
+                                $status = 400;
+                            }
+                            else{
+
+                                    $resp = User::where('api_token', $req->bearerToken())->update(['password' => Hash::make($req->newpassword)]);
+
+                                    $data = $resp;
+                                    $message = "Saved";
+                                    $status = 200;
+
+                                    $this->createNotification($thisuser->ref_code, "Password reset successfully");
+
+                            }
+
+
+                        }
+
+                        
+
+                }
+                else{
+
+                    $error = implode(",",$validator->messages()->all());
+
+                    $data = [];
+                    $status = 400;
+                    $message = $error;
+                }
+
+                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                return $this->returnJSON($resData, $status);
+
+    }
+
+
+    public function resetTransactionPin(Request $req){
+        
+
+        $validator = Validator::make($req->all(), [
+                     'securityQuestion' => 'required|string',
+                     'securityAnswer' => 'required|string',
+                     'newpin' => 'required|string',
+                     'confirmpin' => 'required|string',
+                ]);
+
+                if($validator->passes()){
+
+                        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+                        // Check if Security Answer is correct
+                        if($req->securityAnswer != $thisuser->securityAnswer){
+                            // You have provided a wrong answer to your security question
+
+                            $error = "You have provided a wrong answer to your security question";
+
+                            $data = [];
+                            $status = 400;
+                            $message = $error;
+                        }
+                        else{
+
+                            if($req->newpin != $req->confirmpin){
+                                $data = [];
+                                $message = "The confirm pin does not match";
+                                $status = 400;
+                            }
+                            else{
+
+                                // Update
+                                $resp = User::where('api_token', $req->bearerToken())->update(['transaction_pin' => Hash::make($req->newpin)]);
+
+                                $data = $resp;
+                                $message = "Saved";
+                                $status = 200;
+
+                                $this->createNotification($thisuser->ref_code, "Transaction pin updated");
+                            
+                            }
+
+
+                        }
+
+                        
+
+                }
+                else{
+
+                    $error = implode(",",$validator->messages()->all());
+
+                    $data = [];
+                    $status = 400;
+                    $message = $error;
+                }
+
+                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                return $this->returnJSON($resData, $status);
+
+    }
+
+
     public function updateTransactionPin(Request $req){
         
 
@@ -373,9 +578,6 @@ class UserController extends Controller
         User::where('id', $id)->update([''.$rowName.'' => $docPath]);
 
     }
-
-
-
 
 
 

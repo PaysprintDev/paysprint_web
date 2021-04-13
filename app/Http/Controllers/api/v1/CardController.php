@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 
+use Illuminate\Support\Facades\Log;
+
 use App\User as User;
 use App\AddCard as AddCard;
 
@@ -32,6 +34,8 @@ class CardController extends Controller
             $message = "No Card Found";
         }
 
+        Log::info("Get Card:=> ".$data);
+
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
@@ -44,6 +48,7 @@ class CardController extends Controller
         // Run Validation
 
         $validator = Validator::make($req->all(), [
+                     'card_name' => 'required|string',
                      'card_number' => 'required|string',
                      'month' => 'required|string',
                      'year' => 'required|string',
@@ -59,7 +64,7 @@ class CardController extends Controller
             try {
                 if($userCardType != false){
                     // Do Insert
-                    $insertRecord = AddCard::insert(['user_id' => $thisuser->id, 'card_number' => $req->card_number, 'month' => $req->month, 'year' => $req->year, 'cvv' => Hash::make($req->cvv), 'card_type' => $userCardType]);
+                    $insertRecord = AddCard::insert(['user_id' => $thisuser->id, 'card_name' => $req->card_name, 'card_number' => $req->card_number, 'month' => $req->month, 'year' => $req->year, 'cvv' => Hash::make($req->cvv), 'card_type' => $userCardType, 'card_provider' => $req->card_provider]);
 
                     $data = $insertRecord;
                     $status = 200;
@@ -92,6 +97,8 @@ class CardController extends Controller
         }
 
 
+        Log::info("Add Card:=> ".$data);
+
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
@@ -105,11 +112,16 @@ class CardController extends Controller
         // Run Validation
 
         $validator = Validator::make($req->all(), [
+                     'card_name' => 'required|string',
                      'card_number' => 'required|string',
                      'month' => 'required|string',
                      'year' => 'required|string',
                      'cvv' => 'required|string',
                 ]);
+
+
+                    Log::info($req->all());
+
 
         if($validator->passes()){
 
@@ -120,9 +132,14 @@ class CardController extends Controller
             try {
                 if($userCardType != false){
                     // Do Insert
-                    $updateRecord = AddCard::where('id', $req->id)->update(['user_id' => $thisuser->id, 'card_number' => $req->card_number, 'month' => $req->month, 'year' => $req->year, 'cvv' => Hash::make($req->cvv), 'card_type' => $userCardType]);
+                    $updateRecord = AddCard::where('id', $req->id)->update(['user_id' => $thisuser->id, 'card_name' => $req->card_name, 'card_number' => $req->card_number, 'month' => $req->month, 'year' => $req->year, 'cvv' => Hash::make($req->cvv), 'card_type' => $userCardType, 'card_provider' => $req->card_provider]);
 
-                    $data = $updateRecord;
+                    $cardData = AddCard::where('id', $req->id)->first();
+
+
+                    Log::info("Edit Card Detail :=> ".$cardData);
+
+                    $data = $cardData;
                     $status = 200;
                     $message = 'You have successfully updated your card';
 
@@ -152,6 +169,8 @@ class CardController extends Controller
         }
 
 
+        Log::info("Edit Card:=> ".$data);
+
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
@@ -170,6 +189,8 @@ class CardController extends Controller
         $message = 'Deleted successfully';
 
         $this->createNotification($thisuser->ref_code, "You deleted a card");
+
+        Log::info("Delete Card:=> ".$data);
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 

@@ -55,7 +55,7 @@ input[type="radio"] {
         <!-- For demo purpose -->
         <div class="row mb-4">
             <div class="col-lg-8 mx-auto text-center">
-                <h1 class="display-4">My Card</h1>
+                <h1 class="display-4">{{ Request::get('card') }}</h1>
             </div>
         </div> <!-- End -->
         <div class="row">
@@ -75,6 +75,8 @@ input[type="radio"] {
 
                             <!-- credit card info-->
                             <div id="credit-card" class="tab-pane fade show active pt-3">
+
+                                
                                     
 
                                     <div class="form-group row">
@@ -104,40 +106,162 @@ input[type="radio"] {
                                                         $cardImage = '<img src="https://img.icons8.com/fluent/30/000000/bank-card-back-side.png"/>';
                                                     @endphp
                                             @endswitch
+                                            
+
+                                            
+
+                                            
 
                                         <div class="col-md-6">
-                                            
-                                            <div class="alert {{ $alertInfo }}">
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <h4>
-                                                                {{ wordwrap($mycard->card_number, 4, ' - ', true) }}
-                                                            </h4>
+
+
+                                            @if (Request::get('card') == "Credit Card")
+
+                                                @if ($mycard->card_provider == "Credit Card")
+                                                    
+                                                <div class="alert {{ $alertInfo }}">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <h4>
+                                                                    {{ wordwrap($mycard->card_number, 4, ' - ', true) }}
+                                                                </h4>
+                                                            </div>
+                                                            <br>
+                                                            <div class="col-md-6">
+                                                                <h6>
+                                                                Expiry: {{ $mycard->month."/".$mycard->year }}
+                                                                </h6>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <h6>
+                                                                CVV: ***
+                                                                </h6>
+                                                            </div>
                                                         </div>
                                                         <br>
-                                                        <div class="col-md-6">
-                                                            <h6>
-                                                               Expiry: {{ $mycard->month."/".$mycard->year }}
-                                                            </h6>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <h5>
+
+                                                                    {{ (strlen($mycard->card_name) < 18) ? strtoupper($mycard->card_name) : substr(strtoupper($mycard->card_name), 0, 18)."..." }}
+                                                                </h5>
+                                                            </div>
                                                         </div>
-                                                        <div class="col-md-6">
-                                                            <h6>
-                                                               CVV: ***
-                                                            </h6>
+
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <input type="hidden" name="card_id" value="{{ $mycard->id }}" id="card_id">
+                                                                <a href="{{ route('Edit card', $mycard->id) }}" title="Edit Card"><i class="far fa-edit text-secondary"></i></a>
+                                                                <a href="javascript:void(0)" title="Delete Card" onclick="handShake('deletecard')"><i class="far fa-trash-alt text-danger"></i></a>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                {!! $cardImage !!}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <input type="hidden" name="card_id" value="{{ $mycard->id }}" id="card_id">
-                                                            <a href="{{ route('Edit card', $mycard->id) }}" title="Edit Card"><i class="far fa-edit text-secondary"></i></a>
-                                                            <a href="javascript:void(0)" title="Delete Card" onclick="handShake('deletecard')"><i class="far fa-trash-alt text-danger"></i></a>
+                                                </div>
+                                                    
+                                                @endif
+
+
+                                            @elseif (Request::get('card') == "Prepaid Card")
+
+                                                @if ($mycard->card_provider != "Credit Card")
+                                                    
+                                                <div class="alert {{ $alertInfo }}">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <h4>
+                                                                    {{ wordwrap($mycard->card_number, 4, ' - ', true) }}
+                                                                </h4>
+                                                            </div>
+                                                            <br>
+                                                            <div class="col-md-6">
+                                                                <h6>
+                                                                Expiry: {{ $mycard->month."/".$mycard->year }}
+                                                                </h6>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <h6>
+                                                                CVV: ***
+                                                                </h6>
+                                                            </div>
                                                         </div>
-                                                        <div class="col-md-6">
-                                                            {!! $cardImage !!}
+                                                        <br>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <h5>
+
+                                                                    {{ (strlen($mycard->card_name) < 18) ? strtoupper($mycard->card_name) : substr(strtoupper($mycard->card_name), 0, 18)."..." }}
+                                                                </h5>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                            </div>
+
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <input type="hidden" name="card_id" value="{{ $mycard->id }}" id="card_id">
+                                                                <a href="{{ route('Edit card', $mycard->id) }}" title="Edit Card"><i class="far fa-edit text-secondary"></i></a>
+                                                                <a href="javascript:void(0)" title="Delete Card" onclick="handShake('deletecard')"><i class="far fa-trash-alt text-danger"></i></a>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                {!! $cardImage !!}
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                                    
+                                                @endif
+
+                                            @elseif (Request::get('card') == "Bank Detail")
+
+                                                @if ($mycard->card_provider == "Prepaid Card")
+                                                    
+                                                <div class="alert {{ $alertInfo }}">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <h4>
+                                                                    {{ wordwrap($mycard->card_number, 4, ' - ', true) }}
+                                                                </h4>
+                                                            </div>
+                                                            <br>
+                                                            <div class="col-md-6">
+                                                                <h6>
+                                                                Expiry: {{ $mycard->month."/".$mycard->year }}
+                                                                </h6>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <h6>
+                                                                CVV: ***
+                                                                </h6>
+                                                            </div>
+                                                        </div>
+                                                        <br>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <h5>
+
+                                                                    {{ (strlen($mycard->card_name) < 18) ? strtoupper($mycard->card_name) : substr(strtoupper($mycard->card_name), 0, 18)."..." }}
+                                                                </h5>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <input type="hidden" name="card_id" value="{{ $mycard->id }}" id="card_id">
+                                                                <a href="{{ route('Edit card', $mycard->id) }}" title="Edit Card"><i class="far fa-edit text-secondary"></i></a>
+                                                                <a href="javascript:void(0)" title="Delete Card" onclick="handShake('deletecard')"><i class="far fa-trash-alt text-danger"></i></a>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                {!! $cardImage !!}
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                                    
+                                                @endif
+                                                
+                                            
+                                                
+                                            @endif
+                                            
+                                            
                                         </div>
                                         
                                             
@@ -183,6 +307,36 @@ input[type="radio"] {
                                     <div class="form-group cardform disp-0"> 
                                        <form action="#" method="POST" id="formElem">
                                            @csrf
+
+                                           <div class="form-group">
+                                               <label for="card_name">Name on Card</label>
+
+                                            <div class="input-group"> <input type="text" name="card_name" id="card_name" class="form-control" required>
+                                                <div class="input-group-append"> 
+                                                    <span class="input-group-text text-muted"> <i class="far fa-user"></i></span> 
+                                                </div>
+                                            </div>
+
+                                           </div>
+
+                                           <div class="form-group">
+                                               <label for="card_name">Card Provider</label>
+
+                                            <div class="input-group"> 
+                                                <select name="card_provider" id="card_provider" class="form-control" required>
+                                                    <option value="">Select card provider</option>
+                                                    @if (Request::get('card') == "Prepaid Card")
+                                                        <option value="EXBC Prepaid Card">EXBC Prepaid Card</option>
+                                                    @else
+                                                        <option value="Credit Card">Credit Card</option>
+                                                    @endif
+                                                </select>
+                                                <div class="input-group-append"> 
+                                                    <span class="input-group-text text-muted"> <i class="fas fa-credit-card"></i></span> 
+                                                </div>
+                                            </div>
+
+                                           </div>
 
                                            <div class="form-group">
                                                <label for="card_number">Card Number</label>

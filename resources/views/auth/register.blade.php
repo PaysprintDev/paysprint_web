@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
 
     <!-- Favicon -->
-    <link rel="icon" href="https://img.icons8.com/nolan/64/000000/paycheque.png" type="image/x-icon" />
+<link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" type="image/x-icon" />
     <!-- Bootstrap CSS -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- Animate CSS -->
@@ -170,7 +170,7 @@ body::-webkit-scrollbar-thumb:hover {
         <div class="container">
             <div class="row contact_row">
                 <div class="col-sm-6 contact_info">
-                    <img src="https://thumbs.gfycat.com/GlossyAdoredJapanesebeetle-small.gif" style="width: 100%;">
+                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg" style="width: 100%;">
                 </div>
                 <div class="col-sm-6 contact_info send_message">
                     <h2>Sign Up for FREE</h2>
@@ -196,13 +196,13 @@ body::-webkit-scrollbar-thumb:hover {
                     <form class="form-inline contact_box" action="#" method="POST">
                         @csrf
 
-                    <div class="indselectForm animated fadeIn choice">
+                    {{-- <div class="indselectForm animated fadeIn choice">
                         <select class="form-control input_box" style="color: #000 !important;" name="account" id="accountType">
                             <option value="">--Select account type--</option>
                             <option value="Individual">Personal</option>
                             <option value="Business">Business</option>
                         </select>
-                        </div>
+                        </div> --}}
 
                         @if (Request::get('user') != null)
                             @if($newuser = \App\AnonUsers::where('ref_code', Request::get('user'))->first())
@@ -229,7 +229,7 @@ body::-webkit-scrollbar-thumb:hover {
 
                         <input type="hidden" name="ref_code" id="ref_code" @if($ref_code != "") value="{{ $ref_code }}" readonly @else placeholder="Ref code" @endif>
 
-                        <div class="indForm animated rollIn disp-0">
+                        <div class="indForm animated rollIn">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -246,6 +246,39 @@ body::-webkit-scrollbar-thumb:hover {
                                     </div>
                                 </div>
                             </div>
+
+
+                            {{-- <input id="autocomplete" placeholder="Enter your address" onFocus="geolocate()" type="text" class="form-control input_box">
+                                    <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="control-label">Street address</label>
+                                        <input class="form-control input_box" id="street_number" disabled="true">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="control-label">Route</label>
+                                        <input class="form-control input_box" id="route" disabled="true">
+                                    </div>
+                                    </div>
+                                    <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="control-label">City</label>
+                                        <input class="form-control input_box field" id="locality" disabled="true">
+                                    </div>
+                                    <div class="col-md-6"> 
+                                        <label class="control-label">State</label>
+                                        <input class="form-control input_box" id="administrative_area_level_1" disabled="true">
+                                    </div>
+                                    </div>
+                                    <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="control-label">Zip code</label>
+                                        <input class="form-control input_box" id="postal_code" disabled="true">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="control-label">Country</label>
+                                        <input class="form-control input_box" id="local_country" disabled="true">
+                                    </div>
+                                    </div> --}}
 
                             
                             
@@ -450,11 +483,11 @@ body::-webkit-scrollbar-thumb:hover {
         <div class="container">
             <div class="footer_row row">
                 <div class="col-md-3 col-sm-6 footer_about">
-                    <h2>ABOUT OUR COMPANY</h2>
+                    <h2 style="padding-bottom: 0px !important;">ABOUT OUR COMPANY</h2>
                     {{-- <p style="font-weight: bold; font-size: 30px;">Pay<span style="color: #f6b60b">Sprint</span></p> --}}
                     <img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_white_horizotal_mb5ouw.png" style="position: relative; left: -40px;">
                     {{-- <p>Payca or electronic bill payment, is when a seller such as company, organization, or group sends its bills or invoices over the internet, and customers pay the bills electronically.</p> --}}
-                    <p>PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!</p>
+                    <p style="padding-top: 0px !important;">PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!</p>
                     <ul class="socail_icon">
                         <li><a href="https://www.facebook.com/EXPRESSCANADA2014/?modal=admin_todo_tour" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
                         <li><a href="https://twitter.com/EXBC2" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
@@ -467,9 +500,16 @@ body::-webkit-scrollbar-thumb:hover {
                 <div class="col-md-3 col-sm-6 footer_about quick">
                     <h2>Services</h2>
                     <ul class="quick_link">
-                        <li><a href="#"><i class="fa fa-chevron-right"></i>Money Transfer</a></li>
-                        <li><a href="#"><i class="fa fa-chevron-right"></i>Pay Invoice</a></li>
-                        <li><a href="#"><i class="fa fa-chevron-right"></i>Wallet</a></li>
+                        @guest
+                        <li><a href="{{ route('my account') }}"><i class="fa fa-chevron-right"></i>Money Transfer</a></li>
+                        @endguest
+
+                        @auth
+                            <li onclick="$('#sendMoney').click()"><a href="javascript:void()"><i class="fa fa-chevron-right"></i>Money Transfer</a></li>
+                            
+                        @endauth
+                        <li><a href="{{ route('invoice') }}"><i class="fa fa-chevron-right"></i>Pay Invoice</a></li>
+                        <li><a href="{{ route('my account') }}"><i class="fa fa-chevron-right"></i>Wallet</a></li>
                         {{-- <li><a href="#"><i class="fa fa-chevron-right"></i>Parking Tickets</a></li> --}}
                         {{-- <li><a href="#"><i class="fa fa-chevron-right"></i>Commercial Construction</a></li> --}}
                         {{-- <li><a href="#"><i class="fa fa-chevron-right"></i>Concreate Transport</a></li> --}}
@@ -509,6 +549,7 @@ body::-webkit-scrollbar-thumb:hover {
     <!-- End Footer Area -->
 
 
+
     <!-- jQuery JS -->
     <script src="{{ asset('js/jquery-1.12.0.min.js') }}"></script>
     <script src="{{ asset('js/country-state-select.js') }}"></script>
@@ -535,6 +576,7 @@ body::-webkit-scrollbar-thumb:hover {
     <script src="{{ asset('vendors/stellar/jquery.stellar.js') }}"></script>
     <!-- Theme JS -->
     <script src="{{ asset('js/theme.js') }}"></script>
+    <script src="{{ asset('js/auto-complete.js') }}"></script>
 
 
 <script language="javascript">
@@ -542,6 +584,8 @@ body::-webkit-scrollbar-thumb:hover {
     populateCountries("buscountry", "busstate");
 
 </script>
+
+{{-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYvEW1mdrIJpTgmamihUpRS2p0a7A_kCM&libraries=places&callback=initAutocomplete" async defer></script> --}}
 
 {{-- Ajax --}}
 

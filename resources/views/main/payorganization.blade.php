@@ -56,14 +56,14 @@
                 <div class="portfolio_item portfolio_2">
                    <div class="grid-sizer-2"></div>
 
-                    <div class="single_facilities col-sm-8 invoice">
+                    <div class="single_facilities col-sm-10 invoice">
 
 
                         <ul class="nav nav-tabs">
-                            <li class="tab-menu active"><a data-toggle="tab" href="#home">Send Money</a></li>
+                            <li class="tab-menu active"><a data-toggle="tab" href="#home">Send Money <i class="fas fa-info-circle" style="cursor: pointer;" title="The fund would be auto deposited into the wallet of the receiver and the receiver would get a text message and email notification of the transaction"></i></a></li>
                             {{-- <li class="tab-menu"><a data-toggle="tab" href="#menu1">Receive</a></li> --}}
                             <li class="tab-menu"><a data-toggle="tab" href="#menu3">Search</a></li>
-                            <li class="tab-menu" onclick="location.href='{{ route('create new payment', 'country='.Auth::user()->country) }}'"><a data-toggle="tab" href="{{ route('create new payment', 'country='.Auth::user()->country) }}">Send money by Text/Email</a></li>
+                            <li class="tab-menu" onclick="location.href='{{ route('create new payment', 'country='.Auth::user()->country) }}'"><a data-toggle="tab" href="{{ route('create new payment', 'country='.Auth::user()->country) }}">Text/Email-To-Transfer <i class="fas fa-info-circle" style="cursor: pointer;" title="The receiver would get a text message and an email to download PaySprint App to access the money sent"></i></a></li>
                             <li class="tab-menu" onclick="notifyForm('{{ $email }}')"><a data-toggle="tab" href="#menu2">Notification @if(isset($data)) <span class="badge badge-danger">{{ $data['newnotification'] }}</span> @else 0 @endif</a></li>
                         </ul>
 
@@ -323,7 +323,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="orgInfo">&nbsp;</label><br>
-                                                    <button class="btn btn-primary" onclick="checkDetail('send')">Check details</button>
+                                                    <button class="btn btn-primary" onclick="checkDetail('send')">Confirm details</button>
         
                                             </div>
                                         </div>
@@ -338,7 +338,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="orgInfo">&nbsp;</label><br>
-                                                    <button class="btn btn-primary" onclick="checkDetail('send')">Check details</button>
+                                                    <button class="btn btn-primary" onclick="checkDetail('send')">Confirm details</button>
         
                                             </div>
                                         </div>
@@ -356,6 +356,7 @@
                                             <table class="table table-responsive table-striped table-bordered">
                                                 <thead>
                                                     <tr>
+                                                        <th></th>
                                                         <th>Name</th>
                                                         <th>Address</th>
                                                         <th>Account No.</th>
@@ -653,6 +654,7 @@
                                             <table class="table table-responsive table-striped table-bordered">
                                                 <thead>
                                                     <tr>
+                                                        <th></th>
                                                         <th>Name</th>
                                                         <th>Address</th>
                                                         <th>City</th>
@@ -699,12 +701,14 @@
                                             <table class="table table-responsive table-striped table-bordered">
                                                 <thead>
                                                     <tr>
+                                                        <th></th>
                                                         <th>Name</th>
                                                         <th>Address</th>
                                                         <th>Account No.</th>
                                                         <th>City</th>
                                                         <th>State</th>
                                                         <th>Country</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="searchorgRec">
@@ -789,3 +793,4 @@
 
 
 @endsection
+

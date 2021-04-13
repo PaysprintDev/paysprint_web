@@ -77,7 +77,6 @@ input[type="radio"] {
                                 <form role="form" action="#" method="POST" id="formElem">
                                     @csrf
 
-                                    @if (count($data['getCard']) > 0)
 
                                     <div class="form-group"> <label for="card_id">
                                             <h6>Select Card</h6>
@@ -85,101 +84,20 @@ input[type="radio"] {
                                         <div class="input-group"> 
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/fluent/20/000000/bank-card-back-side.png"/> </span> </div>
                                             <select name="card_id" id="card_id" class="form-control" required>
-                                                @foreach ($data['getCard'] as $mycard)
-                                                <option value="{{ $mycard->id }}">{!! wordwrap($mycard->card_number, 4, '-', true) !!}</option>
-                                                @endforeach
+                                                @if (count($data['getCard']) > 0)
+                                                
+                                                    @foreach ($data['getCard'] as $mycard)
+                                                    <option value="{{ $mycard->id }}">{!! wordwrap($mycard->card_number, 4, '-', true) !!}</option>
+                                                    @endforeach
+
+                                                @else
+                                                    <option value="">Add a new card</option>
+                                                @endif
                                                 
                                             </select>
                                             
                                         </div>
                                     </div>
-
-
-                                    @else
-
-                                        <div class="form-group"> <label for="amount">
-                                                <h5>Add a new card</h5>
-                                            </label>
-
-                                            <form action="#" method="POST" id="formCardElem">
-                                           @csrf
-
-                                           <div class="form-group">
-                                               <label for="card_number">Card Number</label>
-
-                                            <div class="input-group"> <input type="text" name="card_number" id="card_number" class="form-control" maxlength="16" required>
-                                                <div class="input-group-append"> 
-                                                    <span class="input-group-text text-muted"> <i class="fas fa-money-check mx-1"></i> <i class="fab fa-cc-mastercard mx-1"></i> <i class="fab fa-cc-amex mx-1"></i> </span> 
-                                                </div>
-                                            </div>
-
-                                           </div>
-                                           <div class="form-group">
-
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <label for="month">Month</label>
-
-                                                    <div class="input-group"> 
-                                                        <select name="month" id="month" class="form-control" required>
-                                                            <option value="01">January</option>
-                                                            <option value="02">February</option>
-                                                            <option value="03">March</option>
-                                                            <option value="04">April</option>
-                                                            <option value="05">May</option>
-                                                            <option value="06">June</option>
-                                                            <option value="07">July</option>
-                                                            <option value="08">August</option>
-                                                            <option value="09">September</option>
-                                                            <option value="10">October</option>
-                                                            <option value="11">November</option>
-                                                            <option value="12">December</option>
-                                                        </select>
-                                                        <div class="input-group-append"> 
-                                                            <span class="input-group-text text-muted"> <i class="fas fa-table"></i> </span> 
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label for="year">Year</label>
-
-                                                    <div class="input-group"> 
-                                                        <select name="year" id="year" class="form-control" required>
-                                                            @for ($i = date('y'); $i <= date('y')+10; $i++)
-                                                                <option value="{{ $i }}">{{ "20".$i }}</option>
-                                                            @endfor
-                                                        </select>
-                                                        <div class="input-group-append"> 
-                                                            <span class="input-group-text text-muted"> <i class="fas fa-calendar-week"></i> </span> 
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label for="month">CVV <small class="text-danger">3 digit at the back of your card</small></label>
-
-                                                    <div class="input-group"> 
-                                                        <input type="password" name="cvv" id="cvv" class="form-control" maxlength="3" required>
-                                                        <div class="input-group-append"> 
-                                                            <span class="input-group-text text-muted"> <i class="fas fa-closed-captioning"></i> </span> 
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                               
-
-                                           </div>
-
-
-                                           <div class="form-group">
-                                               <button type="button" class="btn btn-primary btn-block" onclick="handShake('addcard')" id="cardSubmit">Submit</button>
-                                           </div>
-
-                                       </form>
-                                        </div>
-
-                                        
-                                    @endif
 
 
                                     
@@ -190,6 +108,8 @@ input[type="radio"] {
                                         <div class="input-group"> <div class="input-group-append"> <span class="input-group-text text-muted"> {{ $data['currencyCode'][0]->currencies[0]->symbol }} </span> </div> <input type="number" min="0.00" step="0.01" name="amount" id="amount" class="form-control" required>
 
                                         <input type="hidden" name="currencyCode" class="form-control" id="curCurrency" value="{{ $data['currencyCode'][0]->currencies[0]->code }}" readonly>
+
+                                        <input type="hidden" name="paymentToken" class="form-control" id="paymentToken" value="" readonly>
 
                                         <input type="hidden" name="mode" class="form-control" id="mode" value="live" readonly>
                                             
@@ -248,6 +168,10 @@ input[type="radio"] {
                                     
                                     <div class="card-footer"> <button type="button" onclick="handShake('addmoney')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </button></div>
 
+                                    <div class="col-md-12 withCardGoogle disp-0">
+                                        <center><div id="container"></div></center>
+                                    </div>
+
                                     
                                 </form>
                             </div>
@@ -271,6 +195,13 @@ input[type="radio"] {
 
     <script src="{{ asset('pace/pace.min.js') }}"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+        {{-- Google Pay API --}}
+        
+        <script async
+          src="https://pay.google.com/gp/p/js/pay.js"
+          onload="onGooglePayLoaded()">
+</script>
 
         <script>
 
@@ -334,15 +265,17 @@ function runCommission(){
 
                 if(result.state == "commission available"){
 
+                    var chargeAmount = $("#amount").val();
+
                     $('.commissionInfo').addClass('alert alert-success');
                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.toFixed(2)+" will be charged from your Credit/Debit Card.</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+chargeAmount+" will be charged from your Credit/Debit Card.</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
 
-                    $("#totalcharge").val(result.data);
+                    $("#totalcharge").val(chargeAmount);
 
                     totalCharge = $("#totalcharge").val();
 
@@ -512,6 +445,271 @@ else if(val == 'addcard'){
 function goBack() {
   window.history.back();
 }
+
+
+
+
+// GPay Starts
+
+        /**
+         * Define the version of the Google Pay API referenced when creating your
+         * configuration
+         *
+         * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#PaymentDataRequest|apiVersion in PaymentDataRequest}
+         */
+         const baseRequest = {
+          apiVersion: 2,
+          apiVersionMinor: 0
+        };
+        
+        /**
+         * Card networks supported by your site and your gateway
+         *
+         * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#CardParameters|CardParameters}
+         * @todo confirm card networks supported by your site and gateway
+         */
+        const allowedCardNetworks = ["AMEX", "DISCOVER", "INTERAC", "JCB", "MASTERCARD", "VISA"];
+        
+        /**
+         * Card authentication methods supported by your site and your gateway
+         *
+         * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#CardParameters|CardParameters}
+         * @todo confirm your processor supports Android device tokens for your
+         * supported card networks
+         */
+        const allowedCardAuthMethods = ["PAN_ONLY", "CRYPTOGRAM_3DS"];
+        
+        /**
+         * Identify your gateway and your site's gateway merchant identifier
+         *
+         * The Google Pay API response will return an encrypted payment method capable
+         * of being charged by a supported gateway after payer authorization
+         *
+         * @todo check with your gateway on the parameters to pass
+         * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#gateway|PaymentMethodTokenizationSpecification}
+         */
+        const tokenizationSpecification = {
+          type: 'PAYMENT_GATEWAY',
+          parameters: {
+            'gateway': 'example',
+            'gatewayMerchantId': 'exampleGatewayMerchantId'
+          }
+        };
+        
+        /**
+         * Describe your site's support for the CARD payment method and its required
+         * fields
+         *
+         * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#CardParameters|CardParameters}
+         */
+        const baseCardPaymentMethod = {
+          type: 'CARD',
+          parameters: {
+            allowedAuthMethods: allowedCardAuthMethods,
+            allowedCardNetworks: allowedCardNetworks
+          }
+        };
+        
+        /**
+         * Describe your site's support for the CARD payment method including optional
+         * fields
+         *
+         * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#CardParameters|CardParameters}
+         */
+        const cardPaymentMethod = Object.assign(
+          {},
+          baseCardPaymentMethod,
+          {
+            tokenizationSpecification: tokenizationSpecification
+          }
+        );
+        
+        /**
+         * An initialized google.payments.api.PaymentsClient object or null if not yet set
+         *
+         * @see {@link getGooglePaymentsClient}
+         */
+        let paymentsClient = null;
+        
+        /**
+         * Configure your site's support for payment methods supported by the Google Pay
+         * API.
+         *
+         * Each member of allowedPaymentMethods should contain only the required fields,
+         * allowing reuse of this base request when determining a viewer's ability
+         * to pay and later requesting a supported payment method
+         *
+         * @returns {object} Google Pay API version, payment methods supported by the site
+         */
+        function getGoogleIsReadyToPayRequest() {
+          return Object.assign(
+              {},
+              baseRequest,
+              {
+                allowedPaymentMethods: [baseCardPaymentMethod]
+              }
+          );
+        }
+        
+        /**
+         * Configure support for the Google Pay API
+         *
+         * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#PaymentDataRequest|PaymentDataRequest}
+         * @returns {object} PaymentDataRequest fields
+         */
+        function getGooglePaymentDataRequest() {
+          const paymentDataRequest = Object.assign({}, baseRequest);
+          paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
+          paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
+          paymentDataRequest.merchantInfo = {
+            // @todo a merchant ID is available for a production environment after approval by Google
+            // See {@link https://developers.google.com/pay/api/web/guides/test-and-deploy/integration-checklist|Integration checklist}
+            merchantId: 'BCR2DN6T2PJ3FJ37',
+            merchantName: "PaySprint",
+          };
+          return paymentDataRequest;
+        }
+        
+        /**
+         * Return an active PaymentsClient or initialize
+         *
+         * @see {@link https://developers.google.com/pay/api/web/reference/client#PaymentsClient|PaymentsClient constructor}
+         * @returns {google.payments.api.PaymentsClient} Google Pay API client
+         */
+        function getGooglePaymentsClient() {
+          if ( paymentsClient === null ) {
+            paymentsClient = new google.payments.api.PaymentsClient({environment: 'PRODUCTION'});
+          }
+          return paymentsClient;
+        }
+        
+        /**
+         * Initialize Google PaymentsClient after Google-hosted JavaScript has loaded
+         *
+         * Display a Google Pay payment button after confirmation of the viewer's
+         * ability to pay.
+         */
+        function onGooglePayLoaded() {
+          const paymentsClient = getGooglePaymentsClient();
+          paymentsClient.isReadyToPay(getGoogleIsReadyToPayRequest())
+              .then(function(response) {
+                if (response.result) {
+                  addGooglePayButton();
+                  // @todo prefetch payment data to improve performance after confirming site functionality
+                  // prefetchGooglePaymentData();
+                }
+              })
+              .catch(function(err) {
+                // show error in developer console for debugging
+                console.error(err);
+                alert(err.statusMessage);
+              });
+        }
+        
+        /**
+         * Add a Google Pay purchase button alongside an existing checkout button
+         *
+         * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#ButtonOptions|Button options}
+         * @see {@link https://developers.google.com/pay/api/web/guides/brand-guidelines|Google Pay brand guidelines}
+         */
+        function addGooglePayButton() {
+          const paymentsClient = getGooglePaymentsClient();
+          const button =
+              paymentsClient.createButton({onClick: onGooglePaymentButtonClicked, buttonType: 'plain'});
+          document.getElementById('container').appendChild(button);
+        }
+        
+        /**
+         * Provide Google Pay API with a payment amount, currency, and amount status
+         *
+         * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#TransactionInfo|TransactionInfo}
+         * @returns {object} transaction info, suitable for use as transactionInfo property of PaymentDataRequest
+         */
+        function getGoogleTransactionInfo() {
+            var totalcharge = $('#totalcharge').val();
+
+            var charge = ParseFloat(totalcharge, 2);
+
+          return {
+            countryCode: "{{ $data['currencyCode'][0]->alpha2Code }}",
+            currencyCode: "{{ $data['currencyCode'][0]->currencies[0]->code }}",
+            totalPriceStatus: "FINAL",
+            // set to cart total
+            totalPrice: ""+charge+""
+          };
+        }
+
+        
+        function ParseFloat(str,val) {
+            str = str.toString();
+            str = str.slice(0, (str.indexOf(".")) + val + 1); 
+            return Number(str);   
+        }
+        
+        /**
+         * Prefetch payment data to improve performance
+         *
+         * @see {@link https://developers.google.com/pay/api/web/reference/client#prefetchPaymentData|prefetchPaymentData()}
+         */
+        function prefetchGooglePaymentData() {
+          const paymentDataRequest = getGooglePaymentDataRequest();
+          // transactionInfo must be set but does not affect cache
+          paymentDataRequest.transactionInfo = {
+            totalPriceStatus: 'NOT_CURRENTLY_KNOWN',
+            currencyCode: "{{ $data['currencyCode'][0]->currencies[0]->code }}"
+          };
+          const paymentsClient = getGooglePaymentsClient();
+          paymentsClient.prefetchPaymentData(paymentDataRequest);
+        }
+        
+        /**
+         * Show Google Pay payment sheet when Google Pay payment button is clicked
+         */
+        function onGooglePaymentButtonClicked() {
+          const paymentDataRequest = getGooglePaymentDataRequest();
+          paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
+        
+          const paymentsClient = getGooglePaymentsClient();
+          paymentsClient.loadPaymentData(paymentDataRequest)
+              .then(function(paymentData) {
+                // handle the response
+                processPayment(paymentData);
+              })
+              .catch(function(err) {
+                // show error in developer console for debugging
+                console.error(err);
+                alert(err.statusMessage);
+              });
+        }
+        /**
+         * Process payment data returned by the Google Pay API
+         *
+         * @param {object} paymentData response from Google Pay API after user approves payment
+         * @see {@link https://developers.google.com/pay/api/web/reference/response-objects#PaymentData|PaymentData object reference}
+         */
+        function processPayment(paymentData) {
+
+            // Run System Payment Complete
+            $('#paymentToken').val('');
+                // show returned data in developer console for debugging
+                console.log(paymentData);
+                // @todo pass payment token to your gateway to process payment
+                paymentToken = paymentData.paymentMethodData.tokenizationData.token;
+
+                $('#paymentToken').val(paymentToken);
+
+                handShake('addmoney');
+
+
+                // $("#paymentForm").submit();
+
+            
+
+        }
+
+
+
+// Gpay Ends
 
 
 function setHeaders(){

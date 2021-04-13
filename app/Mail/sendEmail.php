@@ -32,15 +32,15 @@ class sendEmail extends Mailable
         
 
         if($this->mail->purpose == "Payment Received"){
-        return $this->subject($this->mail->purpose)->view('mails.clientreceive')
+        return $this->subject($this->mail->subject)->view('mails.clientreceive')
                     ->with('maildata', $this->mail);
         }
         elseif($this->mail->purpose == "Payment Successful"){
-        return $this->subject($this->mail->purpose)->view('mails.userreceive')
+        return $this->subject($this->mail->subject)->view('mails.userreceive')
                     ->with('maildata', $this->mail);
         }
         elseif($this->mail->purpose == "Contact us"){
-        return $this->subject($this->mail->purpose)->view('mails.contactus')
+        return $this->subject("URGENT MESSAGE for your attention!")->view('mails.contactus')
                     ->with('maildata', $this->mail);
         }
         elseif($this->mail->purpose == "Bronchure Download"){

@@ -172,9 +172,32 @@ input[type="radio"] {
                                            @csrf
 
                                            <div class="form-group">
-                                               <label for="card_number">Card Number</label>
+                                               <label for="card_name">Name on Card</label>
 
                                                <input type="hidden" name="id" value="{{ $data['getthisCard']->id }}">
+
+                                            <div class="input-group"> <input type="text" name="card_name" id="card_name" value="{{ $data['getthisCard']->card_name }}" class="form-control" required>
+                                                <div class="input-group-append"> 
+                                                    <span class="input-group-text text-muted"> <i class="far fa-user"></i> </span> 
+                                                </div>
+                                            </div>
+
+                                           </div>
+
+                                           <div class="input-group"> 
+                                                <select name="card_provider" id="card_provider" class="form-control" required>
+                                                    <option value="">Select card provider</option>
+                                                    <option value="{{ $data['getthisCard']->card_provider }}" selected>{{ $data['getthisCard']->card_provider }}</option>
+                                                    <option value="Credit Card">Credit Card</option>
+                                                    <option value="EXBC Prepaid Card">EXBC Prepaid Card</option>
+                                                </select>
+                                                <div class="input-group-append"> 
+                                                    <span class="input-group-text text-muted"> <i class="fas fa-credit-card"></i></span> 
+                                                </div>
+                                            </div>
+
+                                           <div class="form-group">
+                                               <label for="card_number">Card Number</label>
 
                                             <div class="input-group"> <input type="text" name="card_number" id="card_number" value="{{ $data['getthisCard']->card_number }}" class="form-control" maxlength="16" required>
                                                 <div class="input-group-append"> 
@@ -381,7 +404,7 @@ var formData = new FormData(formElem);
 
             if(result.status == 200){
                     swal("Success", result.message, "success");
-                    setTimeout(function(){ location.href="{{ route('Add card') }}"; }, 2000);
+                    setTimeout(function(){ location.href="{{ route('my account') }}"; }, 2000);
                 }
                 else{
                     swal("Oops", result.message, "error");

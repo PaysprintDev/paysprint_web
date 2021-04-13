@@ -108,6 +108,7 @@ class MonerisController extends Controller
     public $address;
     public $clientname;
     public $subject;
+    public $subject2;
     public $paypurpose;
     public $service;
     public $city;
@@ -442,13 +443,13 @@ else{
                                     $this->name = $thisuser->name;
                                     $this->email = $thisuser->email;
                                     // $this->email = "bambo@vimfile.com";
-                                    $this->subject = "Transaction Notification";
+                                    $this->subject = "Your Invoice # [".$req->invoice_no."] of ".$req->currencyCode.' '.number_format($req->amount, 2)." is Paid";
 
-                                    $this->message = '<p>You have successfully paid invoice of <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong>. You now have <strong>'.$req->currencyCode.' '.number_format($walletBalance, 2).'</strong> in your account</p>';
+                                    $this->message = '<p>You have successfully paid invoice of <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong>. You now have <strong>'.$req->currencyCode.' '.number_format($walletBalance, 2).'</strong> balance in your account</p>';
 
                                     $this->sendEmail($this->email, "Fund remittance");
 
-                                    $sendMsg = 'You have successfully paid invoice of '.$req->currencyCode.' '.number_format($req->amount, 2).'. You now have '.$req->currencyCode.' '.number_format($walletBalance, 2).' in your account';
+                                    $sendMsg = 'You have successfully paid invoice of '.$req->currencyCode.' '.number_format($req->amount, 2).'. You now have '.$req->currencyCode.' '.number_format($walletBalance, 2).' balance in your account';
                                     $sendPhone = "+".$thisuser->code.$thisuser->telephone;
 
                                     $this->sendMessage($sendMsg, $sendPhone);
@@ -476,19 +477,22 @@ else{
                                     $this->name = $thismerchant->name;
                                     $this->email = $thismerchant->email;
                                     // $this->email = "bambo@vimfile.com";
-                                    $this->subject = "Transaction Notification";
+                                    $this->subject = $thisuser->name." has paid Invoice: [".$req->invoice_no."]";
 
-                                    $this->message = '<p>You received <strong>'.$req->currencyCode.''.number_format($req->amount, 2).'</strong> for <b>INVOICE: '.$req->invoice_no.'</b>. Payment made by <b>'.$thisuser->name.'</b>.</p> <p>You now have <strong>'.$req->currencyCode.''.number_format($merchantwalletBalance, 2).'</strong> in your wallet account</p>';
+                                    $this->message = '<p>You have received <strong>'.$req->currencyCode.''.number_format($req->amount, 2).'</strong> for <b>INVOICE: '.$req->invoice_no.'</b> made by <b>'.$thisuser->name.'</b>.</p> <p>You now have <strong>'.$req->currencyCode.''.number_format($merchantwalletBalance, 2).'</strong> balance in your wallet account with PaySprint</p>';
 
                                     $this->sendEmail($this->email, "Fund remittance");
 
-                                    $recMesg = 'You received '.$req->currencyCode.' '.number_format($req->amount, 2).' for INVOICE: '.$req->invoice_no.'. Payment made by '.$thisuser->name.'. You now have '.$req->currencyCode.' '.number_format($merchantwalletBalance, 2).' in your wallet account';
+                                    $recMesg = 'You have received '.$req->currencyCode.' '.number_format($req->amount, 2).' for INVOICE: '.$req->invoice_no.' made by '.$thisuser->name.'. You now have '.$req->currencyCode.' '.number_format($merchantwalletBalance, 2).' balance in your wallet account with PaySprint';
                                     $recPhone = "+".$thismerchant->code.$thismerchant->telephone;
 
                                     $this->sendMessage($recMesg, $recPhone);
 
 
-                                $data = $insPay;
+                                    $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+
+
+                                $data = $userInfo;
                                 $status = 200;
                                 $message = 'You have successfully paid invoice of '.$req->currencyCode.' '.number_format($req->amount, 2);
 
@@ -555,8 +559,6 @@ else{
 
         // dd($req->all());
 
-
-
         $validator = Validator::make($req->all(), [
                      'card_id' => 'required|string',
                      'amount' => 'required|string',
@@ -571,7 +573,58 @@ else{
                 $monerisDeductamount = $req->conversionamount;
                 // $monerisDeductamount = $this->currencyConvert($req->currencyCode, $req->amount);
 
-                
+                if($req->paymentToken != null){
+
+                        $reference_code = $req->paymentToken;
+                        
+                        // Update Wallet Balance
+                        $walletBal = $thisuser->wallet_balance + $req->amounttosend;
+                        User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal]);
+
+                        $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
+
+                        $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to Wallet including a fee charge of ".$req->currencyCode.''.number_format($req->commissiondeduct, 2)." was deducted from your Credit/Debit Card";
+                        $credit = $req->amounttosend;
+                        $debit = 0;
+                        $reference_code = $req->paymentToken;
+                        $balance = 0;
+                        $trans_date = date('Y-m-d');
+                        $status = "Delivered";
+                        $action = "Wallet credit";
+                        $regards = $thisuser->ref_code;
+                        $statement_route = "wallet";
+
+                        // Senders statement
+                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
+
+                        // Notification
+
+
+                            $this->name = $thisuser->name;
+                            $this->email = $thisuser->email;
+                            $this->subject = $req->currencyCode.' '.number_format($req->amounttosend, 2)." now added to your wallet with PaySprint";
+
+                            $this->message = '<p>You have added <strong>'.$req->currencyCode.' '.number_format($req->amounttosend, 2).'</strong> to your wallet with PaySprint. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your account</p>';
+
+                            $sendMsg = 'You have added '.$req->currencyCode.' '.number_format($req->amounttosend, 2).' to your wallet with PaySprint. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+                            $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+
+
+                            $this->sendMessage($sendMsg, $sendPhone);
+
+                            $this->sendEmail($this->email, "Fund remittance");
+
+                            $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+
+                        $data = $userInfo;
+                        $status = 200;
+                        $message = 'You have successfully added '.$req->currencyCode.' '.number_format($req->amounttosend, 2).' to your wallet';
+
+                        $this->createNotification($thisuser->ref_code, 'You have successfully added '.$req->currencyCode.' '.number_format($req->amounttosend, 2).' to your wallet');
+
+
+                }
+                else{
 
 
                 $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "purchase", "PaySprint Add Money to the Wallet of ".$thisuser->name, $req->mode);
@@ -580,15 +633,19 @@ else{
                     if($response->responseData['Message'] == "APPROVED           *                    ="){
 
                         $reference_code = $response->responseData['ReceiptId'];
+
+                        $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
+
+                        $cardNo = str_repeat("*", strlen($cardDetails->card_number)-4) . substr($cardDetails->card_number, -4);
                         
                         // Update Wallet Balance
-                        $walletBal = $thisuser->wallet_balance + $req->amount;
+                        $walletBal = $thisuser->wallet_balance + $req->amounttosend;
                         User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal]);
 
                         $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                        $activity = "Added ".$req->currencyCode.''.$req->amount." to Wallet";
-                        $credit = $req->amount;
+                        $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to Wallet including fee charge of ".$req->currencyCode.''.number_format($req->commissiondeduct, 2)." was deducted from Card: ".wordwrap($cardNo, 4, '-', true);
+                        $credit = $req->amounttosend;
                         $debit = 0;
                         $reference_code = $response->responseData['ReceiptId'];
                         $balance = 0;
@@ -606,11 +663,11 @@ else{
 
                             $this->name = $thisuser->name;
                             $this->email = $thisuser->email;
-                            $this->subject = "Transaction Notification";
+                            $this->subject = $req->currencyCode.' '.number_format($req->amounttosend, 2)." now added to your wallet with PaySprint";
 
-                            $this->message = '<p>You added <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong> to your wallet. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> in your account</p>';
+                            $this->message = '<p>You have added <strong>'.$req->currencyCode.' '.number_format($req->amounttosend, 2).'</strong> to your wallet with PaySprint. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your account</p>';
 
-                            $sendMsg = 'You added '.$req->currencyCode.' '.number_format($req->amount, 2).' to your wallet. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' in your account';
+                            $sendMsg = 'You have added '.$req->currencyCode.' '.number_format($req->amounttosend, 2).' to your wallet with PaySprint. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
                             $sendPhone = "+".$thisuser->code.$thisuser->telephone;
 
 
@@ -618,13 +675,13 @@ else{
 
                             $this->sendEmail($this->email, "Fund remittance");
 
-                            
+                            $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
 
-                        $data = $userData;
+                        $data = $userInfo;
                         $status = 200;
-                        $message = 'You have successfully added '.$req->currencyCode.' '.number_format($req->amount, 2).' to your wallet';
+                        $message = 'You have successfully added '.$req->currencyCode.' '.number_format($req->amounttosend, 2).' to your wallet';
 
-                        $this->createNotification($thisuser->ref_code, 'You have successfully added '.$req->currencyCode.' '.number_format($req->amount, 2).' to your wallet');
+                        $this->createNotification($thisuser->ref_code, 'You have successfully added '.$req->currencyCode.' '.number_format($req->amounttosend, 2).' to your wallet');
                         
 
                     }
@@ -633,6 +690,12 @@ else{
                         $message = $response->responseData['Message'];
                         $status = 400;
                     }
+                }
+
+                
+
+
+
                 
 
             }
@@ -687,7 +750,8 @@ else{
 
                             // This 1.35 is commission charge, kindly calculate again
 
-                                $monerisDeductamount = $req->conversionamount - 1.35;
+                                // $monerisDeductamount = $req->conversionamount - 1.35;
+                                $monerisDeductamount = $req->conversionamount;
 
 
                                 // Check Transaction PIn
@@ -713,7 +777,7 @@ else{
 
                                                 $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                                                $activity = "Debited ".$req->currencyCode.''.$req->amount." from Wallet";
+                                                $activity = "Withdraw ".$req->currencyCode.''.$req->amount." from Wallet to Credit/Debit card";
                                                 $credit = 0;
                                                 $debit = $req->amount;
                                                 $reference_code = $response->responseData['ReceiptId'];
@@ -727,16 +791,22 @@ else{
                                                 // Senders statement
                                                 $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
 
-
                                                 // Notification
+                                                $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
+
+                                                $cardNo = str_repeat("*", strlen($cardDetails->card_number)-4) . substr($cardDetails->card_number, -4);
+
 
                                                 $this->name = $thisuser->name;
                                                 $this->email = $thisuser->email;
-                                                $this->subject = "Transaction Notification";
+                                                $this->subject = $req->currencyCode.' '.number_format($req->amount, 2)." has been Withdrawn from your Wallet with PaySprint";
 
-                                                $this->message = '<p>You sent <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong> to your card. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> in your account</p>';
+                                                $this->message = '<p>The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Card Name: <strong>'.$cardDetails->card_name.'</strong> and Number: <strong>'.wordwrap($cardNo, 4, '-', true).'</strong> is successful. </p><p>You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your account</p>';
 
-                                                $sendMsg = 'You sent '.$req->currencyCode.' '.number_format($req->amount, 2).' to your card. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' in your account';
+
+                                                $this->createNotification($thisuser->ref_code, $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet');
+
+                                                $sendMsg = 'The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your '.$cardDetails->card_name.' and Number: '.wordwrap($cardNo, 4, '-', true).' is successful. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
                                                 $sendPhone = "+".$thisuser->code.$thisuser->telephone;
 
 
@@ -748,7 +818,7 @@ else{
                                                 $status = 200;
                                                 $message = $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet';
 
-                                                $this->createNotification($thisuser->ref_code, $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet');
+                                                
 
                                         }
                                         else{
@@ -802,7 +872,7 @@ else{
 
                                                 $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                                                $activity = "Debited ".$req->amount." from Wallet";
+                                                $activity = "Withdraw ".$req->currencyCode.''.$req->amount." from Wallet to Credit/Debit card";
                                                 $credit = 0;
                                                 $debit = $req->amount;
                                                 $reference_code = $response->responseData['ReceiptId'];
@@ -819,24 +889,33 @@ else{
 
                                                 // Notification
 
+                                                $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
+
+                                                $cardNo = str_repeat("*", strlen($cardDetails->card_number)-4) . substr($cardDetails->card_number, -4);
+
                                                 $this->name = $thisuser->name;
                                                 $this->email = $thisuser->email;
-                                                $this->subject = "Transaction Notification";
+                                                $this->subject = $req->currencyCode.' '.number_format($req->amount, 2)." has been Withdrawn from your Wallet with PaySprint";
 
-                                                $this->message = '<p>You sent <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong> to your card. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> in your account</p>';
+                                                $this->message = '<p>The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Card Name: <strong>'.$cardDetails->card_name.'</strong> and Number: <strong>'.wordwrap($cardNo, 4, '-', true).'</strong> is successful. </p><p>You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your account</p>';
 
-                                                $sendMsg = 'You sent '.$req->currencyCode.' '.number_format($req->amount, 2).' to your card. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' in your account';
+                                                $sendMsg = 'The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your '.$cardDetails->card_name.' and Number: '.wordwrap($cardNo, 4, '-', true).' is successful. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
                                                 $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+
+
+                                                $this->createNotification($thisuser->ref_code, $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet');
+
 
                                                 $this->sendMessage($sendMsg, $sendPhone);
 
                                                 $this->sendEmail($this->email, "Fund remittance");
 
-                                                $data = $userData;
+
+                                                $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+
+                                                $data = $userInfo;
                                                 $status = 200;
                                                 $message = $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet';
-
-                                                $this->createNotification($thisuser->ref_code, $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet');
 
                                         }
                                         else{
@@ -927,6 +1006,13 @@ else{
         $order_id='ord-'.date("dmy-Gis");
         // $amount= number_format($dollaramount, 2);
         $amount= $dollaramount;
+
+        if($thisuser->country == "Canada"){
+            $amount= number_format($dollaramount, 2);
+        }
+        else{
+            $amount= $dollaramount;
+        }
 
         
 
@@ -1127,6 +1213,8 @@ if($mpgResponse->responseData['Message'] == "APPROVED           *               
             $this->email = $user->email;
             $this->amount = $req->amounttosend;
             $this->paypurpose = $service;
+            $this->subject = "Payment Received from ".$user->name." for ".$service;
+            $this->subject2 = "Your Payment to ".$client->name." was successfull";
 
             // Mail to receiver
             $this->sendEmail($this->to, "Payment Received");
@@ -1304,6 +1392,7 @@ public function receivemoneyProcess(Request $req){
             $objDemo->amount = $this->amount;
             $objDemo->paypurpose = $this->paypurpose;
             $objDemo->coy_name = $this->coy_name;
+            $objDemo->subject = $this->subject;
 
         }
         elseif($purpose == "Payment Successful"){
@@ -1313,6 +1402,7 @@ public function receivemoneyProcess(Request $req){
             $objDemo->amount = $this->amount;
             $objDemo->paypurpose = $this->paypurpose;
             $objDemo->coy_name = $this->coy_name;
+            $objDemo->subject = $this->subject2;
 
         }
 

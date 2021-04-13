@@ -1,6 +1,7 @@
 <!-- jQuery JS -->
 
     <script src="{{ asset('js/jquery-1.12.0.min.js') }}"></script>
+        <script src="{{ asset('js/country-state-select.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://raw.githubusercontent.com/HubSpot/pace/v1.0.0/pace.min.js"></script>
@@ -31,6 +32,10 @@
     <script src="{{ asset('ext/plugins/countrycode/js/jquery.ccpicker.js') }}"></script>
 
 
+    <script language="javascript">
+        populateCountries("thiscountry", "state");
+    </script>
+
 
 
 
@@ -48,6 +53,26 @@
 
 function receiveMoney(user_id){
     location.href = location.origin+"/payment/receivemoney/"+user_id+"?country={{ Auth::user()->country }}";
+}
+
+
+
+// When the user scrolls the page, execute myFunction
+window.onscroll = function() {myFunction()};
+
+// Get the header
+var header = document.getElementById("myHeader");
+
+// Get the offset position of the navbar
+var sticky = header.offsetTop;
+
+// Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
+function myFunction() {
+  if (window.pageYOffset > sticky) {
+    header.classList.add("sticky");
+  } else {
+    header.classList.remove("sticky");
+  }
 }
 
 </script>
@@ -960,9 +985,11 @@ function checkDetail(val){
                 data: thisdata,
                 dataType: 'JSON',
                 beforeSend: function(){
-                    $('tbody#orgRec').html("<tr><td colspan='7' align='center'>Please wait...</td></tr>");
+                    $('tbody#orgRec').html("<tr><td colspan='8' align='center'>Please wait...</td></tr>");
                 },
                 success: function(result){
+
+                    
 
                     if(result.message == "success"){
                         var res = JSON.parse(result.data);
@@ -975,10 +1002,30 @@ function checkDetail(val){
 
                         var datainfo = "";
                         var datarec;
+                        var sendBtn;
+                        var avatar;
+
+                        
 
 
                         $.each(res, function(v, k){
-                           datarec = "<tr><td>"+k.name+"</td><td>"+k.address+"</td><td>"+k.ref_code+"</td><td>"+k.city+"</td><td>"+k.state+"</td><td>"+k.country+"</td><td><button class='btn btn-primary' onclick=payOrg('"+k.ref_code+"')>Send Money</button></td></tr>";
+
+                            if(result.country == k.country){
+                            sendBtn = "<button class='btn btn-primary' onclick=payOrg('"+k.ref_code+"')>Send Money</button>";
+                                
+                            }
+                            else{
+                                sendBtn = "<button class='btn btn-primary' onclick=cannotSend()>Send Money</button>";
+                            }
+
+                            if(k.avatar != null){
+                                avatar = k.avatar;
+                            }
+                            else{
+                                avatar = "https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg";
+                            }
+
+                           datarec = "<tr><td><img src='"+avatar+"' style='width:40px; height:40px; border-radius: 100%;'></td><td>"+k.name+"</td><td>"+k.address+"</td><td>"+k.ref_code+"</td><td>"+k.city+"</td><td>"+k.state+"</td><td>"+k.country+"</td><td>"+sendBtn+"</td></tr>";
 
                            datainfo += datarec;
                         });
@@ -991,7 +1038,7 @@ function checkDetail(val){
                         // $('tbody#orgRec').html("<tr><td>"+res.name+"</td><td>"+res.address+"</td><td>"+res.ref_code+"</td><td>"+res.city+"</td><td>"+res.state+"</td><td>"+res.country+"</td><td><button class='btn btn-primary' onclick=payOrg('"+res.ref_code+"')>Send Money</button></td></tr>");
                     }
                     else{
-                        $('tbody#orgRec').html("<tr><td colspan='7' align='center'>"+result.res+"</td></tr>");
+                        $('tbody#orgRec').html("<tr><td colspan='8' align='center'>"+result.res+"</td></tr>");
                         // swal(result.title, result.res, result.message);
                     }
 
@@ -1021,7 +1068,7 @@ function checkDetail(val){
                 data: thisdata,
                 dataType: 'JSON',
                 beforeSend: function(){
-                    $('tbody#searchorgRec').html("<tr><td colspan='6' align='center'>Please wait...</td></tr>");
+                    $('tbody#searchorgRec').html("<tr><td colspan='8' align='center'>Please wait...</td></tr>");
                 },
                 success: function(result){
 
@@ -1031,10 +1078,28 @@ function checkDetail(val){
 
                         var datainfo = "";
                         var datarec;
+                        var sendBtn;
+                        var avatar;
 
 
                         $.each(res, function(v, k){
-                           datarec = "<tr><td>"+k.name+"</td><td>"+k.address+"</td><td>"+k.ref_code+"</td><td>"+k.city+"</td><td>"+k.state+"</td><td>"+k.country+"</td></tr>";
+
+                            if(result.country == k.country){
+                            sendBtn = "<button class='btn btn-primary' onclick=payOrg('"+k.ref_code+"')>Send Money</button>";
+                                
+                            }
+                            else{
+                                sendBtn = "<button class='btn btn-primary' onclick=cannotSend()>Send Money</button>";
+                            }
+
+                            if(k.avatar != null){
+                                avatar = k.avatar;
+                            }
+                            else{
+                                avatar = "https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg";
+                            }
+
+                           datarec = "<tr><td><img src='"+avatar+"' style='width:40px; height:40px; border-radius: 100%;'></td><td>"+k.name+"</td><td>"+k.address+"</td><td>"+k.ref_code+"</td><td>"+k.city+"</td><td>"+k.state+"</td><td>"+k.country+"</td><td>"+sendBtn+"</td></tr>";
 
                            datainfo += datarec;
                         });
@@ -1044,7 +1109,7 @@ function checkDetail(val){
                         $('tbody#searchorgRec').html(datainfo);
                     }
                     else{
-                        $('tbody#searchorgRec').html("<tr><td colspan='6' align='center'>"+result.res+"</td></tr>");
+                        $('tbody#searchorgRec').html("<tr><td colspan='8' align='center'>"+result.res+"</td></tr>");
                     }
 
 
@@ -1075,7 +1140,7 @@ $('#orgInfo').change(function(){
                 data: thisdata,
                 dataType: 'JSON',
                 beforeSend: function(){
-                    $('tbody#orgRec').html("<tr><td colspan='7' align='center'>Please wait...</td></tr>");
+                    $('tbody#orgRec').html("<tr><td colspan='8' align='center'>Please wait...</td></tr>");
                 },
                 success: function(result){
 
@@ -1089,12 +1154,30 @@ $('#orgInfo').change(function(){
 
                         var datainfo = "";
                         var datarec;
+                        var sendBtn;
+                        var avatar;
 
                         // console.log(res);
 
 
                         $.each(res, function(v, k){
-                           datarec = "<tr><td>"+k.name+"</td><td>"+k.address+"</td><td>"+k.ref_code+"</td><td>"+k.city+"</td><td>"+k.state+"</td><td>"+k.country+"</td><td><button class='btn btn-primary' onclick=payOrg('"+k.ref_code+"')>Send Money</button></td></tr>";
+
+                            if(result.country == k.country){
+                            sendBtn = "<button class='btn btn-primary' onclick=payOrg('"+k.ref_code+"')>Send Money</button>";
+                                
+                            }
+                            else{
+                                sendBtn = "<button class='btn btn-primary' onclick=cannotSend()>Send Money</button>";
+                            }
+
+                            if(k.avatar != null){
+                                avatar = k.avatar;
+                            }
+                            else{
+                                avatar = "https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg";
+                            }
+
+                           datarec = "<tr><td><img src='"+avatar+"' style='width:40px; height:40px; border-radius: 100%;'></td><td>"+k.name+"</td><td>"+k.address+"</td><td>"+k.ref_code+"</td><td>"+k.city+"</td><td>"+k.state+"</td><td>"+k.country+"</td><td>"+sendBtn+"</td></tr>";
 
                            datainfo += datarec;
                         });
@@ -1107,7 +1190,7 @@ $('#orgInfo').change(function(){
                         // $('tbody#orgRec').html("<tr><td>"+res.name+"</td><td>"+res.address+"</td><td>"+res.ref_code+"</td><td>"+res.city+"</td><td>"+res.state+"</td><td>"+res.country+"</td><td><button class='btn btn-primary' onclick=payOrg('"+res.ref_code+"')>Send Money</button></td></tr>");
                     }
                     else{
-                        $('tbody#orgRec').html("<tr><td colspan='7' align='center'>"+result.res+"</td></tr>");
+                        $('tbody#orgRec').html("<tr><td colspan='8' align='center'>"+result.res+"</td></tr>");
                         // swal(result.title, result.res, result.message);
                     }
 
@@ -1896,7 +1979,13 @@ function notifyForm(email){
 
 
  function comingSoon(){
+     $('.close').click();
      swal('Hey', 'This feature is coming soon', 'info');
+ }
+
+
+ function cannotSend(){
+     swal('International Transfer Coming Soon!', 'We detected this is an international transaction. We\'ll notify you when it is available', 'info');
  }
 
 
@@ -1914,8 +2003,6 @@ function handShake(val){
 var route;
 
 var formData = new FormData(formElem);
-
-console.log(val);
 
 
 
@@ -2010,6 +2097,52 @@ else if(val == "transactionpinsettings"){
     });
 
 }
+else if(val == "newtransactionpinsettings"){
+
+    formData = new FormData(formElemnewtransactionpinsettings);
+
+        route = "{{ URL('/api/v1/createtransactionpin') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#transactionBtn').text('Please wait...');
+        },
+        success: function(result){
+
+            $('#transactionBtn').text('Save');
+
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $('#transactionBtn').text('Save');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
 
 else if(val == "passwordsettings"){
 
@@ -2049,6 +2182,150 @@ else if(val == "passwordsettings"){
         },
         error: function(err) {
             $('#passwordBtn').text('Save');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+else if(val == "securityquestans"){
+
+    formData = new FormData(formElemsecurityquestans);
+
+    route = "{{ URL('/api/v1/security') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#securityBtn').text('Please wait...');
+        },
+        success: function(result){
+
+            $('#securityBtn').text('Save');
+
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $('#securityBtn').text('Save');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+
+else if(val == "resetPassword"){
+
+    formData = new FormData(formElemresetPassword);
+
+    route = "{{ URL('/api/v1/resetpassword') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#'+val+'Btn').text('Please wait...');
+        },
+        success: function(result){
+            
+
+            $('#'+val+'Btn').text('Submit');
+
+                $(".close").click();
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $(".close").click();
+            $('#'+val+'Btn').text('Submit');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+else if(val == "resetTransactionPin"){
+
+    formData = new FormData(formElemresetTransactionPin);
+
+    route = "{{ URL('/api/v1/resettransactionpin') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#'+val+'Btn').text('Please wait...');
+        },
+        success: function(result){
+            
+
+            $('#'+val+'Btn').text('Submit');
+            $(".close").click();
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $(".close").click();
+            $('#'+val+'Btn').text('Submit');
             swal("Oops", err.responseJSON.message, "error");
 
         } 
@@ -2108,6 +2385,23 @@ else if('addcard'){
 
 }
 
+function resetPin(question, val){
+    $("#"+val+"securityQuest").val(question);
+    $("#"+val+"mySecQuest").text(question);
+    $("#"+val).click();
+}
+
+
+$("#thiscountry").change(function(){
+    var country = $("#correctcountry").val();
+    if($("#thiscountry").val() != "-1"){
+        country = $("#thiscountry").val();
+        $("#correctcountry").val(country);
+    }
+    else{
+        $("#correctcountry").val(country);
+    }
+});
 
 function showForm(val){
     $(".cardform").removeClass('disp-0');

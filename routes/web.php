@@ -18,6 +18,8 @@
 // App Logger
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
+Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
+
 // Major Routes
 
 Route::get('/', ['uses' => 'HomeController@index', 'as' => 'home']);
@@ -61,6 +63,7 @@ Route::prefix('mywallet')->group(function () {
 
 	Route::get('/', ['uses' => 'HomeController@myAccount', 'as' => 'my account']);
 	Route::get('card', ['uses' => 'HomeController@addCard', 'as' => 'Add card']);
+	Route::get('exbccard', ['uses' => 'HomeController@requestExbcCard', 'as' => 'request exbc card']);
 	Route::get('editcard/{id}', ['uses' => 'HomeController@editCard', 'as' => 'Edit card']);
 	Route::get('addmoney', ['uses' => 'HomeController@addMoney', 'as' => 'Add Money']);
 	Route::get('withdrawmoney', ['uses' => 'HomeController@withdrawMoney', 'as' => 'Withdraw Money']);
@@ -168,6 +171,8 @@ Route::get('Admin/customer/{id}', ['uses' => 'AdminController@customer', 'as' =>
 
 
 Route::get('Admin/feestructure', ['uses' => 'AdminController@feeStructure', 'as' => 'fee structure']);
+Route::get('Admin/feestructurebycountry', ['uses' => 'AdminController@feeStructureByCountry', 'as' => 'fee structure by country']);
+Route::get('Admin/structurebycountry/{country}', ['uses' => 'AdminController@structureByCountry', 'as' => 'structure by country']);
 Route::get('editfee/{id}', ['uses' => 'AdminController@editFee', 'as' => 'editfee']);
 Route::post('createfeestructure', ['uses' => 'AdminController@createFeeStructure', 'as' => 'create fee structure']);
 Route::post('editfeestructure/{id}', ['uses' => 'AdminController@editFeeStructure', 'as' => 'edit fee structure']);

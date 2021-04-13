@@ -40,10 +40,15 @@
                 <div class="col-sm-6 contact_info send_message">
                     <h2>Send Us a Message</h2>
                     <form class="form-inline contact_box">
+                        <label for="name">Name</label>
                         <input id="name" type="text" class="form-control input_box" @if($name != "") value="{{ $name }}" readonly @else placeholder="Name *" @endif>
+                        <label for="email">Email</label>
                         <input id="email" type="text" class="form-control input_box" @if($email != "") value="{{ $email }}" readonly @else placeholder="Your Email *" @endif>
+                        <label for="subject">Subject</label>
                         <input id="subject" type="text" class="form-control input_box" placeholder="Subject">
+                        <label for="website">Website</label>
                         <input id="website" type="text" class="form-control input_box" placeholder="Your Website">
+                        <label for="message">Message</label>
                         <textarea id="message" class="form-control input_box" placeholder="Message"></textarea>
                         <button type="button" class="btn btn-default" onclick="contactUs()">Send Message</button>
                     </form>

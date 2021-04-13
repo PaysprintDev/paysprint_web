@@ -52,7 +52,7 @@ input[type="radio"] {
         <!-- For demo purpose -->
         <div class="row mb-4">
             <div class="col-lg-8 mx-auto text-center">
-                <h1 class="display-4">Money Transfer</h1>
+                <h1 class="display-4">Send Money</h1>
             </div>
         </div> <!-- End -->
         <div class="row">
@@ -262,7 +262,7 @@ input[type="radio"] {
 
 
                                 <div class="form-group"> <label for="netwmount">
-                                    <h6>Net Amount <br><small class="text-success"><b>This is the total amount to be received</b></small></h6>
+                                    <h6>Net Amount <br><small class="text-success"><b>Total amount that would be received</b></small></h6>
                                     
                                 </label>
                                 <div class="input-group"> 
@@ -270,7 +270,7 @@ input[type="radio"] {
                                 </div>
                             </div>
                                 <div class="form-group"> <label for="netwmount">
-                                    <h6>Commission <small class="text-success"><b>(FREE)</b></small></h6>
+                                    <h6>Fee <small class="text-success"><b>(FREE)</b></small></h6>
                                 </label>
                                 <div class="input-group"> 
                                     <input type="text" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
@@ -369,7 +369,16 @@ input[type="radio"] {
                                                 <button type="button" onclick="orgmonerisPay()" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Send Money </button>
                                             </div>
                                             <div class="col-md-12 withWallet">
-                                                <button type="button" onclick="orgmonerisPay()" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Send Money </button>
+
+                                                @if (Auth::user()->approval == 1)
+                                                    <button type="button" onclick="orgmonerisPay()" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Send Money </button>
+                                                @else
+
+                                                <button type="button" onclick="restriction('sendmoney', '{{ Auth::user()->name }}')" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Send Money </button>
+                                                    
+                                                @endif
+
+                                                
                                             </div>
 
                                             {{--  <div class="col-md-6">
@@ -933,7 +942,11 @@ function beginApplePay() {
 
 
 
-
+ function restriction(val, name){
+    if(val == "sendmoney"){
+        swal('Hello '+name, 'Your account need to be verified before you can send money', 'info');
+    }
+ }
 
 
 

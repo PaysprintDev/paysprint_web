@@ -25,7 +25,7 @@
                 <div class="camera_caption">
                    <div class="container">
                          {{-- <h5 class=" wow fadeInUp animated">Welcome to our</h5> --}}
-                        <h3 class=" wow fadeInUp animated" data-wow-delay="0.5s">PAYSPRINT....INVOICE</h3>
+                        <h3 class=" wow fadeInUp animated" data-wow-delay="0.5s"><span style="font-weight: 800;">PAY</span><span style="font-weight: 800; color: darkorange;">SPRINT</span> INVOICE</h3>
                         {{-- <p class=" wow fadeInUp animated" data-wow-delay="0.8s">fastest way to collect money from customers</p> --}}
                         {{-- <a class=" wow fadeInUp animated" data-wow-delay="1s" href="#">Read More</a>--}}
                    </div>
@@ -36,7 +36,7 @@
                 <div class="camera_caption">
                    <div class="container">
                          {{-- <h5 class=" wow fadeInUp animated">Welcome to our</h5> --}}
-                        <h3 class=" wow fadeInUp animated" data-wow-delay="0.5s">PAYSPRINT....WALLET</h3> 
+                        <h3 class=" wow fadeInUp animated" data-wow-delay="0.5s"><span style="font-weight: 800;">PAY</span><span style="font-weight: 800; color: darkorange;">SPRINT</span> WALLET</h3> 
                         {{-- <p class=" wow fadeInUp animated" data-wow-delay="0.8s">fastest way to collect money from customers</p> --}}
                         {{-- <a class=" wow fadeInUp animated" data-wow-delay="1s" href="#">Read More</a> --}}
                    </div>
@@ -47,7 +47,7 @@
                 <div class="camera_caption">
                    <div class="container">
                          {{-- <h5 class=" wow fadeInUp animated">Welcome to our</h5> --}}
-                        <h3 class=" wow fadeInUp animated" data-wow-delay="0.5s">PAYSPRINT....MONEY TRANSFER</h3> 
+                        <h3 class=" wow fadeInUp animated" data-wow-delay="0.5s"><span style="font-weight: 800;">PAY</span><span style="font-weight: 800; color: darkorange;">SPRINT</span> MONEY TRANSFER</h3> 
                         {{-- <p class=" wow fadeInUp animated" data-wow-delay="0.8s">fastest way to collect money from customers</p> --}}
                         {{-- <a class=" wow fadeInUp animated" data-wow-delay="1s" href="#">Read More</a> --}}
                    </div>

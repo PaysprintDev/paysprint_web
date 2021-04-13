@@ -390,7 +390,7 @@
                                         <td valign="top" class="textContent">
                                           <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:left;">Hello {{ $maildata->name }},</h3>
 
-<br /><br> <b>Your payment to the receiver is successful. Below are the details:</b>
+<br /><br> <b>Your payment to {{ $maildata->coy_name }} on PaySprint was successful. Here are the Payment information details:</b>
 <br /><br />
 Name: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $maildata->coy_name }} <br><br>
 
@@ -401,7 +401,7 @@ Purpose: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $mailda
 <hr>
 
 <p>
-  PaySprint provides fastest money transfer and invoice payment solution. 
+  PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!
 Download PaySprint App today on <br> <ul style="
     display: inline-flex;
     list-style: none;
@@ -412,11 +412,12 @@ Download PaySprint App today on <br> <ul style="
     <li>
 <img id="1617200960035100001_imgsrc_url_2" alt="App Store" style="width :  125px; " src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/Coming_Soon_to_the_App_Store_izz7ir.png"></li>
 </ul> <br>
-Visit our website, <a href="{{ route('home') }}">www.paysprint.net</a> to open an Merchant account.
+Visit our website, <a href="{{ route('home') }}">www.paysprint.net</a> to open a Merchant account.
 </p>
 
 Best <br><br>
-PaySprint Support Team.<br>
+
+PaySprint Support Team<br>
                                         </td>
                                       </tr>
                                     </tbody></table>

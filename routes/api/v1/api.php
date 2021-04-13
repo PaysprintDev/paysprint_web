@@ -54,6 +54,13 @@ Route::prefix('/v1')->group(function () {
 
     Route::post('updatepassword',  ['uses' => 'api\v1\UserController@updatePassword'])->name('update password');
 
+    Route::post('security',  ['uses' => 'api\v1\UserController@updateSecurity'])->name('update security');
+
+
+    Route::post('resetpassword',  ['uses' => 'api\v1\UserController@resetPassword'])->name('reset password');
+
+    Route::post('resettransactionpin',  ['uses' => 'api\v1\UserController@resetTransactionPin'])->name('reset transaction pin');
+
 
     Route::post('sendmoney',  ['uses' => 'api\v1\MoneyTransferController@sendMoney'])->name('send money');
 
@@ -67,6 +74,12 @@ Route::prefix('/v1')->group(function () {
 
 
     Route::post('commissionfee',  ['uses' => 'api\v1\MoneyTransferController@commissionFee'])->name('commission fee');
+
+
+
+    Route::post('debitwalletforcard',  ['uses' => 'api\v1\MoneyTransferController@debitWalletForCard'])->name('debit wallet for exbc card');
+
+    Route::post('requestcard',  ['uses' => 'api\v1\MoneyTransferController@requestPrepaidCard'])->name('request for prepaid card');
 
 
 

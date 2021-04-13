@@ -55,7 +55,7 @@
                     <div class="well well-sm">
                         <div class="row">
                             <div class="col-sm-6 col-md-4">
-                                <img src="{{ (Auth::user()->avatar != "") ? Auth::user()->avatar : 'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png' }}" alt="" class="img-rounded img-responsive" />
+                                <a href="{{ Auth::user()->avatar }}" target="_blank"><img src="{{ (Auth::user()->avatar != "") ? Auth::user()->avatar : 'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png' }}" alt="" class="img-rounded img-responsive" style="height: 150px; width: 150px; border-radius: 100%;" /></a>
                             </div>
                             <div class="col-sm-6 col-md-8">
                                 <h4>
@@ -64,6 +64,9 @@
                                 </i></cite></small>
                                 <p>
                                     <i class="fa fa-cc"></i> <b>Account code:  {{ Auth::user()->ref_code }}</b>
+                                </p>
+                                <p>
+                                    <i class="fa fa-user"></i> <b>Account Type:  {{ Auth::user()->accountType." account" }}</b>
                                 </p>
                                 <p>
                                     <i class="fa fa-envelope"></i> <b>Email: {{ Auth::user()->email }}</b>
@@ -85,7 +88,6 @@
                                             <small style="font-weight: bold;"> <a href="{{ Auth::user()->nin_front }}" target="_blank">Front View</a> | <a href="{{ Auth::user()->nin_back }}" target="_blank">Back View</a></small>
                                              
                                          </li>
-                                         <hr>
                                         @endif
 
 
@@ -95,7 +97,6 @@
                                             <small style="font-weight: bold;"> <a href="{{ Auth::user()->drivers_license_front }}" target="_blank">Front View</a> | <a href="{{ Auth::user()->drivers_license_back }}" target="_blank">Back View</a> </small>
                                             
                                         </li>
-                                        <hr>
 
 
                                         @endif
@@ -108,6 +109,18 @@
                                              
                                         </li>
 
+                                        @endif
+
+
+                                        @if (Auth::user()->accountType == "Business")
+                                            @if (Auth::user()->incorporation_doc_front != null || Auth::user()->incorporation_doc_back != null)
+
+                                            <li>Incorporation Document: <br>
+                                                <small style="font-weight: bold;"> <a href="{{ Auth::user()->incorporation_doc_front }}" target="_blank">Front View</a> | <a href="{{ Auth::user()->incorporation_doc_back }}" target="_blank">Back View</a></small>
+                                                
+                                            </li>
+
+                                            @endif
                                         @endif
                                         
                                         
@@ -136,11 +149,13 @@
     </div>
     <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
       <div class="panel-body">
+
+        @if (Auth::user()->transaction_pin != null)
+
         <form action="#" method="post" id="formElemtransactionpinsettings">
             
-
             <div class="form-group">
-                <label for="oldpin">Old Pin</label>
+                <label for="oldpin">Old Pin <strong><p class="text-danger" style="cursor: pointer;" onclick="resetPin('{{ Auth::user()->securityQuestion }}','transaction')">Have you forgotten your old transaction pin? Click here to reset</p></strong></label>
                 <input type="password" name="oldpin" id="oldpin" class="form-control" placeholder="Pin" maxlength="4">
             </div>
             <div class="form-group">
@@ -151,11 +166,37 @@
                 <label for="confirmpin">Confirm Pin</label>
                 <input type="password" name="confirmpin" id="confirmpin" class="form-control" placeholder="Confirm Pin" maxlength="4">
             </div>
+            
             <div class="form-group">
                 <button type="button" class="btn btn-primary btn-block" id="transactionBtn" onclick="handShake('transactionpinsettings')">Save</button>
             </div>
 
         </form>
+            
+        @else
+
+        <form action="#" method="post" id="formElemnewtransactionpinsettings">
+            
+            <div class="form-group">
+                <label for="newpin">New Pin</label>
+                <input type="password" name="newpin" id="newpin" class="form-control" placeholder="New Pin" maxlength="4">
+            </div>
+            <div class="form-group">
+                <label for="confirmpin">Confirm Pin</label>
+                <input type="password" name="confirmpin" id="confirmpin" class="form-control" placeholder="Confirm Pin" maxlength="4">
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary btn-block" id="transactionBtn" onclick="handShake('newtransactionpinsettings')">Save</button>
+            </div>
+
+        </form>
+            
+        @endif
+
+        
+
+
+
       </div>
     </div>
   </div>
@@ -171,8 +212,9 @@
       <div class="panel-body">
         <form action="#" method="post" id="formElempasswordsettings">
 
+
             <div class="form-group">
-                <label for="oldpassword">Old Password</label>
+                <label for="oldpassword">Old Password <strong><p class="text-danger" style="cursor: pointer;" onclick="resetPin('{{ Auth::user()->securityQuestion }}','password')">Have you forgotten your old password? Click here to reset</p></strong></label>
                 <input type="password" name="oldpassword" id="oldpassword" class="form-control" placeholder="Password">
             </div>
             <div class="form-group">
@@ -183,8 +225,42 @@
                 <label for="confirmpin">Confirm Password</label>
                 <input type="password" name="confirmpassword" id="confirmpassword" class="form-control" placeholder="Confirm Password">
             </div>
+            
             <div class="form-group">
                 <button type="button" class="btn btn-primary btn-block" id="passwordBtn" onclick="handShake('passwordsettings')">Save</button>
+            </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingThree">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Security Question and Answer
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+      <div class="panel-body">
+
+        <h5 >
+            <strong>Security Question: <span style="color: red">{{ Auth::user()->securityQuestion }}?</span></strong>
+        </h5>
+        <hr>
+        <form action="#" method="post" id="formElemsecurityquestans">
+
+            <div class="form-group">
+                <label for="securityQuestion">Question</label>
+                <input type="text" name="securityQuestion" id="securityQuestion" class="form-control" placeholder="Question">
+            </div>
+            <div class="form-group">
+                <label for="securityAnswer">Answer</label>
+                <input type="text" name="securityAnswer" id="securityAnswer" class="form-control" placeholder="Answer">
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary btn-block" id="securityBtn" onclick="handShake('securityquestans')">Save</button>
             </div>
 
         </form>
@@ -204,7 +280,7 @@
                                     @csrf
                                     <div class="form-group">
                                         <label for="name">Name</label>
-                                        <input type="text" class="form-control" name="name" id="name" value="{{ Auth::user()->name }}" placeholder="Your Name">
+                                        <input type="text" class="form-control" name="name" id="name" value="{{ Auth::user()->name }}" placeholder="Your Name" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="email">Email Address</label>
@@ -212,31 +288,37 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="telephone">Phone Number</label>
-                                        <input type="tel" class="form-control" name="telephone" id="telephone" value="{{ Auth::user()->telephone }}" placeholder="Your Phone Number">
+                                        <input type="tel" class="form-control" name="telephone" id="telephone" value="{{ Auth::user()->telephone }}" placeholder="Your Phone Number" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="address">Home Address</label>
-                                        <input type="text" class="form-control" name="address" id="address" value="{{ Auth::user()->address }}" placeholder="Your Home Address">
+                                        <input type="text" class="form-control" name="address" id="address" value="{{ Auth::user()->address }}" placeholder="Your Home Address" required>
                                     </div>
 
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="country">Country</label>
-                                                <input type="text" class="form-control" name="country" id="country" value="{{ Auth::user()->country }}" placeholder="Your Country">
+                                                {{-- <select id="thiscountry" class="form-control" required>
+                                                    <option value="{{ Auth::user()->country }}" selected>{{ Auth::user()->country }}</option>
+                                                </select> --}}
+                                                <input type="text" class="form-control" name="country" id="country" value="{{ Auth::user()->country }}" placeholder="Your Country" required readonly>
                                             </div>
                                         </div>
 
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="state">State/Province</label>
-                                                <input type="text" class="form-control" name="state" id="state" value="{{ Auth::user()->state }}" placeholder="Your State/Province">
+                                                {{-- <input type="text" class="form-control" name="state" id="state" value="{{ Auth::user()->state }}" placeholder="Your State/Province"> --}}
+                                                <select name="state" id="state" class="form-control" required>
+                                                    <option value="{{ Auth::user()->state }}" selected>{{ Auth::user()->state }}</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="city">City</label>
-                                                <input type="text" class="form-control" name="city" id="city" value="{{ Auth::user()->city }}" placeholder="Your City">
+                                                <input type="text" class="form-control" name="city" id="city" value="{{ Auth::user()->city }}" placeholder="Your City" required>
                                             </div>
                                         </div>
                                     </div>
@@ -314,6 +396,28 @@
                                             </div>
                                         </div>
                                     </div>
+
+
+                                    @if (Auth::user()->accountType == "Business")
+                                        <div class="row">
+                                        <div class="col-md-12">
+                                            <b style="color: darkorange;">Upload Incorporation Document</b>
+                                        </div>
+                                        <hr>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="nin_front">Front</label>
+                                                <input type="file" class="form-control" name="incorporation_doc_front" id="incorporation_doc_front">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="nin_back">Back</label>
+                                                <input type="file" class="form-control" name="incorporation_doc_back" id="incorporation_doc_back">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
 
 
                                     <div class="form-group">

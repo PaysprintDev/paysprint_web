@@ -110,6 +110,18 @@
                     <div class="media">
                         <div class="media-left">
                             <a href="#">
+                                <i class="fa fa-bolt" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <a href="#">UTILITY BILL</a>
+                            <p>Do you want to pay a utility bill to the landlord or government? Do you want to be receiving electronic copy (eCopy) of the bills, Open a Free PaySprint Account Today <a href="https://exbc.ca/login" style="font-size: 14px;">Login to your account Today</a>.</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="media">
+                        <div class="media-left">
+                            <a href="#">
                                 <i class="fa fa-home" aria-hidden="true"></i>
                             </a>
                         </div>
@@ -121,18 +133,7 @@
                             <span style="background-color: tomato; color: #fff; border-radius: 10px; padding: 5px">COMING SOON!!</span></p>
                         </div>
                     </div>
-                    <hr>
-                    <div class="media">
-                        <div class="media-left">
-                            <a href="#">
-                                <i class="fa fa-bolt" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                        <div class="media-body">
-                            <a href="#">UTILITY BILL</a>
-                            <p>Do you want to pay a utility bill to the landlord or government? Do you want to be receiving electronic copy (eCopy) of the bills, Open a Free PaySprint Account Today <a href="https://exbc.ca/login" style="font-size: 14px;">Login to your account Today</a>.</p>
-                        </div>
-                    </div>
+                    
                     <hr>
                     <div class="media">
                         <div class="media-left">

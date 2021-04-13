@@ -18,6 +18,8 @@ use Rap2hpoutre\FastExcel\FastExcel;
 
 use Illuminate\Support\Facades\Mail;
 
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
 use App\User as User;
 
 use App\AnonUsers as AnonUsers;
@@ -101,6 +103,7 @@ class HomeController extends Controller
                     'walletTrans' => $this->sendAndReceive(Auth::user()->email),
                     'urgentnotification' => $this->urgentNotification(Auth::user()->email),
                     'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+                    'getCard' => $this->getUserCard(),
                 );
 
                 $view = 'home';
@@ -130,6 +133,7 @@ class HomeController extends Controller
                     'walletTrans' => $this->sendAndReceive(Auth::user()->email),
                     'urgentnotification' => $this->urgentNotification(Auth::user()->email),
                     'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+                    'getCard' => $this->getUserCard(),
                 );
             }
             else{
@@ -477,6 +481,38 @@ class HomeController extends Controller
 
 
         return view('main.mycard')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+
+    public function requestExbcCard(Request $req)
+    {
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'Request Exbc Card';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            }
+            else{
+                $this->page = 'Request Exbc Card';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'Request Exbc Card';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+
+        $data = array(
+            'getCard' => $this->getUserCard(),
+        );
+
+
+        return view('main.requestexbccard')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -1640,6 +1676,8 @@ class HomeController extends Controller
 
             // dd($getBilling);
 
+            
+
 
 
 
@@ -1845,8 +1883,18 @@ class HomeController extends Controller
         return $data;
     }
     public function payInvoice($email){
-        $data = Statement::where('user_id', $email)->where('statement_route', 'invoice')->orderBy('created_at', 'DESC')->limit(5)->get();
+        $mydata = ImportExcel::select('import_excel.*', 'invoice_payment.*')->join('invoice_payment', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')->where('import_excel.payee_email', $email)->orderBy('import_excel.created_at', 'DESC')->limit(5)->get();
+
+        if(count($mydata)){
+            $data = $mydata;
+        }
+        else{
+            $data = ImportExcel::where('payee_email', $email)->orderBy('created_at', 'DESC')->limit(5)->get();
+        }
+
+        // dd($data);
         return $data;
+        
     }
     public function urgentNotification($email){
         $data = Statement::where('user_id', $email)->orderBy('created_at', 'DESC')->limit(5)->get();
@@ -1868,6 +1916,9 @@ class HomeController extends Controller
             $ref_code = mt_rand(00000, 99999);
 
             $mycode = $this->getCountryCode($req->country);
+
+                $currencyCode = $countryInfo[0]->currencies[0]->code;
+                $currencySymbol = $countryInfo[0]->currencies[0]->symbol;
 
                         // Get all ref_codes
             $ref = User::all();
@@ -1893,11 +1944,11 @@ class HomeController extends Controller
                             // Insert User record
                 if($req->accountType == "Individual"){
                     // Insert Information for Individual user
-                    $insInd = User::insert(['ref_code' => $req->ref_code, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance]);
+                    $insInd = User::insert(['ref_code' => $req->ref_code, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
                 }
                 elseif($req->accountType == "Business"){
                     // Insert Information for Business user
-                    $insBus = User::insert(['ref_code' => $req->ref_code, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance]);
+                    $insBus = User::insert(['ref_code' => $req->ref_code, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
 
                 }
 
@@ -1909,13 +1960,13 @@ class HomeController extends Controller
                             // Insert User record
                 if($req->accountType == "Individual"){
                     // Insert Information for Individual user
-                    $insInd = User::insert(['ref_code' => $newRefcode, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email)]);
+                    $insInd = User::insert(['ref_code' => $newRefcode, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
 
                     // $req->session()->put(['name' => $name, 'email' => $req->email, 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType]);
                 }
                 elseif($req->accountType == "Business"){
                     // Insert Information for Business user
-                    $insBus = User::insert(['ref_code' => $newRefcode, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email)]);
+                    $insBus = User::insert(['ref_code' => $newRefcode, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
 
                     // $req->session()->put(['businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype]);
 
@@ -1947,8 +1998,13 @@ class HomeController extends Controller
             // Check User Password if match
             if(Hash::check($req->password, $userExists[0]['password'])){
 
+                $countryInfo = $this->getCountryCode($userExists[0]['country']);
+
+                $currencyCode = $countryInfo[0]->currencies[0]->code;
+                $currencySymbol = $countryInfo[0]->currencies[0]->symbol;
+
                 // Update API Token
-                 User::where('email', $req->email)->update(['api_token' => uniqid().md5($req->email)]);
+                 User::where('email', $req->email)->update(['api_token' => uniqid().md5($req->email), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
 
                 $resData = ['res' => 'Welcome back '.$userExists[0]['name'], 'message' => 'success'];
             }else{
@@ -2121,7 +2177,7 @@ class HomeController extends Controller
                 if(count($data) > 0){
                     // Get Sender Details
 
-                    $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($data), 'title' => 'Good'];
+                    $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($data), 'title' => 'Good', 'country' => Auth::user()->country];
                 }
                 else{
                     $resData = ['res' => 'Receiver not found', 'message' => 'error'];
@@ -2135,7 +2191,7 @@ class HomeController extends Controller
                 
                 if(count($data) > 0){
 
-                    $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($data), 'title' => 'Good'];
+                    $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($data), 'title' => 'Good', 'country' => Auth::user()->country];
                 }
                 else{
 
@@ -2146,7 +2202,7 @@ class HomeController extends Controller
 
                     if(count($result)){
 
-                        $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($result), 'title' => 'Good'];
+                        $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($result), 'title' => 'Good', 'country' => Auth::user()->country];
                     }
                     else{
 
@@ -2197,7 +2253,7 @@ class HomeController extends Controller
                 $this->subject = "Bronchure Download";
                 $this->message = $req->name." just downloaded PaySprint bronchure. Email is stateted below: <br><br> Email: ".$req->email."<br><br> Thanks.";
 
-                $this->sendEmail($this->to, $this->subject);
+                // $this->sendEmail($this->to, $this->subject);
 
                 $resData = ['res' => 'Thanks.', 'message' => 'success', 'title' => 'Great!'];
             }
@@ -2571,7 +2627,7 @@ class HomeController extends Controller
         $amount = $amount;
         $localCurrency = 'USD'.$localcurrency;
 
-        $access_key = '3755c94ab8bc3a28513e616a6b47305c';
+        $access_key = '89e3a2b081fb2b9d188d22516553545c';
 
         $curl = curl_init();
 

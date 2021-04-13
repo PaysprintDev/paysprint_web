@@ -421,7 +421,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-success');
                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.toFixed(2)+" will be credited to your Credit/Debit Card. Commission charge inclusive</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.toFixed(2)+" will be credited to your Credit/Debit Card. Fee charge inclusive</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
@@ -429,6 +429,7 @@ function runCommission(){
                     $("#totalcharge").val(result.data);
 
                     totalCharge = $("#amount").val();
+
 
                     currencyConvert(totalCharge);
 
@@ -480,6 +481,7 @@ function currencyConvert(amount){
         data: thisdata,
         dataType: 'JSON',
         success: function(result){
+
 
             if(result.message == "success"){
                 $("#conversionamount").val(result.data);

@@ -106,11 +106,19 @@
           </ul>
         </li>
 
-        <li>
-          <a href="{{ route('fee structure') }}">
+        <li class="treeview">
+          <a href="#">
             <i class="fa fa-laptop"></i>
             <span>Fee Structure</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
           </a>
+          <ul class="treeview-menu">
+            <li title="Set up Fee Structure"><a href="{{ route('fee structure') }}"><i class="fa fa-circle-o text-red"></i> Set up Fee Structure</a></li>
+            <li title="Structure by Country"><a href="{{ route('fee structure by country') }}"><i class="fa fa-circle-o text-red"></i> Structure by Country</a></li>
+
+          </ul>
         </li>
 
         <li class="disp-0">

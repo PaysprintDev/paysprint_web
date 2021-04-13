@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\DB;
 
+use Illuminate\Support\Facades\Log;
+
 use App\User as User;
 
 use App\Statement as Statement;
@@ -138,7 +140,9 @@ class StatementController extends Controller
 
             try {
 
-                if($req->get('start') != null && $req->get('end') != null){
+                if($req->get('start') != null && $req->get('end') != null && $req->get('service') == null){
+
+                    Log::info("Here 1st");
 
                     $from = date('Y-m-d', strtotime($req->get('start')));
                     $nextDay = date('Y-m-d', strtotime($req->get('end')));
@@ -147,9 +151,14 @@ class StatementController extends Controller
 
                 }
                 elseif($req->get('service')){
+
+                    Log::info("Here 2nd");
+
                     $mystatement = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%'.$req->get('service').'%')->orderBy('created_at', 'DESC')->get();
                 }
-                elseif($req->get('start') != null && $req->get('end') != null && $req->get('service')){
+                elseif($req->get('start') != null && $req->get('end') != null && $req->get('service') != null){
+
+                    Log::info("Here 3rd");
 
                     $from = date('Y-m-d', strtotime($req->get('start')));
                     $nextDay = date('Y-m-d', strtotime($req->get('end')));
@@ -162,13 +171,16 @@ class StatementController extends Controller
                 if(count($mystatement) > 0){
                     $data = $mystatement;
                     $message = "success";
+                    $status = 200;
+
                 }
                 else{
                     $data = [];
                     $message = "No record";
+                    $status = 400;
+
                 }
 
-                $status = 200;
 
                 $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 

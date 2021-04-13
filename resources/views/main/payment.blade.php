@@ -62,7 +62,7 @@ input[type="radio"] {
                         <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
                             <!-- Credit card form tabs -->
                             <ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
-                                <li class="nav-item"> <a data-toggle="pill" href="{{ route('invoice') }}" class="nav-link active "> <i class="fas fa-home"></i> Go Back </a> </li>
+                                <li class="nav-item" onclick="location.href='{{ route('invoice') }}'"> <a data-toggle="pill" href="{{ route('invoice') }}" class="nav-link active "> <i class="fas fa-home"></i> Go Back </a> </li>
                                 {{-- <li class="nav-item"> <a data-toggle="pill" href="#credit-card" class="nav-link active "> <i class="fas fa-credit-card mr-2"></i> Be Payment Ready... </a> </li> --}}
                                 
                                 {{-- <li class="nav-item"> <a data-toggle="pill" href="#paypal" class="nav-link "> <i class="fab fa-paypal mr-2"></i> Debit Card </a> </li>
@@ -231,7 +231,13 @@ input[type="radio"] {
                                         </div>
                                     </div>
                                     {{-- onclick="monerisPay()" --}}
-                                    <div class="card-footer"> <button type="button" onclick="handShake('payinvoice')" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Pay Invoice </button></div>
+
+                                    @if (Auth::user()->approval == 1)
+                                        <div class="card-footer"> <button type="button" onclick="handShake('payinvoice')" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Pay Invoice </button></div>
+                                    @else
+                                        <div class="card-footer"> <button type="button" onclick="restriction('payinvoice', '{{ Auth::user()->name }}')" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Pay Invoice </button></div>
+                                    @endif
+                                    
 
                                     
                                 </form>
@@ -310,7 +316,7 @@ if('payinvoice'){
 
             if(result.status == 200){
                     swal("Success", result.message, "success");
-                    setTimeout(function(){ location.href="{{ route('invoice') }}"; }, 2000);
+                    setTimeout(function(){ location.href="{{ route('my account') }}"; }, 2000);
                 }
                 else{
                     swal("Oops", result.message, "error");
@@ -468,6 +474,13 @@ function monerisPay(){
 
 
 }
+
+
+ function restriction(val, name){
+    if(val == "payinvoice"){
+        swal('Hello '+name, 'Your account need to be verified before you can pay invoice', 'info');
+    }
+ }
 
     //Set CSRF HEADERS
     function setHeaders(){

@@ -35,6 +35,8 @@ use App\ReceivePay as ReceivePay;
 
 use App\TransactionCost as TransactionCost;
 
+use App\CardRequest as CardRequest;
+
 class MoneyTransferController extends Controller
 {
 
@@ -52,6 +54,7 @@ class MoneyTransferController extends Controller
     public $address;
     public $clientname;
     public $subject;
+    public $subject2;
     public $paypurpose;
     public $service;
     public $city;
@@ -97,6 +100,88 @@ class MoneyTransferController extends Controller
 
 
         return $this->returnJSON($resData, $status);
+    }
+
+
+    public function requestPrepaidCard(Request $req){
+
+        if(env('APP_ENV') == "local"){
+            $url = "http://localhost:4000/api/v1/paysprint/requestcard";
+        }
+        else{
+            $url = "https://exbc.ca/api/v1/paysprint/requestcard";
+        }
+
+        $data = $req->all();
+
+        $token = "base64:HgMO6FDHGziGl01OuLH9mh7CeP095shB6uuDUUClhks=";
+
+
+        $response = $this->curlPost($url, $data, $token);
+
+        if($response->status == 200){
+           $resData = $this->debitWalletForCard($req->ref_code, $req->card_provider);
+           $status = 200;
+        }
+        else{
+            $status = $response->status;
+            $resData = ['data' => $response->data,'message' => $response->message, 'status' => $response->status];
+        }
+
+        return $this->returnJSON($resData, $status);
+
+
+    }
+
+
+    public function debitWalletForCard($ref_code, $card_provider){
+
+
+            $myWallet = User::where('ref_code', $ref_code)->first();
+
+            // Deduct $20 for EXBC Card
+            $wallet_balance = $myWallet->wallet_balance - 20;
+
+            // Update walllet balance
+            User::where('ref_code', $ref_code)->update(['wallet_balance' => $wallet_balance]);
+
+            CardRequest::insert(['ref_code' => $ref_code, 'card_provider' => $card_provider, 'status' => 0]);
+
+            $data = User::where('ref_code', $ref_code)->first();
+
+            $status = 200;
+
+            $resData = ['data' => $data,'message' => 'success', 'status' => $status];
+
+            // Send SMS
+            $sendMsg = "Hi ".$data->name.", ".$data->currencyCode." 20.00 was deducted from your PaySprint wallet for ".$card_provider." request. Your new wallet balance is ".$data->currencyCode.' '.number_format($wallet_balance, 2).". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us.";
+
+            $sendPhone = "+".$data->code.$data->telephone;
+
+            $this->sendMessage($sendMsg, $sendPhone);
+
+            $this->createNotification($ref_code, "Debited ".$data->currencyCode." 20.00 from Wallet for ".$card_provider." request");
+
+            // Wallet Statement
+
+            // Insert Statement
+            $activity = "Debited ".$data->currencyCode." ".number_format(20, 2)." for ".$card_provider." request from PaySprint Wallet.";
+            $credit = 0;
+            $debit = 20;
+            $reference_code = "wallet-".date('dmY').time();
+            $balance = 0;
+            $trans_date = date('Y-m-d');
+            $status = "Delivered";
+            $action = "Wallet debit";
+            $regards = $ref_code;
+
+            $statement_route = "wallet";
+
+            // Senders statement
+            $this->insStatement($data->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
+
+
+        return $resData;
     }
 
     public function getReceiver(Request $req){
@@ -241,8 +326,8 @@ class MoneyTransferController extends Controller
 
                 try {
 
-                    // Update Wallet
-                    User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $wallet_balance]);
+                // Update Wallet
+                User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $wallet_balance]);
 
                 // Send mail to both parties
 
@@ -254,6 +339,8 @@ class MoneyTransferController extends Controller
                 $this->email = $sender->email;
                 $this->amount = $req->currency." ".$req->amount;
                 $this->paypurpose = $service;
+                $this->subject = "Payment Received from ".$sender->name." for ".$service;
+                $this->subject2 = "Your Payment to ".$receiver->name." was successfull";
 
                 // Mail to receiver
                 $this->sendEmail($this->to, "Payment Received");
@@ -264,14 +351,14 @@ class MoneyTransferController extends Controller
 
 
                 // Insert Statement
-                $activity = "Wallet transfer of ".$req->currency."".$req->amount." to ".$receiver->name." for ".$service;
+                $activity = "Transfer of ".$req->currency." ".number_format($req->amount, 2)." to ".$receiver->name." for ".$service." on PaySprint Wallet.";
                 $credit = 0;
-                $debit = $req->amount;
+                $debit = number_format($req->amount, 2);
                 $reference_code = $paymentToken;
                 $balance = 0;
                 $trans_date = date('Y-m-d');
                 $status = "Delivered";
-                $action = "Payment";
+                $action = "Wallet debit";
                 $regards = $receiver->ref_code;
 
 
@@ -282,13 +369,13 @@ class MoneyTransferController extends Controller
                 User::where('ref_code', $req->accountNumber)->update(['wallet_balance' => $recWallet]);
 
 
-                $sendMsg = "You made a ".$activity.". You now have ".$wallet_balance." in your account";
+                $sendMsg = "Hi ".$sender->name.", You have made a ".$activity." Your new Wallet balance ".$req->currency.' '.number_format($wallet_balance, 2)." balance  in your account. If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us. PaySprint Team";
                 $sendPhone = "+".$sender->code.$sender->telephone;
 
                 $this->sendMessage($sendMsg, $sendPhone);
 
 
-                $recMsg = "Received ".$req->currency.''.$req->amount." in wallet for ".$service." from ".$sender->name.". You now have ".$recWallet." in your wallet.";
+                $recMsg = "You have received ".$req->currency.' '.number_format($req->amount, 2)." in your PaySprint wallet for ".$service." from ".$sender->name.". You now have ".number_format($recWallet, 2)." balance in your wallet. PaySprint Team";
                 $recPhone = "+".$receiver->code.$receiver->telephone;
 
                 $this->sendMessage($recMsg, $recPhone);
@@ -297,7 +384,7 @@ class MoneyTransferController extends Controller
                 $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
                 
                 // Receiver Statement
-                $this->insStatement($receiver->email, $reference_code, "Received ".$req->currency.''.$req->amount." in wallet for ".$service." from ".$sender->name, $req->amount, 0, $balance, $trans_date, $status, "Invoice", $receiver->ref_code, 1, $statement_route);
+                $this->insStatement($receiver->email, $reference_code, "Received ".$req->currency.' '.number_format($req->amount, 2)." in wallet for ".$service." from ".$sender->name, number_format($req->amount, 2), 0, $balance, $trans_date, $status, "Invoice", $receiver->ref_code, 1, $statement_route);
 
                 $data = OrganizationPay::where('transactionid', $paymentToken)->first();
 
@@ -305,9 +392,9 @@ class MoneyTransferController extends Controller
 
                 $resData = ['data' => $data, 'message' => 'Money Sent Successfully', 'status' => $status];
 
-                $this->createNotification($receiver->ref_code, "Received ".$req->currency.''.$req->amount." to your wallet from ".$sender->name." for ".$service);
+                $this->createNotification($receiver->ref_code, "Received ".$req->currency.' '.number_format($req->amount, 2)." to your wallet from ".$sender->name." for ".$service);
 
-                $this->createNotification($sender->ref_code, "Wallet transfer of ".$req->currency.''.$req->amount." to ".$receiver->name." for ".$service);
+                $this->createNotification($sender->ref_code, "Wallet transfer of ".$req->currency.' '.number_format($req->amount, 2)." to ".$receiver->name." for ".$service);
                     
                 } catch (\Throwable $th) {
                     $status = 400;
@@ -410,6 +497,7 @@ class MoneyTransferController extends Controller
               $objDemo->amount = $this->amount;
               $objDemo->paypurpose = $this->paypurpose;
               $objDemo->coy_name = $this->coy_name;
+              $objDemo->subject = $this->subject;
   
           }
           elseif($purpose == "Payment Successful"){
@@ -419,6 +507,7 @@ class MoneyTransferController extends Controller
               $objDemo->amount = $this->amount;
               $objDemo->paypurpose = $this->paypurpose;
               $objDemo->coy_name = $this->coy_name;
+              $objDemo->subject = $this->subject2;
   
           }
   

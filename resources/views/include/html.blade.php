@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
 
     <!-- Favicon -->
-<link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1602675914/paysprint_icon_png_ol2z3u.png" type="image/x-icon" />
+<link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" type="image/x-icon" />
     <!-- Bootstrap CSS -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- Animate CSS -->
@@ -60,6 +60,14 @@ body::-webkit-scrollbar-thumb {
 /* Handle on hover */
 body::-webkit-scrollbar-thumb:hover {
   background: #f6b60b;
+}
+
+.input_box{
+    color: #000 !important;
+}
+.form-control{
+    border-color: #f6b60d !important;
+    width: 100% !important;
 }
 
 li.dropdown.submenu > a {
@@ -113,6 +121,45 @@ li.dropdown.submenu > a {
             .fas.fa-circle{
       font-size: 12px !important;
   }
+
+  .badge.badge-success{
+    background-color: #2aad2d !important;
+  }
+  .badge.badge-danger{
+    background-color: #a94442 !important;
+  }
+
+  .list-group-item{
+    font-weight: bold;
+  }
+
+  /* Style the header */
+.header {
+  padding: 10px 16px;
+  background: #555;
+  color: #f1f1f1;
+}
+
+/* Page content */
+.content {
+  padding: 16px;
+}
+
+/* The sticky class is added to the header with JS when it reaches its scroll position */
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10000;
+
+  
+}
+
+/* Add some top padding to the page content to prevent sudden quick movement (as the header gets a new position at the top of the page (position:fixed and top:0) */
+.sticky + .content {
+  padding-top: 102px;
+}
+
         </style>
     @endif
 

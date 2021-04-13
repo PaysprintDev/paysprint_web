@@ -73,7 +73,7 @@ class Controller extends BaseController
         $currency = 'USD'.$curCurrency;
         $amount = $curAmount;
 
-        $access_key = '3755c94ab8bc3a28513e616a6b47305c';
+        $access_key = '89e3a2b081fb2b9d188d22516553545c';
 
         $curl = curl_init();
 
@@ -169,6 +169,32 @@ class Controller extends BaseController
 
         Notifications::insert(['ref_code' => $ref_code, 'activity' => $activity, 'notify' => 0]);
 
+    }
+
+
+    public function curlPost($url, $data, $token){
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => $data,
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: Bearer '.$token
+        ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        return json_decode($response);
     }
 
 

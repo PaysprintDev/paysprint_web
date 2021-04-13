@@ -390,17 +390,14 @@
                                         <td valign="top" class="textContent">
                                           <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:left;">Hello {{ $maildata->name }},</h3>
 
-<br /><br> <b>You have an invoice for payment on PaySprint. Below are the details:</b>
+<br /><br> <b>You have an invoice for payment on PaySprint.</b>
 <br /><br />
 
  <table>
    <tbody>
-     <tr>
-       <td>Invoice #: </td>
-       <td align="center;" style="font-weight: bold;">{{ $maildata->invoice_no }}</td>
-     </tr>
 
-     <tr>
+
+    <tr>
        <td>Customer Ref #: </td>
        <td align="center;" style="font-weight: bold;">{{ $maildata->payee_ref_no }}</td>
      </tr>
@@ -410,8 +407,24 @@
        <td align="center;" style="font-weight: bold;">{{ $maildata->customer_id }}</td>
      </tr>
 
+    </tbody>
+    </table>
+
+      <table>
+   <tbody>
+
      <tr>
-       <td>Transaction Ref: </td>
+       <td colspan="2">Here are the details:</td>
+     </tr>
+
+     <tr>
+       <td>Invoice #: </td>
+       <td align="center;" style="font-weight: bold;">{{ $maildata->invoice_no }}</td>
+     </tr>
+     
+
+     <tr>
+       <td>Transaction Ref Number: </td>
        <td align="center;" style="font-weight: bold;">{{ $maildata->transaction_ref }}</td>
      </tr>
 
@@ -426,12 +439,12 @@
      </tr>
 
      <tr>
-       <td>Client: </td>
+       <td>Merchant: </td>
        <td align="center;" style="font-weight: bold;">{{ $maildata->clientname }}</td>
      </tr>
 
      <tr>
-       <td>Client Address: </td>
+       <td>Merchant Address: </td>
        <td align="center;" style="font-weight: bold;">{{ $maildata->address }}</td>
      </tr>
 
@@ -459,16 +472,14 @@
 
 
 
-<h4>Pay Invoice by following these steps on PaySprint:</h4><hr>
-<p>a. Click the link beklow to download Paysprint Mobile App on Google Play Store or App Store or visit <a href="{{ route('home') }}">www.paysprint.net</a> to open an account</p>
-<p>b. Click on Invoince menu and go to "View Invoice"</p>
-<p>c. Type this invoice reference number menu to view invoice details</p>
-<p>d. Click on Pay Invoice link to make payment from your PaySprint Wallet or from a Credit/Debit card or Bank Account</p>
+<h4>Pay Invoice on PaySprint by following these steps:</h4><hr>
+<p>a. Download Paysprint Mobile App on Google Play Store or App Store or visit <a href="{{ route('home') }}">www.paysprint.net</a> to login/open an account</p>
+<p>b. On the menu option, click on Invoice, select the service and type the invoice reference number to view or pay invoice.</p>
 
 <hr>
 
 <p>
-  PaySprint provides fastest money transfer and invoice payment solution. 
+  PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!
 Download PaySprint App today on <br> <ul style="
     display: inline-flex;
     list-style: none;
@@ -479,11 +490,12 @@ Download PaySprint App today on <br> <ul style="
     <li>
 <img id="1617200960035100001_imgsrc_url_2" alt="App Store" style="width :  125px; " src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/Coming_Soon_to_the_App_Store_izz7ir.png"></li>
 </ul> <br>
-Visit our website, <a href="{{ route('home') }}">www.paysprint.net</a> to open an Merchant account.
+Visit our website, <a href="{{ route('home') }}">www.paysprint.net</a> to open a Merchant account.
 </p>
 
 Best <br><br>
-PaySprint Support Team.<br>
+
+PaySprint Support Team<br>
                                         </td>
                                       </tr>
                                     </tbody></table>

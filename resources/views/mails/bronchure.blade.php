@@ -312,7 +312,7 @@ Email: {{$maildata->email}} <br><br>
 <hr>
 
 <p>
-  PaySprint provides fastest money transfer and invoice payment solution. 
+  PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!
 Download PaySprint App today on <br> <ul style="
     display: inline-flex;
     list-style: none;
@@ -323,12 +323,12 @@ Download PaySprint App today on <br> <ul style="
     <li>
 <img id="1617200960035100001_imgsrc_url_2" alt="App Store" style="width :  125px; " src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/Coming_Soon_to_the_App_Store_izz7ir.png"></li>
 </ul> <br>
-Visit our website, <a href="{{ route('home') }}">www.paysprint.net</a> to open an Merchant account.
+Visit our website, <a href="{{ route('home') }}">www.paysprint.net</a> to open a Merchant account.
 </p>
 
 Best <br><br>
 
-PaySprint Team<br>
+PaySprint Support Team<br>
                                         </td>
                                       </tr>
                                     </tbody></table>
