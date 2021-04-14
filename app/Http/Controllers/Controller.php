@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 use Twilio\Rest\Client;
 use App\Notifications as Notifications;
+use App\FeeTransaction as FeeTransaction;
 
 class Controller extends BaseController
 {
@@ -172,6 +173,13 @@ class Controller extends BaseController
     }
 
 
+    public function getfeeTransaction($transaction_id, $ref_code, $amount, $fee, $amounttosend){
+
+        FeeTransaction::insert(['transaction_id' => $transaction_id, 'ref_code' => $ref_code, 'amount' => $amount, 'fee' => $fee, 'amount_to_send' => $amounttosend]);
+
+    }
+
+
     public function curlPost($url, $data, $token){
 
         $curl = curl_init();
@@ -197,6 +205,9 @@ class Controller extends BaseController
 
         return json_decode($response);
     }
+
+
+    
 
 
     public function returnJSON($data, $status){

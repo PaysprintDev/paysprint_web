@@ -118,8 +118,12 @@ Route::prefix('/v1')->group(function () {
     Route::post('addnewcard',  ['uses' => 'api\v1\CardController@addNewCard'])->name('add new card');
     
     Route::post('editcard',  ['uses' => 'api\v1\CardController@editCard'])->name('edit card');
+
+    Route::post('editbank',  ['uses' => 'api\v1\CardController@editBank'])->name('edit bank');
     
     Route::post('deletecard',  ['uses' => 'api\v1\CardController@deleteCard'])->name('delete card');
+
+    Route::post('deletebank',  ['uses' => 'api\v1\CardController@deleteBank'])->name('delete bank');
     
     Route::post('addmoneytowallet',  ['uses' => 'MonerisController@addMoneyToWallet'])->name('add money to wallet');
     

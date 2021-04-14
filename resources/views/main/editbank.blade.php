@@ -9,13 +9,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
         <!-- Favicon -->
-<link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" type="image/x-icon" />
+<link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1602675914/paysprint_icon_png_ol2z3u.png" type="image/x-icon" />
 
 <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
 
 <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
 
-    <title>PaySprint | Add Bank Detail</title>
+    <title>PaySprint | Bank Account</title>
 
     <style>
         body {
@@ -55,7 +55,7 @@ input[type="radio"] {
         <!-- For demo purpose -->
         <div class="row mb-4">
             <div class="col-lg-8 mx-auto text-center">
-                <h1 class="display-4">{{ Request::get('card') }}</h1>
+                <h1 class="display-4">Edit Bank Account</h1>
             </div>
         </div> <!-- End -->
         <div class="row">
@@ -75,69 +75,57 @@ input[type="radio"] {
 
                             <!-- credit card info-->
                             <div id="credit-card" class="tab-pane fade show active pt-3">
-
-                                
                                     
 
                                     <div class="form-group row">
 
-                                        @if (count($data['getBankDetail']) > 0)
+                                        @if (isset($data['getthisBank']))
 
-                                        @foreach ($data['getBankDetail'] as $myBank)
 
                                         <div class="col-md-6">
-
-
+                                            
                                             <div class="alert alert-info">
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <h4>
-                                                                    {{ $myBank->accountNumber }}
-                                                                </h4>
-                                                            </div>
-                                                            <br>
-                                                            <div class="col-md-12">
-                                                                <h6>
-                                                                {{ $myBank->bankName }}
-                                                                </h6>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <h6>
-                                                                Transit No: {{ $myBank->transitNumber }}
-                                                                </h6>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <h6>
-                                                                Branch Code: {{ $myBank->branchCode }}
-                                                                </h6>
-                                                            </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <h4>
+                                                                {{ $data['getthisBank']->accountNumber }}
+                                                            </h4>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <h5>
-
-                                                                    {{ (strlen($myBank->accountName) < 18) ? strtoupper($myBank->accountName) : substr(strtoupper($myBank->accountName), 0, 18)."..." }}
-                                                                </h5>
-                                                            </div>
+                                                        <div class="col-md-12">
+                                                            <h6>
+                                                               {{ $data['getthisBank']->bankName }}
+                                                            </h6>
                                                         </div>
-
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <input type="hidden" name="bank_id" value="{{ $myBank->id }}" id="bank_id">
-                                                                <a href="{{ route('Edit bank', $myBank->id) }}" title="Edit Bank Detail"><i class="far fa-edit text-secondary"></i></a>
-                                                                <a href="javascript:void(0)" title="Delete Bank Detail" onclick="handShake('deletebank')"><i class="far fa-trash-alt text-danger"></i></a>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <img src="https://img.icons8.com/emoji/30/000000/bank-emoji.png"/>
-                                                            </div>
+                                                        <div class="col-md-6">
+                                                            <h6>
+                                                              Transit No: {{ $data['getthisBank']->transitNumber }}
+                                                            </h6>
                                                         </div>
+                                                        <div class="col-md-6">
+                                                            <h6>
+                                                               Branch Code: {{ $data['getthisBank']->branchCode }}
+                                                            </h6>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <h6>
+                                                               {{ (strlen($data['getthisBank']->accountName) < 18) ? strtoupper($data['getthisBank']->accountName) : substr(strtoupper($data['getthisBank']->accountName), 0, 18)."..." }}
+                                                            </h6>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <input type="hidden" name="bank_id" value="{{ $data['getthisBank']->id }}" id="bank_id">
+                                                            <a href="{{ route('Edit bank', $data['getthisBank']->id) }}" title="Edit Bank Account"><i class="far fa-edit text-secondary"></i></a>
+                                                            <a href="javascript:void(0)" title="Delete Bank Account" onclick="handShake('deletebank')"><i class="far fa-trash-alt text-danger"></i></a>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <img src="https://img.icons8.com/emoji/30/000000/bank-emoji.png"/>
+                                                        </div>
+                                                    </div>
                                             </div>
-                                            
-                                            
                                         </div>
                                         
                                             
-                                        @endforeach
                                             
                                         @else
 
@@ -147,11 +135,9 @@ input[type="radio"] {
                                                             <div class="row">
                                                             <div class="col-md-12">
                                                                 <h4>
-                                                                    No Bank Account!!
+                                                                   No Bank Account!!
                                                                 </h4>
-                                                                <p>
-                                                                    You are yet to add any bank account, start adding your bank account by clicking the add bank account below.
-                                                                </p>
+                                                                
                                                             </div>
                                                         </div>
                                                         </center>
@@ -166,17 +152,8 @@ input[type="radio"] {
                                     </div>
 
                                     
-                                    
-                                    
-                                    <div class="form-group row pickCard"> 
-                                        <div class="col-md-12">
-                                            <button class="btn btn-secondary btn-block" onclick="showForm('card')">Add Bank Account <i class="fas fa-university"></i></button>
-                                        </div>
-                                    </div>
-
-                                    
-
-                                    <div class="form-group cardform disp-0"> 
+                                    @if (isset($data['getthisBank']))
+                                    <div class="form-group"> 
                                        <form action="#" method="POST" id="formElem">
                                            @csrf
 
@@ -184,11 +161,15 @@ input[type="radio"] {
                                                <label for="bankName">Bank Name</label>
 
                                             <div class="input-group">
+
+                                               <input type="hidden" name="id" value="{{ $data['getthisBank']->id }}">
+
                                                 
                                                 @if (Auth::user()->country == "Canada")
                                                     
 
                                                 <select name="bankName" id="bankName" class="form-control" required>
+                                                    <option data-tokens="{{ $data['getthisBank']->bankName }}" value="{{ $data['getthisBank']->bankName }}"> {{ $data['getthisBank']->bankName }}</option>
                                                     <option data-tokens="RBC ROYAL BANK" value="RBC ROYAL BANK"> RBC ROYAL BANK</option>
                                                     <option data-tokens="TD CANADA TRUST" value="TD CANADA TRUST">TD CANADA TRUST</option>
                                                     <option data-tokens="SCOTIABANK" value="SCOTIABANK">SCOTIABANK</option>
@@ -208,7 +189,7 @@ input[type="radio"] {
 
                                                 @else
 
-                                                <input type="text" name="bankName" id="bankName" class="form-control" required>
+                                                <input type="text" name="bankName" id="bankName" class="form-control" value="{{ $data['getthisBank']->bankName }}" required>
                                                 <div class="input-group-append"> 
                                                     <span class="input-group-text text-muted"> <i class="fas fa-university"></i></span> 
                                                 </div>
@@ -222,11 +203,10 @@ input[type="radio"] {
 
                                            </div>
 
-
                                            <div class="form-group">
                                                <label for="transitNumber">Transit Number</label>
 
-                                            <div class="input-group"> <input type="text" name="transitNumber" id="transitNumber" class="form-control" required>
+                                            <div class="input-group"> <input type="text" name="transitNumber" id="transitNumber" class="form-control" value="{{ $data['getthisBank']->transitNumber }}" required>
                                                 <div class="input-group-append"> 
                                                     <span class="input-group-text text-muted"> <i class="fas fa-sort-numeric-up-alt"></i></span> 
                                                 </div>
@@ -234,11 +214,10 @@ input[type="radio"] {
 
                                            </div>
 
-
                                            <div class="form-group">
                                                <label for="branchCode">Branch Code</label>
 
-                                            <div class="input-group"> <input type="text" name="branchCode" id="branchCode" class="form-control" required>
+                                            <div class="input-group"> <input type="text" name="branchCode" id="branchCode" class="form-control" value="{{ $data['getthisBank']->branchCode }}" required>
                                                 <div class="input-group-append"> 
                                                     <span class="input-group-text text-muted"> <i class="fas fa-code-branch"></i></span> 
                                                 </div>
@@ -246,11 +225,10 @@ input[type="radio"] {
 
                                            </div>
 
-
                                            <div class="form-group">
                                                <label for="accountNumber">Account Number</label>
 
-                                            <div class="input-group"> <input type="text" name="accountNumber" id="accountNumber" class="form-control" required>
+                                            <div class="input-group"> <input type="text" name="accountNumber" id="accountNumber" class="form-control" value="{{ $data['getthisBank']->accountNumber }}" required>
                                                 <div class="input-group-append"> 
                                                     <span class="input-group-text text-muted"> <i class="fas fa-university"></i></span> 
                                                 </div>
@@ -260,11 +238,16 @@ input[type="radio"] {
 
 
                                            <div class="form-group">
-                                               <button type="button" class="btn btn-primary btn-block" onclick="handShake('addbank')" id="cardSubmit">Submit</button>
+                                               <button type="button" class="btn btn-primary btn-block" onclick="handShake('editbank')" id="cardSubmit">Submit</button>
                                            </div>
 
                                        </form>
                                     </div>
+
+
+
+
+                                    @endif
 
 
                             
@@ -293,15 +276,14 @@ input[type="radio"] {
 
 function handShake(val){
 
-
 var route;
 
-if(val == 'addbank'){
+if(val == 'editbank'){
 
 var formData = new FormData(formElem);
 
 
-    route = "{{ URL('/api/v1/addnewbank') }}";
+    route = "{{ URL('/api/v1/editbank') }}";
 
         Pace.restart();
     Pace.track(function(){
@@ -324,7 +306,7 @@ var formData = new FormData(formElem);
 
             if(result.status == 200){
                     swal("Success", result.message, "success");
-                    setTimeout(function(){ location.reload(); }, 2000);
+                    setTimeout(function(){ location.href="{{ route('my account') }}"; }, 2000);
                 }
                 else{
                     swal("Oops", result.message, "error");

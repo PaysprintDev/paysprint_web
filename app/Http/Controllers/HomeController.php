@@ -386,6 +386,15 @@ class HomeController extends Controller
     }
 
 
+    public function getthisBank($id){
+
+        $data = AddBank::where('id', $id)->first();
+
+        return $data;
+
+    }
+
+
     public function walletStatement(){
 
         $data = Statement::where('user_id', Auth::user()->email)->where('statement_route', 'wallet')->orderBy('created_at', 'DESC')->get();
@@ -454,6 +463,7 @@ class HomeController extends Controller
         $data = array(
             'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
             'getCard' => $this->getUserCard(),
+            'getBank' => $this->getUserBankDetail(),
             'walletStatement' => $this->walletStatement(),
         );
 
@@ -554,6 +564,39 @@ class HomeController extends Controller
 
 
         return view('main.editcard')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+
+
+    public function editBank(Request $req, $id)
+    {
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'My Bank Account';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            }
+            else{
+                $this->page = 'My Bank Account';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'My Bank Account';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+
+        $data = array(
+            'getthisBank' => $this->getthisBank($id),
+        );
+
+
+        return view('main.editbank')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 

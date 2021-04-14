@@ -117,7 +117,7 @@ input[type="radio"] {
                                         </div>
                                     </div>
                                     <div class="form-group"> <label for="card_id">
-                                            <h6>Select Card</h6>
+                                            <h6>Select Card/Bank</h6>
                                         </label>
                                         <div class="input-group"> 
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/fluent/20/000000/bank-card-back-side.png"/> </span> </div>
@@ -410,10 +410,19 @@ function runCardType(){
             if(result.message == "success"){
                 var res = result.data;
 
+                if(result.action == "Bank Account"){
+                    $.each(res, function(v, k){
+                        $('#card_id').append(`<option value="${k.id}">${k.bankName} - ${k.accountNumber}</option>`);
+                    });
+                }
+                else{
+                    $.each(res, function(v, k){
+                        $('#card_id').append(`<option value="${k.id}">${k.card_number} - ${k.card_provider}</option>`);
+                    });
+                }
 
-                $.each(res, function(v, k){
-                    $('#card_id').append(`<option value="${k.id}">${k.card_number} - ${k.card_provider}</option>`);
-                });
+
+                
 
             }
             else{

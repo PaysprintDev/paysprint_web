@@ -65,6 +65,7 @@ Route::prefix('mywallet')->group(function () {
 	Route::get('card', ['uses' => 'HomeController@addCard', 'as' => 'Add card']);
 	Route::get('exbccard', ['uses' => 'HomeController@requestExbcCard', 'as' => 'request exbc card']);
 	Route::get('editcard/{id}', ['uses' => 'HomeController@editCard', 'as' => 'Edit card']);
+	Route::get('editbank/{id}', ['uses' => 'HomeController@editBank', 'as' => 'Edit bank']);
 	Route::get('addmoney', ['uses' => 'HomeController@addMoney', 'as' => 'Add Money']);
 	Route::get('withdrawmoney', ['uses' => 'HomeController@withdrawMoney', 'as' => 'Withdraw Money']);
 	Route::get('addbank', ['uses' => 'HomeController@addBankDetail', 'as' => 'Add bank detail']);

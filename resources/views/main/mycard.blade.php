@@ -210,7 +210,7 @@ input[type="radio"] {
                                                     
                                                 @endif
 
-                                            @elseif (Request::get('card') == "Bank Detail")
+                                            @elseif (Request::get('card') == "Bank Account")
 
                                                 @if ($mycard->card_provider == "Prepaid Card")
                                                     
@@ -345,8 +345,7 @@ input[type="radio"] {
 
                                             <div class="input-group"> 
                                                 <select name="card_provider" id="card_provider" class="form-control" required>
-                                                    <option value="">Select card provider</option>
-                                                    <option value="Credit Card">Credit Card</option>
+                                                    <option value="Credit Card" selected>Credit Card</option>
 
                                                 </select>
                                                 <div class="input-group-append"> 

@@ -173,19 +173,21 @@ input[type="radio"] {
                                             </div>
                                                     
                                                 <div class="row">
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4 mb-3">
                                                         <strong>
-                                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff3cd !important; border-color: #fff3cd !important;" href="{{ route('Add card', 'card=Credit Card') }}">Add a new Credit Card <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>
+                                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff3cd !important; border-color: #fff3cd !important;" href="{{ route('Add card', 'card=Credit Card') }}">Add a new Credit Card <i class="fas fa-plus-square" title="Add Credit Card" style="font-size: 16px; color: black"></i></a>
                                                         </strong>
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4 mb-3">
                                                         <strong>
-                                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #d1ecf1 !important; border-color: #d1ecf1 !important;" href="{{ route('Add card', 'card=Prepaid Card') }}"> Add a new Prepaid Card <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>
+                                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #d1ecf1 !important; border-color: #d1ecf1 !important;" href="{{ route('Add card', 'card=Prepaid Card') }}"> Add a new Prepaid Card <i class="fas fa-plus-square" title="Add Prepaid Card" style="font-size: 16px; color: black"></i></a>
                                                         </strong>
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4 mb-3">
                                                         <strong>
-                                                            <a type="button" class="btn btn-warning" style="color: #f7f7f7; font-weight: bold; background-color: #6c757d !important; border-color: #6c757d !important;" href="javascript:void()" onclick="comingSoon('bank')"> Add a new Bank Account <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>
+                                                            {{--  <a type="button" class="btn btn-warning" style="color: #f7f7f7; font-weight: bold; background-color: #6c757d !important; border-color: #6c757d !important;" href="javascript:void()" onclick="comingSoon('bank')"> Add a new Bank Account <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>  --}}
+
+                                                            <a type="button" class="btn btn-warning" style="color: #f7f7f7; font-weight: bold; background-color: #6c757d !important; border-color: #6c757d !important;" href="{{ route('Add bank detail') }}"> Add a new Bank Account <i class="fas fa-plus-square" title="Add Bank Account" style="font-size: 16px; color: black"></i></a>
                                                         </strong>
                                                     </div>
                                                 </div>
@@ -193,20 +195,21 @@ input[type="radio"] {
                                                 @else
 
                                                 <div class="row">
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4 mb-3">
                                                         <strong>
-                                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff3cd !important; border-color: #fff3cd !important;" href="{{ route('Add card', 'card=Credit Card') }}">Add a new Credit Card <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>
+                                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff3cd !important; border-color: #fff3cd !important;" href="{{ route('Add card', 'card=Credit Card') }}">Add a new Credit Card <i class="fas fa-plus-square" title="Add Credit Card" style="font-size: 16px; color: black"></i></a>
                                                         </strong>
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4 mb-3">
                                                         <strong>
-                                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #d1ecf1 !important; border-color: #d1ecf1 !important;" href="{{ route('Add card', 'card=Prepaid Card') }}"> Add a new Prepaid Card <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>
+                                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #d1ecf1 !important; border-color: #d1ecf1 !important;" href="{{ route('Add card', 'card=Prepaid Card') }}"> Add a new Prepaid Card <i class="fas fa-plus-square" title="Add Prepaid Card" style="font-size: 16px; color: black"></i></a>
                                                         </strong>
                                                     </div>
-                                                    <div class="col-md-4">
-                                                        {{-- {{ route('Add card', 'card=Bank Detail') }} --}}
+                                                    <div class="col-md-4 mb-3">
+                                                        {{-- {{ route('Add card', 'card=Bank Account') }} --}}
                                                         <strong>
-                                                            <a type="button" class="btn btn-warning" style="color: #f7f7f7; font-weight: bold; background-color: #6c757d !important; border-color: #6c757d !important;" href="javascript:void()" onclick="comingSoon('bank')"> Add a new Bank Account <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>
+                                                            {{--  <a type="button" class="btn btn-warning" style="color: #f7f7f7; font-weight: bold; background-color: #6c757d !important; border-color: #6c757d !important;" href="javascript:void()" onclick="comingSoon('bank')"> Add a new Bank Account <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>  --}}
+                                                            <a type="button" class="btn btn-warning" style="color: #f7f7f7; font-weight: bold; background-color: #6c757d !important; border-color: #6c757d !important;" href="{{ route('Add bank detail') }}"> Add a new Bank Account <i class="fas fa-plus-square" title="Add Bank Account" style="font-size: 16px; color: black"></i></a>
                                                         </strong>
                                                     </div>
                                                 </div>
@@ -237,19 +240,56 @@ input[type="radio"] {
                                             </div>
                                             <div class="alert alert-success">
                                                     <div class="row">
+                                                        
+
+                                                        @if (isset($data['getBank']) && count($data['getBank']) > 0)
+                                                        
+                                                        @php
+                                                            $otherBanks = count($data['getBank']) - 1;
+                                                            $accountNumber = $data['getBank'][0]->accountNumber;
+                                                        @endphp
+
+                                                            <div class="col-md-12">
+                                                                <h6>
+                                                                    {{ (strlen($accountNumber) < 15) ? $accountNumber : substr($accountNumber, 0, 15)."***" }} {{ ($otherBanks > 0) ? "& ".$otherBanks." others" : "" }}
+                                                                </h6>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <h4>
+                                                                    {{ $data['getBank'][0]->bankName }}
+                                                                </h4>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <h6>
+                                                                Transit Number: {{ $data['getBank'][0]->transitNumber }}
+                                                                </h6>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <h6>
+                                                                Branch Code: {{ $data['getBank'][0]->branchCode }}
+                                                                </h6>
+                                                            </div>
+
+                                                        @else
+
                                                         <div class="col-md-12">
                                                             <h6 class="font-sm">
                                                                 Bank Account
+                                                                {{--  getBank  --}}
                                                             </h6>
                                                         </div>
-                                                        <div class="col-md-12">
-                                                            <h4>
-                                                                Feature available soon
-                                                            </h4>
-                                                        </div>
+
+                                                            <div class="col-md-12">
+                                                                <h4>
+                                                                    <a href="{{ route('Add bank detail') }}">Add your Bank Account</a>
+                                                                </h4>
+                                                            </div>
+
+                                                        @endif
+                                                        
                                                         <div class="row">
                                                         <div class="col-md-6">
-                                                            <img src="https://img.icons8.com/emoji/48/000000/bank-emoji.png"/>
+                                                            <img src="https://img.icons8.com/emoji/30/000000/bank-emoji.png"/>
                                                         </div>
                                                     </div>
                                                     </div>

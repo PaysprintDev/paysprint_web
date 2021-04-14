@@ -253,7 +253,7 @@ class UserController extends Controller
                             $message = "Saved";
                             $status = 200;
 
-                            $this->createNotification($thisuser->refCode, "Hello ".strtoupper($thisuser->name).", You have successfully updated your password.");
+                            $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully updated your password.");
                         }
                         else{
                             $data = [];
@@ -306,7 +306,7 @@ class UserController extends Controller
                         $message = "Saved";
                         $status = 200;
 
-                        $this->createNotification($thisuser->refCode, "Hello ".strtoupper($thisuser->name).", You have successfully created your transaction pin. Keep it SAFE!.");
+                        $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully created your transaction pin. Keep it SAFE!.");
                     
                     }
 
@@ -348,7 +348,7 @@ class UserController extends Controller
                         $message = "Saved";
                         $status = 200;
 
-                        $this->createNotification($thisuser->refCode, "Hello ".strtoupper($thisuser->name).", You have successfully set up your security question and answer.");
+                        $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully set up your security question and answer.");
 
                 }
                 else{
@@ -409,7 +409,7 @@ class UserController extends Controller
                                     $message = "Saved";
                                     $status = 200;
 
-                                    $this->createNotification($thisuser->refCode, "Hello ".strtoupper($thisuser->name).", You have successfully reset your password.");
+                                    $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully reset your password.");
 
                             }
 
@@ -477,7 +477,7 @@ class UserController extends Controller
 
                                 $this->createNotification($thisuser->ref_code, "Transaction pin updated");
 
-                                $this->createNotification($thisuser->refCode, "Hello ".strtoupper($thisuser->name).", You have successfully changed your transaction pin. Keep it SAFE!.");
+                                $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully changed your transaction pin. Keep it SAFE!.");
 
 
                             
@@ -532,7 +532,7 @@ class UserController extends Controller
                         $message = "Saved";
                         $status = 200;
 
-                        $this->createNotification($thisuser->refCode, "Hello ".strtoupper($thisuser->name).", You have successfully updated your transaction pin. Keep it SAFE!.");
+                        $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully updated your transaction pin. Keep it SAFE!.");
                     }
                     else{
                         $data = [];

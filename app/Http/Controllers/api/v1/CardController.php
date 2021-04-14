@@ -71,7 +71,7 @@ class CardController extends Controller
                     $status = 200;
                     $message = 'You have successfully added a card';
 
-                    $this->createNotification($thisuser->refCode, "Hello ".strtoupper($thisuser->name).", You have successfully added a new card.");
+                    $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully added a new card.");
 
                 }
                 else{
@@ -114,6 +114,8 @@ class CardController extends Controller
         $validator = Validator::make($req->all(), [
                      'bankName' => 'required|string',
                      'accountNumber' => 'required|string',
+                     'transitNumber' => 'required|string',
+                     'branchCode' => 'required|string',
                 ]);
 
         if($validator->passes()){
@@ -123,13 +125,13 @@ class CardController extends Controller
 
             try {
                     // Do Insert
-                    $insertRecord = AddBank::insert(['user_id' => $thisuser->id, 'bankName' => $req->bankName, 'accountNumber' => $req->accountNumber, 'accountName' => $thisuser->name]);
+                    $insertRecord = AddBank::insert(['user_id' => $thisuser->id, 'bankName' => $req->bankName, 'accountNumber' => $req->accountNumber, 'accountName' => $thisuser->name, 'transitNumber' => $req->transitNumber, 'branchCode' => $req->branchCode]);
 
                     $data = $insertRecord;
                     $status = 200;
                     $message = 'You have successfully added a bank account';
 
-                    $this->createNotification($thisuser->refCode, "Hello ".strtoupper($thisuser->name).", You have successfully added a new bank account.");
+                    $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully added a new bank account.");
 
                 
             } catch (\Throwable $th) {
@@ -151,6 +153,61 @@ class CardController extends Controller
 
 
         // Log::info("Add Bank account:=> ".$data);
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+
+    }
+
+
+        public function editBank(Request $req){
+
+
+        // Run Validation
+
+        $validator = Validator::make($req->all(), [
+                     'bankName' => 'required|string',
+                     'accountNumber' => 'required|string',
+                     'transitNumber' => 'required|string',
+                     'branchCode' => 'required|string',
+                ]);
+
+
+        if($validator->passes()){
+
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+
+            try {
+                    // Do Insert
+                    $updateRecord = AddBank::where('id', $req->id)->update(['user_id' => $thisuser->id, 'bankName' => $req->bankName, 'accountNumber' => $req->accountNumber, 'accountName' => $thisuser->name, 'transitNumber' => $req->transitNumber, 'branchCode' => $req->branchCode]);
+
+                    $data = $updateRecord;
+                    $status = 200;
+                    $message = 'You have successfully updated your bank account';
+
+                    $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully updated your new bank account.");
+
+                
+            } catch (\Throwable $th) {
+                $data = [];
+                $status = 400;
+                $message = "Error: ".$th;
+            }
+            
+
+        }else{
+
+            $error = implode(",",$validator->messages()->all());
+
+            $data = [];
+            $status = 400;
+            $message = $error;
+
+        }
+
+
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
@@ -196,7 +253,7 @@ class CardController extends Controller
                     $status = 200;
                     $message = 'You have successfully updated your card';
 
-                    $this->createNotification($thisuser->refCode, "Hello ".strtoupper($thisuser->name).", You have successfully updated your card detail.");
+                    $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully updated your card detail.");
                 }
                 else{
                     $data = [];
@@ -231,6 +288,10 @@ class CardController extends Controller
     }
 
 
+
+
+
+
     public function deleteCard(Request $req){
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
@@ -242,7 +303,31 @@ class CardController extends Controller
         $message = 'Deleted successfully';
 
 
-        $this->createNotification($thisuser->refCode, "Hello ".strtoupper($thisuser->name).", You have successfully deleted a card.");
+        $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully deleted a card.");
+
+        // Log::info("Delete Card:=> ".$data);
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+
+    }
+
+
+    public function deleteBank(Request $req){
+
+
+        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+        
+       $query = AddBank::where('id', $req->id)->delete();
+
+        $data = $query;
+        $status = 200;
+        $message = 'Deleted successfully';
+
+
+        $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully deleted a bank account.");
 
         // Log::info("Delete Card:=> ".$data);
 
@@ -257,8 +342,16 @@ class CardController extends Controller
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
+        if($req->card_provider == "Bank Account"){
+        $query = AddBank::where('user_id', $thisuser->id)->get();
 
+        }
+        else{
         $query = AddCard::where('user_id', $thisuser->id)->where('card_provider', 'LIKE', '%'.$req->card_provider.'%')->get();
+
+        }
+
+
 
         if(count($query) > 0){
             $data = $query;
@@ -271,7 +364,7 @@ class CardController extends Controller
             $status = 400;
         }
 
-        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'action' => $req->card_provider];
 
         return $this->returnJSON($resData, $status);
 
