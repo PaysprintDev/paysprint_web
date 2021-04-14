@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
         <!-- Favicon -->
-<link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1602675914/paysprint_icon_png_ol2z3u.png" type="image/x-icon" />
+<link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" type="image/x-icon" />
 
 <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
 <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
@@ -78,21 +78,37 @@ input[type="radio"] {
                                     @csrf
 
 
+                                    <div class="form-group"> <label for="card_type">
+                                            <h6>Select Card Type/ Bank Account</h6>
+                                        </label>
+                                        <div class="input-group"> 
+                                            <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/cotton/20/000000/money--v4.png"/> </span> </div>
+                                            <select name="card_type" id="card_type" class="form-control" required>
+                                                <option value="">Select option</option>
+                                                <option value="Credit Card">Credit Card</option>
+                                                {{-- <option value="Prepaid Card">Prepaid Card</option> --}}
+                                                {{-- <option value="Bank Account">Bank Account</option> --}}
+                                            </select>
+                                            
+                                        </div>
+                                    </div>
+
+
                                     <div class="form-group"> <label for="card_id">
                                             <h6>Select Card</h6>
                                         </label>
                                         <div class="input-group"> 
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/fluent/20/000000/bank-card-back-side.png"/> </span> </div>
                                             <select name="card_id" id="card_id" class="form-control" required>
-                                                @if (count($data['getCard']) > 0)
+                                                {{-- @if (count($data['getCard']) > 0)
                                                 
                                                     @foreach ($data['getCard'] as $mycard)
-                                                    <option value="{{ $mycard->id }}">{!! wordwrap($mycard->card_number, 4, '-', true) !!}</option>
+                                                    <option value="{{ $mycard->id }}">{!! wordwrap($mycard->card_number, 4, '-', true).' - ['.$mycard->card_provider.']' !!}</option>
                                                     @endforeach
 
                                                 @else
                                                     <option value="">Add a new card</option>
-                                                @endif
+                                                @endif --}}
                                                 
                                             </select>
                                             
@@ -217,6 +233,57 @@ input[type="radio"] {
 $('#commission').click(function(){
     runCommission();
 });
+
+
+$('#card_type').change(function(){
+    runCardType();
+});
+
+
+function runCardType(){
+
+    $('#card_id').html("");
+
+    var route = "{{ URL('/api/v1/getmycarddetail') }}";
+    var thisdata = {card_provider: $('#card_type').val()};
+
+
+    Pace.restart();
+    Pace.track(function(){
+
+        setHeaders();
+        
+        jQuery.ajax({
+        url: route,
+        method: 'get',
+        data: thisdata,
+        dataType: 'JSON',
+        
+        success: function(result){
+            if(result.message == "success"){
+                var res = result.data;
+
+
+                $.each(res, function(v, k){
+                    $('#card_id').append(`<option value="${k.id}">${k.card_number} - ${k.card_type}</option>`);
+                });
+
+            }
+            else{
+                $('#card_id').append(`<option value="">${$('#card_type').val()} not available</option>`);
+            }
+
+        },
+        error: function(err) {
+            $('#card_id').append(`<option value="">${$('#card_type').val()} not available</option>`);
+            // swal("Oops", err.responseJSON.message, "error");
+        } 
+
+    });
+
+    });
+
+}
 
 
 function runCommission(){

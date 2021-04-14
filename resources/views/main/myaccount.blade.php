@@ -185,7 +185,7 @@ input[type="radio"] {
                                                     </div>
                                                     <div class="col-md-4">
                                                         <strong>
-                                                            <a type="button" class="btn btn-warning" style="color: #f7f7f7; font-weight: bold; background-color: #6c757d !important; border-color: #6c757d !important;" href="javascript:void()"> Add a new Bank Account <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>
+                                                            <a type="button" class="btn btn-warning" style="color: #f7f7f7; font-weight: bold; background-color: #6c757d !important; border-color: #6c757d !important;" href="javascript:void()" onclick="comingSoon('bank')"> Add a new Bank Account <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>
                                                         </strong>
                                                     </div>
                                                 </div>
@@ -206,7 +206,7 @@ input[type="radio"] {
                                                     <div class="col-md-4">
                                                         {{-- {{ route('Add card', 'card=Bank Detail') }} --}}
                                                         <strong>
-                                                            <a type="button" class="btn btn-warning" style="color: #f7f7f7; font-weight: bold; background-color: #6c757d !important; border-color: #6c757d !important;" href="javascript:void()"> Add a new Bank Account <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>
+                                                            <a type="button" class="btn btn-warning" style="color: #f7f7f7; font-weight: bold; background-color: #6c757d !important; border-color: #6c757d !important;" href="javascript:void()" onclick="comingSoon('bank')"> Add a new Bank Account <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>
                                                         </strong>
                                                     </div>
                                                 </div>
@@ -603,8 +603,14 @@ input[type="radio"] {
     }
 
 
-     function comingSoon(){
+function comingSoon(val){
+    if(val == 'bank'){
+        swal('Feature available soon', 'Add a new bank account will be available soon', 'info');
+    }
+    else{
      swal('Hey', 'This feature is coming soon', 'info');
+
+    }
  }
 
  function restriction(val, name){

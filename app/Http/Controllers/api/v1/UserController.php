@@ -91,7 +91,7 @@ class UserController extends Controller
             $resData = ['data' => $user, 'message' => 'Registration successful'];
             $status = 200;
 
-            $this->createNotification($newRefcode, "Welcome on board to PaySprint");
+            $this->createNotification($newRefcode, "Hello ".$request->firstname.", PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!. Welcome on board.");
 
         }
         else{
@@ -145,7 +145,7 @@ class UserController extends Controller
                 $status = 200;
                 $message = 'Login successful';
 
-                $this->createNotification($userData->refCode, "Login successful");
+                $this->createNotification($userData->refCode, "Hello ".$getUser->name.", Your login successful. Welcome back");
 
 
             }
@@ -178,39 +178,40 @@ class UserController extends Controller
         if($request->hasFile('nin_front')){
             $this->uploadDocument($user->id, $request->file('nin_front'), 'document/nin_front', 'nin_front');
 
-            $this->createNotification($user->refCode, "Front page of your national identity card successfully uploaded");
+            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the front page of your national identity card.");
         }
         if($request->hasFile('nin_back')){
             $this->uploadDocument($user->id, $request->file('nin_back'), 'document/nin_back', 'nin_back');
-            $this->createNotification($user->refCode, "Back page of your national identity card successfully uploaded");
+            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the back page of your national identity card.");
         }
         if($request->hasFile('drivers_license_front')){
             $this->uploadDocument($user->id, $request->file('drivers_license_front'), 'document/drivers_license_front', 'drivers_license_front');
-            $this->createNotification($user->refCode, "Front page of your drivers license successfully uploaded");
+            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the front page of your drivers license.");
         }
         if($request->hasFile('drivers_license_back')){
             $this->uploadDocument($user->id, $request->file('drivers_license_back'), 'document/drivers_license_back', 'drivers_license_back');
-            $this->createNotification($user->refCode, "Back page of your drivers license successfully uploaded");
+            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the back page of your drivers license.");
         }
         if($request->hasFile('international_passport_front')){
             $this->uploadDocument($user->id, $request->file('international_passport_front'), 'document/international_passport_front', 'international_passport_front');
-            $this->createNotification($user->refCode, "International Passport successfully uploaded");
+            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded your international passport.");
         }
         if($request->hasFile('international_passport_back')){
             $this->uploadDocument($user->id, $request->file('international_passport_back'), 'document/international_passport_back', 'international_passport_back');
-            $this->createNotification($user->refCode, "International Passport successfully uploaded");
+            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded your international passport.");
         }
         if($request->hasFile('incorporation_doc_front')){
             $this->uploadDocument($user->id, $request->file('incorporation_doc_front'), 'document/incorporation_doc_front', 'incorporation_doc_front');
             $this->createNotification($user->refCode, "Incorporation document successfully uploaded");
+            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the front page of your incorporation document.");
         }
         if($request->hasFile('incorporation_doc_back')){
             $this->uploadDocument($user->id, $request->file('incorporation_doc_back'), 'document/incorporation_doc_back', 'incorporation_doc_back');
-            $this->createNotification($user->refCode, "Incorporation document successfully uploaded");
+            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the back page of your incorporation document.");
         }
         if($request->hasFile('avatar')){
             $this->uploadDocument($user->id, $request->file('avatar'), 'profilepic/avatar', 'avatar');
-            $this->createNotification($user->refCode, "Profile picture successfully uploaded");
+            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully updated your profile picture.");
         }
 
 
@@ -252,7 +253,7 @@ class UserController extends Controller
                             $message = "Saved";
                             $status = 200;
 
-                            $this->createNotification($thisuser->ref_code, "Password updated");
+                            $this->createNotification($thisuser->refCode, "Hello ".strtoupper($thisuser->name).", You have successfully updated your password.");
                         }
                         else{
                             $data = [];
@@ -305,7 +306,7 @@ class UserController extends Controller
                         $message = "Saved";
                         $status = 200;
 
-                        $this->createNotification($thisuser->ref_code, "Transaction pin saved");
+                        $this->createNotification($thisuser->refCode, "Hello ".strtoupper($thisuser->name).", You have successfully created your transaction pin. Keep it SAFE!.");
                     
                     }
 
@@ -347,7 +348,7 @@ class UserController extends Controller
                         $message = "Saved";
                         $status = 200;
 
-                        $this->createNotification($thisuser->ref_code, "Your security information saved");
+                        $this->createNotification($thisuser->refCode, "Hello ".strtoupper($thisuser->name).", You have successfully set up your security question and answer.");
 
                 }
                 else{
@@ -408,7 +409,7 @@ class UserController extends Controller
                                     $message = "Saved";
                                     $status = 200;
 
-                                    $this->createNotification($thisuser->ref_code, "Password reset successfully");
+                                    $this->createNotification($thisuser->refCode, "Hello ".strtoupper($thisuser->name).", You have successfully reset your password.");
 
                             }
 
@@ -475,6 +476,10 @@ class UserController extends Controller
                                 $status = 200;
 
                                 $this->createNotification($thisuser->ref_code, "Transaction pin updated");
+
+                                $this->createNotification($thisuser->refCode, "Hello ".strtoupper($thisuser->name).", You have successfully changed your transaction pin. Keep it SAFE!.");
+
+
                             
                             }
 
@@ -527,7 +532,7 @@ class UserController extends Controller
                         $message = "Saved";
                         $status = 200;
 
-                        $this->createNotification($thisuser->ref_code, "Transaction pin updated");
+                        $this->createNotification($thisuser->refCode, "Hello ".strtoupper($thisuser->name).", You have successfully updated your transaction pin. Keep it SAFE!.");
                     }
                     else{
                         $data = [];

@@ -70,7 +70,7 @@
                                 </select>
                             </div>
                             <div class="billingIns">
-                                <input type="text" name="reference" id="invoiceReference" class="form-control billinginput_box" placeholder="Type Invoice Reference Number*">
+                                <input type="text" name="reference" id="invoiceReference" class="form-control billinginput_box" placeholder="Type Invoice Number*">
                             </div>
 
                             <div class="row billingIns">
@@ -89,7 +89,7 @@
 
                             <div class="billingIns">
                                 <input type="hidden" name="payemail" id="payemail" value="{{ $email }}">
-                                <input type="text" name="invoiceNumber" id="invoiceNumber" class="form-control billinginput_box" placeholder="Type Invoice Reference Number*">
+                                <input type="text" name="invoiceNumber" id="invoiceNumber" class="form-control billinginput_box" placeholder="Type Invoice Number*">
                             </div>
                             <button class="button_all" onclick="makePay()" id="pay_invoice">Submit</button>
                         </div>

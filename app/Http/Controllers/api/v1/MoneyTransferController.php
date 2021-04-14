@@ -70,7 +70,7 @@ class MoneyTransferController extends Controller
 
 
     public function getTransactionStructure(){
-        $resp = TransactionCost::select('id','structure', 'method')->get();
+        $resp = TransactionCost::select('id','structure', 'method', 'country')->get();
 
         $data = $resp;
         $status = 200;
@@ -81,17 +81,40 @@ class MoneyTransferController extends Controller
     }
 
     public function commissionFee(Request $req){
-        $amount = $req->amount;
+        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            $amount = $req->amount;
             // Get Commission
 
-            $data = TransactionCost::where('structure', $req->structure)->where('method', $req->method)->first();
+            $data = TransactionCost::where('structure', $req->structure)->where('method', $req->method)->where('country', $thisuser->country)->first();
+
+            if(isset($data) == true){
+                $x = ($data->variable / 100) * $req->amount;
+
+                $y = $data->fixed + $x;
+
+                $collection = $y;
+            }
+            else{
+
+                $data = TransactionCost::where('structure', $req->structure)->where('method', $req->method)->first();
+
+                $x = ($data->variable / 100) * $req->amount;
+
+                $y = $data->fixed + $x;
+
+                $collection = $y;
+
+            }
+
+            
 
 
-            $fixed = $amount * ($data->fixed / 100);
+            // $fixed = $amount * ($data->fixed / 100);
 
-            $variable = $data->fixed * 1;
+            // $variable = $data->fixed * 1;
 
-            $collection = $fixed + $variable;
+            // $collection = $fixed + $variable;
 
             $status = 200;
 
@@ -104,6 +127,8 @@ class MoneyTransferController extends Controller
 
 
     public function requestPrepaidCard(Request $req){
+
+        $thisuser = User::where('api_token', $req->bearerToken())->first();
 
         if(env('APP_ENV') == "local"){
             $url = "http://localhost:4000/api/v1/paysprint/requestcard";
@@ -121,12 +146,19 @@ class MoneyTransferController extends Controller
 
         if($response->status == 200){
            $resData = $this->debitWalletForCard($req->ref_code, $req->card_provider);
-           $status = 200;
+           $status = $resData['status'];
+           $data = $resData['data'];
+           $message = $response->message;
+           $resData = ['data' => $data,'message' => $message, 'status' => $status];
         }
         else{
             $status = $response->status;
-            $resData = ['data' => $response->data,'message' => $response->message, 'status' => $response->status];
+            $data = $response->data;
+            $message = $response->message;
+            $resData = ['data' => $data,'message' => $message, 'status' => $status];
         }
+
+        $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", ".$message);
 
         return $this->returnJSON($resData, $status);
 
@@ -160,7 +192,7 @@ class MoneyTransferController extends Controller
 
             $this->sendMessage($sendMsg, $sendPhone);
 
-            $this->createNotification($ref_code, "Debited ".$data->currencyCode." 20.00 from Wallet for ".$card_provider." request");
+            $this->createNotification($ref_code, $sendMsg);
 
             // Wallet Statement
 
@@ -375,7 +407,7 @@ class MoneyTransferController extends Controller
                 $this->sendMessage($sendMsg, $sendPhone);
 
 
-                $recMsg = "You have received ".$req->currency.' '.number_format($req->amount, 2)." in your PaySprint wallet for ".$service." from ".$sender->name.". You now have ".number_format($recWallet, 2)." balance in your wallet. PaySprint Team";
+                $recMsg = "Hi ".$receiver->name.", You have received ".$req->currency.' '.number_format($req->amount, 2)." in your PaySprint wallet for ".$service." from ".$sender->name.". You now have ".$req->currency.' '.number_format($recWallet, 2)." balance in your wallet. PaySprint Team";
                 $recPhone = "+".$receiver->code.$receiver->telephone;
 
                 $this->sendMessage($recMsg, $recPhone);
@@ -392,9 +424,9 @@ class MoneyTransferController extends Controller
 
                 $resData = ['data' => $data, 'message' => 'Money Sent Successfully', 'status' => $status];
 
-                $this->createNotification($receiver->ref_code, "Received ".$req->currency.' '.number_format($req->amount, 2)." to your wallet from ".$sender->name." for ".$service);
+                $this->createNotification($receiver->ref_code, $recMsg);
 
-                $this->createNotification($sender->ref_code, "Wallet transfer of ".$req->currency.' '.number_format($req->amount, 2)." to ".$receiver->name." for ".$service);
+                $this->createNotification($sender->ref_code, $sendMsg);
                     
                 } catch (\Throwable $th) {
                     $status = 400;

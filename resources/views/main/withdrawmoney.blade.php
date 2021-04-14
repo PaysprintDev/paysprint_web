@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
         <!-- Favicon -->
-<link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1602675914/paysprint_icon_png_ol2z3u.png" type="image/x-icon" />
+<link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" type="image/x-icon" />
 
 <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
 
@@ -103,14 +103,28 @@ input[type="radio"] {
                                     
                                     @if (count($data['getCard']) > 0)
                                     <div class="form-group"> <label for="card_id">
+                                            <h6>Select Card Type/ Bank Account</h6>
+                                        </label>
+                                        <div class="input-group"> 
+                                            <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/cotton/20/000000/money--v4.png"/> </span> </div>
+                                            <select name="card_type" id="card_type" class="form-control" required>
+                                                <option value="">Select option</option>
+                                                <option value="Credit Card">Credit Card</option>
+                                                <option value="Prepaid Card">Prepaid Card</option>
+                                                <option value="Bank Account">Bank Account</option>
+                                            </select>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="form-group"> <label for="card_id">
                                             <h6>Select Card</h6>
                                         </label>
                                         <div class="input-group"> 
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/fluent/20/000000/bank-card-back-side.png"/> </span> </div>
                                             <select name="card_id" id="card_id" class="form-control" required>
-                                                @foreach ($data['getCard'] as $mycard)
+                                                {{-- @foreach ($data['getCard'] as $mycard)
                                                     <option value="{{ $mycard->id }}">{!! wordwrap($mycard->card_number, 4, '-', true) !!}</option>
-                                                @endforeach
+                                                @endforeach --}}
                                             </select>
                                             
                                         </div>
@@ -366,11 +380,57 @@ $("#amount").on("keyup", function() {
 });
 
 
+});
 
-
+$('#card_type').change(function(){
+    runCardType();
 });
 
 
+function runCardType(){
+
+    $('#card_id').html("");
+
+    var route = "{{ URL('/api/v1/getmycarddetail') }}";
+    var thisdata = {card_provider: $('#card_type').val()};
+
+
+    Pace.restart();
+    Pace.track(function(){
+
+        setHeaders();
+        
+        jQuery.ajax({
+        url: route,
+        method: 'get',
+        data: thisdata,
+        dataType: 'JSON',
+        
+        success: function(result){
+            if(result.message == "success"){
+                var res = result.data;
+
+
+                $.each(res, function(v, k){
+                    $('#card_id').append(`<option value="${k.id}">${k.card_number} - ${k.card_provider}</option>`);
+                });
+
+            }
+            else{
+                $('#card_id').append(`<option value="">${$('#card_type').val()} not available</option>`);
+            }
+
+        },
+        error: function(err) {
+            $('#card_id').append(`<option value="">${$('#card_type').val()} not available</option>`);
+            // swal("Oops", err.responseJSON.message, "error");
+        } 
+
+    });
+
+    });
+
+}
 
 function runCommission(){
     
@@ -421,7 +481,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-success');
                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.toFixed(2)+" will be credited to your Credit/Debit Card. Fee charge inclusive</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.toFixed(2)+" will be credited to your "+$('#card_type').val()+". Fee charge inclusive</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
@@ -440,7 +500,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-danger');
                     $('.commissionInfo').removeClass('alert alert-success');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+(+result.data + +result.collection).toFixed(2)+" will be charged from your Credit/Debit Card.</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+(+result.data + +result.collection).toFixed(2)+" will be charged from your "+$('#card_type').val()+".</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
@@ -530,7 +590,7 @@ if(val == 'withdrawmoney'){
 
             if(result.status == 200){
                     swal("Success", result.message, "success");
-                    setTimeout(function(){ location.href="{{ route('my account') }}"; }, 2000);
+                    setTimeout(function(){ location.href="{{ route('my account') }}"; }, 5000);
                 }
                 else{
                     swal("Oops", result.message, "error");

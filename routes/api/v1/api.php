@@ -116,15 +116,18 @@ Route::prefix('/v1')->group(function () {
     Route::get('getmycard',  ['uses' => 'api\v1\CardController@getCard'])->name('get my card');
 
     Route::post('addnewcard',  ['uses' => 'api\v1\CardController@addNewCard'])->name('add new card');
-
+    
     Route::post('editcard',  ['uses' => 'api\v1\CardController@editCard'])->name('edit card');
-
+    
     Route::post('deletecard',  ['uses' => 'api\v1\CardController@deleteCard'])->name('delete card');
-
+    
     Route::post('addmoneytowallet',  ['uses' => 'MonerisController@addMoneyToWallet'])->name('add money to wallet');
-
+    
     Route::post('moneywithdrawal',  ['uses' => 'MonerisController@moneyWithdrawal'])->name('withdraw from wallet');
-
+    
+    Route::get('getmycarddetail',  ['uses' => 'api\v1\CardController@getMyCardDetail'])->name('get card details');
+    
+    Route::post('addnewbank',  ['uses' => 'api\v1\CardController@addNewBank'])->name('add new bank');
 
 
     // pay Invoice

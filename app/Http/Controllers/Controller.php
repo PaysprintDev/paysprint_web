@@ -73,7 +73,7 @@ class Controller extends BaseController
         $currency = 'USD'.$curCurrency;
         $amount = $curAmount;
 
-        $access_key = '89e3a2b081fb2b9d188d22516553545c';
+        $access_key = 'c9e62dd9e7af596a2e955a8d324f0ca6';
 
         $curl = curl_init();
 
@@ -173,6 +173,7 @@ class Controller extends BaseController
 
 
     public function curlPost($url, $data, $token){
+
         $curl = curl_init();
 
         curl_setopt_array($curl, array(

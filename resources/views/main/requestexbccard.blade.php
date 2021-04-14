@@ -192,8 +192,9 @@ var formData = new FormData(formElem);
 
 var walletBal = "{{ Auth::user()->wallet_balance }}";
 
-var amount = "20";
+var amount = 20;
 var provider = $("#card_provider").val();
+
 
 
 if(amount > walletBal){
@@ -223,13 +224,12 @@ else{
             $('#cardSubmit').text('Please wait...');
         },
         success: function(result){
-            console.log(result);
 
             $('#cardSubmit').text('Submit');
 
             if(result.status == 200){
                 swal("Success", result.message, "success");
-                setTimeout(function(){ location.href = "{{ route('my account') }}"; }, 2000);
+                setTimeout(function(){ location.href = "{{ route('my account') }}"; }, 5000);
             }
             else{
                 swal("Oops", result.message, "error");

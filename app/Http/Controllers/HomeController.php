@@ -58,6 +58,8 @@ use App\TransactionCost as TransactionCost;
 
 use App\AddCard as AddCard;
 
+use App\AddBank as AddBank;
+
 use App\Traits\RpmApp;
 
 class HomeController extends Controller
@@ -367,6 +369,14 @@ class HomeController extends Controller
 
     }
 
+    public function getUserBankDetail(){
+
+        $data = AddBank::where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+
+    }
+
     public function getthisCard($id){
 
         $data = AddCard::where('id', $id)->first();
@@ -609,6 +619,38 @@ class HomeController extends Controller
 
 
         return view('main.withdrawmoney')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function addBankDetail(Request $req)
+    {
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'Add Bank Detail';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            }
+            else{
+                $this->page = 'Add Bank Detail';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'Add Bank Detail';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+
+        $data = array(
+            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'getBankDetail' => $this->getUserBankDetail(),
+        );
+
+
+        return view('main.addbankdetail')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
     public function getthispayment($id){
@@ -1885,15 +1927,16 @@ class HomeController extends Controller
     public function payInvoice($email){
         $mydata = ImportExcel::select('import_excel.*', 'invoice_payment.*')->join('invoice_payment', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')->where('import_excel.payee_email', $email)->orderBy('import_excel.created_at', 'DESC')->limit(5)->get();
 
-        if(count($mydata)){
-            $data = $mydata;
+        if(count($mydata) > 0){
+            $newdata = ImportExcel::where('payee_email', $email)->orderBy('created_at', 'DESC')->limit(5)->get();
+            $data = array_merge($mydata->toArray(), $newdata->toArray());
         }
         else{
             $data = ImportExcel::where('payee_email', $email)->orderBy('created_at', 'DESC')->limit(5)->get();
         }
 
         // dd($data);
-        return $data;
+        return json_encode($data);
         
     }
     public function urgentNotification($email){
@@ -2533,6 +2576,8 @@ class HomeController extends Controller
 
     public function ajaxgetCommission(Request $req){
 
+        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
         if($req->pay_method != "Wallet"){
 
             if($req->foreigncurrency != $req->localcurrency){
@@ -2551,13 +2596,34 @@ class HomeController extends Controller
             
             // dd($dataInfo);
 
-        $data = TransactionCost::where('structure', $req->structure)->where('method', $req->structureMethod)->first();
+        $data = TransactionCost::where('structure', $req->structure)->where('method', $req->structureMethod)->where('country', $thisuser->country)->first();
 
-        $fixed = $req->amount * ($data->fixed / 100);
+        /*
+        
+            Calculation
 
-        $variable = $data->fixed * 1;
+            x = Variable * Amount;
+            y = Fixed + x;
+        */ 
 
-        $collection = $fixed + $variable;
+        if(isset($data) == true){
+            $x = ($data->variable / 100) * $req->amount;
+
+            $y = $data->fixed + $x;
+
+            $collection = $y;
+        }
+        else{
+
+            $data = TransactionCost::where('structure', $req->structure)->where('method', $req->structureMethod)->first();
+
+            $x = ($data->variable / 100) * $req->amount;
+
+            $y = $data->fixed + $x;
+
+            $collection = $y;
+
+        }
 
 
 
@@ -2627,7 +2693,7 @@ class HomeController extends Controller
         $amount = $amount;
         $localCurrency = 'USD'.$localcurrency;
 
-        $access_key = '89e3a2b081fb2b9d188d22516553545c';
+        $access_key = 'c9e62dd9e7af596a2e955a8d324f0ca6';
 
         $curl = curl_init();
 

@@ -90,7 +90,10 @@ input[type="radio"] {
                                         <div class="alert alert-info">
                                             <ul>
                                                 <li>
-                                                    Reference Number: <b>{{ $data['getinvoice'][0]->invoice_no }}</b>
+                                                    Transaction Reference Number: <b>{{ $data['getinvoice'][0]->payee_ref_no }}</b>
+                                                </li>
+                                                <li>
+                                                    Invoice Number: <b>{{ $data['getinvoice'][0]->invoice_no }}</b>
                                                 </li>
                                                 <li>
                                                     Invoice Amount: <b>{{ number_format($data['getinvoice'][0]->amount, 2) }}</b>
@@ -103,6 +106,18 @@ input[type="radio"] {
                                                 </li>
                                             </ul>
                                         </div>
+
+                                        @if (isset($data['getinvoice'][0]->installpay))
+
+
+                                            @if ($data['getinvoice'][0]->installpay == "Yes" && $data['getinvoice'][0]->installlimit == $data['getinvoice'][0]->installcount)
+                                                
+                                            <div class='alert alert-danger'>You can not pay installmentally on this invoice as you have exceeded the limit</div>
+
+                                            @endif
+                                            
+                                        @endif
+                                        
                                         <div class="alert alert-warning">
                                             <div class="row">
                                                 <div class="col-md-12">
@@ -118,16 +133,7 @@ input[type="radio"] {
                                             </div>
                                         </div>
 
-                                        @if (isset($data['getinvoice'][0]->installpay))
-
-
-                                            @if ($data['getinvoice'][0]->installpay == "Yes" && $data['getinvoice'][0]->installlimit == $data['getinvoice'][0]->installcount)
-                                                
-                                            <div class='alert alert-danger'>You can not pay installmentally as you have exceeded the limit</div>
-
-                                            @endif
-                                            
-                                        @endif
+                                        
                                     </div>
 
 

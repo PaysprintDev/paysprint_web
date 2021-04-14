@@ -16,7 +16,7 @@ class CurrencyConverterApiController extends Controller
         $amount = $req->amount;
         $localCurrency = 'USD'.$req->localcurrency;
 
-        $access_key = '89e3a2b081fb2b9d188d22516553545c';
+        $access_key = 'c9e62dd9e7af596a2e955a8d324f0ca6';
 
         $curl = curl_init();
 
@@ -91,7 +91,7 @@ class CurrencyConverterApiController extends Controller
         $cadconvert = 'USDCAD';
         $amount = $req->amount;
 
-        $access_key = '89e3a2b081fb2b9d188d22516553545c';
+        $access_key = 'c9e62dd9e7af596a2e955a8d324f0ca6';
 
         $curl = curl_init();
 

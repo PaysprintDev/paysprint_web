@@ -319,7 +319,7 @@ input[type="radio"] {
 
                                            </div>
 
-                                           <div class="form-group">
+                                           {{-- <div class="form-group">
                                                <label for="card_name">Card Provider</label>
 
                                             <div class="input-group"> 
@@ -336,7 +336,50 @@ input[type="radio"] {
                                                 </div>
                                             </div>
 
+                                           </div> --}}
+
+                                           @if (Request::get('card') == "Credit Card")
+
+                                            <div class="form-group disp-0">
+                                               <label for="card_name">Card Provider</label>
+
+                                            <div class="input-group"> 
+                                                <select name="card_provider" id="card_provider" class="form-control" required>
+                                                    <option value="">Select card provider</option>
+                                                    <option value="Credit Card">Credit Card</option>
+
+                                                </select>
+                                                <div class="input-group-append"> 
+                                                    <span class="input-group-text text-muted"> <i class="fas fa-credit-card"></i></span> 
+                                                </div>
+                                            </div>
+
                                            </div>
+
+                                           @endif
+
+
+                                           @if (Request::get('card') == "Prepaid Card")
+
+                                            <div class="form-group">
+                                               <label for="card_name">Card Provider</label>
+
+                                            <div class="input-group"> 
+                                                <select name="card_provider" id="card_provider" class="form-control" required>
+                                                    <option value="">Select card provider</option>
+                                                    <option value="EXBC Prepaid Card">EXBC Prepaid Card</option>
+
+                                                </select>
+                                                <div class="input-group-append"> 
+                                                    <span class="input-group-text text-muted"> <i class="fas fa-credit-card"></i></span> 
+                                                </div>
+                                            </div>
+
+                                           </div>
+
+                                           @endif
+
+
 
                                            <div class="form-group">
                                                <label for="card_number">Card Number</label>

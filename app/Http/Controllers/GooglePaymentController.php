@@ -314,16 +314,18 @@ class GooglePaymentController extends Controller
             // Receiver Statement
             $this->insStatement($client->email, $reference_code, "Received ".$req->currency.''.number_format($dataInfo, 2)." in wallet for ".$service." from ".$user->name, number_format($req->conversionamount, 2), 0, $balance, $trans_date, $status, "Wallet credit", $client->ref_code, 1, $statement_route);
 
-            $this->createNotification($user->ref_code, $req->payment_method." transfer of ".$req->currency.''.number_format($req->amount, 2)." to ".$client->name." for ".$service);
-
-            $this->createNotification($client->ref_code, "Received ".$req->currency.''.number_format($req->amount, 2)." to your wallet from ".$user->name." for ".$service);
+            
 
             $sendMsg = "Hi ".Auth::user()->name.", You have made a ".$activity.". Your new wallet balance is ".$req->currency.''.$wallet_balance.". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us. PaySprint Team";
             $sendPhone = "+".Auth::user()->code.Auth::user()->telephone;
 
 
-            $recMsg = "Hi ".$client->name.", You have received ".$req->currency.''.number_format($dataInfo, 2)." in PaySprint wallet for ".$service." from ".$user->name.". Your new wallet balance is ".$req->currency.''.$recWallet.".";
+            $recMsg = "Hi ".$client->name.", You have received ".$req->currency.''.number_format($dataInfo, 2)." in PaySprint wallet for ".$service." from ".$user->name.". Your new wallet balance is ".$req->currency.''.number_format($recWallet, 2).".";
             $recPhone = "+".$client->code.$client->telephone;
+
+            $this->createNotification($user->ref_code, $sendMsg);
+
+            $this->createNotification($client->ref_code, $recMsg);
 
             
 
@@ -568,7 +570,7 @@ class GooglePaymentController extends Controller
 
 
                                 // Insert Statement
-                                $activity = $req->payment_method." transfer of ".$req->currency.''.$req->amount." to ".$req->fname.' '.$req->lname." for ".$service;
+                                $activity = $req->payment_method." transfer of ".$req->currency.' '.number_format($req->amount, 2)." to ".$req->fname.' '.$req->lname." for ".$service;
                                 $credit = 0;
                                 $debit = $req->conversionamount + $req->commissiondeduct;
                                 $reference_code = $paymentToken;
@@ -592,7 +594,8 @@ class GooglePaymentController extends Controller
                                 $message = $response;
 
 
-                                $this->createNotification($thisuser->ref_code, $req->payment_method." transfer of ".$req->currency.''.$req->amount." to ".$req->fname.' '.$req->lname." for ".$service);
+                                $this->createNotification($thisuser->ref_code, $sendMsg);
+                                $this->createNotification($newRefcode, $recMesg);
 
                             }
                             else{
@@ -640,7 +643,7 @@ class GooglePaymentController extends Controller
         $amount = $amount;
         $localCurrency = 'USD'.$localcurrency;
 
-        $access_key = '89e3a2b081fb2b9d188d22516553545c';
+        $access_key = 'c9e62dd9e7af596a2e955a8d324f0ca6';
 
         $curl = curl_init();
 

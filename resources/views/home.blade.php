@@ -132,8 +132,9 @@
                                     <table class="table table-striped">
                                         <tbody>
 
-                                            @if (count($data['payInvoice']) > 0)
-                                                @foreach ($data['payInvoice'] as $payInv)
+                                            @if (isset($data['payInvoice']))
+
+                                                @foreach (json_decode($data['payInvoice']) as $payInv)
                                                     <tr>
                                                         <td><i class="fas fa-circle"></i></td>
                                                         <td>
