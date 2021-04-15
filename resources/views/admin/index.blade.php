@@ -4,6 +4,7 @@
 @section('dashContent')
 
 <?php use \App\Http\Controllers\ClientInfo; ?>
+<?php use \App\Http\Controllers\User; ?>
 <?php use \App\Http\Controllers\InvoicePayment; ?>
 
   <!-- Content Wrapper. Contains page content -->
@@ -13,16 +14,19 @@
       <h1>
         Dashboard
 
-        @if($userInfo = \App\ClientInfo::where('user_id', session('user_id'))->get())
+        @if (session('role') != "Super")
 
-          @if(count($userInfo) > 0)
+          @if($userInfo = \App\User::where('ref_code', session('user_id'))->first())
 
-            <small style="color: green; font-weight: bold;">${{ number_format($userInfo[0]->card_balance, 2) }}</small>
+            @if(isset($userInfo))
 
-          @else
-            <small>Control panel</small>
+              <h4 style="color: green; font-weight: bold;">Account Number: {{ $userInfo->ref_code }}</h4>
+
+            @else
+              <small>Control panel</small>
+            @endif
+
           @endif
-
         @endif
         
       </h1>
@@ -99,22 +103,22 @@
         </div>
         <!-- ./col -->
       @else
-      <div class="col-lg-3 col-xs-6">
+      <div class="col-lg-6 col-xs-6">
           <!-- small box -->
-          <div class="small-box bg-red">
+          <div class="small-box bg-warning">
             <div class="inner">
-              <h3>{{ count($invoiceImport) }}</h3>
+              <h3>{{ $getUserDetail->currencySymbol.number_format($getUserDetail->wallet_balance, 2) }}</h3>
 
-              <p>Invoice Upload</p>
+              <p>Wallet Balance</p>
             </div>
             <div class="icon">
-              <i class="ion ion-bag"></i>
+              <i class="ion ion-card"></i>
             </div>
             {{-- <a href="#" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a> --}}
           </div>
         </div>
         <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
+        <div class="col-lg-3 col-xs-6 disp-0">
           <!-- small box -->
           <div class="small-box bg-green">
             <div class="inner">
@@ -129,35 +133,32 @@
           </div>
         </div>
         <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
+        <div class="col-lg-6 col-xs-6">
           <!-- small box -->
-          <div class="small-box bg-yellow">
+          <div class="small-box bg-info">
             <div class="inner">
-            <h3>@if(count($otherPays) > 0) {{ count($otherPays) }} @else 0 @endif</h3>
+            <h3>{{ $getUserDetail->number_of_withdrawals }}</h3>
 
-              <p>Other Payments</p>
+              <p>Total Withdrawal</p>
             </div>
             <div class="icon">
               <i class="ion ion-person-add"></i>
             </div>
-        <a href="{{ route('Otherpay') }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+        {{--  <a href="{{ route('Otherpay') }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>  --}}
           </div>
         </div>
         <!-- ./col -->
-        <div class="col-lg-3 col-xs-6 disp-0">
+        <div class="col-lg-12 col-xs-12">
           <!-- small box -->
-          <div class="small-box bg-red">
-            <div class="inner">
-              <h3>65</h3>
-
-              <p>Unique Visitors</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-pie-graph"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          <div class="small-box">
+              <div class="col-md-4"><button class="btn btn-danger btn-block">Add a new Credit Card <i class="fa fa-plus"></i></button></div>
+              <div class="col-md-4"><button class="btn btn-info btn-block">Add a new Prepaid Card <i class="fa fa-plus"></i></button></div>
+              <div class="col-md-4"><button class="btn btn-success btn-block">Add a new Bank Account <i class="fa fa-plus"></i></button></div>
           </div>
+          <br>
+        <br>
         </div>
+        
         <!-- ./col -->
       @endif
 

@@ -10,6 +10,9 @@
   <!-- iCheck -->
   <link rel="stylesheet" href="{{ asset('ext/plugins/iCheck/square/blue.css') }}">
 
+      <!-- Favicon -->
+<link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" type="image/x-icon" />
+
  <!-- Bootstrap 3.3.7 -->
   <link rel="stylesheet" href="{{ asset('ext/bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
   <!-- Font Awesome -->
@@ -54,6 +57,7 @@
 
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
 
   <style>
     .disp-0{

@@ -81,6 +81,8 @@ Route::prefix('/v1')->group(function () {
 
     Route::post('requestcard',  ['uses' => 'api\v1\MoneyTransferController@requestPrepaidCard'])->name('request for prepaid card');
 
+    Route::post('requestforrefund',  ['uses' => 'api\v1\MoneyTransferController@requestForRefund'])->name('request for refund');
+
 
 
     Route::get('getallstatement',  ['uses' => 'api\v1\StatementController@getAllStatement'])->name('get all statement');

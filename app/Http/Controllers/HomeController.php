@@ -708,6 +708,39 @@ class HomeController extends Controller
         return view('main.addbankdetail')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
+
+
+    public function requestForRefund(Request $req)
+    {
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'Request For Refund';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            }
+            else{
+                $this->page = 'Request For Refund';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'Request For Refund';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+
+        $data = array(
+            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'getBankDetail' => $this->getUserBankDetail(),
+        );
+
+
+        return view('main.requestforrefund')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
     public function getthispayment($id){
 
         $data = DB::table('organization_pay')

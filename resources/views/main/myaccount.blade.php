@@ -296,7 +296,7 @@ input[type="radio"] {
                                             </div>
 
                                             <div class="alert alert-default">
-                                                <a href="#" type="button" class="btn btn-danger btn-block">Request for Refund</a>
+                                                <a href="{{ route('request for refund') }}" type="button" class="btn btn-danger btn-block">Request for Refund</a>
                                             </div>
 
                                         </div>
@@ -308,17 +308,17 @@ input[type="radio"] {
                                     
                                     
                                     <div class="form-group row"> 
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 mb-3">
                                             <a type="button" href="{{ route('Add Money') }}" class="btn btn-info btn-block">Add Money <i class="fa fa-plus"></i></a>
                                         </div>
 
                                         @if (Auth::user()->approval == 1)
-                                            <div class="col-md-6">
+                                            <div class="col-md-6 mb-3">
                                                 <a type="button" href="{{ route('Withdraw Money') }}" class="btn btn-secondary btn-block">Withdraw Money <i class="fa fa-credit-card"></i></a>
                                             </div>
                                         @else
 
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 mb-3">
                                                 <a type="button" href="javascript:void()" class="btn btn-secondary btn-block" onclick="restriction('withdrawal', '{{ Auth::user()->name }}')">Withdraw Money <i class="fa fa-credit-card"></i></a>
                                             </div>
                                             

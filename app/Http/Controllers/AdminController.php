@@ -119,12 +119,20 @@ class AdminController extends Controller
             $transCost = $this->transactionCost();
             $allusers = $this->allUsers();
 
-            return view('admin.index')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'allusers' => $allusers]);
+            $getUserDetail = $this->getmyPersonalDetail(session('user_id'));
+
+            return view('admin.index')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'allusers' => $allusers, 'getUserDetail' => $getUserDetail]);
         }
         else{
             return redirect()->route('AdminLogin');
         }
 
+    }
+
+    public function getmyPersonalDetail($ref_code){
+        $data = User::where('ref_code', $ref_code)->first();
+
+        return $data;
     }
     public function Otherpay(Request $req){
 
@@ -2232,7 +2240,7 @@ class AdminController extends Controller
             // COnfirm Password
             if(Hash::check($req->password, $adminCheck[0]['password'])){
                 // Set session
-                $req->session()->put(['user_id' => $adminCheck[0]['user_id'], 'firstname' => $adminCheck[0]['firstname'], 'lastname' => $adminCheck[0]['lastname'], 'username' => $adminCheck[0]['username'], 'role' => 'Client', 'email' => $adminCheck[0]['email']]);
+                $req->session()->put(['user_id' => $adminCheck[0]['user_id'], 'firstname' => $adminCheck[0]['firstname'], 'lastname' => $adminCheck[0]['lastname'], 'username' => $adminCheck[0]['username'], 'role' => 'Merchant', 'email' => $adminCheck[0]['email']]);
 
                 $resData = ['res' => 'Logging in...', 'message' => 'success', 'link' => 'Admin'];
             }
@@ -2272,7 +2280,7 @@ class AdminController extends Controller
 
         if(count($adminCheck) > 0){
                 // Set session
-                $req->session()->put(['user_id' => $adminCheck[0]['user_id'], 'firstname' => $adminCheck[0]['firstname'], 'lastname' => $adminCheck[0]['lastname'], 'username' => $adminCheck[0]['username'], 'role' => 'Client', 'email' => $adminCheck[0]['email']]);
+                $req->session()->put(['user_id' => $adminCheck[0]['user_id'], 'firstname' => $adminCheck[0]['firstname'], 'lastname' => $adminCheck[0]['lastname'], 'username' => $adminCheck[0]['username'], 'role' => 'Merchant', 'email' => $adminCheck[0]['email']]);
 
                 $resData = ['res' => 'Logging in...', 'message' => 'success', 'link' => 'Admin'];
 
@@ -2298,20 +2306,68 @@ class AdminController extends Controller
             $resData = ['res' => 'User with this email already exist', 'message' => 'error'];
         }
         else{
-            // Insert
-            $insClient = ClientInfo::insert(['user_id' => $req->user_id, 'business_name' => $req->business_name, 'address' => $req->address, 'corporate_type' => $req->corporate_type, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'email' => $req->email, 'country' => $req->country, 'state' => $req->state, 'city' => $req->city, 'zip_code' => $req->zip_code]);
 
-            $insAdmin = Admin::insert(['user_id' => $req->user_id, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $req->username, 'password' => Hash::make($req->password), 'role' => 'Client', 'email' => $req->email]);
+                // Check User Account if Email
+                $userExist = user::where('email', $req->email)->first();
 
-            if($insAdmin == 1){
-                // Set session
-            $req->session()->put(['user_id' => $req->user_id, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $req->username, 'role' => 'Client', 'email' => $req->email]);
+                if(isset($userExist)){
+                    // User already exist
+                    $resData = ['res' => 'The email address already exist as an Individual account holder', 'message' => 'error'];
+                }
+                else{
 
-            $resData = ['res' => 'Logging in...', 'message' => 'success', 'link' => 'Admin'];
-            }
-            else{
-                $resData = ['res' => 'Something went wrong', 'message' => 'error'];
-            }
+                    $ref_code = mt_rand(00000, 99999);
+
+
+                    $ref = User::all();
+
+                    if(count($ref) > 0){
+                        foreach($ref as $key => $value){
+                            if($value->ref_code == $ref_code){
+                                $newRefcode = mt_rand(000000, 999999);
+                            }
+                            else{
+                                $newRefcode = $ref_code;
+                            }
+                        }
+                    }
+                    else{
+                        $newRefcode = $ref_code;
+                    }
+                    
+                    // Insert
+                    $insClient = ClientInfo::insert(['user_id' => $newRefcode, 'business_name' => $req->business_name, 'address' => $req->address, 'corporate_type' => $req->corporate_type, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'email' => $req->email, 'country' => $req->country, 'state' => $req->state, 'city' => $req->city, 'zip_code' => $req->zip_code, 'industry' => $req->industry, 'telephone' => $req->telephone]);
+
+                    $insAdmin = Admin::insert(['user_id' => $newRefcode, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $req->username, 'password' => Hash::make($req->password), 'role' => 'Merchant', 'email' => $req->email]);
+
+
+                    $mycode = $this->getCountryCode($req->country);
+
+                        $currencyCode = $mycode[0]->currencies[0]->code;
+                        $currencySymbol = $mycode[0]->currencies[0]->symbol;
+
+                                // Get all ref_codes
+                    
+
+                    // Insert to User
+
+                    $data = ['code' => $mycode[0]->callingCodes[0], 'ref_code' => $newRefcode, 'businessname' => $req->business_name, 'name' => $req->firstname.' '.$req->lastname, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'telephone' => $req->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => uniqid().md5($req->email)];
+
+
+                    User::updateOrCreate(['email' => $req->email], $data);
+
+                    if($insAdmin == 1){
+                        // Set session
+                    $req->session()->put(['user_id' => $newRefcode, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $req->username, 'role' => 'Merchant', 'email' => $req->email]);
+
+                    $resData = ['res' => 'Logging in...', 'message' => 'success', 'link' => 'Admin'];
+                    }
+                    else{
+                        $resData = ['res' => 'Something went wrong', 'message' => 'error'];
+                    }
+
+                }
+
 
             }
 

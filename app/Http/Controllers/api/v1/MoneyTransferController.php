@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Support\Facades\DB;
 
+use Illuminate\Support\Facades\Validator;
+
 use App\User as User;
 
 use App\Mail\sendEmail;
@@ -36,6 +38,8 @@ use App\ReceivePay as ReceivePay;
 use App\TransactionCost as TransactionCost;
 
 use App\CardRequest as CardRequest;
+
+use App\RequestRefund as RequestRefund;
 
 class MoneyTransferController extends Controller
 {
@@ -162,6 +166,42 @@ class MoneyTransferController extends Controller
 
         return $this->returnJSON($resData, $status);
 
+
+    }
+
+    public function requestForRefund(Request $req){
+
+        $validator = Validator::make($req->all(), [
+                     'transaction_id' => 'required|string',
+                     'reason' => 'required|string',
+                ]);
+
+                if($validator->passes()){
+                    $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+                    $insertRecord = RequestRefund::insert(['user_id' => $thisuser->id, 'transaction_id' => $req->transaction_id, 'reason' => $req->reason]);
+
+                    $data = $insertRecord;
+                    $status = 200;
+                    $message = 'You have successfully made request for refund. Kindly note that refund takes up to 5 days for review.';
+
+                    $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", ".$message);
+                }
+                else{
+
+                    $error = implode(",",$validator->messages()->all());
+
+                    $data = [];
+                    $status = 400;
+                    $message = $error;
+
+                }
+
+        
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
 
     }
 
@@ -332,7 +372,7 @@ class MoneyTransferController extends Controller
         if(isset($receiver)){
 
             if($req->amount > $sender->wallet_balance){
-                
+
                 $status = 404;
 
                 $resData = ['data' => [], 'message' => 'Insufficient wallet balance', 'status' => $status];

@@ -290,6 +290,9 @@
                     <div class="card" style="width: 100%;">
                         <div class="card-header" style="background-color: #f6b60b; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
                             Quick Setup
+                            @if (Auth::user()->approval == 0 || count($data['getCard']) <= 0 || Auth::user()->transaction_pin == null || Auth::user()->securityQuestion == null)
+                                <a href="javascript:void()" type="button" class="btn btn-danger fa-blink">Incomplete</a>
+                            @endif
                         </div>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item" title="Upload Government issued photo ID e.g National ID, International Passport, Driver Licence"><a href="{{ route('profile') }}">Identity Verification {!! Auth::user()->approval == 1 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}</a></li>

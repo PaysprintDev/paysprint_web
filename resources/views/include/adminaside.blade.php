@@ -9,7 +9,9 @@
         </div>
         <div class="pull-left info">
           <p>{{ session('firstname').' '.session('lastname') }}</p>
-          <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+          @if (session('role') != "Super")
+            <a href="#"><i class="fa fa-circle text-success"></i> Account No: {{ session('user_id') }}</a>
+          @endif
         </div>
       </div>
       <!-- search form -->
@@ -221,7 +223,38 @@
           </ul>
         </li>
 
+
+        <li>
+          <a href="#">
+            <i class="fa fa-book"></i>
+            <span>Create Service Types</span>
+          </a>
+        </li>
+
+
+        <li>
+          <a href="#">
+            <i class="fa fa-book"></i>
+            <span>API Integration</span>
+          </a>
+        </li>
+
         <li class="treeview">
+          <a href="#">
+            <i class="fa fa-wrench"></i>
+            <span>Settings</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="#"><i class="fa fa-circle-o text-info"></i> Profile</a></li>
+            
+          </ul>
+        </li>
+
+
+        <li class="treeview disp-0">
           <a href="#">
             <i class="fa fa-book"></i>
             <span>Report</span>

@@ -69,6 +69,7 @@ Route::prefix('mywallet')->group(function () {
 	Route::get('addmoney', ['uses' => 'HomeController@addMoney', 'as' => 'Add Money']);
 	Route::get('withdrawmoney', ['uses' => 'HomeController@withdrawMoney', 'as' => 'Withdraw Money']);
 	Route::get('addbank', ['uses' => 'HomeController@addBankDetail', 'as' => 'Add bank detail']);
+	Route::get('requestrefund', ['uses' => 'HomeController@requestForRefund', 'as' => 'request for refund']);
 	
 });
 
