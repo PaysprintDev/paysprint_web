@@ -59,6 +59,10 @@ class sendEmail extends Mailable
         return $this->subject($this->mail->purpose)->view('mails.epay')
                     ->with('maildata', $this->mail);
         }
+        elseif($this->mail->purpose == "Flagged Account"){
+        return $this->subject($this->mail->subject)->view('mails.cardupdate')
+                    ->with('maildata', $this->mail);
+        }
         elseif($this->mail->purpose == "Maintenace Request"){
             if($this->mail->file != "noImage.png"){
                 return $this->subject($this->mail->subject)

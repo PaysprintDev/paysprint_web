@@ -73,6 +73,10 @@ Route::prefix('mywallet')->group(function () {
 });
 
 
+
+
+
+
  
 
 
@@ -153,6 +157,27 @@ Route::get('Admin', ['uses' => 'AdminController@index', 'as' => 'Admin']);
 Route::get('allusers', ['uses' => 'AdminController@allPlatformUsers', 'as' => 'allusers']);
 
 
+Route::prefix('Admin/wallet')->group(function () {
+
+	Route::get('/', ['uses' => 'AdminController@walletBalance', 'as' => 'wallet balance']);
+	Route::get('bankrequestwithdrawal', ['uses' => 'AdminController@bankRequestWithdrawal', 'as' => 'bank request withdrawal']);
+	Route::get('bankrequestprocessed', ['uses' => 'AdminController@bankRequestProcessed', 'as' => 'processed payment']);
+	
+});
+
+
+Route::prefix('Admin/card')->group(function () {
+
+	Route::get('issuer', ['uses' => 'AdminController@allCardIssuer', 'as' => 'card issuer']);
+	Route::get('editcardissuer/{id}', ['uses' => 'AdminController@editCardIssuer', 'as' => 'editcardissuer']);
+
+	Route::get('addedcards', ['uses' => 'AdminController@allAddedCards', 'as' => 'all added cards']);
+	Route::get('getusercard/{user_id}', ['uses' => 'AdminController@getUsersCard', 'as' => 'get user card']);
+	Route::get('redflagged', ['uses' => 'AdminController@redFlaggedAccount', 'as' => 'red flagged account']);
+	
+});
+
+
 Route::get('AdminLogin', ['uses' => 'AdminController@adminlogin', 'as' => 'AdminLogin']);
 Route::get('AdminRegister', ['uses' => 'AdminController@adminregister', 'as' => 'AdminRegister']);
 Route::get('otherpay', ['uses' => 'AdminController@Otherpay', 'as' => 'Otherpay']);
@@ -180,6 +205,10 @@ Route::post('createfeestructure', ['uses' => 'AdminController@createFeeStructure
 Route::post('editfeestructure/{id}', ['uses' => 'AdminController@editFeeStructure', 'as' => 'edit fee structure']);
 Route::post('deletefee/{id}', ['uses' => 'AdminController@deleteFee', 'as' => 'deletefee']);
 
+
+Route::post('createcardissuer', ['uses' => 'AdminController@createCardIssuer', 'as' => 'create card issuer']);
+Route::post('editcardissuer/{id}', ['uses' => 'AdminController@editThisCardIssuer', 'as' => 'edit card issuer']);
+Route::post('deletecardissuer/{id}', ['uses' => 'AdminController@deleteCardIssuer', 'as' => 'deletecardissuer']);
 
 Route::get('Admin/xpaytrans', ['uses' => 'AdminController@xpaytrans', 'as' => 'xpaytrans']);
 
@@ -279,6 +308,8 @@ Route::post('invoiceVisit', ['uses' => 'AdminController@ajaxinvoiceVisit', 'as' 
 Route::post('confirmpayment', ['uses' => 'AdminController@ajaxconfirmpayment', 'as' => 'Ajaxconfirmpayment']);
 
 Route::post('approveUser', ['uses' => 'AdminController@ajaxapproveUser', 'as' => 'AjaxapproveUser']);
+Route::post('paybankwithdrawal', ['uses' => 'AdminController@ajaxpayBankWithdrawal', 'as' => 'Ajaxpaybankwithdrawal']);
+Route::post('flagguser', ['uses' => 'AdminController@ajaxflagUser', 'as' => 'Ajaxflagguser']);
 
 
 Route::post('quotedecision', ['uses' => 'ConsultantController@ajaxquotedecision', 'as' => 'Ajaxquotedecision']);

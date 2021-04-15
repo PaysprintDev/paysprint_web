@@ -1253,10 +1253,10 @@ function invoiceVisit(id, val){
 }
 
 function del(val){
-if(val == "deletefee"){
+if(val == "deletefee" || val == "deletecardissuer"){
       swal({
       title: "Are you sure?",
-      text: "Once deleted, you will not be able to recover this fee structure!",
+      text: "Once deleted, you will not be able to recover this data",
       icon: "warning",
       buttons: true,
       dangerMode: true,
@@ -1367,6 +1367,124 @@ function approveaccount(id){
                 }
 
 
+            }
+
+          });
+
+      }
+    });
+
+}
+
+
+
+
+
+$('#structure').change(function(){
+  if($('#structure').val() == "Others"){
+    $('.specificStructure').removeClass('disp-0');
+  }
+  else{
+    $('.specificStructure').addClass('disp-0');
+  }
+});
+
+
+$('#method').change(function(){
+  if($('#method').val() == "Others"){
+    $('.specificMethod').removeClass('disp-0');
+  }
+  else{
+    $('.specificMethod').addClass('disp-0');
+  }
+});
+
+
+function payBank(id){
+var route = "{{ URL('Ajax/paybankwithdrawal') }}";
+var thisdata = {id: id};
+var spinner = $('.spin'+id);
+
+            setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: thisdata,
+            dataType: 'JSON',
+            beforeSend: function(){
+              spinner.removeClass('disp-0');
+            },
+            success: function(result){
+              spinner.addClass('disp-0');
+                
+                if (result.message == "success") {
+
+                  swal(result.title, result.res, result.message);
+                  setTimeout(function(){ location.reload(); }, 2000);
+
+                }
+
+                else{
+                  swal(result.title, result.res, result.message);
+                }
+
+
+            },
+            error: function(err){
+              spinner.addClass('disp-0');
+              swal("OOps!", error.responseJSON.message, "error");
+            }
+
+
+          });
+
+}
+
+
+function flagAccount(id){
+
+  var thisdata;
+  var spinner = $('.spin'+id);
+  var route = "{{ URL('Ajax/flagguser') }}";
+
+  swal({
+      title: "Are you sure?",
+      text: "Please make sure you have confirmed user information before you proceed",
+      icon: "info",
+      buttons: true,
+      dangerMode: false,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        thisdata = {id: id};
+          setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: thisdata,
+            dataType: 'JSON',
+            beforeSend: function(){
+              spinner.removeClass('disp-0');
+            },
+            success: function(result){
+              spinner.addClass('disp-0');
+                
+                if (result.message == "success") {
+
+                  swal(result.title, result.res, result.message);
+                  setTimeout(function(){ location.reload(); }, 2000);
+
+                }
+
+                else{
+                  swal(result.title, result.res, result.message);
+                }
+
+
+            },
+            error: function(err){
+              spinner.addClass('disp-0');
+              swal("OOps!", error.responseJSON.message, "error");
             }
 
           });

@@ -294,6 +294,11 @@ input[type="radio"] {
                                                     </div>
                                                     </div>
                                             </div>
+
+                                            <div class="alert alert-default">
+                                                <a href="#" type="button" class="btn btn-danger btn-block">Request for Refund</a>
+                                            </div>
+
                                         </div>
 
                                         

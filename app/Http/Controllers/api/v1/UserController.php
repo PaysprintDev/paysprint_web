@@ -130,22 +130,35 @@ class UserController extends Controller
 
             if(Hash::check($request->password, $getUser->password)){
 
-                $countryInfo = $this->getCountryCode($getUser->country);
 
-                $currencyCode = $countryInfo[0]->currencies[0]->code;
-                $currencySymbol = $countryInfo[0]->currencies[0]->symbol;
+                if($getUser->flagged == 1){
+                    $data = [];
+                    $status = 400;
+                    $message = 'Hello '.$getUser->ref_code.', Your account is restricted from login because you are flagged.';
+
+                    $this->createNotification($getUser->ref_code, $message);
+                }
+                else{
+
+                    $countryInfo = $this->getCountryCode($getUser->country);
+
+                    $currencyCode = $countryInfo[0]->currencies[0]->code;
+                    $currencySymbol = $countryInfo[0]->currencies[0]->symbol;
 
 
-                // Update User API Token
-                User::where('email', $request->email)->update(['api_token' => $token, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
+                    // Update User API Token
+                    User::where('email', $request->email)->update(['api_token' => $token, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
 
-                $userData = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('email', $request->email)->first();
+                    $userData = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('email', $request->email)->first();
 
-                $data = $userData;
-                $status = 200;
-                $message = 'Login successful';
+                    $data = $userData;
+                    $status = 200;
+                    $message = 'Login successful';
 
-                $this->createNotification($userData->refCode, "Hello ".$getUser->name.", Your login successful. Welcome back");
+                    $this->createNotification($userData->refCode, "Hello ".$getUser->name.", Your login successful. Welcome back");
+                }
+
+
 
 
             }

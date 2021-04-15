@@ -5,7 +5,7 @@
       <!-- Sidebar user panel -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img src="{{ asset('images/payca.png') }}" class="img-circle" alt="User Image">
+          <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
           <p>{{ session('firstname').' '.session('lastname') }}</p>
@@ -58,7 +58,7 @@
           </ul>
         </li>
 
-        <li class="treeview">
+        <li class="treeview disp-0">
           <a href="#">
             <i class="fa fa-book"></i>
             <span>Remittance Report</span>
@@ -73,7 +73,7 @@
           </ul>
         </li>
 
-        <li class="treeview">
+        <li class="treeview disp-0">
           <a href="#">
             <i class="fa fa-book"></i>
             <span>Remitted Report</span>
@@ -89,7 +89,7 @@
           </ul>
         </li>
 
-        <li class="treeview">
+        <li class="treeview disp-0">
           <a href="#">
             <i class="fa fa-book"></i>
             <span>In-house Report</span>
@@ -108,7 +108,7 @@
 
         <li class="treeview">
           <a href="#">
-            <i class="fa fa-laptop"></i>
+            <i class="fas fa-money-bill"></i>
             <span>Fee Structure</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
@@ -121,11 +121,41 @@
           </ul>
         </li>
 
-        <li class="disp-0">
+
+        <li class="treeview">
           <a href="#">
-            <i class="fa fa-laptop"></i>
-            <span>Wallet Report</span>
+            <i class="fas fa-wallet"></i>
+            <span>Wallet</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
           </a>
+          <ul class="treeview-menu">
+            <li title="Wallet Balance"><a href="{{ route('wallet balance') }}"><i class="fa fa-circle-o text-red"></i> Wallet Balance</a></li>
+            <li title="Bank Withdrawal"><a href="{{ route('bank request withdrawal') }}"><i class="fa fa-circle-o text-red"></i> Bank Withdrawal</a></li>
+            <li title="Processed Payment"><a href="{{ route('processed payment') }}"><i class="fa fa-circle-o text-red"></i> Processed Payment</a></li>
+            <li title="Credit Card Withdrawal"><a href="#"><i class="fa fa-circle-o text-red"></i> Credit Card Withdrawal</a></li>
+            <li title="Refund Request"><a href="#"><i class="fa fa-circle-o text-red"></i> Refund Request</a></li>
+            <li title="Monthly Maintenance Charge"><a href="#"><i class="fa fa-circle-o text-red"></i> Monthly Maintenance ...</a></li>
+
+          </ul>
+        </li>
+
+
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-credit-card"></i>
+            <span>Card</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li title="Card Issuer"><a href="{{ route('card issuer') }}"><i class="fa fa-circle-o text-red"></i> Card Issuer</a></li>
+            <li title="Added Cards"><a href="{{ route('all added cards') }}"><i class="fa fa-circle-o text-red"></i> Added Cards</a></li>
+            <li title="Red Flagged"><a href="{{ route('red flagged account') }}"><i class="fa fa-circle-o text-red"></i> Red Flagged</a></li>
+
+          </ul>
         </li>
 
         <li onclick="openModal('transactioncost')" class="disp-0">
@@ -135,7 +165,7 @@
           </a>
         </li>
 
-        <li class="treeview">
+        <li class="treeview disp-0">
           <a href="#">
             <i class="fa fa-laptop"></i>
             <span>Money Transfer Trans...</span>

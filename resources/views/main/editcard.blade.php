@@ -186,10 +186,18 @@ input[type="radio"] {
 
                                            <div class="input-group"> 
                                                 <select name="card_provider" id="card_provider" class="form-control" required>
-                                                    <option value="">Select card provider</option>
+                                                    <option value="">Select Card Issuer</option>
                                                     <option value="{{ $data['getthisCard']->card_provider }}" selected>{{ $data['getthisCard']->card_provider }}</option>
                                                     <option value="Credit Card">Credit Card</option>
-                                                    <option value="EXBC Prepaid Card">EXBC Prepaid Card</option>
+                                                    @if (count($data['cardIssuer']) > 0)
+
+                                                        @foreach ($data['cardIssuer'] as $cardIssuers)
+                                                            <option value="{{ $cardIssuers->issuer_card }}">{{ $cardIssuers->issuer_card.' from '.$cardIssuers->issuer_name }}</option>
+                                                        @endforeach
+
+                                                    @else
+                                                        <option value="EXBC Prepaid Card">EXBC Prepaid Card from EXBC</option>
+                                                    @endif
                                                 </select>
                                                 <div class="input-group-append"> 
                                                     <span class="input-group-text text-muted"> <i class="fas fa-credit-card"></i></span> 

@@ -60,6 +60,8 @@ use App\AddCard as AddCard;
 
 use App\AddBank as AddBank;
 
+use App\CardIssuer as CardIssuer;
+
 use App\Traits\RpmApp;
 
 class HomeController extends Controller
@@ -369,6 +371,14 @@ class HomeController extends Controller
 
     }
 
+    public function getCardIssuer(){
+
+        $data = CardIssuer::orderBy('created_at', 'DESC')->get();
+
+        return $data;
+
+    }
+
     public function getUserBankDetail(){
 
         $data = AddBank::where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
@@ -497,6 +507,7 @@ class HomeController extends Controller
 
         $data = array(
             'getCard' => $this->getUserCard(),
+            'cardIssuer' => $this->getCardIssuer(),
         );
 
 
@@ -560,6 +571,7 @@ class HomeController extends Controller
 
         $data = array(
             'getthisCard' => $this->getthisCard($id),
+            'cardIssuer' => $this->getCardIssuer(),
         );
 
 
@@ -2084,15 +2096,26 @@ class HomeController extends Controller
             // Check User Password if match
             if(Hash::check($req->password, $userExists[0]['password'])){
 
-                $countryInfo = $this->getCountryCode($userExists[0]['country']);
+                // Check if Flagged or not
+                if($userExists[0]['flagged'] == 1){
 
-                $currencyCode = $countryInfo[0]->currencies[0]->code;
-                $currencySymbol = $countryInfo[0]->currencies[0]->symbol;
+                    $resData = ['res' => 'Hello '.$userExists[0]['name'].', Your account is restricted from login because you are flagged.', 'message' => 'error'];
 
-                // Update API Token
-                 User::where('email', $req->email)->update(['api_token' => uniqid().md5($req->email), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
+                    $this->createNotification($userExists[0]['ref_code'], 'Hello '.$userExists[0]['name'].', Your account is restricted from login because you are flagged.');
+                }
+                else{
+                    $countryInfo = $this->getCountryCode($userExists[0]['country']);
 
-                $resData = ['res' => 'Welcome back '.$userExists[0]['name'], 'message' => 'success'];
+                    $currencyCode = $countryInfo[0]->currencies[0]->code;
+                    $currencySymbol = $countryInfo[0]->currencies[0]->symbol;
+
+                    // Update API Token
+                    User::where('email', $req->email)->update(['api_token' => uniqid().md5($req->email), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
+
+                    $resData = ['res' => 'Welcome back '.$userExists[0]['name'], 'message' => 'success'];
+                }
+
+                
             }else{
                 $resData = ['res' => 'Your password is not correct', 'message' => 'info'];
             }

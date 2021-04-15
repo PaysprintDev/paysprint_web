@@ -567,7 +567,8 @@ thisdata = {email: email, password: password}
             }
             },
             error: function(err) {
-                
+                spinner.addClass('disp-0');
+                submitBtn.removeClass('disp-0');
                 swal("Oops", err.responseJSON.message, "error");
 
             } 

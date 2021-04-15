@@ -285,23 +285,49 @@
                         <label class="control-label" for="inputSuccess"> Structure</label>
                         <select name="structure" id="structure" class="form-control">
                             <option value="">Select option</option>
-                            <option value="Send Money/Pay Invoice">Send Money/Pay Invoice</option>
-                            <option value="Receive Money">Receive Money</option>
-                            <option value="Maintenance Fee">Maintenance Fee</option>
-                            <option value="Withdrawal">Withdrawal</option>
+
+                            @if (count($data['byStructure']) > 0)
+                                @foreach ($data['byStructure'] as $item)
+                                    <option value="{{ $item->structure }}">{{ $item->structure }}</option>
+                                @endforeach
+                            @else
+                            <option value="Others">Add Structure</option>
+                                
+                            @endif
+
+                            <option value="Others">Others</option>
                         </select>
                         {{-- <input type="text" class="form-control" name="name" id="inputSuccess" placeholder="E.g Belt Work"> --}}
                     </div>
+
+                    <div class="form-group has-success specificStructure disp-0">
+                        <label class="control-label" for="inputSuccess"> Specify Structure</label>
+                        <input name="other_structure" id="other_structure" class="form-control">
+                    </div>
+
+
                     <div class="form-group has-success">
                         <label class="control-label" for="inputSuccess"> Method</label>
                         <select name="method" id="method" class="form-control">
                             <option value="">Select option</option>
-                            <option value="CC/Bank">CC/Bank</option>
-                            <option value="Wallet">Wallet</option>
-                            <option value="EXBC Prepaid Card">EXBC Prepaid Card</option>
+
+                              @if (count($data['byMethod']) > 0)
+                                @foreach ($data['byMethod'] as $info)
+                                    <option value="{{ $info->method }}">{{ $info->method }}</option>
+                                @endforeach
+                            @else
+                            <option value="Others">Add Method</option>
+                                
+                            @endif
+                            <option value="Others">Others</option>
                         </select>
 
                         {{-- <input type="text" class="form-control" name="name" id="inputSuccess" placeholder="E.g Belt Work"> --}}
+                    </div>
+
+                    <div class="form-group has-success specificMethod disp-0">
+                        <label class="control-label" for="inputSuccess"> Specify Method</label>
+                        <input name="other_method" id="other_method" class="form-control">
                     </div>
 
                     <div class="row">
