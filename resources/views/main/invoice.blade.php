@@ -18,6 +18,10 @@
     padding: 5px 15px;
     line-height: 10;
 }
+.notificationImage{
+    margin-top: 30px;
+}
+
 </style>
 
 @show

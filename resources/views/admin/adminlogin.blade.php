@@ -48,6 +48,8 @@
 
   <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
 
+   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -90,12 +92,17 @@
 
     <form action="#" method="post">
       <div class="form-group has-feedback">
+        <label for="username">Username</label>
         <input type="username" id="username" class="form-control" placeholder="Username">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
+        <label for="password">Password</label>
         <input type="password" id="password" class="form-control" placeholder="Password">
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+        {!! htmlFormSnippet() !!}
       </div>
       <div class="row">
         <div class="col-xs-6">
@@ -116,7 +123,7 @@
       </div>
     </form>
 
-    <a href="{{ route('adminpasswordreset') }}">I forgot my password</a><br><br>
+    <strong><a href="{{ route('adminpasswordreset') }}">I forgot my password</a></strong><br><br>
     <a href="{{ route('AdminRegister') }}" class="text-center btn btn-danger btn-block" type="button">I don't have an account. Register</a>
 
   </div>
@@ -250,6 +257,10 @@
 // Register function
 function signIn(){
   var route = "{{ URL('Ajax/Adminlogin') }}";
+//   if (grecaptcha.getResponse() == ""){
+//     swal('Oops', 'Check the captcha box', 'info');
+//     return false;
+// }
   if($('#username').val() == ""){
     swal('Oops!', 'Your username is needed for next login', 'warning');
     return false;

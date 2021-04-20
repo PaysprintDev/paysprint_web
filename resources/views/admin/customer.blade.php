@@ -3,6 +3,7 @@
 @section('dashContent')
 
 
+<?php use \App\Http\Controllers\ClientInfo; ?>
 <?php use \App\Http\Controllers\User; ?>
 <?php use \App\Http\Controllers\InvoicePayment; ?>
 
@@ -10,6 +11,7 @@
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
+
       <h1>
          Customer Invoice Details
       </h1>
@@ -76,7 +78,14 @@
                       </tr>
                       <tr>
                         <td>Invoice Amount</td>
-                        <td class="mainText">${{ number_format($getCustomer[0]->amount) }}</td>
+
+                        @if($userInfo = \App\User::where('ref_code', session('user_id'))->first())
+                          @php
+                              $currencySymbol = $userInfo->currencySymbol;
+                          @endphp
+                        @endif
+
+                        <td class="mainText">{{ $currencySymbol.number_format($getCustomer[0]->amount) }}</td>
                         <td class="mainInput disp-0"><input class="form-control" type="text" name="amount" value="{{ $getCustomer[0]->amount }}" required=""></td>
                       </tr>
                       <tr>

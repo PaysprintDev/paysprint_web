@@ -182,6 +182,10 @@
                             </ul>
                         </li>
 
+                        <li class="dropdown submenu">
+                            <a href="{{ route('notifications') }}"><img src="https://img.icons8.com/ios/25/000000/appointment-reminders--v1.png" class="notificationImage"/> @if (count($data['getfiveNotifications']) > 0 && $data['getfiveNotifications'][0]->notify == 0) <i class="fas fa-circle fa-blink" style="color: rgb(129, 6, 6)"></i> @endif</a>
+                        </li>
+
                 @endif
 
                         <li><a href="#" class="nav_searchFroms"><i class="fa fa-searchs"></i></a></li>

@@ -41,6 +41,8 @@
 
     <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
 
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
     <style>
     /* width */
 body::-webkit-scrollbar {
@@ -151,7 +153,8 @@ li.dropdown.submenu > a {
   top: 0;
   width: 100%;
   z-index: 10000;
-
+  padding-left: 50px;
+  padding-right: 50px;
   
 }
 

@@ -49,6 +49,8 @@
 
   <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
 
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -342,6 +344,10 @@
         </div>
       </div>
 
+      <div class="form-group has-feedback">
+        {!! htmlFormSnippet() !!}
+      </div>
+
       
 
       <div class="row">
@@ -457,7 +463,11 @@
 // Register function
 function signUp(){
   var route = "{{ URL('Ajax/Adminregister') }}";
-  if($('#business_name').val() == ""){
+  if (grecaptcha.getResponse() == ""){
+      swal('Oops', 'Check the captcha box', 'info');
+      return false;
+  }
+  else if($('#business_name').val() == ""){
     swal('Oops!', 'Business name field can\'t be empty', 'warning');
     return false;
   }

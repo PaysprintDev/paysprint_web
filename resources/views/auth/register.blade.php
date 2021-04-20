@@ -30,6 +30,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
     <style>
     /* width */
 body::-webkit-scrollbar {
@@ -349,6 +351,11 @@ body::-webkit-scrollbar-thumb:hover {
                                     
                                 </div>
                             </div>
+
+
+                            {!! htmlFormSnippet() !!}
+
+                            <br>
                             
 
                             <button type="button" class="btn btn-default submitBtn" onclick="register('Individual')" style="width: 100% !important">Sign Up</button>
@@ -443,6 +450,8 @@ body::-webkit-scrollbar-thumb:hover {
                                     <input type="password" name="confirmpassword" id="buspassword-confirm" class="form-control input_box" placeholder="Confirm Password *" required>
                                 </div>
                             </div>
+
+                            
                             
 
                             <button type="button" class="btn btn-default submitBtn" onclick="register('Business')" style="width: 100% !important">Sign Up</button>
@@ -658,6 +667,11 @@ var ref_code;
         zipcode = $('#zipcode').val();
         cpassword = $('#password-confirm').val();
 
+
+        if (grecaptcha.getResponse() == ""){
+            swal('Oops', 'Check the captcha box', 'info');
+            return false;
+        }
         if(fname == ""){
             swal('Oops', 'Firstname field can\'t be empty', 'info');
             return false;

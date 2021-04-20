@@ -18,6 +18,9 @@
     padding: 5px 15px;
     line-height: 10;
 }
+.notificationImage{
+    margin-top: 30px;
+}
 </style>
 
 @show
@@ -59,12 +62,11 @@
                                 <select name="invoiceService" class="form-control billinginput_box" id="invoiceService">
                                     <option value="">--Select Statement--</option>
                                     <option value="Wallet">Wallet</option>
-                                    <option value="Rent">Rent</option>
-                                    <option value="Property Tax">Property Tax</option>
-                                    <option value="Utility Bills">Utility Bills</option>
-                                    <option value="Traffic Ticket">Traffic Ticket</option>
-                                    <option value="Tax Bills">Tax Bills</option>
-                                    {{-- <option value="Others"> Others</option> --}}
+                                    @if(count($data['service']) > 0)
+                                        @foreach($data['service'] as $services)
+                                            <option value="{{ $services->name }}">{{ $services->name }}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                             <div class="billingIns">

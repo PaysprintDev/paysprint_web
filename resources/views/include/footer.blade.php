@@ -462,7 +462,7 @@ function getStatement(){
                                     today = new Date(today.getTime() - 3000000);
                                     var date_format_str = (today.getDate().toString().length==2?today.getDate().toString():"0"+today.getDate().toString())+"/"+((today.getMonth()+1).toString().length==2?(today.getMonth()+1).toString():"0"+(today.getMonth()+1).toString())+"/"+today.getFullYear().toString()+" "+(today.getHours().toString().length==2?today.getHours().toString():"0"+today.getHours().toString())+":"+((parseInt(today.getMinutes()/5)*5).toString().length==2?(parseInt(today.getMinutes()/5)*5).toString():"0"+(parseInt(today.getMinutes()/5)*5).toString())+":00";
 
-                                    statement = "<tr><td style='font-weight:bold; font-size: 11px;'>"+date_format_str+"</td><td>"+k.activity+"</td><td>"+k.reference_code+"</td><td><span style='color:"+transform+"; font-weight:bold;'>"+price+"</span></td><td><a type='button' class='btn btn-default' href='"+urlRoute+"/"+k.reference_code+"' target='_blank' style='border:1px solid grey'>View Receipt</a></td></tr>";
+                                    statement = "<tr><td style='font-weight:bold; font-size: 11px;'>"+date_format_str+"</td><td>"+k.activity+"</td><td>"+k.reference_code+"</td><td><span style='color:"+transform+"; font-weight:bold;'>"+parseFloat(price).toFixed(2)+"</span></td><td><a type='button' class='btn btn-default' href='"+urlRoute+"/"+k.reference_code+"' target='_blank' style='border:1px solid grey'>View Receipt</a></td></tr>";
 
 
 
@@ -477,7 +477,8 @@ function getStatement(){
                             today = new Date(today.getTime() - 3000000);
                             var date_format_str = (today.getDate().toString().length==2?today.getDate().toString():"0"+today.getDate().toString())+"/"+((today.getMonth()+1).toString().length==2?(today.getMonth()+1).toString():"0"+(today.getMonth()+1).toString())+"/"+today.getFullYear().toString();
 
-                            $('tbody#statementRec').append(statements+"<tr><td colspan='3' align='right' style='font-size: 14px; font-weight: bold;'>Total as of "+date_format_str+"</td><td style='font-size: 14px; font-weight: bold;'>"+total.toFixed(2)+"</td><td colspan='3'></td></tr>");
+                            $('tbody#statementRec').append(statements);
+                            // $('tbody#statementRec').append(statements+"<tr><td colspan='3' align='right' style='font-size: 14px; font-weight: bold;'>Total as of "+date_format_str+"</td><td style='font-size: 14px; font-weight: bold;'>"+total.toFixed(2)+"</td><td colspan='3'></td></tr>");
 
 
                         }
@@ -509,7 +510,12 @@ function contactUs(){
     var website = $('#website').val();
     var message = $('#message').val();
 
-    if(name == ""){
+    if (grecaptcha.getResponse() == ""){
+        swal('Oops', 'Check the captcha box', 'info');
+        return false;
+    }
+
+    else if(name == ""){
         swal('Oops!', 'Please provide your fullname', 'info');
         return false;
     }

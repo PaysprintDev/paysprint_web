@@ -134,11 +134,42 @@
           </a>
           <ul class="treeview-menu">
             <li title="Wallet Balance"><a href="{{ route('wallet balance') }}"><i class="fa fa-circle-o text-red"></i> Wallet Balance</a></li>
-            <li title="Bank Withdrawal"><a href="{{ route('bank request withdrawal') }}"><i class="fa fa-circle-o text-red"></i> Bank Withdrawal</a></li>
             <li title="Processed Payment"><a href="{{ route('processed payment') }}"><i class="fa fa-circle-o text-red"></i> Processed Payment</a></li>
             <li title="Credit Card Withdrawal"><a href="#"><i class="fa fa-circle-o text-red"></i> Credit Card Withdrawal</a></li>
             <li title="Refund Request"><a href="#"><i class="fa fa-circle-o text-red"></i> Refund Request</a></li>
-            <li title="Monthly Maintenance Charge"><a href="#"><i class="fa fa-circle-o text-red"></i> Monthly Maintenance ...</a></li>
+            <li title="Maintenance Fee"><a href="#"><i class="fa fa-circle-o text-red"></i> Maintenance Fee</a></li>
+
+          </ul>
+        </li>
+
+
+        <li class="treeview">
+          <a href="#">
+            <i class="far fa-handshake"></i>
+            <span>Withdrawal</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li title="Credit Card"><a href="#"><i class="fa fa-circle-o text-red"></i> Credit Card</a></li>
+            <li title="Prepaid Card"><a href="#"><i class="fa fa-circle-o text-red"></i> Prepaid Card</a></li>
+            <li title="Bank Account"><a href="{{ route('bank request withdrawal') }}"><i class="fa fa-circle-o text-red"></i> Bank Account</a></li>
+
+          </ul>
+        </li>
+
+        <li class="treeview">
+          <a href="#">
+            <i class="far fa-money-bill-alt"></i>
+            <span>Refund</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li title="To Wallet"><a href="#"><i class="fa fa-circle-o text-red"></i> To Wallet</a></li>
+            <li title="To Bank Account"><a href="#"><i class="fa fa-circle-o text-red"></i> To Bank Account</a></li>
 
           </ul>
         </li>
@@ -192,16 +223,16 @@
 
 
         @else
-        <li class="treeview">
+        <li class="treeview" title="Create and Send Invoice">
           <a href="#">
             <i class="fa fa-book"></i>
-            <span>Invoice</span>
+            <span> Create and Send Invoi..</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li onclick="openModal('singleDoc1')"><a href="#"><i class="fa fa-circle-o text-green"></i> Single Invoice </a></li>
+            <li onclick="openModal('create single invoice')"><a href="#"><i class="fa fa-circle-o text-green"></i> Single Invoice </a></li>
             <li onclick="openModal('uploadDoc')"><a href="#"><i class="fa fa-circle-o text-red"></i> Bulk Invoice</a></li>
             {{-- <li><a href="#"><i class="fa fa-circle-o text-info"></i> Check Sold Tickets</a></li>
             <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
@@ -218,6 +249,7 @@
           </a>
           <ul class="treeview-menu">
             <li><a href="{{ route('getStatement') }}"><i class="fa fa-circle-o text-info"></i> Check Statement</a></li>
+            <li><a href="{{ route('getwalletStatement') }}"><i class="fa fa-circle-o text-info"></i> Wallet Statement</a></li>
             {{-- <li><a href="#"><i class="fa fa-circle-o text-info"></i> Check Sold Tickets</a></li>
             <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
           </ul>
@@ -225,15 +257,15 @@
 
 
         <li>
-          <a href="#">
+          <a href="{{ route('create service types') }}">
             <i class="fa fa-book"></i>
-            <span>Create Service Types</span>
+            <span>Create Service Type</span>
           </a>
         </li>
 
 
         <li>
-          <a href="#">
+          <a href="{{ route('api integration') }}">
             <i class="fa fa-book"></i>
             <span>API Integration</span>
           </a>

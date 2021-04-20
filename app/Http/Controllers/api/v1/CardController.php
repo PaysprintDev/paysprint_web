@@ -114,6 +114,7 @@ class CardController extends Controller
         $validator = Validator::make($req->all(), [
                      'bankName' => 'required|string',
                      'accountNumber' => 'required|string',
+                     'accountName' => 'required|string',
                      'transitNumber' => 'required|string',
                      'branchCode' => 'required|string',
                 ]);
@@ -125,7 +126,7 @@ class CardController extends Controller
 
             try {
                     // Do Insert
-                    $insertRecord = AddBank::insert(['user_id' => $thisuser->id, 'bankName' => $req->bankName, 'accountNumber' => $req->accountNumber, 'accountName' => $thisuser->name, 'transitNumber' => $req->transitNumber, 'branchCode' => $req->branchCode]);
+                    $insertRecord = AddBank::insert(['user_id' => $thisuser->id, 'bankName' => $req->bankName, 'accountNumber' => $req->accountNumber, 'accountName' => $req->accountName, 'transitNumber' => $req->transitNumber, 'branchCode' => $req->branchCode]);
 
                     $data = $insertRecord;
                     $status = 200;
@@ -169,6 +170,7 @@ class CardController extends Controller
         $validator = Validator::make($req->all(), [
                      'bankName' => 'required|string',
                      'accountNumber' => 'required|string',
+                     'accountName' => 'required|string',
                      'transitNumber' => 'required|string',
                      'branchCode' => 'required|string',
                 ]);
@@ -181,7 +183,7 @@ class CardController extends Controller
 
             try {
                     // Do Insert
-                    $updateRecord = AddBank::where('id', $req->id)->update(['user_id' => $thisuser->id, 'bankName' => $req->bankName, 'accountNumber' => $req->accountNumber, 'accountName' => $thisuser->name, 'transitNumber' => $req->transitNumber, 'branchCode' => $req->branchCode]);
+                    $updateRecord = AddBank::where('id', $req->id)->update(['user_id' => $thisuser->id, 'bankName' => $req->bankName, 'accountNumber' => $req->accountNumber, 'accountName' => $req->accountName, 'transitNumber' => $req->transitNumber, 'branchCode' => $req->branchCode]);
 
                     $data = $updateRecord;
                     $status = 200;

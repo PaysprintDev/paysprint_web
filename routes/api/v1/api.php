@@ -48,6 +48,8 @@ Route::prefix('/v1')->group(function () {
 
     Route::post('profile',  ['uses' => 'api\v1\UserController@updateProfile'])->name('update profile');
 
+    Route::post('createservicetype',  ['uses' => 'api\v1\ServiceController@createServiceType'])->name('create service type');
+
     Route::post('createtransactionpin',  ['uses' => 'api\v1\UserController@createTransactionPin'])->name('create transaction pin');
 
     Route::post('updatetransactionpin',  ['uses' => 'api\v1\UserController@updateTransactionPin'])->name('update transaction pin');
@@ -131,13 +133,18 @@ Route::prefix('/v1')->group(function () {
     
     Route::post('moneywithdrawal',  ['uses' => 'MonerisController@moneyWithdrawal'])->name('withdraw from wallet');
     
-    Route::get('getmycarddetail',  ['uses' => 'api\v1\CardController@getMyCardDetail'])->name('get card details');
+    Route::post('getmycarddetail',  ['uses' => 'api\v1\CardController@getMyCardDetail'])->name('get card details');
     
     Route::post('addnewbank',  ['uses' => 'api\v1\CardController@addNewBank'])->name('add new bank');
 
 
     // pay Invoice
     Route::post('payinvoice',  ['uses' => 'MonerisController@payInvoice'])->name('pay invoice from wallet');
+    
+    // Create Single Invoice
+    Route::post('singleinvoice',  ['uses' => 'api\v1\InvoiceController@singleInvoice'])->name('create single invoice');
+    Route::post('bulkinvoice',  ['uses' => 'api\v1\InvoiceController@bulkInvoice'])->name('create bulk invoice');
+
 
     // Send Money to User not on PS
     Route::post('sendmoneytoanonymous',  ['uses' => 'GooglePaymentController@sendMoneyToAnonymous'])->name('send money to user not on ps');

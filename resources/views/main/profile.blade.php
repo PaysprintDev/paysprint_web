@@ -27,7 +27,9 @@
   position: relative !important;
   top: 0 !important;
 }
-
+.notificationImage{
+    margin-top: 30px;
+}
 </style>
 
 @show

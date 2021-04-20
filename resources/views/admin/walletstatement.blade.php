@@ -2,16 +2,20 @@
 
 @section('dashContent')
 
+<?php use \App\Http\Controllers\ClientInfo; ?>
+<?php use \App\Http\Controllers\User; ?>
+<?php use \App\Http\Controllers\InvoicePayment; ?>
+
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         Statement
+         Wallet Statement
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Statement</li>
+        <li class="active">Wallet Statement</li>
       </ol>
     </section>
 
@@ -21,21 +25,13 @@
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Statement</h3> <br>
+              <h3 class="box-title">Wallet Statement</h3> <br>
 
               <br>
               <div class="row">
                 <div class="col-md-12">
                   <select name="statement_service" class="form-control" id="statement_service">
-                    @if (count($servicetypes) > 0)
-                        @foreach ($servicetypes as $data)
-
-                          <option value="{{ $data->name }}">{{ $data->name }}</option>   
-                        @endforeach
-                    @else
-                      <option value=""> Create Service Type</option>
-                    @endif
-                      
+                      <option value="Wallet">Wallet</option>
                   </select>
                 </div>
               </div>
@@ -61,39 +57,50 @@
                 <thead>
                 <tr>
                   <th>#</th>
-                  <th>Transaction Date</th>
                   <th>Description</th>
-                  <th>Reference Code</th>
-                  <th>Invoice Amount</th>
-                  <th>Amount Paid</th>
-                  <th>Remaining Balance</th>
+                  <th>Amount</th>
                 </tr>
                 </thead>
                 <tbody id="statementtab">
                     @if (count($otherPays) > 0)
-                    <?php $i = 1; ?>
-                        @foreach ($otherPays as $items)
-                        <tr>
-                            <td>{{ $i++ }}</td>
-                            <td>{{ date('d/F/Y', strtotime($items->transaction_date)) }}</td>
-                            <td>{!! $items->description !!}</td>
-                            <td>{{ $items->transactionid }}</td>
-                            <td>{{ number_format($items->invoice_amount, 2) }}</td>
-                            <td>{{ number_format($items->amount_paid, 2) }}</td>
-                            <td><?php $inv = $items->invoice_amount; $amt = $items->amount_paid; $rem = $inv - $amt;?> {{ number_format($rem,2) }}</td>
-                        </tr>
-                        @endforeach
+                    @foreach ($otherPays as $walletstatements)
+                            <tr>
+                                <td><i class="fas fa-circle {{ ($walletstatements->credit != 0) ? "text-success" : "text-danger" }}"></i></td>
+                                <td>
 
-                    @else
-                    <tr>
-                        <td colspan="7" align="center">No statement available</td>
-                    </tr>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                {!! $walletstatements->activity !!}
+                                            </div>
+                                            <div class="col-md-12">
+                                                <small>
+                                                    {{ $walletstatements->reference_code }}
+                                                </small><br>
+                                                <small>
+                                                    {{ date('d/m/Y h:i a', strtotime($walletstatements->created_at)) }}
+                                                </small>
+                                            </div>
+                                        </div>
+
+                                    </td>
+
+                                    @if($userInfo = \App\User::where('ref_code', session('user_id'))->first())
+
+                                    <td style="font-weight: 700" class="{{ ($walletstatements->credit != 0) ? "text-success" : "text-danger" }}">{{ ($walletstatements->credit != 0) ? "+".$userInfo->currencySymbol.number_format($walletstatements->credit, 2) : "-".$userInfo->currencySymbol.number_format($walletstatements->debit, 2) }}</td>
+
+
+                                    @endif
+
+                                
+                            </tr>
+        
+                        @endforeach
                     @endif
                 </tbody>
               </table>
 
 
-
+              
             </div>
             <!-- /.box-body -->
           </div>

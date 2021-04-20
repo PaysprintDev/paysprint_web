@@ -78,6 +78,7 @@
 <script src="{{ asset('ext/dist/js/pages/dashboard.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('ext/dist/js/demo.js') }}"></script>
+<script src="{{ asset('ext/documentation/docs.js') }}"></script>
 
 <script>
   $(document).ready(function(){
@@ -139,7 +140,7 @@ $('#single_invoice_generate').change(function(){
       $('#single_invoiceno').val('');
   }
   else if($('#single_invoice_generate').val() == "Auto Generate"){
-    var gen_inv = "{{ 'PAYca_'.date('Ymds') }}";
+    var gen_inv = "{{ 'PS_'.date('Ymds') }}";
       $('#single_invoiceno').attr('readonly', true);
       $('#single_invoiceno').val(gen_inv);
   }
@@ -488,13 +489,41 @@ function checkStatement(){
                         var invoice;
                         var payment;
 
+                        
+
 
                         if(res[0].error == "No statement record"){
                             $('tbody#statementtab').append("<tr><td colspan='7' align='center'>"+res[0].error+"</td></tr>");
                         }
                         else{
 
-                            $.each(res, function (v, k) {
+                        if(status == "wallet"){
+                          $.each(res, function (v, k) {
+                            var price;
+                            var icon;
+                            var styleColor;
+
+                            if(k.debit != 0){
+                              price = "-"+k.debit;
+                              icon = '<i class="fas fa-circle text-danger"></i>';
+                              styleColor="text-danger";
+                            }
+                            else{
+                              price = "+"+k.credit;
+                              icon = '<i class="fas fa-circle text-success"></i>';
+                              styleColor="text-danger";
+                            }
+
+                              var rem = parseInt(k.invoice_amount) - parseInt(k.amount_paid);
+
+                                invoice = "<tr><td>"+icon+"</td><td>"+k.activity+"<br>"+k.reference_code+"<br>"+k.created_at+"</td><td style='font-weight: 700;' class="+styleColor+"><strong>"+parseFloat(price).toFixed(2)+"</strong></td></tr>";
+                                 // Fetch data
+
+                                 invoices += invoice;
+                            });
+                        }
+                        else{
+                          $.each(res, function (v, k) {
 
                               var rem = parseInt(k.invoice_amount) - parseInt(k.amount_paid);
 
@@ -503,6 +532,9 @@ function checkStatement(){
 
                                  invoices += invoice;
                             });
+                        }
+
+                            
                             
                             $('tbody#statementtab').append("<tr>"+invoices+"</tr>");
                             
@@ -1499,10 +1531,446 @@ function openModal(val){
   $('#'+val).click();
 }
 
+function showForm(val){
+    $(".cardform").removeClass('disp-0');
+    $(".pickCard").addClass('disp-0');
+}
+
+function handShake(val){
+
+var route;
+
+if(val == 'addcard'){
+
+var formData = new FormData(formElem);
+
+
+    route = "{{ URL('/api/v1/addnewcard') }}";
+
+        Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#cardSubmit').text('Please wait...');
+        },
+        success: function(result){
+            // console.log(result);
+
+            $('#cardSubmit').text('Submit');
+
+            if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+        },
+        error: function(err) {
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+else if(val == 'editcard'){
+
+var formData = new FormData(formElem);
+
+
+    route = "{{ URL('/api/v1/editcard') }}";
+
+        Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#cardSubmit').text('Please wait...');
+        },
+        success: function(result){
+            // console.log(result);
+
+            $('#cardSubmit').text('Submit');
+
+            if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.href="{{ route('Admin') }}"; }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+        },
+        error: function(err) {
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+else if(val == 'singleinvoice'){
+
+var formData = new FormData(formElem);
+
+
+    route = "{{ URL('/api/v1/singleinvoice') }}";
+
+        Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#cardSubmit').text('Please wait...');
+        },
+        success: function(result){
+            // console.log(result);
+
+            $('#cardSubmit').text('Submit');
+
+            if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.href="{{ route('Admin') }}"; }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+        },
+        error: function(err) {
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+else if(val == 'bulkinvoice'){
+
+var formData = new FormData(formElem);
+
+
+    route = "{{ URL('/api/v1/bulkinvoice') }}";
+
+        Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#cardSubmit').text('Please wait...');
+        },
+        success: function(result){
+            // console.log(result);
+
+            $('#cardSubmit').text('Submit');
+
+            if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.href="{{ route('Admin') }}"; }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+        },
+        error: function(err) {
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+else if(val == 'addbank'){
+
+var formData = new FormData(formElem);
+
+
+    route = "{{ URL('/api/v1/addnewbank') }}";
+
+        Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#cardSubmit').text('Please wait...');
+        },
+        success: function(result){
+            // console.log(result);
+
+            $('#cardSubmit').text('Submit');
+
+            if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+        },
+        error: function(err) {
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+else if(val == 'createservicetype'){
+
+var formData = new FormData(formElem);
+
+
+    route = "{{ URL('/api/v1/createservicetype') }}";
+
+        Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#cardSubmit').text('Please wait...');
+        },
+        success: function(result){
+            // console.log(result);
+
+            $('#cardSubmit').text('Submit');
+
+            if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+        },
+        error: function(err) {
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+else if(val == 'editbank'){
+
+var formData = new FormData(formElem);
+
+
+    route = "{{ URL('/api/v1/editbank') }}";
+
+        Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#cardSubmit').text('Please wait...');
+        },
+        success: function(result){
+            // console.log(result);
+
+            $('#cardSubmit').text('Submit');
+
+            if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.href="{{ route('Admin') }}"; }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+        },
+        error: function(err) {
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+else if(val == "deletebank"){
+
+    // Ask Are you sure
+
+    swal({
+  title: "Are you sure you want to delete bank account?",
+  text: "This bank account will be deleted and can not be recovered!",
+  icon: "warning",
+  buttons: true,
+  dangerMode: true,
+})
+.then((willDelete) => {
+  if (willDelete) {
+    
+    // Run Ajax
+
+    var thisdata = {id: $("#bank_id").val()};
+
+    route = "{{ URL('/api/v1/deletebank') }}";
+
+        Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: thisdata,
+        dataType: 'JSON',
+        
+        success: function(result){
+
+            if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+        },
+        error: function(err) {
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+
+  } else {
+    
+  }
+});
+
+}
+
+else if(val == "deletecard"){
+
+    // Ask Are you sure
+
+    swal({
+  title: "Are you sure you want to delete card?",
+  text: "This card will be deleted and can not be recovered!",
+  icon: "warning",
+  buttons: true,
+  dangerMode: true,
+})
+.then((willDelete) => {
+  if (willDelete) {
+    
+    // Run Ajax
+
+    var thisdata = {id: $("#card_id").val()};
+
+    route = "{{ URL('/api/v1/deletecard') }}";
+
+        Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: thisdata,
+        dataType: 'JSON',
+        
+        success: function(result){
+
+            if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+        },
+        error: function(err) {
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+
+  } else {
+    
+  }
+});
+
+}
+
+}
+
  function setHeaders(){
     $.ajaxSetup({
       headers: {
-          'X-CSRF-TOKEN': "{{csrf_token()}}"
+          'X-CSRF-TOKEN': "{{csrf_token()}}",
+          'Authorization': "Bearer "+"{{ session('api_token') }}"
       }
     });
  }

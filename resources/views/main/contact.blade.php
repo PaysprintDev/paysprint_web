@@ -50,6 +50,9 @@
                         <input id="website" type="text" class="form-control input_box" placeholder="Your Website">
                         <label for="message">Message</label>
                         <textarea id="message" class="form-control input_box" placeholder="Message"></textarea>
+
+                            {!! htmlFormSnippet() !!}
+                            <br>
                         <button type="button" class="btn btn-default" onclick="contactUs()">Send Message</button>
                     </form>
                 </div>

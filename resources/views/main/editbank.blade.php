@@ -226,6 +226,16 @@ input[type="radio"] {
                                            </div>
 
                                            <div class="form-group">
+                                               <label for="accountName">Account Name</label>
+
+                                            <div class="input-group"> <input type="text" name="accountName" id="accountName" class="form-control" value="{{ $data['getthisBank']->accountName }}" required>
+                                                <div class="input-group-append"> 
+                                                    <span class="input-group-text text-muted"> <i class="fas fa-university"></i></span> 
+                                                </div>
+                                            </div>
+
+                                           </div>
+                                           <div class="form-group">
                                                <label for="accountNumber">Account Number</label>
 
                                             <div class="input-group"> <input type="text" name="accountNumber" id="accountNumber" class="form-control" value="{{ $data['getthisBank']->accountNumber }}" required>

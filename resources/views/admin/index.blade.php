@@ -151,9 +151,9 @@
         <div class="col-lg-12 col-xs-12">
           <!-- small box -->
           <div class="small-box">
-              <div class="col-md-4"><button class="btn btn-danger btn-block">Add a new Credit Card <i class="fa fa-plus"></i></button></div>
-              <div class="col-md-4"><button class="btn btn-info btn-block">Add a new Prepaid Card <i class="fa fa-plus"></i></button></div>
-              <div class="col-md-4"><button class="btn btn-success btn-block">Add a new Bank Account <i class="fa fa-plus"></i></button></div>
+              <div class="col-md-4"><a type="button" href="{{ route('merchant credit card', $getUserDetail->id) }}" class="btn btn-danger btn-block">Add a new Credit Card <i class="fa fa-plus"></i></a></div>
+              <div class="col-md-4"><a type="button" href="{{ route('merchant prepaid card', $getUserDetail->id) }}" class="btn btn-info btn-block">Add a new Prepaid Card <i class="fa fa-plus"></i></a></div>
+              <div class="col-md-4"><a type="button" href="{{ route('merchant bank account', $getUserDetail->id) }}" class="btn btn-success btn-block">Add a new Bank Account <i class="fa fa-plus"></i></a></div>
           </div>
           <br>
         <br>
@@ -211,7 +211,7 @@
                       <td>{{ $invoiceImports->name }}</td>
                     <td title="{{ $invoiceImports->payee_email }}"><?php $string = $invoiceImports->payee_email; $output = strlen($string) > 10 ? substr($string,0,10)."..." : $string; echo $output;?></td>
                     <td title="{{ $invoiceImports->service }}"><?php $string = $invoiceImports->service; $output = strlen($string) > 10 ? substr($string,0,10)."..." : $string; echo $output;?></td>
-                      <td align="center" style="font-weight: bold; color: navy;">${{ $invoiceImports->amount }}</td>
+                      <td align="center" style="font-weight: bold; color: navy;">{{ $getUserDetail->currencySymbol.number_format($invoiceImports->amount, 2) }}</td>
 
                       @if($leftOver = \App\InvoicePayment::where('invoice_no', $invoiceImports->invoice_no)->get())
                         

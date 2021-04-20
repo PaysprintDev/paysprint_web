@@ -151,13 +151,13 @@ class MoneyTransferController extends Controller
         if($response->status == 200){
            $resData = $this->debitWalletForCard($req->ref_code, $req->card_provider);
            $status = $resData['status'];
-           $data = $resData['data'];
+           $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
            $message = $response->message;
            $resData = ['data' => $data,'message' => $message, 'status' => $status];
         }
         else{
             $status = $response->status;
-            $data = $response->data;
+            $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
             $message = $response->message;
             $resData = ['data' => $data,'message' => $message, 'status' => $status];
         }
@@ -181,7 +181,7 @@ class MoneyTransferController extends Controller
 
                     $insertRecord = RequestRefund::insert(['user_id' => $thisuser->id, 'transaction_id' => $req->transaction_id, 'reason' => $req->reason]);
 
-                    $data = $insertRecord;
+                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
                     $status = 200;
                     $message = 'You have successfully made request for refund. Kindly note that refund takes up to 5 days for review.';
 
@@ -468,7 +468,8 @@ class MoneyTransferController extends Controller
                     // Receiver Statement
                     $this->insStatement($receiver->email, $reference_code, "Received ".$req->currency.' '.number_format($req->amount, 2)." in wallet for ".$service." from ".$sender->name, number_format($req->amount, 2), 0, $balance, $trans_date, $status, "Invoice", $receiver->ref_code, 1, $statement_route);
 
-                    $data = OrganizationPay::where('transactionid', $paymentToken)->first();
+                    // $data = OrganizationPay::where('transactionid', $paymentToken)->first();
+                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
 
                     $status = 200;
 
@@ -530,15 +531,15 @@ class MoneyTransferController extends Controller
 
 
                 if($dataDetails->request_receive == 1){
-                    $data = "Processing payment";
+                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
                     $message = 'Success. It may take up to two (2) business days for money to reflect in your '.$req->paymentMethod;
                 }
                 elseif($dataDetails->request_receive == 2){
-                    $data = "Payment already processed";
+                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
                     $message = 'Success. Payment already made, kindly check your financial institution for complaint.';
                 }
                 else{
-                    $data = "Request not yet made";
+                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
                     $message = 'Success. You have not made request yet';
                 }
 

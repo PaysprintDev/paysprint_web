@@ -41,9 +41,13 @@
     <!-- DataTables -->
   <link rel="stylesheet" href="{{ asset('ext/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
 
+  <link rel="stylesheet" href="{{ asset('ext/documentation/style.css') }}">
+
   <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
 
   <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
+
+      <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

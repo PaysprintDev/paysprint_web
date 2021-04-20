@@ -541,7 +541,7 @@ else{
         // dd($req->all());
 
         $validator = Validator::make($req->all(), [
-                     'card_id' => 'required|string',
+                    //  'card_id' => 'required|string',
                      'amount' => 'required|string',
                      'currencyCode' => 'required|string',
                      'conversionamount' => 'required|string',
@@ -564,7 +564,7 @@ else{
 
                         $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                        $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to Wallet including a fee charge of ".$req->currencyCode.''.number_format($req->commissiondeduct, 2)." was deducted from your Credit/Debit Card";
+                        $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to Wallet including a fee charge of ".$req->currencyCode.''.number_format($req->commissiondeduct, 2)." was deducted from your GooglePay Credit/Debit Card";
                         $credit = $req->amounttosend;
                         $debit = 0;
                         $reference_code = $req->paymentToken;
@@ -785,13 +785,15 @@ else{
                                                 $resData = $this->debitWalletForCard($thisuser->ref_code, $req->amount, $cardDetails->card_provider, $transaction_id);
 
                                                 $status = $resData['status'];
-                                                $data = $resData['data'];
+                                                // $data = $resData['data'];
+                                                $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
                                                 $message = $response->message;
                                                 
                                             }
                                             else{
                                                 $status = $response->status;
-                                                $data = $response->data;
+                                                // $data = $response->data;
+                                                $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();;
                                                 $message = $response->message;
                                                 $resData = ['data' => $data, 'message' => $message, 'status' => $status];
                                             }
@@ -835,7 +837,7 @@ else{
 
 
                                             $status = 200;
-                                            $data = $mydata;
+                                            $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
                                             $message = "Your wallet withdrawal to Bank Account ".$bankDetails->accountNumber." - ".$bankDetails->bankName." has been received. This will take 10 working days to process payment. Thanks";
 
 
@@ -935,7 +937,7 @@ else{
 
                                                         $this->sendEmail($this->email, "Fund remittance");
 
-                                                        $data = $userData;
+                                                        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
                                                         $status = 200;
                                                         $message = $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet';
 
@@ -1017,13 +1019,13 @@ else{
                                                 $resData = $this->debitWalletForCard($thisuser->ref_code, $req->amount, $cardDetails->card_provider, $transaction_id);
                                                 
                                                 $status = $resData['status'];
-                                                $data = $resData['data'];
+                                                $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
                                                 $message = $response->message;
                                                 
                                             }
                                             else{
                                                 $status = $response->status;
-                                                $data = $response->data;
+                                                $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
                                                 $message = $response->message;
                                                 $resData = ['data' => $data, 'message' => $message, 'status' => $status];
                                             }
@@ -1066,7 +1068,7 @@ else{
 
 
                                             $status = 200;
-                                            $data = $mydata;
+                                            $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
                                             $message = "Your wallet withdrawal to Bank Account ".$bankDetails->accountNumber." - ".$bankDetails->bankName." has been received. This will take 10 working days to process payment. Thanks";
 
 

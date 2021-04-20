@@ -13,9 +13,11 @@
 
 <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+
 <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
 
-    <title>PaySprint | Request For Refund</title>
+    <title>PaySprint | Notifications</title>
 
     <style>
         body {
@@ -55,7 +57,7 @@ input[type="radio"] {
         <!-- For demo purpose -->
         <div class="row mb-4">
             <div class="col-lg-8 mx-auto text-center">
-                <h1 class="display-4">Request For Refund</h1>
+                <h1 class="display-4">Notifications</h1>
             </div>
         </div> <!-- End -->
         <div class="row">
@@ -79,60 +81,47 @@ input[type="radio"] {
                             <!-- credit card info-->
                             <div id="credit-card" class="tab-pane fade show active pt-3">
 
+                                <div class="table table-responsive">
+                                    <table class="table table-striped" id="myTableAll">
+                                        <thead>
+                                            <tr>
+                                                <th>&nbsp;</th>
+                                                <th>&nbsp;</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @if (count($data['getNotifications']) > 0)
+                                                @foreach ($data['getNotifications'] as $data)
+                                                
+                                            
+                                                <tr>
+                                                    <td>
+                                                        <i class="fas fa-circle {{ ($data->notify == 0) ? "text-success" : "text-secondary" }}"></i> 
+                                                    </td>
+                                                    <td>
+                                                        {!! ($data->notify == 0) ? '<strong>'.$data->activity.'</strong><br><small>'.$data->created_at.'</small>' : $data->activity.'<br><small>'.$data->created_at.'</small>'  !!}
+                                                    </td>
+                                                    
+                                                </tr>
+                            
+                                            @endforeach
+
+                                            @else
+
+                                            <tr>
+                                                <td align="center">
+                                                    No new notification
+                                                </td>
+                                            </tr>
+
+                                            @endif
+
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
                                     
-                                    
-                                    
-
-                                    <div class="form-group"> 
-                                       <form action="#" method="POST" id="formElem">
-                                           @csrf
-
-                                           <div class="form-group">
-                                               <label for="transaction_id" style="font-weight: bold;">Transaction Order</label>
-
-                                            <div class="input-group">
-                                                
-                                                <input type="text" name="transaction_id" id="transaction_id" class="form-control" required placeholder="e.g wallet-{{ date('dmy').time() }}">
-                                                <div class="input-group-append"> 
-                                                    <span class="input-group-text text-muted"> <i class="fas fa-university"></i></span> 
-                                                </div>
-                                                
-                                                
-
-                                            </div>
-
-                                           </div>
-
-
-                                           <div class="form-group">
-                                               <label for="reason" style="font-weight: bold;">Reason for Refund</label>
-
-                                            <div class="input-group">
-                                                    <textarea name="reason" id="reason" cols="30" rows="5" class="form-control" required></textarea>
-                                                
-                                            </div>
-
-                                           </div>
-
-
-                                           
-
-
-                                           <div class="form-group">
-                                               <div class="alert alert-info">
-                                                   <strong>Kindly note that refund takes up to 5 working days for review.</strong>
-                                               </div>
-
-                                           </div>
-
-
-                                           <div class="form-group">
-                                               <button type="button" class="btn btn-primary btn-block" onclick="handShake('requestforrefund')" id="cardSubmit">Submit</button>
-                                           </div>
-
-                                       </form>
-                                    </div>
-
 
                             
 
@@ -150,6 +139,7 @@ input[type="radio"] {
 
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js" integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous"></script>
+        <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 
     <script src="{{ asset('pace/pace.min.js') }}"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -157,6 +147,10 @@ input[type="radio"] {
 
 
     <script>
+
+        $(document).ready(function(){
+            $('#myTableAll').DataTable();
+        });
 
 function handShake(val){
 

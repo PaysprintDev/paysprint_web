@@ -86,6 +86,7 @@ input[type="radio"] {
                                             <select name="card_type" id="card_type" class="form-control" required>
                                                 <option value="">Select option</option>
                                                 <option value="Credit Card">Credit Card</option>
+                                                {{--  <option value="Google Pay">Google Pay</option>  --}}
                                                 {{-- <option value="Prepaid Card">Prepaid Card</option> --}}
                                                 {{-- <option value="Bank Account">Bank Account</option> --}}
                                             </select>
@@ -94,7 +95,7 @@ input[type="radio"] {
                                     </div>
 
 
-                                    <div class="form-group"> <label for="card_id">
+                                    <div class="form-group selectCard"> <label for="card_id">
                                             <h6>Select Card</h6>
                                         </label>
                                         <div class="input-group"> 
@@ -236,7 +237,20 @@ $('#commission').click(function(){
 
 
 $('#card_type').change(function(){
-    runCardType();
+
+    if($('#card_type').val() != "Google Pay"){
+        $(".selectCard").removeClass('disp-0');
+        $(".card-footer").removeClass('disp-0');
+        $(".withCardGoogle").addClass('disp-0');
+        runCardType();
+    }
+    else{
+        // Change to google pay button
+        $(".selectCard").addClass('disp-0');
+        $(".card-footer").addClass('disp-0');
+        $(".withCardGoogle").removeClass('disp-0');
+    }
+    
 });
 
 
@@ -645,6 +659,7 @@ function goBack() {
          */
         function getGooglePaymentsClient() {
           if ( paymentsClient === null ) {
+            // paymentsClient = new google.payments.api.PaymentsClient({environment: 'TEST'});
             paymentsClient = new google.payments.api.PaymentsClient({environment: 'PRODUCTION'});
           }
           return paymentsClient;
@@ -759,13 +774,15 @@ function goBack() {
             // Run System Payment Complete
             $('#paymentToken').val('');
                 // show returned data in developer console for debugging
-                console.log(paymentData);
+                // console.log(paymentData);
                 // @todo pass payment token to your gateway to process payment
                 paymentToken = paymentData.paymentMethodData.tokenizationData.token;
 
                 $('#paymentToken').val(paymentToken);
 
-                handShake('addmoney');
+                setTimeout(() => {
+                    handShake('addmoney');
+                }, 1000);
 
 
                 // $("#paymentForm").submit();

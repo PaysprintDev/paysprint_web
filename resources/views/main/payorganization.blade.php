@@ -28,6 +28,10 @@
   top: 0 !important;
 }
 
+.notificationImage{
+    margin-top: 30px;
+}
+
 </style>
 
 @show
@@ -743,7 +747,7 @@
 
                                                         <br>
 
-                                                        {{ $notify->created_at->diffForHumans() }}</small></td>
+                                                        {{ date('d-m-Y h:i A', strtotime($notify->created_at)) }}</small></td>
                                                 </tr>
 
                                                 @else
@@ -761,7 +765,7 @@
 
                                                         <br>
 
-                                                        {{ $notify->created_at->diffForHumans() }}</small></td>
+                                                        {{ date('d-m-Y h:i A', strtotime($notify->created_at)) }}</small></td>
                                                 </tr>
                                                     
                                                 @endif

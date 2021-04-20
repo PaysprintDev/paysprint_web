@@ -62,6 +62,8 @@ use App\AddBank as AddBank;
 
 use App\CardIssuer as CardIssuer;
 
+use App\Notifications as Notifications;
+
 use App\Traits\RpmApp;
 
 class HomeController extends Controller
@@ -108,6 +110,8 @@ class HomeController extends Controller
                     'urgentnotification' => $this->urgentNotification(Auth::user()->email),
                     'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
                     'getCard' => $this->getUserCard(),
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'getmerchantsByCategory' => $this->getMerchantsByCategory(),
                 );
 
                 $view = 'home';
@@ -138,6 +142,8 @@ class HomeController extends Controller
                     'urgentnotification' => $this->urgentNotification(Auth::user()->email),
                     'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
                     'getCard' => $this->getUserCard(),
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'getmerchantsByCategory' => $this->getMerchantsByCategory(),
                 );
             }
             else{
@@ -147,7 +153,6 @@ class HomeController extends Controller
                 $data = [];
             }
 
-            // dd($data);
 
 
         return view('home')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -164,10 +169,21 @@ class HomeController extends Controller
                 $this->page = 'About';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+
+                $data = array(
+                    'sendReceive' => $this->sendAndReceive(Auth::user()->email),
+                    'payInvoice' => $this->payInvoice(Auth::user()->email),
+                    'walletTrans' => $this->sendAndReceive(Auth::user()->email),
+                    'urgentnotification' => $this->urgentNotification(Auth::user()->email),
+                    'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+                    'getCard' => $this->getUserCard(),
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'About';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -175,9 +191,10 @@ class HomeController extends Controller
             $this->page = 'About';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
-        return view('main.about')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email]);
+        return view('main.about')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -190,10 +207,15 @@ class HomeController extends Controller
                 $this->page = 'Terms of Use';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Terms of Use';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -201,9 +223,10 @@ class HomeController extends Controller
             $this->page = 'Terms of Use';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
-        return view('main.termofuse')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email]);
+        return view('main.termofuse')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -215,10 +238,15 @@ class HomeController extends Controller
                 $this->page = 'Privacy Policy';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Privacy Policy';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -226,9 +254,10 @@ class HomeController extends Controller
             $this->page = 'Privacy Policy';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
-        return view('main.privacy')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email]);
+        return view('main.privacy')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -242,6 +271,7 @@ class HomeController extends Controller
                 $this->page = 'Payment';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                
             }
             else{
                 $this->page = 'Payment';
@@ -258,7 +288,7 @@ class HomeController extends Controller
 
         $data = array(
             'getinvoice' => $this->getthisInvoice($invoice),
-            'currencyCode' => $this->getCurrencyCode(Auth::user()->country)
+            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
         );
 
         // dd($data);
@@ -438,7 +468,7 @@ class HomeController extends Controller
 
         $data = array(
             'getpay' => $this->getthispayment($id),
-            'currencyCode' => $this->getCurrencyCode(Auth::user()->country)
+            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
         );
 
         // dd($data);
@@ -741,6 +771,104 @@ class HomeController extends Controller
         return view('main.requestforrefund')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
+
+    public function allNotifications(Request $req)
+    {
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'Notifications';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            }
+            else{
+                $this->page = 'Notifications';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'Notifications';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+
+        $data = array(
+            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'getNotifications' => $this->getUserNotifications(Auth::user()->ref_code),
+            'updateNotification' => $this->updateNotification(Auth::user()->ref_code),
+        );
+
+
+        return view('main.allnotifications')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function merchantCategory(Request $req)
+    {
+        $industry = $req->get('industry');
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'Notifications';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            }
+            else{
+                $this->page = 'Notifications';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'Notifications';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+
+        $data = array(
+            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'getNotifications' => $this->getUserNotifications(Auth::user()->ref_code),
+            'getMerchantHere' => $this->getMerchantHere($industry),
+        );
+
+
+        return view('main.merchantcategory')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function getMerchantHere($industry){
+        $data = ClientInfo::where('industry', $industry)->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
+    public function getUserNotifications($ref_code){
+        $data = Notifications::where('ref_code', $ref_code)->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
+
+
+    public function getfiveUserNotifications($ref_code){
+        $data = Notifications::where('ref_code', $ref_code)->latest()->take(5)->get();
+
+        return $data;
+    }
+
+    public function getMerchantsByCategory(){
+        $data = ClientInfo::where('industry', '!=', null)->orderBy('created_at', 'DESC')->groupBy('industry')->get();
+
+        return $data;
+    }
+
+    public function updateNotification($ref_code){
+        $data = Notifications::where('ref_code', $ref_code)->update(['notify' => 1]);
+
+        return $data;
+    }
+
     public function getthispayment($id){
 
         $data = DB::table('organization_pay')
@@ -797,10 +925,14 @@ class HomeController extends Controller
                 $this->page = 'Invoice';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Invoice';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -808,11 +940,12 @@ class HomeController extends Controller
             $this->page = 'Invoice';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
         $service = $this->myServices();
 
-        return view('main.invoice')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'service' => $service]);
+        return view('main.invoice')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'service' => $service, 'data' => $data]);
     }
 
     public function statement(Request $req)
@@ -823,10 +956,15 @@ class HomeController extends Controller
                 $this->page = 'Statement';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'service' => $this->myServices(),
+                );
             }
             else{
                 $this->page = 'Statement';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -834,9 +972,10 @@ class HomeController extends Controller
             $this->page = 'Statement';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
-        return view('main.statement')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email]);
+        return view('main.statement')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -849,10 +988,14 @@ class HomeController extends Controller
                 $this->page = 'Rental Property Management';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Management';
                 $this->name = '';
+                $data = [];
             }
 
 
@@ -861,9 +1004,10 @@ class HomeController extends Controller
             $this->page = 'Rental Property Management';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
-        return view('main.rentalmanagement')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email]);
+        return view('main.rentalmanagement')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -875,10 +1019,14 @@ class HomeController extends Controller
                 $this->page = 'Rental Property Management for Property Owner';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Management for Property Owner';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -886,9 +1034,10 @@ class HomeController extends Controller
             $this->page = 'Rental Property Management for Property Owner';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
-        return view('main.rentalmanagementadmin')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email]);
+        return view('main.rentalmanagementadmin')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -900,10 +1049,14 @@ class HomeController extends Controller
                 $this->page = 'Rental Property Management for Service Providers';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Management for Service Providers';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -911,6 +1064,7 @@ class HomeController extends Controller
             $this->page = 'Rental Property Management for Service Providers';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
         $getId = $consultant->where('consultant_email', $this->email)->get();
@@ -926,7 +1080,7 @@ class HomeController extends Controller
         }
 
 
-        return view('main.rentalmanagementconsultant')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'id' => $id]);
+        return view('main.rentalmanagementconsultant')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'id' => $id, 'data' => $data]);
     }
 
 
@@ -939,10 +1093,14 @@ class HomeController extends Controller
                 $this->page = 'Rental Property Management for Service Providers';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Management for Service Providers';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -950,12 +1108,13 @@ class HomeController extends Controller
             $this->page = 'Rental Property Management for Service Providers';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
 
         $statuschecker = $this->workorderCheck($this->email, $req->get('s'));
 
-        return view('main.rentalmanagementworkorder')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'statuschecker' => $statuschecker]);
+        return view('main.rentalmanagementworkorder')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'statuschecker' => $statuschecker, 'data' => $data]);
     }
 
 
@@ -967,10 +1126,14 @@ class HomeController extends Controller
                 $this->page = 'Rental Property Management for Service Providers';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Management for Service Providers';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -978,12 +1141,13 @@ class HomeController extends Controller
             $this->page = 'Rental Property Management for Service Providers';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
 
         $maintdetail = $this->consultmaintenanceDetail($id);
 
-        return view('main.rentalmanagementmymaintenance')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'maintdetail' => $maintdetail]);
+        return view('main.rentalmanagementmymaintenance')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'maintdetail' => $maintdetail, 'data' => $data]);
     }
 
 
@@ -995,10 +1159,14 @@ class HomeController extends Controller
                 $this->page = 'Rental Property Management for Service Providers';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Management for Service Providers';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1006,13 +1174,14 @@ class HomeController extends Controller
             $this->page = 'Rental Property Management for Service Providers';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
 
         $statuschecker = $this->workorderCheck($this->email, $req->get('s'));
         $maintdetail = $this->maintenanceDetail($id);
 
-        return view('main.rentalmanagementmaintenance')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'statuschecker' => $statuschecker, 'maintdetail' => $maintdetail]);
+        return view('main.rentalmanagementmaintenance')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'statuschecker' => $statuschecker, 'maintdetail' => $maintdetail, 'data' => $data]);
     }
 
 
@@ -1026,10 +1195,14 @@ class HomeController extends Controller
                 $this->page = 'Rental Property Management for Service Providers';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Management for Service Providers';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1037,13 +1210,14 @@ class HomeController extends Controller
             $this->page = 'Rental Property Management for Service Providers';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
 
         $statuschecker = $this->workorderCheck($this->email, $req->get('s'));
         $maintdetail = $this->maintenanceDetail($id);
 
-        return view('main.rentalmanagementinvoice')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'statuschecker' => $statuschecker, 'maintdetail' => $maintdetail]);
+        return view('main.rentalmanagementinvoice')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'statuschecker' => $statuschecker, 'maintdetail' => $maintdetail, 'data' => $data]);
     }
 
 
@@ -1057,10 +1231,14 @@ class HomeController extends Controller
                 $this->page = 'Rental Property Management for Service Providers';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Management for Service Providers';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1068,13 +1246,14 @@ class HomeController extends Controller
             $this->page = 'Rental Property Management for Service Providers';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
 
         $statuschecker = $this->workorderCheck($this->email, $req->get('s'));
         $maintdetail = $this->maintenanceDetail($id);
 
-        return view('main.rentalmanagementquote')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'statuschecker' => $statuschecker, 'maintdetail' => $maintdetail]);
+        return view('main.rentalmanagementquote')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'statuschecker' => $statuschecker, 'maintdetail' => $maintdetail, 'data' => $data]);
     }
 
 
@@ -1088,10 +1267,14 @@ class HomeController extends Controller
                 $this->page = 'Rental Property Management for Service Providers';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Management for Service Providers';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1099,13 +1282,14 @@ class HomeController extends Controller
             $this->page = 'Rental Property Management for Service Providers';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
 
         $statuschecker = $this->workorderCheck($this->email, $req->get('s'));
         $viewquotedetail = $this->quoteDetail($id);
 
-        return view('main.rentalmanagementnegotiate')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'statuschecker' => $statuschecker, 'viewquotedetail' => $viewquotedetail]);
+        return view('main.rentalmanagementnegotiate')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'statuschecker' => $statuschecker, 'viewquotedetail' => $viewquotedetail, 'data' => $data]);
     }
 
 
@@ -1117,10 +1301,14 @@ class HomeController extends Controller
                 $this->page = 'Statement';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Management for Property Owner';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1128,9 +1316,10 @@ class HomeController extends Controller
             $this->page = 'Rental Property Management for Property Owner';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
-        return view('main.rentalmanagementadminfacility')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email]);
+        return view('main.rentalmanagementadminfacility')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -1142,10 +1331,14 @@ class HomeController extends Controller
                 $this->page = 'Statement';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Management for Property Owner';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1153,11 +1346,12 @@ class HomeController extends Controller
             $this->page = 'Rental Property Management for Property Owner';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
         $consultant = $this->consultantCheck($id);
 
-        return view('main.rentalmanagementadminconsultantedit')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'consultant' => $consultant]);
+        return view('main.rentalmanagementadminconsultantedit')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'consultant' => $consultant, 'data' => $data]);
     }
 
 
@@ -1169,10 +1363,14 @@ class HomeController extends Controller
                 $this->page = 'Statement';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Management for Property Owner';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1180,9 +1378,10 @@ class HomeController extends Controller
             $this->page = 'Rental Property Management for Property Owner';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
-        return view('main.rentalmanagementadminconsultant')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email]);
+        return view('main.rentalmanagementadminconsultant')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -1197,10 +1396,12 @@ class HomeController extends Controller
                 $this->page = 'Statement';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $ref_code = Auth::user()->ref_code;
             }
             else{
                 $this->page = 'Rental Property Management for Property Owner';
                 $this->name = '';
+                $ref_code = 0;
             }
 
         }
@@ -1208,6 +1409,7 @@ class HomeController extends Controller
             $this->page = 'Rental Property Management for Property Owner';
             $this->name = session('name');
             $this->email = session('email');
+            $ref_code = 0;
         }
 
         $maintreq = $maintenance->where('post_id', $id)->get();
@@ -1215,7 +1417,8 @@ class HomeController extends Controller
 
         $data = array(
             'maintenance' => $maintreq,
-            'consult' => $consult
+            'consult' => $consult,
+            'getfiveNotifications' => $this->getfiveUserNotifications($ref_code)
         );
 
         // dd($data);
@@ -1233,10 +1436,15 @@ class HomeController extends Controller
                 $this->page = 'Statement';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
+                
             }
             else{
                 $this->page = 'Rental Property Maintenance';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1244,13 +1452,14 @@ class HomeController extends Controller
             $this->page = 'Rental Property Maintenance';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
         // Get Organization & Business
         $clientInfo = $this->clientsInformation();
 
 
-        return view('main.maintenance')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'clientInfo' => $clientInfo]);
+        return view('main.maintenance')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'clientInfo' => $clientInfo, 'data' => $data]);
     }
 
 
@@ -1262,10 +1471,14 @@ class HomeController extends Controller
                 $this->page = 'Statement';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Maintenance';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1273,13 +1486,14 @@ class HomeController extends Controller
             $this->page = 'Rental Property Maintenance';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
 
         // Get Organization & Business
         $statuschecker = $this->maintenanceCheck($this->email, $req->get('s'));
 
-        return view('main.maintenancestatus')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'statuschecker' => $statuschecker]);
+        return view('main.maintenancestatus')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'statuschecker' => $statuschecker, 'data' => $data]);
     }
 
 
@@ -1293,10 +1507,14 @@ class HomeController extends Controller
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $this->ref_code = Auth::user()->ref_code;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Maintenance for Property Owner';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1305,12 +1523,13 @@ class HomeController extends Controller
             $this->name = session('name');
             $this->email = session('email');
             $this->ref_code = session('ref_code');
+            $data = [];
         }
 
         // Get Organization & Business
         $statuschecker = $this->requestmaintenanceCheck($this->ref_code, $req->get('s'));
 
-        return view('main.requestmaintenancecheck')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'statuschecker' => $statuschecker]);
+        return view('main.requestmaintenancecheck')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'statuschecker' => $statuschecker, 'data' => $data]);
     }
 
 
@@ -1323,10 +1542,14 @@ class HomeController extends Controller
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $this->ref_code = Auth::user()->ref_code;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Maintenance for Property Owner';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1335,12 +1558,13 @@ class HomeController extends Controller
             $this->name = session('name');
             $this->email = session('email');
             $this->ref_code = session('ref_code');
+            $data = [];
         }
 
         // Get Organization & Business
         $statuschecker = $this->adminworkorderCheck($this->email);
 
-        return view('main.adminworkordercheck')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'statuschecker' => $statuschecker]);
+        return view('main.adminworkordercheck')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'statuschecker' => $statuschecker, 'data' => $data]);
     }
 
 
@@ -1353,10 +1577,14 @@ class HomeController extends Controller
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $this->ref_code = Auth::user()->ref_code;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Maintenance for Property Owner';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1365,12 +1593,13 @@ class HomeController extends Controller
             $this->name = session('name');
             $this->email = session('email');
             $this->ref_code = session('ref_code');
+            $data = [];
         }
 
         // Get Organization & Business
         $statuschecker = $this->requestinvoiceCheck($this->email);
 
-        return view('main.admininvoicecheck')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'statuschecker' => $statuschecker]);
+        return view('main.admininvoicecheck')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'statuschecker' => $statuschecker, 'data' => $data]);
     }
 
 
@@ -1383,10 +1612,14 @@ class HomeController extends Controller
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $this->ref_code = Auth::user()->ref_code;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Maintenance for Property Owner';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1395,12 +1628,13 @@ class HomeController extends Controller
             $this->name = session('name');
             $this->email = session('email');
             $this->ref_code = session('ref_code');
+            $data = [];
         }
 
         // Get Organization & Business
         $statuschecker = $this->requestquoteCheck($this->email);
 
-        return view('main.adminquotecheck')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'statuschecker' => $statuschecker]);
+        return view('main.adminquotecheck')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'statuschecker' => $statuschecker, 'data' => $data]);
     }
 
 
@@ -1413,10 +1647,14 @@ class HomeController extends Controller
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $this->ref_code = Auth::user()->ref_code;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Maintenance for Property Owner';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1425,12 +1663,13 @@ class HomeController extends Controller
             $this->name = session('name');
             $this->email = session('email');
             $this->ref_code = session('ref_code');
+            $data = [];
         }
 
 
         $viewquotedetail = $this->quoteDetail($id);
 
-        return view('main.adminquotenegotiate')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'viewquotedetail' => $viewquotedetail]);
+        return view('main.adminquotenegotiate')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'viewquotedetail' => $viewquotedetail, 'data' => $data]);
     }
 
 
@@ -1443,10 +1682,14 @@ class HomeController extends Controller
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $this->ref_code = Auth::user()->ref_code;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Maintenance for Property Owner';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1455,6 +1698,7 @@ class HomeController extends Controller
             $this->name = session('name');
             $this->email = session('email');
             $this->ref_code = session('ref_code');
+            $data = [];
         }
 
         // Get Organization & Business
@@ -1472,10 +1716,14 @@ class HomeController extends Controller
                 $this->page = 'Statement';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Maintenance';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1483,12 +1731,13 @@ class HomeController extends Controller
             $this->page = 'Rental Property Maintenance';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
         // Get Organization & Business
         $viewmaintdetail = $this->maintenanceDetail($id);
 
-        return view('main.maintenanceview')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'maintdetail' => $viewmaintdetail]);
+        return view('main.maintenanceview')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'maintdetail' => $viewmaintdetail, 'data' => $data]);
     }
 
     public function maintenanceEdit(Request $req, $id)
@@ -1499,10 +1748,14 @@ class HomeController extends Controller
                 $this->page = 'Statement';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Maintenance';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1510,13 +1763,14 @@ class HomeController extends Controller
             $this->page = 'Rental Property Maintenance';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
         // Get Organization & Business
         $viewmaintdetail = $this->maintenanceDetail($id);
         $clientInfo = $this->clientsInformation();
 
-        return view('main.maintenanceedit')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'maintdetail' => $viewmaintdetail, 'clientInfo' => $clientInfo]);
+        return view('main.maintenanceedit')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'maintdetail' => $viewmaintdetail, 'clientInfo' => $clientInfo, 'data' => $data]);
     }
 
 
@@ -1528,10 +1782,14 @@ class HomeController extends Controller
                 $this->page = 'Statement';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Maintenance for Property Owner';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1539,12 +1797,13 @@ class HomeController extends Controller
             $this->page = 'Rental Property Maintenance for Property Owner';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
         // Get Organization & Business
         $viewmaintdetail = $this->maintenanceDetail($id);
 
-        return view('main.maintenanceadminview')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'maintdetail' => $viewmaintdetail]);
+        return view('main.maintenanceadminview')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'maintdetail' => $viewmaintdetail, 'data' => $data]);
     }
 
 
@@ -1556,10 +1815,14 @@ class HomeController extends Controller
                 $this->page = 'Statement';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Amenities';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1567,12 +1830,13 @@ class HomeController extends Controller
             $this->page = 'Rental Property Amenities';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
         $facilities = $this->facilities();
 
 
-        return view('main.amenities')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'facilities' => $facilities]);
+        return view('main.amenities')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'facilities' => $facilities, 'data' => $data]);
     }
 
     public function facilityview(Request $req, $id)
@@ -1583,10 +1847,14 @@ class HomeController extends Controller
                 $this->page = 'Statement';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Amenities';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1594,12 +1862,13 @@ class HomeController extends Controller
             $this->page = 'Rental Property Amenities';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
         $facilityinfo = $this->facilityInfo($id);
 
 
-        return view('main.facilityview')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'facilityinfo' => $facilityinfo]);
+        return view('main.facilityview')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'facilityinfo' => $facilityinfo, 'data' => $data]);
     }
 
     public function messages(Request $req)
@@ -1610,10 +1879,14 @@ class HomeController extends Controller
                 $this->page = 'Statement';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Messages';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1621,9 +1894,10 @@ class HomeController extends Controller
             $this->page = 'Rental Property Messages';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
-        return view('main.messages')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email]);
+        return view('main.messages')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -1635,10 +1909,14 @@ class HomeController extends Controller
                 $this->page = 'Statement';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Payment History';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1646,12 +1924,13 @@ class HomeController extends Controller
             $this->page = 'Rental Property Payment History';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
 
         $payhistory = $this->paymentHistoryrecord($this->email);
 
-        return view('main.paymenthistory')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'payhistory' => $payhistory]);
+        return view('main.paymenthistory')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'payhistory' => $payhistory, 'data' => $data]);
     }
 
     public function documents(Request $req)
@@ -1663,10 +1942,14 @@ class HomeController extends Controller
                 $this->page = 'Statement';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Documents';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1674,6 +1957,7 @@ class HomeController extends Controller
             $this->page = 'Rental Property Documents';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
 
@@ -1681,7 +1965,7 @@ class HomeController extends Controller
         $sharedDocs = $this->sharedDocs($this->email);
 
 
-        return view('main.documents')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'sharedDocs' => $sharedDocs]);
+        return view('main.documents')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'sharedDocs' => $sharedDocs, 'data' => $data]);
     }
 
     public function otherservices(Request $req)
@@ -1692,10 +1976,14 @@ class HomeController extends Controller
                 $this->page = 'Statement';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Rental Property Other Services';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1703,9 +1991,10 @@ class HomeController extends Controller
             $this->page = 'Rental Property Other Services';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
-        return view('main.otherservices')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email]);
+        return view('main.otherservices')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -1718,10 +2007,13 @@ class HomeController extends Controller
                 $this->page = 'Money Transfer';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $ref_code = Auth::user()->ref_code;
+                
             }
             else{
                 $this->page = 'Money Transfer';
                 $this->name = '';
+                $ref_code = 0;
             }
 
         }
@@ -1729,6 +2021,7 @@ class HomeController extends Controller
             $this->page = 'Money Transfer';
             $this->name = session('name');
             $this->email = session('email');
+            $ref_code = 0;
         }
 
         // Get Organization & Business
@@ -1737,7 +2030,9 @@ class HomeController extends Controller
         $data = array(
             'newnotification' => $this->notification($this->email),
             'allnotification' => $this->allnotification($this->email),
+            'getfiveNotifications' => $this->getfiveUserNotifications($ref_code),
         );
+
 
         return view('main.payorganization')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'clientInfo' => $clientInfo, 'location' => $location, 'data' => $data]);
     }
@@ -1908,10 +2203,14 @@ class HomeController extends Controller
                 $this->page = 'Contact';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Contact';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1919,9 +2218,10 @@ class HomeController extends Controller
             $this->page = 'Contact';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
-        return view('main.contact')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email]);
+        return view('main.contact')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -1933,10 +2233,14 @@ class HomeController extends Controller
                 $this->page = 'Services';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
             }
             else{
                 $this->page = 'Services';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1944,9 +2248,10 @@ class HomeController extends Controller
             $this->page = 'Services';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
         }
 
-        return view('main.services')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email]);
+        return view('main.services')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -1958,12 +2263,16 @@ class HomeController extends Controller
                 $this->page = 'Create a Ticket';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
 
                 $this->getTickets = CreateEvent::where('user_id', $this->email)->orderBy('created_at', 'DESC')->get();
             }
             else{
                 $this->page = 'Create a Ticket';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -1971,11 +2280,12 @@ class HomeController extends Controller
             $this->page = 'Create a Ticket';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
 
             $this->getTickets = CreateEvent::where('user_id', $this->email)->orderBy('created_at', 'DESC')->get();
         }
 
-        return view('main.ticket')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'getTickets' => $this->getTickets]);
+        return view('main.ticket')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'getTickets' => $this->getTickets, 'data' => $data]);
     }
 
     
@@ -1988,11 +2298,15 @@ class HomeController extends Controller
                 $this->page = 'Profile Information';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
 
             }
             else{
                 $this->page = 'Profile Information';
                 $this->name = '';
+                $data = [];
             }
 
         }
@@ -2000,10 +2314,11 @@ class HomeController extends Controller
             $this->page = 'Profile Information';
             $this->name = session('name');
             $this->email = session('email');
+            $data = [];
 
         }
 
-        return view('main.profile')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email]);
+        return view('main.profile')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -2792,7 +3107,7 @@ class HomeController extends Controller
         $amount = $amount;
         $localCurrency = 'USD'.$localcurrency;
 
-        $access_key = 'c9e62dd9e7af596a2e955a8d324f0ca6';
+        $access_key = '6173fa628b16d8ce1e0db5cfa25092ac';
 
         $curl = curl_init();
 

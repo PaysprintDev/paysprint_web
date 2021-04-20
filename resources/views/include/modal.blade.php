@@ -11,16 +11,33 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
-          <h5 class="modal-title" id="exampleModalCenterTitle">Money Transfer</h5>
+          <h3 class="modal-title" id="exampleModalCenterTitle">Money Transfer</h3>
           
         </div>
         {{--  <div class="modal-body">
           <center><h4>How would you like to send Money</h4></center>
         </div>  --}}
         <div class="modal-footer">
-          {{-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> --}}
-          <a type="button" class="btn btn-primary btn btn-block" href="{{ url('payorganization?type=local') }}">Local</a>
-          <a type="button" class="btn btn-danger btn btn-block" href="javascript:void()" onclick="comingSoon()">International</a>
+
+          <div class="row">
+            <center>
+              <div class="col-md-6">
+                <a href="{{ url('payorganization?type=local') }}" title="Local">
+                <img src="https://img.icons8.com/cotton/64/000000/location-update.png"/>
+                </a>
+              </div>
+
+              <div class="col-md-6">
+                <a href="javascript:void()" onclick="comingSoon()" title="International">
+                  <img src="https://img.icons8.com/cotton/64/000000/worldwide-location.png"/>
+                  
+                </a>
+              </div>
+            </center>
+          </div>
+
+          {{--  <a type="button" class="btn btn-primary btn btn-block" href="{{ url('payorganization?type=local') }}">Local</a>
+          <a type="button" class="btn btn-danger btn btn-block" href="javascript:void()" onclick="comingSoon()">International</a>  --}}
           {{-- <a type="button" class="btn btn-danger btn btn-block" href="{{ url('payorganization?type=international') }}">International</a> --}}
         </div>
       </div>

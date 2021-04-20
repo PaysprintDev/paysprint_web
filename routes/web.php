@@ -18,6 +18,8 @@
 // App Logger
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
+Route::get('feecharge', 'MaintenanceFeeCharge@monthlyMaintenaceFee');
+
 Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
 
 // Major Routes
@@ -70,9 +72,11 @@ Route::prefix('mywallet')->group(function () {
 	Route::get('withdrawmoney', ['uses' => 'HomeController@withdrawMoney', 'as' => 'Withdraw Money']);
 	Route::get('addbank', ['uses' => 'HomeController@addBankDetail', 'as' => 'Add bank detail']);
 	Route::get('requestrefund', ['uses' => 'HomeController@requestForRefund', 'as' => 'request for refund']);
+	Route::get('notifications', ['uses' => 'HomeController@allNotifications', 'as' => 'notifications']);
 	
 });
 
+Route::get('merchantcategory', ['uses' => 'HomeController@merchantCategory', 'as' => 'merchant category']);
 
 
 
@@ -167,6 +171,7 @@ Route::prefix('Admin/wallet')->group(function () {
 });
 
 
+
 Route::prefix('Admin/card')->group(function () {
 
 	Route::get('issuer', ['uses' => 'AdminController@allCardIssuer', 'as' => 'card issuer']);
@@ -175,14 +180,32 @@ Route::prefix('Admin/card')->group(function () {
 	Route::get('addedcards', ['uses' => 'AdminController@allAddedCards', 'as' => 'all added cards']);
 	Route::get('getusercard/{user_id}', ['uses' => 'AdminController@getUsersCard', 'as' => 'get user card']);
 	Route::get('redflagged', ['uses' => 'AdminController@redFlaggedAccount', 'as' => 'red flagged account']);
+
+
+	Route::get('merchantcreditcard/{id}', ['uses' => 'AdminController@merchantCreditCard', 'as' => 'merchant credit card']);
+	Route::get('editmerchantcreditcard/{id}', ['uses' => 'AdminController@editMerchantCreditCard', 'as' => 'Edit merchant credit card']);
+	Route::get('editmerchantprepaidcard/{id}', ['uses' => 'AdminController@editMerchantPrepaidCard', 'as' => 'Edit merchant prepaid card']);
+	Route::get('merchantprepaidcard/{id}', ['uses' => 'AdminController@merchantPrepaidCard', 'as' => 'merchant prepaid card']);
+	Route::get('merchantbankaccount/{id}', ['uses' => 'AdminController@merchantBankAccount', 'as' => 'merchant bank account']);
+	Route::get('editmerchantbankaccount/{id}', ['uses' => 'AdminController@editMerchantBankAccount', 'as' => 'Edit merchant bank account']);
+	
+});
+Route::prefix('Admin/invoice')->group(function () {
+
+	Route::get('single', ['uses' => 'AdminController@createSingleInvoice', 'as' => 'create single invoice']);
+	Route::get('bulk', ['uses' => 'AdminController@createBulkInvoice', 'as' => 'create bulk invoice']);
 	
 });
 
+
+Route::get('Admin/servicetypes', ['uses' => 'AdminController@createServiceTypes', 'as' => 'create service types']);
+Route::get('Admin/api-documentation', ['uses' => 'AdminController@apiDocumentation', 'as' => 'api integration']);
 
 Route::get('AdminLogin', ['uses' => 'AdminController@adminlogin', 'as' => 'AdminLogin']);
 Route::get('AdminRegister', ['uses' => 'AdminController@adminregister', 'as' => 'AdminRegister']);
 Route::get('otherpay', ['uses' => 'AdminController@Otherpay', 'as' => 'Otherpay']);
 Route::get('Admin/statement', ['uses' => 'AdminController@getStatement', 'as' => 'getStatement']);
+Route::get('Admin/walletstatement', ['uses' => 'AdminController@getWalletStatement', 'as' => 'getwalletStatement']);
 Route::get('Admin/payreport', ['uses' => 'AdminController@payreport', 'as' => 'payreport']);
 Route::get('Admin/epayreport', ['uses' => 'AdminController@epayreport', 'as' => 'epayreport']);
 Route::get('Admin/payremittancereport', ['uses' => 'AdminController@payremittancereport', 'as' => 'payremittancereport']);

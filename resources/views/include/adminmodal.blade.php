@@ -261,7 +261,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close_single_step1">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h5 class="modal-title" id="exampleModalLongTitle">Create Invoice</h5>
+        <h5 class="modal-title" id="exampleModalLongTitle">Create and Send Invoice</h5>
 
       </div>
         <div class="modal-body">

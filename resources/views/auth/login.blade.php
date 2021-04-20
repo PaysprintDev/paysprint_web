@@ -33,6 +33,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
     <style>
     /* width */
 body::-webkit-scrollbar {
@@ -195,7 +197,9 @@ body::-webkit-scrollbar-thumb:hover {
 
             <input type="password" name="password" id="loginpassword" class="form-control input_box" placeholder="Password *" required>
 
+            {!! htmlFormSnippet() !!}
 
+            <br>
 
             <button type="button" class="btn btn-default loginBtn" onclick="login()">Login</button>
             <img src="https://cdn.dribbble.com/users/608059/screenshots/2032455/spinner.gif" class="spinner disp-0" style="width: auto; height: 50px;">
@@ -529,6 +533,11 @@ var spinner = $('.spinner');
 var submitBtn = $('.loginBtn');
 var email = $('#loginemail').val();
 var password = $('#loginpassword').val();
+
+if (grecaptcha.getResponse() == ""){
+    swal('Oops', 'Check the captcha box', 'info');
+    return false;
+}
 
 if(email == ""){
     swal('Oops', 'Your email is important for login', 'info');

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 
 use App\User as User;
 use App\AnonUsers as AnonUsers;
+use App\ServiceType as ServiceType;
 
 
 class UserController extends Controller
@@ -155,7 +156,7 @@ class UserController extends Controller
                     $status = 200;
                     $message = 'Login successful';
 
-                    $this->createNotification($userData->refCode, "Hello ".$getUser->name.", Your login successful. Welcome back");
+                    $this->createNotification($userData->refCode, "Hello ".$getUser->name.", Your login was successful. Welcome back");
                 }
 
 
@@ -236,6 +237,8 @@ class UserController extends Controller
 
         return $this->returnJSON($resData, $status);
     }
+
+
 
 
     public function updatePassword(Request $req){
