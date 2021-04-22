@@ -28,7 +28,7 @@
   top: 0 !important;
 }
 .notificationImage{
-    margin-top: 30px;
+    margin-top: 0px;
 }
 </style>
 
@@ -263,6 +263,38 @@
             </div>
             <div class="form-group">
                 <button type="button" class="btn btn-primary btn-block" id="securityBtn" onclick="handShake('securityquestans')">Save</button>
+            </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingFour">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+          Auto Deposit
+        </a>
+      </h4>
+    </div>
+    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+      <div class="panel-body">
+
+        <h5 >
+            <strong>Status: <span style="color: {{ (Auth::user()->auto_deposit == 'on' ? 'green' : 'red') }}">{{ strtoupper(Auth::user()->auto_deposit) }}</span></strong>
+        </h5>
+        <hr>
+        <form action="#" method="post" id="formElemautodeposit">
+
+            <div class="form-group">
+                <label for="securityQuestion">Change Status</label>
+                <select name="auto_deposit" id="auto_deposit" class="form-control">
+                    <option value="on" {{ (Auth::user()->auto_deposit == 'on' ? 'selected' : '') }}>ON</option>
+                    <option value="off" {{ (Auth::user()->auto_deposit == 'off' ? 'selected' : '') }}>OFF</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary btn-block" id="autodepositBtn" onclick="handShake('autodeposit')">Save</button>
             </div>
 
         </form>

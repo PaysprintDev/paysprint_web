@@ -58,6 +58,8 @@ Route::prefix('/v1')->group(function () {
 
     Route::post('security',  ['uses' => 'api\v1\UserController@updateSecurity'])->name('update security');
 
+    Route::post('autodeposit',  ['uses' => 'api\v1\UserController@updateAutoDeposit'])->name('update auto deposit');
+
 
     Route::post('resetpassword',  ['uses' => 'api\v1\UserController@resetPassword'])->name('reset password');
 
@@ -65,6 +67,9 @@ Route::prefix('/v1')->group(function () {
 
 
     Route::post('sendmoney',  ['uses' => 'api\v1\MoneyTransferController@sendMoney'])->name('send money');
+
+
+    Route::post('claimmoney',  ['uses' => 'api\v1\MoneyTransferController@claimMoney'])->name('claim money');
 
 
     Route::post('receivemoney',  ['uses' => 'api\v1\MoneyTransferController@receiveMoney'])->name('receive money');
@@ -133,7 +138,7 @@ Route::prefix('/v1')->group(function () {
     
     Route::post('moneywithdrawal',  ['uses' => 'MonerisController@moneyWithdrawal'])->name('withdraw from wallet');
     
-    Route::post('getmycarddetail',  ['uses' => 'api\v1\CardController@getMyCardDetail'])->name('get card details');
+    Route::get('getmycarddetail',  ['uses' => 'api\v1\CardController@getMyCardDetail'])->name('get card details');
     
     Route::post('addnewbank',  ['uses' => 'api\v1\CardController@addNewBank'])->name('add new bank');
 

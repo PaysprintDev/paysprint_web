@@ -342,14 +342,18 @@ class CardController extends Controller
 
     public function getMyCardDetail(Request $req){
 
+        // dd($req->all());
+
+        $cardDetail = $req->get('card_provider');
+
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-        if($req->card_provider == "Bank Account"){
+        if($cardDetail == "Bank Account"){
         $query = AddBank::where('user_id', $thisuser->id)->get();
 
         }
         else{
-        $query = AddCard::where('user_id', $thisuser->id)->where('card_provider', 'LIKE', '%'.$req->card_provider.'%')->get();
+        $query = AddCard::where('user_id', $thisuser->id)->where('card_provider', 'LIKE', '%'.$cardDetail.'%')->get();
 
         }
 
@@ -362,11 +366,11 @@ class CardController extends Controller
         }
         else{
             $data = [];
-            $message = $req->card_provider." not available";
+            $message = $cardDetail." not available";
             $status = 400;
         }
 
-        $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'action' => $req->card_provider];
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'action' => $cardDetail];
 
         return $this->returnJSON($resData, $status);
 

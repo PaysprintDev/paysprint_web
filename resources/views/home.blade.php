@@ -94,6 +94,18 @@
                                                                         <small>
                                                                             {{ date('d/m/Y h:i a', strtotime($sendRecData->created_at)) }}
                                                                         </small>
+
+                                                                        @if ($sendRecData->auto_deposit == 'off')
+                                                                        <br>
+                                                                        <small>
+                                                                            <input type="hidden" name="reference_code" id="reference_code" value="{{ $sendRecData->reference_code }}">
+
+                                                                            <small><span class='badge badge-danger' style='cursor: pointer;' onclick="shakeHand('claimmoney', '{{ $sendRecData->reference_code }}')">Pending - Add to wallet <img src="https://img.icons8.com/officel/16/000000/spinner-frame-4.png" class="fa-spin disp-0" id="btn{{ $sendRecData->reference_code }}"/></span></small>
+
+                                                                            
+                                                                        </small>
+                                                                    @endif
+
                                                                     </div>
                                                                 </div>
 
@@ -290,7 +302,7 @@
                     
                     <div class="card" style="width: 100%;">
                             <div class="card-header" style="background-color: #f6b60b; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
-                                Quick Setup
+                                Quick Wallet Setup
                                 @if (Auth::user()->approval == 0 || count($data['getCard']) <= 0 || Auth::user()->transaction_pin == null || Auth::user()->securityQuestion == null)
                                     <a href="javascript:void()" type="button" class="btn btn-danger fa-blink">Incomplete</a>
                                 @endif

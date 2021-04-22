@@ -15,7 +15,7 @@
 
 <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
 
-    <title>PaySprint | Request For Refund</title>
+    <title>PaySprint | Request For Refund To Wallet</title>
 
     <style>
         body {
@@ -55,7 +55,7 @@ input[type="radio"] {
         <!-- For demo purpose -->
         <div class="row mb-4">
             <div class="col-lg-8 mx-auto text-center">
-                <h1 class="display-4">Request For Refund</h1>
+                <h1 class="display-4">Request For Refund To Wallet</h1>
             </div>
         </div> <!-- End -->
         <div class="row">

@@ -2004,6 +2004,59 @@ function notifyForm(email){
 @auth
 <script>
 
+
+    function shakeHand(val, ref_code){
+
+        var route;
+
+if(val == 'claimmoney'){
+
+var formData = new FormData();
+var spin = $('#btn'+ref_code);
+formData.append('reference_code', $('#reference_code').val());
+
+
+    route = "{{ URL('/api/v1/claimmoney') }}";
+
+        Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            spin.removeClass('disp-0');
+        },
+        success: function(result){
+            spin.addClass('disp-0');
+            if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+        },
+        error: function(err) {
+            spin.addClass('disp-0');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+    }
+
+
 function handShake(val){
 
 var route;
@@ -2242,6 +2295,54 @@ else if(val == "securityquestans"){
     });
 
 }
+else if(val == "autodeposit"){
+
+    formData = new FormData(formElemautodeposit);
+
+    route = "{{ URL('/api/v1/autodeposit') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#autodepositBtn').text('Please wait...');
+        },
+        success: function(result){
+
+            $('#autodepositBtn').text('Save');
+
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $('#autodepositBtn').text('Save');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+
 
 
 else if(val == "resetPassword"){

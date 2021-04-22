@@ -79,13 +79,14 @@ input[type="radio"] {
 
 
                                     <div class="form-group"> <label for="card_type">
-                                            <h6>Select Card Type/ Bank Account</h6>
+                                            {{--  <h6>Select Card Type/ Bank Account</h6>  --}}
+                                            <h6>Select Payment Gateway</h6>
                                         </label>
                                         <div class="input-group"> 
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/cotton/20/000000/money--v4.png"/> </span> </div>
                                             <select name="card_type" id="card_type" class="form-control" required>
                                                 <option value="">Select option</option>
-                                                <option value="Credit Card">Credit Card</option>
+                                                <option value="Credit Card">PaySprint</option>
                                                 {{--  <option value="Google Pay">Google Pay</option>  --}}
                                                 {{-- <option value="Prepaid Card">Prepaid Card</option> --}}
                                                 {{-- <option value="Bank Account">Bank Account</option> --}}
@@ -186,8 +187,15 @@ input[type="radio"] {
                                     <div class="card-footer"> <button type="button" onclick="handShake('addmoney')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </button></div>
 
                                     <div class="col-md-12 withCardGoogle disp-0">
-                                        <center><div id="container"></div></center>
+                                        <center>
+                                            <div id="container"></div>
+
+                                            
+    <div id="moneris-google-pay" store-id="monca04155" web-merchant-key="8721CF195A6D59C63304681BB18FA9163808950E2743426DBF11CB7D91A74E03"></div>
+                                        </center>
                                     </div>
+
+                                    
 
                                     
                                 </form>
@@ -213,12 +221,8 @@ input[type="radio"] {
     <script src="{{ asset('pace/pace.min.js') }}"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-        {{-- Google Pay API --}}
-        
-        <script async
-          src="https://pay.google.com/gp/p/js/pay.js"
-          onload="onGooglePayLoaded()">
-</script>
+
+
 
         <script>
 
@@ -572,8 +576,9 @@ function goBack() {
         const tokenizationSpecification = {
           type: 'PAYMENT_GATEWAY',
           parameters: {
-            'gateway': 'example',
-            'gatewayMerchantId': 'exampleGatewayMerchantId'
+            'gateway': 'moneris',
+            // 'gatewayMerchantId': 'gwca026583'
+            'gatewayMerchantId': 'monca04155'
           }
         };
         
@@ -659,8 +664,8 @@ function goBack() {
          */
         function getGooglePaymentsClient() {
           if ( paymentsClient === null ) {
-            // paymentsClient = new google.payments.api.PaymentsClient({environment: 'TEST'});
-            paymentsClient = new google.payments.api.PaymentsClient({environment: 'PRODUCTION'});
+            paymentsClient = new google.payments.api.PaymentsClient({environment: 'TEST'});
+            // paymentsClient = new google.payments.api.PaymentsClient({environment: 'PRODUCTION'});
           }
           return paymentsClient;
         }
@@ -770,22 +775,61 @@ function goBack() {
          * @see {@link https://developers.google.com/pay/api/web/reference/response-objects#PaymentData|PaymentData object reference}
          */
         function processPayment(paymentData) {
+            var d = new Date();
 
-            // Run System Payment Complete
-            $('#paymentToken').val('');
-                // show returned data in developer console for debugging
+            var totalcharge = $('#totalcharge').val();
+
+            var charge = ParseFloat(totalcharge, 2);
+
+                // Run System Payment Complete
+                $('#paymentToken').val('');
+
+            // show returned data in developer console for debugging
                 // console.log(paymentData);
                 // @todo pass payment token to your gateway to process payment
                 paymentToken = paymentData.paymentMethodData.tokenizationData.token;
 
-                $('#paymentToken').val(paymentToken);
 
-                setTimeout(() => {
-                    handShake('addmoney');
-                }, 1000);
+                // var thistoken = JSON.parse(paymentToken);
 
 
-                // $("#paymentForm").submit();
+                
+            var orderId = "ord-"+d.getTime();
+
+
+
+                paymentData["orderId"] = orderId;
+                paymentData["amount"] = ""+charge+"";
+
+                MonerisGooglePay.purchase(paymentData, function(response)
+                {
+
+                if ( response && response.receipt && response.receipt.ResponseCode &&
+                !isNaN(response.receipt.ResponseCode) )
+                {
+                if ( parseInt(response.receipt.ResponseCode) < 50 )
+                {
+                    $('#paymentToken').val(orderId);
+
+                    // alert("Looks like the transaction is approved.");
+                        setTimeout(() => {
+                            handShake('addmoney');
+                        }, 1000);
+
+                }
+                else
+                {
+                    alert("Looks like the transaction is declined.");
+                }
+                }
+                else
+                {
+                    throw ("Error processing receipt.");
+                }
+                });
+
+            
+                
 
             
 
@@ -809,6 +853,15 @@ function setHeaders(){
 
 
         </script>
+
+
+
+        {{-- Google Pay API --}}
+        
+<script async
+  src="https://pay.google.com/gp/p/js/pay.js"
+  onload="onGooglePayLoaded()"></script>
+  <script async src="{{ asset('js/moneris-googlepay.js') }}" onload="MonerisGooglePay.onReady()"></script>
 
   </body>
 </html>

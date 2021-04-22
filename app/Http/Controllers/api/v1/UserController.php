@@ -382,6 +382,42 @@ class UserController extends Controller
 
     }
 
+    public function updateAutoDeposit(Request $req){
+        
+
+        $validator = Validator::make($req->all(), [
+                     'auto_deposit' => 'required|string',
+                ]);
+
+                if($validator->passes()){
+
+                        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+                        // Update
+                        $resp = User::where('api_token', $req->bearerToken())->update(['auto_deposit' => $req->auto_deposit]);
+
+                        $data = $resp;
+                        $message = "Saved";
+                        $status = 200;
+
+                        $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully updated your Auto deposit Status.");
+
+                }
+                else{
+
+                    $error = implode(",",$validator->messages()->all());
+
+                    $data = [];
+                    $status = 400;
+                    $message = $error;
+                }
+
+                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                return $this->returnJSON($resData, $status);
+
+    }
+
 
 
     public function resetPassword(Request $req){

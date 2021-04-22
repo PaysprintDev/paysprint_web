@@ -53,8 +53,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li onclick="openModal('singleDoc1')"><a href="#"><i class="fa fa-circle-o text-green"></i> Single Invoice </a></li>
-            <li onclick="openModal('uploadDoc')"><a href="#"><i class="fa fa-circle-o text-red"></i> Bulk Invoice</a></li>
+            <li onclick="openModal('singleDoc1')"><a href="#"><i class="fa fa-circle-o text-green"></i> Single </a></li>
+            <li onclick="openModal('uploadDoc')"><a href="#"><i class="fa fa-circle-o text-red"></i> Bulk</a></li>
             
             {{-- <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
           </ul>
@@ -108,42 +108,9 @@
           </ul>
         </li>
 
-        <li class="treeview">
-          <a href="#">
-            <i class="fas fa-money-bill"></i>
-            <span>Fee Structure</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li title="Set up Fee Structure"><a href="{{ route('fee structure') }}"><i class="fa fa-circle-o text-red"></i> Set up Fee Structure</a></li>
-            <li title="Structure by Country"><a href="{{ route('fee structure by country') }}"><i class="fa fa-circle-o text-red"></i> Structure by Country</a></li>
+        
 
-          </ul>
-        </li>
-
-
-        <li class="treeview">
-          <a href="#">
-            <i class="fas fa-wallet"></i>
-            <span>Wallet</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li title="Wallet Balance"><a href="{{ route('wallet balance') }}"><i class="fa fa-circle-o text-red"></i> Wallet Balance</a></li>
-            <li title="Processed Payment"><a href="{{ route('processed payment') }}"><i class="fa fa-circle-o text-red"></i> Processed Payment</a></li>
-            <li title="Credit Card Withdrawal"><a href="#"><i class="fa fa-circle-o text-red"></i> Credit Card Withdrawal</a></li>
-            <li title="Refund Request"><a href="#"><i class="fa fa-circle-o text-red"></i> Refund Request</a></li>
-            <li title="Maintenance Fee"><a href="#"><i class="fa fa-circle-o text-red"></i> Maintenance Fee</a></li>
-
-          </ul>
-        </li>
-
-
-        <li class="treeview">
+                <li class="treeview">
           <a href="#">
             <i class="far fa-handshake"></i>
             <span>Withdrawal</span>
@@ -169,7 +136,7 @@
           </a>
           <ul class="treeview-menu">
             <li title="To Wallet"><a href="#"><i class="fa fa-circle-o text-red"></i> To Wallet</a></li>
-            <li title="To Bank Account"><a href="#"><i class="fa fa-circle-o text-red"></i> To Bank Account</a></li>
+            {{--  <li title="To Bank Account"><a href="#"><i class="fa fa-circle-o text-red"></i> To Bank Account</a></li>  --}}
 
           </ul>
         </li>
@@ -190,6 +157,43 @@
 
           </ul>
         </li>
+
+
+        <li class="treeview">
+          <a href="#">
+            <i class="fas fa-wallet"></i>
+            <span>Wallet</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li title="Balance"><a href="{{ route('wallet balance') }}"><i class="fa fa-circle-o text-red"></i> Balance</a></li>
+            <li title="Processed Payment"><a href="{{ route('processed payment') }}"><i class="fa fa-circle-o text-red"></i> Processed Payment</a></li>
+            <li title="Credit Card Withdrawal"><a href="#"><i class="fa fa-circle-o text-red"></i> Credit Card Withdrawal</a></li>
+            <li title="Refund Request"><a href="#"><i class="fa fa-circle-o text-red"></i> Refund Request</a></li>
+            <li title="Maintenance Fee"><a href="#"><i class="fa fa-circle-o text-red"></i> Maintenance Fee</a></li>
+
+          </ul>
+        </li>
+
+        <li class="treeview">
+          <a href="#">
+            <i class="fas fa-money-bill"></i>
+            <span>Fee</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li title="Set up"><a href="{{ route('fee structure') }}"><i class="fa fa-circle-o text-red"></i> Set up</a></li>
+            <li title="By Country"><a href="{{ route('fee structure by country') }}"><i class="fa fa-circle-o text-red"></i> By Country</a></li>
+
+          </ul>
+        </li>
+
+
+
 
         <li onclick="openModal('transactioncost')" class="disp-0">
           <a href="#">
@@ -232,8 +236,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li onclick="openModal('create single invoice')"><a href="#"><i class="fa fa-circle-o text-green"></i> Single Invoice </a></li>
-            <li onclick="openModal('uploadDoc')"><a href="#"><i class="fa fa-circle-o text-red"></i> Bulk Invoice</a></li>
+            <li ><a href="{{ route('create single invoice') }}"><i class="fa fa-circle-o text-green"></i> Single </a></li>
+            <li ><a href="{{ route('create bulk invoice') }}"><i class="fa fa-circle-o text-red"></i> Bulk</a></li>
             {{-- <li><a href="#"><i class="fa fa-circle-o text-info"></i> Check Sold Tickets</a></li>
             <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
           </ul>
@@ -248,8 +252,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="{{ route('getStatement') }}"><i class="fa fa-circle-o text-info"></i> Check Statement</a></li>
-            <li><a href="{{ route('getwalletStatement') }}"><i class="fa fa-circle-o text-info"></i> Wallet Statement</a></li>
+            <li><a href="{{ route('getStatement') }}"><i class="fa fa-circle-o text-info"></i> Service Type</a></li>
+            <li><a href="{{ route('getwalletStatement') }}"><i class="fa fa-circle-o text-info"></i> Wallet</a></li>
             {{-- <li><a href="#"><i class="fa fa-circle-o text-info"></i> Check Sold Tickets</a></li>
             <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
           </ul>

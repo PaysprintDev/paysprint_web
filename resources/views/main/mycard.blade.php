@@ -258,6 +258,32 @@ input[type="radio"] {
                                        <form action="#" method="POST" id="formElem">
                                            @csrf
 
+                                            @if (Request::get('card') == "Prepaid Card")
+
+                                            <div class="form-group">
+                                               <label for="card_name">Card Issuer</label>
+
+                                            <div class="input-group"> 
+                                                <select name="card_provider" id="card_provider" class="form-control" required>
+                                                    <option value="">Select Card Issuer</option>
+                                                    @if (count($data['cardIssuer']) > 0)
+                                                        @foreach ($data['cardIssuer'] as $cardIssuers)
+                                                            <option value="{{ $cardIssuers->issuer_card }}">{{ $cardIssuers->issuer_card.' from '.$cardIssuers->issuer_name }}</option>
+                                                        @endforeach
+                                                    @else
+                                                        <option value="EXBC Prepaid Card">EXBC Prepaid Card from EXBC</option>
+                                                    @endif
+
+                                                </select>
+                                                <div class="input-group-append"> 
+                                                    <span class="input-group-text text-muted"> <i class="fas fa-credit-card"></i></span> 
+                                                </div>
+                                            </div>
+
+                                           </div>
+
+                                           @endif
+
                                            <div class="form-group">
                                                <label for="card_name">Name on Card</label>
 
@@ -308,31 +334,7 @@ input[type="radio"] {
                                            @endif
 
 
-                                           @if (Request::get('card') == "Prepaid Card")
-
-                                            <div class="form-group">
-                                               <label for="card_name">Card Issuer</label>
-
-                                            <div class="input-group"> 
-                                                <select name="card_provider" id="card_provider" class="form-control" required>
-                                                    <option value="">Select Card Issuer</option>
-                                                    @if (count($data['cardIssuer']) > 0)
-                                                        @foreach ($data['cardIssuer'] as $cardIssuers)
-                                                            <option value="{{ $cardIssuers->issuer_card }}">{{ $cardIssuers->issuer_card.' from '.$cardIssuers->issuer_name }}</option>
-                                                        @endforeach
-                                                    @else
-                                                        <option value="EXBC Prepaid Card">EXBC Prepaid Card from EXBC</option>
-                                                    @endif
-
-                                                </select>
-                                                <div class="input-group-append"> 
-                                                    <span class="input-group-text text-muted"> <i class="fas fa-credit-card"></i></span> 
-                                                </div>
-                                            </div>
-
-                                           </div>
-
-                                           @endif
+                                          
 
 
 

@@ -39,7 +39,7 @@
                                     <input type="text" name="single_firstname" id="single_firstname" class="form-control" placeholder="Firstname">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="single_firstname">Customer First Name</label>
+                                    <label for="single_firstname">Customer Last Name</label>
                                     <input type="text" name="single_lastname" id="single_lastname" class="form-control" placeholder="Lastname">
                                 </div>
                             </div>

@@ -53,6 +53,10 @@ input[type="radio"] {
     border: 1px solid #6c757d !important;
     width: 20%;
 }
+
+.nav-link.active, .nav-pills .show>.nav-link{
+    background-color: #fff3cd !important;
+}
     </style>
 
   </head>
@@ -71,9 +75,7 @@ input[type="radio"] {
                         <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
                             <!-- Credit card form tabs -->
                             <ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
-                                <li class="nav-item"> <a data-toggle="pill" href="{{ route('home') }}" class="nav-link active "> <i class="fas fa-home"></i> Goto HomePage </a> </li>
-                                {{-- <li class="nav-item"> <a data-toggle="pill" href="#paypal" class="nav-link "> <i class="fab fa-paypal mr-2"></i> Debit Card </a> </li>
-                                <li class="nav-item"> <a data-toggle="pill" href="#net-banking" class="nav-link "> <i class="fas fa-mobile-alt mr-2"></i> EXBC Card </a> </li> --}}
+                                <li class="nav-item" style="background-color: #007bff !important;"> <a data-toggle="pill" href="{{ route('home') }}" class="nav-link active" style="background-color: #007bff !important;"> <i class="fas fa-home"></i> Goto HomePage </a> </li>
                             </ul>
                         </div> <!-- End -->
                         <!-- Credit card form content -->
@@ -171,48 +173,112 @@ input[type="radio"] {
                                                         </div>
                                                     </div>
                                             </div>
-                                                    
-                                                <div class="row">
-                                                    <div class="col-md-4 mb-3">
-                                                        <strong>
-                                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff3cd !important; border-color: #fff3cd !important;" href="{{ route('Add card', 'card=Credit Card') }}">Add a new Credit Card <i class="fas fa-plus-square" title="Add Credit Card" style="font-size: 16px; color: black"></i></a>
-                                                        </strong>
-                                                    </div>
-                                                    <div class="col-md-4 mb-3">
-                                                        <strong>
-                                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #d1ecf1 !important; border-color: #d1ecf1 !important;" href="{{ route('Add card', 'card=Prepaid Card') }}"> Add a new Prepaid Card <i class="fas fa-plus-square" title="Add Prepaid Card" style="font-size: 16px; color: black"></i></a>
-                                                        </strong>
-                                                    </div>
-                                                    <div class="col-md-4 mb-3">
-                                                        <strong>
-                                                            {{--  <a type="button" class="btn btn-warning" style="color: #f7f7f7; font-weight: bold; background-color: #6c757d !important; border-color: #6c757d !important;" href="javascript:void()" onclick="comingSoon('bank')"> Add a new Bank Account <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>  --}}
 
-                                                            <a type="button" class="btn btn-warning" style="color: #f7f7f7; font-weight: bold; background-color: #6c757d !important; border-color: #6c757d !important;" href="{{ route('Add bank detail') }}"> Add a new Bank Account <i class="fas fa-plus-square" title="Add Bank Account" style="font-size: 16px; color: black"></i></a>
-                                                        </strong>
-                                                    </div>
+
+                                            {{--  Add Payment Gateway  --}}
+
+
+                                            <div class="d-flex align-items-start">
+                                                <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                                    <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">
+                                                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" alt="PaySprint logo" width="50" height="50">
+                                                    </button>
+                                                    <br>
+                                                    <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false"><img src="https://img.icons8.com/fluent/50/000000/google-logo.png"/></button>
+                                                    
                                                 </div>
+                                                <div class="tab-content px-3" id="v-pills-tabContent">
+                                                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+
+                                                        {{--  PaySprint Card  --}}
+
+                                                        <div class="row">
+                                                            <div class="col-md-4 mb-3">
+                                                                <strong>
+                                                                    <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('Add card', 'card=Credit Card') }}"><img src="https://img.icons8.com/fluent/53/000000/credit-card-cash-withdrawal.png" title="Add Credit Card"/> <i class="fas fa-plus-square" title="Add Credit Card" style="font-size: 16px; color: black"></i></a>
+                                                                </strong>
+                                                            </div>
+                                                            <div class="col-md-4 mb-3">
+                                                                <strong>
+                                                                    <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('Add card', 'card=Prepaid Card') }}"> <img src="https://img.icons8.com/cotton/53/000000/bank-cards--v2.png" title="Add Prepaid Card"/> <i class="fas fa-plus-square" title="Add Prepaid Card" style="font-size: 16px; color: black"></i></a>
+                                                                </strong>
+                                                            </div>
+                                                            <div class="col-md-4 mb-3">
+                                                                <strong>
+
+                                                                    <a type="button" class="btn btn-warning" style="color: #f7f7f7; font-weight: bold; background-color: #fff !important;" href="{{ route('Add bank detail') }}"> <img src="https://img.icons8.com/dusk/53/000000/merchant-account.png" title="Add Bank Account"/> <i class="fas fa-plus-square" title="Add Bank Account" style="font-size: 16px; color: black"></i></a>
+                                                                </strong>
+                                                            </div>
+                                                        </div>
+
+
+                                                        {{--  PaySprint Card End  --}}
+
+
+                                                    </div>
+                                                    <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                                                        
+                                                    </div>
+                                                    
+                                                </div>
+                                                </div>
+
+                                                {{--  End Payment Gateway  --}}
+
+                                                    
+                                                
 
                                                 @else
 
-                                                <div class="row">
-                                                    <div class="col-md-4 mb-3">
-                                                        <strong>
-                                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff3cd !important; border-color: #fff3cd !important;" href="{{ route('Add card', 'card=Credit Card') }}">Add a new Credit Card <i class="fas fa-plus-square" title="Add Credit Card" style="font-size: 16px; color: black"></i></a>
-                                                        </strong>
-                                                    </div>
-                                                    <div class="col-md-4 mb-3">
-                                                        <strong>
-                                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #d1ecf1 !important; border-color: #d1ecf1 !important;" href="{{ route('Add card', 'card=Prepaid Card') }}"> Add a new Prepaid Card <i class="fas fa-plus-square" title="Add Prepaid Card" style="font-size: 16px; color: black"></i></a>
-                                                        </strong>
-                                                    </div>
-                                                    <div class="col-md-4 mb-3">
-                                                        {{-- {{ route('Add card', 'card=Bank Account') }} --}}
-                                                        <strong>
-                                                            {{--  <a type="button" class="btn btn-warning" style="color: #f7f7f7; font-weight: bold; background-color: #6c757d !important; border-color: #6c757d !important;" href="javascript:void()" onclick="comingSoon('bank')"> Add a new Bank Account <i class="fas fa-plus-square" title="Add card" style="font-size: 16px; color: black"></i></a>  --}}
-                                                            <a type="button" class="btn btn-warning" style="color: #f7f7f7; font-weight: bold; background-color: #6c757d !important; border-color: #6c757d !important;" href="{{ route('Add bank detail') }}"> Add a new Bank Account <i class="fas fa-plus-square" title="Add Bank Account" style="font-size: 16px; color: black"></i></a>
-                                                        </strong>
-                                                    </div>
+                                                {{--  Add Payment Gateway  --}}
+
+
+                                            <div class="d-flex align-items-start">
+                                                <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                                    <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">
+                                                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" alt="PaySprint logo" width="50" height="50">
+                                                    </button>
+                                                    <br>
+                                                    <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false"><img src="https://img.icons8.com/fluent/50/000000/google-logo.png"/></button>
+                                                    
                                                 </div>
+                                                <div class="tab-content px-3" id="v-pills-tabContent">
+                                                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+
+                                                        {{--  PaySprint Card  --}}
+
+                                                        <div class="row">
+                                                            <div class="col-md-4 mb-3">
+                                                                <strong>
+                                                                    <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('Add card', 'card=Credit Card') }}"><img src="https://img.icons8.com/fluent/53/000000/credit-card-cash-withdrawal.png" title="Add Credit Card"/> <i class="fas fa-plus-square" title="Add Credit Card" style="font-size: 16px; color: black"></i></a>
+                                                                </strong>
+                                                            </div>
+                                                            <div class="col-md-4 mb-3">
+                                                                <strong>
+                                                                    <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('Add card', 'card=Prepaid Card') }}"> <img src="https://img.icons8.com/cotton/53/000000/bank-cards--v2.png" title="Add Prepaid Card"/> <i class="fas fa-plus-square" title="Add Prepaid Card" style="font-size: 16px; color: black"></i></a>
+                                                                </strong>
+                                                            </div>
+                                                            <div class="col-md-4 mb-3">
+                                                                <strong>
+
+                                                                    <a type="button" class="btn btn-warning" style="color: #f7f7f7; font-weight: bold; background-color: #fff !important;" href="{{ route('Add bank detail') }}"> <img src="https://img.icons8.com/dusk/53/000000/merchant-account.png" title="Add Bank Account"/> <i class="fas fa-plus-square" title="Add Bank Account" style="font-size: 16px; color: black"></i></a>
+                                                                </strong>
+                                                            </div>
+                                                        </div>
+
+
+                                                        {{--  PaySprint Card End  --}}
+
+
+                                                    </div>
+                                                    <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                                                        
+                                                    </div>
+                                                    
+                                                </div>
+                                                </div>
+
+                                                {{--  End Payment Gateway  --}}
 
                                                 
                                                 
@@ -379,6 +445,13 @@ input[type="radio"] {
                                                                                         <small>
                                                                                             {{ date('d/m/Y h:i a', strtotime($walletstatements->created_at)) }}
                                                                                         </small>
+                                                                                        @if ($walletstatements->auto_deposit == 'off')
+                                                                                            <br>
+                                                                                            <small>
+                                                                                                <input type="hidden" name="reference_code" id="reference_code" value="{{ $walletstatements->reference_code }}">
+                                                                                                <button type="button" class="btn btn-success" onclick="handShake('claimmoney', '{{ $walletstatements->reference_code }}')">Pending - Add to wallet <img src="https://img.icons8.com/officel/25/000000/spinner-frame-4.png" class="fa-spin disp-0" id="btn{{ $walletstatements->reference_code }}"/></button>
+                                                                                            </small>
+                                                                                        @endif
                                                                                     </div>
                                                                                 </div>
 
@@ -424,6 +497,13 @@ input[type="radio"] {
                                                                                         <small>
                                                                                             {{ date('d/m/Y h:i a', strtotime($walletstatements->created_at)) }}
                                                                                         </small>
+                                                                                        @if ($walletstatements->auto_deposit == 'off')
+                                                                                            <br>
+                                                                                            <small>
+                                                                                                <input type="hidden" name="reference_code" id="reference_code" value="{{ $walletstatements->reference_code }}">
+                                                                                                <button type="button" class="btn btn-success" onclick="handShake('claimmoney', '{{ $walletstatements->reference_code }}')">Pending - Add to wallet <img src="https://img.icons8.com/officel/25/000000/spinner-frame-4.png" class="fa-spin disp-0" id="btn{{ $walletstatements->reference_code }}"/></button>
+                                                                                            </small>
+                                                                                        @endif
                                                                                     </div>
                                                                                 </div>
 
@@ -648,6 +728,59 @@ input[type="radio"] {
     }
 
 
+    function handShake(val, ref_code){
+
+        var route;
+
+if(val == 'claimmoney'){
+
+var formData = new FormData();
+var spin = $('#btn'+ref_code);
+
+formData.append('reference_code', $('#reference_code').val());
+
+
+    route = "{{ URL('/api/v1/claimmoney') }}";
+
+        Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            spin.removeClass('disp-0');
+        },
+        success: function(result){
+            spin.addClass('disp-0');
+            if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+        },
+        error: function(err) {
+            spin.addClass('disp-0');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+    }
+
+
 function comingSoon(val){
     if(val == 'bank'){
         swal('Feature available soon', 'Add a new bank account will be available soon', 'info');
@@ -669,7 +802,8 @@ function comingSoon(val){
     function setHeaders(){
     jQuery.ajaxSetup({
       headers: {
-          'X-CSRF-TOKEN': "{{csrf_token()}}"
+          'X-CSRF-TOKEN': "{{csrf_token()}}",
+            'Authorization': "Bearer "+"{{ Auth::user()->api_token }}"
       }
     });
  }

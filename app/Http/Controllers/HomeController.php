@@ -2363,8 +2363,8 @@ class HomeController extends Controller
 
             $mycode = $this->getCountryCode($req->country);
 
-                $currencyCode = $countryInfo[0]->currencies[0]->code;
-                $currencySymbol = $countryInfo[0]->currencies[0]->symbol;
+                $currencyCode = $mycode[0]->currencies[0]->code;
+                $currencySymbol = $mycode[0]->currencies[0]->symbol;
 
                         // Get all ref_codes
             $ref = User::all();
@@ -2613,7 +2613,28 @@ class HomeController extends Controller
         }
         elseif(Auth::user()->approval == 0){
 
-            $res = '<small><b class="text-danger">You cannot send or receive money now, because your account is not yet approved, Kindly update means of identification in your <a href='.route('profile').' class="text-primary" style="text-decoration: underline">profile</a></b></small>';
+            if(Auth::user()->approval == 0){
+
+                $identity = "means of identification,";
+            }
+            else{
+                $identity = "";
+            }
+            if(Auth::user()->transaction_pin == null){
+                $transPin = " and your transaction Pin code.";
+            }
+            else{
+                $transPin = "";
+            }
+            if(Auth::user()->securityQuestion == null){
+                $secQuest = "your security questions and answer";
+            }
+            else{
+                $secQuest = "";
+            }
+
+
+            $res = '<small><b class="text-danger">You cannot send money because your account is not yet approved and you have not set up your '.$identity.' '.$secQuest.' '.$transPin.' Kindly complete these important steps in your <a href='.route('profile').' class="text-primary" style="text-decoration: underline">profile.</a></b></small>';
 
             $resData = ['res' => $res, 'message' => 'error'];
         }

@@ -127,6 +127,13 @@
 
                         @else
 
+                        @auth
+                        <li class="dropdown submenu">
+                            
+                            <a href="{{ route('my account') }}">My Wallet</a>
+                        </li>
+                        @endauth
+
                         <li class="dropdown submenu">
                             {{-- <a href="{{ route('payorganization') }}">Send Money</a> --}}
                             {{-- COnver to Modal popup --}}
@@ -159,12 +166,7 @@
                             <a href="{{ route('contact') }}">Contact Us</a>
                         </li> --}}
 
-                        @auth
-                        <li class="dropdown submenu">
-                            
-                            <a href="{{ route('my account') }}">My Wallet</a>
-                        </li>
-                        @endauth
+                        
 
                         
 

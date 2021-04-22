@@ -250,7 +250,7 @@ class MoneyTransferController extends Controller
             $statement_route = "wallet";
 
             // Senders statement
-            $this->insStatement($data->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
+            $this->insStatement($data->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on');
 
 
         return $resData;
@@ -446,9 +446,25 @@ class MoneyTransferController extends Controller
 
                     $statement_route = "wallet";
 
-                    $recWallet = $receiver->wallet_balance + $req->amount;
 
-                    User::where('ref_code', $req->accountNumber)->update(['wallet_balance' => $recWallet]);
+                    if($receiver->auto_deposit == 'on'){
+                        $recWallet = $receiver->wallet_balance + $req->amount;
+                        $walletstatus = "Delivered";
+                        
+                        $recMsg = "Hi ".$receiver->name.", You have received ".$req->currency.' '.number_format($req->amount, 2)." in your PaySprint wallet for ".$service." from ".$sender->name.". You now have ".$req->currency.' '.number_format($recWallet, 2)." balance in your wallet. PaySprint Team";
+
+                    }
+                    else{
+                        $recWallet = $receiver->wallet_balance;
+                        $walletstatus = "Pending";
+
+                        $recMsg = "Hi ".$receiver->name.", You have received ".$req->currency.' '.number_format($req->amount, 2)." for ".$service." from ".$sender->name.". Your wallet balance is ".$req->currency.' '.number_format($recWallet, 2).". Kindly login to your wallet account to receive money. PaySprint Team ".route('my account');
+
+                    }
+
+                        User::where('ref_code', $req->accountNumber)->update(['wallet_balance' => $recWallet]);
+
+                    
 
 
                     $sendMsg = "Hi ".$sender->name.", You have made a ".$activity." Your new Wallet balance ".$req->currency.' '.number_format($wallet_balance, 2)." balance  in your account. If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us. PaySprint Team";
@@ -457,16 +473,16 @@ class MoneyTransferController extends Controller
                     $this->sendMessage($sendMsg, $sendPhone);
 
 
-                    $recMsg = "Hi ".$receiver->name.", You have received ".$req->currency.' '.number_format($req->amount, 2)." in your PaySprint wallet for ".$service." from ".$sender->name.". You now have ".$req->currency.' '.number_format($recWallet, 2)." balance in your wallet. PaySprint Team";
+                    
                     $recPhone = "+".$receiver->code.$receiver->telephone;
 
                     $this->sendMessage($recMsg, $recPhone);
 
                     // Senders statement
-                    $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
+                    $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on');
                     
                     // Receiver Statement
-                    $this->insStatement($receiver->email, $reference_code, "Received ".$req->currency.' '.number_format($req->amount, 2)." in wallet for ".$service." from ".$sender->name, number_format($req->amount, 2), 0, $balance, $trans_date, $status, "Invoice", $receiver->ref_code, 1, $statement_route);
+                    $this->insStatement($receiver->email, $reference_code, "Received ".$req->currency.' '.number_format($req->amount, 2)." in wallet for ".$service." from ".$sender->name, number_format($req->amount, 2), 0, $balance, $trans_date, $walletstatus, "Wallet credit", $receiver->ref_code, 1, $statement_route, $receiver->auto_deposit);
 
                     // $data = OrganizationPay::where('transactionid', $paymentToken)->first();
                     $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
@@ -506,6 +522,71 @@ class MoneyTransferController extends Controller
         }
 
 
+        return $this->returnJSON($resData, $status);
+    }
+
+
+    public function claimMoney(Request $req){
+
+        // Get Sender in User
+        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+        if(isset($thisuser)){
+            // Get Money fro Statement
+            $getMoney = Statement::where('reference_code', $req->reference_code)->first();
+
+            if(isset($getMoney)){
+                // Get Credit and Add to Wallet
+                $credit = $getMoney->debit;
+
+                $wallet_balance = $thisuser->wallet_balance + $credit;
+
+                User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $wallet_balance]);
+                Statement::where('reference_code', $req->reference_code)->update(['auto_deposit' => 'on', 'status' => 'Delivered']);
+
+
+                $query = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+
+                // Send Message
+
+                $recMsg = "Hi ".$thisuser->name.", You have added a pending transfer of ".$thisuser->currencyCode.' '.number_format($credit, 2)." to your PaySprint wallet. You now have ".$thisuser->currencyCode.' '.number_format($wallet_balance, 2)." balance in your wallet. PaySprint Team";
+                $recPhone = "+".$thisuser->code.$thisuser->telephone;
+                
+
+                $this->name = $thisuser->name;
+                // $this->email = "bambo@vimfile.com";
+                $this->email = $thisuser->email;
+                $this->subject = $thisuser->currencyCode.$credit." added to your PaySprint wallet";
+
+                $this->message = '<p>You have added a pending transfer of <strong>'.$thisuser->currencyCode.' '.number_format($credit, 2).'</strong> to your PaySprint wallet. You now have <strong>'.$thisuser->currencyCode.' '.number_format($wallet_balance, 2).'</strong> balance in your account</p>';
+                
+
+                $this->sendEmail($this->email, "Fund remittance");
+                $this->sendMessage($recMsg, $recPhone);
+
+
+                $this->createNotification($thisuser->ref_code, $recMsg);
+
+                $data = $query;
+                $message = $thisuser->currencyCode.$credit." added to wallet";
+                $status = 200;
+
+            }
+            else{
+                $data = [];
+                $message = "This reference number does not match our record";
+                $status = 400;
+            }
+
+        }
+        else{
+            $data = [];
+            $message = "Token mismatch";
+            $status = 400;
+        }
+
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
         return $this->returnJSON($resData, $status);
     }
 
@@ -568,8 +649,8 @@ class MoneyTransferController extends Controller
 
     }
 
-    public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route){
-        Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route]);
+    public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $auto_deposit){
+        Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route, 'auto_deposit' => $auto_deposit]);
     }
 
 

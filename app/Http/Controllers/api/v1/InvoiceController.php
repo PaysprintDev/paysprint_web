@@ -214,6 +214,16 @@ class InvoiceController extends Controller
 
                             $this->insStatement($req->single_email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0);
 
+                            if($thisuser->businessname != null){
+                                $businessName = $thisuser->businessname;
+                            }
+                            else{
+
+                                $getClient = ClientInfo::where('user_id', $thisuser->ref_code)->first();
+
+                                $businessName = $getClient->business_name;
+                            }
+
 
                             $this->to = $req->single_email;
                             // $this->to = "adenugaadebambo41@gmail.com";
@@ -224,10 +234,10 @@ class InvoiceController extends Controller
                             $this->transaction_ref = $req->single_transaction_ref;
                             $this->description = $req->single_description;
                             $this->payment_due_date = $req->single_payment_due_date;
-                            $this->amount = $req->single_amount;
+                            $this->amount = $thisuser->currencySymbol.number_format($req->single_amount, 2);
                             $this->address = $thisuser->address;
                             $this->service = $req->single_service;
-                            $this->clientname = $thisuser->businessname;
+                            $this->clientname = $businessName;
                             $this->client_realname = $thisuser->name;
                             $this->city = $thisuser->city;
                             $this->state = $thisuser->state;
@@ -239,7 +249,7 @@ class InvoiceController extends Controller
                             $this->sendEmail($this->to, $this->subject);
 
                             // Send SMS
-                            $sendMsg = "Hello ".$this->name.", ".$this->subject.". Login using your PaySprint App Today to make payment.";
+                            $sendMsg = "Hello ".$this->name.", ".$this->subject.". Login to your PaySprint App to make payment. <a href='https://".route('login')."'>https://".route('login')."</a>";
 
                             $sendPhone = "+".$getCustomer->code.$getCustomer->telephone;
                             // $sendPhone = "+23408137492316";
@@ -421,7 +431,7 @@ class InvoiceController extends Controller
                                                 // $this->payment_due_date = gmdate("Y-m-d", $UNIX_DATE2);
                                                 $this->payment_due_date = date('Y-m-d', strtotime($UNIX_DATE2));
                                                 $this->customer_id = $key['Customer ID'];
-                                                $this->amount = $key['Amount'];
+                                                $this->amount = $thisuser->currencySymbol.number_format($key['Amount'], 2);
                                                 $this->address = $clientaddress;
                                                 $this->service = $req->service;
                                                 $this->clientname = $clientname;
@@ -438,7 +448,8 @@ class InvoiceController extends Controller
 
                                                 if(isset($getCustomer)){
                                                     // Send SMS
-                                                    $sendMsg = "Hello ".$this->name.", ".$this->subject.". Login using your PaySprint App Today to make payment.";
+
+                                                    $sendMsg = "Hello ".$this->name.", ".$this->subject.". Login to your PaySprint App to make payment. <a href='https://".route('login')."'>https://".route('login')."</a>";
 
                                                     // $sendPhone = "+".$getCustomer->code.$getCustomer->telephone;
                                                     $sendPhone = "+23408137492316";

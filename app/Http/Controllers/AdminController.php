@@ -3894,14 +3894,16 @@ class AdminController extends Controller
 
         if($thisuser->flagged == 0){
             $user->where('id', $req->id)->update(['flagged' => 1]);
-            $subject = "Your account is flagged on PaySprint";
-            $message = "This is to inform you that your account is flagged on PaySprint by the Security Team because of some irregularities. Contact Us on https://paysprint.net/contact";
+            $subject = "Review of PaySprint Account";
+            $message = "This is to inform you that your account  has been randomly selected for review. You will not be able to login or conduct any transaction both on the mobile app and on the web during the review period, which might last for 48 hours. We shall inform you when your PaySprint account is available for use. We regret any inconvenience this action might cause you. If you have any concern, please send us a message on : compliance@paysprint.net";
+
         }
         else{
             $user->where('id', $req->id)->update(['flagged' => 0]);
-            $subject = "Your account is restored on PaySprint";
-            $message = "Welcome back, your account is restored successfully. You can now continue with your transactions. Thanks";
+            $subject = "Review of PaySprint Account";
+            $message = "We have completed the review of your PaySprint Account. Your PaySprint account has been enabled and you will be able to access the services both on the Mobile and Web platforms. Thank you for your patience. If you have any concern, please send us a message on : compliance@paysprint.net";
         }
+
 
         $this->name = $thisuser->name;
         $this->to = $thisuser->email;

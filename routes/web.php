@@ -20,6 +20,8 @@ Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
 Route::get('feecharge', 'MaintenanceFeeCharge@monthlyMaintenaceFee');
 
+Route::get('quicksetup', 'CheckSetupController@updateQuickSetup');
+
 Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
 
 // Major Routes

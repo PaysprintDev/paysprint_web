@@ -19,7 +19,7 @@
     line-height: 10;
 }
 .notificationImage{
-    margin-top: 30px;
+    margin-top: 0px;
 }
 </style>
 
