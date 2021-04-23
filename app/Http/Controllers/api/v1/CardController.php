@@ -342,7 +342,7 @@ class CardController extends Controller
 
     public function getMyCardDetail(Request $req){
 
-        // dd($req->all());
+        // dd($req->get('card_provider'));
 
         $cardDetail = $req->get('card_provider');
 

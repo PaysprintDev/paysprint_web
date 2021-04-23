@@ -6,6 +6,9 @@
       <div class="user-panel">
         <div class="pull-left image">
           <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" class="img-circle" alt="User Image">
+
+
+          
         </div>
         <div class="pull-left info">
           <p>{{ session('firstname').' '.session('lastname') }}</p>
@@ -284,7 +287,7 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="#"><i class="fa fa-circle-o text-info"></i> Profile</a></li>
+            <li><a href="{{ route('merchant profile') }}"><i class="fa fa-circle-o text-info"></i> Profile</a></li>
             
           </ul>
         </li>

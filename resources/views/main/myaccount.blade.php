@@ -137,7 +137,7 @@ input[type="radio"] {
                                                         $alertInfo = "alert-success";
                                                         $cardImage = '<img src="https://img.icons8.com/fluent/30/000000/bank-card-back-side.png"/>';
                                                     @endphp
-                                            @endswitch
+                                                @endswitch
 
                                                 <div class="alert {{ $alertInfo }}">
                                                     <div class="row">

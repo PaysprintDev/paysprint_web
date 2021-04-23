@@ -722,9 +722,6 @@ else{
 
                     $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                    
-
-
                     // Check amount in wallet
                     if($req->amount > $thisuser->wallet_balance){
                         // Insufficient amount for withdrawal
@@ -743,7 +740,7 @@ else{
                                 $monerisDeductamount = $req->conversionamount;
 
                                 // Get Transaction record for last money added to wallet
-                                $getTrans = Statement::where('reference_code', 'LIKE', '%ord-%')->where('user_id', $thisuser->email)->latest()->first();
+                                $getTrans = Statement::where('reference_code', 'LIKE', '%ord-%')->where('reference_code', 'LIKE', '%wallet-%')->where('user_id', $thisuser->email)->latest()->first();
 
 
                                 // Check Transaction PIn
@@ -831,6 +828,7 @@ else{
                                             $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
                                         }
+
                                         elseif($req->card_type == "Bank Account"){
 
                                             $bankDetails = AddBank::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();                                            
@@ -885,9 +883,13 @@ else{
                                         }
                                         else{   
 
-                                            
+                                            if(isset($getTrans) == true){
+                                                $transaction_id = $getTrans->reference_code;
+                                            }
+                                            else{
+                                                $transaction_id = "wallet-".date('dmY').time();
+                                            }
 
-                                            $transaction_id = $getTrans->reference_code;
                                             $customer_id = $thisuser->ref_code;
 
                                             // Get Card Detail
@@ -1133,7 +1135,13 @@ else{
                                         }
                                         else{
 
-                                            $transaction_id = $getTrans->reference_code;
+                                            if(isset($getTrans) == true){
+                                                $transaction_id = $getTrans->reference_code;
+                                            }
+                                            else{
+                                                $transaction_id = "wallet-".date('dmY').time();
+                                            }
+
                                             $customer_id = $thisuser->ref_code;
 
                                             // Get Card Detail
@@ -1147,10 +1155,10 @@ else{
 
                                             // Proceed to Withdrawal
 
-                                        // $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "ind_refund", "PaySprint Withdraw from Wallet to ".$thisuser->name, $req->mode);
+                                            // $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "ind_refund", "PaySprint Withdraw from Wallet to ".$thisuser->name, $req->mode);
 
 
-                                        // if($response->responseData['Message'] == "APPROVED           *                    ="){
+                                            // if($response->responseData['Message'] == "APPROVED           *                    ="){
 
                                             $walletBal = $thisuser->wallet_balance - $req->amount;
                                                 $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
@@ -1212,12 +1220,12 @@ else{
                                                 $status = 200;
                                                 $message = $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet';
 
-                                        // }
-                                        // else{
-                                        //     $data = [];
-                                        //         $message = $response->responseData['Message'];
-                                        //         $status = 400;
-                                        // }
+                                            // }
+                                            // else{
+                                            //     $data = [];
+                                            //         $message = $response->responseData['Message'];
+                                            //         $status = 400;
+                                            // }
 
                                         }
 

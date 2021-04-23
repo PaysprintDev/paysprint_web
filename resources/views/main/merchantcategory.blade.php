@@ -89,6 +89,7 @@ input[type="radio"] {
                                                 <th>Company</th>
                                                 <th>Address</th>
                                                 <th>Phone</th>
+                                                <th>Website</th>
                                                 <th>City</th>
                                                 <th>Province/State</th>
                                                 <th>Country</th>
@@ -115,6 +116,9 @@ input[type="radio"] {
                                                     </td>
                                                     <td>
                                                         {{ ($merchantData->telephone != null) ? $merchantData->telephone : "N/A" }}
+                                                    </td>
+                                                    <td>
+                                                        {{ ($merchantData->website != null) ? $merchantData->website : "N/A" }}
                                                     </td>
                                                     <td>
                                                         {{ $merchantData->city }}

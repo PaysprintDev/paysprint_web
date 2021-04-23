@@ -169,6 +169,9 @@ Route::prefix('Admin/wallet')->group(function () {
 	Route::get('/', ['uses' => 'AdminController@walletBalance', 'as' => 'wallet balance']);
 	Route::get('bankrequestwithdrawal', ['uses' => 'AdminController@bankRequestWithdrawal', 'as' => 'bank request withdrawal']);
 	Route::get('bankrequestprocessed', ['uses' => 'AdminController@bankRequestProcessed', 'as' => 'processed payment']);
+
+	
+	Route::get('withdrawal', ['uses' => 'AdminController@merchantWithdrawal', 'as' => 'merchant withdrawal']);
 	
 });
 
@@ -196,6 +199,13 @@ Route::prefix('Admin/invoice')->group(function () {
 
 	Route::get('single', ['uses' => 'AdminController@createSingleInvoice', 'as' => 'create single invoice']);
 	Route::get('bulk', ['uses' => 'AdminController@createBulkInvoice', 'as' => 'create bulk invoice']);
+	
+});
+
+
+Route::prefix('Admin/merchant')->group(function () {
+
+	Route::get('profile', ['uses' => 'AdminController@merchantProfile', 'as' => 'merchant profile']);
 	
 });
 

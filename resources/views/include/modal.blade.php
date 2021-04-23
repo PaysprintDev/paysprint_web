@@ -77,13 +77,13 @@
 
               <div class="form-group">
                 <label for="passwordnewpassword">New Password</label>
-                <input type="text" class="form-control" name="newpassword">
+                <input type="password" class="form-control" name="newpassword">
               </div>
 
 
               <div class="form-group">
                 <label for="passwordconfirmpassword">Confirm Password</label>
-                <input type="text" class="form-control" name="confirmpassword">
+                <input type="password" class="form-control" name="confirmpassword">
               </div>
 
 
@@ -130,13 +130,13 @@
 
             <div class="form-group">
               <label for="transactionnewpin">New Pin</label>
-              <input type="text" class="form-control" name="newpin">
+              <input type="password" class="form-control" name="newpin">
             </div>
 
 
             <div class="form-group">
               <label for="transactionconfirmpin">Confirm Pin</label>
-              <input type="text" class="form-control" name="confirmpin">
+              <input type="password" class="form-control" name="confirmpin">
             </div>
 
 

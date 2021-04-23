@@ -48,6 +48,10 @@ Route::prefix('/v1')->group(function () {
 
     Route::post('profile',  ['uses' => 'api\v1\UserController@updateProfile'])->name('update profile');
 
+    Route::post('merchantprofile',  ['uses' => 'api\v1\UserController@updateMerchantProfile'])->name('merchant profile');
+
+    Route::post('merchantbusinessprofile',  ['uses' => 'api\v1\UserController@updateMerchantBusinessProfile'])->name('merchant business profile');
+
     Route::post('createservicetype',  ['uses' => 'api\v1\ServiceController@createServiceType'])->name('create service type');
 
     Route::post('createtransactionpin',  ['uses' => 'api\v1\UserController@createTransactionPin'])->name('create transaction pin');

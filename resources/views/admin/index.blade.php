@@ -109,20 +109,165 @@
             <div class="inner">
               <h3>{{ $getUserDetail->currencySymbol.number_format($getUserDetail->wallet_balance, 2) }}</h3>
 
-              <p>Wallet Balance</p>
+              <p>Balance</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-pricetag"></i>
+            </div>
+            {{-- <a href="#" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a> --}}
+          </div>
+        </div>
+        <!-- ./col -->
+        
+        <!-- ./col -->
+        <div class="col-lg-6 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-info">
+            <div class="inner">
+            <h3>{{ $getUserDetail->number_of_withdrawals }}</h3>
+
+              <p>Withdrawal</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-archive"></i>
+            </div>
+        {{--  <a href="{{ route('Otherpay') }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>  --}}
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-success">
+            <div class="inner">
+              @if (isset($getCard) && count($getCard) > 0)
+                  @php
+                      $others = count($getCard) - 1;
+                      $cardNo = wordwrap($getCard[0]->card_number, 4, '-', true);
+                  @endphp
+
+                @switch($getCard[0]->card_type)
+                    @case("Mastercard")
+                        @php
+                            $cardImage = '<img src="https://img.icons8.com/color/30/000000/mastercard.png"/>';
+                        @endphp
+                        @break
+                    @case("Visa")
+                        @php
+                            $cardImage = '<img src="https://img.icons8.com/color/30/000000/visa.png"/>';
+                        @endphp
+                        @break
+                    @default
+                        @php
+                            $cardImage = '<img src="https://img.icons8.com/fluent/30/000000/bank-card-back-side.png"/>';
+                        @endphp
+                    @endswitch
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 style="font-size: 30px;">
+                                    {{ (strlen($cardNo) < 10) ? $cardNo : substr($cardNo, 0, 10)."***" }} {{ ($others > 0) ? "& ".$others." others" : "" }}
+
+                                    
+                                </h3>
+                            </div>
+                            <br>
+                            <div class="col-md-6">
+                                <h4>
+                                    Expiry: {{ $getCard[0]->month."/".$getCard[0]->year }}
+                                </h4>
+                            </div>
+                            <div class="col-md-6">
+                                <h4>
+                                    CVV: ***
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>
+                                    {{ (strlen($getCard[0]->card_name) < 18) ? strtoupper($getCard[0]->card_name) : substr(strtoupper($getCard[0]->card_name), 0, 18)."..." }}
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {!! $cardImage !!}
+                            </div>
+                        </div>
+
+              @else
+                  <h3>&nbsp;</h3>
+
+                <p>Add a new card</p>
+              @endif
+
+
+              
             </div>
             <div class="icon">
               <i class="ion ion-card"></i>
             </div>
             {{-- <a href="#" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a> --}}
           </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-xs-6 disp-0">
+
+                  <!-- ./col -->
+        <div class="col-lg-12 col-xs-12">
           <!-- small box -->
-          <div class="small-box bg-green">
+          <div class="small-box">
+              <div class="col-md-4">
+                  <strong>
+                    <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('merchant credit card', $getUserDetail->id) }}"><img src="https://img.icons8.com/fluent/53/000000/credit-card-cash-withdrawal.png" title="Add Credit Card"/> <i class="fas fa-plus-square" title="Add Credit Card" style="font-size: 16px; color: black"></i></a>
+                  </strong>
+              </div>
+
+              <div class="col-md-4">
+                <strong>
+                    <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('merchant prepaid card', $getUserDetail->id) }}"> <img src="https://img.icons8.com/cotton/53/000000/bank-cards--v2.png" title="Add Prepaid Card"/> <i class="fas fa-plus-square" title="Add Prepaid Card" style="font-size: 16px; color: black"></i></a>
+                </strong>
+              </div>
+
+              <div class="col-md-4">
+                <strong>
+                    <a type="button" class="btn btn-warning" style="color: #f7f7f7; font-weight: bold; background-color: #fff !important;" href="{{ route('merchant bank account', $getUserDetail->id) }}"> <img src="https://img.icons8.com/dusk/53/000000/merchant-account.png" title="Add Bank Account"/> <i class="fas fa-plus-square" title="Add Bank Account" style="font-size: 16px; color: black"></i></a>
+                </strong>
+              
+              </div>
+          </div>
+        </div>
+
+        </div>
+
+
+        <div class="col-lg-6 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-danger">
             <div class="inner">
-              <h3>0</h3>
+
+              @php
+                $infoPend = 0;
+              @endphp
+
+              @if(count($invoiceImport) > 0)
+                @foreach ($invoiceImport as $items)
+                    @if($left = \App\InvoicePayment::where('invoice_no', $items->invoice_no)->get())
+                        
+                  @if(count($left) > 0)
+                    @php
+                        $pendPaid = count($left);
+
+                        $infoPend += $pendPaid;
+                    @endphp
+                  
+                  
+                  @endif
+
+                @endif
+                @endforeach
+              @endif
+
+              
+
+              <h3>{{ $infoPend }}</h3>
 
               <p>Paid Invoices</p>
             </div>
@@ -131,38 +276,18 @@
             </div>
             {{-- <a href="#" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a> --}}
           </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-6 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-info">
-            <div class="inner">
-            <h3>{{ $getUserDetail->number_of_withdrawals }}</h3>
 
-              <p>Total Withdrawal</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-person-add"></i>
-            </div>
-        {{--  <a href="{{ route('Otherpay') }}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>  --}}
-          </div>
+          <a type="button" href="{{ route('merchant withdrawal') }}" class="btn btn-primary btn-block">Withdraw Money <i class="fas fa-credit-card"></i></a>
         </div>
-        <!-- ./col -->
-        <div class="col-lg-12 col-xs-12">
-          <!-- small box -->
-          <div class="small-box">
-              <div class="col-md-4"><a type="button" href="{{ route('merchant credit card', $getUserDetail->id) }}" class="btn btn-danger btn-block">Add a new Credit Card <i class="fa fa-plus"></i></a></div>
-              <div class="col-md-4"><a type="button" href="{{ route('merchant prepaid card', $getUserDetail->id) }}" class="btn btn-info btn-block">Add a new Prepaid Card <i class="fa fa-plus"></i></a></div>
-              <div class="col-md-4"><a type="button" href="{{ route('merchant bank account', $getUserDetail->id) }}" class="btn btn-success btn-block">Add a new Bank Account <i class="fa fa-plus"></i></a></div>
-          </div>
-          <br>
-        <br>
-        </div>
+
+
         
         <!-- ./col -->
       @endif
 
       </div>
+      <br>
+      <br>
       <!-- /.row -->
       <!-- Main row -->
       <div class="row">

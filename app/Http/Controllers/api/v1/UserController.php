@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Validator;
 use App\User as User;
 use App\AnonUsers as AnonUsers;
 use App\ServiceType as ServiceType;
+use App\Admin as Admin;
+use App\ClientInfo as ClientInfo;
 
 
 class UserController extends Controller
@@ -229,7 +231,89 @@ class UserController extends Controller
         }
 
 
-        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $request->bearerToken())->first();
+        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'accountType', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $request->bearerToken())->first();
+
+        $status = 200;
+
+        $resData = ['data' => $data, 'message' => 'Profile updated', 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+
+    public function updateMerchantProfile(Request $request, Admin $admin, ClientInfo $clientinfo){
+
+        $user = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $request->bearerToken())->first();
+        
+
+        User::where('id', $user->id)->update($request->all());
+
+        $adminName = explode(" ", $request->name); 
+
+        $admin->where('email', $user->email)->update(['firstname' => $adminName[0], 'lastname' => $adminName[1]]);
+
+        $clientinfo->where('email', $user->email)->update(['firstname' => $adminName[0], 'lastname' => $adminName[1], 'telephone' => $request->telephone, 'country' => $request->country, 'state' => $request->state, 'city' => $request->city, 'zip_code' => $request->zip]);
+
+        if($request->hasFile('nin_front')){
+            $this->uploadDocument($user->id, $request->file('nin_front'), 'document/nin_front', 'nin_front');
+
+            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the front page of your national identity card.");
+        }
+        if($request->hasFile('nin_back')){
+            $this->uploadDocument($user->id, $request->file('nin_back'), 'document/nin_back', 'nin_back');
+            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the back page of your national identity card.");
+        }
+        if($request->hasFile('drivers_license_front')){
+            $this->uploadDocument($user->id, $request->file('drivers_license_front'), 'document/drivers_license_front', 'drivers_license_front');
+            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the front page of your drivers license.");
+        }
+        if($request->hasFile('drivers_license_back')){
+            $this->uploadDocument($user->id, $request->file('drivers_license_back'), 'document/drivers_license_back', 'drivers_license_back');
+            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the back page of your drivers license.");
+        }
+        if($request->hasFile('international_passport_front')){
+            $this->uploadDocument($user->id, $request->file('international_passport_front'), 'document/international_passport_front', 'international_passport_front');
+            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded your international passport.");
+        }
+        if($request->hasFile('international_passport_back')){
+            $this->uploadDocument($user->id, $request->file('international_passport_back'), 'document/international_passport_back', 'international_passport_back');
+            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded your international passport.");
+        }
+        if($request->hasFile('avatar')){
+            $this->uploadDocument($user->id, $request->file('avatar'), 'profilepic/avatar', 'avatar');
+            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully updated your profile picture.");
+        }
+
+
+        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'accountType', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $request->bearerToken())->first();
+
+        $status = 200;
+
+        $resData = ['data' => $data, 'message' => 'Profile updated', 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+    public function updateMerchantBusinessProfile(Request $request, Admin $admin, ClientInfo $clientinfo){
+
+        $user = User::where('api_token', $request->bearerToken())->first();
+
+        $clientinfo->where('email', $user->email)->update(['business_name' => $request->businessName, 'address' => $request->businessAddress, 'corporate_type' => $request->corporate_type, 'industry' => $request->industry, 'website' => $request->businessWebsite]);
+
+        if($request->hasFile('incorporation_doc_front')){
+            $this->uploadDocument($user->id, $request->file('incorporation_doc_front'), 'document/incorporation_doc_front', 'incorporation_doc_front');
+            $this->createNotification($user->ref_code, "Incorporation document successfully uploaded");
+            $this->createNotification($user->ref_code, "Hello ".$user->name.", You have successfully uploaded the front page of your incorporation document.");
+        }
+        if($request->hasFile('incorporation_doc_back')){
+            $this->uploadDocument($user->id, $request->file('incorporation_doc_back'), 'document/incorporation_doc_back', 'incorporation_doc_back');
+            $this->createNotification($user->ref_code, "Hello ".$user->name.", You have successfully uploaded the back page of your incorporation document.");
+        }
+
+
+        $data = $clientinfo->where('email', $user->email)->first();
 
         $status = 200;
 
@@ -264,6 +348,8 @@ class UserController extends Controller
                         if(Hash::check($req->oldpassword, $thisuser->password)){
                             // Update
                             $resp = User::where('api_token', $req->bearerToken())->update(['password' => Hash::make($req->newpassword)]);
+
+                            Admin::where('email', $thisuser->email)->update(['password' => Hash::make($req->newpassword)]);
 
                             $data = $resp;
                             $message = "Saved";
@@ -456,6 +542,8 @@ class UserController extends Controller
                             else{
 
                                     $resp = User::where('api_token', $req->bearerToken())->update(['password' => Hash::make($req->newpassword)]);
+
+                                    Admin::where('email', $thisuser->email)->update(['password' => Hash::make($req->newpassword)]);
 
                                     $data = $resp;
                                     $message = "Saved";

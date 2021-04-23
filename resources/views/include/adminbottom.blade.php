@@ -1539,10 +1539,11 @@ function showForm(val){
 function handShake(val){
 
 var route;
+var formData;
 
 if(val == 'addcard'){
 
-var formData = new FormData(formElem);
+ formData = new FormData(formElem);
 
 
     route = "{{ URL('/api/v1/addnewcard') }}";
@@ -1587,7 +1588,7 @@ var formData = new FormData(formElem);
 
 else if(val == 'editcard'){
 
-var formData = new FormData(formElem);
+ formData = new FormData(formElem);
 
 
     route = "{{ URL('/api/v1/editcard') }}";
@@ -1631,7 +1632,7 @@ var formData = new FormData(formElem);
 }
 else if(val == 'singleinvoice'){
 
-var formData = new FormData(formElem);
+ formData = new FormData(formElem);
 
 
     route = "{{ URL('/api/v1/singleinvoice') }}";
@@ -1675,7 +1676,7 @@ var formData = new FormData(formElem);
 }
 else if(val == 'bulkinvoice'){
 
-var formData = new FormData(formElem);
+ formData = new FormData(formElem);
 
 
     route = "{{ URL('/api/v1/bulkinvoice') }}";
@@ -1718,9 +1719,54 @@ var formData = new FormData(formElem);
 
 }
 
+else if(val == 'withdrawmoney'){
+
+    formData = new FormData(formElem);
+
+    route = "{{ URL('/api/v1/moneywithdrawal') }}";
+
+        Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('.withdrawmoneyBtn').text('Please wait...');
+        },
+        success: function(result){
+            console.log(result);
+
+            $('.withdrawmoneyBtn').text('Withdraw Money');
+
+            if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.href="{{ route('Admin') }}"; }, 5000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+        },
+        error: function(err) {
+            $('.withdrawmoneyBtn').text('Withdraw Money');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
 else if(val == 'addbank'){
 
-var formData = new FormData(formElem);
+ formData = new FormData(formElem);
 
 
     route = "{{ URL('/api/v1/addnewbank') }}";
@@ -1764,7 +1810,7 @@ var formData = new FormData(formElem);
 }
 else if(val == 'createservicetype'){
 
-var formData = new FormData(formElem);
+ formData = new FormData(formElem);
 
 
     route = "{{ URL('/api/v1/createservicetype') }}";
@@ -1809,7 +1855,7 @@ var formData = new FormData(formElem);
 
 else if(val == 'editbank'){
 
-var formData = new FormData(formElem);
+formData = new FormData(formElem);
 
 
     route = "{{ URL('/api/v1/editbank') }}";
@@ -1964,6 +2010,392 @@ else if(val == "deletecard"){
 
 }
 
+else if(val == "transactionpinsettings"){
+
+    formData = new FormData(formElemtransactionpinsettings);
+
+        route = "{{ URL('/api/v1/updatetransactionpin') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#transactionBtn').text('Please wait...');
+        },
+        success: function(result){
+
+            $('#transactionBtn').text('Save');
+
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $('#transactionBtn').text('Save');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+else if(val == "newtransactionpinsettings"){
+
+    formData = new FormData(formElemnewtransactionpinsettings);
+
+        route = "{{ URL('/api/v1/createtransactionpin') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#transactionBtn').text('Please wait...');
+        },
+        success: function(result){
+
+            $('#transactionBtn').text('Save');
+
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $('#transactionBtn').text('Save');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+else if(val == "passwordsettings"){
+
+    formData = new FormData(formElempasswordsettings);
+
+    route = "{{ URL('/api/v1/updatepassword') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#passwordBtn').text('Please wait...');
+        },
+        success: function(result){
+
+            $('#passwordBtn').text('Save');
+
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $('#passwordBtn').text('Save');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+else if(val == "securityquestans"){
+
+    formData = new FormData(formElemsecurityquestans);
+
+    route = "{{ URL('/api/v1/security') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#securityBtn').text('Please wait...');
+        },
+        success: function(result){
+
+            $('#securityBtn').text('Save');
+
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $('#securityBtn').text('Save');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+else if(val == "resetPassword"){
+
+    formData = new FormData(formElemresetPassword);
+
+    route = "{{ URL('/api/v1/resetpassword') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#'+val+'Btn').text('Please wait...');
+        },
+        success: function(result){
+            
+
+            $('#'+val+'Btn').text('Submit');
+
+                $(".close").click();
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $(".close").click();
+            $('#'+val+'Btn').text('Submit');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+else if(val == "resetTransactionPin"){
+
+    formData = new FormData(formElemresetTransactionPin);
+
+    route = "{{ URL('/api/v1/resettransactionpin') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#'+val+'Btn').text('Please wait...');
+        },
+        success: function(result){
+            
+
+            $('#'+val+'Btn').text('Submit');
+            $(".close").click();
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $(".close").click();
+            $('#'+val+'Btn').text('Submit');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+
+else if(val == "merchantprofile"){
+
+ formData = new FormData(formElemProfile);
+
+    route = "{{ URL('/api/v1/merchantprofile') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#updatemyProfile').text('Updating Profile...');
+        },
+        success: function(result){
+
+            $('#updatemyProfile').text('Update Profile');
+
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $('#updatemyProfile').text('Update Profile');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+else if(val == "merchantbusiness"){
+
+ formData = new FormData(formElemBusinessProfile);
+
+    route = "{{ URL('/api/v1/merchantbusinessprofile') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#updatemyBusinessProfile').text('Updating Business...');
+        },
+        success: function(result){
+
+            $('#updatemyBusinessProfile').text('Update Business');
+
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $('#updatemyBusinessProfile').text('Update Business');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+
+}
+
+function resetPin(question, val){
+    $("#"+val+"securityQuest").val(question);
+    $("#"+val+"mySecQuest").text(question);
+    $("#"+val).click();
 }
 
  function setHeaders(){

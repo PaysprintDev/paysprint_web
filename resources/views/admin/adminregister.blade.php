@@ -259,6 +259,18 @@
       </div>
 
       <div class="form-group has-feedback">
+        <label for="website">Website</label>
+      <div class="row">
+        <div class="col-xs-12">
+            <input type="text" name="website" id="website" class="form-control" placeholder="www.example.com">
+        </div>
+        <!-- /.col -->
+        
+      </div>
+      </div>
+
+
+      <div class="form-group has-feedback">
         <label for="firstname">Contact Person</label>
       <div class="row">
         <div class="col-xs-6">
@@ -544,6 +556,7 @@ function signUp(){
     address: $('#address').val(),
     corporate_type: $('#corporate_type').val(),
     industry: $('#industry').val(),
+    website: $('#website').val(),
     firstname: $('#firstname').val(),
     lastname: $('#lastname').val(),
     telephone: $('#telephone').val(),

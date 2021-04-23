@@ -2295,6 +2295,8 @@ else if(val == "securityquestans"){
     });
 
 }
+
+
 else if(val == "autodeposit"){
 
     formData = new FormData(formElemautodeposit);
@@ -2497,6 +2499,7 @@ function resetPin(question, val){
     $("#"+val+"mySecQuest").text(question);
     $("#"+val).click();
 }
+
 
 
 $("#thiscountry").change(function(){
