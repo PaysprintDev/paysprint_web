@@ -599,7 +599,7 @@ if(val == 'withdrawmoney'){
 
             if(result.status == 200){
                     swal("Success", result.message, "success");
-                    setTimeout(function(){ location.href="{{ route('my account') }}"; }, 5000);
+                    setTimeout(function(){ location.href="{{ route('my account') }}"; }, 15000);
                 }
                 else{
                     swal("Oops", result.message, "error");

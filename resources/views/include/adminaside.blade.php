@@ -57,7 +57,7 @@
           </a>
           <ul class="treeview-menu">
             <li onclick="openModal('singleDoc1')"><a href="#"><i class="fa fa-circle-o text-green"></i> Single </a></li>
-            <li onclick="openModal('uploadDoc')"><a href="#"><i class="fa fa-circle-o text-red"></i> Bulk</a></li>
+            <li onclick="openModal('uploadDoc')"><a href="#"><i class="fa fa-circle-o text-red"></i> Batch</a></li>
             
             {{-- <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
           </ul>
@@ -240,7 +240,7 @@
           </a>
           <ul class="treeview-menu">
             <li ><a href="{{ route('create single invoice') }}"><i class="fa fa-circle-o text-green"></i> Single </a></li>
-            <li ><a href="{{ route('create bulk invoice') }}"><i class="fa fa-circle-o text-red"></i> Bulk</a></li>
+            <li ><a href="{{ route('create bulk invoice') }}"><i class="fa fa-circle-o text-red"></i> Batch</a></li>
             {{-- <li><a href="#"><i class="fa fa-circle-o text-info"></i> Check Sold Tickets</a></li>
             <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
           </ul>

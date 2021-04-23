@@ -486,7 +486,7 @@ class UserController extends Controller
                         $message = "Saved";
                         $status = 200;
 
-                        $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully updated your Auto deposit Status.");
+                        $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully turned ".$req->auto_deposit." your Auto Deposit Status.");
 
                 }
                 else{

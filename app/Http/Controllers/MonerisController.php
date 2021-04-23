@@ -920,9 +920,9 @@ else{
 
                                                         $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                                                        $activity = "Withdraw ".$req->currencyCode.''.$req->amount." from Wallet to Credit/Debit card";
+                                                        $activity = "Withdraw ".$req->currencyCode.''.number_format($req->amount, 2)." from Wallet to Credit/Debit card";
                                                         $credit = 0;
-                                                        $debit = $req->amount;
+                                                        $debit = number_format($req->amount, 2);
                                                         // $reference_code = $response->responseData['ReceiptId'];
                                                         $reference_code = $transaction_id;
                                                         $balance = 0;
@@ -945,12 +945,12 @@ else{
                                                         $this->email = $thisuser->email;
                                                         $this->subject = $req->currencyCode.' '.number_format($req->amount, 2)." has been Withdrawn from your Wallet with PaySprint";
 
-                                                        $this->message = '<p>The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Card Name: <strong>'.$cardDetails->card_name.'</strong> and Number: <strong>'.wordwrap($cardNo, 4, '-', true).'</strong> is successful. This will take about 10 working days before remittance. </p><p>You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your account</p>';
+                                                        $this->message = '<p>The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Card Name: <strong>'.$cardDetails->card_name.'</strong> and Number: <strong>'.wordwrap($cardNo, 4, '-', true).'</strong> is successful. This will take about 10 working days before it reflect in your bank account or credit card. </p><p>You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your account</p>';
 
 
                                                         
 
-                                                        $sendMsg = 'The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your '.$cardDetails->card_name.' and Number: '.wordwrap($cardNo, 4, '-', true).' is successful. This will take about 10 working days before remittance. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+                                                        $sendMsg = 'The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your '.$cardDetails->card_name.' and Number: '.wordwrap($cardNo, 4, '-', true).' is successful. This will take about 10 working days before it reflect in your bank account or credit card. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
                                                         $sendPhone = "+".$thisuser->code.$thisuser->telephone;
 
                                                         $this->createNotification($thisuser->ref_code, $sendMsg);
@@ -964,7 +964,8 @@ else{
 
                                                         $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
                                                         $status = 200;
-                                                        $message = $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet';
+                                                        // $message = $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet';
+                                                        $message = $sendMsg;
 
                                                         
 
@@ -1172,9 +1173,9 @@ else{
 
                                                 $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                                                $activity = "Withdraw ".$req->currencyCode.''.$req->amount." from Wallet to Credit/Debit card";
+                                                $activity = "Withdraw ".$req->currencyCode.''.number_format($req->amount, 2)." from Wallet to Credit/Debit card";
                                                 $credit = 0;
-                                                $debit = $req->amount;
+                                                $debit = number_format($req->amount, 2);
                                                 // $reference_code = $response->responseData['ReceiptId'];
                                                 $reference_code = $transaction_id;
                                                 $balance = 0;
@@ -1200,9 +1201,9 @@ else{
                                                 $this->email = $thisuser->email;
                                                 $this->subject = $req->currencyCode.' '.number_format($req->amount, 2)." has been Withdrawn from your Wallet with PaySprint";
 
-                                                $this->message = '<p>The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Card Name: <strong>'.$cardDetails->card_name.'</strong> and Number: <strong>'.wordwrap($cardNo, 4, '-', true).'</strong> is successful. This will take about 10 working days before remittance. </p><p>You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your account</p>';
+                                                $this->message = '<p>The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Card Name: <strong>'.$cardDetails->card_name.'</strong> and Number: <strong>'.wordwrap($cardNo, 4, '-', true).'</strong> is successful. This will take about 10 working days before it reflect in your bank account or credit card. </p><p>You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your account</p>';
 
-                                                $sendMsg = 'The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your '.$cardDetails->card_name.' and Number: '.wordwrap($cardNo, 4, '-', true).' is successful. This will take about 10 working days before remittance. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+                                                $sendMsg = 'The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your '.$cardDetails->card_name.' and Number: '.wordwrap($cardNo, 4, '-', true).' is successful. This will take about 10 working days before it reflect in your bank account or credit card. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
                                                 $sendPhone = "+".$thisuser->code.$thisuser->telephone;
 
 
@@ -1218,7 +1219,8 @@ else{
 
                                                 $data = $userInfo;
                                                 $status = 200;
-                                                $message = $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet';
+                                                $message = $sendMsg;
+                                                // $message = $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet';
 
                                             // }
                                             // else{

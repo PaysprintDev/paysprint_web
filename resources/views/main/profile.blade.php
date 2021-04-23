@@ -77,7 +77,7 @@
                                     <i class="fa fa-phone"></i> <b>Phone: {{ Auth::user()->telephone }}</b>
                                 </p>
                                 <p>
-                                    <i class="fa fa-address-book"></i> <b>Address: {{ Auth::user()->address }}</b>
+                                    <i class="fa fa-address-book"></i> <b>Address: {{ Auth::user()->address.', '.Auth::user()->city.' '.Auth::user()->state.' '.Auth::user()->country }}</b>
                                 </p>
                                 
                                 <p>
@@ -273,7 +273,7 @@
     <div class="panel-heading" role="tab" id="headingFour">
       <h4 class="panel-title">
         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-          Auto Deposit
+          Turn Off Auto Deposit
         </a>
       </h4>
     </div>

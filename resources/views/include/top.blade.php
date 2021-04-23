@@ -146,7 +146,7 @@
                         </li>
 
                         <li class="dropdown submenu">
-                            <a href="{{ route('statement') }}">Statement</a>
+                            <a href="{{ route('statement') }}">Transaction History</a>
                         </li>
 
                         

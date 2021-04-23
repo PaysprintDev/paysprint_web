@@ -76,15 +76,31 @@ input[type="radio"] {
                                     @csrf
 
 
-                                    <div class="form-group"> <label for="card_type">
+                                    <div class="form-group"> <label for="gateway">
                                             {{--  <h6>Select Card Type/ Bank Account</h6>  --}}
                                             <h6>Select Payment Gateway</h6>
                                         </label>
                                         <div class="input-group"> 
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/cotton/20/000000/money--v4.png"/> </span> </div>
+                                            <select name="gateway" id="gateway" class="form-control" required>
+                                                <option value="">Select option</option>
+                                                <option value="PaySprint">PaySprint</option>
+                                                {{--  <option value="Google Pay">Google Pay</option>  --}}
+                                                {{-- <option value="Prepaid Card">Prepaid Card</option> --}}
+                                                {{-- <option value="Bank Account">Bank Account</option> --}}
+                                            </select>
+                                            
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group"> <label for="card_type">
+                                            <h6>Select Card Type/ Bank Account</h6>
+                                        </label>
+                                        <div class="input-group"> 
+                                            <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/cotton/20/000000/money--v4.png"/> </span> </div>
                                             <select name="card_type" id="card_type" class="form-control" required>
                                                 <option value="">Select option</option>
-                                                <option value="Credit Card">PaySprint</option>
+                                                <option value="Credit Card">Credit Card</option>
                                                 {{--  <option value="Google Pay">Google Pay</option>  --}}
                                                 {{-- <option value="Prepaid Card">Prepaid Card</option> --}}
                                                 {{-- <option value="Bank Account">Bank Account</option> --}}

@@ -29,10 +29,10 @@
 @section('content')
     <!-- Banner area -->
     <section class="banner_area" data-stellar-background-ratio="0.5">
-        <h2>{{ $pages }}</h2>
+        <h2>TRANSACTION HISTORY</h2>
         <ol class="breadcrumb">
             <li><a href="{{ route('home') }}">Home</a></li>
-            <li><a href="{{ route('statement') }}" class="active">{{ $pages }}</a></li>
+            <li><a href="{{ route('statement') }}" class="active">TRANSACTION HISTORY</a></li>
         </ol>
     </section>
     <!-- End Banner area -->
@@ -43,7 +43,7 @@
             <div class="architecture_area services_pages">
                 <div class="portfolio_filter portfolio_filter_2">
                     <ul>
-                        <li data-filter="*" class="active"><a href=""><i class="fa fa-file" aria-hidden="true"></i>Generate Statement</a></li>
+                        <li data-filter="*" class="active"><a href=""><i class="fa fa-file" aria-hidden="true"></i>Transaction History</a></li>
                         {{-- <li data-filter=".payment"><a href=""><img src="https://p7.hiclipart.com/preview/40/409/113/letter-alphabet-patrol-others.jpg" style="width: 50px; height: 50px"><br>Make Payment</a></li> --}}
                     </ul>
                 </div>
@@ -53,14 +53,14 @@
                     <div class="single_facilities col-sm-12 invoice">
                         <div class="who_we_area">
                             <div class="subtittle">
-                                <h2>GENERATE STATEMENT</h2>
+                                <h2>GENERATE TRANSACTION HISTORY</h2>
                             </div>
                             <div class="billingIns">
                                 <input type="hidden" name="invname" id="invname" value="{{ $name }}">
                                 <input type="hidden" name="invemail" id="invemail" value="{{ $email }}">
-                                <label for="invoiceService">Type of Statement</label>
+                                <label for="invoiceService">Select</label>
                                 <select name="invoiceService" class="form-control billinginput_box" id="invoiceService">
-                                    <option value="">--Select Statement--</option>
+                                    <option value="">--Select--</option>
                                     <option value="Wallet">Wallet</option>
                                     @if(count($data['service']) > 0)
                                         @foreach($data['service'] as $services)

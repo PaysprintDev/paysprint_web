@@ -424,7 +424,7 @@
                         <form action="#" method="post" id="formElemtransactionpinsettings">
                             
                             <div class="form-group">
-                                <label for="oldpin">Old Pin <strong><p class="text-danger" style="cursor: pointer;" onclick="resetPin('{{ $data['getuserDetail']->securityQuestion }}','transaction')">Have you forgotten your old transaction pin? Click here to reset</p></strong></label>
+                                <label for="oldpin">Old Pin <strong><p class="text-danger" style="cursor: pointer;" onclick="resetPin('{{ $data['getuserDetail']->securityQuestion }}','transaction')">Have you forgotten your old transaction pin? <span style="text-decoration: underline;">Click here to reset</span></p></strong></label>
                                 <input type="password" name="oldpin" id="oldpin" class="form-control" placeholder="Pin" maxlength="4">
                             </div>
                             <div class="form-group">
@@ -471,7 +471,7 @@
                   <form action="#" method="post" id="formElempasswordsettings">
 
                         <div class="form-group">
-                            <label for="oldpassword">Old Password <strong><p class="text-danger" style="cursor: pointer;" onclick="resetPin('{{ $data['getuserDetail']->securityQuestion }}','password')">Have you forgotten your old password? Click here to reset</p></strong></label>
+                            <label for="oldpassword">Old Password <strong><p class="text-danger" style="cursor: pointer;" onclick="resetPin('{{ $data['getuserDetail']->securityQuestion }}','password')">Have you forgotten your old password? <span style="text-decoration: underline;">Click here to reset</span></p></strong></label>
                             <input type="password" name="oldpassword" id="oldpassword" class="form-control" placeholder="Password">
                         </div>
                         <div class="form-group">

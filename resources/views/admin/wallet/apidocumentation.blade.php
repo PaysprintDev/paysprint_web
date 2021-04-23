@@ -43,13 +43,13 @@
                 <span class="label label-primary pull-right"><i class="fas fa-code"></i></span>
               </div><!-- /.box-header -->
               <div class="box-body">
-                <p>Copy your api secrete key, send to your developer for integration on your website</p>
+                <p>Copy merchant api secrete key and send to your developer for integration on the website</p>
 
                 <p>
                   <strong>API SECRETE KEY: </strong> <pre><strong>{{ $data['getbusinessDetail']->api_secrete_key }}</strong></pre>
                 </p>
 
-                <a href="#" target="_blank" class="btn btn-primary"><i class="fas fa-book-reader"></i> Read documentation</a>
+                <a href="#" target="_blank" class="btn btn-primary"><i class="fas fa-book-reader"></i> Share with developer</a>
               </div><!-- /.box-body -->
             </div><!-- /.box -->
           </div><!-- /.col -->

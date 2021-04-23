@@ -180,7 +180,7 @@ input[type="radio"] {
 
                                             <div class="d-flex align-items-start">
                                                 <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                                                    <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">
+                                                    <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true" style="background-color: #000 !important;">
                                                         <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" alt="PaySprint logo" width="50" height="50">
                                                     </button>
                                                     <br>
@@ -294,7 +294,7 @@ input[type="radio"] {
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <h6 class="font-sm">
-                                                                Total Withdrawals
+                                                                Number of Withdrawals
                                                             </h6>
                                                         </div>
                                                         <div class="col-md-12">
