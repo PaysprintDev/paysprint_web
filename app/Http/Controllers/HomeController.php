@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Mail;
 
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
+use Illuminate\Support\Facades\Log;
+
 use App\User as User;
 
 use App\AnonUsers as AnonUsers;
@@ -130,7 +132,6 @@ class HomeController extends Controller
     public function authIndex(Request $req)
     {
         // dd($req->session());
-
             if(Auth::check() == true){
                 $this->page = 'Landing';
                 $this->name = Auth::user()->name;

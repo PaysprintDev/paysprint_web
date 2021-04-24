@@ -417,6 +417,7 @@
 
 
 
+
                <!-- /.tab-pane -->
               <div class="tab-pane" id="myconnection">
                     @if ($data['getuserDetail']->transaction_pin != null)

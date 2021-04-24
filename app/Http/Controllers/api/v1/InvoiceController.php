@@ -249,7 +249,7 @@ class InvoiceController extends Controller
                             $this->sendEmail($this->to, $this->subject);
 
                             // Send SMS
-                            $sendMsg = "Hello ".$this->name.", ".$this->subject.". Login to your PaySprint App to make payment. <a href='https://".route('login')."'>https://".route('login')."</a>";
+                            $sendMsg = "Hello ".$this->name.", ".$this->subject.". Login to your PaySprint App to make payment. ".route('login');
 
                             $sendPhone = "+".$getCustomer->code.$getCustomer->telephone;
                             // $sendPhone = "+23408137492316";
