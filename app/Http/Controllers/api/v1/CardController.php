@@ -35,7 +35,7 @@ class CardController extends Controller
             $message = "No Card Found";
         }
 
-        // Log::info("Get Card:=> ".$data);
+        Log::info("Get Card details by :=> ".$thisuser->name);
 
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
@@ -73,6 +73,7 @@ class CardController extends Controller
 
                     $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully added a new card.");
 
+                    Log::info("New card added by :=> ".$thisuser->name);
                 }
                 else{
                     $data = [];
@@ -134,6 +135,8 @@ class CardController extends Controller
 
                     $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully added a new bank account.");
 
+                    Log::info("New bank added by :=> ".$thisuser->name);
+
                 
             } catch (\Throwable $th) {
                 $data = [];
@@ -190,6 +193,8 @@ class CardController extends Controller
                     $message = 'You have successfully updated your bank account';
 
                     $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully updated your new bank account.");
+
+                    Log::info("Edit bank by :=> ".$thisuser->name);
 
                 
             } catch (\Throwable $th) {
@@ -251,6 +256,8 @@ class CardController extends Controller
 
                     // Log::info("Edit Card Detail :=> ".$cardData);
 
+                    Log::info("Edit card by :=> ".$thisuser->name);
+
                     $data = $cardData;
                     $status = 200;
                     $message = 'You have successfully updated your card';
@@ -309,6 +316,8 @@ class CardController extends Controller
 
         // Log::info("Delete Card:=> ".$data);
 
+        Log::info("Delete card by :=> ".$thisuser->name);
+
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
@@ -333,6 +342,8 @@ class CardController extends Controller
 
         // Log::info("Delete Card:=> ".$data);
 
+        Log::info("Delete bank by :=> ".$thisuser->name);
+
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
@@ -351,9 +362,13 @@ class CardController extends Controller
         if($cardDetail == "Bank Account"){
         $query = AddBank::where('user_id', $thisuser->id)->get();
 
+        Log::info("Get bank inforamtion for :=> ".$thisuser->name);
+
         }
         else{
         $query = AddCard::where('user_id', $thisuser->id)->where('card_provider', 'LIKE', '%'.$cardDetail.'%')->get();
+
+        Log::info("Get card inforamtion for :=> ".$thisuser->name);
 
         }
 

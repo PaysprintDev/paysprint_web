@@ -22,14 +22,19 @@
     <!-- Main content -->
     <section class="content">
 
+        <div class="col-md-2 col-md-offset-10">
+                <button class="btn btn-secondary btn-block bg-red" onclick="goBack()"><i class="fas fa-chevron-left"></i> Go back</button>
+            </div>
+
       <div class="row">
 
         @if (count($data['getmycreditCard']) > 0)
 
         <div class="row" style="margin-top: 5px; margin-bottom:20px;">
-            <div class="col-md-3 col-md-offset-9">
+            <div class="col-md-3 col-md-offset-0">
                 <button class="btn btn-secondary btn-block bg-black" onclick="showForm('card')">Add new Card <i class="fa fa-credit-card"></i></button>
             </div>
+            
         </div>
 
         @foreach ($data['getmycreditCard'] as $mycard)
@@ -71,9 +76,14 @@
                     <h4><strong>{{ (strlen($mycard->card_name) < 18) ? strtoupper($mycard->card_name) : substr(strtoupper($mycard->card_name), 0, 18)."..." }}</strong></h4>
                 </div>
                 <div class="col-md-6">
-                    <input type="hidden" name="card_id" value="{{ $mycard->id }}" id="card_id">
+                    
                     <a href="{{ route('Edit merchant credit card', $mycard->id) }}" title="Edit Card"><i class="far fa-edit text-secondary"></i></a>
-                    <a href="javascript:void(0)" title="Delete Card" onclick="handShake('deletecard')"><i class="far fa-trash-alt text-danger"></i></a>
+                    {{--  <a href="javascript:void(0)" title="Delete Card" onclick="handShake('deletecard')"><i class="far fa-trash-alt text-danger"></i></a>  --}}
+
+                    <form action="#" method="POST" class="disp-0">@csrf <input type="hidden" name="card_id" value="{{ $mycard->id }}" id="card_id{{ $mycard->id }}"></form> <a href="javascript:void(0)" title="Delete Card" onclick="delhandShake('deletecard', '{{ $mycard->id }}')"><i class="far fa-trash-alt text-danger"></i></a>
+
+                    
+
                 </div>
                 
             </div>

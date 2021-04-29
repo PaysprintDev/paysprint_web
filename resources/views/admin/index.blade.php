@@ -126,7 +126,7 @@
             <div class="inner">
             <h3>{{ $getUserDetail->number_of_withdrawals }}</h3>
 
-              <p>Withdrawal</p>
+              <p>Number of Withdrawals</p>
             </div>
             <div class="icon">
               <i class="ion ion-archive"></i>
@@ -210,30 +210,32 @@
             {{-- <a href="#" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a> --}}
           </div>
 
-                  <!-- ./col -->
-        <div class="col-lg-12 col-xs-12">
-          <!-- small box -->
-          <div class="small-box">
-              <div class="col-md-4">
-                  <strong>
-                    <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('merchant credit card', $getUserDetail->id) }}"><img src="https://img.icons8.com/fluent/53/000000/credit-card-cash-withdrawal.png" title="Add Credit Card"/> <i class="fas fa-plus-square" title="Add Credit Card" style="font-size: 16px; color: black"></i></a>
-                  </strong>
-              </div>
 
-              <div class="col-md-4">
-                <strong>
-                    <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('merchant prepaid card', $getUserDetail->id) }}"> <img src="https://img.icons8.com/cotton/53/000000/bank-cards--v2.png" title="Add Prepaid Card"/> <i class="fas fa-plus-square" title="Add Prepaid Card" style="font-size: 16px; color: black"></i></a>
-                </strong>
-              </div>
+            <div class="col-md-12">
+          <h3><strong>Payment Method</strong></h3>
+              <hr>
+            </div>
+            <div class="col-md-12">
+                <button style="background-color: #000 !important;" class="px-2" title="PaySprint Payment Gateway" onclick="location.href='{{ route('merchant payment gateway', 'gateway=PaySprint') }}'">
+                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" alt="PaySprint logo" width="50" height="50">
+                </button>
+                <button class="px-2" title="GooglePay Payment Gateway" onclick="comingSoon()"><img src="https://img.icons8.com/fluent/50/000000/google-logo.png"/></button>
+                <br>
+            <br>
+            </div>
 
-              <div class="col-md-4">
-                <strong>
-                    <a type="button" class="btn btn-warning" style="color: #f7f7f7; font-weight: bold; background-color: #fff !important;" href="{{ route('merchant bank account', $getUserDetail->id) }}"> <img src="https://img.icons8.com/dusk/53/000000/merchant-account.png" title="Add Bank Account"/> <i class="fas fa-plus-square" title="Add Bank Account" style="font-size: 16px; color: black"></i></a>
-                </strong>
-              
-              </div>
-          </div>
-        </div>
+            <div class="col-md-6 mb-3">
+
+              <a type="button" href="{{ route('merchant add money') }}" class="btn btn-info btn-block">Add Money <i class="fas fa-plus"></i></a>
+            </div>
+            <div class="col-md-6 mb-3">
+              <a type="button" href="{{ route('merchant send money', 'type=local') }}" class="btn btn-warning btn-block">Send Money <i class="fas fa-paper-plane"></i></a>
+            </div>
+
+
+
+
+
 
         </div>
 
@@ -277,7 +279,17 @@
             {{-- <a href="#" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a> --}}
           </div>
 
-          <a type="button" href="{{ route('merchant withdrawal') }}" class="btn btn-primary btn-block">Withdraw Money <i class="fas fa-credit-card"></i></a>
+          
+
+
+          @if ($getUserDetail->approval == 1)
+                <a type="button" href="{{ route('merchant withdrawal') }}" class="btn btn-primary btn-block">Withdraw Money <i class="fas fa-credit-card"></i></a>
+            @else
+                    <a type="button" href="javascript:void()" class="btn btn-primary btn-block" onclick="restriction('withdrawal', '{{ $getUserDetail->name }}')">Withdraw Money <i class="fa fa-credit-card"></i></a>
+                
+            @endif
+
+
         </div>
 
 
@@ -317,6 +329,8 @@
                   <th>Email</th>
                   <th>Service</th>
                   <th>Amount</th>
+                  <th>Tax Amount</th>
+                  <th>Total Amount</th>
                   <th>Status</th>
                   <th>Pay Due Date</th>
                   @if(session('role') != "Super")<th>Action</th>@endif
@@ -337,6 +351,10 @@
                     <td title="{{ $invoiceImports->payee_email }}"><?php $string = $invoiceImports->payee_email; $output = strlen($string) > 10 ? substr($string,0,10)."..." : $string; echo $output;?></td>
                     <td title="{{ $invoiceImports->service }}"><?php $string = $invoiceImports->service; $output = strlen($string) > 10 ? substr($string,0,10)."..." : $string; echo $output;?></td>
                       <td align="center" style="font-weight: bold; color: navy;">@if (isset($getUserDetail) == true) {{ $getUserDetail->currencySymbol.number_format($invoiceImports->amount, 2) }} @else {{ number_format($invoiceImports->amount, 2) }} @endif </td>
+
+                      <td align="center" style="font-weight: bold; color: purple;">@if (isset($getUserDetail) == true) {{ $getUserDetail->currencySymbol.number_format($invoiceImports->tax_amount, 2) }} @else {{ number_format($invoiceImports->tax_amount, 2) }} @endif </td>
+
+                      <td align="center" style="font-weight: bold; color: green;">@if (isset($getUserDetail) == true) {{ $getUserDetail->currencySymbol.number_format($invoiceImports->total_amount, 2) }} @else {{ number_format($invoiceImports->total_amount, 2) }} @endif </td>
 
                       @if($leftOver = \App\InvoicePayment::where('invoice_no', $invoiceImports->invoice_no)->get())
                         

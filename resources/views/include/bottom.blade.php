@@ -57,6 +57,7 @@
                         <ul class="my_address">
                             <li><a href="#"><i class="fa fa-envelope" aria-hidden="true"></i>info@paysprint.net</a></li><br>
                             <li><a href="#"><i class="fa fa-map-marker" aria-hidden="true"></i><span> PaySprint by Express Ca Corp, <br> 10 George St. North, Brampton. ON. L6X1R2. Canada </span></a></li>
+                            <li><a href="#"><i class="fas fa-thumbtack" aria-hidden="true"></i></i>FINTRAC Reg No: M21469983</a></li><br>
                         </ul>
                     </address>
                 </div>

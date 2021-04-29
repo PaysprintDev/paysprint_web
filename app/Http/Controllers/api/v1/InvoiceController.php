@@ -9,12 +9,15 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Rap2hpoutre\FastExcel\FastExcel;
 
+use Illuminate\Support\Facades\Log;
+
 use App\Mail\sendEmail;
 
 use App\User as User;
 use App\ImportExcel as ImportExcel;
 use App\ClientInfo as ClientInfo;
 use App\Statement as Statement;
+use App\Tax as Tax;
 
 class InvoiceController extends Controller
 {
@@ -42,6 +45,9 @@ class InvoiceController extends Controller
     public $info2;
     public $infomessage;
     public $customer_id;
+    public $tax;
+    public $tax_amount;
+    public $total_amount;
     
 
     public function getAllInvoices(Request $req){
@@ -56,6 +62,8 @@ class InvoiceController extends Controller
                 $status = 200;
         
                 $resData = ['data' => $data, 'message' => 'success', 'status' => $status];
+
+                Log::info("Get all invoice for :=> ".$user->name);
            }
            else{
                 $status = 400;
@@ -85,7 +93,9 @@ class InvoiceController extends Controller
 
            if(count($data) > 0){
             $status = 200;
-    
+            
+            Log::info("Get specific invoice for :=> ".$user->name);
+
             $resData = ['data' => $data, 'message' => 'success', 'status' => $status];
        }
        else{
@@ -96,6 +106,8 @@ class InvoiceController extends Controller
 
         if(count($data) > 0){
             $status = 200;
+
+            Log::info("Get specific invoice for :=> ".$user->name);
     
             $resData = ['data' => $data, 'message' => 'success', 'status' => $status];
        }
@@ -131,6 +143,8 @@ class InvoiceController extends Controller
 
            if(count($data) > 0){
             $status = 200;
+
+            Log::info("Get invoice by ".$req->get('service')." for :=> ".$user->name);
     
             $resData = ['data' => $data, 'message' => 'success', 'status' => $status];
        }
@@ -157,122 +171,149 @@ class InvoiceController extends Controller
                      'single_firstname' => 'required|string',
                      'single_lastname' => 'required|string',
                      'single_email' => 'required|string',
+                     'single_telephone' => 'required|string',
                      'single_service' => 'required|string',
                      'single_invoiceno' => 'required|string',
                      'single_transaction_date' => 'required|string',
                      'single_amount' => 'required|string',
                      'single_payment_due_date' => 'required|string',
+                     'single_tax' => 'required|string',
+                     'single_tax_amount' => 'required|string',
+                     'single_total_amount' => 'required|string',
                 ]);
 
-                try {
-                    $thisuser = User::where('api_token', $req->bearerToken())->first();
-                    
-                    if(isset($thisuser) == false){
-                        $status = 400;
-                        $data = [];
-                        $message = "Invalid authorization";
-                    }
-                    else{
 
-                        // Check if invoice exist
-                        $checkExist = ImportExcel::where('invoice_no', $req->single_invoiceno)->first();
+                if($validator->passes()){
+                        try {
+                            $thisuser = User::where('api_token', $req->bearerToken())->first();
+                            
+                            if(isset($thisuser) == false){
+                                $status = 400;
+                                $data = [];
+                                $message = "Invalid authorization";
+                            }
+                            else{
 
-                        if(isset($checkExist) == true){
+                                // Check if invoice exist
+                                $checkExist = ImportExcel::where('invoice_no', $req->single_invoiceno)->first();
+
+                                if(isset($checkExist) == true){
+                                    $status = 400;
+                                    $data = [];
+                                    $message = "This invoice number already exists";
+                                }
+                                else{
+
+                                    $getCustomer = User::where('email', $req->single_email)->first();
+
+                                    if(isset($getCustomer)){
+                                        $address = $getCustomer->address;
+                                        $telephone = "+".$getCustomer->code.$getCustomer->telephone;
+                                    }
+                                    else{
+                                        $address = null;
+                                        $telephone = $req->single_telephone;
+                                    }
+
+                                    $getTax = Tax::where('id', $req->single_tax)->first();
+
+                                    // Insert Record
+                                    $query = [
+                                        'transaction_date' => $req->single_transaction_date, 'invoice_no' => $req->single_invoiceno, 'payee_ref_no' => $req->single_transaction_ref, 'name' => $req->single_firstname.' '.$req->single_lastname, 'transaction_ref' => $req->single_transaction_ref, 'description' => $req->single_description, 'amount' => $req->single_amount, 'payment_due_date' => $req->single_payment_due_date, 'payee_email' => $req->single_email, 'address' => $address, 'customer_id' => $thisuser->ref_code, 'service' => $req->single_service, 'installpay' => $req->single_installpay, 'installlimit' => $req->single_installlimit, 'status' => 'invoice', 'uploaded_by' => $thisuser->ref_code, 'merchantName' => $thisuser->businessname, 'recurring' => $req->single_recurring_service, 'reminder' => $req->single_reminder_service, 'telephone' => $req->single_telephone, 'tax' => $req->single_tax, 'tax_amount' => $req->single_tax_amount, 'total_amount' => $req->single_total_amount
+                                    ];
+
+                                    $insertData = ImportExcel::insert($query);
+
+                                    // Insert Statement
+                                    $activity = "Invoice on ".$req->single_service;
+                                    $credit = $req->single_total_amount;
+                                    $debit = 0;
+                                    $balance = 0;
+                                    $reference_code = $req->single_invoiceno;
+                                    $status = "Delivered";
+                                    $action = "Invoice";
+
+                                    $trans_date = date('Y-m-d', strtotime($req->single_transaction_date));
+
+                                    $regards = $thisuser->ref_code;
+
+                                    $this->insStatement($req->single_email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0);
+
+                                    if($thisuser->businessname != null){
+                                        $businessName = $thisuser->businessname;
+                                    }
+                                    else{
+
+                                        $getClient = ClientInfo::where('user_id', $thisuser->ref_code)->first();
+
+                                        $businessName = $getClient->business_name;
+                                    }
+
+
+                                    $this->to = $req->single_email;
+                                    // $this->to = "adenugaadebambo41@gmail.com";
+                                    $this->name = $req->single_firstname.' '.$req->single_lastname;
+                                    $this->transaction_date = $req->single_transaction_date;
+                                    $this->invoice_no = $req->single_invoiceno;
+                                    $this->payee_ref_no = $req->single_transaction_ref;
+                                    $this->transaction_ref = $req->single_transaction_ref;
+                                    $this->description = $req->single_description;
+                                    $this->payment_due_date = $req->single_payment_due_date;
+                                    $this->amount = $thisuser->currencySymbol.number_format($req->single_amount, 2);
+                                    $this->total_amount = $thisuser->currencySymbol.number_format($req->single_total_amount, 2);
+                                    $this->address = $thisuser->address;
+                                    $this->service = $req->single_service;
+                                    $this->clientname = $businessName;
+                                    $this->client_realname = $thisuser->name;
+                                    $this->city = $thisuser->city;
+                                    $this->state = $thisuser->state;
+                                    $this->zipcode = $thisuser->zipcode;
+                                    $this->customer_id = $thisuser->ref_code;
+                                    $this->tax = $getTax->rate.'% '.$getTax->name;
+                                    $this->tax_amount = $thisuser->currencySymbol.number_format($req->single_tax_amount, 2);
+
+                                    $this->subject = 'You have an invoice '.$req->single_invoiceno.' from  '.$this->clientname.' on PaySprint';
+
+                                    $this->sendEmail($this->to, $this->subject);
+
+                                    // Send SMS
+                                    $sendMsg = "Hello ".$this->name.", ".$this->subject.". Login to your PaySprint App to make payment. ".route('login');
+
+                                    $sendPhone = $telephone;
+                                    // $sendPhone = "+23408137492316";
+
+                                    $this->sendMessage($sendMsg, $sendPhone);
+
+
+                                    Log::info("Single Invoice prepared by ".$this->clientname." for :=> ".$this->name);
+
+                                    $this->createNotification($getCustomer->ref_code, $sendMsg);
+
+                                    $getinvoiceData = ImportExcel::where('invoice_no', $req->single_invoiceno)->first();
+
+                                    $status = 200;
+                                    $data = $getinvoiceData;
+                                    $message = "Invoice generated";
+
+                                }
+                            }
+
+                        } 
+                        catch (\Throwable $th) {
                             $status = 400;
                             $data = [];
-                            $message = "This invoice number already exists";
+                            $message = "Error: ".$th;
                         }
-                        else{
-
-                            $getCustomer = User::where('email', $req->single_email)->first();
-
-                            if(isset($getCustomer)){
-                                $address = $getCustomer->address;
-                            }
-                            else{
-                                $address = null;
-                            }
-                            // Insert Record
-                            $query = [
-                                'transaction_date' => $req->single_transaction_date, 'invoice_no' => $req->single_invoiceno, 'payee_ref_no' => $req->single_transaction_ref, 'name' => $req->single_firstname.' '.$req->single_lastname, 'transaction_ref' => $req->single_transaction_ref, 'description' => $req->single_description, 'amount' => number_format($req->single_amount, 2), 'payment_due_date' => $req->single_payment_due_date, 'payee_email' => $req->single_email, 'address' => $address, 'customer_id' => $thisuser->ref_code, 'service' => $req->single_service, 'installpay' => $req->single_installpay, 'installlimit' => $req->single_installlimit, 'status' => 'invoice', 'uploaded_by' => $thisuser->ref_code, 'merchantName' => $thisuser->businessname, 'recurring' => $req->single_recurring_service, 'reminder' => $req->single_reminder_service
-                            ];
-
-                            $insertData = ImportExcel::insert($query);
-
-                            // Insert Statement
-                            $activity = "Invoice on ".$req->single_service;
-                            $credit = $req->single_amount;
-                            $debit = 0;
-                            $balance = 0;
-                            $reference_code = $req->single_invoiceno;
-                            $status = "Delivered";
-                            $action = "Invoice";
-
-                            $trans_date = date('Y-m-d', strtotime($req->single_transaction_date));
-
-                            $regards = $thisuser->ref_code;
-
-                            $this->insStatement($req->single_email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0);
-
-                            if($thisuser->businessname != null){
-                                $businessName = $thisuser->businessname;
-                            }
-                            else{
-
-                                $getClient = ClientInfo::where('user_id', $thisuser->ref_code)->first();
-
-                                $businessName = $getClient->business_name;
-                            }
-
-
-                            $this->to = $req->single_email;
-                            // $this->to = "adenugaadebambo41@gmail.com";
-                            $this->name = $req->single_firstname.' '.$req->single_lastname;
-                            $this->transaction_date = $req->single_transaction_date;
-                            $this->invoice_no = $req->single_invoiceno;
-                            $this->payee_ref_no = $req->single_transaction_ref;
-                            $this->transaction_ref = $req->single_transaction_ref;
-                            $this->description = $req->single_description;
-                            $this->payment_due_date = $req->single_payment_due_date;
-                            $this->amount = $thisuser->currencySymbol.number_format($req->single_amount, 2);
-                            $this->address = $thisuser->address;
-                            $this->service = $req->single_service;
-                            $this->clientname = $businessName;
-                            $this->client_realname = $thisuser->name;
-                            $this->city = $thisuser->city;
-                            $this->state = $thisuser->state;
-                            $this->zipcode = $thisuser->zipcode;
-                            $this->customer_id = $thisuser->ref_code;
-
-                            $this->subject = 'You have an invoice '.$req->single_invoiceno.' from  '.$this->clientname.' on PaySprint';
-
-                            $this->sendEmail($this->to, $this->subject);
-
-                            // Send SMS
-                            $sendMsg = "Hello ".$this->name.", ".$this->subject.". Login to your PaySprint App to make payment. ".route('login');
-
-                            $sendPhone = "+".$getCustomer->code.$getCustomer->telephone;
-                            // $sendPhone = "+23408137492316";
-
-                            $this->sendMessage($sendMsg, $sendPhone);
-
-                            $this->createNotification($getCustomer->ref_code, $sendMsg);
-
-                            $getinvoiceData = ImportExcel::where('invoice_no', $req->single_invoiceno)->first();
-
-                            $status = 200;
-                            $data = $getinvoiceData;
-                            $message = "Invoice generated";
-
-                        }
-                    }
-
-                } 
-                catch (\Throwable $th) {
-                    $status = 400;
-                    $data = [];
-                    $message = "Error: ".$th;
                 }
+                else{
+                    $error = implode(",",$validator->messages()->all());
+
+                    $data = [];
+                    $status = 400;
+                    $message = $error;
+                }
+
+
 
             $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
@@ -338,6 +379,9 @@ class InvoiceController extends Controller
                                     }
 
 
+                                    $getTax = Tax::where('id', $req->single_tax)->first();
+
+                                    
 
                                     if($data->count() > 0){
                                         foreach ($data->toArray() as $key) {
@@ -371,6 +415,11 @@ class InvoiceController extends Controller
 
                                                 
                                                 // dd($UNIX_DATE1);
+
+                                                // Tax amount in %...
+                                                $taxAmount = ($getTax->rate / 100) * $key['Amount'];
+
+                                                $totalAmount = $key['Amount'] + $taxAmount;
                                                 
 
                                                 if($key['Customer Email'] == "" || $key['Customer Email'] == null){
@@ -404,11 +453,14 @@ class InvoiceController extends Controller
                                                     'merchantName' => $client_realname,
                                                     'recurring' => $req->recurring_service,
                                                     'reminder' => $req->reminder_service,
+                                                    'tax' => $req->single_tax,
+                                                    'tax_amount' => $taxAmount,
+                                                    'total_amount' => $totalAmount,
                                                 );
 
                                                     // Insert Statement
                                                     $activity = "Invoice on ".$req->service;
-                                                    $credit = $key['Amount'];
+                                                    $credit = $totalAmount;
                                                     $debit = 0;
                                                     $balance = 0;
                                                     $reference_code = $invoice_no;
@@ -419,8 +471,8 @@ class InvoiceController extends Controller
                                                     
                                                     $this->insStatement($key['Customer Email'], $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0);
 
-                                                // $this->to = $key['Customer Email'];
-                                                $this->to = "adenugaadebambo41@gmail.com";
+                                                $this->to = $key['Customer Email'];
+                                                // $this->to = "adenugaadebambo41@gmail.com";
                                                 $this->name = $key['Name'];
                                                 // $this->transaction_date = gmdate("Y-m-d", $UNIX_DATE1);
                                                 $this->transaction_date = date('Y-m-d', strtotime($UNIX_DATE1));
@@ -439,26 +491,30 @@ class InvoiceController extends Controller
                                                 $this->city = $city;
                                                 $this->state = $state;
                                                 $this->zipcode = $zipcode;
+                                                $this->tax = $getTax->rate.'% '.$getTax->name;
+                                                $this->tax_amount = $thisuser->currencySymbol.number_format($taxAmount, 2);
+                                                $this->total_amount = $thisuser->currencySymbol.number_format($totalAmount, 2);
 
                                                 $this->subject = 'You have an invoice '.$this->invoice_no.' from  '.$this->clientname.' on PaySprint';
 
                                                 $this->sendEmail($this->to, $this->subject);
+
+                                                Log::info("Bulk Invoice prepared by ".$this->clientname);
 
                                                 $getCustomer = User::where('email', $key['Customer Email'])->first();
 
                                                 if(isset($getCustomer)){
                                                     // Send SMS
 
-                                                    $sendMsg = "Hello ".$this->name.", ".$this->subject.". Login to your PaySprint App to make payment. <a href='https://".route('login')."'>https://".route('login')."</a>";
+                                                    $sendMsg = "Hello ".$this->name.", ".$this->subject.". Login to your PaySprint App to make payment. <a href='".route('login')."'>".route('login')."</a>";
 
-                                                    // $sendPhone = "+".$getCustomer->code.$getCustomer->telephone;
-                                                    $sendPhone = "+23408137492316";
+                                                    $sendPhone = "+".$getCustomer->code.$getCustomer->telephone;
+                                                    // $sendPhone = "+23408137492316";
 
                                                     $this->sendMessage($sendMsg, $sendPhone);
                                                     $this->createNotification($getCustomer->ref_code, $sendMsg);
 
                                                 }
-
                                                 
 
 
@@ -542,6 +598,9 @@ class InvoiceController extends Controller
             $objDemo->state = $this->state;
             $objDemo->zipcode = $this->zipcode;
             $objDemo->customer_id = $this->customer_id;
+            $objDemo->tax = $this->tax;
+            $objDemo->tax_amount = $this->tax_amount;
+            $objDemo->total_amount = $this->total_amount;
 
         }
         

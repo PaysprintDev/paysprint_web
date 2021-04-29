@@ -29,25 +29,25 @@ class CheckSetupController extends Controller
                 $info = $this->accountInfo($value->id);
 
                 if($value->approval == 0){
-                    $approval = "<li>Provide Means of Identification</li>";
+                    $approval = "<li>Upload a copy of Government Issued Photo ID</li>";
                 }
                 else{
                     $approval = "";
                 }
                 if($value->transaction_pin == null){
-                    $transaction = "<li>Set Up Transaction Pin</li>";
+                    $transaction = "<li>Set Up Transaction Pin-You will need the PIN to Send Money, Pay Invoice or Withdraw Money from Your PaySprint Account</li>";
                 }
                 else{
                     $transaction = "";
                 }
                 if($value->securityQuestion == null){
-                    $security = "<li>Provide Security Question and Answer</li>";
+                    $security = "<li>Set up Security Question and Answer-You will need this to reset your PIN code or Login Password</li>";
                 }
                 else{
                     $security = "";
                 }
                 if($info == 0){
-                    $card = "<li>Add Credit Card/Prepaid Card/Bank Account</li>";
+                    $card = "<li>Add Credit Card/Prepaid Card/Bank Account-You need this to add money to your PaySprint Wallet.</li>";
                 }
                 else{
                     $card = "";
@@ -55,16 +55,21 @@ class CheckSetupController extends Controller
 
                 // Send Mail
 
-                $this->name = $value->name;
-                $this->email = $value->email;
-                $this->subject = "You have some incomplete information on your PaySprint account";
+                if($value->approval == 0 || $value->transaction_pin == null || $value->securityQuestion == null || $info == 0){
 
-                $this->message = '<p>We noticed some of your information on your PaySprint account is not complete.</p><p><ul>'.$approval.''.$transaction.''.$security.''.$card.'</ul></p><p>Kindly complete these important steps in your profile. <a href=https://'.route('profile').' class="text-primary" style="text-decoration: underline">Click here to login to your account</a></p>';
+                    $this->name = $value->name;
+                    $this->email = $value->email;
+                    $this->subject = "You have some incomplete information on your PaySprint account";
 
-                $this->sendEmail($this->email, "Incomplete Setup");
+                    $this->message = '<p>We noticed you are yet to properly set-up your PaySprint Account. You need to set up the following in order to enjoy the full benefits of a PaySprint Account.</p><p><ul>'.$approval.''.$transaction.''.$security.''.$card.'</ul></p><p>Kindly complete these important steps in your profile. <a href='.route('profile').' class="text-primary" style="text-decoration: underline">Click here to login to your account</a></p>';
+
+                    $this->sendEmail($this->email, "Incomplete Setup");
 
 
-                echo "Sent to ".$this->name."<hr>";
+                    echo "Sent to ".$this->name."<hr>";
+                }
+
+                
 
             }
 
@@ -102,6 +107,30 @@ class CheckSetupController extends Controller
     }
 
 
+
+    public function autoDepositOff(){
+        $user = User::where('auto_deposit', 'off')->inRandomOrder()->get();
+
+        if(count($user) > 0){
+            // Send mail
+            foreach($user as $key => $value){
+                $this->name = $value->name;
+                $this->email = $value->email;
+                $this->subject = "Your Auto Deposit status is OFF on PaySprint.";
+
+                $this->message = '<p>The Auto Deposit feature on PaySprint is turned OFF. You will need to manually accept all transfers made to your PaySprint wallet. If you want to enjoy a stress-free transaction deposit, you may have visit your profile on PaySprint Account to turn ON the feature. <br><br> Thanks, PaySprint Team</p>';
+
+                $this->sendEmail($this->email, "Incomplete Setup");
+
+                echo "Sent to ".$this->name."<hr>";
+            }
+        }
+        else{
+            // Do nothing
+        }
+    }
+
+
     public function sendEmail($objDemoa, $purpose){
         $objDemo = new \stdClass();
         $objDemo->purpose = $purpose;
@@ -112,6 +141,7 @@ class CheckSetupController extends Controller
               $objDemo->subject = $this->subject;
               $objDemo->message = $this->message;
           }
+          
   
         Mail::to($objDemoa)
               ->send(new sendEmail($objDemo));

@@ -25,7 +25,13 @@
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Wallet Statement</h3> <br>
+              <div class="row">
+                <div class="col-md-2 col-md-offset-0">
+                <button class="btn btn-secondary btn-block bg-red" onclick="goBack()"><i class="fas fa-chevron-left"></i> Go back</button>
+            </div>
+            </div>
+
+              <h3 class="box-title">&nbsp;</h3> <br>
 
               <br>
               <div class="row">

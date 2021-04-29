@@ -78,17 +78,79 @@
   <div class="login-box-body">
     <p class="login-box-msg">Register Account</p>
 
+
+    <?php use \App\Http\Controllers\AnonUsers; ?>
+
     <form action="#" method="post">
+
+      @if (Request::get('user') != null)
+            @if($newuser = \App\AnonUsers::where('ref_code', Request::get('user'))->first())
+
+                @php
+                    $name = explode(" ", $newuser->name);
+                    $ref_code = Request::get('user');
+                    $fname = $name[0];
+                    $lname = $name[1];
+                    $email = $newuser->email;
+                @endphp
+
+            @endif
+        @else
+
+            @php
+                $ref_code = "";
+                $fname = "";
+                $lname = "";
+                $email = "";
+            @endphp
+            
+        @endif
+
+
+        
+
       <div class="form-group has-feedback">
         <label for="business_name">Business Name</label>
+        <input type="hidden" name="ref_code" id="ref_code" @if($ref_code != "") value="{{ $ref_code }}" readonly @else placeholder="Ref code" @endif>
         <input type="hidden" name="user_id" id="user_id" class="form-control" value="{{ 'PaySprint_'.mt_rand(1000, 9999) }}">
         <input type="text" name="business_name" id="business_name" class="form-control" placeholder="Business Name*">
         <span class="glyphicon glyphicon-briefcase form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <label for="address">Address</label>
-        <input type="text" name="address" id="address" class="form-control" placeholder="Address*">
+        <label for="address">Street Number & Name</label>
+        <input type="text" name="address" id="address" class="form-control" placeholder="Street Number & Name*">
         <span class="glyphicon glyphicon-screenshot form-control-feedback"></span>
+      </div>
+
+        <div class="form-group has-feedback">
+        <div class="row">
+
+          <div class="col-xs-6">
+              <label for="city">City</label>
+                <input type="text" name="city" id="city" class="form-control" placeholder="City*">
+            </div>
+            <!-- /.col -->
+
+            <div class="col-xs-6">
+              <label for="zip_code">Postal/Zip Code</label>
+                <input type="text" name="zip_code" id="zip_code" class="form-control" placeholder="Postal/Zip Code">
+            </div>
+            <!-- /.col -->
+
+            
+        </div>
+      </div>
+
+
+      <div class="form-group has-feedback">
+        <label for="country">Country</label>
+        <select name="country" id="country" class="form-control" required></select>
+      </div>
+
+
+      <div class="form-group has-feedback">
+        <label for="state">Province/State</label>
+        <select name="state" id="state" class="form-control"></select>
       </div>
 
       <div class="form-group has-feedback">
@@ -101,6 +163,27 @@
               <option value="Public Company">Public Company</option>
               <option value="Trust and Estate">Trust and Estate</option>
           </select>
+      </div>
+
+
+      <div class="form-group has-feedback">
+        <label for="type_of_service">Service Offer</label>
+          <select name="type_of_service" id="type_of_service" class="form-control">
+              <option value="">Select Service Offer</option>
+              <option value="Add Service Type">Add Service offer</option>
+              @if (count($data) > 0)
+                  @foreach ($data as $item)
+                    <option value="{{ $item->name }}">{{ $item->name }}</option>
+                  @endforeach
+              @endif
+
+          </select>
+      </div>
+
+      <div class="form-group has-feedback otherservice disp-0">
+        <label for="type_of_service">Add Service offer</label>
+          <input type="text" name="other_type_of_service" id="other_type_of_service" class="form-control" placeholder="Service Type*">
+        <span class="glyphicon glyphicon-screenshot form-control-feedback"></span>
       </div>
 
       
@@ -274,11 +357,11 @@
         <label for="firstname">Contact Person</label>
       <div class="row">
         <div class="col-xs-6">
-            <input type="text" name="firstname" id="firstname" class="form-control" placeholder="Firstname*">
+            <input type="text" name="firstname" id="firstname" class="form-control" @if($fname != "") value="{{ $fname }}" readonly @else placeholder="First Name *" required @endif>
         </div>
         <!-- /.col -->
         <div class="col-xs-6">
-            <input type="text" name="lastname" id="lastname" class="form-control" placeholder="Lastname*">
+            <input type="text" name="lastname" id="lastname" class="form-control"  @if($lname != "") value="{{ $lname }}" readonly @else placeholder="Last Name *" required @endif>
         </div>
         <!-- /.col -->
       </div>
@@ -291,36 +374,7 @@
         <input type="text" name="telephone" id="telephone" class="form-control" placeholder="Telephone*">
       </div>
 
-      <div class="form-group has-feedback">
-        <div class="row">
 
-          <div class="col-xs-6">
-              <label for="city">City</label>
-                <input type="text" name="city" id="city" class="form-control" placeholder="City*">
-            </div>
-            <!-- /.col -->
-
-            <div class="col-xs-6">
-              <label for="zip_code">Postal/Zip Code</label>
-                <input type="text" name="zip_code" id="zip_code" class="form-control" placeholder="Postal/Zip Code">
-            </div>
-            <!-- /.col -->
-
-            
-        </div>
-      </div>
-
-
-      <div class="form-group has-feedback">
-        <label for="country">Country</label>
-        <select name="country" id="country" class="form-control" required></select>
-      </div>
-
-
-      <div class="form-group has-feedback">
-        <label for="state">Province/State</label>
-        <select name="state" id="state" class="form-control"></select>
-      </div>
 
 
       <div class="form-group has-feedback">
@@ -331,13 +385,13 @@
 
       <div class="form-group has-feedback">
         <label for="email">Email</label>
-        <input type="email" name="email" id="email" class="form-control" placeholder="Email Address*">
+        <input type="email" name="email" id="email" class="form-control" @if($email != "") value="{{ $email }}" readonly @else placeholder="Email Address *" required @endif>
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
 
       <div class="form-group has-feedback">
         <label for="cemail">Confirm Email</label>
-        <input type="email" name="cemail" id="cemail" class="form-control" placeholder="Confirm Email*">
+        <input type="email" name="cemail" id="cemail" class="form-control" @if($email != "") value="{{ $email }}" readonly @else placeholder="Confirm Email *" required @endif>
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
 
@@ -356,9 +410,24 @@
         </div>
       </div>
 
+
+
+      <div class="row">
+        <div class="col-xs-8">
+          <div class="checkbox icheck">
+            <label>
+              <input type="checkbox" name="checkbox" id="checkBox"> 
+            </label>
+            <a href="{{ route('terms of use') }}" target="_blank"lass="text-primary"><strong>Accept Terms and Condition</strong></a>
+          </div>
+        </div>
+
+      </div>
+
       <div class="form-group has-feedback">
         {!! htmlFormSnippet() !!}
       </div>
+
 
       
 
@@ -472,6 +541,15 @@
 
 
 
+$("#type_of_service").change(function(){
+  if($("#type_of_service").val() == "Add Service Type"){
+    $(".otherservice").removeClass('disp-0');
+  }
+  else{
+    $(".otherservice").addClass('disp-0');
+  }
+});
+
 // Register function
 function signUp(){
   var route = "{{ URL('Ajax/Adminregister') }}";
@@ -489,6 +567,10 @@ function signUp(){
   }
   else if($('#corporate_type').val() == ""){
     swal('Oops!', 'Select corporration type', 'warning');
+    return false;
+  }
+  else if($('#type_of_service').val() == ""){
+    swal('Oops!', 'Select Type of Service', 'warning');
     return false;
   }
   else if($('#industry').val() == ""){
@@ -541,6 +623,7 @@ function signUp(){
     return false;
   }
 
+
   else if($('#email').val() != $('#cemail').val()){
     swal('Oops!', 'Your email doesn\'t match', 'info');
     return false;
@@ -549,12 +632,24 @@ function signUp(){
     swal('Oops!', 'Your password doesn\'t match', 'info');
     return false;
   }
+  else if($('#type_of_service').val() == "Add Service Type" &&  $('#other_type_of_service').val() == ""){
+    swal('Oops!', 'Please add your service type', 'info');
+    return false;
+  }
+
+  else if($('#checkBox').prop('checked') == false){
+    swal('Oops!', 'You have to accept terms and conditions', 'warning');
+    return false;
+  }
 
   var thisdata = {
     user_id: $('#user_id').val(),
+    ref_code: $('#ref_code').val(),
     business_name: $('#business_name').val(),
     address: $('#address').val(),
     corporate_type: $('#corporate_type').val(),
+    type_of_service: $('#type_of_service').val(),
+    other_type_of_service: $('#other_type_of_service').val(),
     industry: $('#industry').val(),
     website: $('#website').val(),
     firstname: $('#firstname').val(),

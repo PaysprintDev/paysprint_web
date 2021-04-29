@@ -17,7 +17,7 @@
 
 <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
 
-    <title>PaySprint | {{ Request::get('industry').' Merchants' }}</title>
+    <title>PaySprint | {{ Request::get('service').' Merchants' }}</title>
 
     <style>
         body {
@@ -57,7 +57,7 @@ input[type="radio"] {
         <!-- For demo purpose -->
         <div class="row mb-4">
             <div class="col-lg-10 mx-auto text-center">
-                <h1 class="display-4">{{ Request::get('industry').' Merchants' }}</h1>
+                <h1 class="display-4">{{ Request::get('service').' Merchants' }}</h1>
             </div>
         </div> <!-- End -->
         <div class="row">
@@ -138,8 +138,8 @@ input[type="radio"] {
                                             @else
 
                                             <tr>
-                                                <td align="center" colspan="7">
-                                                    No record
+                                                <td align="center" colspan="8">
+                                                    No record in your country
                                                 </td>
                                             </tr>
 

@@ -136,7 +136,7 @@ class GooglePaymentController extends Controller
     if($validator->passes()){
             
     // Get User Info
-    $user = User::where('email', Auth::user()->email)->first();
+    $user = User::where('api_token', $req->api_token)->first();
 
     Log::info($user);
 
@@ -206,7 +206,7 @@ class GooglePaymentController extends Controller
 
         if($req->payment_method == "Wallet"){
 
-            $wallet_balance = Auth::user()->wallet_balance - $req->totalcharge;
+            $wallet_balance = $user->wallet_balance - $req->totalcharge;
             $paymentToken = "wallet-".date('dmY').time();
             $status = "Delivered";
             $action = "Wallet debit";
@@ -229,13 +229,13 @@ class GooglePaymentController extends Controller
 
 
 
-            $response = $this->monerisWalletProcess(Auth::user()->api_token, $req->card_id, $monerisDeductamount, "purchase", "PaySprint Send Money to the Wallet of ".$client->name, $mode);
+            $response = $this->monerisWalletProcess($user->api_token, $req->card_id, $monerisDeductamount, "purchase", "PaySprint Send Money to the Wallet of ".$client->name, $mode);
 
             if($response->responseData['Message'] == "APPROVED           *                    ="){
 
                 $reference_code = $response->responseData['ReceiptId'];
 
-                $wallet_balance = Auth::user()->wallet_balance;
+                $wallet_balance = $user->wallet_balance;
                 $paymentToken = $reference_code;
                 $status = "Delivered";
                 $action = "Payment";
@@ -263,7 +263,7 @@ class GooglePaymentController extends Controller
 
 
             // Update Wallet
-            User::where('email', Auth::user()->email)->update(['wallet_balance' => $wallet_balance]);
+            User::where('email', $user->email)->update(['wallet_balance' => $wallet_balance]);
             // Send mail to both parties
 
             // $this->to = "bambo@vimfile.com";
@@ -326,14 +326,14 @@ class GooglePaymentController extends Controller
             User::where('ref_code', $req->user_id)->update(['wallet_balance' => $recWallet]);
 
             // Senders statement
-            $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on');
+            $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $walletstatus, $action, $regards, 1, $statement_route, 'on');
             
             $this->insStatement($client->email, $reference_code, "Received ".$req->currency.' '.number_format($dataInfo, 2)." in wallet for ".$service." from ".$user->name, number_format($dataInfo, 2), 0, $balance, $trans_date, $walletstatus, "Wallet credit", $client->ref_code, 1, $statement_route, $client->auto_deposit);
 
             
 
-            $sendMsg = "Hi ".Auth::user()->name.", You have made a ".$activity.". Your new wallet balance is ".$req->currency.' '.number_format($wallet_balance, 2).". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us. PaySprint Team";
-            $sendPhone = "+".Auth::user()->code.Auth::user()->telephone;
+            $sendMsg = "Hi ".$user->name.", You have made a ".$activity.". Your new wallet balance is ".$req->currency.' '.number_format($wallet_balance, 2).". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us. PaySprint Team";
+            $sendPhone = "+".$user->code.$user->telephone;
 
 
             
@@ -366,7 +366,14 @@ class GooglePaymentController extends Controller
                 $response = 'Money sent successfully';
                 $respaction = 'success';
 
-                return redirect()->route('my account')->with($respaction, $response);
+                if($user->accountType == "Individual"){
+                    return redirect()->route('my account')->with($respaction, $response);
+
+                }
+                else{
+                    return redirect()->back()->with($respaction, $response);
+                }
+
 
             } catch (\Throwable $th) {
 
@@ -375,7 +382,16 @@ class GooglePaymentController extends Controller
                 $response = 'Money sent successfully. However, we are unable to send you a notification through a text message because we detected there is no phone number or you have an invalid phone number on your PaySprint Account. Kindly update your phone number to receive notification via text on your next transaction.';
                 $respaction = 'success';
 
-                return redirect()->route('my account')->with($respaction, $response);
+
+                if($user->accountType == "Individual"){
+                    return redirect()->route('my account')->with($respaction, $response);
+
+                }
+                else{
+                    return redirect()->back()->with($respaction, $response);
+                }
+
+                
             }
 
 
@@ -456,6 +472,7 @@ class GooglePaymentController extends Controller
                         $data = [];
                         $message = $response;
                         $status = 403;
+                        
 
                         $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'link' => URL('payment/sendmoney/'.$checkExist->ref_code.'?country='.$thisuser->country)];
 
@@ -519,7 +536,7 @@ class GooglePaymentController extends Controller
                             }
 
 
-                            if($thisuser->wallet_balance > $req->amount){
+                            if($req->amount > $thisuser->wallet_balance){
                                 $response = 'Insufficient wallet balance';
                                 $data = [];
                                 $message = $response;
@@ -547,18 +564,21 @@ class GooglePaymentController extends Controller
 
                                 // Create or update Other party account
                                 if(isset($newcustomer)){
+
+                                    $ref_code = $newcustomer->ref_code;
                                     // Update account
                                     $newwalletBal = $newcustomer->wallet_balance + $amount;
                                     AnonUsers::where('email', $newcustomer->email)->update(['wallet_balance' => $newwalletBal]);
                                 }
                                 else{
+                                    $ref_code = $newRefcode;
                                     // Create account
                                     $newwalletBal = $amount;
-                                    AnonUsers::insert(['code' => $req->countryCode, 'ref_code' => $newRefcode, 'name' => $req->fname.' '.$req->lname, 'email' => $req->email, 'telephone' => $req->phone, 'country' => $req->country, 'wallet_balance' => $newwalletBal]);
+                                    AnonUsers::insert(['code' => $req->countryCode, 'ref_code' => $newRefcode, 'name' => $req->fname.' '.$req->lname, 'email' => $req->email, 'telephone' => $req->phone, 'country' => $req->country, 'wallet_balance' => $newwalletBal, 'accountType' => $thisuser->accountType]);
                                 }
 
                                 
-
+                                $getInviteType = AnonUsers::where('email', $req->email)->first();
                                 // Send mail to both parties
 
                                 // Notification to Sender
@@ -583,9 +603,17 @@ class GooglePaymentController extends Controller
                                 $this->to = $req->email;
                                 $this->subject = $thisuser->name." Thas sent you ".$foreigncurrency[0]->currencies[0]->code.' '.number_format($amount, 2)." on PaySprint";
 
-                                $this->message = '<p>You have received <strong>'.$foreigncurrency[0]->currencies[0]->code.' '.number_format($amount, 2).'</strong> from '.$thisuser->name.'. You now have <strong>'.$foreigncurrency[0]->currencies[0]->code.' '.number_format($newwalletBal, 2).'</strong> balance in your account</p><hr><p>To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE </p><p><a href="'.route('register', 'user='.$newRefcode).'">'.route('register', 'user='.$newRefcode).'</a></p>';
 
-                                $recMesg = 'You have received '.$foreigncurrency[0]->currencies[0]->code.' '.number_format($amount, 2).' from '.$thisuser->name.'. You now have '.$foreigncurrency[0]->currencies[0]->code.' '.number_format($newwalletBal, 2).' balance in your account. To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE '.route('register', 'user='.$newRefcode);
+                                if($thisuser->accountType == "Individual" || $getInviteType->accountType == "Individual"){
+                                    $route = route('register', 'user='.$ref_code);
+                                }
+                                else{
+                                    $route = route('AdminRegister', 'user='.$ref_code);
+                                }
+
+                                $this->message = '<p>You have received <strong>'.$foreigncurrency[0]->currencies[0]->code.' '.number_format($amount, 2).'</strong> from '.$thisuser->name.'. You now have <strong>'.$foreigncurrency[0]->currencies[0]->code.' '.number_format($newwalletBal, 2).'</strong> balance in your account</p><hr><p>To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE </p><p><a href="'.$route.'">'.$route.'</a></p>';
+
+                                $recMesg = 'You have received '.$foreigncurrency[0]->currencies[0]->code.' '.number_format($amount, 2).' from '.$thisuser->name.'. You now have '.$foreigncurrency[0]->currencies[0]->code.' '.number_format($newwalletBal, 2).' balance in your account. To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE '.$route;
                                 $recPhone = "+".$req->countryCode.$req->phone;
                                 
 
@@ -603,13 +631,13 @@ class GooglePaymentController extends Controller
                                 $balance = 0;
                                 $trans_date = date('Y-m-d');
                                 
-                                $regards = $newRefcode;
+                                $regards = $ref_code;
 
                                 // Senders statement
                                 $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on');
                                 
                                 // Receiver Statement
-                                $this->insStatement($req->email, $reference_code, "Received ".$foreigncurrency[0]->currencies[0]->code.''.$amount." in wallet for ".$service." from ".$thisuser->name, $amount, 0, $balance, $trans_date, $status, "Wallet credit", $newRefcode, 1, $statement_route, 'on');
+                                $this->insStatement($req->email, $reference_code, "Received ".$foreigncurrency[0]->currencies[0]->code.''.$amount." in wallet for ".$service." from ".$thisuser->name, $amount, 0, $balance, $trans_date, $status, "Wallet credit", $ref_code, 1, $statement_route, 'on');
 
                                 
 
@@ -622,7 +650,7 @@ class GooglePaymentController extends Controller
 
 
                                 $this->createNotification($thisuser->ref_code, $sendMsg);
-                                $this->createNotification($newRefcode, $recMesg);
+                                $this->createNotification($ref_code, $recMesg);
 
                             }
                             else{
@@ -779,8 +807,8 @@ class GooglePaymentController extends Controller
         }
         else{
             // Live API
-            $store_id='gwca026583';
-            $api_token='sssLFi2U8VFO0oWvPWax';
+            $store_id='gwca045238';
+            $api_token='V9XOY4JBS4JII01xBFch';
 
             $setMode = false;
         }
@@ -831,7 +859,7 @@ class GooglePaymentController extends Controller
 
         /******************* Credential on File **********************************/
         $cof = new CofInfo();
-        $cof->setPaymentIndicator("U");
+        $cof->setPaymentIndicator("Z");
         $cof->setPaymentInformation("2");
         $cof->setIssuerId("168451306048014");
         $mpgTxn->setCofInfo($cof);

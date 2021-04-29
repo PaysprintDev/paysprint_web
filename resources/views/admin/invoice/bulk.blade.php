@@ -22,6 +22,12 @@
       <div class="box">
         
         <div class="box-body">
+
+            <div class="row">
+                <div class="col-md-2 col-md-offset-0">
+                <button class="btn btn-secondary btn-block bg-red" onclick="goBack()"><i class="fas fa-chevron-left"></i> Go back</button>
+            </div>
+            </div>
           
             {{-- Provide Form --}}
             <form action="#" method="POST" id="formElem" enctype="multipart/form-data">
@@ -96,6 +102,30 @@
 
                            <h1>STEP 2:</h1>
 <div class="box-body">
+
+                    <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group has-success">
+                            <label for="single_tax">Tax </label>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <select name="single_tax" id="single_tax" class="form-control">
+                                        <option value="">Select Tax</option>
+                                        @if (count($data['getTax']) > 0)
+                                            @foreach ($data['getTax'] as $tax)
+                                                <option value="{{ $tax->id }}">{{ number_format($tax->rate, 2).'% '.$tax->name.' -  ('.$tax->agency.')' }}</option>
+                                            @endforeach
+                                        @else
+                                            <option value="Set Up Tax">Set Up Tax</option>
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group has-success">

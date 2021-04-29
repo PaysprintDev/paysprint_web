@@ -31,6 +31,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 
+        <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
+
     <style>
     /* width */
 body::-webkit-scrollbar {
@@ -151,7 +153,7 @@ body::-webkit-scrollbar-thumb:hover {
         <div class="container">
             <div class="row contact_row">
                 <div class="col-sm-6 contact_info">
-                    <img src="https://thumbs.gfycat.com/GlossyAdoredJapanesebeetle-small.gif" style="width: 100%;">
+                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg" style="width: 100%;">
                 </div>
                 <div class="col-sm-6 contact_info send_message">
                     <h2>{{ __('Reset Password') }}</h2>
@@ -199,60 +201,7 @@ body::-webkit-scrollbar-thumb:hover {
     </section>
 
 
-<!--Footer Area -->
-    <footer class="footer_area">
-        <div class="container">
-            <div class="footer_row row">
-                <div class="col-md-3 col-sm-6 footer_about">
-                    <h2>ABOUT OUR COMPANY</h2>
-                    <p style="font-weight: bold; font-size: 30px; color: #111f29 font-family: tahoma"><span style="color: #f6b60b">E-</span>BILLING</p>
-                    <p>Electronic billing or electronic bill payment and presentment, is when a seller such as company, organization, or group sends its bills or invoices over the internet, and customers pay the bills electronically.</p>
-                    <ul class="socail_icon">
-                        <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                        <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
-
-                        <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3 col-sm-6 footer_about quick">
-                    <h2>Services</h2>
-                    <ul class="quick_link">
-                        <li><a href="#"><i class="fa fa-chevron-right"></i>Property tax</a></li>
-                        <li><a href="#"><i class="fa fa-chevron-right"></i>Utility Bill</a></li>
-                        <li><a href="#"><i class="fa fa-chevron-right"></i>Tickets</a></li>
-                        <li><a href="#"><i class="fa fa-chevron-right"></i>Others</a></li>
-                        {{-- <li><a href="#"><i class="fa fa-chevron-right"></i>Commercial Construction</a></li> --}}
-                        {{-- <li><a href="#"><i class="fa fa-chevron-right"></i>Concreate Transport</a></li> --}}
-                    </ul>
-                </div>
-                <div class="col-md-3 col-sm-6 footer_about">
-                    <h2>Quick link</h2>
-                    <ul class="quick_link">
-                        <li><a href="{{ route('home') }}"><i class="fa fa-chevron-right"></i>Home</a></li>
-                        <li><a href="{{ route('invoice') }}"><i class="fa fa-chevron-right"></i>Invoices</a></li>
-                        <li><a href="{{ route('statement') }}"><i class="fa fa-chevron-right"></i>Statement</a></li>
-
-
-                    </ul>
-                </div>
-                <div class="col-md-3 col-sm-6 footer_about">
-                    <h2>CONTACT US</h2>
-                    <address>
-                        <p>Have questions, comments or just want to say hello:</p>
-                        <ul class="my_address">
-                            <li><a href="#"><i class="fa fa-envelope" aria-hidden="true"></i>info@e-billing.com</a></li>
-                            <li><a href="#"><i class="fa fa-phone" aria-hidden="true"></i>+123-456-789</a></li>
-                            <li><a href="#"><i class="fa fa-map-marker" aria-hidden="true"></i><span> Ontario, Canada </span></a></li>
-                        </ul>
-                    </address>
-                </div>
-            </div>
-        </div>
-        <div class="copyright_area">
-            Copyright 2019 All rights reserved.
-        </div>
-    </footer>
-    <!-- End Footer Area -->
+@include('include.bottom')
 
     <!-- jQuery JS -->
     <script src="{{ asset('js/jquery-1.12.0.min.js') }}"></script>

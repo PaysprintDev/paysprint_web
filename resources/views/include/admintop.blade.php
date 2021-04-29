@@ -63,6 +63,20 @@
     .disp-0{
         display: none !important;
     }
+
+      @keyframes fa-blink {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 0; }
+  }
+  .fa-blink {
+    -webkit-animation: fa-blink .75s linear infinite;
+    -moz-animation: fa-blink .75s linear infinite;
+    -ms-animation: fa-blink .75s linear infinite;
+    -o-animation: fa-blink .75s linear infinite;
+    animation: fa-blink .75s linear infinite;
+  }
+  
   </style>
 
 </head>

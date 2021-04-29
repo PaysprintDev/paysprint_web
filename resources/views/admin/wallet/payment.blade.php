@@ -1,129 +1,95 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+@extends('layouts.dashboard')
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
-        <!-- Favicon -->
-<link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1602675914/paysprint_icon_png_ol2z3u.png" type="image/x-icon" />
+@section('dashContent')
 
-<link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
+<?php use \App\Http\Controllers\ClientInfo; ?>
+<?php use \App\Http\Controllers\User; ?>
+<?php use \App\Http\Controllers\InvoicePayment; ?>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Send Money
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Send Money</li>
+      </ol>
+    </section>
 
-<script src="https://kit.fontawesome.com/384ade21a6.js"></script>
+    <!-- Main content -->
+    <section class="content">
 
-    <title>PaySprint | Money Transfer</title>
-
-    <style>
-        body {
-    background: #f5f5f5
-}
-
-.rounded {
-    border-radius: 1rem
-}
-
-.nav-pills .nav-link {
-    color: #555
-}
-
-.nav-pills .nav-link.active {
-    color: white
-}
-
-input[type="radio"] {
-    margin-right: 5px
-}
-
-.bold {
-    font-weight: bold
-}
-.disp-0{
-    display: none !important;
-}
-    </style>
-
-  </head>
-  <body>
-    <div class="container py-5">
-        <!-- For demo purpose -->
-        <div class="row mb-4">
-            <div class="col-lg-8 mx-auto text-center">
-                <h1 class="display-4">Send Money</h1>
-            </div>
-        </div> <!-- End -->
         <div class="row">
-            <div class="col-lg-6 mx-auto">
-                <div class="card ">
-                    <div class="card-header">
-                        <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
-                            <!-- Credit card form tabs -->
-                            <ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
-                                <li class="nav-item" onclick="location.href='{{ route('payorganization') }}'"> <a data-toggle="pill" href="{{ route('payorganization') }}" class="nav-link active "> <i class="fas fa-home"></i> Go Back </a> </li>
-                                {{-- <li class="nav-item"> <a data-toggle="pill" href="#paypal" class="nav-link "> <i class="fab fa-paypal mr-2"></i> Debit Card </a> </li>
-                                <li class="nav-item"> <a data-toggle="pill" href="#net-banking" class="nav-link "> <i class="fas fa-mobile-alt mr-2"></i> EXBC Card </a> </li> --}}
-                            </ul>
-                        </div> <!-- End -->
-                        <!-- Credit card form content -->
-                        <div class="tab-content">
+                <div class="col-md-2 col-md-offset-0">
+                <button class="btn btn-secondary btn-block bg-red" onclick="goBack()"><i class="fas fa-chevron-left"></i> Go back</button>
+                </div>
+        </div>
+
+      <div class="row">
 
 
 
-                            @if (isset($data) && isset($data['paymentorg']))
+                      <div class="box-body">
 
-                            {{-- 234-90695 --}}
-                            
-                                
-                            <!-- credit card info-->
-                            <div id="credit-card" class="tab-pane fade show active pt-3">
-                                <form role="form" action="{{ route('orgPaymentInvoice') }}" method="POST" id="paymentForm">
+                        
+
+                    <div class="form-group cardform"> 
+                        @if (isset($data) && isset($data['paymentorg']))
+
+                            <form role="form" action="{{ route('orgPaymentInvoice') }}" method="POST" id="paymentForm">
 
                                     @csrf
                                     <input type="hidden" class="form-control" name="user_id" id="orgpayuser_id" value="{{ $data['paymentorg']->ref_code }}">
-                                    <input type="hidden" name="orgpayname" id="orgpayname" value="{{ $name }}"> 
+                                    <input type="hidden" name="orgpayname" id="orgpayname" value="{{ session('businessname') }}"> 
 
-                                    <input type="hidden" name="orgpayemail" id="orgpayemail" value="{{ $email }}">
+                                    <input type="hidden" name="orgpayemail" id="orgpayemail" value="{{ session('email') }}">
 
-                                    <input type="hidden" name="api_token" id="api_token" value="{{ Auth::user()->api_token }}">
+                                    <input type="hidden" name="api_token" id="api_token" value="{{ session('api_token') }}">
 
                                     <input type="hidden" name="code" id="code" value="{{ $data['currencyCode'][0]->callingCodes[0] }}">
 
                                     <input type="hidden" name="paymentToken" id="paymentToken" value="">
 
                                     <div class="form-group">
-                                        <div class="alert alert-info">
+                                        <div class="small-box bg-primary">
                                             <ul>
+                                                <br>
                                                 <li>
                                                     Receiver's Name: <b>{{ $data['paymentorg']->name }}</b>
-                                                </li>
+                                                </li><br>
                                                 <li>
                                                     Address: <b>{{ $data['paymentorg']->address }}</b>
-                                                </li>
+                                                </li><br>
                                                 <li>
                                                     City: <b>{{ $data['paymentorg']->city }}</b> | State/Province: <b>{{ $data['paymentorg']->state }}</b>
-                                                </li>
+                                                </li><br>
                                                 <li>
                                                     Country: <b>{{ $data['paymentorg']->country }}</b>
                                                 </li>
+                                                <br>
                                             </ul>
                                         </div>
-                                        <div class="alert alert-warning">
                                             <div class="row">
-                                                <div class="col-md-12">
-                                                    <h4>
-                                                        Wallet Balance
-                                                    </h4>
+                                                <div class="col-lg-12 col-xs-12">
+                                                <!-- small box -->
+                                                <div class="small-box bg-warning">
+                                                    <div class="inner">
+                                                    <h3>{{ $data['getuserDetail']->currencySymbol.number_format($data['getuserDetail']->wallet_balance, 2) }}</h3>
+
+                                                    <p>Balance</p>
+                                                    </div>
+                                                    <div class="icon">
+                                                    <i class="ion ion-pricetag"></i>
+                                                    </div>
+                                                    {{-- <a href="#" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a> --}}
                                                 </div>
-                                                <div class="col-md-12">
-                                                    <h4>
-                                                        {{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format(Auth::user()->wallet_balance, 2) }}
-                                                    </h4>
                                                 </div>
                                             </div>
-                                        </div>
+
+                                        
 
                                         
                                     </div>
@@ -142,7 +108,7 @@ input[type="radio"] {
                                             
                                         </div>
                                     </div>
-
+                                    
 
 
                                     <div class="form-group creditcard disp-0"> <label for="card_id">
@@ -169,9 +135,8 @@ input[type="radio"] {
                                     
                                     
                                         <div class="form-group"> <label for="orgpayservice">
-                                            <h6>Purpose of Transfer</h6>
+                                            Purpose of Transfer
                                         </label>
-                                        <div class="input-group"> 
                                             <select name="service" id="orgpayservice" class="form-control" required>
                                                 <option value="Offering">Offering</option>
                                                 <option value="Tithe">Tithe</option>
@@ -180,47 +145,35 @@ input[type="radio"] {
                                                 <option value="Others">Others</option>
                                             </select>
                                             
-                                        </div>
                                     </div>
 
 
                                         <div class="form-group others disp-0"> <label for="orgpaypurpose">
-                                            <h6>Specify Purpose</h6>
+                                            Specify Purpose
                                         </label>
-                                        <div class="input-group"> 
                                             <input type="text" name="purpose" id="orgpaypurpose" placeholder="Specify Purpose" class="form-control">
                                             
-                                        </div>
                                     </div>
 
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group"> <label for="currency">
-                                                    <h6>Currency</h6>
+                                                    Currency
                                                 </label>
                                                 <input type="hidden" name="localcurrency" value="{{ $data['currencyCode'][0]->currencies[0]->code }}">
-                                                <div class="input-group"> 
                                                     <select name="currency" id="currency" class="form-control" readonly>
                                                         <option value="{{ $data['othercurrencyCode'][0]->currencies[0]->code }}" selected>{{ $data['othercurrencyCode'][0]->currencies[0]->code }}</option>
                                                     </select>
-                                                    
-                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-8">
                                             <div class="form-group"> <label for="orgpayamount">
-                                                    <h6>Amount to Send</h6>
+                                                    Amount to Send
                                                 </label>
-                                                <div class="input-group"> <input type="number" name="amount" id="orgpayamount" placeholder="50.00" class="form-control" maxlength="16" required>
-                                                    <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fas fa-money-check mx-1"></i> <i class="fab fa-cc-mastercard mx-1"></i> <i class="fab fa-cc-amex mx-1"></i> </span> </div>
-                                                </div>
+                                                <input type="number" name="amount" id="orgpayamount" placeholder="50.00" class="form-control" maxlength="16" required>
                                             </div>
                                         </div>
                                     </div>
-                                        
-                                    
-                                    
-                                    
                                     
 
                                     <div class="form-group disp-0">
@@ -233,28 +186,24 @@ input[type="radio"] {
                                     @if (Request::get('country') != $data['paymentorg']->country)
 
                                         <div class="form-group"> <label for="netwmount">
-                                                <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small></h6>
+                                               Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small>
                                                 <p style="font-weight: bold;">
                                                     {{ $data['currencyCode'][0]->currencies[0]->code }} <=> {{ $data['othercurrencyCode'][0]->currencies[0]->code }}
                                                 </p>
                                             </label>
-                                            <div class="input-group"> 
                                                 <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
-                                            </div>
                                         </div>
 
 
                                         @else
 
                                         <div class="form-group disp-0"> <label for="netwmount">
-                                                <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small></h6>
+                                                Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small>
                                                 <p style="font-weight: bold;">
                                                     {{ $data['currencyCode'][0]->currencies[0]->code }} <=> {{ $data['othercurrencyCode'][0]->currencies[0]->code }}
                                                 </p>
                                             </label>
-                                            <div class="input-group"> 
                                                 <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
-                                            </div>
                                         </div>
 
 
@@ -266,22 +215,18 @@ input[type="radio"] {
 
 
                                 <div class="form-group"> <label for="netwmount">
-                                    <h6>Net Amount <br><small class="text-success"><b>Total amount that would be received</b></small></h6>
+                                    Net Amount <br><small class="text-success"><b>Total amount that would be received</b></small>
                                     
                                 </label>
-                                <div class="input-group"> 
                                     <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
-                                </div>
                             </div>
                                 <div class="form-group"> <label for="netwmount">
-                                    <h6>Fee <small class="text-success"><b>(FREE)</b></small></h6>
+                                    Fee <small class="text-success"><b>(FREE)</b></small>
                                 </label>
-                                <div class="input-group"> 
                                     <input type="text" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
 
                                     <input type="hidden" name="totalcharge" class="form-control" id="totalcharge" value="" placeholder="0.00" readonly>
 
-                                </div>
                             </div>
 
 
@@ -374,11 +319,11 @@ input[type="radio"] {
                                             </div>
                                             <div class="col-md-12 withWallet">
 
-                                                @if (Auth::user()->approval == 1)
+                                                @if ($data['getuserDetail']->approval == 1)
                                                     <button type="button" onclick="orgmonerisPay()" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Send Money </button>
                                                 @else
 
-                                                <button type="button" onclick="restriction('sendmoney', '{{ Auth::user()->name }}')" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Send Money </button>
+                                                <button type="button" onclick="restriction('sendmoney', '{{ $data['getuserDetail']->name }}')" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Send Money </button>
                                                     
                                                 @endif
 
@@ -394,7 +339,6 @@ input[type="radio"] {
                                     </div>
 
                                 </form>
-                            </div>
 
                             @else
 
@@ -404,15 +348,16 @@ input[type="radio"] {
                             </div>
 
                             @endif
-
-                        </div> <!-- End -->
-                        
-                    </div>
+                        </div>
                 </div>
-            </div>
-        </div>
+    </div>
 
-    
+
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
         <script src="{{ asset('js/jquery-1.12.0.min.js') }}"></script>
 
         @include('include.message')
@@ -960,7 +905,7 @@ function beginApplePay() {
     jQuery.ajaxSetup({
       headers: {
             'X-CSRF-TOKEN': "{{csrf_token()}}",
-            'Authorization': "Bearer "+"{{ Auth::user()->api_token }}"
+            'Authorization': "Bearer "+"{{ session('api_token') }}"
         }
     });
  }
@@ -975,5 +920,4 @@ function beginApplePay() {
           onload="onGooglePayLoaded()">
 </script>
 
-  </body>
-</html>
+  @endsection

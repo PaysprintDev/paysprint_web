@@ -35,7 +35,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single', 'slack'],
+            'channels' => ['single', 'slack', 'successlogs'],
         ],
 
         'single' => [
@@ -57,6 +57,14 @@ return [
             'username' => 'Laravel Log',
             'emoji' => ':boom:',
             'level' => 'error',
+        ],
+
+        'successlogs' => [
+            'driver' => 'slack',
+            'url' => 'https://hooks.slack.com/services/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',
+            'username' => 'Success Log',
+            'emoji' => ':boom:',
+            'level' => 'info',
         ],
 
 

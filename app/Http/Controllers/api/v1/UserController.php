@@ -8,11 +8,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
+use Illuminate\Support\Facades\Mail;
+
 use App\User as User;
 use App\AnonUsers as AnonUsers;
 use App\ServiceType as ServiceType;
 use App\Admin as Admin;
 use App\ClientInfo as ClientInfo;
+use App\Mail\sendEmail;
 
 
 class UserController extends Controller
@@ -300,7 +303,7 @@ class UserController extends Controller
 
         $user = User::where('api_token', $request->bearerToken())->first();
 
-        $clientinfo->where('email', $user->email)->update(['business_name' => $request->businessName, 'address' => $request->businessAddress, 'corporate_type' => $request->corporate_type, 'industry' => $request->industry, 'website' => $request->businessWebsite]);
+        $clientinfo->where('email', $user->email)->update(['business_name' => $request->businessName, 'address' => $request->businessAddress, 'corporate_type' => $request->corporate_type, 'industry' => $request->industry, 'website' => $request->businessWebsite, 'type_of_service' => $request->type_of_service]);
 
         if($request->hasFile('incorporation_doc_front')){
             $this->uploadDocument($user->id, $request->file('incorporation_doc_front'), 'document/incorporation_doc_front', 'incorporation_doc_front');
@@ -481,6 +484,31 @@ class UserController extends Controller
 
                         // Update
                         $resp = User::where('api_token', $req->bearerToken())->update(['auto_deposit' => $req->auto_deposit]);
+
+                        // send Mail and SMS
+
+                        $recMsg = "Hi ".$thisuser->name.", You have successfully turned ".$req->auto_deposit." your Auto Deposit Status.  PaySprint Team";
+                        $recPhone = "+".$thisuser->code.$thisuser->telephone;
+                        
+
+                        $this->name = $thisuser->name;
+                        // $this->email = "bambo@vimfile.com";
+                        $this->email = $thisuser->email;
+                        $this->subject = "You have successfully turned ".$req->auto_deposit." your Auto Deposit Status.";
+
+                        if($req->auto_deposit == "ON"){
+                            $message = "The Auto Deposit feature on PaySprint is turned ON. You can now enjoy a stress-free transaction deposit on your PaySprint Account. <br><br> Thanks, PaySprint Team";
+                        }
+                        else{
+                            $message = "The Auto Deposit feature on PaySprint is turned OFF. You will need to manually accept all transfers made to your PaySprint wallet. If you want to enjoy a stress-free transaction deposit, you may have visit your profile on PaySprint Account to turn ON the feature. <br><br> Thanks, PaySprint Team";
+                        }
+
+                        $this->message = '<p>'.$message.'</p>';
+
+
+
+                        $this->sendEmail($this->email, "Fund remittance");
+                        $this->sendMessage($recMsg, $recPhone);
 
                         $data = $resp;
                         $message = "Saved";
@@ -723,6 +751,42 @@ class UserController extends Controller
         User::where('id', $id)->update([''.$rowName.'' => $docPath]);
 
     }
+
+    
+    public function sendEmail($objDemoa, $purpose){
+        $objDemo = new \stdClass();
+        $objDemo->purpose = $purpose;
+          if($purpose == "Payment Received"){
+  
+              $objDemo->name = $this->name;
+              $objDemo->email = $this->email;
+              $objDemo->amount = $this->amount;
+              $objDemo->paypurpose = $this->paypurpose;
+              $objDemo->coy_name = $this->coy_name;
+              $objDemo->subject = $this->subject;
+  
+          }
+          elseif($purpose == "Payment Successful"){
+  
+              $objDemo->name = $this->name;
+              $objDemo->email = $this->email;
+              $objDemo->amount = $this->amount;
+              $objDemo->paypurpose = $this->paypurpose;
+              $objDemo->coy_name = $this->coy_name;
+              $objDemo->subject = $this->subject2;
+  
+          }
+  
+          elseif($purpose == 'Fund remittance'){
+              $objDemo->name = $this->name;
+              $objDemo->email = $this->email;
+              $objDemo->subject = $this->subject;
+              $objDemo->message = $this->message;
+          }
+  
+        Mail::to($objDemoa)
+              ->send(new sendEmail($objDemo));
+     }
 
 
 

@@ -50,7 +50,7 @@
         <li class="treeview disp-0">
           <a href="#">
             <i class="fa fa-book"></i>
-            <span>Statement & Invoicing</span>
+            <span>Transaction History & Invoicing</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -249,7 +249,7 @@
         <li class="treeview">
           <a href="#">
             <i class="fa fa-book"></i>
-            <span>Statement</span>
+            <span>Transaction History</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -267,6 +267,14 @@
           <a href="{{ route('create service types') }}">
             <i class="fa fa-book"></i>
             <span>Create Service Type</span>
+          </a>
+        </li>
+
+
+        <li>
+          <a href="{{ route('setup tax') }}">
+            <i class="fa fa-book"></i>
+            <span>Set Up Tax</span>
           </a>
         </li>
 
@@ -291,6 +299,74 @@
             
           </ul>
         </li>
+
+
+        @if ($pages == "My Dashboard")
+                    <li>
+                <div class="card" style="width: auto;">
+                            <div class="card-header" style="background-color: #f6b60b; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
+                                Quick Wallet Setup
+                                @if ($getUserDetail->approval == 0 || count($getCard) <= 0 || $getUserDetail->transaction_pin == null || $getUserDetail->securityQuestion == null)
+                                <br>
+                                    <a href="javascript:void()" type="button" class="btn btn-danger fa-blink">Incomplete</a>
+                                @endif
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item" title="Upload Government issued photo ID e.g National ID, International Passport, Driver Licence">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <a href="{{ route('merchant profile') }}" style="color: navy; font-weight: 700;">Identity Verification</a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! $getUserDetail->approval == 1 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+
+                                    </li>
+                                <li class="list-group-item" title="To add money to your wallet, you need to add a credit/debit card to your account">
+
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                             <a href="{{ route('merchant payment gateway', 'gateway=PaySprint') }}" style="color: navy; font-weight: 700;">Add Card/Bank Account </a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! count($getCard) > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+
+                                   
+                                </li>
+                                <li class="list-group-item" title="Setup transaction pin for security purpose" >
+
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <a href="{{ route('merchant profile') }}" style="color: navy; font-weight: 700;">Set Transaction Pin </a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! $getUserDetail->transaction_pin != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+                                    
+                                
+                                </li>
+                                <li class="list-group-item" title="Setup transaction pin for security purpose" >
+
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <a href="{{ route('merchant profile') }}" style="color: navy; font-weight: 700;">Set Security Question </a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! $getUserDetail->securityQuestion != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                
+                                </li>
+                            </ul>
+                    </div>
+        </li>
+        @endif
 
 
         <li class="treeview disp-0">

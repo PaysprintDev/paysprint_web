@@ -143,8 +143,10 @@ public function purchase(Request $req){
 // $api_token='KvTMr066FKlJm9rD3i71';
 
 // Live API
-$store_id='gwca026583';
-$api_token='sssLFi2U8VFO0oWvPWax';
+// $store_id='gwca026583';
+// $api_token='sssLFi2U8VFO0oWvPWax';
+$store_id='gwca045238';
+$api_token='V9XOY4JBS4JII01xBFch';
 
 // $type='purchase';
 // $cust_id='cust id';
@@ -200,7 +202,7 @@ $mpgTxn = new mpgTransaction($txnArray);
 
 /******************* Credential on File **********************************/
 $cof = new CofInfo();
-$cof->setPaymentIndicator("U");
+$cof->setPaymentIndicator("Z");
 $cof->setPaymentInformation("2");
 $cof->setIssuerId("168451306048014");
 $mpgTxn->setCofInfo($cof);
@@ -346,7 +348,7 @@ else{
             if($validator->passes()){
 
                 try {
-                    $transactionID = "wallet-".date('dmY').time();
+                        $transactionID = "invoice-".date('dmY').time();
 
                             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
@@ -371,7 +373,7 @@ else{
                             $purpose = $req->service;
 
 
-                    $insPay = InvoicePayment::updateOrCreate(['invoice_no' => $req->invoice_no],['transactionid' => $transactionID, 'name' => $thisuser->name, 'email' => $thisuser->email, 'amount' => $req->amount, 'invoice_no' => $req->invoice_no, 'service'=> $purpose, 'client_id' => $req->merchant_id, 'payment_method' => $req->payment_method]);
+                            $insPay = InvoicePayment::updateOrCreate(['invoice_no' => $req->invoice_no],['transactionid' => $transactionID, 'name' => $thisuser->name, 'email' => $thisuser->email, 'amount' => $req->amount, 'invoice_no' => $req->invoice_no, 'service'=> $purpose, 'client_id' => $req->merchant_id, 'payment_method' => $req->payment_method]);
 
 
                     if($insPay){
@@ -410,7 +412,7 @@ else{
 
                                     $activity = "Payment for ".$purpose." from ".$req->payment_method;
                                     $credit = 0;
-                                    $debit = $req->amount;
+                                    $debit = number_format($req->amount, 2);
                                     $balance = $newAmount;
                                     $status = "Delivered";
                                     $action = "Wallet debit";
@@ -442,8 +444,8 @@ else{
 
                                     // Merchant Statement
 
-                                    $activity = "Added ".$req->currencyCode.''.$req->amount." to Wallet";
-                                    $credit = $req->amount;
+                                    $activity = "Added ".$req->currencyCode.''.number_format($req->amount, 2)." to Wallet";
+                                    $credit = number_format($req->amount, 2);
                                     $debit = 0;
                                     $reference_code = $transactionID;
                                     $balance = 0;
@@ -1359,8 +1361,8 @@ else{
         }
         else{
             // Live API
-            $store_id='gwca026583';
-            $api_token='sssLFi2U8VFO0oWvPWax';
+            $store_id='gwca045238';
+            $api_token='V9XOY4JBS4JII01xBFch';
 
             $setMode = false;
         }
@@ -1415,7 +1417,7 @@ else{
 
         /******************* Credential on File **********************************/
         $cof = new CofInfo();
-        $cof->setPaymentIndicator("U");
+        $cof->setPaymentIndicator("Z");
         $cof->setPaymentInformation("2");
         $cof->setIssuerId("168451306048014");
         $mpgTxn->setCofInfo($cof);
@@ -1449,8 +1451,8 @@ public function orgPaymentInvoice(Request $req){
 // $api_token='KvTMr066FKlJm9rD3i71';
 
 // Live API
-$store_id='gwca026583';
-$api_token='sssLFi2U8VFO0oWvPWax';
+$store_id='gwca045238';
+$api_token='V9XOY4JBS4JII01xBFch';
 
 // $type='purchase';
 // $cust_id='cust id';
@@ -1510,7 +1512,7 @@ $mpgTxn = new mpgTransaction($txnArray);
 
 /******************* Credential on File **********************************/
 $cof = new CofInfo();
-$cof->setPaymentIndicator("U");
+$cof->setPaymentIndicator("Z");
 $cof->setPaymentInformation("2");
 $cof->setIssuerId("168451306048014");
 $mpgTxn->setCofInfo($cof);

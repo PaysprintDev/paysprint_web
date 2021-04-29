@@ -363,7 +363,7 @@
                     </div>
                     <div class="card" style="width: 100%;">
                             <div class="card-header" style="background-color: #f6b60b; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
-                                Merchant By Category
+                                Merchant By Services
                                 
                             </div>
                             <ul class="list-group list-group-flush">
@@ -372,10 +372,10 @@
 
                                 @foreach ($data['getmerchantsByCategory'] as $merchants)
 
-                                    <li class="list-group-item" title="{{ $merchants->industry }}">
+                                    <li class="list-group-item" title="{{ $merchants->type_of_service }}">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <a href="{{ route('merchant category', 'industry='.$merchants->industry) }}">{{ $merchants->industry }}</a>
+                                                <a href="{{ route('merchant category', 'service='.$merchants->type_of_service) }}">{{ $merchants->type_of_service }}</a>
                                             </div>
                                             
                                         </div>

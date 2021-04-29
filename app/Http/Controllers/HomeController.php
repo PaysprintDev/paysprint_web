@@ -89,7 +89,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'invoice', 'statement', 'myinvoice', 'setupBills', 'checkmyBills', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'payOrganization', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'payment', 'paymentOrganization', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy']]);
+        $this->middleware('auth', ['except' => ['index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'invoice', 'statement', 'myinvoice', 'setupBills', 'checkmyBills', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'payOrganization', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'payment', 'paymentOrganization', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate']]);
     }
 
     /**
@@ -125,6 +125,9 @@ class HomeController extends Controller
                 $data = [];
             }
 
+            // dd($data);
+
+
         return view($view)->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
@@ -153,6 +156,8 @@ class HomeController extends Controller
                 $this->email = '';
                 $data = [];
             }
+
+
 
 
 
@@ -546,6 +551,38 @@ class HomeController extends Controller
     }
 
 
+    public function paymentGateway(Request $req)
+    {
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'Payment Gateway';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            }
+            else{
+                $this->page = 'Payment Gateway';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'Payment Gateway';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+
+        $data = array(
+            'getCard' => $this->getUserCard(),
+            'cardIssuer' => $this->getCardIssuer(),
+        );
+
+
+        return view('main.gateway')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
 
     public function requestExbcCard(Request $req)
     {
@@ -808,22 +845,22 @@ class HomeController extends Controller
 
     public function merchantCategory(Request $req)
     {
-        $industry = $req->get('industry');
+        $service = $req->get('service');
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Notifications';
+                $this->page = 'Merchant By Services';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
             }
             else{
-                $this->page = 'Notifications';
+                $this->page = 'Merchant By Services';
                 $this->name = '';
             }
 
         }
         else{
-            $this->page = 'Notifications';
+            $this->page = 'Merchant By Services';
             $this->name = session('name');
             $this->email = session('email');
         }
@@ -832,7 +869,7 @@ class HomeController extends Controller
         $data = array(
             'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
             'getNotifications' => $this->getUserNotifications(Auth::user()->ref_code),
-            'getMerchantHere' => $this->getMerchantHere($industry),
+            'getMerchantHere' => $this->getMerchantHere($service),
         );
 
 
@@ -840,8 +877,8 @@ class HomeController extends Controller
     }
 
 
-    public function getMerchantHere($industry){
-        $data = ClientInfo::where('industry', $industry)->orderBy('created_at', 'DESC')->get();
+    public function getMerchantHere($service){
+        $data = ClientInfo::where('type_of_service', $service)->where('country', Auth::user()->country)->orderBy('created_at', 'DESC')->get();
 
         return $data;
     }
@@ -859,7 +896,7 @@ class HomeController extends Controller
     }
 
     public function getMerchantsByCategory(){
-        $data = ClientInfo::where('industry', '!=', null)->orderBy('created_at', 'DESC')->groupBy('industry')->get();
+        $data = ClientInfo::where('type_of_service', '!=', null)->orderBy('created_at', 'DESC')->groupBy('type_of_service')->get();
 
         return $data;
     }
@@ -902,7 +939,7 @@ class HomeController extends Controller
 
     public function getthisInvoice($invoice){
         $getInvoice = DB::table('import_excel')
-                     ->select(DB::raw('import_excel.name as name, import_excel.payee_email as payee_email, import_excel.service as service, invoice_payment.remaining_balance as remaining_balance, import_excel.amount as amount, import_excel.uploaded_by, import_excel.invoice_no, invoice_payment.amount as amount_paid'))
+                     ->select(DB::raw('import_excel.name as name, import_excel.payee_ref_no, import_excel.payee_email as payee_email, import_excel.service as service, invoice_payment.remaining_balance as remaining_balance, import_excel.amount as amount, import_excel.uploaded_by, import_excel.invoice_no, invoice_payment.amount as amount_paid'))
                      ->join('invoice_payment', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')
                      ->where('import_excel.invoice_no', $invoice)
                     ->orderBy('invoice_payment.created_at', 'DESC')
@@ -2609,7 +2646,9 @@ class HomeController extends Controller
 
     public function getOrganization(Request $req){
 
-        if($req->user_id == Auth::user()->ref_code){
+        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+        if($req->user_id == $thisuser->ref_code){
 
             if($req->action == "rec"){
                 $res = '<b style="color: red">You can not receive money from yourself</b>';
@@ -2620,30 +2659,37 @@ class HomeController extends Controller
 
             $resData = ['res' => $res, 'message' => 'error'];
         }
-        elseif(Auth::user()->approval == 0){
+        elseif($thisuser->approval == 0){
 
-            if(Auth::user()->approval == 0){
+            if($thisuser->approval == 0){
 
                 $identity = "means of identification,";
             }
             else{
                 $identity = "";
             }
-            if(Auth::user()->transaction_pin == null){
+            if($thisuser->transaction_pin == null){
                 $transPin = " and your transaction Pin code.";
             }
             else{
                 $transPin = "";
             }
-            if(Auth::user()->securityQuestion == null){
+            if($thisuser->securityQuestion == null){
                 $secQuest = "your security questions and answer";
             }
             else{
                 $secQuest = "";
             }
 
+            if($thisuser->accountType == "Individual"){
+                $route = route('profile');
+            }
+            else{
+                $route = route('merchant profile');
+            }
 
-            $res = '<small><b class="text-danger">You cannot send money because your account is not yet approved and you have not set up your '.$identity.' '.$secQuest.' '.$transPin.' Kindly complete these important steps in your <a href='.route('profile').' class="text-primary" style="text-decoration: underline">profile.</a></b></small>';
+
+            $res = '<small><b class="text-danger">You cannot send money because your account is not yet approved and you have not set up your '.$identity.' '.$secQuest.' '.$transPin.' Kindly complete these important steps in your <a href='.$route.' class="text-primary" style="text-decoration: underline">profile.</a></b></small>';
 
             $resData = ['res' => $res, 'message' => 'error'];
         }
@@ -2656,7 +2702,7 @@ class HomeController extends Controller
                 $data = DB::table('organization_pay')
                 ->select(DB::raw('organization_pay.id as orgId, organization_pay.purpose, organization_pay.amount_to_send, users.*'))
                 ->join('users', 'organization_pay.payer_id', '=', 'users.ref_code')->where('organization_pay.state', 1)->where('organization_pay.request_receive', '!=', 2)->
-                where('organization_pay.payer_id', $req->user_id)->orWhere('organization_pay.payer_id', $req->code.'-'.$req->user_id)->where('organization_pay.coy_id', Auth::user()->ref_code)->orderBy('organization_pay.created_at', 'DESC')->get();
+                where('organization_pay.payer_id', $req->user_id)->orWhere('organization_pay.payer_id', $req->code.'-'.$req->user_id)->where('organization_pay.coy_id', $thisuser->ref_code)->orderBy('organization_pay.created_at', 'DESC')->get();
 
 
                 
@@ -2664,7 +2710,7 @@ class HomeController extends Controller
                 if(count($data) > 0){
                     // Get Sender Details
 
-                    $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($data), 'title' => 'Good', 'country' => Auth::user()->country];
+                    $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($data), 'title' => 'Good', 'country' => $thisuser->country];
                 }
                 else{
                     $resData = ['res' => 'Receiver not found', 'message' => 'error'];
@@ -2678,23 +2724,23 @@ class HomeController extends Controller
                 
                 if(count($data) > 0){
 
-                    $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($data), 'title' => 'Good', 'country' => Auth::user()->country];
+                    $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($data), 'title' => 'Good', 'country' => $thisuser->country];
                 }
                 else{
 
                     // Get Users
-                    $result = User::where('name', 'LIKE', '%'.$req->user_id.'%')->where('name', 'NOT LIKE', '%'.Auth::user()->name.'%')->get();
+                    $result = User::where('name', 'LIKE', '%'.$req->user_id.'%')->where('name', 'NOT LIKE', '%'.$thisuser->name.'%')->get();
 
 
 
                     if(count($result)){
 
-                        $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($result), 'title' => 'Good', 'country' => Auth::user()->country];
+                        $resData = ['res' => 'Fetching Data', 'message' => 'success', 'data' => json_encode($result), 'title' => 'Good', 'country' => $thisuser->country];
                     }
                     else{
 
 
-                    $resData = ['res' => 'Receiver not on PaySprint. <strong><a href="'.route('create new payment', 'country='.Auth::user()->country).'">You can proceeed to send money</a></strong>', 'message' => 'error'];
+                    $resData = ['res' => 'Receiver not on PaySprint. <strong><a href="'.route('create new payment', 'country='.$thisuser->country).'">You can proceeed to send money</a></strong>', 'message' => 'error'];
 
                     }
 
@@ -3003,7 +3049,7 @@ class HomeController extends Controller
 
         $data = $statement->where('user_id', $req->user_id)->update(['notify' => 1]);
 
-        if(count($data) > 0){
+        if(isset($data)){
 
             // Get Facility
             $resData = ['data' => 1, 'message' => 'success'];
@@ -3019,6 +3065,7 @@ class HomeController extends Controller
 
 
     public function ajaxgetCommission(Request $req){
+
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
@@ -3097,10 +3144,18 @@ class HomeController extends Controller
         $walletCheck = "";
 
         if($req->pay_method == "Wallet"){
-            $wallet = Auth::user()->wallet_balance;
+            $wallet = $thisuser->wallet_balance;
 
             if($wallet < $amountReceive){
-                $walletCheck = 'Wallet Balance: <strong>'.$req->localcurrency. number_format($wallet,2).'</strong>. <br> Insufficient balance. <a href="'.route('Add Money').'">Add money <i class="fa fa-plus" style="font-size: 15px;border-radius: 100%;border: 1px solid grey;padding: 3px;" aria-hidden="true"></i></a>';
+
+                if($thisuser->accountType == "Individual"){
+                    $route = route('Add Money');
+                }
+                else{
+                    $route = route('merchant add money');
+                }
+
+                $walletCheck = 'Wallet Balance: <strong>'.$req->localcurrency. number_format($wallet,2).'</strong>. <br> Insufficient balance. <a href="'.$route.'">Add money <i class="fa fa-plus" style="font-size: 15px;border-radius: 100%;border: 1px solid grey;padding: 3px;" aria-hidden="true"></i></a>';
             }
         }
 

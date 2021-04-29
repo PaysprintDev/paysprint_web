@@ -53,6 +53,15 @@ Route::prefix('/v1')->group(function () {
     Route::post('merchantbusinessprofile',  ['uses' => 'api\v1\UserController@updateMerchantBusinessProfile'])->name('merchant business profile');
 
     Route::post('createservicetype',  ['uses' => 'api\v1\ServiceController@createServiceType'])->name('create service type');
+    
+    Route::post('setuptax',  ['uses' => 'api\v1\TaxController@setupTax'])->name('set up taxes');
+
+    Route::post('edittax',  ['uses' => 'api\v1\TaxController@editTax'])->name('edit taxes');
+
+    Route::post('deletetax',  ['uses' => 'api\v1\TaxController@deleteTax'])->name('delete taxes');
+
+
+    Route::get('gettaxdetail',  ['uses' => 'api\v1\TaxController@getTaxDetail'])->name('get tax detail');
 
     Route::post('createtransactionpin',  ['uses' => 'api\v1\UserController@createTransactionPin'])->name('create transaction pin');
 

@@ -31,6 +31,9 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
+              <div class="col-md-2 col-md-offset-10">
+                <button class="btn btn-secondary btn-block bg-blue" onclick="goBack()"><i class="fas fa-chevron-left"></i> Go back</button>
+            </div>
 
               <table class="table table-bordered table-striped">
                 

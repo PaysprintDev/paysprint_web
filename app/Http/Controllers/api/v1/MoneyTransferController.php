@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Validator;
 
+use Illuminate\Support\Facades\Log;
+
 use App\User as User;
 
 use App\Mail\sendEmail;
@@ -141,6 +143,17 @@ class MoneyTransferController extends Controller
             $url = "https://exbc.ca/api/v1/paysprint/requestcard";
         }
 
+        if($req->amount > $thisuser->wallet_balance){
+
+            $data = [];
+            $message = "Insufficient wallet balance";
+            $status = 400;
+
+
+            $resData = ['data' => $data,'message' => $message, 'status' => $status];
+        }
+        else{
+
         $data = $req->all();
 
         $token = "base64:HgMO6FDHGziGl01OuLH9mh7CeP095shB6uuDUUClhks=";
@@ -162,7 +175,15 @@ class MoneyTransferController extends Controller
             $resData = ['data' => $data,'message' => $message, 'status' => $status];
         }
 
+
+        Log::info("Request for Exbc prepaid card  by ".$thisuser->name);
+
         $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", ".$message);
+
+
+        }
+
+
 
         return $this->returnJSON($resData, $status);
 
@@ -179,13 +200,80 @@ class MoneyTransferController extends Controller
                 if($validator->passes()){
                     $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                    $insertRecord = RequestRefund::insert(['user_id' => $thisuser->id, 'transaction_id' => $req->transaction_id, 'reason' => $req->reason]);
+                    // Check if invoice 
+                    $getStatement = Statement::where('reference_code', $req->transaction_id)->where('activity', 'LIKE', '%Payment for %')->where('activity', 'LIKE', '%Invoice on %')->first();
 
-                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-                    $status = 200;
-                    $message = 'You have successfully made request for refund. Kindly note that refund takes up to 5 days for review.';
+                    if(isset($getStatement) == true ){
+                        $error = "You cannot request for refund on this transaction. Kindly contact your merchant for refund";
 
-                    $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", ".$message);
+                        $data = [];
+                        $status = 400;
+                        $message = $error;
+                    }
+                    else{
+                        // Check if its a fund debit
+                        $getStatement = Statement::where('reference_code', $req->transaction_id)->where('credit', '!=', '0')->first();
+
+                        if(isset($getStatement) == true ){
+                            $error = "You can request for refund of debit transfer when its a pending deposit or not accepted by the receiver. Thanks";
+
+                            $data = [];
+                            $status = 400;
+                            $message = $error;
+                        }
+                        else{
+
+                                // check if its monthly maintenance
+
+                                $getStatement = Statement::where('reference_code', $req->transaction_id)->where('activity', 'LIKE', '%Monthly maintenance fee %')->first();
+
+                                
+
+                                if(isset($getStatement) == true){
+                                    $error = "This is a monthly maintenance charge fee. Request for refund not allowed on this transaction";
+                                    
+                                    $data = [];
+                                    $status = 400;
+                                    $message = $error;
+                                }
+
+                                else{
+                                    
+                                    // Then check if money is accepted
+                                    $getStatement = Statement::where('reference_code', $req->transaction_id)->where('auto_deposit', 'on')->first();
+
+                                    if(isset($getStatement) == true){
+                                        $error = "You cannot request for refund on this transaction. Kindly contact receiver for refund";
+
+                                        $data = [];
+                                        $status = 400;
+                                        $message = $error;
+                                    }
+                                    else{
+
+                                        $insertRecord = RequestRefund::insert(['user_id' => $thisuser->id, 'transaction_id' => $req->transaction_id, 'reason' => $req->reason]);
+
+                                        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                        $status = 200;
+                                        $message = 'You have successfully made request for refund. Kindly note that refund takes up to 5 days for review.';
+
+                                        Log::info("Request for refund by ".$thisuser->name);
+
+                                        $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", ".$message);
+                                    }
+
+
+                                
+
+                                }
+
+                        }
+
+                        
+                    }
+
+
+
                 }
                 else{
 
@@ -239,7 +327,7 @@ class MoneyTransferController extends Controller
             // Insert Statement
             $activity = "Debited ".$data->currencyCode." ".number_format(20, 2)." for ".$card_provider." request from PaySprint Wallet.";
             $credit = 0;
-            $debit = 20;
+            $debit = number_format(20, 2);
             $reference_code = "wallet-".date('dmY').time();
             $balance = 0;
             $trans_date = date('Y-m-d');
@@ -490,6 +578,9 @@ class MoneyTransferController extends Controller
                     $status = 200;
 
                     $resData = ['data' => $data, 'message' => 'Money Sent Successfully', 'status' => $status];
+
+
+                    Log::info("Sent money from ".$sender->name." to ".$receiver->name);
 
                     $this->createNotification($receiver->ref_code, $recMsg);
 

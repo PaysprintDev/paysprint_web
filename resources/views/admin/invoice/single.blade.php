@@ -20,8 +20,16 @@
 
       <!-- Default box -->
       <div class="box">
+
+          
         
         <div class="box-body">
+
+            <div class="row">
+                <div class="col-md-2 col-md-offset-0">
+                <button class="btn btn-secondary btn-block bg-red" onclick="goBack()"><i class="fas fa-chevron-left"></i> Go back</button>
+            </div>
+            </div>
           
             {{-- Provide Form --}}
             <form action="#" method="POST" id="formElem">
@@ -48,13 +56,28 @@
                 </div>
                 
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group has-success">
                             <label for="single_email">Customer Email</label>
                             <div class="row">
                                 <div class="col-md-12">
                                     <input type="text" name="single_email" id="single_email" class="form-control" placeholder="Email Address">
+
+                                    <strong><small class="text-info emailcheck disp-0"></small></strong>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group has-success">
+                            <label for="single_telephone">Customer Telephone</label>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input type="tel" name="single_telephone" id="single_telephone" class="form-control" placeholder="Telephone e.g +{{ $data['getpersonalData']->code }}-123456789">
+                                    <strong><small class="text-info phonecheck disp-0"></small></strong>
+
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -210,6 +233,51 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <input type="number" min="0.00" step="0.01" name="single_amount" id="single_amount" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group has-success">
+                            <label for="single_tax">Tax </label>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <select name="single_tax" id="single_tax" class="form-control">
+                                        <option value="">Select Tax</option>
+                                        @if (count($data['getTax']) > 0)
+                                            @foreach ($data['getTax'] as $tax)
+                                                <option value="{{ $tax->id }}">{{ number_format($tax->rate, 2).'% '.$tax->name.' -  ('.$tax->agency.')' }}</option>
+                                            @endforeach
+                                        @else
+                                            <option value="Set Up Tax">Set Up Tax</option>
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group has-success">
+                            <label for="single_tax_amount">Tax Amount </label>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input type="text" min="0.00" step="0.01" name="single_tax_amount" id="single_tax_amount" class="form-control" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group has-success">
+                            <label for="single_total_amount">Total Amount </label>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input type="text" min="0.00" step="0.01" name="single_total_amount" id="single_total_amount" class="form-control" readonly>
                                 </div>
                             </div>
                         </div>

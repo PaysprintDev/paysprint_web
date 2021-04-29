@@ -160,6 +160,55 @@ input[type="radio"] {
                                                 @endif
 
 
+                                            @elseif (Request::get('card') == "Debit Card")
+
+                                                @if ($mycard->card_provider == "Debit Card")
+                                            <div class="col-md-6">
+                                                <div class="alert {{ $alertInfo }}">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <h4>
+                                                                    {{ wordwrap($mycard->card_number, 4, ' - ', true) }}
+                                                                </h4>
+                                                            </div>
+                                                            <br>
+                                                            <div class="col-md-6">
+                                                                <h6>
+                                                                Expiry: {{ $mycard->month."/".$mycard->year }}
+                                                                </h6>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <h6>
+                                                                CVV: ***
+                                                                </h6>
+                                                            </div>
+                                                        </div>
+                                                        <br>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <h5>
+
+                                                                    {{ (strlen($mycard->card_name) < 18) ? strtoupper($mycard->card_name) : substr(strtoupper($mycard->card_name), 0, 18)."..." }}
+                                                                </h5>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <input type="hidden" name="card_id" value="{{ $mycard->id }}" id="card_id">
+                                                                <a href="{{ route('Edit card', $mycard->id) }}" title="Edit Card"><i class="far fa-edit text-secondary"></i></a>
+                                                                <a href="javascript:void(0)" title="Delete Card" onclick="handShake('deletecard')"><i class="far fa-trash-alt text-danger"></i></a>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                {!! $cardImage !!}
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                                </div>
+                                                    
+                                                @endif
+
+
                                             @elseif (Request::get('card') == "Prepaid Card")
 
                                                 @if ($mycard->card_provider != "Credit Card")
@@ -322,6 +371,23 @@ input[type="radio"] {
                                             <div class="input-group"> 
                                                 <select name="card_provider" id="card_provider" class="form-control" required>
                                                     <option value="Credit Card" selected>Credit Card</option>
+
+                                                </select>
+                                                <div class="input-group-append"> 
+                                                    <span class="input-group-text text-muted"> <i class="fas fa-credit-card"></i></span> 
+                                                </div>
+                                            </div>
+
+                                           </div>
+
+                                           @elseif(Request::get('card') == "Debit Card")
+
+                                           <div class="form-group disp-0">
+                                               <label for="card_name">Card Provider</label>
+
+                                            <div class="input-group"> 
+                                                <select name="card_provider" id="card_provider" class="form-control" required>
+                                                    <option value="Debit Card" selected>Debit Card</option>
 
                                                 </select>
                                                 <div class="input-group-append"> 

@@ -176,9 +176,21 @@ input[type="radio"] {
 
 
                                             {{--  Add Payment Gateway  --}}
+                                                <h4>Payment Method</h4><hr>
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <button style="background-color: #000 !important;" class="px-2" title="PaySprint Payment Gateway" onclick="location.href='{{ route('payment gateway', 'gateway=PaySprint') }}'">
+                                                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" alt="PaySprint logo" width="50" height="50">
+                                                    </button>
+                                                    <button class="px-2" title="GooglePay Payment Gateway" onclick="comingSoon()"><img src="https://img.icons8.com/fluent/50/000000/google-logo.png"/></button>
+
+                                                </div>
+                                            </div>
 
 
-                                            <div class="d-flex align-items-start">
+
+                                            <div class="d-flex align-items-start disp-0">
                                                 <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                                                     <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true" style="background-color: #000 !important;">
                                                         <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" alt="PaySprint logo" width="50" height="50">
@@ -231,9 +243,20 @@ input[type="radio"] {
                                                 @else
 
                                                 {{--  Add Payment Gateway  --}}
+                                                <h4>Payment Method</h4><hr>
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <button style="background-color: #000 !important;" class="px-2" title="PaySprint Payment Gateway" onclick="location.href='{{ route('payment gateway', 'gateway=PaySprint') }}'">
+                                                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" alt="PaySprint logo" width="50" height="50">
+                                                    </button>
+                                                    <button class="px-2" title="GooglePay Payment Gateway" onclick="comingSoon()"><img src="https://img.icons8.com/fluent/50/000000/google-logo.png"/></button>
+
+                                                </div>
+                                            </div>
 
 
-                                            <div class="d-flex align-items-start">
+                                            <div class="d-flex align-items-start disp-0">
                                                 <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                                                     <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">
                                                         <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" alt="PaySprint logo" width="50" height="50">
@@ -456,7 +479,7 @@ input[type="radio"] {
                                                                                 </div>
 
                                                                             </td>
-                                                                        <td style="font-weight: 700" class="{{ ($walletstatements->credit != 0) ? "text-success" : "text-danger" }}">{{ ($walletstatements->credit != 0) ? "+".$data['currencyCode'][0]->currencies[0]->symbol.number_format($walletstatements->credit, 2) : "-".$data['currencyCode'][0]->currencies[0]->symbol.number_format($walletstatements->debit, 2) }}</td>
+                                                                        <td style="font-weight: 700" class="{{ ($walletstatements->credit != 0) ? "text-success" : "text-danger" }}">{{ ($walletstatements->credit != 0) ? "+".$data['currencyCode'][0]->currencies[0]->symbol.number_format($walletstatements->credit, 2) : "-".$data['currencyCode'][0]->currencies[0]->symbol.number_format($walletstatements->debit, 2) }} <br> <small class="{{ ($walletstatements->status == "Delivered") ? "text-primary" : "text-secondary" }}"><strong>{{ $walletstatements->status }}</strong></small> </td>
                                                                     </tr>
                                                 
                                                                 @endforeach
@@ -508,7 +531,7 @@ input[type="radio"] {
                                                                                 </div>
 
                                                                             </td>
-                                                                            <td style="font-weight: 700" class="text-success">{{ "+".$data['currencyCode'][0]->currencies[0]->symbol.number_format($walletstatements->credit, 2) }}</td>
+                                                                            <td style="font-weight: 700" class="text-success">{{ "+".$data['currencyCode'][0]->currencies[0]->symbol.number_format($walletstatements->credit, 2) }}<br> <small class="{{ ($walletstatements->status == "Delivered") ? "text-primary" : "text-secondary" }}"><strong>{{ $walletstatements->status }}</strong></small></td>
                                                                         </tr>
 
                                                                     @endif
@@ -559,7 +582,7 @@ input[type="radio"] {
 
                                                                             </td>
                                                                             <td style="font-weight: 700" class="text-danger">
-                                                                                {{ "-".$data['currencyCode'][0]->currencies[0]->symbol.number_format($walletstatements->debit, 2) }}
+                                                                                {{ "-".$data['currencyCode'][0]->currencies[0]->symbol.number_format($walletstatements->debit, 2) }}<br> <small class="{{ ($walletstatements->status == "Delivered") ? "text-primary" : "text-secondary" }}"><strong>{{ $walletstatements->status }}</strong></small>
                                                                             </td>
                                                                         </tr>
 

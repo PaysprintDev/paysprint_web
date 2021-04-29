@@ -35,6 +35,72 @@
 
               <p class="text-muted text-center">{{ $data['getuserDetail']->accountType }} Account</p>
 
+
+              <div class="row">
+                <div class="card" style="width: auto;">
+                            <div class="card-header" style="background-color: #f6b60b; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
+                                Quick Wallet Setup
+                                @if ($data['getuserDetail']->approval == 0 || count($data['getCard']) <= 0 || $data['getuserDetail']->transaction_pin == null || $data['getuserDetail']->securityQuestion == null)
+                                    <a href="javascript:void()" type="button" class="btn btn-danger fa-blink">Incomplete</a>
+                                @endif
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item" title="Upload Government issued photo ID e.g National ID, International Passport, Driver Licence">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <a href="{{ route('merchant profile') }}">Identity Verification</a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! $data['getuserDetail']->approval == 1 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+
+                                    </li>
+                                <li class="list-group-item" title="To add money to your wallet, you need to add a credit/debit card to your account">
+
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                             <a href="{{ route('merchant payment gateway', 'gateway=PaySprint') }}">Add Card/Bank Account </a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! count($data['getCard']) > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+
+                                   
+                                </li>
+                                <li class="list-group-item" title="Setup transaction pin for security purpose" >
+
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <a href="{{ route('merchant profile') }}">Set Transaction Pin </a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! $data['getuserDetail']->transaction_pin != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+                                    
+                                
+                                </li>
+                                <li class="list-group-item" title="Setup transaction pin for security purpose" >
+
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <a href="{{ route('merchant profile') }}">Set Security Question </a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! $data['getuserDetail']->securityQuestion != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                
+                                </li>
+                            </ul>
+                    </div>
+              </div>
+
+
               {{--  <input type="file" name="avatar" class="form-control" id="avatar">  --}}
               {{--  <br>  --}}
               {{--  <a style="cursor: pointer;" onclick="uploadAvatar()" class="btn btn-primary btn-block" id="uploadingavatar"><b>Upload Profile Picture</b></a>  --}}
@@ -91,6 +157,21 @@
                             <option value="Limited Liability Company" {{ ($data['getbusinessDetail']->corporate_type == "Limited Liability Company") ? 'selected' : '' }} >Limited Liability Company</option>
                             <option value="Public Company" {{ ($data['getbusinessDetail']->corporate_type == "Public Company") ? 'selected' : '' }} >Public Company</option>
                             <option value="Trust and Estate" {{ ($data['getbusinessDetail']->corporate_type == "Trust and Estate") ? 'selected' : '' }} >Trust and Estate</option>
+                        </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputName" class="col-sm-2 control-label">Service Offer</label>
+
+                    <div class="col-sm-10">
+                      <select name="type_of_service" id="type_of_service" class="form-control">
+                            <option value="">Select Service Offer</option>
+                            <option value="{{ $data['getbusinessDetail']->type_of_service }}" {{ ($data['getbusinessDetail']->type_of_service != null) ? 'selected' : '' }}>{{ $data['getbusinessDetail']->type_of_service }}</option>
+                            @if (count($data['merchantservice']) > 0)
+                                @foreach ($data['merchantservice'] as $item)
+                                    <option value="{{ $item->name }}">{{ $item->name }}</option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
                   </div>

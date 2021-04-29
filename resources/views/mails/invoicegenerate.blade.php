@@ -769,6 +769,24 @@
                                                         </tr>
 
                                                         <tr>
+                                                          <td>Tax: </td>
+                                                          <td style="font-weight: bold;">
+                                                            {{ $maildata->tax }}</td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                          <td>Tax Amount: </td>
+                                                          <td style="font-weight: bold;">
+                                                            {{ $maildata->tax_amount }}</td>
+                                                        </tr>
+
+                                                        <tr>
+                                                          <td>Total Amount: </td>
+                                                          <td style="font-weight: bold;">
+                                                            {{ $maildata->total_amount }}</td>
+                                                        </tr>
+
+                                                        <tr>
                                                           <td>Type of Service: </td>
                                                           <td style="font-weight: bold;">
                                                             {{ $maildata->service }}</td>

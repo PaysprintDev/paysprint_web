@@ -21,6 +21,7 @@ Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Route::get('feecharge', 'MaintenanceFeeCharge@monthlyMaintenaceFee');
 
 Route::get('quicksetup', 'CheckSetupController@updateQuickSetup');
+Route::get('autodepositoff', 'CheckSetupController@autoDepositOff');
 
 Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
 
@@ -75,6 +76,7 @@ Route::prefix('mywallet')->group(function () {
 	Route::get('addbank', ['uses' => 'HomeController@addBankDetail', 'as' => 'Add bank detail']);
 	Route::get('requestrefund', ['uses' => 'HomeController@requestForRefund', 'as' => 'request for refund']);
 	Route::get('notifications', ['uses' => 'HomeController@allNotifications', 'as' => 'notifications']);
+	Route::get('paymentgateway', ['uses' => 'HomeController@paymentGateway', 'as' => 'payment gateway']);
 	
 });
 
@@ -172,6 +174,14 @@ Route::prefix('Admin/wallet')->group(function () {
 
 	
 	Route::get('withdrawal', ['uses' => 'AdminController@merchantWithdrawal', 'as' => 'merchant withdrawal']);
+	Route::get('addmoney', ['uses' => 'AdminController@merchantAddMoney', 'as' => 'merchant add money']);
+	Route::get('sendmoney', ['uses' => 'AdminController@merchantSendMoney', 'as' => 'merchant send money']);
+
+
+	Route::get('merchantpaymentgateway', ['uses' => 'AdminController@merchantPaymentGateway', 'as' => 'merchant payment gateway']);
+	Route::get('new/payment/createuser', ['uses' => 'AdminController@createnewPayment', 'as' => 'create new merchant payment']);
+
+	Route::get('payment/sendmoney/{user_id}', ['uses' => 'AdminController@paymentOrganization', 'as' => 'merchant sendmoney payment']);
 	
 });
 
@@ -211,6 +221,8 @@ Route::prefix('Admin/merchant')->group(function () {
 
 
 Route::get('Admin/servicetypes', ['uses' => 'AdminController@createServiceTypes', 'as' => 'create service types']);
+Route::get('Admin/setuptax', ['uses' => 'AdminController@setupTax', 'as' => 'setup tax']);
+Route::get('Admin/edittax/{id}', ['uses' => 'AdminController@editTax', 'as' => 'edit tax']);
 Route::get('Admin/api-documentation', ['uses' => 'AdminController@apiDocumentation', 'as' => 'api integration']);
 
 Route::get('AdminLogin', ['uses' => 'AdminController@adminlogin', 'as' => 'AdminLogin']);
@@ -346,6 +358,7 @@ Route::post('confirmpayment', ['uses' => 'AdminController@ajaxconfirmpayment', '
 Route::post('approveUser', ['uses' => 'AdminController@ajaxapproveUser', 'as' => 'AjaxapproveUser']);
 Route::post('paybankwithdrawal', ['uses' => 'AdminController@ajaxpayBankWithdrawal', 'as' => 'Ajaxpaybankwithdrawal']);
 Route::post('flagguser', ['uses' => 'AdminController@ajaxflagUser', 'as' => 'Ajaxflagguser']);
+Route::post('singleinvoiceusercheck', ['uses' => 'AdminController@ajaxSingleInvoiceUserCheck', 'as' => 'Ajaxsingleinvoiceusercheck']);
 
 
 Route::post('quotedecision', ['uses' => 'ConsultantController@ajaxquotedecision', 'as' => 'Ajaxquotedecision']);
