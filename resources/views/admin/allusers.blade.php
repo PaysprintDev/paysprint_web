@@ -48,9 +48,7 @@
                   <th>Account No.</th>
                   <th>Name</th>
                   <th>Email</th>
-                  <th>Phone</th>
-                  <th>Address</th>
-                  <th>Means of Identification</th>
+                  <th>Identification</th>
                   <th>Date Joined</th>
                   <th>Status</th>
                   <th>Action</th>
@@ -66,12 +64,10 @@
                             <td>{{ $data->ref_code }}</td>
                             <td>{{ $data->name }}</td>
                             <td>{{ $data->email }}</td>
-                            <td>{{ $data->telephone }}</td>
-                            <td>{{ $data->address }}</td>
                             <td>
                                 @if (($data->nin_front != null || $data->nin_back != null))
                                 <small style="font-weight: bold;">
-                                    Govnt. issued photo ID : <a href="{{ $data->nin_front }}" target="_blank">Front view</a> | <a href="{{ $data->nin_back }}" target="_blank">Back view</a>
+                                    Govnt. issued photo ID : @if($data->nin_front != null) <a href="{{ $data->nin_front }}" target="_blank">Front view</a> @endif | @if($data->nin_back != null) <a href="{{ $data->nin_back }}" target="_blank">Back view</a> @endif
                                 </small>
                                 <hr>
                                     
@@ -79,7 +75,7 @@
 
                                 @if (($data->drivers_license_front != null || $data->drivers_license_back != null))
                                 <small style="font-weight: bold;">
-                                    Driver's License : <a href="{{ $data->drivers_license_front }}" target="_blank">Front view</a> | <a href="{{ $data->drivers_license_back }}" target="_blank">Back view</a>
+                                    Driver's License : @if($data->drivers_license_front != null) <a href="{{ $data->drivers_license_front }}" target="_blank">Front view</a> @endif | @if($data->drivers_license_back != null) <a href="{{ $data->drivers_license_back }}" target="_blank">Back view</a> @endif
                                 </small>
                                 <hr>
                                     
@@ -88,7 +84,7 @@
 
                                 @if (($data->international_passport_front != null || $data->international_passport_back != null))
                                 <small style="font-weight: bold;">
-                                    International Passport : <a href="{{ $data->international_passport_front }}" target="_blank">Front view</a> | <a href="{{ $data->international_passport_back }}" target="_blank">Back view</a>
+                                    International Passport : @if($data->international_passport_front != null) <a href="{{ $data->international_passport_front }}" target="_blank">Front view</a> @endif | @if($data->international_passport_back != null) <a href="{{ $data->international_passport_back }}" target="_blank">Back view</a> @endif
                                 </small>
                                 <hr>
                                     
@@ -106,11 +102,13 @@
                             
                             <td>
 
-                                @if ($data->approval == 1)
+                              <a href="#"><i class="far fa-eye text-primary" title="More details"></i></strong></a>  <a href="javascript:void()" onclick="checkverification('{{ $data->id }}')"><i class="fas fa-user-check text-success" title="Check verification"></i> <img class="spinvery{{ $data->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  @if($data->approval == 1) <a href="javascript:void()" onclick="approveaccount('{{ $data->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" title="Disapprove"></i> <img class="spin{{ $data->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  @else <a href="javascript:void()" onclick="approveaccount('{{ $data->id }}')" class="text-primary"><i class="far fa-lightbulb text-success" title="Approve"></i> <img class="spin{{ $data->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  @endif
+
+                                {{--  @if ($data->approval == 1)
                                 <button class="btn btn-danger" id="processPay" onclick="approveaccount('{{ $data->id }}')">Disapprove Identification <img class="spin{{ $data->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></button>
                                 @else
                                 <button class="btn btn-primary" id="processPay" onclick="approveaccount('{{ $data->id }}')">Approve Identification <img class="spin{{ $data->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></button>
-                                @endif
+                                @endif  --}}
 
                               
                             </td>
@@ -123,7 +121,7 @@
 
                     @else
                     <tr>
-                        <td colspan="10" align="center">No record available</td>
+                        <td colspan="8" align="center">No record available</td>
                     </tr>
                     @endif
                 </tbody>

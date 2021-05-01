@@ -375,6 +375,50 @@
       </div>
 
 
+          <div class="row">
+        <div class="col-sm-4">
+            <div class="form-group has-feedback">
+                <label for="dayOfBirth">Day of Birth</label>
+                
+                <select name="dayOfBirth" id="dayOfBirth" class="form-control">
+                    @for ($i = 1; $i <= 31; $i++)
+                        <option value="{{ $i }}">{{ $i }}</option>
+                    @endfor
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group has-feedback">
+                <label for="monthOfBirth">Month of Birth</label>
+                <select name="monthOfBirth" id="monthOfBirth" class="form-control">
+                    <option selected value='1'>January</option>
+                    <option value='2'>February</option>
+                    <option value='3'>March</option>
+                    <option value='4'>April</option>
+                    <option value='5'>May</option>
+                    <option value='6'>June</option>
+                    <option value='7'>July</option>
+                    <option value='8'>August</option>
+                    <option value='9'>September</option>
+                    <option value='10'>October</option>
+                    <option value='11'>November</option>
+                    <option value='12'>December</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group has-feedback">
+                <label for="yearOfBirth">Year of Birth</label>
+                <select name="yearOfBirth" id="yearOfBirth" class="form-control">
+                    @for ($i = 1900; $i <= date('Y'); $i++)
+                        <option value="{{ $i }}">{{ $i }}</option>
+                    @endfor
+                </select>
+            </div>
+        </div>
+    </div>
+
+
 
 
       <div class="form-group has-feedback">
@@ -586,6 +630,18 @@ function signUp(){
     swal('Oops!', 'Lastname field can\'t be empty', 'warning');
     return false;
   }
+  else if($('#dayOfBirth').val() == ""){
+    swal('Oops!', 'Please select day of birth', 'warning');
+    return false;
+  }
+  else if($('#monthOfBirth').val() == ""){
+    swal('Oops!', 'Please select month of birth', 'warning');
+    return false;
+  }
+  else if($('#yearOfBirth').val() == ""){
+    swal('Oops!', 'Please select year of birth', 'warning');
+    return false;
+  }
   else if($('#telephone').val() == ""){
     swal('Oops!', 'Your telephone number is needed', 'warning');
     return false;
@@ -654,6 +710,9 @@ function signUp(){
     website: $('#website').val(),
     firstname: $('#firstname').val(),
     lastname: $('#lastname').val(),
+    dayOfBirth: $('#dayOfBirth').val(),
+    monthOfBirth: $('#monthOfBirth').val(),
+    yearOfBirth: $('#yearOfBirth').val(),
     telephone: $('#telephone').val(),
     username: $('#username').val(),
     email: $('#email').val(),

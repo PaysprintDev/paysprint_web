@@ -80,7 +80,7 @@ input[type="radio"] {
                                 <form role="form" action="#" method="POST" id="formElem">
                                     @csrf
                                     <input type="hidden" name="invoice_no" id="payinvoiceRef" value="{{ $data['getinvoice'][0]->invoice_no }}">
-                                    <input type="hidden" name="amount" id="payamount" value="{{ number_format($data['getinvoice'][0]->amount, 2) }}">
+                                    {{--  <input type="hidden" name="amount" id="payamount" value="{{ number_format($data['getinvoice'][0]->amount, 2) }}">  --}}
                                     <input type="hidden" name="invoice_balance" value="{{ $data['getinvoice'][0]->remaining_balance }}">
                                     <input type="hidden" name="merchant_id" id="payuser_id" value="{{ $data['getinvoice'][0]->uploaded_by }}">
                                     <input type="hidden" name="email" id="payemail" value="{{ $email }}">
@@ -96,10 +96,17 @@ input[type="radio"] {
                                                     Invoice Number: <b>{{ $data['getinvoice'][0]->invoice_no }}</b>
                                                 </li>
                                                 <li>
-                                                    Invoice Amount: <b>{{ number_format($data['getinvoice'][0]->amount, 2) }}</b>
+                                                    Invoice Amount: <b>{{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format($data['getinvoice'][0]->amount, 2) }}</b>
                                                 </li>
                                                 <li>
-                                                    Invoice Balance: <b>{{ number_format($data['getinvoice'][0]->remaining_balance, 2) }}</b>
+                                                    Tax Amount: <b>{{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format($data['getinvoice'][0]->tax_amount, 2) }}</b>
+                                                </li>
+                                                <li>
+                                                    Total Amount: <b>{{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format($data['getinvoice'][0]->total_amount, 2) }}</b>
+                                                </li>
+                                                
+                                                <li>
+                                                    Invoice Balance: <b>{{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format($data['getinvoice'][0]->remaining_balance, 2) }}</b>
                                                 </li>
                                                 <li>
                                                     Service: <b>{{ $data['getinvoice'][0]->service }}</b>
@@ -164,13 +171,81 @@ input[type="radio"] {
                                         </div>
                                     </div>
                                     <div class="form-group"> <label for="currency">
-                                            <h6>Amount to Pay</h6>
+                                            <h6>Amount Invoiced</h6>
                                         </label>
+
+                                        @php
+                                            if($data['getinvoice'][0]->remaining_balance > 0){
+                                                $amountInvoiced = $data['getinvoice'][0]->remaining_balance;
+                                            }
+                                            else{
+                                                $amountInvoiced = $data['getinvoice'][0]->total_amount + $data['getinvoice'][0]->remaining_balance;
+                                            }
+                                        @endphp
+
                                         <input type="hidden" value="{{ $data['currencyCode'][0]->currencies[0]->code }}" name="currencyCode">
-                                        <div class="input-group"> <span class="input-group-text text-muted"> {{ $data['currencyCode'][0]->currencies[0]->symbol }} </span> <input type="number" min="0.00" step="0.01" name="typepayamount" id="typepayamount" placeholder="50.00" class="form-control" value="{{ number_format($data['getinvoice'][0]->amount, 2) }}" readonly>
+                                        <div class="input-group"> <span class="input-group-text text-muted"> {{ $data['currencyCode'][0]->currencies[0]->symbol }} </span> <input type="number" min="0.00" step="0.01" name="amountinvoiced" id="amountinvoiced" placeholder="50.00" class="form-control" value="{{ $amountInvoiced }}" readonly>
                                             <div class="input-group-append">  </div>
                                         </div>
                                     </div>
+
+                                    @if ($data['getinvoice'][0]->installpay == "Yes")
+
+                                        @if ($data['getinvoice'][0]->installlimit > $data['getinvoice'][0]->installcount)
+
+                                        <div class="form-group"> <label for="currency">
+                                                <h6>Do you want to pay intallmentally?</h6>
+                                            </label>
+                                            <div class="input-group"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/office/16/000000/circled-dot.png"/> </span> 
+                                                <select name="payInstallment" id="pay_installment" class="form-control">
+                                                    <option value="Yes">Yes</option>
+                                                    <option value="No" selected>No</option>
+                                                </select>
+                                                <div class="input-group-append">  </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group topay disp-0"> <label for="currency">
+                                                <h6>Amount to Pay</h6>
+                                            </label>
+                                            <input type="hidden" value="{{ $data['currencyCode'][0]->currencies[0]->code }}" name="currencyCode">
+                                            <div class="input-group"> <span class="input-group-text text-muted"> {{ $data['currencyCode'][0]->currencies[0]->symbol }} </span> <input type="number" min="0.00" step="0.01" name="amount" id="typepayamount" placeholder="50.00" class="form-control" value="{{ $amountInvoiced }}">
+                                                <div class="input-group-append"> </div>
+                                            </div>
+                                        </div>
+
+                                        @else
+
+                                        <div class="form-group disp-0"> <label for="currency">
+                                                <h6>Do you want to pay intallmentally?</h6>
+                                            </label>
+                                            <div class="input-group"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/office/16/000000/circled-dot.png"/> </span> 
+                                                <select name="payInstallment" id="pay_installment" class="form-control">
+                                                    <option value="Yes">Yes</option>
+                                                    <option value="No" selected>No</option>
+                                                </select>
+                                                <div class="input-group-append">  </div>
+                                            </div>
+                                        </div>
+
+                                    <div class="form-group topay disp-0"> <label for="currency">
+                                                <h6>Amount to Pay</h6>
+                                            </label>
+                                            <input type="hidden" value="{{ $data['currencyCode'][0]->currencies[0]->code }}" name="currencyCode">
+                                            <div class="input-group"> <span class="input-group-text text-muted"> {{ $data['currencyCode'][0]->currencies[0]->symbol }} </span> <input type="number" min="0.00" step="0.01" name="amount" id="typepayamount" placeholder="50.00" class="form-control" value="{{ $amountInvoiced }}">
+                                                <div class="input-group-append"> </div>
+                                            </div>
+                                        </div>
+                                            
+                                        @endif
+
+                                    {{--  @if ($data['getinvoice'][0]->installpay == "Yes" && $data['getinvoice'][0]->installlimit == $data['getinvoice'][0]->installcount)  --}}
+
+                                    
+                                    
+
+                                    @endif
 
                                     <hr>
 
@@ -284,11 +359,26 @@ input[type="radio"] {
                     runCommission();
                 }
 
-                // $("#typepayamount").on("keyup", function() {
-                //     runCommission();
-                // });
+                $("#typepayamount").on("keyup", function() {
+                    runCommission();
+                });
 
                 })
+
+
+$("#pay_installment").change(function(){
+
+    var amount = $("#amountinvoiced").val();
+
+    if($("#pay_installment").val() == "Yes"){
+        $('.topay').removeClass('disp-0');
+    }
+    else{
+        $("#typepayamount").val(amount);
+        runCommission();
+        $('.topay').addClass('disp-0');
+    }
+});
 
 
 function handShake(val){

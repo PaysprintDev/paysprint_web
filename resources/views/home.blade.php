@@ -166,7 +166,17 @@
                                                                             </div>
                                                                             <div class="col-md-4">
 
-                                                                                {!! ($payInv->payment_status == 0) ? "<small><span class='badge badge-danger' style='cursor: pointer;' onclick=location.href='".route('payment', $payInv->invoice_no)."'>Pay Invoice</span></small>" : "<small><span class='badge badge-success'>Paid</span></small>" !!}
+                                                                                @if ($payInv->payment_status == 0)
+                                                                                    <small><span class='badge badge-danger' style='cursor: pointer;' onclick=location.href='{{ route('payment', $payInv->invoice_no) }}'>Pay Invoice</span></small>
+
+                                                                                @elseif($payInv->payment_status == 2)
+                                                                                    <small><span class='badge badge-danger' style='cursor: pointer;' onclick=location.href='{{ route('payment', $payInv->invoice_no) }}'>Pay Balance</span></small>
+
+                                                                                @else
+                                                                                <small><span class='badge badge-success'>Paid</span></small>
+                                                                                @endif
+
+                                                                                {{--  {!! ($payInv->payment_status == 0) ? "<small><span class='badge badge-danger' style='cursor: pointer;' onclick=location.href='".route('payment', $payInv->invoice_no)."'>Pay Invoice</span></small>" : "<small><span class='badge badge-success'>Paid</span></small>" !!}  --}}
 
                                                                             </div>
                                                                         </div>
@@ -177,7 +187,27 @@
                                                                 </div>
 
                                                             </td>
-                                                        <td style="font-weight: 700">{{ ($payInv->payment_status == 0) ? "+".$data['currencyCode'][0]->currencies[0]->symbol.number_format($payInv->amount, 2) : "-".$data['currencyCode'][0]->currencies[0]->symbol.number_format($payInv->amount, 2) }}</td>
+                                                        <td style="font-weight: 700">
+                                                            @php
+                                                                if($payInv->total_amount != null || $payInv->total_amount != 0){
+                                                                    $totalAmount = $payInv->total_amount;
+                                                                }else{
+                                                                    $totalAmount = $payInv->amount;
+                                                                }
+                                                            @endphp
+
+                                                            @if ($payInv->payment_status == 0)
+                                                                {{ "+".$data['currencyCode'][0]->currencies[0]->symbol.number_format($totalAmount, 2) }}
+                                                            @elseif($payInv->payment_status == 2)
+                                                                {{ "-".$data['currencyCode'][0]->currencies[0]->symbol.number_format($payInv->remaining_balance, 2) }}
+                                                            @else
+                                                                {{ "-".$data['currencyCode'][0]->currencies[0]->symbol.number_format($totalAmount, 2) }}
+                                                            @endif
+                                                            
+                                                            {{--  {{ ($payInv->payment_status == 0) ? "+".$data['currencyCode'][0]->currencies[0]->symbol.number_format($totalAmount, 2) : "-".$data['currencyCode'][0]->currencies[0]->symbol.number_format($totalAmount, 2) }}  --}}
+                                                        
+                                                        
+                                                        </td>
                                                     </tr>
                                                 @endforeach
 

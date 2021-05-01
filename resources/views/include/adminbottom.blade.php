@@ -1441,7 +1441,7 @@ function approveaccount(id){
   var route = "{{ URL('Ajax/approveUser') }}";
 
   swal({
-      title: "Ready to Approve!",
+      title: "Are you sure?",
       text: "Please make sure you have thoroughly checked the uploaded means of identification before you proceed",
       icon: "info",
       buttons: true,
@@ -1474,6 +1474,57 @@ function approveaccount(id){
                 }
 
 
+            }
+
+          });
+
+      }
+    });
+
+}
+function checkverification(id){
+
+  var thisdata;
+  var spinner = $('.spinvery'+id);
+  var route = "{{ URL('Ajax/checkverification') }}";
+
+  swal({
+      title: "Ready to check verification!",
+      text: "Click OK to continue identity verification check",
+      icon: "info",
+      buttons: true,
+      dangerMode: false,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        thisdata = {id: id};
+          setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: thisdata,
+            dataType: 'JSON',
+            beforeSend: function(){
+              spinner.removeClass('disp-0');
+            },
+            success: function(result){
+              spinner.addClass('disp-0');
+
+                if (result.message == "success") {
+
+                  swal(result.title, result.res, result.message);
+
+                }
+
+                else{
+                  swal(result.title, result.res, result.message);
+                }
+
+
+            },
+            error: function(err){
+              spinner.addClass('disp-0');
+              swal("Oops!", error.responseJSON.message, "error");
             }
 
           });
@@ -1539,7 +1590,7 @@ var spinner = $('.spin'+id);
             },
             error: function(err){
               spinner.addClass('disp-0');
-              swal("OOps!", error.responseJSON.message, "error");
+              swal("Oops!", error.responseJSON.message, "error");
             }
 
 
@@ -1591,7 +1642,7 @@ function flagAccount(id){
             },
             error: function(err){
               spinner.addClass('disp-0');
-              swal("OOps!", error.responseJSON.message, "error");
+              swal("Oops!", error.responseJSON.message, "error");
             }
 
           });
@@ -2302,68 +2353,6 @@ else if(val == 'edittax'){
 }
 
 
-
-
-else if('createnew'){
-      formData = new FormData(formElem);
-
-    route = "{{ URL('/api/v1/sendmoneytoanonymous') }}";
-
-        Pace.restart();
-    Pace.track(function(){
-        setHeaders();
-        jQuery.ajax({
-        url: route,
-        method: 'post',
-        data: formData,
-        cache: false,
-        processData: false,
-        contentType: false,
-        dataType: 'JSON',
-        beforeSend: function(){
-            $('.sendmoneyBtn').text('Please wait...');
-        },
-        success: function(result){
-            console.log(result);
-
-            $('.sendmoneyBtn').text('Send Money');
-
-            if(result.status == 200){
-                    swal("Success", result.message, "success");
-                    setTimeout(function(){ location.href="{{ route('merchant send money') }}"; }, 2000);
-                }
-                else{
-                    swal("Oops", result.message, "error");
-                }
-
-        },
-        error: function(err) {
-
-            // console.log(err);
-
-            if(err.responseJSON.status == 400){
-
-                $('.sendmoneyBtn').text('Send Money');
-                swal("Oops", err.responseJSON.message, "error");
-            }
-            else{
-
-
-                $('.sendmoneyBtn').text('Send Money');
-                swal("User already exist", "You'll be redirected in 3sec to continue your transfer", "info");
-
-                setTimeout(function(){ location.href=err.responseJSON.link; }, 2000);
-            }
-            
-            
-
-        } 
-
-    });
-    });
-
-}
-
   else if(val == 'editbank'){
 
     formData = new FormData(formElem);
@@ -2796,7 +2785,65 @@ else if(val == "merchantbusiness"){
 }
 
 
+else if('createnew'){
+      formData = new FormData(formElem);
 
+    route = "{{ URL('/api/v1/sendmoneytoanonymous') }}";
+
+        Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('.sendmoneyBtn').text('Please wait...');
+        },
+        success: function(result){
+            console.log(result);
+
+            $('.sendmoneyBtn').text('Send Money');
+
+            if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.href="{{ route('merchant send money') }}"; }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+        },
+        error: function(err) {
+
+            // console.log(err);
+
+            if(err.responseJSON.status == 400){
+
+                $('.sendmoneyBtn').text('Send Money');
+                swal("Oops", err.responseJSON.message, "error");
+            }
+            else{
+
+
+                $('.sendmoneyBtn').text('Send Money');
+                swal("User already exist", "You'll be redirected in 3sec to continue your transfer", "info");
+
+                setTimeout(function(){ location.href=err.responseJSON.link; }, 2000);
+            }
+            
+            
+
+        } 
+
+    });
+    });
+
+}
 
 
 }

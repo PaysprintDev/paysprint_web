@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
+use Illuminate\Support\Facades\Log;
+
 use Illuminate\Support\Facades\Mail;
 
 use App\User as User;
@@ -35,6 +37,9 @@ class UserController extends Controller
             'city' => 'required',
             'state' => 'required',
             'country' => 'required',
+            'dayOfBirth' => 'required',
+            'monthOfBirth' => 'required',
+            'yearOfBirth' => 'required',
         ]);
 
         if($validator->passes()){
@@ -67,7 +72,7 @@ class UserController extends Controller
 
             if(isset($newcustomer)){
 
-                    $user = User::create(['code' => $newcustomer->code, 'ref_code' => $newcustomer->ref_code, 'name' => $newcustomer->name, 'email' => $newcustomer->email, 'password' => Hash::make($request->password), 'address' => $newcustomer->address, 'city' => $request->city, 'state' => $request->state, 'country' => $newcustomer->country, 'accountType' => 'Individual', 'api_token' => uniqid().md5($request->email), 'telephone' => $newcustomer->telephone, 'wallet_balance' => $newcustomer->wallet_balance, 'approval' => 0, 'currencyCode' => $mycode[0]->currencies[0]->code, 'currencySymbol' => $mycode[0]->currencies[0]->symbol]);
+                    $user = User::create(['code' => $newcustomer->code, 'ref_code' => $newcustomer->ref_code, 'name' => $newcustomer->name, 'email' => $newcustomer->email, 'password' => Hash::make($request->password), 'address' => $newcustomer->address, 'city' => $request->city, 'state' => $request->state, 'country' => $newcustomer->country, 'accountType' => 'Individual', 'api_token' => uniqid().md5($request->email), 'telephone' => $newcustomer->telephone, 'wallet_balance' => $newcustomer->wallet_balance, 'approval' => 0, 'currencyCode' => $mycode[0]->currencies[0]->code, 'currencySymbol' => $mycode[0]->currencies[0]->symbol, 'dayOfBirth' => $request->dayOfBirth, 'monthOfBirth' => $request->monthOfBirth, 'yearOfBirth' => $request->yearOfBirth]);
 
                     AnonUsers::where('ref_code', $newcustomer->ref_code)->delete();
 
@@ -87,7 +92,10 @@ class UserController extends Controller
                 'currencySymbol' => $mycode[0]->currencies[0]->symbol,
                 'api_token' => uniqid().md5($request->email),
                 'password' => Hash::make($request->password),
-                'approval' => 0
+                'approval' => 0, 
+                'dayOfBirth' => $request->dayOfBirth, 
+                'monthOfBirth' => $request->monthOfBirth, 
+                'yearOfBirth' => $request->yearOfBirth
             ]);
             }
 
@@ -96,6 +104,8 @@ class UserController extends Controller
 
             $resData = ['data' => $user, 'message' => 'Registration successful'];
             $status = 200;
+
+            Log::info("New user registration via mobile app by: ".$request->firstname.' '.$request->lastname." from ".$request->state.", ".$request->country);
 
             $this->createNotification($newRefcode, "Hello ".$request->firstname.", PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!. Welcome on board.");
 
@@ -189,7 +199,7 @@ class UserController extends Controller
 
     public function updateProfile(Request $request, User $user){
 
-        $user = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $request->bearerToken())->first();
+        $user = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'dayOfBirth', 'monthOfBirth', 'yearOfBirth')->where('api_token', $request->bearerToken())->first();
         
 
         User::where('id', $user->id)->update($request->all());
@@ -234,7 +244,7 @@ class UserController extends Controller
         }
 
 
-        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'accountType', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $request->bearerToken())->first();
+        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'accountType', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'dayOfBirth', 'monthOfBirth', 'yearOfBirth')->where('api_token', $request->bearerToken())->first();
 
         $status = 200;
 
@@ -247,7 +257,7 @@ class UserController extends Controller
 
     public function updateMerchantProfile(Request $request, Admin $admin, ClientInfo $clientinfo){
 
-        $user = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $request->bearerToken())->first();
+        $user = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'dayOfBirth', 'monthOfBirth', 'yearOfBirth')->where('api_token', $request->bearerToken())->first();
         
 
         User::where('id', $user->id)->update($request->all());
@@ -289,7 +299,7 @@ class UserController extends Controller
         }
 
 
-        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'accountType', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $request->bearerToken())->first();
+        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'accountType', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'dayOfBirth', 'monthOfBirth', 'yearOfBirth')->where('api_token', $request->bearerToken())->first();
 
         $status = 200;
 
@@ -323,6 +333,52 @@ class UserController extends Controller
         $resData = ['data' => $data, 'message' => 'Profile updated', 'status' => $status];
 
         return $this->returnJSON($resData, $status);
+    }
+
+
+
+    public function merchantsByServiceTypes(Request $req){
+
+        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+        $data = ClientInfo::select('type_of_service as typeOfService')->where('type_of_service', '!=', null)->where('country', $thisuser->country)->orderBy('created_at', 'DESC')->groupBy('type_of_service')->get();
+
+        Log::info($data);
+
+        $status = 200;
+
+        $resData = ['data' => $data, 'message' => 'success', 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+    public function listMerchantsByServiceTypes(Request $req){
+
+        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+        $query = ClientInfo::select('id', 'user_id as userId', 'business_name as businessName', 'address', 'corporate_type as corporateType', 'industry', 'type_of_service as typeOfService', 'website', 'firstname', 'lastname', 'telephone', 'country', 'state', 'city', 'zip_code as zipCode')->where('type_of_service', $req->get('service'))->where('country', $thisuser->country)->orderBy('created_at', 'DESC')->orderBy('created_at', 'DESC')->get();
+
+        if(count($query) > 0){ 
+
+            $data = $query;
+            $status = 200;
+            $message = 'success';
+
+        }
+        else{
+            $data = [];
+            $status = 400;
+            $message = 'No record';
+        }
+
+        Log::info($data);
+
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+
     }
 
 

@@ -53,7 +53,7 @@ return [
 
         'slack' => [
             'driver' => 'slack',
-            'url' => env('LOG_SLACK_WEBHOOK_URL'),
+            'url' => "https://hooks.slack.com/services/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",
             'username' => 'Laravel Log',
             'emoji' => ':boom:',
             'level' => 'error',
@@ -61,7 +61,7 @@ return [
 
         'successlogs' => [
             'driver' => 'slack',
-            'url' => 'https://hooks.slack.com/services/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',
+            'url' => 'https://hooks.slack.com/services/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',
             'username' => 'Success Log',
             'emoji' => ':boom:',
             'level' => 'info',

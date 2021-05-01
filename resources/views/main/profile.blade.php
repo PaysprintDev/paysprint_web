@@ -324,6 +324,52 @@
                                         <label for="telephone">Phone Number</label>
                                         <input type="tel" class="form-control" name="telephone" id="telephone" value="{{ Auth::user()->telephone }}" placeholder="Your Phone Number" required>
                                     </div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="dayOfBirth">Day of Birth</label>
+
+                                                <select name="dayOfBirth" id="dayOfBirth" class="form-control" required>
+                                                    @for ($i = 1; $i <= 31; $i++)
+                                                        <option value="{{ $i }}" {{ (Auth::user()->dayOfBirth == $i) ? "selected" : "" }}>{{ $i }}</option>
+                                                    @endfor
+                                                </select>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="state">Month of Birth</label>
+                                                <select name="monthOfBirth" id="monthOfBirth" class="form-control" required>
+                                                        <option selected value='1' {{ (Auth::user()->monthOfBirth == 1) ? "selected" : "" }}>January</option>
+                                                        <option value='2' {{ (Auth::user()->monthOfBirth == 2) ? "selected" : "" }}>February</option>
+                                                        <option value='3' {{ (Auth::user()->monthOfBirth == 3) ? "selected" : "" }}>March</option>
+                                                        <option value='4' {{ (Auth::user()->monthOfBirth == 4) ? "selected" : "" }}>April</option>
+                                                        <option value='5' {{ (Auth::user()->monthOfBirth == 5) ? "selected" : "" }}>May</option>
+                                                        <option value='6' {{ (Auth::user()->monthOfBirth == 6) ? "selected" : "" }}>June</option>
+                                                        <option value='7' {{ (Auth::user()->monthOfBirth == 7) ? "selected" : "" }}>July</option>
+                                                        <option value='8' {{ (Auth::user()->monthOfBirth == 8) ? "selected" : "" }}>August</option>
+                                                        <option value='9' {{ (Auth::user()->monthOfBirth == 9) ? "selected" : "" }}>September</option>
+                                                        <option value='10' {{ (Auth::user()->monthOfBirth == 10) ? "selected" : "" }}>October</option>
+                                                        <option value='11' {{ (Auth::user()->monthOfBirth == 11) ? "selected" : "" }}>November</option>
+                                                        <option value='12' {{ (Auth::user()->monthOfBirth == 12) ? "selected" : "" }}>December</option>
+                                                    </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="yearOfBirth">Year of Birth</label>
+                                                <select name="yearOfBirth" id="yearOfBirth" class="form-control">
+                                                    @for ($i = 1900; $i <= date('Y'); $i++)
+                                                        <option value="{{ $i }}" {{ (Auth::user()->yearOfBirth == $i) ? "selected" : "" }}>{{ $i }}</option>
+                                                    @endfor
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="form-group">
                                         <label for="address">Home Address</label>
                                         <input type="text" class="form-control" name="address" id="address" value="{{ Auth::user()->address }}" placeholder="Your Home Address" required>

@@ -17,6 +17,7 @@
         "rap2hpoutre/laravel-log-viewer": "^1.7",
         "simplesoftwareio/simple-qrcode": "~4",
         "spatie/laravel-permission": "^2.29",
+        "trulioo/trulioo-sdk": "^1.0",
         "twilio/sdk": "^6.20"
     },
     "require-dev": {

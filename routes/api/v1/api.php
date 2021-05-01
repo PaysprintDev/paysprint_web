@@ -52,6 +52,14 @@ Route::prefix('/v1')->group(function () {
 
     Route::post('merchantbusinessprofile',  ['uses' => 'api\v1\UserController@updateMerchantBusinessProfile'])->name('merchant business profile');
 
+
+    Route::get('merchantsbyservicetypes',  ['uses' => 'api\v1\UserController@merchantsByServiceTypes'])->name('merchants by service types');
+    
+    Route::get('listmerchantsbyservicetypes',  ['uses' => 'api\v1\UserController@listMerchantsByServiceTypes'])->name('list merchants by service types');
+
+
+
+
     Route::post('createservicetype',  ['uses' => 'api\v1\ServiceController@createServiceType'])->name('create service type');
     
     Route::post('setuptax',  ['uses' => 'api\v1\TaxController@setupTax'])->name('set up taxes');

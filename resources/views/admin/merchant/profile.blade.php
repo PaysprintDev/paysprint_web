@@ -160,16 +160,16 @@
                         </select>
                     </div>
                   </div>
+
                   <div class="form-group">
                     <label for="inputName" class="col-sm-2 control-label">Service Offer</label>
 
                     <div class="col-sm-10">
                       <select name="type_of_service" id="type_of_service" class="form-control">
                             <option value="">Select Service Offer</option>
-                            <option value="{{ $data['getbusinessDetail']->type_of_service }}" {{ ($data['getbusinessDetail']->type_of_service != null) ? 'selected' : '' }}>{{ $data['getbusinessDetail']->type_of_service }}</option>
                             @if (count($data['merchantservice']) > 0)
                                 @foreach ($data['merchantservice'] as $item)
-                                    <option value="{{ $item->name }}">{{ $item->name }}</option>
+                                    <option value="{{ $item->name }}" {{ ($data['getbusinessDetail']->type_of_service == $item->name) ? 'selected' : '' }}>{{ $item->name }}</option>
                                 @endforeach
                             @endif
                         </select>
@@ -383,13 +383,7 @@
                       <input type="email" class="form-control" name="email" value="{{ $data['getuserDetail']->email }}" readonly="" placeholder="Email">
                     </div>
                   </div>
-                  <div class="form-group">
-                    <label for="inputEmail" class="col-sm-2 control-label">Address</label>
 
-                    <div class="col-sm-10">
-                      <input type="text" class="form-control" name="address" value="{{ $data['getuserDetail']->address }}" placeholder="Address">
-                    </div>
-                  </div>
                   <div class="form-group">
                     <label for="inputName" class="col-sm-2 control-label">Telephone</label>
 
@@ -397,6 +391,59 @@
                       <input type="number" class="form-control" name="telephone" placeholder="Telephone" value="{{ $data['getuserDetail']->telephone }}">
                     </div>
                   </div>
+
+
+                  <div class="form-group">
+                    <label for="inputName" class="col-sm-2 control-label">Day of Birth</label>
+
+                    <div class="col-sm-10">
+                        <select name="dayOfBirth" id="dayOfBirth" class="form-control" required>
+                            @for ($i = 1; $i <= 31; $i++)
+                                <option value="{{ $i }}" {{ ($data['getuserDetail']->dayOfBirth == $i) ? "selected" : "" }}>{{ $i }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputName" class="col-sm-2 control-label">Month of Birth</label>
+
+                    <div class="col-sm-10">
+                        <select name="monthOfBirth" id="monthOfBirth" class="form-control" required>
+                            <option selected value='1' {{ ($data['getuserDetail']->monthOfBirth == 1) ? "selected" : "" }}>January</option>
+                            <option value='2' {{ ($data['getuserDetail']->monthOfBirth == 2) ? "selected" : "" }}>February</option>
+                            <option value='3' {{ ($data['getuserDetail']->monthOfBirth == 3) ? "selected" : "" }}>March</option>
+                            <option value='4' {{ ($data['getuserDetail']->monthOfBirth == 4) ? "selected" : "" }}>April</option>
+                            <option value='5' {{ ($data['getuserDetail']->monthOfBirth == 5) ? "selected" : "" }}>May</option>
+                            <option value='6' {{ ($data['getuserDetail']->monthOfBirth == 6) ? "selected" : "" }}>June</option>
+                            <option value='7' {{ ($data['getuserDetail']->monthOfBirth == 7) ? "selected" : "" }}>July</option>
+                            <option value='8' {{ ($data['getuserDetail']->monthOfBirth == 8) ? "selected" : "" }}>August</option>
+                            <option value='9' {{ ($data['getuserDetail']->monthOfBirth == 9) ? "selected" : "" }}>September</option>
+                            <option value='10' {{ ($data['getuserDetail']->monthOfBirth == 10) ? "selected" : "" }}>October</option>
+                            <option value='11' {{ ($data['getuserDetail']->monthOfBirth == 11) ? "selected" : "" }}>November</option>
+                            <option value='12' {{ ($data['getuserDetail']->monthOfBirth == 12) ? "selected" : "" }}>December</option>
+                        </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputName" class="col-sm-2 control-label">Year of Birth</label>
+
+                    <div class="col-sm-10">
+                      <select name="yearOfBirth" id="yearOfBirth" class="form-control">
+                          @for ($i = 1900; $i <= date('Y'); $i++)
+                              <option value="{{ $i }}" {{ ($data['getuserDetail']->yearOfBirth == $i) ? "selected" : "" }}>{{ $i }}</option>
+                          @endfor
+                      </select>
+                    </div>
+                  </div>
+
+                  {{--  <div class="form-group">
+                    <label for="inputEmail" class="col-sm-2 control-label">Address</label>
+
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" name="address" value="{{ $data['getuserDetail']->address }}" placeholder="Address">
+                    </div>
+                  </div>  --}}
+                  
 
                   <div class="form-group">
                     <label for="inputName" class="col-sm-2 control-label">Country</label>

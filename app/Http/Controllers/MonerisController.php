@@ -343,6 +343,8 @@ else{
                      'service' => 'required|string',
                      'payment_method' => 'required|string',
                      'currencyCode' => 'required|string',
+                     'amountinvoiced' => 'required|string',
+                     'payInstallment' => 'required|string',
                 ]);
 
             if($validator->passes()){
@@ -381,23 +383,65 @@ else{
                         $getInv = ImportExcel::where('invoice_no', $req->invoice_no)->get();
 
                         if(count($getInv) > 0){
-                            // Get Amount
-                            $prevAmount = $getInv[0]->amount;
 
-                            $paidAmount = $req->amount;
 
-                            $newAmount = $prevAmount - $paidAmount;
+                            if($req->payInstallment == "Yes"){
 
-                            $instcount = $getInv[0]->installcount + 1;
+                                if($getInv[0]->total_amount != null){
+                                    // Get Amount
+                                    $prevAmount = $getInv[0]->total_amount;
+                                }
+                                else{
+                                    $prevAmount = $getInv[0]->amount;
+                                }
 
-                            if($getInv[0]->installlimit > $instcount){
-                                $installcounter = $getInv[0]->installlimit;
+                                $paidAmount = $req->amount;
+
+                                $newAmount = $prevAmount - $paidAmount;
+
+                                $instcount = $getInv[0]->installcount + 1;
+
+                                if($getInv[0]->installlimit > $instcount){
+                                    $installcounter = $getInv[0]->installlimit;
+                                }
+                                else{
+                                    $installcounter = $instcount;
+                                }
+
+                                $payment_status = 2;
+
                             }
                             else{
-                                $installcounter = $instcount;
+
+                                if($getInv[0]->total_amount != 0){
+                                    // Get Amount
+                                    $prevAmount = $getInv[0]->total_amount;
+                                }
+                                else{
+                                    $prevAmount = $getInv[0]->amount;
+                                }
+
+                                $paidAmount = $req->amount;
+
+                                $newAmount = $prevAmount - $paidAmount;
+
+                                $instcount = $getInv[0]->installcount;
+
+                                if($getInv[0]->installlimit > $instcount){
+                                    $installcounter = $getInv[0]->installlimit;
+                                }
+                                else{
+                                    $installcounter = $instcount;
+                                }
+
+                                $payment_status = 1;
                             }
 
-                            ImportExcel::where('invoice_no', $req->invoice_no)->update(['installcount' => $installcounter, 'payment_status' => 1]);
+
+                            // if payment status is 2, there sre still some pending payments to make, if 1, payments are cleared off
+
+
+                            ImportExcel::where('invoice_no', $req->invoice_no)->update(['installcount' => $installcounter, 'payment_status' => $payment_status, 'remaining_balance' => $newAmount]);
 
                             // Update Price Record
                             $updtPrice = InvoicePayment::where('transactionid', $transactionID)->update(['remaining_balance' => $newAmount, 'opening_balance' => $prevAmount, 'payment_method' => $req->payment_method]);
@@ -430,11 +474,11 @@ else{
                                     // $this->email = "bambo@vimfile.com";
                                     $this->subject = "Your Invoice # [".$req->invoice_no."] of ".$req->currencyCode.' from '.$thismerchant->businessname.' '.number_format($req->amount, 2)." is Paid";
 
-                                    $this->message = '<p>Hi '.$thisuser->name.' You have successfully paid invoice of <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong> to '.$thismerchant->name.' for '.$purpose.'. You now have <strong>'.$req->currencyCode.' '.number_format($walletBalance, 2).'</strong> balance in PaySprint Wallet account</p>';
+                                    $this->message = '<p>Hi '.$thisuser->name.' You have successfully paid invoice of <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong> to '.$thismerchant->name.' for '.$purpose.'. Your remaining balance is to pay '.$req->currencyCode.' '.number_format($newAmount, 2).'. You now have <strong>'.$req->currencyCode.' '.number_format($walletBalance, 2).'</strong> balance in PaySprint Wallet account</p>';
 
                                     $this->sendEmail($this->email, "Fund remittance");
 
-                                    $sendMsg = 'Hi '.$thisuser->name.' You have successfully paid invoice of '.$req->currencyCode.' '.number_format($req->amount, 2).' to '.$thismerchant->name.' for '.$purpose.'. You now have '.$req->currencyCode.' '.number_format($walletBalance, 2).' balance in PaySprint Wallet account';
+                                    $sendMsg = 'Hi '.$thisuser->name.' You have successfully paid invoice of '.$req->currencyCode.' '.number_format($req->amount, 2).' to '.$thismerchant->name.' for '.$purpose.'. Your remaining balance is to pay '.$req->currencyCode.' '.number_format($newAmount, 2).'. You now have '.$req->currencyCode.' '.number_format($walletBalance, 2).' balance in PaySprint Wallet account';
                                     $sendPhone = "+".$thisuser->code.$thisuser->telephone;
 
                                     $this->sendMessage($sendMsg, $sendPhone);
@@ -464,11 +508,11 @@ else{
                                     // $this->email = "bambo@vimfile.com";
                                     $this->subject = $thisuser->name." has paid Invoice: [".$req->invoice_no."]";
 
-                                    $this->message = '<p>You have received <strong>'.$req->currencyCode.''.number_format($req->amount, 2).'</strong> for <b>INVOICE: '.$req->invoice_no.'</b> made by <b>'.$thisuser->name.'</b>.</p> <p>You now have <strong>'.$req->currencyCode.''.number_format($merchantwalletBalance, 2).'</strong> balance in your wallet account with PaySprint</p>';
+                                    $this->message = '<p>You have received <strong>'.$req->currencyCode.''.number_format($req->amount, 2).'</strong> for <b>INVOICE: '.$req->invoice_no.'</b> made by <b>'.$thisuser->name.'</b>, remaining balance to pay is '.$req->currencyCode.' '.number_format($newAmount, 2).'.</p> <p>You now have <strong>'.$req->currencyCode.''.number_format($merchantwalletBalance, 2).'</strong> balance in your wallet account with PaySprint</p>';
 
                                     $this->sendEmail($this->email, "Fund remittance");
 
-                                    $recMesg = 'You have received '.$req->currencyCode.' '.number_format($req->amount, 2).' for INVOICE: '.$req->invoice_no.' made by '.$thisuser->name.'. You now have '.$req->currencyCode.' '.number_format($merchantwalletBalance, 2).' balance in your wallet account with PaySprint';
+                                    $recMesg = 'You have received '.$req->currencyCode.' '.number_format($req->amount, 2).' for INVOICE: '.$req->invoice_no.' made by '.$thisuser->name.', remaining balance to pay is '.$req->currencyCode.' '.number_format($newAmount, 2).'. You now have '.$req->currencyCode.' '.number_format($merchantwalletBalance, 2).' balance in your wallet account with PaySprint';
                                     $recPhone = "+".$thismerchant->code.$thismerchant->telephone;
 
                                     $this->sendMessage($recMesg, $recPhone);

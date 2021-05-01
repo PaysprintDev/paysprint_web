@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c88917415bb5325dbcbcb0ab7974ef9f",
+    "content-hash": "ef285be8a17b08c8823abccdfa00d073",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -5207,6 +5207,49 @@
                 "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/2.2.3"
             },
             "time": "2020-07-13T06:12:54+00:00"
+        },
+        {
+            "name": "trulioo/trulioo-sdk",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Trulioo/sdk-php.git",
+                "reference": "39bfad4c73b8ae48104b659087bf06768184faab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Trulioo/sdk-php/zipball/39bfad4c73b8ae48104b659087bf06768184faab",
+                "reference": "39bfad4c73b8ae48104b659087bf06768184faab",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "ext-openssl": "*",
+                "guzzlehttp/guzzle": "^6.2",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.12",
+                "phpunit/phpunit": "^8.0 || ^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "OpenAPI\\Client\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Trulioo PHP SDK",
+            "support": {
+                "issues": "https://github.com/Trulioo/sdk-php/issues",
+                "source": "https://github.com/Trulioo/sdk-php/tree/1.0.1"
+            },
+            "time": "2021-04-15T18:18:24+00:00"
         },
         {
             "name": "twilio/sdk",

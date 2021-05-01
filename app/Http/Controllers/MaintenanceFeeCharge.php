@@ -65,9 +65,12 @@ class MaintenanceFeeCharge extends Controller
 
                 $this->message = '<p>'.$activity.'</p><p>You now have <strong>'.$value->currencyCode.' '.number_format($walletBalance, 2).'</strong> balance in your account</p>';
 
-                $this->sendMessage($sendMsg, $sendPhone);
 
-                $this->sendEmail($this->email, "Fund remittance");
+                Log::info($sendMsg);
+
+                // $this->sendMessage($sendMsg, $sendPhone);
+
+                // $this->sendEmail($this->email, "Fund remittance");
 
                 $this->monthlyChargeInsert($value->ref_code, $value->country, $getTranscost->fixed, $value->currencyCode);
 

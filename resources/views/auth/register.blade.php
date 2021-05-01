@@ -251,6 +251,50 @@ body::-webkit-scrollbar-thumb:hover {
                             </div>
 
 
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="dayOfBirth">Day of Birth</label>
+                                        
+                                        <select name="dayOfBirth" id="dayOfBirth" class="form-control">
+                                            @for ($i = 1; $i <= 31; $i++)
+                                                <option value="{{ $i }}">{{ $i }}</option>
+                                            @endfor
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="monthOfBirth">Month of Birth</label>
+                                        <select name="monthOfBirth" id="monthOfBirth" class="form-control">
+                                            <option selected value='1'>January</option>
+                                            <option value='2'>February</option>
+                                            <option value='3'>March</option>
+                                            <option value='4'>April</option>
+                                            <option value='5'>May</option>
+                                            <option value='6'>June</option>
+                                            <option value='7'>July</option>
+                                            <option value='8'>August</option>
+                                            <option value='9'>September</option>
+                                            <option value='10'>October</option>
+                                            <option value='11'>November</option>
+                                            <option value='12'>December</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="yearOfBirth">Year of Birth</label>
+                                        <select name="yearOfBirth" id="yearOfBirth" class="form-control">
+                                            @for ($i = 1900; $i <= date('Y'); $i++)
+                                                <option value="{{ $i }}">{{ $i }}</option>
+                                            @endfor
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+
                             {{-- <input id="autocomplete" placeholder="Enter your address" onFocus="geolocate()" type="text" class="form-control input_box">
                                     <div class="row">
                                     <div class="col-md-6">
@@ -284,10 +328,10 @@ body::-webkit-scrollbar-thumb:hover {
                                     </div> --}}
 
                             
-                            
+                            <br>
 
-                            <label for="address">Address</label>
-                                <input type="text" name="address" id="address" class="form-control input_box" placeholder="Address *" required>
+                            <label for="address">Street Number & Name</label>
+                                <input type="text" name="address" id="address" class="form-control input_box" placeholder="Street Number & Name *" required>
 
                             <div class="row">
                                 <div class="col-sm-6">
@@ -597,10 +641,16 @@ var fname; var lname; var email; var cemail; var city; var country;
 var state; var address; var password; var cpassword; var zipcode; var busname;
 var corporationtype;
 var ref_code;
+var dayOfBirth;
+var monthOfBirth;
+var yearOfBirth;
     if(accountType == "Individual"){
         ref_code = $('#ref_code').val();
         fname = $('#fname').val();
         lname = $('#lname').val();
+        dayOfBirth = $('#dayOfBirth').val();
+        monthOfBirth = $('#monthOfBirth').val();
+        yearOfBirth = $('#yearOfBirth').val();
         email = $('#email').val();
         cemail = $('#cemail').val();
         country = $('#country').val();
@@ -622,7 +672,20 @@ var ref_code;
         }if(lname == ""){
             swal('Oops', 'Lastname field can\'t be empty', 'info');
             return false;
-        }if(email == ""){
+        }
+        if(dayOfBirth == ""){
+            swal('Oops', 'Please select day of birth', 'info');
+            return false;
+        }
+        if(monthOfBirth == ""){
+            swal('Oops', 'Please select month of birth', 'info');
+            return false;
+        }
+        if(yearOfBirth == ""){
+            swal('Oops', 'Please select year of birth', 'info');
+            return false;
+        }
+        if(email == ""){
             swal('Oops', 'Email field can\'t be empty', 'info');
             return false;
         }if(cemail == ""){
@@ -668,7 +731,7 @@ var ref_code;
             fname: fname, lname: lname, email: email,
             country: country, state: state, city: city,
             address: address, password: password, zipcode: zipcode,
-            accountType: accountType, ref_code: ref_code
+            accountType: accountType, ref_code: ref_code, dayOfBirth: dayOfBirth, monthOfBirth: monthOfBirth, yearOfBirth: yearOfBirth
         };
     }
     else if(accountType == "Business"){

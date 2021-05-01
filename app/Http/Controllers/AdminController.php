@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
+use Illuminate\Support\Facades\Log;
+
 use Rap2hpoutre\FastExcel\FastExcel;
 //Session
 use Session;
@@ -57,7 +59,7 @@ use App\AnonUsers as AnonUsers;
 
 use App\Tax as Tax;
 
-
+use App\Traits\Trulioo;
 
 class AdminController extends Controller
 {
@@ -86,7 +88,7 @@ class AdminController extends Controller
     public $infomessage;
     public $customer_id;
 
-
+    use Trulioo;
     
 
 
@@ -3699,7 +3701,7 @@ class AdminController extends Controller
                         $api_token = uniqid().md5($req->email).time();
 
 
-                        $data = ['code' => $mycode[0]->callingCodes[0], 'ref_code' => $req->ref_code, 'businessname' => $req->business_name, 'name' => $getanonuser->name, 'email' => $getanonuser->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'telephone' => $getanonuser->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $getanonuser->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'wallet_balance' => $getanonuser->wallet_balance];
+                        $data = ['code' => $mycode[0]->callingCodes[0], 'ref_code' => $req->ref_code, 'businessname' => $req->business_name, 'name' => $getanonuser->name, 'email' => $getanonuser->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'telephone' => $getanonuser->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $getanonuser->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'wallet_balance' => $getanonuser->wallet_balance, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth];
 
 
                         User::updateOrCreate(['email' => $getanonuser->email], $data);
@@ -3713,6 +3715,8 @@ class AdminController extends Controller
 
 
                         AnonUsers::where('ref_code', $req->ref_code)->delete();
+
+                        Log::info("New merchant registration via web by: ".$req->firstname.' '.$req->lastname." from ".$req->state.", ".$req->country);
 
                         $resData = ['res' => 'Logging in...', 'message' => 'success', 'link' => 'Admin'];
                         }
@@ -3769,7 +3773,7 @@ class AdminController extends Controller
                     $api_token = uniqid().md5($req->email).time();
 
 
-                        $data = ['code' => $mycode[0]->callingCodes[0], 'ref_code' => $newRefcode, 'businessname' => $req->business_name, 'name' => $req->firstname.' '.$req->lastname, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'telephone' => $req->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token];
+                        $data = ['code' => $mycode[0]->callingCodes[0], 'ref_code' => $newRefcode, 'businessname' => $req->business_name, 'name' => $req->firstname.' '.$req->lastname, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'telephone' => $req->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth];
 
 
                         User::updateOrCreate(['email' => $req->email], $data);
@@ -3782,8 +3786,10 @@ class AdminController extends Controller
 
                             $req->session()->put(['user_id' => $newRefcode, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $req->username, 'role' => 'Merchant', 'email' => $req->email, 'api_token' => $api_token, 'myID' => $getMerchant->id, 'country' => $req->country]);
 
+                            Log::info("New merchant registration via web by: ".$req->firstname.' '.$req->lastname." from ".$req->state.", ".$req->country);
 
-                        $resData = ['res' => 'Logging in...', 'message' => 'success', 'link' => 'Admin'];
+
+                            $resData = ['res' => 'Logging in...', 'message' => 'success', 'link' => 'Admin'];
                         }
                         else{
                             $resData = ['res' => 'Something went wrong', 'message' => 'error'];
@@ -4534,6 +4540,77 @@ class AdminController extends Controller
 
             $resData = ['res' => 'Account information approved', 'message' => 'success', 'title' => 'Great'];
         }
+
+
+        return $this->returnJSON($resData, 200);
+
+    }
+
+
+    public function ajaxCheckVerification(Request $req, User $user){
+
+        $data = $user->where('id', $req->id)->first();
+
+        $url = 'https://api.globaldatacompany.com/verifications/v1/verify';
+
+        $name = explode(" ", $data->name);
+
+        $firstname = $name[0];
+        $lastname = $name[1];
+        $dayofbirth = $data->dayOfBirth;
+        $monthofbirth = $data->monthOfBirth;
+        $yearofbirth = $data->yearOfBirth;
+        $minimuAge = date('Y') - $data->yearOfBirth;
+        $streetname = $data->address;
+        $city = $data->city;
+        $country = $data->country;
+        $zipcode = $data->zip;
+        $telephone = $data->telephone;
+        $email = $data->email;
+
+
+        $countryCode = $this->getCountryCode($country);
+
+        // dd($countryCode);
+
+
+        $countryCode = $countryCode[0]->alpha2Code;
+
+
+
+        $info = $this->identificationAPI($url, $firstname, $lastname, $dayofbirth, $monthofbirth, $yearofbirth, $minimuAge, $streetname, $city, $country, $zipcode, $telephone, $email, $countryCode);
+
+        if(isset($info->TransactionID) == true){
+            $result = $this->transStatus($info->TransactionID);
+
+            $res = $this->getTransRec($result->TransactionRecordId);
+
+
+            if($res->Record->RecordStatus == "nomatch"){
+               
+                $message = "error";
+                $title = "Oops!";
+                
+            }
+            else{
+                $message = "success";
+                $title = "Great";
+            }
+
+            $resp = $res->Record->RecordStatus;
+
+        }
+        else{
+            $message = "error";
+            $title = "Oops!";
+
+            $resp = $info->Message;
+        }
+
+
+
+        $resData = ['res' => strtoupper($resp), 'message' => $message, 'title' => $title];
+
 
 
         return $this->returnJSON($resData, 200);

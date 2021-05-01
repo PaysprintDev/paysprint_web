@@ -89,7 +89,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'invoice', 'statement', 'myinvoice', 'setupBills', 'checkmyBills', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'payOrganization', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'payment', 'paymentOrganization', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate']]);
+        $this->middleware('auth', ['except' => ['index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'myinvoice', 'setupBills', 'checkmyBills', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'payOrganization', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'paymentOrganization', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate']]);
     }
 
     /**
@@ -896,7 +896,7 @@ class HomeController extends Controller
     }
 
     public function getMerchantsByCategory(){
-        $data = ClientInfo::where('type_of_service', '!=', null)->orderBy('created_at', 'DESC')->groupBy('type_of_service')->get();
+        $data = ClientInfo::where('type_of_service', '!=', null)->where('country', Auth::user()->country)->orderBy('created_at', 'DESC')->groupBy('type_of_service')->get();
 
         return $data;
     }
@@ -939,7 +939,7 @@ class HomeController extends Controller
 
     public function getthisInvoice($invoice){
         $getInvoice = DB::table('import_excel')
-                     ->select(DB::raw('import_excel.name as name, import_excel.payee_ref_no, import_excel.payee_email as payee_email, import_excel.service as service, invoice_payment.remaining_balance as remaining_balance, import_excel.amount as amount, import_excel.uploaded_by, import_excel.invoice_no, invoice_payment.amount as amount_paid'))
+                     ->select(DB::raw('import_excel.name as name, import_excel.payee_ref_no, import_excel.payee_email as payee_email, import_excel.service as service, invoice_payment.remaining_balance as remaining_balance, import_excel.amount as amount, import_excel.uploaded_by, import_excel.invoice_no, import_excel.tax_amount, import_excel.total_amount, import_excel.installpay, import_excel.installlimit, import_excel.installcount, invoice_payment.amount as amount_paid'))
                      ->join('invoice_payment', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')
                      ->where('import_excel.invoice_no', $invoice)
                     ->orderBy('invoice_payment.created_at', 'DESC')
@@ -2428,7 +2428,7 @@ class HomeController extends Controller
                             // Insert User record
                 if($req->accountType == "Individual"){
                     // Insert Information for Individual user
-                    $insInd = User::insert(['ref_code' => $req->ref_code, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email).time(), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
+                    $insInd = User::insert(['ref_code' => $req->ref_code, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email).time(), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth]);
                 }
                 elseif($req->accountType == "Business"){
                     // Insert Information for Business user
@@ -2444,7 +2444,7 @@ class HomeController extends Controller
                             // Insert User record
                 if($req->accountType == "Individual"){
                     // Insert Information for Individual user
-                    $insInd = User::insert(['ref_code' => $newRefcode, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email).time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
+                    $insInd = User::insert(['ref_code' => $newRefcode, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email).time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth]);
 
                     // $req->session()->put(['name' => $name, 'email' => $req->email, 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType]);
                 }
@@ -2462,6 +2462,9 @@ class HomeController extends Controller
             $credentials = $req->only('email', 'password');
 
             if (Auth::attempt($credentials)) {
+
+                Log::info("New user registration via web by: ".$name." from ".$req->state.", ".$req->country);
+
                 $resData = ['res' => 'Hello '.$name.' you will be redirected in 5sec', 'message' => 'success', 'link' => '/'];
             }
             else{
