@@ -54,7 +54,7 @@ Route::prefix('/v1')->group(function () {
 
 
     Route::get('merchantsbyservicetypes',  ['uses' => 'api\v1\UserController@merchantsByServiceTypes'])->name('merchants by service types');
-    
+
     Route::get('listmerchantsbyservicetypes',  ['uses' => 'api\v1\UserController@listMerchantsByServiceTypes'])->name('list merchants by service types');
 
 
@@ -144,6 +144,8 @@ Route::prefix('/v1')->group(function () {
 
     // Add Card
     Route::get('getmycard',  ['uses' => 'api\v1\CardController@getCard'])->name('get my card');
+
+    Route::get('getprepaidcardissuers',  ['uses' => 'api\v1\CardController@getPrepaidCardIssuers'])->name('get prepaid card issuers');
 
     Route::post('addnewcard',  ['uses' => 'api\v1\CardController@addNewCard'])->name('add new card');
     

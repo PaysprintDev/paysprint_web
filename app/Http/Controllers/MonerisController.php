@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Support\Facades\Validator;
 
+use Illuminate\Support\Facades\Log;
+
 use App\User as User;
 
 use App\Mail\sendEmail;
@@ -472,9 +474,9 @@ else{
                                     $this->name = $thisuser->name;
                                     $this->email = $thisuser->email;
                                     // $this->email = "bambo@vimfile.com";
-                                    $this->subject = "Your Invoice # [".$req->invoice_no."] of ".$req->currencyCode.' from '.$thismerchant->businessname.' '.number_format($req->amount, 2)." is Paid";
+                                    $this->subject = "Your Invoice # [".$req->invoice_no."] of ".$req->currencyCode.' '.number_format($req->amount, 2).' from '.$thismerchant->businessname.' '.number_format($req->amount, 2)." is Paid";
 
-                                    $this->message = '<p>Hi '.$thisuser->name.' You have successfully paid invoice of <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong> to '.$thismerchant->name.' for '.$purpose.'. Your remaining balance is to pay '.$req->currencyCode.' '.number_format($newAmount, 2).'. You now have <strong>'.$req->currencyCode.' '.number_format($walletBalance, 2).'</strong> balance in PaySprint Wallet account</p>';
+                                    $this->message = '<p>Hi '.$thisuser->name.' You have successfully paid invoice of <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong> to '.$thismerchant->name.' for '.$purpose.'. Your remaining balance is to pay <strong>'.$req->currencyCode.' '.number_format($newAmount, 2).'</strong>. You now have <strong>'.$req->currencyCode.' '.number_format($walletBalance, 2).'</strong> balance in PaySprint Wallet account</p>';
 
                                     $this->sendEmail($this->email, "Fund remittance");
 
@@ -877,8 +879,13 @@ else{
 
                                         elseif($req->card_type == "Bank Account"){
 
-                                            $bankDetails = AddBank::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();                                            
-                                            $transaction_id = "wallet-".date('dmY').time();
+                                            $bankDetails = AddBank::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();   
+
+                                            Log::info("Card ID: ".$req->card_id." Type: ".$req->card_type); 
+
+                                            if(isset($bankDetails)){
+
+                                                $transaction_id = "wallet-".date('dmY').time();
                                             // Save Payment for Admin
                                             $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amounttosend]);
 
@@ -921,6 +928,15 @@ else{
                                             $this->createNotification($thisuser->ref_code, $sendMsg);
 
                                             $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+
+                                            }
+                                            else{
+                                                $data = [];
+                                                $message = "No bank record found for your account";
+                                                $status = 400;
+                                            }
+                                            
+                                            
 
 
                                             $resData = ['data' => $data, 'message' => $message, 'status' => $status];

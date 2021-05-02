@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use App\User as User;
 use App\AddCard as AddCard;
 use App\AddBank as AddBank;
+use App\CardIssuer as CardIssuer;
 
 class CardController extends Controller
 {
@@ -43,6 +44,34 @@ class CardController extends Controller
         return $this->returnJSON($resData, $status);
     }
 
+
+    public function getPrepaidCardIssuers(Request $req){
+        // Get My Cards
+        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+        $data = CardIssuer::orderBy('created_at', 'DESC')->get();
+
+
+        if(count($data) > 0){
+
+            $data = $data;
+            $status = 200;
+            $message = 'Success';
+        }
+        else{
+            $data = [];
+            $status = 400;
+            $message = "No Card Issuer Found";
+        }
+
+        Log::info("Get Card Issuer details by :=> ".$thisuser->name);
+
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
     public function addNewCard(Request $req){
 
 
@@ -64,7 +93,17 @@ class CardController extends Controller
 
             try {
                 if($userCardType != false){
-                    // Do Insert
+
+                    // Check card year
+                    if($req->year <= date('y') && $req->month < date('m')){
+                        $data = [];
+                        $status = 400;
+                        $message = "This card is expired!";
+
+                        Log::info($thisuser->name." tried to add an expired card with Month: ".$req->month." and year ".$req->year);
+                    }
+                    else{
+                        // Do Insert
                     $insertRecord = AddCard::insert(['user_id' => $thisuser->id, 'card_name' => $req->card_name, 'card_number' => $req->card_number, 'month' => $req->month, 'year' => $req->year, 'cvv' => Hash::make($req->cvv), 'card_type' => $userCardType, 'card_provider' => $req->card_provider]);
 
                     $data = $insertRecord;
@@ -74,6 +113,9 @@ class CardController extends Controller
                     $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully added a new card.");
 
                     Log::info("New card added by :=> ".$thisuser->name);
+                    }
+
+                    
                 }
                 else{
                     $data = [];
