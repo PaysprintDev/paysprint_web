@@ -27,7 +27,9 @@ Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
 
 // Major Routes
 
-Route::get('/', ['uses' => 'HomeController@index', 'as' => 'home']);
+Route::get('/', ['uses' => 'HomeController@homePage', 'as' => 'home']);
+
+Route::get('/merchant-home', ['uses' => 'HomeController@merchantIndex', 'as' => 'merchant home']);
 
 Route::get('/home', ['uses' => 'HomeController@authIndex', 'as' => 'user home']);
 
@@ -164,6 +166,7 @@ Route::get('walletstatement/{key}', ['uses' => 'HomeController@mywalletStatement
 Route::get('Admin', ['uses' => 'AdminController@index', 'as' => 'Admin']);
 
 Route::get('allusers', ['uses' => 'AdminController@allPlatformUsers', 'as' => 'allusers']);
+Route::get('usermoredetail/{id}', ['uses' => 'AdminController@userMoreDetail', 'as' => 'user more detail']);
 
 
 Route::prefix('Admin/wallet')->group(function () {
@@ -199,6 +202,8 @@ Route::prefix('Admin/card')->group(function () {
 
 	Route::get('merchantcreditcard/{id}', ['uses' => 'AdminController@merchantCreditCard', 'as' => 'merchant credit card']);
 	Route::get('editmerchantcreditcard/{id}', ['uses' => 'AdminController@editMerchantCreditCard', 'as' => 'Edit merchant credit card']);
+	Route::get('merchantdebitcard/{id}', ['uses' => 'AdminController@merchantDebitCard', 'as' => 'merchant debit card']);
+	Route::get('editmerchantdebitcard/{id}', ['uses' => 'AdminController@editMerchantDebitCard', 'as' => 'Edit merchant debit card']);
 	Route::get('editmerchantprepaidcard/{id}', ['uses' => 'AdminController@editMerchantPrepaidCard', 'as' => 'Edit merchant prepaid card']);
 	Route::get('merchantprepaidcard/{id}', ['uses' => 'AdminController@merchantPrepaidCard', 'as' => 'merchant prepaid card']);
 	Route::get('merchantbankaccount/{id}', ['uses' => 'AdminController@merchantBankAccount', 'as' => 'merchant bank account']);

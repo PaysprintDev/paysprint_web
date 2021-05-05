@@ -88,7 +88,12 @@ input[type="radio"] {
                                     <div class="form-group row">
 
                                         <div class="col-md-12">
-                                            <h5>Hello {{ (strlen($name) < 10) ? $name : substr($name, 0, 10)."." }},</h5>
+                                            {{--  <h5>Hello {{ (strlen($name) < 10) ? $name : substr($name, 0, 10)."." }},</h5>  --}}
+                                            @php
+                                                $username = explode(" ", $name);
+                                            @endphp
+
+                                            <h5>Hello {{ $username[0] }},</h5>
                                             <p>
                                                 {{ (date('A') == "AM") ? "Good Morning! Hope you took some coffee.☕" : "Good day! Remember to wash your hands.👏" }}
                                             </p>
@@ -370,7 +375,8 @@ input[type="radio"] {
 
                                                             <div class="col-md-12">
                                                                 <h4>
-                                                                    <a href="{{ route('Add bank detail') }}">Add your Bank Account</a>
+                                                                    {{--  {{ route('Add bank detail') }}  --}}
+                                                                    <a href="javascript:void()" onclick="comingSoon()">Coming Soon</a>
                                                                 </h4>
                                                             </div>
 
@@ -385,7 +391,7 @@ input[type="radio"] {
                                             </div>
 
                                             <div class="alert alert-default">
-                                                <a href="{{ route('request for refund') }}" type="button" class="btn btn-danger btn-block">Request for Refund</a>
+                                                <a href="{{ route('request for refund') }}" type="button" class="btn btn-danger btn-block">Request For Refund To Wallet</a>
                                             </div>
 
                                         </div>

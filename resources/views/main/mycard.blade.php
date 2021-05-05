@@ -55,7 +55,7 @@ input[type="radio"] {
         <!-- For demo purpose -->
         <div class="row mb-4">
             <div class="col-lg-8 mx-auto text-center">
-                <h1 class="display-4">{{ Request::get('card') }}</h1>
+                <h1 class="display-4">{{ (Request::get('card') == "Debit Card" ? "Debit VISA/Mastercard" : Request::get('card')) }}</h1>
             </div>
         </div> <!-- End -->
         <div class="row">

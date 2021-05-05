@@ -19,9 +19,13 @@ use App\Admin as Admin;
 use App\ClientInfo as ClientInfo;
 use App\Mail\sendEmail;
 
+use App\Traits\Trulioo;
+
 
 class UserController extends Controller
 {
+
+    use Trulioo;
 
     // User Registration
 
@@ -34,6 +38,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required',
             'telephone' => 'required',
+            'address' => 'required',
             'city' => 'required',
             'state' => 'required',
             'country' => 'required',
@@ -83,6 +88,7 @@ class UserController extends Controller
                 'name' => $request->firstname.' '.$request->lastname,
                 'code' => $mycode[0]->callingCodes[0],
                 'email' => $request->email,
+                'address' => $request->address,
                 'telephone' => $request->telephone,
                 'city' => $request->city,
                 'state' => $request->state,
@@ -99,15 +105,68 @@ class UserController extends Controller
             ]);
             }
 
+            $getcurrentUser = User::where('ref_code', $newRefcode)->first();
+
+            $url = 'https://api.globaldatacompany.com/verifications/v1/verify';
+
+            $minimuAge = date('Y') - $request->yearOfBirth;
+
+            $info = $this->identificationAPI($url, $request->firstname, $request->lastname, $request->dayOfBirth, $request->monthOfBirth, $request->yearOfBirth, $minimuAge, $request->address, $request->city, $request->country, null, $request->telephone, $request->email, $mycode[0]->alpha2Code);
+
+
+                    if(isset($info->TransactionID) == true){
+
+                        $result = $this->transStatus($info->TransactionID);
+
+                        $res = $this->getTransRec($result->TransactionRecordId);
+
+
+                        if($res->Record->RecordStatus == "nomatch"){
+                        
+                            $message = "error";
+                            $title = "Oops!";
+                            $link = "contact";
+                            $data = [];
+                            $statusCode = 400;
+                            
+                            $resInfo = strtoupper($res->Record->RecordStatus).", Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.";
+
+                            
+                        }
+                        else{
+                            $message = "success";
+                            $title = "Great";
+                            $link = "/";
+                            $resInfo = strtoupper($res->Record->RecordStatus).", Congratulations!!!. Your account has been approved. Please complete the Quick Set up to enjoy PaySprint.";
+                            $data = $user;
+                            $statusCode = 200;
+
+                            // Udpate User Info
+                            User::where('id', $getcurrentUser->id)->update(['accountLevel' => 1]);
+
+                            $this->createNotification($newRefcode, "Hello ".$request->firstname.", PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!. Welcome on board.");
+                        }
+
+                    }
+                    else{
+                        $message = "error";
+                        $title = "Oops!";
+                        $link = "contact";
+                        $resInfo = "Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.";
+                        $data = [];
+                        $statusCode = 400;
+
+                        // $resp = $info->Message;
+                    }
+
+
+                    Log::info("New user registration via mobile app by: ".$request->firstname.' '.$request->lastname." from ".$request->state.", ".$request->country." STATUS: ".$resInfo);
+            
+                    $status = $statusCode;
+
+                    $resData = ['data' => $data, 'message' => $resInfo, 'status' => $status];
 
             
-
-            $resData = ['data' => $user, 'message' => 'Registration successful'];
-            $status = 200;
-
-            Log::info("New user registration via mobile app by: ".$request->firstname.' '.$request->lastname." from ".$request->state.", ".$request->country);
-
-            $this->createNotification($newRefcode, "Hello ".$request->firstname.", PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!. Welcome on board.");
 
         }
         else{
@@ -142,7 +201,7 @@ class UserController extends Controller
             $token = Auth::user()->createToken('authToken')->accessToken;
 
 
-            $getUser = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('email', $request->email)->first();
+            $getUser = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'accountLevel')->where('email', $request->email)->first();
 
             if(Hash::check($request->password, $getUser->password)){
 
@@ -150,10 +209,17 @@ class UserController extends Controller
                 if($getUser->flagged == 1){
                     $data = [];
                     $status = 400;
-                    $message = 'Hello '.$getUser->ref_code.', Your account is restricted from login because you are flagged.';
+                    $message = 'Hello '.$getUser->name.', Your account is restricted from login because you are flagged.';
 
-                    $this->createNotification($getUser->ref_code, $message);
+                    $this->createNotification($getUser->refCode, $message);
                 }
+                // elseif($getUser->accountLevel == 0){
+                //     $data = [];
+                //     $status = 400;
+                //     $message = 'Hello '.$getUser->name.', Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.';
+
+                //     $this->createNotification($getUser->refCode, $message);
+                // }
                 else{
 
                     $countryInfo = $this->getCountryCode($getUser->country);
@@ -165,7 +231,7 @@ class UserController extends Controller
                     // Update User API Token
                     User::where('email', $request->email)->update(['api_token' => $token, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
 
-                    $userData = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('email', $request->email)->first();
+                    $userData = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'accountLevel')->where('email', $request->email)->first();
 
                     $data = $userData;
                     $status = 200;
@@ -503,11 +569,13 @@ class UserController extends Controller
                         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
                         // Update
-                        $resp = User::where('api_token', $req->bearerToken())->update(['securityQuestion' => $req->securityQuestion, 'securityAnswer' => $req->securityAnswer]);
+                        $resp = User::where('api_token', $req->bearerToken())->update(['securityQuestion' => $req->securityQuestion, 'securityAnswer' => strtolower($req->securityAnswer)]);
 
                         $data = $resp;
                         $message = "Saved";
                         $status = 200;
+
+                        Log::notice("Hello ".strtoupper($thisuser->name).", You have successfully set up your security question and answer.");
 
                         $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully set up your security question and answer.");
 
@@ -562,13 +630,15 @@ class UserController extends Controller
                         $this->message = '<p>'.$message.'</p>';
 
 
-
                         $this->sendEmail($this->email, "Fund remittance");
                         $this->sendMessage($recMsg, $recPhone);
 
                         $data = $resp;
                         $message = "Saved";
                         $status = 200;
+
+                        Log::info("Hello ".strtoupper($thisuser->name).", You have successfully turned ".$req->auto_deposit." your Auto Deposit Status.");
+
 
                         $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully turned ".$req->auto_deposit." your Auto Deposit Status.");
 
@@ -605,7 +675,7 @@ class UserController extends Controller
                         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
                         // Check if Security Answer is correct
-                        if($req->securityAnswer != $thisuser->securityAnswer){
+                        if(strtolower($req->securityAnswer) != $thisuser->securityAnswer){
                             // You have provided a wrong answer to your security question
 
                             $error = "You have provided a wrong answer to your security question";
@@ -674,7 +744,7 @@ class UserController extends Controller
                         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
                         // Check if Security Answer is correct
-                        if($req->securityAnswer != $thisuser->securityAnswer){
+                        if(strtolower($req->securityAnswer) != $thisuser->securityAnswer){
                             // You have provided a wrong answer to your security question
 
                             $error = "You have provided a wrong answer to your security question";

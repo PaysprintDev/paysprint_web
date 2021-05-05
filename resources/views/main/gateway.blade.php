@@ -83,27 +83,27 @@ input[type="radio"] {
 
                                 <center>
                                     <div class="row">
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md-4 mb-3">
                                         <strong>
-                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('Add card', 'card=Credit Card') }}"><img src="https://img.icons8.com/fluent/53/000000/credit-card-cash-withdrawal.png" title="Add Credit Card"/> <i class="fas fa-plus-square" title="Add Credit Card" style="font-size: 16px; color: black"></i><br><br>
-                                            Add Credit Card</a>
+                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('Add card', 'card=Credit Card') }}"><img src="https://img.icons8.com/fluent/53/000000/credit-card-cash-withdrawal.png" title="Credit Card"/> <i class="fas fa-plus-square" title="Credit Card" style="font-size: 16px; color: black"></i><br><br>
+                                            Credit Card</a>
                                         </strong>
                                     </div>
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md-4 mb-3">
                                         <strong>
-                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('Add card', 'card=Debit Card') }}"><img src="https://img.icons8.com/color/53/000000/bank-card-front-side.png" title="Add Debit Card"/> <i class="fas fa-plus-square" title="Add Debit Card" style="font-size: 16px; color: black"></i><br><br>
-                                            Add Debit Card</a>
+                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important; font-size: 15px;" href="{{ route('Add card', 'card=Debit Card') }}"><img src="https://img.icons8.com/color/53/000000/bank-card-front-side.png" title="Debit VISA/Mastercard"/> <i class="fas fa-plus-square" title="Debit VISA/Mastercard" style="font-size: 16px; color: black"></i><br><br>
+                                            Debit VISA/Mastercard</a>
                                         </strong>
                                     </div>
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md-4 mb-3">
                                         <strong>
-                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('Add card', 'card=Prepaid Card') }}"> <img src="https://img.icons8.com/cotton/53/000000/bank-cards--v2.png" title="Add Prepaid Card"/> <i class="fas fa-plus-square" title="Add Prepaid Card" style="font-size: 16px; color: black"></i><br><br>Add Prepaid Card</a>
+                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('Add card', 'card=Prepaid Card') }}"> <img src="https://img.icons8.com/cotton/53/000000/bank-cards--v2.png" title="Prepaid Card"/> <i class="fas fa-plus-square" title="Prepaid Card" style="font-size: 16px; color: black"></i><br><br>Prepaid Card</a>
                                         </strong>
                                     </div>
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md-3 mb-3 disp-0">
                                         <strong>
 
-                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('Add bank detail') }}"> <img src="https://img.icons8.com/dusk/53/000000/merchant-account.png" title="Add Bank Account"/> <i class="fas fa-plus-square" title="Add Bank Account" style="font-size: 16px; color: black"></i><br><br>Add Bank Account</a>
+                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('Add bank detail') }}"> <img src="https://img.icons8.com/dusk/53/000000/merchant-account.png" title="Bank Account"/> <i class="fas fa-plus-square" title="Bank Account" style="font-size: 16px; color: black"></i><br><br>Bank Account</a>
                                         </strong>
                                     </div>
                                 </div>

@@ -61,7 +61,7 @@ return [
 
         'successlogs' => [
             'driver' => 'slack',
-            'url' => 'https://hooks.slack.com/services/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',
+            'url' => 'https://hooks.slack.com/services/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',
             'username' => 'Success Log',
             'emoji' => ':boom:',
             'level' => 'info',

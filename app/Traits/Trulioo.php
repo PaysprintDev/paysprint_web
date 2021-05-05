@@ -131,6 +131,11 @@ trait Trulioo{
         $response = curl_exec($curl);
 
         curl_close($curl);
+
+        // Send Response back to User
+        
+
+
         return json_decode($response);
 
     }

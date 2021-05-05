@@ -156,7 +156,7 @@
           <ul class="treeview-menu">
             <li title="Card Issuer"><a href="{{ route('card issuer') }}"><i class="fa fa-circle-o text-red"></i> Card Issuer</a></li>
             <li title="Added Cards"><a href="{{ route('all added cards') }}"><i class="fa fa-circle-o text-red"></i> Added Cards</a></li>
-            <li title="Red Flagged"><a href="{{ route('red flagged account') }}"><i class="fa fa-circle-o text-red"></i> Red Flagged</a></li>
+            
 
           </ul>
         </li>
@@ -192,6 +192,19 @@
             <li title="Set up"><a href="{{ route('fee structure') }}"><i class="fa fa-circle-o text-red"></i> Set up</a></li>
             <li title="By Country"><a href="{{ route('fee structure by country') }}"><i class="fa fa-circle-o text-red"></i> By Country</a></li>
 
+          </ul>
+        </li>
+
+        <li class="treeview">
+          <a href="#">
+            <i class="fas fa-lock"></i>
+            <span>Security</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li title="Red Flagged"><a href="{{ route('red flagged account') }}"><i class="fa fa-circle-o text-red"></i> Red Flagged</a></li>
           </ul>
         </li>
 

@@ -219,7 +219,7 @@ class InvoiceController extends Controller
 
                                     // Insert Record
                                     $query = [
-                                        'transaction_date' => $req->single_transaction_date, 'invoice_no' => $req->single_invoiceno, 'payee_ref_no' => $req->single_transaction_ref, 'name' => $req->single_firstname.' '.$req->single_lastname, 'transaction_ref' => $req->single_transaction_ref, 'description' => $req->single_description, 'amount' => $req->single_amount, 'payment_due_date' => $req->single_payment_due_date, 'payee_email' => $req->single_email, 'address' => $address, 'customer_id' => $thisuser->ref_code, 'service' => $req->single_service, 'installpay' => $req->single_installpay, 'installlimit' => $req->single_installlimit, 'status' => 'invoice', 'uploaded_by' => $thisuser->ref_code, 'merchantName' => $thisuser->businessname, 'recurring' => $req->single_recurring_service, 'reminder' => $req->single_reminder_service, 'telephone' => $req->single_telephone, 'tax' => $req->single_tax, 'tax_amount' => $req->single_tax_amount, 'total_amount' => $req->single_total_amount
+                                        'transaction_date' => $req->single_transaction_date, 'invoice_no' => $req->single_invoiceno, 'payee_ref_no' => $req->single_transaction_ref, 'name' => $req->single_firstname.' '.$req->single_lastname, 'transaction_ref' => $req->single_transaction_ref, 'description' => $req->single_description, 'amount' => $req->single_amount, 'payment_due_date' => $req->single_payment_due_date, 'payee_email' => $req->single_email, 'address' => $address, 'customer_id' => $thisuser->ref_code, 'service' => $req->single_service, 'installpay' => $req->single_installpay, 'installlimit' => $req->single_installlimit, 'status' => 'invoice', 'uploaded_by' => $thisuser->ref_code, 'merchantName' => $thisuser->businessname, 'recurring' => $req->single_recurring_service, 'reminder' => $req->single_reminder_service, 'telephone' => $req->single_telephone, 'tax' => $req->single_tax, 'tax_amount' => $req->single_tax_amount, 'total_amount' => $req->single_total_amount, 'remaining_balance' => $req->single_total_amount
                                     ];
 
                                     $insertData = ImportExcel::insert($query);
@@ -455,7 +455,9 @@ class InvoiceController extends Controller
                                                     'reminder' => $req->reminder_service,
                                                     'tax' => $req->single_tax,
                                                     'tax_amount' => $taxAmount,
-                                                    'total_amount' => $totalAmount,
+                                                    'total_amount' => $totalAmount, 
+                                                    'remaining_balance' => $req->single_total_amount
+                                                    
                                                 );
 
                                                     // Insert Statement

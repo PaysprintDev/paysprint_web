@@ -55,27 +55,36 @@
           <div class="small-box">
               <div class="col-md-4">
                   <strong>
-                    <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('merchant credit card', $data['getUserDetail']->id) }}"><img src="https://img.icons8.com/fluent/53/000000/credit-card-cash-withdrawal.png" title="Add Credit Card"/> <i class="fas fa-plus-square" title="Add Credit Card" style="font-size: 16px; color: black"></i>
+                    <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('merchant credit card', $data['getUserDetail']->id) }}"><img src="https://img.icons8.com/fluent/53/000000/credit-card-cash-withdrawal.png" title="Credit Card"/> <i class="fas fa-plus-square" title="Credit Card" style="font-size: 16px; color: black"></i>
                         <br>
-                        Add Credit Card
+                        Credit Card
+                    </a>
+                  </strong>
+              </div>
+
+              <div class="col-md-4">
+                  <strong>
+                    <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('merchant debit card', $data['getUserDetail']->id) }}"><img src="https://img.icons8.com/color/53/000000/bank-card-front-side.png" title="Credit Card"/> <i class="fas fa-plus-square" title="Credit Card" style="font-size: 16px; color: black"></i>
+                        <br>
+                        Debit VISA/Mastercard
                     </a>
                   </strong>
               </div>
 
               <div class="col-md-4">
                 <strong>
-                    <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('merchant prepaid card', $data['getUserDetail']->id) }}"> <img src="https://img.icons8.com/cotton/53/000000/bank-cards--v2.png" title="Add Prepaid Card"/> <i class="fas fa-plus-square" title="Add Prepaid Card" style="font-size: 16px; color: black"></i>
+                    <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('merchant prepaid card', $data['getUserDetail']->id) }}"> <img src="https://img.icons8.com/cotton/53/000000/bank-cards--v2.png" title="Prepaid Card"/> <i class="fas fa-plus-square" title="Prepaid Card" style="font-size: 16px; color: black"></i>
                         <br>
-                        Add Prepaid Card
+                        Prepaid Card
                     </a>
                 </strong>
               </div>
 
-              <div class="col-md-4">
+              <div class="col-md-4 disp-0">
                 <strong>
-                    <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('merchant bank account', $data['getUserDetail']->id) }}"> <img src="https://img.icons8.com/dusk/53/000000/merchant-account.png" title="Add Bank Account"/> <i class="fas fa-plus-square" title="Add Bank Account" style="font-size: 16px; color: black"></i>
+                    <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('merchant bank account', $data['getUserDetail']->id) }}"> <img src="https://img.icons8.com/dusk/53/000000/merchant-account.png" title="Bank Account"/> <i class="fas fa-plus-square" title="Bank Account" style="font-size: 16px; color: black"></i>
                         <br>
-                        Add Bank Account
+                        Bank Account
                     </a>
                 </strong>
               

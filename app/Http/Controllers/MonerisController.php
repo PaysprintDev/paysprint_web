@@ -389,9 +389,9 @@ else{
 
                             if($req->payInstallment == "Yes"){
 
-                                if($getInv[0]->total_amount != null){
+                                if($getInv[0]->remaining_balance > 0 || $getInv[0]->remaining_balance != null){
                                     // Get Amount
-                                    $prevAmount = $getInv[0]->total_amount;
+                                    $prevAmount = $getInv[0]->remaining_balance;
                                 }
                                 else{
                                     $prevAmount = $getInv[0]->amount;
@@ -415,9 +415,9 @@ else{
                             }
                             else{
 
-                                if($getInv[0]->total_amount != 0){
+                                if($getInv[0]->remaining_balance > 0 || $getInv[0]->remaining_balance != null){
                                     // Get Amount
-                                    $prevAmount = $getInv[0]->total_amount;
+                                    $prevAmount = $getInv[0]->remaining_balance;
                                 }
                                 else{
                                     $prevAmount = $getInv[0]->amount;
@@ -476,14 +476,15 @@ else{
                                     // $this->email = "bambo@vimfile.com";
                                     $this->subject = "Your Invoice # [".$req->invoice_no."] of ".$req->currencyCode.' '.number_format($req->amount, 2).' from '.$thismerchant->businessname.' '.number_format($req->amount, 2)." is Paid";
 
-                                    $this->message = '<p>Hi '.$thisuser->name.' You have successfully paid invoice of <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong> to '.$thismerchant->name.' for '.$purpose.'. Your remaining balance is to pay <strong>'.$req->currencyCode.' '.number_format($newAmount, 2).'</strong>. You now have <strong>'.$req->currencyCode.' '.number_format($walletBalance, 2).'</strong> balance in PaySprint Wallet account</p>';
+                                    $this->message = '<p>Hi '.$thisuser->name.' You have successfully paid invoice of <strong>'.$req->currencyCode.' '.number_format($req->amount, 2).'</strong> to '.$thismerchant->name.' for '.$purpose.'. Your balance is <strong>'.$req->currencyCode.' '.number_format($newAmount, 2).'</strong>. You now have <strong>'.$req->currencyCode.' '.number_format($walletBalance, 2).'</strong> balance in PaySprint Wallet account</p>';
 
                                     $this->sendEmail($this->email, "Fund remittance");
 
-                                    $sendMsg = 'Hi '.$thisuser->name.' You have successfully paid invoice of '.$req->currencyCode.' '.number_format($req->amount, 2).' to '.$thismerchant->name.' for '.$purpose.'. Your remaining balance is to pay '.$req->currencyCode.' '.number_format($newAmount, 2).'. You now have '.$req->currencyCode.' '.number_format($walletBalance, 2).' balance in PaySprint Wallet account';
+                                    $sendMsg = 'Hi '.$thisuser->name.' You have successfully paid invoice of '.$req->currencyCode.' '.number_format($req->amount, 2).' to '.$thismerchant->name.' for '.$purpose.'. Your balance is '.$req->currencyCode.' '.number_format($newAmount, 2).'. You now have '.$req->currencyCode.' '.number_format($walletBalance, 2).' balance in PaySprint Wallet account';
                                     $sendPhone = "+".$thisuser->code.$thisuser->telephone;
 
                                     $this->sendMessage($sendMsg, $sendPhone);
+
 
                                     
                                     /*---------------------------------------------------------------------------------------------------------------------*/ 
@@ -510,11 +511,11 @@ else{
                                     // $this->email = "bambo@vimfile.com";
                                     $this->subject = $thisuser->name." has paid Invoice: [".$req->invoice_no."]";
 
-                                    $this->message = '<p>You have received <strong>'.$req->currencyCode.''.number_format($req->amount, 2).'</strong> for <b>INVOICE: '.$req->invoice_no.'</b> made by <b>'.$thisuser->name.'</b>, remaining balance to pay is '.$req->currencyCode.' '.number_format($newAmount, 2).'.</p> <p>You now have <strong>'.$req->currencyCode.''.number_format($merchantwalletBalance, 2).'</strong> balance in your wallet account with PaySprint</p>';
+                                    $this->message = '<p>You have received <strong>'.$req->currencyCode.''.number_format($req->amount, 2).'</strong> for <b>INVOICE: '.$req->invoice_no.'</b> made by <b>'.$thisuser->name.'</b>, balance is '.$req->currencyCode.' '.number_format($newAmount, 2).'.</p> <p>You now have <strong>'.$req->currencyCode.''.number_format($merchantwalletBalance, 2).'</strong> balance in your wallet account with PaySprint</p>';
 
                                     $this->sendEmail($this->email, "Fund remittance");
 
-                                    $recMesg = 'You have received '.$req->currencyCode.' '.number_format($req->amount, 2).' for INVOICE: '.$req->invoice_no.' made by '.$thisuser->name.', remaining balance to pay is '.$req->currencyCode.' '.number_format($newAmount, 2).'. You now have '.$req->currencyCode.' '.number_format($merchantwalletBalance, 2).' balance in your wallet account with PaySprint';
+                                    $recMesg = 'You have received '.$req->currencyCode.' '.number_format($req->amount, 2).' for INVOICE: '.$req->invoice_no.' made by '.$thisuser->name.', balance is '.$req->currencyCode.' '.number_format($newAmount, 2).'. You now have '.$req->currencyCode.' '.number_format($merchantwalletBalance, 2).' balance in your wallet account with PaySprint';
                                     $recPhone = "+".$thismerchant->code.$thismerchant->telephone;
 
                                     $this->sendMessage($recMesg, $recPhone);
@@ -929,6 +930,8 @@ else{
 
                                             $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
+                                            
+
                                             }
                                             else{
                                                 $data = [];
@@ -1007,13 +1010,13 @@ else{
                                                         $this->email = $thisuser->email;
                                                         $this->subject = $req->currencyCode.' '.number_format($req->amount, 2)." has been Withdrawn from your Wallet with PaySprint";
 
-                                                        $this->message = '<p>The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Card Name: <strong>'.$cardDetails->card_name.'</strong> and Number: <strong>'.wordwrap($cardNo, 4, '-', true).'</strong> is successful. This will take about 10 working days before it reflect in your bank account or credit card. </p><p>You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your account</p>';
-
+                                                        $this->message = '<p>The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Card Name: <strong>'.$cardDetails->card_name.'</strong> and Number: <strong>'.wordwrap($cardNo, 4, '-', true).'</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your wallet.</p>';
 
                                                         
 
-                                                        $sendMsg = 'The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your '.$cardDetails->card_name.' and Number: '.wordwrap($cardNo, 4, '-', true).' is successful. This will take about 10 working days before it reflect in your bank account or credit card. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+                                                        $sendMsg = 'The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your '.$cardDetails->card_name.' and Number: '.wordwrap($cardNo, 4, '-', true).' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your wallet.';
                                                         $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+
 
                                                         $this->createNotification($thisuser->ref_code, $sendMsg);
 
@@ -1263,9 +1266,9 @@ else{
                                                 $this->email = $thisuser->email;
                                                 $this->subject = $req->currencyCode.' '.number_format($req->amount, 2)." has been Withdrawn from your Wallet with PaySprint";
 
-                                                $this->message = '<p>The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Card Name: <strong>'.$cardDetails->card_name.'</strong> and Number: <strong>'.wordwrap($cardNo, 4, '-', true).'</strong> is successful. This will take about 10 working days before it reflect in your bank account or credit card. </p><p>You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your account</p>';
+                                                $this->message = '<p>The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Card Name: <strong>'.$cardDetails->card_name.'</strong> and Number: <strong>'.wordwrap($cardNo, 4, '-', true).'</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your wallet.</p>';
 
-                                                $sendMsg = 'The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your '.$cardDetails->card_name.' and Number: '.wordwrap($cardNo, 4, '-', true).' is successful. This will take about 10 working days before it reflect in your bank account or credit card. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+                                                $sendMsg = 'The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your '.$cardDetails->card_name.' and Number: '.wordwrap($cardNo, 4, '-', true).' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your wallet.';
                                                 $sendPhone = "+".$thisuser->code.$thisuser->telephone;
 
 

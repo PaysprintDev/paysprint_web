@@ -117,8 +117,8 @@
         <span class="glyphicon glyphicon-briefcase form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <label for="address">Street Number & Name</label>
-        <input type="text" name="address" id="address" class="form-control" placeholder="Street Number & Name*">
+        <label for="business_address">Business Street Number & Name</label>
+        <input type="text" name="business_address" id="business_address" class="form-control" placeholder="Business Street Number & Name*">
         <span class="glyphicon glyphicon-screenshot form-control-feedback"></span>
       </div>
 
@@ -126,14 +126,14 @@
         <div class="row">
 
           <div class="col-xs-6">
-              <label for="city">City</label>
-                <input type="text" name="city" id="city" class="form-control" placeholder="City*">
+              <label for="business_city">City</label>
+                <input type="text" name="business_city" id="business_city" class="form-control" placeholder="City*">
             </div>
             <!-- /.col -->
 
             <div class="col-xs-6">
-              <label for="zip_code">Postal/Zip Code</label>
-                <input type="text" name="zip_code" id="zip_code" class="form-control" placeholder="Postal/Zip Code">
+              <label for="business_zip_code">Postal/Zip Code</label>
+                <input type="text" name="business_zip_code" id="business_zip_code" class="form-control" placeholder="Postal/Zip Code">
             </div>
             <!-- /.col -->
 
@@ -143,14 +143,14 @@
 
 
       <div class="form-group has-feedback">
-        <label for="country">Country</label>
-        <select name="country" id="country" class="form-control" required></select>
+        <label for="business_country">Country</label>
+        <select name="business_country" id="business_country" class="form-control" required></select>
       </div>
 
 
       <div class="form-group has-feedback">
-        <label for="state">Province/State</label>
-        <select name="state" id="state" class="form-control"></select>
+        <label for="business_state">Province/State</label>
+        <select name="business_state" id="business_state" class="form-control"></select>
       </div>
 
       <div class="form-group has-feedback">
@@ -374,6 +374,43 @@
         <input type="text" name="telephone" id="telephone" class="form-control" placeholder="Telephone*">
       </div>
 
+            <div class="form-group has-feedback">
+        <label for="address">Street Number & Name</label>
+        <input type="text" name="address" id="address" class="form-control" placeholder="Street Number & Name*">
+        <span class="glyphicon glyphicon-screenshot form-control-feedback"></span>
+      </div>
+
+        <div class="form-group has-feedback">
+        <div class="row">
+
+          <div class="col-xs-6">
+              <label for="city">City</label>
+                <input type="text" name="city" id="city" class="form-control" placeholder="City*">
+            </div>
+            <!-- /.col -->
+
+            <div class="col-xs-6">
+              <label for="zip_code">Postal/Zip Code</label>
+                <input type="text" name="zip_code" id="zip_code" class="form-control" placeholder="Postal/Zip Code">
+            </div>
+            <!-- /.col -->
+
+            
+        </div>
+      </div>
+
+
+      <div class="form-group has-feedback">
+        <label for="country">Country</label>
+        <select name="country" id="country" class="form-control" required></select>
+      </div>
+
+
+      <div class="form-group has-feedback">
+        <label for="state">Province/State</label>
+        <select name="state" id="state" class="form-control"></select>
+      </div>
+
 
           <div class="row">
         <div class="col-sm-4">
@@ -570,6 +607,7 @@
 
 
 <script language="javascript">
+    populateCountries("business_country", "business_state");
     populateCountries("country", "state");
 </script>
 
@@ -605,8 +643,24 @@ function signUp(){
     swal('Oops!', 'Business name field can\'t be empty', 'warning');
     return false;
   }
+  else if($('#business_address').val() == ""){
+    swal('Oops!', 'Business Street Number and Name field can\'t be empty', 'warning');
+    return false;
+  }
+  else if($('#business_country').val() == ""){
+    swal('Oops!', 'Business Country field can\'t be empty', 'warning');
+    return false;
+  }
+  else if($('#business_state').val() == ""){
+    swal('Oops!', 'Business Province/State field can\'t be empty', 'warning');
+    return false;
+  }
+  else if($('#business_city').val() == ""){
+    swal('Oops!', 'Business City field can\'t be empty', 'warning');
+    return false;
+  }
   else if($('#address').val() == ""){
-    swal('Oops!', 'Address field can\'t be empty', 'warning');
+    swal('Oops!', 'Contact Address field can\'t be empty', 'warning');
     return false;
   }
   else if($('#corporate_type').val() == ""){
@@ -702,6 +756,7 @@ function signUp(){
     user_id: $('#user_id').val(),
     ref_code: $('#ref_code').val(),
     business_name: $('#business_name').val(),
+    business_address: $('#business_address').val(),
     address: $('#address').val(),
     corporate_type: $('#corporate_type').val(),
     type_of_service: $('#type_of_service').val(),
@@ -719,7 +774,11 @@ function signUp(){
     country: $('#country').val(),
     state: $('#state').val(),
     city: $('#city').val(),
+    business_country: $('#business_country').val(),
+    business_state: $('#business_state').val(),
+    business_city: $('#business_city').val(),
     password: $('#password').val(),
+    business_zip_code: $('#business_zip_code').val(),
     zip_code: $('#zip_code').val(),
   };
 
@@ -737,7 +796,7 @@ function signUp(){
             success: function(result){
                 if(result.message == 'success'){
                     swal("Saved!", result.res, result.message);
-                    setTimeout(function(){ location.href = result.link; }, 2000);
+                    setTimeout(function(){ location.href = result.link; }, 3000);
                 }
                 else{
                     $(".spinner").addClass('disp-0');

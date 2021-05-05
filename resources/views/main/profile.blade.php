@@ -248,14 +248,24 @@
       <div class="panel-body">
 
         <h5 >
-            <strong>Security Question: <span style="color: red">{{ Auth::user()->securityQuestion }}?</span></strong>
+            <strong>Security Question: <span style="color: red">{{ Auth::user()->securityQuestion }}</span></strong>
         </h5>
         <hr>
         <form action="#" method="post" id="formElemsecurityquestans">
 
             <div class="form-group">
                 <label for="securityQuestion">Question</label>
-                <input type="text" name="securityQuestion" id="securityQuestion" class="form-control" placeholder="Question">
+                <select name="securityQuestion" id="securityQuestion" class="form-control">
+                    <option value="">Select Question</option>
+                    <option value="What was your first pet's name?" {{ (Auth::user()->securityQuestion == "What was your first pet's name?") ? "selected" : "" }}>What was your first pet's name?</option>
+                    <option value="What's the name of the city where you were born?" {{ (Auth::user()->securityQuestion == "What's the name of the city where you were born?") ? "selected" : "" }}>What's the name of the city where you were born?</option>
+                    <option value="What was your childhood nickname?" {{ (Auth::user()->securityQuestion == "What was your childhood nickname?") ? "selected" : "" }}>What was your childhood nickname?</option>
+                    <option value="What's the name of the city where your parents met?" {{ (Auth::user()->securityQuestion == "What's the name of the city where your parents met?") ? "selected" : "" }}>What's the name of the city where your parents met?</option>
+                    <option value="What's the first name of your oldest cousin?" {{ (Auth::user()->securityQuestion == "What's the first name of your oldest cousin?") ? "selected" : "" }}>What's the first name of your oldest cousin?</option>
+                    <option value="What's the name of the first school you attended?" {{ (Auth::user()->securityQuestion == "What's the name of the first school you attended?") ? "selected" : "" }}>What's the name of the first school you attended?</option>
+                </select>
+
+                {{--  <input type="text" name="securityQuestion" id="securityQuestion" class="form-control" placeholder="Question">  --}}
             </div>
             <div class="form-group">
                 <label for="securityAnswer">Answer</label>

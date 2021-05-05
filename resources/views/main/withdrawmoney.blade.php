@@ -110,8 +110,9 @@ input[type="radio"] {
                                             <select name="card_type" id="card_type" class="form-control" required>
                                                 <option value="">Select option</option>
                                                 <option value="Credit Card">Credit Card</option>
+                                                <option value="Debit Card">Debit Visa/Mastercard</option>
                                                 <option value="Prepaid Card">Prepaid Card</option>
-                                                <option value="Bank Account">Bank Account</option>
+                                                {{--  <option value="Bank Account">Bank Account</option>  --}}
                                             </select>
                                             
                                         </div>

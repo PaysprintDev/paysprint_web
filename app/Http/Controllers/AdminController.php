@@ -1565,6 +1565,64 @@ class AdminController extends Controller
     }
 
 
+    public function userMoreDetail(Request $req, $id){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $getthisuser = User::where('id', $id)->first();
+
+
+            return view('admin.usermoredetail')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'getthisuser' => $getthisuser]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
 
     public function walletBalance(Request $req){
 
@@ -2198,6 +2256,67 @@ class AdminController extends Controller
     }
 
 
+    public function merchantDebitCard(Request $req, $id){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'getmydebitCard' => $this->getMyUserDebitCard($id),
+                'getUserCard' => $this->getUserCard($id),
+            );
+
+
+            return view('admin.card.getdebitcard')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
     public function merchantPrepaidCard(Request $req, $id){
 
         if($req->session()->has('username') == true){
@@ -2437,6 +2556,67 @@ class AdminController extends Controller
     }
 
 
+    public function editMerchantDebitCard(Request $req, $id){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'getthisCard' => $this->getthisCard($id),
+                'cardIssuer' => $this->getallCardIssuer(),
+            );
+
+
+            return view('admin.card.editdebitcard')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
     public function editMerchantPrepaidCard(Request $req, $id){
 
         if($req->session()->has('username') == true){
@@ -2525,6 +2705,13 @@ class AdminController extends Controller
     public function getMyUserCard($id){
 
         $data = AddCard::where('user_id', $id)->where('card_provider', 'Credit Card')->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+
+    }
+    public function getMyUserDebitCard($id){
+
+        $data = AddCard::where('user_id', $id)->where('card_provider', 'Debit Card')->orderBy('created_at', 'DESC')->get();
 
         return $data;
 
@@ -3566,9 +3753,6 @@ class AdminController extends Controller
         if(count($adminCheck) > 0){
             // COnfirm Password
             if(Hash::check($req->password, $adminCheck[0]['password'])){
-                // Set session
-
-                
 
 
                 // Check if API Key EXIST
@@ -3590,9 +3774,26 @@ class AdminController extends Controller
 
                 $getMerchant = User::where('email', $adminCheck[0]['email'])->first();
 
-                $req->session()->put(['user_id' => $adminCheck[0]['user_id'], 'firstname' => $adminCheck[0]['firstname'], 'lastname' => $adminCheck[0]['lastname'], 'username' => $adminCheck[0]['username'], 'role' => 'Merchant', 'email' => $adminCheck[0]['email'], 'api_token' => $api_token, 'myID' => $getMerchant->id, 'country' => $getMerchant->country, 'businessname' => $getMerchant->businessname]);
 
-                $resData = ['res' => 'Logging in...', 'message' => 'success', 'link' => 'Admin'];
+                // Check if account is flagged or pass security level
+
+                if($getMerchant->flagged == 1){
+
+                    $resData = ['res' => 'Hello '.$adminCheck[0]['firstname'].', Your account is restricted from login because you are flagged.', 'message' => 'error'];
+
+                }
+                // elseif($getMerchant->accountLevel == 0){
+                    
+                //     $resData = ['res' => 'Hello '.$adminCheck[0]['firstname'].', Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.', 'message' => 'error'];
+                // }
+                else{
+                    // Set session
+
+                    $req->session()->put(['user_id' => $adminCheck[0]['user_id'], 'firstname' => $adminCheck[0]['firstname'], 'lastname' => $adminCheck[0]['lastname'], 'username' => $adminCheck[0]['username'], 'role' => 'Merchant', 'email' => $adminCheck[0]['email'], 'api_token' => $api_token, 'myID' => $getMerchant->id, 'country' => $getMerchant->country, 'businessname' => $getMerchant->businessname]);
+
+                    $resData = ['res' => 'Logging in...', 'message' => 'success', 'link' => 'Admin'];
+                }
+                
             }
             else{
                  $resData = ['res' => 'Incorrect Password!', 'message' => 'info'];
@@ -3683,7 +3884,7 @@ class AdminController extends Controller
                         }
                         
                         // Insert
-                        $insClient = ClientInfo::insert(['user_id' => $req->ref_code, 'business_name' => $req->business_name, 'address' => $req->address, 'corporate_type' => $req->corporate_type, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'email' => $getanonuser->email, 'country' => $getanonuser->country, 'state' => $req->state, 'city' => $req->city, 'zip_code' => $req->zip_code, 'industry' => $req->industry, 'telephone' => $getanonuser->telephone, 'website' => $req->website, 'api_secrete_key' => md5(uniqid($req->username, true)).date('dmY').time(), 'type_of_service' => $merchantservice]);
+                        $insClient = ClientInfo::insert(['user_id' => $req->ref_code, 'business_name' => $req->business_name, 'address' => $req->business_address, 'corporate_type' => $req->corporate_type, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'email' => $getanonuser->email, 'country' => $req->business_country, 'state' => $req->business_state, 'city' => $req->business_city, 'zip_code' => $req->business_zip_code, 'industry' => $req->industry, 'telephone' => $getanonuser->telephone, 'website' => $req->website, 'api_secrete_key' => md5(uniqid($req->username, true)).date('dmY').time(), 'type_of_service' => $merchantservice]);
 
                         $insAdmin = Admin::insert(['user_id' => $req->ref_code, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $req->username, 'password' => Hash::make($req->password), 'role' => 'Merchant', 'email' => $getanonuser->email]);
 
@@ -3718,7 +3919,63 @@ class AdminController extends Controller
 
                         Log::info("New merchant registration via web by: ".$req->firstname.' '.$req->lastname." from ".$req->state.", ".$req->country);
 
-                        $resData = ['res' => 'Logging in...', 'message' => 'success', 'link' => 'Admin'];
+
+                        $url = 'https://api.globaldatacompany.com/verifications/v1/verify';
+
+                        $minimuAge = date('Y') - $req->yearOfBirth;
+
+                        $info = $this->identificationAPI($url, $req->firstname, $req->lastname, $req->dayOfBirth, $req->monthOfBirth, $req->yearOfBirth, $minimuAge, $req->address, $req->city, $req->country, $req->zip_code, $getanonuser->telephone, $getanonuser->email, $mycode[0]->alpha2Code);
+
+
+                                if(isset($info->TransactionID) == true){
+
+                                    $result = $this->transStatus($info->TransactionID);
+
+                                    $res = $this->getTransRec($result->TransactionRecordId);
+
+
+                                    if($res->Record->RecordStatus == "nomatch"){
+                                    
+                                        $message = "error";
+                                        $title = "Oops!";
+                                        $link = "contact";
+                                        
+                                        $resInfo = strtoupper($res->Record->RecordStatus).", Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.";
+
+                                        
+                                    }
+                                    else{
+                                        $message = "success";
+                                        $title = "Great";
+                                        $link = "Admin";
+                                        $resInfo = strtoupper($res->Record->RecordStatus).", Congratulations!!!. Your account has been approved. Please complete the Quick Set up to enjoy PaySprint.";
+
+                                        // Udpate User Info
+                                        User::where('id', $getMerchant->id)->update(['accountLevel' => 1]);
+                                    }
+
+                                }
+                                else{
+                                    $message = "error";
+                                    $title = "Oops!";
+                                    $link = "contact";
+                                    $resInfo = "Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.";
+
+                                    // $resp = $info->Message;
+                                }
+
+                                Log::info("New merchant registration via web by: ".$req->firstname.' '.$req->lastname." from ".$req->state.", ".$req->country." STATUS: ".$resInfo);
+
+
+                                 // This is the response for now until trulioo activates us to LIVE..
+
+                                $message = "success";
+                                    $title = "Great";
+                                    $link = "Admin";
+
+
+
+                            $resData = ['res' => $resInfo, 'message' => $message, 'link' => $link];
                         }
                         else{
                             $resData = ['res' => 'Something went wrong', 'message' => 'error'];
@@ -3755,7 +4012,7 @@ class AdminController extends Controller
                         }
                         
                         // Insert
-                        $insClient = ClientInfo::insert(['user_id' => $newRefcode, 'business_name' => $req->business_name, 'address' => $req->address, 'corporate_type' => $req->corporate_type, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'email' => $req->email, 'country' => $req->country, 'state' => $req->state, 'city' => $req->city, 'zip_code' => $req->zip_code, 'industry' => $req->industry, 'telephone' => $req->telephone, 'website' => $req->website, 'api_secrete_key' => md5(uniqid($req->username, true)).date('dmY').time(), 'type_of_service' => $merchantservice]);
+                        $insClient = ClientInfo::insert(['user_id' => $newRefcode, 'business_name' => $req->business_name, 'address' => $req->business_address, 'corporate_type' => $req->corporate_type, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'email' => $req->email, 'country' => $req->business_country, 'state' => $req->business_state, 'city' => $req->business_city, 'zip_code' => $req->business_zip_code, 'industry' => $req->industry, 'telephone' => $req->telephone, 'website' => $req->website, 'api_secrete_key' => md5(uniqid($req->username, true)).date('dmY').time(), 'type_of_service' => $merchantservice]);
 
                         $insAdmin = Admin::insert(['user_id' => $newRefcode, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $req->username, 'password' => Hash::make($req->password), 'role' => 'Merchant', 'email' => $req->email]);
 
@@ -3789,7 +4046,56 @@ class AdminController extends Controller
                             Log::info("New merchant registration via web by: ".$req->firstname.' '.$req->lastname." from ".$req->state.", ".$req->country);
 
 
-                            $resData = ['res' => 'Logging in...', 'message' => 'success', 'link' => 'Admin'];
+
+                            $url = 'https://api.globaldatacompany.com/verifications/v1/verify';
+
+                        $minimuAge = date('Y') - $req->yearOfBirth;
+
+                        $info = $this->identificationAPI($url, $req->firstname, $req->lastname, $req->dayOfBirth, $req->monthOfBirth, $req->yearOfBirth, $minimuAge, $req->address, $req->city, $req->country, $req->zip_code, $req->telephone, $req->email, $mycode[0]->alpha2Code);
+
+
+                                if(isset($info->TransactionID) == true){
+
+                                    $result = $this->transStatus($info->TransactionID);
+
+                                    $res = $this->getTransRec($result->TransactionRecordId);
+
+
+                                    if($res->Record->RecordStatus == "nomatch"){
+                                    
+                                        $message = "error";
+                                        $title = "Oops!";
+                                        $link = "contact";
+                                        
+                                        $resInfo = strtoupper($res->Record->RecordStatus).", Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.";
+                                        
+                                    }
+                                    else{
+                                        $message = "success";
+                                        $title = "Great";
+                                        $link = "Admin";
+                                        $resInfo = strtoupper($res->Record->RecordStatus).", Congratulations!!!. Your account has been approved. Please complete the Quick Set up to enjoy PaySprint.";
+
+                                        // Udpate User Info
+                                        User::where('id', $getMerchant->id)->update(['accountLevel' => 1]);
+                                    }
+
+                                }
+                                else{
+                                    $message = "error";
+                                    $title = "Oops!";
+                                    $link = "contact";
+                                    $resInfo = "Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.";
+
+                                    // $resp = $info->Message;
+                                }
+
+
+                                Log::info("New merchant registration via web by: ".$req->firstname.' '.$req->lastname." from ".$req->state.", ".$req->country." STATUS: ".$resInfo);
+
+
+
+                            $resData = ['res' => $resInfo, 'message' => $message, 'link' => $link];
                         }
                         else{
                             $resData = ['res' => 'Something went wrong', 'message' => 'error'];
@@ -4531,12 +4837,12 @@ class AdminController extends Controller
         $data = $user->where('id', $req->id)->first();
 
         if($data->approval == 1){
-            $user->where('id', $req->id)->update(['approval' => 0]);
+            $user->where('id', $req->id)->update(['approval' => 0, 'accountLevel' => 0]);
 
             $resData = ['res' => 'Account information disapproved', 'message' => 'success', 'title' => 'Great'];
         }
         else{
-            $user->where('id', $req->id)->update(['approval' => 1]);
+            $user->where('id', $req->id)->update(['approval' => 1, 'accountLevel' => 3]);
 
             $resData = ['res' => 'Account information approved', 'message' => 'success', 'title' => 'Great'];
         }
@@ -4657,13 +4963,13 @@ class AdminController extends Controller
         $thisuser = $user->where('id', $req->id)->first();
 
         if($thisuser->flagged == 0){
-            $user->where('id', $req->id)->update(['flagged' => 1]);
+            $user->where('id', $req->id)->update(['flagged' => 1, 'accountLevel' => 2]);
             $subject = "Review of PaySprint Account";
             $message = "This is to inform you that your account  has been randomly selected for review. You will not be able to login or conduct any transaction both on the mobile app and on the web during the review period, which might last for 48 hours. We shall inform you when your PaySprint account is available for use. We regret any inconvenience this action might cause you. If you have any concern, please send us a message on : compliance@paysprint.net";
 
         }
         else{
-            $user->where('id', $req->id)->update(['flagged' => 0]);
+            $user->where('id', $req->id)->update(['flagged' => 0, 'accountLevel' => 3]);
             $subject = "Review of PaySprint Account";
             $message = "We have completed the review of your PaySprint Account. Your PaySprint account has been enabled and you will be able to access the services both on the Mobile and Web platforms. Thank you for your patience. If you have any concern, please send us a message on : compliance@paysprint.net";
         }
@@ -4976,7 +5282,12 @@ class AdminController extends Controller
 
 
 
-                if($recur == "Weekly"){
+
+                if($recur == "One Time"){
+                    $period = null;
+                    $due_period = null;
+                }
+                elseif($recur == "Weekly"){
                     $period = date('Y-m-d', strtotime($trans_date. ' + 7 days'));
                     $due_period = date('Y-m-d', strtotime($due_date. ' + 7 days'));
                 }
@@ -5004,6 +5315,7 @@ class AdminController extends Controller
                     $period = date('Y-m-d', strtotime($trans_date. ' + 365 days'));
                     $due_period = date('Y-m-d', strtotime($due_date. ' + 365 days'));
                 }
+
 
 
 
@@ -5087,6 +5399,7 @@ class AdminController extends Controller
         }
 
     }
+
 
 
     public function sendEmail($objDemoa, $purpose){

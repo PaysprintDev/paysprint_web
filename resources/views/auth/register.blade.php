@@ -61,6 +61,10 @@ body::-webkit-scrollbar-thumb:hover {
     width: 100% !important;
 }
 
+.disp-0{
+    display: none !important;
+}
+
     </style>
 
 </head>
@@ -180,9 +184,9 @@ body::-webkit-scrollbar-thumb:hover {
 
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
 
-  <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">User</a></li>
+  <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">User Account</a></li>
 
-  <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Merchant</a></li>
+  <li class="disp-0" role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Merchant</a></li>
 </ul>
 
 <div class="tab-content" id="myTabContent">
@@ -518,7 +522,7 @@ body::-webkit-scrollbar-thumb:hover {
 
                     </form>
   </div>
-  <div role="tabpanel" class="tab-pane" id="profile">
+  <div role="tabpanel" class="tab-pane disp-0" id="profile">
       <br>
         <div class="display-3">
           <h4 class="text-center">Click the button to sign up as Merchant.</h4>

@@ -68,6 +68,8 @@ use App\Notifications as Notifications;
 
 use App\Traits\RpmApp;
 
+use App\Traits\Trulioo;
+
 class HomeController extends Controller
 {
 
@@ -82,6 +84,7 @@ class HomeController extends Controller
     public $ref_code;
 
     use RpmApp;
+    use Trulioo;
     /**
      * Create a new controller instance.
      *
@@ -89,7 +92,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'myinvoice', 'setupBills', 'checkmyBills', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'payOrganization', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'paymentOrganization', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate']]);
+        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'myinvoice', 'setupBills', 'checkmyBills', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'payOrganization', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'paymentOrganization', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate']]);
     }
 
     /**
@@ -97,6 +100,49 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
+    public function homePage(){
+
+            if(Auth::check() == true){
+                $this->page = 'Landing';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'sendReceive' => $this->sendAndReceive(Auth::user()->email),
+                    'payInvoice' => $this->payInvoice(Auth::user()->email),
+                    'walletTrans' => $this->sendAndReceive(Auth::user()->email),
+                    'urgentnotification' => $this->urgentNotification(Auth::user()->email),
+                    'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+                    'getCard' => $this->getUserCard(),
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'getmerchantsByCategory' => $this->getMerchantsByCategory(),
+                );
+
+                $view = 'home';
+            }
+            else{
+                $this->page = 'Homepage';
+                $this->name = '';
+                $view = 'main.newpage.shade-pro.index';
+                $data = [];
+            }
+
+            // dd($data);
+
+
+        return view($view)->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+
+    }   
+
+    public function merchantIndex(){
+
+        $this->page = 'Merchant';
+
+        return view('main.newpage.shade-pro.merchantindex')->with(['pages' => $this->page]);
+
+    }   
+
     public function index(Request $req)
     {
         // dd($req->session());
@@ -2439,6 +2485,9 @@ class HomeController extends Controller
 
                 AnonUsers::where('ref_code', $req->ref_code)->delete();
 
+
+                
+
             }
             else{
                             // Insert User record
@@ -2463,9 +2512,65 @@ class HomeController extends Controller
 
             if (Auth::attempt($credentials)) {
 
-                Log::info("New user registration via web by: ".$name." from ".$req->state.", ".$req->country);
+                
 
-                $resData = ['res' => 'Hello '.$name.' you will be redirected in 5sec', 'message' => 'success', 'link' => '/'];
+
+                $url = 'https://api.globaldatacompany.com/verifications/v1/verify';
+
+                $minimuAge = date('Y') - Auth::user()->yearOfBirth;
+
+                $usersname = explode(" ", $name);
+
+                $info = $this->identificationAPI($url, $usersname[0], $usersname[1], Auth::user()->dayOfBirth, Auth::user()->monthOfBirth, Auth::user()->yearOfBirth, $minimuAge, Auth::user()->address, Auth::user()->city, Auth::user()->country, Auth::user()->zipcode, Auth::user()->telephone, Auth::user()->email, $mycode[0]->alpha2Code);
+
+
+                        if(isset($info->TransactionID) == true){
+
+                            $result = $this->transStatus($info->TransactionID);
+
+                            $res = $this->getTransRec($result->TransactionRecordId);
+
+
+                            if($res->Record->RecordStatus == "nomatch"){
+                            
+                                $message = "error";
+                                $title = "Oops!";
+                                $link = "contact";
+                                
+                                $resInfo = strtoupper($res->Record->RecordStatus).", Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.";
+                                
+                            }
+                            else{
+                                $message = "success";
+                                $title = "Great";
+                                $link = "/";
+                                $resInfo = strtoupper($res->Record->RecordStatus).", Congratulations!!!. Your account has been approved. Please complete the Quick Set up to enjoy PaySprint. You will be redirected in 5sec";
+
+                                // Udpate User Info
+                                User::where('id', Auth::user()->id)->update(['accountLevel' => 1]);
+                            }
+
+                        }
+                        else{
+                            $message = "error";
+                            $title = "Oops!";
+                            $link = "contact";
+                            $resInfo = "Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.";
+
+                            // $resp = $info->Message;
+                        }
+
+
+                        Log::info("New user registration via web by: ".$name." from ".$req->state.", ".$req->country." STATUS: ".$resInfo);
+
+
+                        // This is the response for now until trulioo activates us to LIVE..
+                        $message = "success";
+                        $title = "Great";
+                        $link = "/";
+
+
+                    $resData = ['res' => $resInfo, 'message' => $message, 'link' => $link];
             }
             else{
                 $resData = ['res' => 'Credential failed', 'message' => 'error'];
@@ -2492,6 +2597,12 @@ class HomeController extends Controller
 
                     $this->createNotification($userExists[0]['ref_code'], 'Hello '.$userExists[0]['name'].', Your account is restricted from login because you are flagged.');
                 }
+                // elseif($userExists[0]['accountLevel'] == 0){
+
+                //     $resData = ['res' => 'Hello '.$userExists[0]['name'].', Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.', 'message' => 'error'];
+
+                //     $this->createNotification($userExists[0]['ref_code'], 'Hello '.$userExists[0]['name'].', Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.');
+                // }
                 else{
                     $countryInfo = $this->getCountryCode($userExists[0]['country']);
 

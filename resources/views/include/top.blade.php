@@ -174,7 +174,7 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ (strlen($name) < 20) ? $name : substr($name, 0, 20)."..." }}<span class="caret"></span></a>
                             
                             <ul class="dropdown-menu other_dropdwn">
-                                <li><a href="{{ route('my account') }}">Account NO: {{ Auth::user()->ref_code }}</a></li>
+                                <li><a href="javascript:void()">Account NO: {{ Auth::user()->ref_code }}</a></li>
                                 <li><a href="{{ route('profile') }}">Profile</a></li>
                                 {{-- <li><a href="https://exbc.ca/Product">Goto EXBC</a></li> --}}
                                 <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</a></li>
