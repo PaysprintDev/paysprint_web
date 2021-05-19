@@ -823,8 +823,8 @@ class GooglePaymentController extends Controller
         }
         else{
             // Live API
-            $store_id='gwca045238';
-            $api_token='V9XOY4JBS4JII01xBFch';
+            $store_id=env('MONERIS_STORE_ID');
+            $api_token=env('MONERIS_API_TOKEN');
 
             $setMode = false;
         }
