@@ -565,7 +565,7 @@ body::-webkit-scrollbar-thumb:hover {
 
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4b_d3enQHEGQpGQ1WragPd0L89xG4vGA&libraries=places&callback=initAutocomplete" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_API_KEY') }}&libraries=places&callback=initAutocomplete" async defer></script>
 
 {{-- Ajax --}}
 
