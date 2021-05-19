@@ -138,7 +138,6 @@ class GooglePaymentController extends Controller
     // Get User Info
     $user = User::where('api_token', $req->api_token)->first();
 
-    Log::info($user);
 
     if(isset($user)){
         
@@ -241,6 +240,7 @@ class GooglePaymentController extends Controller
                 $action = "Payment";
                 $requestReceive = 0;
 
+
             }
             else{
 
@@ -326,14 +326,18 @@ class GooglePaymentController extends Controller
             User::where('ref_code', $req->user_id)->update(['wallet_balance' => $recWallet]);
 
             // Senders statement
-            $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $walletstatus, $action, $regards, 1, $statement_route, 'on');
+            $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $walletstatus, $action, $regards, 1, $statement_route, 'on', $user->country);
             
-            $this->insStatement($client->email, $reference_code, "Received ".$req->currency.' '.number_format($dataInfo, 2)." in wallet for ".$service." from ".$user->name, number_format($dataInfo, 2), 0, $balance, $trans_date, $walletstatus, "Wallet credit", $client->ref_code, 1, $statement_route, $client->auto_deposit);
+            $this->insStatement($client->email, $reference_code, "Received ".$req->currency.' '.number_format($dataInfo, 2)." in wallet for ".$service." from ".$user->name, number_format($dataInfo, 2), 0, $balance, $trans_date, $walletstatus, "Wallet credit", $client->ref_code, 1, $statement_route, $client->auto_deposit, $client->country);
 
             
 
             $sendMsg = "Hi ".$user->name.", You have made a ".$activity.". Your new wallet balance is ".$req->currency.' '.number_format($wallet_balance, 2).". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us. PaySprint Team";
             $sendPhone = "+".$user->code.$user->telephone;
+
+
+                
+
 
 
             
@@ -357,6 +361,9 @@ class GooglePaymentController extends Controller
             $this->sendMessage($sendMsg, $sendPhone);
 
             $this->sendMessage($recMsg, $recPhone);
+
+            Log::info($sendMsg);
+            Log::info($recMsg);
 
 
             try {
@@ -548,7 +555,7 @@ class GooglePaymentController extends Controller
 
                                 $wallet_balance = $thisuser->wallet_balance - $req->amount;
                                 $paymentToken = "wallet-".date('dmY').time();
-                                $status = "Delivered";
+                                $paystatus = "Pending";
                                 $action = "Wallet debit";
                                 $requestReceive = 2;
 
@@ -597,11 +604,13 @@ class GooglePaymentController extends Controller
 
                                 $this->sendMessage($sendMsg, $sendPhone);
 
+                                
+
                                 // Notification for receiver
                                 $this->name = $req->fname.' '.$req->lname;
                                 // $this->to = "bambo@vimfile.com";
                                 $this->to = $req->email;
-                                $this->subject = $thisuser->name." Thas sent you ".$foreigncurrency[0]->currencies[0]->code.' '.number_format($amount, 2)." on PaySprint";
+                                $this->subject = $thisuser->name." has sent you ".$foreigncurrency[0]->currencies[0]->code.' '.number_format($amount, 2)." on PaySprint";
 
 
                                 if($thisuser->accountType == "Individual" || $getInviteType->accountType == "Individual"){
@@ -622,6 +631,9 @@ class GooglePaymentController extends Controller
                                 $this->sendMessage($recMesg, $recPhone);
 
 
+                                
+
+
                                 // Insert Statement
                                 $activity = $req->payment_method." transfer of ".$req->currency.' '.number_format($req->amount, 2)." to ".$req->fname.' '.$req->lname." for ".$service;
                                 $credit = 0;
@@ -634,10 +646,10 @@ class GooglePaymentController extends Controller
                                 $regards = $ref_code;
 
                                 // Senders statement
-                                $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on');
+                                $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $paystatus, $action, $regards, 1, $statement_route, 'on', $thisuser->country);
                                 
                                 // Receiver Statement
-                                $this->insStatement($req->email, $reference_code, "Received ".$foreigncurrency[0]->currencies[0]->code.''.$amount." in wallet for ".$service." from ".$thisuser->name, $amount, 0, $balance, $trans_date, $status, "Wallet credit", $ref_code, 1, $statement_route, 'on');
+                                $this->insStatement($req->email, $reference_code, "Received ".$foreigncurrency[0]->currencies[0]->code.''.$amount." in wallet for ".$service." from ".$thisuser->name, $amount, 0, $balance, $trans_date, $paystatus, "Wallet credit", $ref_code, 1, $statement_route, 'on', $req->country);
 
                                 
 
@@ -650,7 +662,11 @@ class GooglePaymentController extends Controller
 
 
                                 $this->createNotification($thisuser->ref_code, $sendMsg);
+                                
                                 $this->createNotification($ref_code, $recMesg);
+
+                                Log::info("Congratulations!, ".$thisuser->name." ".$sendMsg);
+                                Log::info("Congratulations!, ".$this->name." ".$recMesg);
 
                             }
                             else{
@@ -746,8 +762,8 @@ class GooglePaymentController extends Controller
     }
 
 
-    public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $auto_deposit){
-        Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route, 'auto_deposit' => $auto_deposit]);
+    public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $auto_deposit, $country){
+        Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route, 'auto_deposit' => $auto_deposit, 'country' => $country]);
     }
 
 

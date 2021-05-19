@@ -64,6 +64,10 @@ body::-webkit-scrollbar-thumb:hover {
 .disp-0{
     display: none !important;
 }
+    .reqField{
+      color: red;
+      font-weight: bold;
+    }
 
     </style>
 
@@ -240,7 +244,7 @@ body::-webkit-scrollbar-thumb:hover {
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="fname">First Name</label>
+                                        <label for="fname"><span class="reqField">*</span> First Name</label>
                                         
 
                                         <input type="text" id="fname" name="firstname" class="form-control input_box" @if($fname != "") value="{{ $fname }}" readonly @else placeholder="First Name *" required @endif >
@@ -248,7 +252,7 @@ body::-webkit-scrollbar-thumb:hover {
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="lname">Last Name</label>
+                                        <label for="lname"><span class="reqField">*</span> Last Name</label>
                                         <input type="text" id="lname" name="lastname" class="form-control input_box" @if($lname != "") value="{{ $lname }}" readonly @else placeholder="Last Name *" required @endif>
                                     </div>
                                 </div>
@@ -258,7 +262,7 @@ body::-webkit-scrollbar-thumb:hover {
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label for="dayOfBirth">Day of Birth</label>
+                                        <label for="dayOfBirth"><span class="reqField">*</span> Day of Birth</label>
                                         
                                         <select name="dayOfBirth" id="dayOfBirth" class="form-control">
                                             @for ($i = 1; $i <= 31; $i++)
@@ -269,7 +273,7 @@ body::-webkit-scrollbar-thumb:hover {
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label for="monthOfBirth">Month of Birth</label>
+                                        <label for="monthOfBirth"><span class="reqField">*</span> Month of Birth</label>
                                         <select name="monthOfBirth" id="monthOfBirth" class="form-control">
                                             <option selected value='1'>January</option>
                                             <option value='2'>February</option>
@@ -288,7 +292,7 @@ body::-webkit-scrollbar-thumb:hover {
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label for="yearOfBirth">Year of Birth</label>
+                                        <label for="yearOfBirth"><span class="reqField">*</span> Year of Birth</label>
                                         <select name="yearOfBirth" id="yearOfBirth" class="form-control">
                                             @for ($i = 1900; $i <= date('Y'); $i++)
                                                 <option value="{{ $i }}">{{ $i }}</option>
@@ -298,70 +302,45 @@ body::-webkit-scrollbar-thumb:hover {
                                 </div>
                             </div>
 
+                            <br>
+                            <label for="autocomplete">Auto complete address</label>
+                            <input id="autocomplete" placeholder="Enter your address" onFocus="geolocate()" type="text" class="form-control input_box">
+                                    <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="control-label"><span class="reqField">*</span> Street Number</label>
+                                        <input class="form-control input_box" name="street_number" id="street_number" disabled="false" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="control-label"><span class="reqField">*</span> Street Name/Route</label>
+                                        <input class="form-control input_box" name="route" id="route" disabled="false" readonly>
+                                    </div>
+                                    </div>
+                                    <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="control-label"><span class="reqField">*</span> City</label>
+                                        <input class="form-control input_box field" name="locality" id="locality" disabled="false">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="control-label"><span class="reqField">*</span> Postal/Zip code</label>
+                                        <input class="form-control input_box" name="postal_code" id="postal_code" disabled="false">
+                                    </div>
 
-                            {{-- <input id="autocomplete" placeholder="Enter your address" onFocus="geolocate()" type="text" class="form-control input_box">
-                                    <div class="row">
-                                    <div class="col-md-6">
-                                        <label class="control-label">Street address</label>
-                                        <input class="form-control input_box" id="street_number" disabled="true">
+                                    
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="control-label">Route</label>
-                                        <input class="form-control input_box" id="route" disabled="true">
-                                    </div>
-                                    </div>
-                                    <div class="row">
-                                    <div class="col-md-6">
-                                        <label class="control-label">City</label>
-                                        <input class="form-control input_box field" id="locality" disabled="true">
-                                    </div>
-                                    <div class="col-md-6"> 
-                                        <label class="control-label">State</label>
-                                        <input class="form-control input_box" id="administrative_area_level_1" disabled="true">
-                                    </div>
-                                    </div>
-                                    <div class="row">
-                                    <div class="col-md-6">
-                                        <label class="control-label">Zip code</label>
-                                        <input class="form-control input_box" id="postal_code" disabled="true">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="control-label">Country</label>
-                                        <input class="form-control input_box" id="local_country" disabled="true">
-                                    </div>
-                                    </div> --}}
 
                             
                             <br>
 
-                            <label for="address">Street Number & Name</label>
-                                <input type="text" name="address" id="address" class="form-control input_box" placeholder="Street Number & Name *" required>
-
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="city">City</label>
-                                        <input type="text" name="city" id="city" class="form-control input_box" placeholder="City *" required>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="zipcode">Postal/Zip code</label>
-                                        <input type="text" name="zipcode" id="zipcode" class="form-control input_box" placeholder="Postal/Zip code">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <label for="country">Country</label>
+                                    <label for="country"><span class="reqField">*</span> Country</label>
 
                                         <select name="country" id="country" class="form-control input_box countries" required></select>
                                         {{-- <input type="text" name="country" id="country" class="form-control input_box countries" placeholder="Country *" required> --}}
                                 </div>
                                 <div class="col-sm-6">
 
-                                    <label for="state">Province/State</label>
+                                    <label for="state"><span class="reqField">*</span> Province/State</label>
                                         <select name="state" id="state" class="form-control input_box" required></select>
                                     {{-- <input type="text" name="state" id="state" class="form-control input_box" placeholder="Province/State *" required> --}}
 
@@ -370,10 +349,10 @@ body::-webkit-scrollbar-thumb:hover {
                                 
                             </div>
 
-                            <label for="email">Email Address</label>
+                            <label for="email"><span class="reqField">*</span> Email Address</label>
                                         <input type="email" name="email" id="email" class="form-control input_box" @if($email != "") value="{{ $email }}" readonly @else placeholder="Your Email *" required @endif>
                             
-                            <label for="cemail">Confirm Email Address</label>
+                            <label for="cemail"><span class="reqField">*</span> Confirm Email Address</label>
                                         <input type="email" name="cemail" id="cemail" class="form-control input_box" @if($email != "") value="{{ $email }}" readonly @else placeholder="Confirm Your Email *" required @endif>
 
                             
@@ -383,7 +362,7 @@ body::-webkit-scrollbar-thumb:hover {
                                 <div class="col-sm-6">
 
                                     <div class="form-group">
-                                        <label for="password">Password</label>
+                                        <label for="password"><span class="reqField">*</span> Password</label>
                                         <input type="password" name="password" id="password" class="form-control input_box" placeholder="Password *" required>
                                     </div>
 
@@ -393,7 +372,7 @@ body::-webkit-scrollbar-thumb:hover {
                                 <div class="col-sm-6">
 
                                     <div class="form-group">
-                                        <label for="password-confirm">Confirm Password</label>
+                                        <label for="password-confirm"><span class="reqField">*</span> Confirm Password</label>
                                         <input type="password" name="confirmpassword" id="password-confirm" class="form-control input_box" placeholder="Confirm Password *" required>
                                     </div>
 
@@ -405,7 +384,7 @@ body::-webkit-scrollbar-thumb:hover {
                                 <div class="col-sm-6">
 
                                     <div class="form-group">
-                                        <label for="password-confirm"><a href="{{ route('terms of use') }}" target="_blank" class="text-primary">Accept Terms & Conditions</a></label>
+                                        <label for="password-confirm"><a href="{{ route('terms of use') }}" target="_blank" class="text-primary"><span class="reqField">*</span> Accept Terms & Conditions</a></label>
                                         <input type="checkbox" name="checkbox" id="checkBox" required>
                                     </div>
 
@@ -586,7 +565,7 @@ body::-webkit-scrollbar-thumb:hover {
 
 </script>
 
-{{-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYvEW1mdrIJpTgmamihUpRS2p0a7A_kCM&libraries=places&callback=initAutocomplete" async defer></script> --}}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4b_d3enQHEGQpGQ1WragPd0L89xG4vGA&libraries=places&callback=initAutocomplete" async defer></script>
 
 {{-- Ajax --}}
 
@@ -648,6 +627,8 @@ var ref_code;
 var dayOfBirth;
 var monthOfBirth;
 var yearOfBirth;
+var street_number;
+var street_name;
     if(accountType == "Individual"){
         ref_code = $('#ref_code').val();
         fname = $('#fname').val();
@@ -659,10 +640,12 @@ var yearOfBirth;
         cemail = $('#cemail').val();
         country = $('#country').val();
         state = $('#state').val();
-        city = $('#city').val();
-        address = $('#address').val();
+        city = $('#locality').val();
+        address = $('#autocomplete').val();
+        street_number = $('#street_number').val();
+        street_name = $('#route').val();
         password = $('#password').val();
-        zipcode = $('#zipcode').val();
+        zipcode = $('#postal_code').val();
         cpassword = $('#password-confirm').val();
 
 
@@ -704,9 +687,6 @@ var yearOfBirth;
         }if(city == ""){
             swal('Oops', 'City field can\'t be empty', 'info');
             return false;
-        }if(address == ""){
-            swal('Oops', 'Address field can\'t be empty', 'info');
-            return false;
         }if(password == ""){
             swal('Oops', 'Password field can\'t be empty', 'info');
             return false;
@@ -735,6 +715,7 @@ var yearOfBirth;
             fname: fname, lname: lname, email: email,
             country: country, state: state, city: city,
             address: address, password: password, zipcode: zipcode,
+            street_number: street_number, street_name: street_name,
             accountType: accountType, ref_code: ref_code, dayOfBirth: dayOfBirth, monthOfBirth: monthOfBirth, yearOfBirth: yearOfBirth
         };
     }

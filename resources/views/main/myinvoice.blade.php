@@ -213,12 +213,37 @@
 
             <tr class="item">
                 <td>
-                    Opening Balance
+                    Amount Invoiced
                 </td>
 
                 <td style="color: navy;">
-                    ${{ number_format($invoices->invoice_amount) }}
+                    {{ Auth::user()->currencySymbol.''.number_format($invoices->invoice_amount, 2) }}
                 </td>
+            </tr>
+            <tr class="item">
+                <td>
+                    Tax Amount
+                </td>
+
+                <td style="color: navy;">
+                    {{ Auth::user()->currencySymbol.''.number_format($invoices->tax_amount, 2) }}
+                </td>
+            </tr>
+            <tr class="item">
+                <td>
+                    Total Amount
+                </td>
+
+                <td style="color: black; font-size: 22px; font-weight: 700;">
+                    {{ Auth::user()->currencySymbol.''.number_format($invoices->total_amount, 2) }}
+                </td>
+            </tr>
+
+            <tr class="heading">
+                <td colspan="2" align="center">
+                    PAYMENT MADE
+                </td>
+
             </tr>
             
             <tr class="item">
@@ -226,8 +251,8 @@
                     Amount Paid
                 </td>
 
-                <td style="color: green;">
-                    @if(isset($invoices->payedAmount))${{ number_format($invoices->payedAmount) }}@else ${{ number_format(0, 2) }} @endif
+                <td style="color: green; font-weight: 700; font-size: 20px;">
+                    @if(isset($invoices->payedAmount)){{ Auth::user()->currencySymbol.''.number_format($invoices->payedAmount, 2) }}@else {{ Auth::user()->currencySymbol.''.number_format(0, 2) }} @endif
                 </td>
             </tr>
 
@@ -237,10 +262,8 @@
                     Balance on Invoice
                 </td>
 
-                <td style="color: tomato;">
-                    <?php if(isset($invoices->invoice_amount)){$opening = $invoices->invoice_amount;}else{$opening = 0;}
-                    if(isset($invoices->payedAmount)){$paid = $invoices->payedAmount;}else{$paid = 0;} $bal = $opening -  $paid;?>
-                    ${{ number_format($bal) }}
+                <td style="color: tomato; font-weight: 700; font-size: 20px;">
+                    {{ Auth::user()->currencySymbol.''.number_format($invoices->remaining_balance, 2) }}
                 </td>
             </tr>
             @endif

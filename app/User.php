@@ -32,6 +32,11 @@ class User extends Authenticatable
         return $this->hasOne('App\AddCard', 'user_id');
     }
 
+    public function userAccount()
+    {
+        return $this->hasOne('App\LinkAccount', 'user_id');
+    }
+
     protected $table = "users";
 }
 

@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Pay Organization')
+@section('title', 'Profile')
 
 
 @show
-
+<?php use \App\Http\Controllers\LinkAccount; ?>
 @section('text/css')
 
 <style>
@@ -279,6 +279,8 @@
       </div>
     </div>
   </div>
+
+
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingFour">
       <h4 class="panel-title">
@@ -305,6 +307,112 @@
             </div>
             <div class="form-group">
                 <button type="button" class="btn btn-primary btn-block" id="autodepositBtn" onclick="handShake('autodeposit')">Save</button>
+            </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingFive">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+          Switch to Other Account
+        </a>
+      </h4>
+    </div>
+    <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+      <div class="panel-body">
+
+        <form action="#" method="post" id="formElemotheraccount">
+
+            <div class="form-group">
+                <label for="account_number">Select Other Accounts</label>
+
+                <select name="account_number" id="other_account_number" class="form-control">
+
+                    @php
+                        $account = \App\LinkAccount::where('ref_code', Auth::user()->ref_code)->get();
+                    @endphp
+
+                    @if(count($account) > 0)
+                        <option value="">Select account number</option>
+                        @foreach ($account as $item)
+                            <option value="{{ $item->link_ref_code }}">{{ $item->link_ref_code }}</option>
+                        @endforeach
+                    @else
+                        
+                        @php
+                            $account = \App\LinkAccount::where('link_ref_code', Auth::user()->ref_code)->get();
+                        @endphp
+
+                        @if(count($account) > 0)
+
+                            <option value="">Select account number</option>
+                            @foreach ($account as $item)
+                                <option value="{{ $item->ref_code }}">{{ $item->ref_code }}</option>
+                            @endforeach
+
+                            @else
+
+                            <option value="">You have not linked an account yet</option>
+                        
+                        @endif
+                    @endif
+                    
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary btn-block" id="otheraccountBtn" onclick="handShake('otheraccount')">Submit</button>
+            </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingSix">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+          Link Other Accounts
+        </a>
+      </h4>
+    </div>
+    <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
+      <div class="panel-body">
+        <form action="#" method="post" id="formElemlinkaccount">
+
+            <div class="form-group">
+                <label for="account_number">Account Number</label><br>
+                <small style="color: red; font-weight: 700;">Kindly enter the account number to link</small>
+                <input type="text" name="account_number" id="link_account_number" class="form-control" placeholder="69212">
+            </div>
+            <div class="form-group">
+                <label for="security_question">Security Question</label><br>
+                <small style="color: red; font-weight: 700;">Kindly select the security question of the account to link</small>
+                <select name="security_question" id="link_security_question" class="form-control">
+                    <option value="">Select Question</option>
+                    <option value="What was your first pet's name?">What was your first pet's name?</option>
+                    <option value="What's the name of the city where you were born?">What's the name of the city where you were born?</option>
+                    <option value="What was your childhood nickname?">What was your childhood nickname?</option>
+                    <option value="What's the name of the city where your parents met?">What's the name of the city where your parents met?</option>
+                    <option value="What's the first name of your oldest cousin?">What's the first name of your oldest cousin?</option>
+                    <option value="What's the name of the first school you attended?">What's the name of the first school you attended?</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="security_answer">Security Answer</label><br>
+                <small style="color: red; font-weight: 700;">Kindly provide answer to the security question of the account to link</small>
+                <input type="text" name="security_answer" id="link_security_answer" class="form-control">
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary btn-block" id="linkaccountBtn" onclick="handShake('linkaccount')">Submit</button>
             </div>
 
         </form>

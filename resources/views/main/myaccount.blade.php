@@ -376,7 +376,7 @@ input[type="radio"] {
                                                             <div class="col-md-12">
                                                                 <h4>
                                                                     {{--  {{ route('Add bank detail') }}  --}}
-                                                                    <a href="javascript:void()" onclick="comingSoon()">Coming Soon</a>
+                                                                    <a href="{{ route('Add bank detail') }}">Add a Bank Account</a>
                                                                 </h4>
                                                             </div>
 

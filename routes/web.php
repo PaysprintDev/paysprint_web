@@ -22,6 +22,10 @@ Route::get('feecharge', 'MaintenanceFeeCharge@monthlyMaintenaceFee');
 
 Route::get('quicksetup', 'CheckSetupController@updateQuickSetup');
 Route::get('autodepositoff', 'CheckSetupController@autoDepositOff');
+Route::get('accountactivity', 'CheckSetupController@checkAccountAcvtivity');
+Route::get('updatestatementcountry', 'CheckSetupController@statementCountry');
+Route::get('chargefee', 'CheckSetupController@chargeFee');
+Route::get('insertcountry', 'CheckSetupController@insertCountry');
 
 Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
 
@@ -52,6 +56,9 @@ Route::get('profile', ['uses' => 'HomeController@profile', 'as' => 'profile']);
 
 // Terms or USE
 Route::get('terms-of-service', ['uses' => 'HomeController@termsOfUse', 'as' => 'terms of use']);
+
+// Pricing
+Route::get('pricing', ['uses' => 'HomeController@feeStructure', 'as' => 'pricing structure']);
 
 // Privacy Policy
 Route::get('privacy-policy', ['uses' => 'HomeController@privacyPolicy', 'as' => 'privacy policy']);
@@ -84,7 +91,7 @@ Route::prefix('mywallet')->group(function () {
 
 Route::get('merchantcategory', ['uses' => 'HomeController@merchantCategory', 'as' => 'merchant category']);
 
-
+Route::get('signout/{id}',  ['uses' => 'api\v1\UserController@logout'])->name('sign out');
 
 
 
@@ -164,8 +171,11 @@ Route::get('walletstatement/{key}', ['uses' => 'HomeController@mywalletStatement
 
 // Client Admin ROute
 Route::get('Admin', ['uses' => 'AdminController@index', 'as' => 'Admin']);
+Route::get('Admin/activity', ['uses' => 'AdminController@platformActivity', 'as' => 'platform activity']);
+Route::get('Admin/allcountries', ['uses' => 'AdminController@allCountries', 'as' => 'all countries']);
 
 Route::get('allusers', ['uses' => 'AdminController@allPlatformUsers', 'as' => 'allusers']);
+Route::get('allusersbycountry', ['uses' => 'AdminController@allPlatformUsersByCountry', 'as' => 'all users by country']);
 Route::get('usermoredetail/{id}', ['uses' => 'AdminController@userMoreDetail', 'as' => 'user more detail']);
 
 
@@ -173,7 +183,35 @@ Route::prefix('Admin/wallet')->group(function () {
 
 	Route::get('/', ['uses' => 'AdminController@walletBalance', 'as' => 'wallet balance']);
 	Route::get('bankrequestwithdrawal', ['uses' => 'AdminController@bankRequestWithdrawal', 'as' => 'bank request withdrawal']);
+	Route::get('bankrequestwithdrawalbycountry', ['uses' => 'AdminController@bankRequestWithdrawalByCountry', 'as' => 'bank withdrawal by country']);
+	Route::get('cardrequestwithdrawal', ['uses' => 'AdminController@cardRequestWithdrawal', 'as' => 'card request withdrawal']);
+
+
+
+	Route::get('cardprocessedwithdrawal', ['uses' => 'AdminController@cardProcessedWithdrawal', 'as' => 'card processed withdrawal']);
+	Route::get('bankprocessedwithdrawal', ['uses' => 'AdminController@bankProcessedWithdrawal', 'as' => 'bank processed withdrawal']);
+
+
+
+	Route::get('cardrequestwithdrawalbycountry', ['uses' => 'AdminController@cardRequestWithdrawalByCountry', 'as' => 'card withdraw by country']);
+	Route::get('cardrequestprocessedbycountry', ['uses' => 'AdminController@cardRequestProcessedByCountry', 'as' => 'card processed by country']);
+	Route::get('bankrequestprocessedbycountry', ['uses' => 'AdminController@bankRequestProcessedByCountry', 'as' => 'bank processed by country']);
+
+
+	Route::get('prepaidrequestwithdrawal', ['uses' => 'AdminController@prepaidRequestWithdrawal', 'as' => 'prepaid request withdrawal']);
+	Route::get('prepaidcardrequest', ['uses' => 'AdminController@prepaidCardRequest', 'as' => 'prepaid card request']);
+
+
+	Route::get('refundmoneyrequest', ['uses' => 'AdminController@refundMoneyRequest', 'as' => 'refund money request']);
+	Route::get('processedrefund', ['uses' => 'AdminController@processedRefundMoneyRequest', 'as' => 'refund processed']);
+
+
 	Route::get('bankrequestprocessed', ['uses' => 'AdminController@bankRequestProcessed', 'as' => 'processed payment']);
+	Route::get('refunddetails/{transid}', ['uses' => 'AdminController@getRefundDetails', 'as' => 'refund details']);
+
+	Route::get('balancebycountry', ['uses' => 'AdminController@balanceByCountry', 'as' => 'balance by country']);
+	Route::get('maintenancefee', ['uses' => 'AdminController@maintenancefeeDetail', 'as' => 'maintenance fee detail']);
+	Route::get('maintenancefeebycountry', ['uses' => 'AdminController@maintenancefeeByCountry', 'as' => 'maintenance fee by country']);
 
 	
 	Route::get('withdrawal', ['uses' => 'AdminController@merchantWithdrawal', 'as' => 'merchant withdrawal']);
@@ -225,7 +263,51 @@ Route::prefix('Admin/merchant')->group(function () {
 });
 
 
-Route::get('Admin/servicetypes', ['uses' => 'AdminController@createServiceTypes', 'as' => 'create service types']);
+Route::prefix('Admin/performance/report')->group(function () {
+
+	Route::get('sentinvoice', ['uses' => 'AdminController@sentInvoiceReport', 'as' => 'sent invoice']);
+	Route::get('paidinvoice', ['uses' => 'AdminController@paidInvoiceReport', 'as' => 'paid invoice']);
+	Route::get('unpaidinvoice', ['uses' => 'AdminController@unpaidInvoiceReport', 'as' => 'unpaid invoice']);
+	Route::get('customerbalance', ['uses' => 'AdminController@customerBalanceReport', 'as' => 'customer balance report']);
+	Route::get('tax', ['uses' => 'AdminController@taxReport', 'as' => 'tax report']);
+	Route::get('invoicetype', ['uses' => 'AdminController@invoiceTypeReport', 'as' => 'invoice type']);
+	Route::get('recurring', ['uses' => 'AdminController@recurringReport', 'as' => 'recurring invoice']);
+	
+});
+
+Route::prefix('Admin/overview/report')->group(function () {
+
+	Route::get('business', ['uses' => 'AdminController@businessReport', 'as' => 'business report']);
+	Route::get('businessreport', ['uses' => 'AdminController@getBusinessReport', 'as' => 'get business report']);
+	Route::get('inflow', ['uses' => 'AdminController@inflowReport', 'as' => 'inflow reports']);
+	Route::get('inflowbycountry', ['uses' => 'AdminController@inflowByCountryReport', 'as' => 'inflow by country']);
+	Route::post('getinflowrecord', ['uses' => 'AdminController@getInflowRecord', 'as' => 'get inflow record']);
+
+
+
+	Route::get('withdrawal', ['uses' => 'AdminController@withdrawalReport', 'as' => 'withdrawal reports']);
+	Route::get('withdrawalbycountry', ['uses' => 'AdminController@withdrawalByCountryReport', 'as' => 'withdrawal by country']);
+	Route::post('getwithdrawalrecord', ['uses' => 'AdminController@getWithdrawalRecord', 'as' => 'get withdrawal record']);
+
+
+
+	Route::get('charge', ['uses' => 'AdminController@chargeReport', 'as' => 'charge reports']);
+	Route::get('expectedbalance', ['uses' => 'AdminController@expectedBalanceReport', 'as' => 'expected balance reports']);
+	Route::get('actualbalance', ['uses' => 'AdminController@actualBalanceReport', 'as' => 'actual balance reports']);
+	Route::get('reconsilation', ['uses' => 'AdminController@reconsilationReport', 'as' => 'reconsilation reports']);
+
+
+	// Report Details
+	Route::get('netamounttowallet', ['uses' => 'AdminController@netAmountToWallet', 'as' => 'net amount to wallet']);
+	Route::get('chargeonaddmoney', ['uses' => 'AdminController@chargeOnAddMoney', 'as' => 'charge on add money']);
+	Route::get('amountwithdrawnfromwallet', ['uses' => 'AdminController@amountWithdrawnFromWallet', 'as' => 'amount withdrawn from wallet']);
+	Route::get('chargesonwithdrawal', ['uses' => 'AdminController@chargesOnWithdrawals', 'as' => 'charges on withdrawal']);
+	Route::get('walletmaintenancefee', ['uses' => 'AdminController@walletMaintenanceFee', 'as' => 'wallet maintenance fee']);
+	
+});
+
+
+Route::get('Admin/invoicetypes', ['uses' => 'AdminController@createServiceTypes', 'as' => 'create service types']);
 Route::get('Admin/setuptax', ['uses' => 'AdminController@setupTax', 'as' => 'setup tax']);
 Route::get('Admin/edittax/{id}', ['uses' => 'AdminController@editTax', 'as' => 'edit tax']);
 Route::get('Admin/api-documentation', ['uses' => 'AdminController@apiDocumentation', 'as' => 'api integration']);
@@ -363,8 +445,11 @@ Route::post('confirmpayment', ['uses' => 'AdminController@ajaxconfirmpayment', '
 Route::post('approveUser', ['uses' => 'AdminController@ajaxapproveUser', 'as' => 'AjaxapproveUser']);
 Route::post('checkverification', ['uses' => 'AdminController@ajaxCheckVerification', 'as' => 'Ajaxcheckverification']);
 Route::post('paybankwithdrawal', ['uses' => 'AdminController@ajaxpayBankWithdrawal', 'as' => 'Ajaxpaybankwithdrawal']);
+Route::post('paycardwithdrawal', ['uses' => 'AdminController@ajaxpayCardWithdrawal', 'as' => 'Ajaxpaycardwithdrawal']);
 Route::post('flagguser', ['uses' => 'AdminController@ajaxflagUser', 'as' => 'Ajaxflagguser']);
 Route::post('singleinvoiceusercheck', ['uses' => 'AdminController@ajaxSingleInvoiceUserCheck', 'as' => 'Ajaxsingleinvoiceusercheck']);
+Route::post('refundmoneybacktowallet', ['uses' => 'AdminController@ajaxRefundMoneyBackToWallet', 'as' => 'Ajaxrefundmoneybacktowallet']);
+Route::post('accesstousepaysprint', ['uses' => 'AdminController@ajaxAccessToUsePaysprint', 'as' => 'grant country']);
 
 
 Route::post('quotedecision', ['uses' => 'ConsultantController@ajaxquotedecision', 'as' => 'Ajaxquotedecision']);

@@ -96,6 +96,20 @@
                                     
                                 
                                 </li>
+                                <li class="list-group-item" title="Set Up Tax" >
+
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <a href="{{ route('setup tax') }}">Set Up Tax </a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! count($data['getTax']) > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                
+                                </li>
                             </ul>
                     </div>
               </div>
@@ -143,7 +157,7 @@
                     <label for="inputName" class="col-sm-2 control-label">Address</label>
 
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" name="businessAddress" value="{{ $data['getbusinessDetail']->address }}" placeholder="Name">
+                      <input type="text" class="form-control" name="businessAddress" value="{{ $data['getbusinessDetail']->address }}" placeholder="Street Number & Name">
                     </div>
                   </div>
                   <div class="form-group">
@@ -162,11 +176,11 @@
                   </div>
 
                   <div class="form-group">
-                    <label for="inputName" class="col-sm-2 control-label">Service Offer</label>
+                    <label for="inputName" class="col-sm-2 control-label">Invoice Type</label>
 
                     <div class="col-sm-10">
                       <select name="type_of_service" id="type_of_service" class="form-control">
-                            <option value="">Select Service Offer</option>
+                            <option value="">Select Invoice Type</option>
                             @if (count($data['merchantservice']) > 0)
                                 @foreach ($data['merchantservice'] as $item)
                                     <option value="{{ $item->name }}" {{ ($data['getbusinessDetail']->type_of_service == $item->name) ? 'selected' : '' }}>{{ $item->name }}</option>

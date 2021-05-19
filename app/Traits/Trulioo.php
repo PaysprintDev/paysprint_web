@@ -66,8 +66,10 @@ trait Trulioo{
             "CountryCode": "'.$countryCode.'",
             "VerboseMode": true
         }',
+
+        
         CURLOPT_HTTPHEADER => array(
-            'Authorization: Basic RVhCQ19EZW1vX0lEVl9BUEk6UGF5c3ByaW50YXBpMjAyMSE=',
+            'Authorization: Basic RVhCQ19JRFZfQVBJOlBheXNwcmludGFwaTIwMjEh',
             'Content-Type: application/json',
             'Cookie: secure; incap_ses_1043_2454110=1ymffNN0lAblUYeASHt5DnSbjGAAAAAA1OvOPjB/O9ngfion/4/o4g==; visid_incap_2454110=Hr+h4VOQRvyVmLwrlcpvTZvRimAAAAAAQUIPAAAAAAC2sDXypQFS5aEhZuG2ZRte'
         ),

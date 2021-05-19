@@ -61,5 +61,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'appkey' => \App\Http\Middleware\AppKey::class,
         'apitoken' => \App\Http\Middleware\ApiToken::class,
+        'merchantkey' => \App\Http\Middleware\MerchantKey::class,
     ];
 }

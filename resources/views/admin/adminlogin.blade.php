@@ -77,6 +77,8 @@
   <div class="login-box-body">
     <p class="login-box-msg">Sign in</p>
 
+    <a href="{{ route('merchant home') }}" type="button" class="btn btn-primary btn-block">Goto Homepage</a> <br>
+
     @if (session('success'))
         <div class="alert alert-success">
             <span style="font-size: 14px; text-align: center">{{ session('success') }}</span>
@@ -257,10 +259,10 @@
 // Register function
 function signIn(){
   var route = "{{ URL('Ajax/Adminlogin') }}";
-//   if (grecaptcha.getResponse() == ""){
-//     swal('Oops', 'Check the captcha box', 'info');
-//     return false;
-// }
+  if (grecaptcha.getResponse() == ""){
+    swal('Oops', 'Check the captcha box', 'info');
+    return false;
+}
   if($('#username').val() == ""){
     swal('Oops!', 'Your username is needed for next login', 'warning');
     return false;

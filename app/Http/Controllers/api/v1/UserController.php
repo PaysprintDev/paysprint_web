@@ -14,9 +14,12 @@ use Illuminate\Support\Facades\Mail;
 
 use App\User as User;
 use App\AnonUsers as AnonUsers;
+use App\Statement as Statement;
 use App\ServiceType as ServiceType;
 use App\Admin as Admin;
 use App\ClientInfo as ClientInfo;
+use App\AllCountries as AllCountries;
+use App\LinkAccount as LinkAccount;
 use App\Mail\sendEmail;
 
 use App\Traits\Trulioo;
@@ -77,7 +80,9 @@ class UserController extends Controller
 
             if(isset($newcustomer)){
 
-                    $user = User::create(['code' => $newcustomer->code, 'ref_code' => $newcustomer->ref_code, 'name' => $newcustomer->name, 'email' => $newcustomer->email, 'password' => Hash::make($request->password), 'address' => $newcustomer->address, 'city' => $request->city, 'state' => $request->state, 'country' => $newcustomer->country, 'accountType' => 'Individual', 'api_token' => uniqid().md5($request->email), 'telephone' => $newcustomer->telephone, 'wallet_balance' => $newcustomer->wallet_balance, 'approval' => 0, 'currencyCode' => $mycode[0]->currencies[0]->code, 'currencySymbol' => $mycode[0]->currencies[0]->symbol, 'dayOfBirth' => $request->dayOfBirth, 'monthOfBirth' => $request->monthOfBirth, 'yearOfBirth' => $request->yearOfBirth]);
+                    $user = User::create(['code' => $newcustomer->code, 'ref_code' => $newcustomer->ref_code, 'name' => $newcustomer->name, 'email' => $newcustomer->email, 'password' => Hash::make($request->password), 'address' => $newcustomer->address, 'city' => $request->city, 'state' => $request->state, 'country' => $newcustomer->country, 'accountType' => 'Individual', 'api_token' => uniqid().md5($request->email), 'telephone' => $newcustomer->telephone, 'wallet_balance' => $newcustomer->wallet_balance, 'approval' => 0, 'currencyCode' => $mycode[0]->currencies[0]->code, 'currencySymbol' => $mycode[0]->currencies[0]->symbol, 'dayOfBirth' => $request->dayOfBirth, 'monthOfBirth' => $request->monthOfBirth, 'yearOfBirth' => $request->yearOfBirth, 'cardRequest' => 0]);
+
+                    Statement::where('user_id', $newcustomer->email)->update(['status' => 'Delivered']);
 
                     AnonUsers::where('ref_code', $newcustomer->ref_code)->delete();
 
@@ -101,7 +106,8 @@ class UserController extends Controller
                 'approval' => 0, 
                 'dayOfBirth' => $request->dayOfBirth, 
                 'monthOfBirth' => $request->monthOfBirth, 
-                'yearOfBirth' => $request->yearOfBirth
+                'yearOfBirth' => $request->yearOfBirth, 
+                'cardRequest' => 0
             ]);
             }
 
@@ -111,7 +117,11 @@ class UserController extends Controller
 
             $minimuAge = date('Y') - $request->yearOfBirth;
 
-            $info = $this->identificationAPI($url, $request->firstname, $request->lastname, $request->dayOfBirth, $request->monthOfBirth, $request->yearOfBirth, $minimuAge, $request->address, $request->city, $request->country, null, $request->telephone, $request->email, $mycode[0]->alpha2Code);
+
+            $countryApproval = AllCountries::where('name', $request->country)->where('approval', 1)->first();
+
+            if(isset($countryApproval)){
+                $info = $this->identificationAPI($url, $request->firstname, $request->lastname, $request->dayOfBirth, $request->monthOfBirth, $request->yearOfBirth, $minimuAge, $request->address, $request->city, $request->country, null, $request->telephone, $request->email, $mycode[0]->alpha2Code);
 
 
                     if(isset($info->TransactionID) == true){
@@ -131,6 +141,8 @@ class UserController extends Controller
                             
                             $resInfo = strtoupper($res->Record->RecordStatus).", Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.";
 
+                            User::where('id', $getcurrentUser->id)->update(['accountLevel' => 0, 'countryapproval' => 1]);
+
                             
                         }
                         else{
@@ -142,7 +154,7 @@ class UserController extends Controller
                             $statusCode = 200;
 
                             // Udpate User Info
-                            User::where('id', $getcurrentUser->id)->update(['accountLevel' => 1]);
+                            User::where('id', $getcurrentUser->id)->update(['accountLevel' => 1, 'countryapproval' => 1]);
 
                             $this->createNotification($newRefcode, "Hello ".$request->firstname.", PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!. Welcome on board.");
                         }
@@ -156,11 +168,34 @@ class UserController extends Controller
                         $data = [];
                         $statusCode = 400;
 
+                        User::where('id', $getcurrentUser->id)->update(['accountLevel' => 0, 'countryapproval' => 1]);
+
                         // $resp = $info->Message;
                     }
+            }
+            else{
+
+                $message = "error";
+                $title = "Oops!";
+                $link = "contact";
+                $resInfo = "PaySprint is not yet available for use in your country. You can contact our Customer Service Executives for further assistance";
+                $data = [];
+                $statusCode = 400;
+
+                User::where('id', $getcurrentUser->id)->update(['accountLevel' => 0, 'countryapproval' => 0]);
+            }
+
+            
 
 
-                    Log::info("New user registration via mobile app by: ".$request->firstname.' '.$request->lastname." from ".$request->state.", ".$request->country." STATUS: ".$resInfo);
+                    Log::info("New user registration via mobile app by: ".$request->firstname.' '.$request->lastname." from ".$request->state.", ".$request->country." \n\n STATUS: ".$resInfo);
+
+                    // $message = "success";
+                    // $title = "Great";
+                    // $link = "/";
+                    // $resInfo = "Hello ".$request->firstname."!, Welcome to PaySprint!";
+                    // $data = $user;
+                    // $statusCode = 200;
             
                     $status = $statusCode;
 
@@ -201,45 +236,60 @@ class UserController extends Controller
             $token = Auth::user()->createToken('authToken')->accessToken;
 
 
-            $getUser = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'accountLevel')->where('email', $request->email)->first();
+            $getUser = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'accountLevel', 'flagged')->where('email', $request->email)->first();
 
             if(Hash::check($request->password, $getUser->password)){
 
 
-                if($getUser->flagged == 1){
-                    $data = [];
-                    $status = 400;
-                    $message = 'Hello '.$getUser->name.', Your account is restricted from login because you are flagged.';
+                $countryApproval = AllCountries::where('name', $getUser->country)->where('approval', 1)->first();
 
-                    $this->createNotification($getUser->refCode, $message);
+                    if(isset($countryApproval)){
+
+                        if($getUser->flagged == 1){
+                            $data = [];
+                            $status = 400;
+                            $message = 'Hello '.$getUser->name.', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.net/contact';
+
+                            $this->createNotification($getUser->refCode, $message);
+                        }
+                        elseif($getUser->accountLevel == 0){
+                            $data = [];
+                            $status = 400;
+                            $message = 'Hello '.$getUser->name.', Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.';
+
+                            $this->createNotification($getUser->refCode, $message);
+                        }
+                        else{
+
+                            $countryInfo = $this->getCountryCode($getUser->country);
+
+                            $currencyCode = $countryInfo[0]->currencies[0]->code;
+                            $currencySymbol = $countryInfo[0]->currencies[0]->symbol;
+
+
+                            // Update User API Token
+                            User::where('email', $request->email)->update(['api_token' => $token, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
+
+                            $userData = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'accountLevel', 'cardRequest', 'flagged')->where('email', $request->email)->first();
+
+                            $data = $userData;
+                            $status = 200;
+                            $message = 'Login successful';
+
+                            $this->createNotification($userData->refCode, "Hello ".$getUser->name.", Your login was successful. Welcome back");
+                        }
+
+                        User::where('email', $request->email)->update(['countryapproval' => 1]);
                 }
-                // elseif($getUser->accountLevel == 0){
-                //     $data = [];
-                //     $status = 400;
-                //     $message = 'Hello '.$getUser->name.', Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.';
-
-                //     $this->createNotification($getUser->refCode, $message);
-                // }
                 else{
 
-                    $countryInfo = $this->getCountryCode($getUser->country);
+                    $data = [];
+                    $status = 400;
+                    $message = 'Hello '.$getUser->name.', PaySprint is currently not available in your country. You can contact our Customer Service Executives for further enquiries. Thanks';
 
-                    $currencyCode = $countryInfo[0]->currencies[0]->code;
-                    $currencySymbol = $countryInfo[0]->currencies[0]->symbol;
+                    User::where('email', $request->email)->update(['countryapproval' => 0]);
 
-
-                    // Update User API Token
-                    User::where('email', $request->email)->update(['api_token' => $token, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
-
-                    $userData = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'accountLevel')->where('email', $request->email)->first();
-
-                    $data = $userData;
-                    $status = 200;
-                    $message = 'Login successful';
-
-                    $this->createNotification($userData->refCode, "Hello ".$getUser->name.", Your login was successful. Welcome back");
                 }
-
 
 
 
@@ -265,7 +315,7 @@ class UserController extends Controller
 
     public function updateProfile(Request $request, User $user){
 
-        $user = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'dayOfBirth', 'monthOfBirth', 'yearOfBirth')->where('api_token', $request->bearerToken())->first();
+        $user = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'dayOfBirth', 'monthOfBirth', 'yearOfBirth', 'cardRequest')->where('api_token', $request->bearerToken())->first();
         
 
         User::where('id', $user->id)->update($request->all());
@@ -310,7 +360,7 @@ class UserController extends Controller
         }
 
 
-        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'accountType', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'dayOfBirth', 'monthOfBirth', 'yearOfBirth')->where('api_token', $request->bearerToken())->first();
+        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'accountType', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'dayOfBirth', 'monthOfBirth', 'yearOfBirth', 'cardRequest')->where('api_token', $request->bearerToken())->first();
 
         $status = 200;
 
@@ -323,7 +373,7 @@ class UserController extends Controller
 
     public function updateMerchantProfile(Request $request, Admin $admin, ClientInfo $clientinfo){
 
-        $user = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'dayOfBirth', 'monthOfBirth', 'yearOfBirth')->where('api_token', $request->bearerToken())->first();
+        $user = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'dayOfBirth', 'monthOfBirth', 'yearOfBirth', 'cardRequest')->where('api_token', $request->bearerToken())->first();
         
 
         User::where('id', $user->id)->update($request->all());
@@ -365,7 +415,7 @@ class UserController extends Controller
         }
 
 
-        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'accountType', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'dayOfBirth', 'monthOfBirth', 'yearOfBirth')->where('api_token', $request->bearerToken())->first();
+        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'accountType', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'dayOfBirth', 'monthOfBirth', 'yearOfBirth', 'cardRequest')->where('api_token', $request->bearerToken())->first();
 
         $status = 200;
 
@@ -407,7 +457,7 @@ class UserController extends Controller
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-        $data = ClientInfo::select('type_of_service as typeOfService')->where('type_of_service', '!=', null)->where('country', $thisuser->country)->orderBy('created_at', 'DESC')->groupBy('type_of_service')->get();
+        $data = ClientInfo::select('industry')->where('industry', '!=', null)->where('country', $thisuser->country)->orderBy('created_at', 'DESC')->groupBy('industry')->get();
 
         Log::info($data);
 
@@ -423,7 +473,7 @@ class UserController extends Controller
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-        $query = ClientInfo::select('id', 'user_id as userId', 'business_name as businessName', 'address', 'corporate_type as corporateType', 'industry', 'type_of_service as typeOfService', 'website', 'firstname', 'lastname', 'telephone', 'country', 'state', 'city', 'zip_code as zipCode')->where('type_of_service', $req->get('service'))->where('country', $thisuser->country)->orderBy('created_at', 'DESC')->orderBy('created_at', 'DESC')->get();
+        $query = ClientInfo::select('id', 'user_id as userId', 'business_name as businessName', 'address', 'corporate_type as corporateType', 'industry', 'type_of_service as typeOfService', 'website', 'firstname', 'lastname', 'telephone', 'country', 'state', 'city', 'zip_code as zipCode')->where('industry', $req->get('industry'))->where('country', $thisuser->country)->orderBy('created_at', 'DESC')->orderBy('created_at', 'DESC')->get();
 
         if(count($query) > 0){ 
 
@@ -438,13 +488,36 @@ class UserController extends Controller
             $message = 'No record';
         }
 
-        Log::info($data);
+        // Log::info($data);
 
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
 
+    }
+
+    public function getMerchantData(Request $req, $id){
+
+        $query = ClientInfo::select('id', 'user_id as userId', 'business_name as businessName', 'address', 'corporate_type as corporateType', 'industry', 'type_of_service as typeOfService', 'website', 'firstname', 'lastname', 'telephone', 'country', 'state', 'city', 'zip_code as zipCode')->where('id', $id)->first();
+
+        if(isset($query)){ 
+
+            $data = $query;
+            $status = 200;
+            $message = 'success';
+
+        }
+        else{
+            $data = [];
+            $status = 400;
+            $message = 'No record';
+        }
+
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
     }
 
 
@@ -578,6 +651,143 @@ class UserController extends Controller
                         Log::notice("Hello ".strtoupper($thisuser->name).", You have successfully set up your security question and answer.");
 
                         $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully set up your security question and answer.");
+
+                }
+                else{
+
+                    $error = implode(",",$validator->messages()->all());
+
+                    $data = [];
+                    $status = 400;
+                    $message = $error;
+                }
+
+                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                return $this->returnJSON($resData, $status);
+
+    }
+
+
+
+    public function linkAccount(Request $req){
+        
+
+        $validator = Validator::make($req->all(), [
+                     'account_number' => 'required|string',
+                     'security_question' => 'required|string',
+                     'security_answer' => 'required|string',
+                ]);
+
+                if($validator->passes()){
+
+                        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+                        // Update
+                        $getAccount = User::where('ref_code', $req->account_number)->first();
+
+                        if(isset($getAccount)){
+
+                            if($getAccount->securityQuestion == $req->security_question && strtolower($getAccount->securityAnswer) == strtolower($req->security_answer)){
+
+
+                                // Link Account
+                                $resp = LinkAccount::updateOrInsert(['ref_code' => $thisuser->ref_code, 'link_ref_code' => $getAccount->ref_code], ['ref_code' => $thisuser->ref_code, 'link_ref_code' => $req->account_number]);
+
+                                $info = "Hello ".strtoupper($thisuser->name).", You have linked your account ".$req->account_number." (".$getAccount->currencyCode.") with your primary account ".$thisuser->ref_code." (".$thisuser->currencyCode.")";
+
+                                $data = $resp;
+                                $message = "Successfull";
+                                $status = 200;
+
+
+                                Log::notice($info);
+
+                                $this->createNotification($thisuser->ref_code, $info);
+
+                            }
+                            else{
+
+                                $error = "Invalid security question and answer provided";
+
+                                $data = [];
+                                $status = 400;
+                                $message = $error;
+
+                            }
+
+                        }
+                        else{
+                            $error = "Account number not found";
+
+                            $data = [];
+                            $status = 400;
+                            $message = $error;
+                        }
+
+                        
+
+                        
+
+                }
+                else{
+
+                    $error = implode(",",$validator->messages()->all());
+
+                    $data = [];
+                    $status = 400;
+                    $message = $error;
+                }
+
+                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                return $this->returnJSON($resData, $status);
+
+    }
+
+
+
+    public function otherAccount(Request $req){
+        
+
+        $validator = Validator::make($req->all(), [
+                     'account_number' => 'required|string',
+                ]);
+
+                if($validator->passes()){
+
+                        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+                        // Update
+                        $getAccount = User::where('ref_code', $req->account_number)->first();
+
+                        if(isset($getAccount)){
+
+                            $link = route('sign out', $getAccount->id);
+
+                            $info = "Hello ".strtoupper($thisuser->name).", You have switched account to ".$req->account_number." (".$getAccount->currencyCode.") from your primary account ".$thisuser->ref_code." (".$thisuser->currencyCode.")";
+
+                            $data = $link;
+                            $message = "Successfull";
+                            $status = 200;
+
+
+                            Log::notice($info);
+
+                            $this->createNotification($thisuser->ref_code, $info);
+                            
+                        }
+                        else{
+                            $error = "Account number not found";
+
+                            $data = [];
+                            $status = 400;
+                            $message = $error;
+                        }
+
+                        
+
+                        
 
                 }
                 else{
@@ -877,6 +1087,18 @@ class UserController extends Controller
         User::where('id', $id)->update([''.$rowName.'' => $docPath]);
 
     }
+
+
+    public function logout(Request $request, $id) {
+        $user = User::where('id', $id)->first();
+
+        User::where('id', $id)->update(['api_token' => encrypt($user->email)]);
+
+        Auth::login($user);
+
+        return redirect('/home');
+    }
+
 
     
     public function sendEmail($objDemoa, $purpose){

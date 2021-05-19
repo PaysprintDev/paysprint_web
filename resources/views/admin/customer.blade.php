@@ -13,11 +13,19 @@
     <section class="content-header">
 
       <h1>
-         Customer Invoice Details
+        @isset($getCustomer)
+         {{ $getCustomer[0]->name." Invoice details" }}
+            
+        @endisset
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Customer Invoice Details</li>
+        <li class="active">
+          @isset($getCustomer)
+         {{ $getCustomer[0]->name." Invoice details" }}
+            
+        @endisset
+        </li>
       </ol>
     </section>
 
@@ -27,7 +35,12 @@
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Customer Invoice Details</h3>
+              <h3 class="box-title">
+                @isset($getCustomer)
+         {{ $getCustomer[0]->name." Invoice details" }}
+            
+        @endisset
+              </h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -35,7 +48,7 @@
                 <button class="btn btn-secondary btn-block bg-blue" onclick="goBack()"><i class="fas fa-chevron-left"></i> Go back</button>
             </div>
 
-              <table class="table table-bordered table-striped">
+              <table class="table table-bordered table-striped" id="userInvoice">
                 
                 <tbody>
                   @if(count($getCustomer) > 0)
@@ -118,7 +131,15 @@
                       </tr>
                       <tr>
                         <td>Status</td>
-                        <td>{{ $getCustomer[0]->status }}</td>
+                        <td>
+                          @if ($getCustomer[0]->payment_status == 1)
+                              FULLY PAID
+                          @elseif ($getCustomer[0]->payment_status == 2)
+                              PARTLY PAID
+                              @else
+                              PENDING
+                          @endif
+                        </td>
                       </tr>
                       <tr>
                         <td>Recurring</td>
@@ -140,6 +161,10 @@
                         <button type="button" class="btn btn-danger" onclick="invoiceVisit('{{ $getCustomer[0]->id }}', 'delete')">Delete <img src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" class="spinnerdelete disp-0" style="width: 30px; height: 30px;"></button>
 
                         <button class="btn btn-default edit" type="button" onclick="invoiceVisit('{{ $getCustomer[0]->id }}', 'edit')">Edit <img src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" class="spinneredit disp-0" style="width: 30px; height: 30px;"></button>
+
+
+                        <button class="btn btn-success print" type="button" onclick="print()">Print <img src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" class="spinneredit disp-0" style="width: 30px; height: 30px;"></button>
+
                         <button class="btn btn-default updt disp-0" type="submit">Update <img src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" class="spinnerupdate disp-0" style="width: 30px; height: 30px;"></button>
                       </div>
                       <br><br>

@@ -30,9 +30,9 @@
           </div>
           <div class="col-11 col-md-10 col-lg-7 col-xl-6 order-lg-1" data-aos="fade-right" data-aos-duration="500" data-aos-once="true">
             <div class="hero-content mt-11 mt-lg-0">
-              <h4 class="pre-title gr-text-12 text-red text-uppercase mb-7" style="font-size: 22px;">Let’s shift your business</h4>
-              <h1 class="title gr-text-2 mb-8">Safe and Secure Way to Send Money!</h1>
-              <p class="gr-text-8 mb-11 pr-md-12">Fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!.</p>
+              <h4 class="pre-title gr-text-12 text-red text-uppercase mb-7" style="font-size: 22px;">Let’s lift your business</h4>
+              <h1 class="title gr-text-2 mb-8" style="font-size:60px">Create and Send Professional Invoices for FREE!</h1>
+              <p class="gr-text-8 mb-11 pr-md-12">Create invoice at a click of a button and accept payment from customers with ease, anytime, anywhere!.</p>
 
               
 
@@ -51,7 +51,7 @@
                         <span class="mr-2 gr-text-color circle-18 border border-black-dynamic">
                             <i class="icon icon-triangle-right-17-2 gr-text-14"></i>
                         </span>
-                        <span class="gr-text-12 font-weight-bold text-uppercase">How PaySprint
+                        <span class="gr-text-12 font-weight-bold text-uppercase" style="font-size: 16px;">How PaySprint
                             works</span>
                     </a>
 
@@ -258,7 +258,6 @@
                             <li>●	Connect Your Preferred Accounting Software.</li>
                             <li>●	Invite Your Accountant.</li>
                             <li>●	Safe and Secure Multi-Level Security and Authentication Features</li>
-                            <li>●	Delegate Tasks To Sub-Ordinates</li>
                         </ul>
 
 
@@ -512,6 +511,7 @@
       </div>
     </div>
 
+
     
 <!-- CTA section -->
 <div class="cta-section pt-15 pt-lg-30 pb-5 pb-lg-5 bg-pattern pattern-7" style="background-color: #f2f2f2 !important;">
@@ -529,11 +529,24 @@
                     </a>
                     <p class="gr-text-11 mb-0 mt-6" style="color: #433d3d;">It takes only 2 mins!</p>
                 </div>
+
+                <div class="hero-img" data-aos="fade-left" data-aos-duration="500" data-aos-once="true">
+                  <div class="hero-video-thumb position-relative gr-z-index-1">
+                    <center>
+<img src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg" alt="" class="w-100 rounded-8" style="height: 350px !important;width: 350px !important;">
+</center>
+                    <a class="video-play-trigger gr-abs-center bg-white circle-xl gr-flex-all-center gr-abs-hover-y focus-reset" data-fancybox="" href="https://youtu.be/A6FGnRpcVok" tabindex="-1"><i class="icon icon-triangle-right-17-2"></i></a>
+                    {{-- <div class="abs-shape gr-abs-tr-custom gr-z-index-n1">
+                      <img src="{{ asset('newpage/image/l4/png/l4-hero-shape.png') }}" alt="" class="w-100" data-aos="zoom-in" data-aos-delay="400" data-aos-duration="800" data-aos-once="true">
+                    </div> --}}
+                  </div>
+                </div>
+
             </div>
 
             <div class="col-md-3">
                 <center>
-                    <img class="shadow-lg" src="https://res.cloudinary.com/pilstech/image/upload/v1620149152/paysprint_asset/image_app_u3evka.webp" alt="mobile app" style="width: 80%; border-radius: 10px; position: relative; z-index: 1000;">
+                    <img class="shadow-lg" src="https://res.cloudinary.com/pilstech/image/upload/v1621266225/paysprint_icon_opahry.webp" alt="mobile app" style="width: 80%; border-radius: 10px; position: relative; z-index: 1000;">
                 </center>
             </div>
 

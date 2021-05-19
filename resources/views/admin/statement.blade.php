@@ -7,11 +7,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         Statement
+         Transaction History
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Statement</li>
+        <li class="active">Transaction History</li>
       </ol>
     </section>
 
@@ -59,7 +59,7 @@
               <br>
               <div class="row">
                 <div class="col-md-12">
-                  <button class="btn btn-primary" onclick="checkStatement()">Check Statement <img src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" class="spinner disp-0" style="width: 40px; height: 40px;"></button>
+                  <button class="btn btn-primary" onclick="checkStatement()">Check Transactions <img src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" class="spinner disp-0" style="width: 40px; height: 40px;"></button>
                 </div>
               </div>
             </div>
@@ -86,15 +86,21 @@
                             <td>{{ date('d/F/Y', strtotime($items->transaction_date)) }}</td>
                             <td>{!! $items->description !!}</td>
                             <td>{{ $items->transactionid }}</td>
-                            <td>{{ number_format($items->invoice_amount, 2) }}</td>
-                            <td>{{ number_format($items->amount_paid, 2) }}</td>
-                            <td><?php $inv = $items->invoice_amount; $amt = $items->amount_paid; $rem = $inv - $amt;?> {{ number_format($rem,2) }}</td>
+
+                            @if($userInfo = \App\User::where('ref_code', session('user_id'))->first())
+
+                              <td>{{ $userInfo->currencySymbol.number_format($items->invoice_amount, 2) }}</td>
+                              <td>{{ $userInfo->currencySymbol.number_format($items->amount_paid, 2) }}</td>
+                            <td><?php $inv = $items->invoice_amount; $amt = $items->amount_paid; $rem = $inv - $amt;?> {{ $userInfo->currencySymbol.number_format($rem,2) }}</td>
+                              @endif
+
+                            
                         </tr>
                         @endforeach
 
                     @else
                     <tr>
-                        <td colspan="7" align="center">No statement available</td>
+                        <td colspan="7" align="center">No transaction available</td>
                     </tr>
                     @endif
                 </tbody>

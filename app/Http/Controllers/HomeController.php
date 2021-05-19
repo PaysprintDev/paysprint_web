@@ -66,6 +66,8 @@ use App\CardIssuer as CardIssuer;
 
 use App\Notifications as Notifications;
 
+use App\AllCountries as AllCountries;
+
 use App\Traits\RpmApp;
 
 use App\Traits\Trulioo;
@@ -82,6 +84,7 @@ class HomeController extends Controller
     public $message;
     public $file;
     public $ref_code;
+    public $country;
 
     use RpmApp;
     use Trulioo;
@@ -92,7 +95,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'myinvoice', 'setupBills', 'checkmyBills', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'payOrganization', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'paymentOrganization', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate']]);
+        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'paymentOrganization', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure']]);
     }
 
     /**
@@ -211,6 +214,37 @@ class HomeController extends Controller
     }
 
 
+    public function feeStructure(Request $req)
+    {
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'Pricing';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
+            }
+            else{
+                $this->page = 'Pricing';
+                $this->name = '';
+                $data = [];
+            }
+
+        }
+        else{
+            $this->page = 'Pricing';
+            $this->name = session('name');
+            $this->email = session('email');
+            $data = [];
+        }
+
+        return view('main.newpage.shade-pro.pricing')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
 
 
     public function about(Request $req)
@@ -280,6 +314,9 @@ class HomeController extends Controller
 
         return view('main.termofuse')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
+
+
+
 
 
     public function privacyPolicy(Request $req)
@@ -924,7 +961,7 @@ class HomeController extends Controller
 
 
     public function getMerchantHere($service){
-        $data = ClientInfo::where('type_of_service', $service)->where('country', Auth::user()->country)->orderBy('created_at', 'DESC')->get();
+        $data = ClientInfo::where('industry', $service)->where('country', Auth::user()->country)->orderBy('created_at', 'DESC')->get();
 
         return $data;
     }
@@ -942,7 +979,7 @@ class HomeController extends Controller
     }
 
     public function getMerchantsByCategory(){
-        $data = ClientInfo::where('type_of_service', '!=', null)->where('country', Auth::user()->country)->orderBy('created_at', 'DESC')->groupBy('type_of_service')->get();
+        $data = ClientInfo::where('industry', '!=', null)->where('country', Auth::user()->country)->orderBy('created_at', 'DESC')->groupBy('industry')->get();
 
         return $data;
     }
@@ -2161,7 +2198,7 @@ class HomeController extends Controller
         // $getBilling = ImportExcel::where('invoice_no', $req->route('key'))->get();
 
         $getBilling = DB::table('users')
-                     ->select(DB::raw('invoice_payment.transactionid as trans_id, invoice_payment.name, invoice_payment.email, invoice_payment.amount as payedAmount, invoice_payment.invoice_no as paidinvoice_no, invoice_payment.service as paidservice, invoice_payment.remaining_balance as remaining_balance, import_excel.payee_ref_no as payee_ref_no, import_excel.description as description, import_excel.amount as invoice_amount, import_excel.transaction_ref as transaction_ref, invoice_payment.created_at, users.address, users.city, users.state, users.zip, users.country, import_excel.uploaded_by, import_excel.payment_due_date'))
+                     ->select(DB::raw('invoice_payment.transactionid as trans_id, invoice_payment.name, invoice_payment.email, invoice_payment.amount as payedAmount, invoice_payment.invoice_no as paidinvoice_no, invoice_payment.service as paidservice, invoice_payment.remaining_balance as remaining_balance, import_excel.payee_ref_no as payee_ref_no, import_excel.description as description, import_excel.amount as invoice_amount, import_excel.transaction_ref as transaction_ref, invoice_payment.created_at, users.address, users.city, users.state, users.zip, users.country, import_excel.uploaded_by, import_excel.payment_due_date, import_excel.tax_amount, import_excel.total_amount'))
                         ->join('invoice_payment', 'users.email', '=', 'invoice_payment.email')
                          ->join('import_excel', 'invoice_payment.invoice_no', '=', 'import_excel.invoice_no')
                         ->where('invoice_payment.invoice_no', $req->route('key'))
@@ -2175,7 +2212,7 @@ class HomeController extends Controller
             }
             else{
                 $getBilling = DB::table('users')
-                     ->select(DB::raw('import_excel.payee_ref_no as trans_id, import_excel.name, import_excel.payee_email as email, import_excel.invoice_no as paidinvoice_no, import_excel.service as paidservice, import_excel.remaining_balance as remaining_balance, import_excel.payee_ref_no as payee_ref_no, import_excel.description as description, import_excel.amount as invoice_amount, import_excel.transaction_ref as transaction_ref, import_excel.created_at, users.address, users.city, users.state, users.zip, users.country, import_excel.uploaded_by, import_excel.payment_due_date'))
+                     ->select(DB::raw('import_excel.payee_ref_no as trans_id, import_excel.name, import_excel.payee_email as email, import_excel.invoice_no as paidinvoice_no, import_excel.service as paidservice, import_excel.remaining_balance as remaining_balance, import_excel.payee_ref_no as payee_ref_no, import_excel.description as description, import_excel.amount as invoice_amount, import_excel.transaction_ref as transaction_ref, import_excel.created_at, users.address, users.city, users.state, users.zip, users.country, import_excel.uploaded_by, import_excel.payment_due_date, import_excel.tax_amount, import_excel.total_amount'))
                          ->join('import_excel', 'users.email', '=', 'import_excel.payee_email')
                         ->where('import_excel.invoice_no', $req->route('key'))
                         ->get();
@@ -2434,6 +2471,7 @@ class HomeController extends Controller
 
     // Custom Ajax Request
     public function ajaxregister(Request $req){
+            
 
         // Check table if user already exist
         $checkUser = User::where('email', $req->email)->get();
@@ -2474,13 +2512,15 @@ class HomeController extends Controller
                             // Insert User record
                 if($req->accountType == "Individual"){
                     // Insert Information for Individual user
-                    $insInd = User::insert(['ref_code' => $req->ref_code, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email).time(), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth]);
+                    $insInd = User::insert(['ref_code' => $req->ref_code, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number.' '.$req->street_name.', '.$req->city.' '.$req->state.' '.$req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email).time(), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth]);
                 }
                 elseif($req->accountType == "Business"){
                     // Insert Information for Business user
-                    $insBus = User::insert(['ref_code' => $req->ref_code, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email).time(), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
+                    $insBus = User::insert(['ref_code' => $req->ref_code, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number.' '.$req->street_name.', '.$req->city.' '.$req->state.' '.$req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email).time(), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
 
                 }
+
+                Statement::where('user_id', $req->email)->update(['status' => 'Delivered']);
 
 
                 AnonUsers::where('ref_code', $req->ref_code)->delete();
@@ -2493,13 +2533,13 @@ class HomeController extends Controller
                             // Insert User record
                 if($req->accountType == "Individual"){
                     // Insert Information for Individual user
-                    $insInd = User::insert(['ref_code' => $newRefcode, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email).time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth]);
+                    $insInd = User::insert(['ref_code' => $newRefcode, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number.' '.$req->street_name.', '.$req->city.' '.$req->state.' '.$req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email).time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth]);
 
                     // $req->session()->put(['name' => $name, 'email' => $req->email, 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType]);
                 }
                 elseif($req->accountType == "Business"){
                     // Insert Information for Business user
-                    $insBus = User::insert(['ref_code' => $newRefcode, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email).time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
+                    $insBus = User::insert(['ref_code' => $newRefcode, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number.' '.$req->street_name.', '.$req->city.' '.$req->state.' '.$req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $mycode[0]->callingCodes[0], 'api_token' => uniqid().md5($req->email).time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
 
                     // $req->session()->put(['businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype]);
 
@@ -2521,7 +2561,10 @@ class HomeController extends Controller
 
                 $usersname = explode(" ", $name);
 
-                $info = $this->identificationAPI($url, $usersname[0], $usersname[1], Auth::user()->dayOfBirth, Auth::user()->monthOfBirth, Auth::user()->yearOfBirth, $minimuAge, Auth::user()->address, Auth::user()->city, Auth::user()->country, Auth::user()->zipcode, Auth::user()->telephone, Auth::user()->email, $mycode[0]->alpha2Code);
+                $countryApproval = AllCountries::where('name', Auth::user()->country)->where('approval', 1)->first();
+
+                if(isset($countryApproval)){
+                    $info = $this->identificationAPI($url, $usersname[0], $usersname[1], Auth::user()->dayOfBirth, Auth::user()->monthOfBirth, Auth::user()->yearOfBirth, $minimuAge, Auth::user()->address, Auth::user()->city, Auth::user()->country, Auth::user()->zipcode, Auth::user()->telephone, Auth::user()->email, $mycode[0]->alpha2Code);
 
 
                         if(isset($info->TransactionID) == true){
@@ -2537,17 +2580,21 @@ class HomeController extends Controller
                                 $title = "Oops!";
                                 $link = "contact";
                                 
-                                $resInfo = strtoupper($res->Record->RecordStatus).", Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.";
+                                $resInfo = strtoupper($res->Record->RecordStatus).", Our system is unable to complete your Sign Up process at this time. You will be directed to the Contact Us page to submit your Name and email. One of our Customer Service Executives would contact you within the next 24 hours for further assistance.";
+
+                                User::where('id', Auth::user()->id)->update(['accountLevel' => 0, 'countryapproval' => 1]);
                                 
                             }
                             else{
                                 $message = "success";
                                 $title = "Great";
                                 $link = "/";
-                                $resInfo = strtoupper($res->Record->RecordStatus).", Congratulations!!!. Your account has been approved. Please complete the Quick Set up to enjoy PaySprint. You will be redirected in 5sec";
+                                $resInfo = strtoupper($res->Record->RecordStatus).", Congratulations!!!. Your account has been approved. Kindly complete the Quick Set up to enjoy the full benefits of  PaySprint. You will be redirected in 5sec";
+
+                                
 
                                 // Udpate User Info
-                                User::where('id', Auth::user()->id)->update(['accountLevel' => 1]);
+                                User::where('id', Auth::user()->id)->update(['accountLevel' => 1, 'countryapproval' => 1]);
                             }
 
                         }
@@ -2555,19 +2602,36 @@ class HomeController extends Controller
                             $message = "error";
                             $title = "Oops!";
                             $link = "contact";
-                            $resInfo = "Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.";
+                            $resInfo = "Our system is unable to complete your Sign Up process at this time. You will be directed to the Contact Us page to submit your Name and email. One of our Customer Service Executives would contact you within the next 24 hours for further assistance.";
+
+                            User::where('id', Auth::user()->id)->update(['accountLevel' => 0, 'countryapproval' => 1]);
 
                             // $resp = $info->Message;
                         }
+                }
+                else{
+
+                    $message = "error";
+                    $title = "Oops!";
+                    $link = "contact";
+                    $resInfo = "PaySprint is not yet available for use in your country. You can contact our Customer Service Executives for further assistance";
+
+                    User::where('id', Auth::user()->id)->update(['accountLevel' => 0, 'countryapproval' => 0]);
+                }
 
 
-                        Log::info("New user registration via web by: ".$name." from ".$req->state.", ".$req->country." STATUS: ".$resInfo);
+
+                
+
+
+                        Log::info("New user registration via web by: ".$name." from ".$req->state.", ".$req->country." \n\n STATUS: ".$resInfo);
 
 
                         // This is the response for now until trulioo activates us to LIVE..
-                        $message = "success";
-                        $title = "Great";
-                        $link = "/";
+                        // $message = "success";
+                        // $title = "Great";
+                        // $link = "/";
+                        // $resInfo = "Hello ".$name.", Welcome to PaySprint!";
 
 
                     $resData = ['res' => $resInfo, 'message' => $message, 'link' => $link];
@@ -2590,38 +2654,55 @@ class HomeController extends Controller
             // Check User Password if match
             if(Hash::check($req->password, $userExists[0]['password'])){
 
-                // Check if Flagged or not
-                if($userExists[0]['flagged'] == 1){
 
-                    $resData = ['res' => 'Hello '.$userExists[0]['name'].', Your account is restricted from login because you are flagged.', 'message' => 'error'];
-
-                    $this->createNotification($userExists[0]['ref_code'], 'Hello '.$userExists[0]['name'].', Your account is restricted from login because you are flagged.');
-                }
-                // elseif($userExists[0]['accountLevel'] == 0){
-
-                //     $resData = ['res' => 'Hello '.$userExists[0]['name'].', Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.', 'message' => 'error'];
-
-                //     $this->createNotification($userExists[0]['ref_code'], 'Hello '.$userExists[0]['name'].', Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.');
-                // }
-                else{
-                    $countryInfo = $this->getCountryCode($userExists[0]['country']);
-
-                    $currencyCode = $countryInfo[0]->currencies[0]->code;
-                    $currencySymbol = $countryInfo[0]->currencies[0]->symbol;
+                $countryApproval = AllCountries::where('name', $userExists[0]['country'])->where('approval', 1)->first();
 
 
-                    if($userExists[0]['accountType'] == "Merchant"){
-                        $resData = ['res' => 'Hello '.$userExists[0]['name'].', your account exists as a merchant. Kindly login on the merchant section', 'message' => 'error'];
+                if(isset($countryApproval)){
+                                    // Check if Flagged or not
+                    if($userExists[0]['flagged'] == 1){
+
+                        $resData = ['res' => 'Hello '.$userExists[0]['name'].', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.net/contact.', 'message' => 'error'];
+
+                        $this->createNotification($userExists[0]['ref_code'], 'Hello '.$userExists[0]['name'].', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.net/contact.');
+                    }
+                    elseif($userExists[0]['accountLevel'] == 0){
+
+                        $resData = ['res' => 'Hello '.$userExists[0]['name'].', Our system is unable to complete your Sign Up process at this time. Kindly Contact Us to submit your Name and email. One of our Customer Service Executives would contact you within the next 24 hours for further assistance.', 'message' => 'error'];
+
+                        $this->createNotification($userExists[0]['ref_code'], 'Hello '.$userExists[0]['name'].', Our system is unable to complete your Sign Up process at this time. Kindly Contact Us to submit your Name and email. One of our Customer Service Executives would contact you within the next 24 hours for further assistance.');
                     }
                     else{
-                        // Update API Token
-                        User::where('email', $req->email)->update(['api_token' => uniqid().md5($req->email).time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
+                        $countryInfo = $this->getCountryCode($userExists[0]['country']);
 
-                        $resData = ['res' => 'Welcome back '.$userExists[0]['name'], 'message' => 'success'];
+                        $currencyCode = $countryInfo[0]->currencies[0]->code;
+                        $currencySymbol = $countryInfo[0]->currencies[0]->symbol;
+
+                        $loginCount = $userExists[0]['loginCount'] + 1;
+
+
+                        if($userExists[0]['accountType'] == "Merchant"){
+                            $resData = ['res' => 'Hello '.$userExists[0]['name'].', your account exists as a merchant. Kindly login on the merchant section', 'message' => 'error'];
+                        }
+                        else{
+                            // Update API Token
+                            User::where('email', $req->email)->update(['api_token' => uniqid().md5($req->email).time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'lastLogin' => date('d-m-Y h:i A'), 'loginCount' => $loginCount]);
+
+                            $resData = ['res' => 'Welcome back '.$userExists[0]['name'], 'message' => 'success'];
+                        }
+
+                        
                     }
 
-                    
+                    User::where('email', $req->email)->update(['countryapproval' => 1]);
                 }
+                else{
+                    $resData = ['res' => 'Hello '.$userExists[0]['name'].', PaySprint is not yet available for use in your country. You can contact our Customer Service Executives for further assistance', 'message' => 'error'];
+
+                    User::where('email', $req->email)->update(['countryapproval' => 0]);
+                }
+
+
 
                 
             }else{
@@ -2946,7 +3027,7 @@ class HomeController extends Controller
 
     public function contactus(Request $req){
         // Insert Record
-        $contactUs = Contactus::insert(['name' => $req->name, 'email' => $req->email, 'subject' => $req->subject, 'website' => $req->website, 'message' => $req->message]);
+        $contactUs = Contactus::insert(['name' => $req->name, 'email' => $req->email, 'subject' => $req->subject, 'website' => $req->website, 'message' => $req->message, 'country' => $req->country]);
 
         if($contactUs == true){
 
@@ -2954,7 +3035,10 @@ class HomeController extends Controller
             $this->email = $req->email;
             $this->subject = $req->subject;
             $this->website = $req->website;
+            $this->country = $req->country;
             $this->message = $req->message;
+
+            Log::notice("Name: ".$this->name."\n Email: ".$this->email."\n Subject: ".$this->subject."\n Website: ".$this->website."\n Country: ".$this->country."\n Message: ".$this->message);
 
             $this->sendEmail($this->to, "Contact us");
 
@@ -3694,6 +3778,7 @@ class HomeController extends Controller
             $objDemo->email = $this->email;
             $objDemo->subject = $this->subject;
             $objDemo->website = $this->website;
+            $objDemo->country = $this->country;
             $objDemo->message = $this->message;
         }
         elseif($purpose == "Bronchure Download"){

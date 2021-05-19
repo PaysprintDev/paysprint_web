@@ -109,10 +109,10 @@ input[type="radio"] {
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/cotton/20/000000/money--v4.png"/> </span> </div>
                                             <select name="card_type" id="card_type" class="form-control" required>
                                                 <option value="">Select option</option>
-                                                <option value="Credit Card">Credit Card</option>
-                                                <option value="Debit Card">Debit Visa/Mastercard</option>
+                                                {{-- <option value="Credit Card">Credit Card</option> --}}
+                                                {{-- <option value="Debit Card">Debit Visa/Mastercard</option> --}}
                                                 <option value="Prepaid Card">Prepaid Card</option>
-                                                {{--  <option value="Bank Account">Bank Account</option>  --}}
+                                                 <option value="Bank Account">Bank Account</option> 
                                             </select>
                                             
                                         </div>
@@ -411,6 +411,8 @@ function runCardType(){
             if(result.message == "success"){
                 var res = result.data;
 
+                console.log(res);
+
                 if(result.action == "Bank Account"){
                     $.each(res, function(v, k){
                         $('#card_id').append(`<option value="${k.id}">${k.bankName} - ${k.accountNumber}</option>`);
@@ -446,11 +448,18 @@ function runCommission(){
     
     $('.commissionInfo').html("");
     var amount = $("#amount").val();
-    // var amount = $("#conversionamount").val();
+    var structure;
+
+    if($('#card_type').val() == "Prepaid Card"){
+        structure = "EXBC Prepaid Card";
+    }
+    else{
+        structure = "CC/Bank";
+    }
 
 
     var route = "{{ URL('Ajax/getCommission') }}";
-    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $('#card_type').val(), localcurrency: "{{ $data['currencyCode'][0]->currencies[0]->code }}", foreigncurrency: "USD", structure: "Withdrawal", structureMethod: "CC/Bank"};
+    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $('#card_type').val(), localcurrency: "{{ $data['currencyCode'][0]->currencies[0]->code }}", foreigncurrency: "USD", structure: "Withdrawal", structureMethod: structure};
 
 
     Pace.restart();
@@ -472,6 +481,7 @@ function runCommission(){
             var totalCharge;
 
             if(result.message == "success"){
+
 
                 $(".wallet-info").html(result.walletCheck);
                 $('.withWallet').removeClass('disp-0');

@@ -50,7 +50,7 @@ class Controller extends BaseController
                 $ip_response = '{"status":"success", "country":"Nigeria", "countryCode":"NG", "region":"LA", "regionName":"Lagos", "city":"Ikeja", "zip":"", "lat":6.4474, "lon":3.3903, "timezone":"Africa/Lagos", "isp":"Globacom Limited", "org":"Glomobile Gprs", "as":"AS37148 Globacom Limited", "query":"129.205.113.93"}';
             }
             else{
-                    $ip_response = file_get_contents('http://ip-api.com/json/'.$userIP);
+                    $ip_response = $this->curl_get_file_contents('http://ip-api.com/json/'.$userIP);
 
             }
 
@@ -65,6 +65,19 @@ class Controller extends BaseController
         // dd($ip_array);
 
         return  $ip_array;
+    }
+
+
+    public function curl_get_file_contents($URL)
+    {
+        $c = curl_init();
+        curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($c, CURLOPT_URL, $URL);
+        $contents = curl_exec($c);
+        curl_close($c);
+    
+        if ($contents) return $contents;
+        else return FALSE;
     }
 
 

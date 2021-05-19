@@ -20,7 +20,7 @@
                     <div class="subtittle">
                         <h2>1. INTRODUCTION</h2>
                     </div>
-                    <p>Thank you for using the services of PaySprint (PS). We build PS Services for individuals and merchant in order to improve the rate of meeting financial obligations and engagement.
+                    <p>Thank you for using the services of PaySprint (PS). We build PS Services for individuals and merchants in order to improve the rate of meeting financial obligations and engagement.
 
                         <br>
                         <br>
@@ -30,7 +30,7 @@
                         <br>
                         <br>
 
-                        These Terms of Service apply between you and the PaySprint (PS) by Express Ca Corp (as defined) located at 10 George St. North, Brampton. ON. L6X1R2 <strong>(‘PS’, ‘EXBC, ‘Express Ca Corp’, 'we’, ‘us’, ‘our’)</strong>.
+                        These Terms of Service apply between you and the PaySprint (PS) by Express Ca Corp (as defined) located at 10 George St. North, Brampton. ON. L6X1R2 <strong>(‘PS’, ‘EXBC, ‘Express Ca Corp’, 'we’, ‘us’, ‘our’).</strong>.
 
                     </p>
 
@@ -80,7 +80,7 @@
                             </li>
                         </ul>
 
-                        All information you provide, including all information concerning your name, address, credit card number, bank account details, information required for background checks and other identifying information of any nature is true, complete and accurate; and
+                        All information you provide, including all information concerning your name, address, credit card number, bank account details, information required for background checks and other identifying information of any nature is true, complete and accurate; and you consented that PS and its company should verify your identity based on information provided at the point of account creation and may show as enquiry in your credit report.
 
                         <br>
                         <br>
@@ -88,12 +88,12 @@
                         You will maintain the accuracy of all information provided to us.
 
                         <br><br>
-                        Customers who use payment processing services are required to provide all information necessary to enable us to verify your identity and ownership of bank accounts, including:
+                        Customers who use payment processing services are required to provide all information necessary to enable us to verify their identity and ownership of bank accounts, including:
 
                         <br>
                         <br>
 
-                        Personal information (full legal name, resident address, date of birth, and Social Security Number (or other government ID, if not a U.S. citizen)) for your beneficial ownership; and Information about your bank account(s) that may be used for payment processing including deposit of processed funds, for anti-money laundering laws, other applicable laws and internal procedures relating to “Know Your Client” and credit worthiness background checks. 
+                        Personal information (full legal name, resident address, date of birth, and Social Security Number (or other government ID, if not a U.S/Canadian. citizen) for your beneficial ownership; and Information about your bank account(s) that may be used for payment processing including deposit of processed funds, for anti-money laundering laws, other applicable laws and internal procedures relating to “Know Your Client” and credit worthiness background checks.
 
                         <br>
                         <br>
@@ -130,7 +130,7 @@
                         <ul>
                             <li>limit or suspend your access to the Services; and/or</li>
                             <li>terminate the Terms of Services or other agreement with you; and/or</li>
-                            <li>cancel your account; and/or</li>
+                            <li>cancel your account due to inactivity after 3 months; and/or</li>
                             <li>remove Customer Content uploaded to the Services,</li>
                         </ul>
 
@@ -172,7 +172,7 @@
                         <br>
                         <br>
 
-                        CUSTOMER NOTIFICATION: For service change notifications, we will communicate via your login area and/or directly to your Customer or Merchant Administrator email address or the phone number as provided to us.  
+                        CUSTOMER NOTIFICATION: For service change notifications, we will communicate via your login area and/or directly to your Customer or Merchant Administrator email address or the phone number as provided to us.
 
                         <br>
                         <br>
@@ -182,17 +182,17 @@
                         <br>
                         <br>
 
-                        By using the Services, you agree to pay all relevant Service Fees.
+                        By using the Services, you agree to pay all relevant Service Fees including PS Monthly Maintenance Charge.
 
                         <br>
                         <br>
 
-                        Service Fees payable for use of any Services are as described on the Website (unless otherwise agreed in writing) and may be updated from time to time. All pricing is specified on a monthly basis or per transactions and in CAD Dollars (unless otherwise specified).
+                        Service Fees payable for use of any Services are available on request (unless otherwise agreed in writing) and may be updated from time to time. All pricing is specified on a monthly basis or per transactions and in CAD Dollars (unless otherwise specified).
 
                         <br>
                         <br>
 
-                        Services will automatically renew at the end of each subscription period, unless you cancel the Services through your Account before the end of the current subscription period.
+                        Services will automatically renew at the end of each subscription month, unless you cancel the Services through your Account before the end of the current subscription month.
 
                         <br>
                         <br>
@@ -211,17 +211,17 @@
 
                         <br>
                         <br>
-                        PS allows Customers to accept payments via credit card, debit card, and ACH transactions including processing cards bearing the trademarks of Visa®, MasterCard®, Discover®, and American Express® (collectively, the “Networks”). PS is not a depositary institution and does not offer banking services or Money Service Business services as defined by the United States Department of Treasury. PS must enter into agreements with Networks, other processors, and banks. These third parties require our Customers to accept Sub-Merchant Agreement terms as described below.
+                        PS allows Merchants to accept payments through PS Wallet and via credit card, debit card, and ACH transactions including processing cards bearing the trademarks of Visa®, MasterCard®, Discover®, and American Express® (collectively, the “Networks”) for non-PS users. PS is not a depositary institution and does not offer banking services as defined by the Bank of Canada and United States Department of Treasury. PS must enter into agreements with Networks, other processors, and banks. These third parties require our Customers to accept Sub-Merchant Agreement terms as described below.
 
                         <br>
                         <br>
 
-                        Sub-Merchant Agreements: Customers who use payment processing services accept the relevant Sub-Merchant Agreements as determined by PS. Payment processing services for PS are currently provided by Moneris and are subject to the Moneris Connected Account Agreement, which includes the Moneris Terms of Service (collectively, the “Moneris Services Agreement”). By agreeing to these Terms of Service, you agree to be bound by the Moneris Services Agreement, as the same may be modified by Moneris from time to time. You also authorize us to share with Moneris any information you provide to us and transaction information related to your use of the Services provided by Moneris.
+                        Merchant Agreements: Customers who use payment processing services accept the relevant Sub-Merchant Agreements as determined by PS. Payment processing services for PS are currently provided by Moneris, Google Pay and Apple Pay and are subject to the Agreements, which includes the Moneris Terms of Service (collectively, the “Moneris Services Agreement”). By agreeing to these Terms of Service, you agree to be bound by the Moneris Services Agreement, as the same may be modified by Moneris from time to time. You also authorize us to share with Moneris any information you provide to us and transaction information related to your use of the Services provided by Moneris.
 
                         <br>
                         <br>
 
-                        Service/Processing Fees: Service Fees shall apply to all financial transactions conducted through the use of PS (including credit card, debit card, and ACH transactions) as further described on the Website or as otherwise agreed in writing.  
+                        Service/Processing Fees: Service Fees shall apply to all financial transactions conducted through the use of PS (including credit card, debit card, and ACH transactions) as further described on the Website or as otherwise agreed in writing.
 
                         <br>
                         <br>
@@ -236,7 +236,7 @@
                         <br>
                         <br>
 
-                        Wallet balance may be withdrawing at any time less all applicable charges. 
+                        Wallet balance may be withdrawing at any time less all applicable charges.
 
                         <br>
                         <br>
@@ -251,7 +251,7 @@
                         <br>
                         <br>
 
-                        Proceeds (net of any Fees and other deductibles) will be available for distribution to the beneficiary by bank transfer typically within 1-2 banking days of transaction for credit/debit cards and up to 1-week for ACH transactions.  
+                        Proceeds (net of any Fees and other deductibles) will be available for distribution to the beneficiary by bank transfer typically within 1-2 banking days of transaction for credit/debit cards and up to 1-week for ACH transactions. 
 
                         <br>
                         <br>
@@ -261,12 +261,12 @@
                         <br>
                         <br>
 
-                        Chargebacks: You agree that PS has the right to debit your PS wallet or bank/credit card account at any time to recover any negative balances that PS may incur, for example, as a result of refunds, chargebacks or disputed payments.  If PS is unable to collect on refunds/chargebacks using offset of your disbursement or debit of your bank account, PS has the right to invoice you for any unpaid balance.
+                        Chargebacks: You agree that PS has the right to debit your PS wallet or bank/credit card account at any time to recover any negative balances that PS may incur, for example, as a result of refunds, chargebacks or disputed payments. If PS is unable to collect on refunds/chargebacks using offset of your disbursement or debit of your bank account, PS has the right to invoice you for any unpaid balance.
 
                         <br>
                         <br>
 
-                        Unauthorized payments and Errors:  If an Error (as defined) occurs that is solely our fault, we will use all reasonable efforts to remedy that Error (subject to the limitations provided in Clause 5). You must notify us immediately if you think there may be an Error or if you need more information about an Error at: <strong><a href="mailto:support@paysprint.net">support@paysprint.net</a></strong>.
+                        Unauthorized payments and Errors: If an Error (as defined) occurs that is solely our fault, we will use all reasonable efforts to remedy that Error (subject to the limitations provided in Clause 5). You must notify us immediately if you think there may be an Error or if you need more information about an Error at: <strong><a href="mailto:support@paysprint.net">support@paysprint.net</a></strong>.
 
                         <br>
                         <br>
@@ -306,7 +306,7 @@
 
                         <br>
                         <br>
-                        Reservation of Rights. Subject to the limited rights expressly granted here under, PS reserves all rights, title and interest in and to the Services and content, including all related intellectual property rights. No rights are granted to you here under other than as expressly set forth here in.  
+                        Reservation of Rights. Subject to the limited rights expressly granted here under, PS reserves all rights, title and interest in and to the Services and content, including all related intellectual property rights. No rights are granted to you here under other than as expressly set forth here in. 
 
                         <br>
                         <br>
@@ -365,7 +365,7 @@
                         You are responsible for the security of your Account. You must maintain and observe all reasonable security measures to protect your electronic systems from unauthorized control, tampering, or other unauthorized access.
 
                         <br><br>
-                        You must keep all passwords confidential and ensure you comply with strong password requirements. You should not share or otherwise disclose your password to any third party. You are responsible for ensuring that Merchant Administrator(s) and Authorized User(s) also maintain the confidentiality of their passwords and meet strong password requirements.  
+                        You must keep all passwords confidential and ensure you comply with strong password requirements. You should not share or otherwise disclose your password to any third party. You are responsible for ensuring that Merchant Administrator(s) and Authorized User(s) also maintain the confidentiality of their passwords and meet strong password requirements.
 
                         <br>
                         <br>
@@ -426,12 +426,12 @@
                         <br>
                         <br>
 
-                        Some of the Services allow the Customer (or its Merchant Administrators or Authorized Users) to enter data into the Services.  This may include information related to third party individuals – for example, the names and addresses and other information relating to the Customer's members, and financial details of from those members (“Customer Content”).
+                        Some of the Services allow the Customer (or its Merchant Administrators or Authorized Users) to enter data into the Services. This may include information related to third party individuals – for example, the names and addresses and other information relating to the Customer's members, and financial details of from those members (“Customer Content”).
 
                         <br>
                         <br>
 
-                        Customer shall bear all responsibility for Customer Content. In particular, you will be responsible for the accuracy, quality and legality of all your Customer Content, the means by which you acquired Customer Content, your use of Customer Content with the Services, and the interoperation of any non-PS applications you use in conjunction with the Services or Customer Content. 
+                        Customer shall bear all responsibility for Customer Content. In particular, you will be responsible for the accuracy, quality and legality of all your Customer Content, the means by which you acquired Customer Content, your use of Customer Content with the Services, and the interoperation of any non-PS applications you use in conjunction with the Services or Customer Content.
 
                         <br>
                         <br>
@@ -461,7 +461,7 @@
                         <br>
                         <br>
 
-                        By integrating your YouTube channel or Playlist with any PS Services you agree to be bound by YouTube’s Terms of Services (https://www.youtube.com/t/terms) and our Privacy Policy which includes reference to data associated with your use of YouTube’s services and acceptance of Google Privacy Policy.  
+                        By integrating your YouTube channel or Playlist with any PS Services you agree to be bound by YouTube’s Terms of Services (https://www.youtube.com/t/terms) and our Privacy Policy which includes reference to data associated with your use of YouTube’s services and acceptance of Google Privacy Policy.
 
 
 
@@ -565,7 +565,7 @@
                         <br>
                         <br>
 
-                        Our Privacy Policy describes in more detail how PS processes personal data.  You should read that Privacy Policy and use the information it contains to help you make informed decisions.  
+                        Our Privacy Policy describes in more detail how PS processes personal data. You should read that Privacy Policy and use the information it contains to help you make informed decisions.
 
 
                         <br>
@@ -587,7 +587,7 @@
                         The PS GDPR Data Processing Addendum shall apply, in addition to the data protection provisions set out in these Terms of Service and the PS Privacy Policy, where:
                         <br>
                         <br>
-                        PS is acting as data processor in relation to the Services, and is subject to the provisions of the EU GDPR; or
+                        PS is acting as data processor in relation to the Services, and is subject to the provisions of the EU GDPR; or 
 
                         <br>
                         <br>
@@ -601,7 +601,7 @@
                         <br>
                         <br>
 
-                        If at any time the Addendum ceases to provide an appropriate safeguard (and, to that end, a lawful ground under applicable Data Protection Legislation) for the transfer of personal data to a third country, territory or international Merchant outside the EEA, then, at the election of PS, each party shall, at its own expense, execute and deliver any necessary documentation as may be required in order to enable the parties to continue to lawfully transfer personal data outside the EEA.
+                       If at any time the Addendum ceases to provide an appropriate safeguard (and, to that end, a lawful ground under applicable Data Protection Legislation) for the transfer of personal data to a third country, territory or international Merchant outside the EEA, then, at the election of PS, each party shall, at its own expense, execute and deliver any necessary documentation as may be required in order to enable the parties to continue to lawfully transfer personal data outside the EEA.
                         
 
                     </p>
@@ -702,7 +702,6 @@
                         <br>
                         <br>
                         The parties acknowledge that this Agreement evidences a transaction involving interstate commerce. Notwithstanding the provisions in this paragraph referencing applicable substantive law, the applicable federal law will govern any arbitration conducted pursuant to the terms of this Agreement.
-
                         
 
                     </p>
@@ -761,7 +760,7 @@
 
                         <br>
                         <br>
-                        Law means any law applying to the provision or use of the Services.  
+                        Law means any law applying to the provision or use of the Services. 
 
                         <br>
                         <br>
@@ -784,7 +783,7 @@
 
                         <br>
                         <br>
-                        is the GDPR, has the meaning given to it in the GDPR; and
+                       is the GDPR, has the meaning given to it in the GDPR; and
 
                         <br>
                         <br>
@@ -807,16 +806,16 @@
                         Term means the period of time referred to in clause 3.2.
                         <br>
                         <br>
-                        Unauthorized Transaction includes any transaction where an amount is debited or credited to an Account without authorization.  
+                        Unauthorized Transaction includes any transaction where an amount is debited or credited to an Account without authorization. 
                         <br>
                         <br>
                         You means a person or entity using the Services or visiting the Website (and includes Customers and Merchants).
                         <br>
                         <br>
-                        Website means, as the circumstances require, the websites located at www.paysprint.net. 
+                        Website means, as the circumstances require, the websites located at www.paysprint.net.
                         <br>
                         <br>
-                        PS includes PaySprint, EXBC or Express Ca Corp, subsidiaries, associates and affiliates. 
+                        PS includes PaySprint, EXBC or Express Ca Corp, subsidiaries, associates, and affiliates.
 
                     </p>
 

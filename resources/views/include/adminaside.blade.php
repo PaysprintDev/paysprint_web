@@ -40,12 +40,53 @@
           </a>
           <ul class="treeview-menu">
             <li class="active"><a href="{{ route('Admin') }}"><i class="fa fa-circle-o text-red"></i> Dashboard</a></li>
-            <li class="active"><a href="{{ route('home') }}"><i class="fa fa-circle-o text-primary"></i> Main Page</a></li>
-            {{-- <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li> --}}
+            <li><a href="{{ route('merchant home') }}"><i class="fa fa-circle-o text-primary"></i> Main Page</a></li>
+
+            @if (session('role') == "Super")
+            <li><a href="{{ route('platform activity') }}"><i class="fa fa-circle-o"></i> Activity</a></li>
+          @endif
+            
           </ul>
         </li>
 
         @if(session('role') == "Super")
+
+        <li>
+          <a href="{{ route('business report') }}">
+            <i class="fa fa-book"></i>
+            <span>Business Report</span>
+          </a>
+          
+        </li>
+
+
+        <li>
+          <a href="{{ route('all countries') }}">
+            <i class="fa fa-book"></i>
+            <span>All Countries</span>
+          </a>
+          
+        </li>
+
+
+        {{-- <li class="treeview">
+          <a href="#">
+            <i class="fa fa-book"></i>
+            <span>Business Report</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="{{ route('inflow reports') }}"><i class="fa fa-circle-o text-green"></i> Inflow </a></li>
+            <li><a href="{{ route('withdrawal reports') }}"><i class="fa fa-circle-o text-red"></i> Withdrawal</a></li>
+            <li><a href="{{ route('charge reports') }}"><i class="fa fa-circle-o text-red"></i> Charge</a></li>
+            <li><a href="{{ route('expected balance reports') }}"><i class="fa fa-circle-o text-red"></i> Expected Balance</a></li>
+            <li><a href="{{ route('actual balance reports') }}"><i class="fa fa-circle-o text-red"></i> Actual Balance</a></li>
+            <li><a href="{{ route('reconsilation reports') }}"><i class="fa fa-circle-o text-red"></i> Reconsilation</a></li>
+
+          </ul>
+        </li> --}}
 
         <li class="treeview disp-0">
           <a href="#">
@@ -113,18 +154,37 @@
 
         
 
-                <li class="treeview">
+        <li class="treeview">
           <a href="#">
             <i class="far fa-handshake"></i>
-            <span>Withdrawal</span>
+            <span>Withdrawal Request</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li title="Credit Card"><a href="#"><i class="fa fa-circle-o text-red"></i> Credit Card</a></li>
-            <li title="Prepaid Card"><a href="#"><i class="fa fa-circle-o text-red"></i> Prepaid Card</a></li>
+            <li title="Credit/Debit Card"><a href="{{ route('card request withdrawal') }}"><i class="fa fa-circle-o text-red"></i> Credit/Debit Card</a></li>
+            <li title="prepaid Card"><a href="{{ route('prepaid request withdrawal') }}"><i class="fa fa-circle-o text-red"></i> Prepaid Card</a></li>
             <li title="Bank Account"><a href="{{ route('bank request withdrawal') }}"><i class="fa fa-circle-o text-red"></i> Bank Account</a></li>
+
+          </ul>
+        </li>
+
+
+        <li class="treeview">
+          <a href="#">
+            <i class="far fa-handshake"></i>
+            <span>Processed Withdrawals</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li title="Credit/Debit Card"><a href="{{ route('card processed withdrawal') }}"><i class="fa fa-circle-o text-red"></i>Credit/Debit Card</a></li>
+            
+            <li title="Bank Account"><a href="{{ route('bank processed withdrawal') }}"><i class="fa fa-circle-o text-red"></i> Bank Account</a></li>
+
+            <li title="Processed Refunds"><a href="{{ route('refund processed') }}"><i class="fa fa-circle-o text-red"></i> Processed Refunds</a></li>
 
           </ul>
         </li>
@@ -138,7 +198,7 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li title="To Wallet"><a href="#"><i class="fa fa-circle-o text-red"></i> To Wallet</a></li>
+            <li title="To Wallet"><a href="{{ route('refund money request') }}"><i class="fa fa-circle-o text-red"></i> To Wallet</a></li>
             {{--  <li title="To Bank Account"><a href="#"><i class="fa fa-circle-o text-red"></i> To Bank Account</a></li>  --}}
 
           </ul>
@@ -154,10 +214,9 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li title="Card Issuer"><a href="{{ route('card issuer') }}"><i class="fa fa-circle-o text-red"></i> Card Issuer</a></li>
+            <li title="Prepaid Card Issuer"><a href="{{ route('card issuer') }}"><i class="fa fa-circle-o text-red"></i> Prepaid Card Issuer</a></li>
+            <li title="Prepaid Card Request"><a href="{{ route('prepaid card request') }}"><i class="fa fa-circle-o text-red"></i> Prepaid Card Request</a></li>
             <li title="Added Cards"><a href="{{ route('all added cards') }}"><i class="fa fa-circle-o text-red"></i> Added Cards</a></li>
-            
-
           </ul>
         </li>
 
@@ -173,9 +232,7 @@
           <ul class="treeview-menu">
             <li title="Balance"><a href="{{ route('wallet balance') }}"><i class="fa fa-circle-o text-red"></i> Balance</a></li>
             <li title="Processed Payment"><a href="{{ route('processed payment') }}"><i class="fa fa-circle-o text-red"></i> Processed Payment</a></li>
-            <li title="Credit Card Withdrawal"><a href="#"><i class="fa fa-circle-o text-red"></i> Credit Card Withdrawal</a></li>
-            <li title="Refund Request"><a href="#"><i class="fa fa-circle-o text-red"></i> Refund Request</a></li>
-            <li title="Maintenance Fee"><a href="#"><i class="fa fa-circle-o text-red"></i> Maintenance Fee</a></li>
+            <li title="Maintenance Fee"><a href="{{ route('maintenance fee detail') }}"><i class="fa fa-circle-o text-red"></i> Maintenance Fee</a></li>
 
           </ul>
         </li>
@@ -246,7 +303,7 @@
         <li class="treeview" title="Create and Send Invoice">
           <a href="#">
             <i class="fa fa-book"></i>
-            <span> Create and Send Invoi..</span>
+            <span> Create and Send Invoice</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -276,10 +333,30 @@
         </li>
 
 
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-book"></i>
+            <span>Performance Report</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="{{ route('sent invoice') }}"><i class="fa fa-circle-o text-info"></i> Sent Invoice</a></li>
+            <li><a href="{{ route('paid invoice') }}"><i class="fa fa-circle-o text-info"></i> Paid Invoice</a></li>
+            <li><a href="{{ route('unpaid invoice') }}"><i class="fa fa-circle-o text-info"></i> Unpaid (Pending) Invoice</a></li>
+            <li><a href="{{ route('customer balance report') }}"><i class="fa fa-circle-o text-info"></i> Customer Balance Report</a></li>
+            <li><a href="{{ route('tax report') }}"><i class="fa fa-circle-o text-info"></i> Taxes Report</a></li>
+            <li><a href="{{ route('invoice type') }}"><i class="fa fa-circle-o text-info"></i> Invoice Type Report</a></li>
+            <li><a href="{{ route('recurring invoice') }}"><i class="fa fa-circle-o text-info"></i> Recurring invoice report</a></li>
+          </ul>
+        </li>
+
+
         <li>
           <a href="{{ route('create service types') }}">
             <i class="fa fa-book"></i>
-            <span>Create Service Type</span>
+            <span>Create Invoice Type</span>
           </a>
         </li>
 
@@ -312,7 +389,8 @@
             
           </ul>
         </li>
-
+        <br>
+        <br>
 
         @if ($pages == "My Dashboard")
                     <li>
@@ -370,6 +448,20 @@
                                         </div>
                                         <div class="col-md-2">
                                             {!! $getUserDetail->securityQuestion != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                
+                                </li>
+                                <li class="list-group-item" title="Set up Tax" >
+
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <a href="{{ route('setup tax') }}" style="color: navy; font-weight: 700;">Set Up Tax</a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! count($getTax) > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
                                         </div>
                                     </div>
                                     

@@ -22,6 +22,10 @@
     <!-- Main content -->
     <section class="content">
 
+        <div class="col-md-2 col-md-offset-10">
+                <button class="btn btn-secondary btn-block bg-red" onclick="goBack()"><i class="fas fa-chevron-left"></i> Go back</button>
+            </div>
+
       <div class="row">
                       <div class="box-body">
 

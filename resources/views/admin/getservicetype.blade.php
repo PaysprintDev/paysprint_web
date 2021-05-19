@@ -7,11 +7,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Create Service Types
+        Create Invoice Types
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Create Service Types</li>
+        <li class="active">Create Invoice Types</li>
       </ol>
     </section>
 
@@ -38,7 +38,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group has-success">
-                                <label class="control-label" for="inputSuccess"> Service Type</label>
+                                <label class="control-label" for="inputSuccess"> Invoice Type</label>
                                 <input type="text" class="form-control" name="name" id="name" placeholder="e.g Accomodation">
                             </div>
                         </div>
@@ -63,7 +63,7 @@
                 <thead>
                 <tr>
                   <th>#</th>
-                  <th>Service Types</th>
+                  <th>Invoice Types</th>
                 </tr>
                 </thead>
                 <tbody>

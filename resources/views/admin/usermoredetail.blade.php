@@ -5,7 +5,7 @@
 
 <?php use \App\Http\Controllers\ClientInfo; ?>
 <?php use \App\Http\Controllers\User; ?>
-<?php use \App\Http\Controllers\InvoicePayment; ?>
+<?php use \App\Http\Controllers\Admin; ?>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -82,6 +82,14 @@
                       </tr>
 
                       @if ($getthisuser->accountType == "Merchant")
+
+                      @if($merchantDetail = \App\Admin::where('email', $getthisuser->email)->first())
+                        <tr>
+                            <td>Username</td>
+                            <td class="mainText" style="font-weight: 900; color: navy;">{{ strtoupper($merchantDetail->username) }}</td>
+                        </tr>
+
+                      @endif
                         <tr>
                             <td>Business Name</td>
                             <td class="mainText">{{ $getthisuser->businessname }}</td>
@@ -95,7 +103,7 @@
                             <td class="mainText">
 
                                 <small style="font-weight: bold;">
-                                    Govnt. issued photo ID : @if($getthisuser->incorporation_doc_front != null) <a href="{{ $getthisuser->incorporation_doc_front }}" target="_blank">Front view</a> @endif | @if($getthisuser->incorporation_doc_back != null) <a href="{{ $getthisuser->incorporation_doc_back }}" target="_blank">Back view</a> @endif
+                                    @if($getthisuser->incorporation_doc_front != null) <a href="{{ $getthisuser->incorporation_doc_front }}" target="_blank">Front view</a> @endif - @if($getthisuser->incorporation_doc_back != null) <a href="{{ $getthisuser->incorporation_doc_back }}" target="_blank">Back view</a> @endif
                                 </small>
 
                             </td>
@@ -107,7 +115,7 @@
                             <td class="mainText">
 
                                 <small style="font-weight: bold;">
-                                    @if($getthisuser->nin_front != null) <a href="{{ $getthisuser->nin_front }}" target="_blank">Front view</a> @endif | @if($getthisuser->nin_back != null) <a href="{{ $getthisuser->nin_back }}" target="_blank">Back view</a> @endif
+                                    @if($getthisuser->nin_front != null) <a href="{{ $getthisuser->nin_front }}" target="_blank">Front view</a> @endif - @if($getthisuser->nin_back != null) <a href="{{ $getthisuser->nin_back }}" target="_blank">Back view</a> @endif
                                 </small>
 
                             </td>
@@ -117,7 +125,7 @@
                             <td class="mainText">
 
                                 <small style="font-weight: bold;">
-                                    @if($getthisuser->drivers_license_front != null) <a href="{{ $getthisuser->drivers_license_front }}" target="_blank">Front view</a> @endif | @if($getthisuser->drivers_license_back != null) <a href="{{ $getthisuser->drivers_license_back }}" target="_blank">Back view</a> @endif
+                                    @if($getthisuser->drivers_license_front != null) <a href="{{ $getthisuser->drivers_license_front }}" target="_blank">Front view</a> @endif - @if($getthisuser->drivers_license_back != null) <a href="{{ $getthisuser->drivers_license_back }}" target="_blank">Back view</a> @endif
                                 </small>
 
                             </td>
@@ -127,14 +135,14 @@
                             <td class="mainText">
 
                                 <small style="font-weight: bold;">
-                                    @if($getthisuser->international_passport_front != null) <a href="{{ $getthisuser->international_passport_front }}" target="_blank">Front view</a> @endif | @if($getthisuser->international_passport_back != null) <a href="{{ $getthisuser->international_passport_back }}" target="_blank">Back view</a> @endif
+                                    @if($getthisuser->international_passport_front != null) <a href="{{ $getthisuser->international_passport_front }}" target="_blank">Front view</a> @endif - @if($getthisuser->international_passport_back != null) <a href="{{ $getthisuser->international_passport_back }}" target="_blank">Back view</a> @endif
                                 </small>
 
                             </td>
                         </tr>
                       <tr>
                             <td>Wallet Balance</td>
-                            <td class="mainText">
+                            <td class="mainText" style="font-weight: 900; color: green;">
 
                                 {{ $getthisuser->currencyCode.' '.number_format($getthisuser->wallet_balance, 2) }}
 

@@ -39,7 +39,7 @@
             <div class="col-12 col-md-9 col-lg-7 col-xl-6 order-lg-1" data-aos="fade-right" data-aos-duration="500"
                 data-aos-once="true">
                 <div class="hero-content section-title text-center text-lg-left">
-                    <h1 class="gr-text-2 font-weight-bold mb-8">Safe and Secure <br class="">Way to Send Money!</h1>
+                    <h1 class="gr-text-2 font-weight-bold mb-8" style="font-size:60px">Safe and Secure <br class="">Way to Send Money for FREE!</h1>
                     <p class="gr-text-9 gr-text-color pr-md-7">Fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!.</p>
                     
                     
@@ -67,7 +67,7 @@
                         <span class="mr-2 gr-text-color circle-18 border border-black-dynamic">
                             <i class="icon icon-triangle-right-17-2 gr-text-14"></i>
                         </span>
-                        <span class="gr-text-12 font-weight-bold text-uppercase">How PaySprint
+                        <span class="gr-text-12 font-weight-bold text-uppercase" style="font-size: 16px;">How PaySprint
                             works</span>
                     </a>
 
@@ -85,6 +85,8 @@
     </div>
 </div>
 <!-- Brand section -->
+
+
 
 
 <div class="brand-section pt-13 pt-lg-17 pb-11 border-bottom bg-default-6 disp-0">
@@ -169,15 +171,17 @@
                     </div>
                     <div class="widget-text">
                         <h3 class="title gr-text-6 mb-7">Send Money</h3>
-                        <p class="gr-text-11 mb-0">Send money anytime, anywhere!!.</p>
+                        <p class="gr-text-11 mb-0">Send money anytime, anywhere for FREE!!.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
 <!-- Content section 1 -->
-<div class="content-section pt-11 pt-lg-20 pb-11 pb-lg-20 bg-default-6 " id=animation-area-2>
+<div class="content-section pt-11 pt-lg-20 pb-11 pb-lg-20 bg-default-6 disp-0" id=animation-area-2>
     <div class="container">
 
         <div class="row justify-content-center disp-0">
@@ -223,7 +227,7 @@
     </div>
 </div>
 <!-- Content section 2 -->
-<div class="content-section pt-11 pt-lg-22 pb-13 pb-lg-26 bg-default-6 hover-shadow-up ">
+<div class="content-section pt-11 pt-lg-22 pb-13 pb-lg-26 bg-default-6 hover-shadow-up disp-0">
     <div class="container">
         <div class="row align-items-center justify-content-center">
             <div class="col-sm-10 col-md-7 col-lg-6 col-xl-5 offset-xl-2 order-lg-2 mb-9 mb-lg-0">
@@ -252,7 +256,7 @@
     </div>
 </div>
 <!-- Content section 3 -->
-<div class="content-section pt-11 pt-lg-20 pb-11 pb-lg-20 bg-default-6 " id=animation-area-2>
+<div class="content-section pt-11 pt-lg-20 pb-11 pb-lg-20 bg-default-6 disp-0" id=animation-area-2>
     <div class="container">
 
         <div class="row align-items-center justify-content-center">
@@ -287,7 +291,7 @@ PaySprint is all you need.</p>
     </div>
 </div>
 <!-- Content section 4 -->
-<div class="content-section pt-11 pt-lg-22 pb-13 pb-lg-26 bg-default-6 hover-shadow-up ">
+<div class="content-section pt-11 pt-lg-22 pb-13 pb-lg-26 bg-default-6 hover-shadow-up disp-0">
     <div class="container">
         <div class="row align-items-center justify-content-center">
             <div class="col-sm-10 col-md-7 col-lg-6 col-xl-5 offset-xl-2 order-lg-2 mb-9 mb-lg-0">
@@ -525,11 +529,24 @@ PaySprint is all you need.</p>
                     </a>
                     <p class="gr-text-11 mb-0 mt-6" style="color: #433d3d;">It takes only 2 mins!</p>
                 </div>
+
+                <div class="hero-img" data-aos="fade-left" data-aos-duration="500" data-aos-once="true">
+                    <div class="hero-video-thumb position-relative gr-z-index-1">
+                        <center>
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg" alt="" class="w-100 rounded-8" style="height: 350px !important;width: 350px !important;">
+                        </center>
+                        <a class="video-play-trigger gr-abs-center bg-white circle-xl gr-flex-all-center gr-abs-hover-y focus-reset" data-fancybox="" href="https://youtu.be/A6FGnRpcVok" tabindex="-1"><i class="icon icon-triangle-right-17-2"></i></a>
+                        {{-- <div class="abs-shape gr-abs-tr-custom gr-z-index-n1">
+                        <img src="{{ asset('newpage/image/l4/png/l4-hero-shape.png') }}" alt="" class="w-100" data-aos="zoom-in" data-aos-delay="400" data-aos-duration="800" data-aos-once="true">
+                        </div> --}}
+                    </div>
+                </div>
+
             </div>
 
             <div class="col-md-3">
                 <center>
-                    <img class="shadow-lg" src="https://res.cloudinary.com/pilstech/image/upload/v1620149152/paysprint_asset/image_app_u3evka.webp" alt="mobile app" style="width: 80%; border-radius: 10px; position: relative; z-index: 1000;">
+                    <img class="shadow-lg" src="https://res.cloudinary.com/pilstech/image/upload/v1621266225/paysprint_icon_opahry.webp" alt="mobile app" style="width: 80%; border-radius: 10px; position: relative; z-index: 1000;">
                 </center>
             </div>
 

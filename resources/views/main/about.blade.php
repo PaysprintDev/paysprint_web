@@ -103,7 +103,7 @@
                             <p>
                             Are you a Property Manager or a Landlord looking for a good tool to manage end-to-end process of your business or property? With PaySprint, you are able to manage every aspect of the business or property ranging from managing maintenance to booking amenities or invoicing tenants.
                             Request for a Demo Today  <br>
-                            <a href="https://exbc.ca/login" style="font-size: 14px;">Click to login</a> to your Account NOW</p>
+                            <a href="{{ route('login') }}" style="font-size: 14px;">Click to login</a> to your Account NOW</p>
                         </div>
                     </div>
                     <hr>
@@ -115,7 +115,7 @@
                         </div>
                         <div class="media-body">
                             <a href="#">UTILITY BILL</a>
-                            <p>Do you want to pay a utility bill to the landlord or government? Do you want to be receiving electronic copy (eCopy) of the bills, Open a Free PaySprint Account Today <a href="https://exbc.ca/login" style="font-size: 14px;">Login to your account Today</a>.</p>
+                            <p>Do you want to pay a utility bill to the landlord or government? Do you want to be receiving electronic copy (eCopy) of the bills, Open a Free PaySprint Account Today <a href="{{ route('login') }}" style="font-size: 14px;">Login to your account Today</a>.</p>
                         </div>
                     </div>
                     <hr>
@@ -129,7 +129,7 @@
                             <a href="#">PROPERTY TAX</a>
                             <p>
                             Do you have a bill to pay, or want to check if there is any outstanding on your property tax account with government? PaySprint is all you need. <br>
-                            {{-- <a href="https://exbc.ca/login" style="font-size: 14px;">Click to login</a> to your Account NOW  --}}
+                            {{-- <a href="{{ route('login') }}" style="font-size: 14px;">Click to login</a> to your Account NOW  --}}
                             <span style="background-color: tomato; color: #fff; border-radius: 10px; padding: 5px">COMING SOON!!</span></p>
                         </div>
                     </div>

@@ -11,11 +11,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         Wallet Statement
+         Wallet Transaction History
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Wallet Statement</li>
+        <li class="active">Wallet Transaction History</li>
       </ol>
     </section>
 
@@ -53,7 +53,7 @@
               <br>
               <div class="row">
                 <div class="col-md-12">
-                  <button class="btn btn-primary" onclick="checkStatement()">Check Statement <img src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" class="spinner disp-0" style="width: 40px; height: 40px;"></button>
+                  <button class="btn btn-primary" onclick="checkStatement()">Check Transactions <img src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" class="spinner disp-0" style="width: 40px; height: 40px;"></button>
                 </div>
               </div>
             </div>

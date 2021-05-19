@@ -645,6 +645,10 @@
                                                           <td>{{$maildata->website}}</td>
                                                         </tr>
                                                         <tr>
+                                                          <td>Country:</td>
+                                                          <td>{{$maildata->country}}</td>
+                                                        </tr>
+                                                        <tr>
                                                           <td>Message:</td>
                                                           <td>{{$maildata->message}}</td>
                                                         </tr>

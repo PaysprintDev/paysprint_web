@@ -18,6 +18,10 @@
     <!-- Main content -->
     <section class="content">
 
+      <br>
+          <button class="btn btn-secondary btn-block bg-red" onclick="goBack()"><i class="fas fa-chevron-left"></i> Go back</button>
+      <br>
+
       <!-- Default box -->
       <div class="box">
         

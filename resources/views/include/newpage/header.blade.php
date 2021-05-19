@@ -30,13 +30,16 @@
             <div class="navbar-nav-wrapper">
               <ul class="navbar-nav main-menu">
 
+                
+
+                
+                @if (Session::has('username') ==  false)
+                @guest
+
                 <li class="nav-item">
                   <a class="nav-link" @guest href="{{ route('merchant home') }}" @endguest  @auth href="{{ route('Admin') }}" @endauth role="button" aria-expanded="false">HOME</a>
                 </li>
 
-                
-
-                @guest
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('about') }}" role="button" aria-expanded="false">ABOUT US</a>
                     </li>
@@ -52,10 +55,24 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('AdminRegister') }}" role="button" aria-expanded="false">SIGN UP FOR FREE</a>
                     </li>
+
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('home') }}" style="color: navy !important; text-decoration: underline">{{ "Are you a USER? ".strtoupper(" CLICK HERE") }}</a>
+                    </li>
+
                 @endguest
+
+                @endif
+
 
                     @if (Session::has('username') ==  true)
                         
+                    <li class="nav-item">
+                      <a class="nav-link" href="{{ route('Admin') }}" role="button" aria-expanded="false">DASHBOARD</a>
+                    </li>
+
+
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('create single invoice') }}" role="button" aria-expanded="false">INVOICE</a>
                     </li>
@@ -271,16 +288,7 @@
             </button>
           </div>
 
-          @guest
           
-              <div class="header-btns d-none d-xs-block  ml-auto ml-lg-3 mr-6 mr-lg-0">
-
-                <a class="btn-link gr-text-11 font-weight-bold gr-text-color pl-lg-5 ml-lg-7 " href="{{ route('home') }}">
-                {{ "Are you a USER? ".strtoupper(" GET STARTED") }}
-                </a>
-                
-            </div>
-          @endguest
 
           
           <!-- Mobile Menu Hamburger-->
@@ -353,6 +361,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('register') }}" role="button" aria-expanded="false">SIGN UP FOR FREE</a>
                     </li>
+
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('merchant home') }}" style="color: navy; text-decoration: underline">{{ "Are you a Merchant? ".strtoupper(" CLICK HERE") }}</a>
+                    </li>
+
+
                 @endguest
 
 
@@ -580,16 +595,7 @@
             </button>
           </div>
 
-          @guest
           
-              <div class="header-btns d-none d-xs-block  ml-auto ml-lg-3 mr-6 mr-lg-0">
-
-                <a class="btn-link gr-text-11 font-weight-bold gr-text-color pl-lg-5 ml-lg-7 " href="{{ route('merchant home') }}">
-                {{ "Are you a Merchant? ".strtoupper(" GET STARTED") }}
-                </a>
-                
-            </div>
-          @endguest
 
           
           <!-- Mobile Menu Hamburger-->

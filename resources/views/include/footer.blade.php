@@ -508,6 +508,7 @@ function contactUs(){
     var email = $('#email').val();
     var subject = $('#subject').val();
     var website = $('#website').val();
+    var country = $('#country').val();
     var message = $('#message').val();
 
     if (grecaptcha.getResponse() == ""){
@@ -523,6 +524,10 @@ function contactUs(){
         swal('Oops!', 'Please provide a valid email address', 'info');
         return false;
     }
+    else if(country == ""){
+        swal('Oops!', 'Please select your country', 'info');
+        return false;
+    }
     else if(message == ""){
         swal('Oops!', 'Please write us a message', 'info');
         return false;
@@ -533,6 +538,7 @@ function contactUs(){
             email: email,
             subject: subject,
             website: website,
+            country: country,
             message: message
         };
 
@@ -546,16 +552,21 @@ function contactUs(){
                     data: thisdata,
                     dataType: 'JSON',
                     beforeSend: function(){
-                        $('#name').val('');
-                        $('#email').val('');
-                        $('#subject').val('');
-                        $('#website').val('');
-                        $('#message').val('');
+                        $("#contactBtn").text("Please wait...");
                     },
                     success: function(result){
-
+                        $("#contactBtn").text("Send Message");
                         if(result.message == "success"){
+
+                            $('#name').val('');
+                            $('#email').val('');
+                            $('#subject').val('');
+                            $('#website').val('');
+                            $('#message').val('');
+
                             swal('Great!', result.res, result.message);
+
+                            
                         }
                         else{
                             swal('Oops!', result.res, result.message);
@@ -2434,6 +2445,103 @@ else if(val == "resetTransactionPin"){
         },
         error: function(err) {
             $(".close").click();
+            $('#'+val+'Btn').text('Submit');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+else if(val == "linkaccount"){
+
+    formData = new FormData(formElemlinkaccount);
+
+    route = "{{ URL('/api/v1/linkaccount') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#'+val+'Btn').text('Please wait...');
+        },
+        success: function(result){
+            
+
+            $('#'+val+'Btn').text('Submit');
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $('#'+val+'Btn').text('Submit');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+
+
+else if(val == "otheraccount"){
+
+    formData = new FormData(formElemotheraccount);
+
+    route = "{{ URL('/api/v1/otheraccount') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#'+val+'Btn').text('Please wait...');
+        },
+        success: function(result){
+            
+
+            $('#'+val+'Btn').text('Submit');
+
+                if(result.status == 200){
+                    var res = result.data;
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.href = res; }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
             $('#'+val+'Btn').text('Submit');
             swal("Oops", err.responseJSON.message, "error");
 

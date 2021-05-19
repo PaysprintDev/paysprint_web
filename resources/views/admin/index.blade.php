@@ -83,7 +83,7 @@
             <div class="icon">
               <i class="ion ion-person-add"></i>
             </div>
-            <a href="{{ route('allusers') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="{{ route('all users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->
@@ -109,7 +109,7 @@
             <div class="inner">
               <h3>{{ $getUserDetail->currencySymbol.number_format($getUserDetail->wallet_balance, 2) }}</h3>
 
-              <p>Balance</p>
+              <p>Wallet Balance</p>
             </div>
             <div class="icon">
               <i class="ion ion-pricetag"></i>
@@ -216,6 +216,9 @@
               <hr>
             </div>
             <div class="col-md-12">
+
+              <p><strong>Click icon below to add card</strong></p>
+
                 <button style="background-color: #000 !important;" class="px-2" title="PaySprint Payment Gateway" onclick="location.href='{{ route('merchant payment gateway', 'gateway=PaySprint') }}'">
                     <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" alt="PaySprint logo" width="50" height="50">
                 </button>
@@ -224,12 +227,22 @@
             <br>
             </div>
 
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
 
-              <a type="button" href="{{ route('merchant add money') }}" class="btn btn-info btn-block">Add Money <i class="fas fa-plus"></i></a>
+              <a style="font-size: 12.5px;" type="button" href="{{ route('merchant add money') }}" class="btn btn-info btn-block">Add Money <i class="fas fa-plus"></i></a>
             </div>
-            <div class="col-md-6 mb-3">
-              <a type="button" href="{{ route('merchant send money', 'type=local') }}" class="btn btn-warning btn-block">Send Money <i class="fas fa-paper-plane"></i></a>
+
+            <div class="col-md-4 mb-3">
+              <a style="font-size: 12.5px;" type="button" href="{{ route('merchant send money', 'type=local') }}" class="btn btn-warning btn-block">Send Money <i class="fas fa-paper-plane"></i></a>
+            </div>
+
+            <div class="col-md-4 mb-3">
+              @if ($getUserDetail->approval == 1)
+                  <a style="font-size: 12.5px;" type="button" href="{{ route('merchant withdrawal') }}" class="btn btn-success btn-block">Withdraw Money <i class="fas fa-credit-card"></i></a>
+              @else
+                      <a style="font-size: 12.5px;" type="button" href="javascript:void()" class="btn btn-success btn-block" onclick="restriction('withdrawal', '{{ $getUserDetail->name }}')">Withdraw Money <i class="fa fa-credit-card"></i></a>
+                  
+              @endif
             </div>
 
 
@@ -282,12 +295,7 @@
           
 
 
-          @if ($getUserDetail->approval == 1)
-                <a type="button" href="{{ route('merchant withdrawal') }}" class="btn btn-primary btn-block">Withdraw Money <i class="fas fa-credit-card"></i></a>
-            @else
-                    <a type="button" href="javascript:void()" class="btn btn-primary btn-block" onclick="restriction('withdrawal', '{{ $getUserDetail->name }}')">Withdraw Money <i class="fa fa-credit-card"></i></a>
-                
-            @endif
+          
 
 
         </div>
@@ -340,6 +348,7 @@
                 @if(count($invoiceImport) > 0)
                 <?php $i = 1;?>
                 @foreach ($invoiceImport as $invoiceImports)
+
                     <tr>
 
 
@@ -356,7 +365,21 @@
 
                       <td align="center" style="font-weight: bold; color: green;">@if (isset($getUserDetail) == true) {{ $getUserDetail->currencySymbol.number_format($invoiceImports->total_amount, 2) }} @else {{ number_format($invoiceImports->total_amount, 2) }} @endif </td>
 
-                      @if($leftOver = \App\InvoicePayment::where('invoice_no', $invoiceImports->invoice_no)->get())
+                      @if ($invoiceImports->payment_status == 1)
+                          <td align="center" style="font-weight: bold; color: green;">Paid</td>
+
+                      @elseif ($invoiceImports->payment_status == 2)
+
+                          <td align="center" style="font-weight: bold; color: purple;">Part Pay</td>
+
+                      @else
+
+                        <td align="center" style="font-weight: bold; color: red;">Pending</td>
+
+                      @endif
+
+
+                      {{-- @if($leftOver = \App\InvoicePayment::where('invoice_no', $invoiceImports->invoice_no)->get())
                         
                         @if(count($leftOver) > 0)
                         <td align="center" style="font-weight: bold; color: green;">Paid</td>
@@ -366,7 +389,7 @@
 
                         @endif
 
-                      @endif
+                      @endif --}}
                       <td>{{ date('d/M/Y', strtotime($invoiceImports->payment_due_date)) }}</td>
 
                    @if(session('role') != "Super") <td><button type="button" class="btn btn-primary" id="viewdetails{{ $invoiceImports->id }}" onclick="location.href='Admin/customer/{{ $invoiceImports->id }}'">View Details</button></td>@endif

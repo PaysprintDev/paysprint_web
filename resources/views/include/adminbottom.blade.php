@@ -119,11 +119,11 @@
 
     $('#example3').DataTable( {
       'paging'      : true,
-      'lengthChange': false,
-      'searching'   : false,
+      'lengthChange': true,
+      'searching'   : true,
       'ordering'    : true,
       'info'        : true,
-      'autoWidth'   : false,
+      'autoWidth'   : true,
         dom: 'Bfrtip',
         buttons: [
             'copyHtml5',
@@ -516,7 +516,7 @@ function logout(val){
         dataType: 'JSON',
         success: function(result){
             if (result.message == "success") {
-            setTimeout(function(){ location.reload(); }, 1000);
+            setTimeout(function(){ location.href = "{{ route('merchant home') }}"; }, 1000);
             }
 
 
@@ -1489,8 +1489,8 @@ function checkverification(id){
   var route = "{{ URL('Ajax/checkverification') }}";
 
   swal({
-      title: "Ready to check verification!",
-      text: "Click OK to continue identity verification check",
+      title: "Ready to override level 1 verification!",
+      text: "Click OK to continue",
       icon: "info",
       buttons: true,
       dangerMode: false,
@@ -1532,6 +1532,25 @@ function checkverification(id){
       }
     });
 
+}
+
+
+function grantCountry(id){
+  var route = "{{ URL('Ajax/accesstousepaysprint') }}";
+
+  swal({
+      title: "Are you sure?",
+      text: "Your decision is about to be processed",
+      icon: "info",
+      buttons: true,
+      dangerMode: false,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        $("#grantform"+id).submit();
+
+      }
+    });
 }
 
 
@@ -1595,6 +1614,101 @@ var spinner = $('.spin'+id);
 
 
           });
+
+}
+
+
+function payCard(id){
+var route = "{{ URL('Ajax/paycardwithdrawal') }}";
+var thisdata = {id: id};
+var spinner = $('.spin'+id);
+
+            setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: thisdata,
+            dataType: 'JSON',
+            beforeSend: function(){
+              spinner.removeClass('disp-0');
+            },
+            success: function(result){
+              spinner.addClass('disp-0');
+                
+                if (result.message == "success") {
+
+                  swal(result.title, result.res, result.message);
+                  setTimeout(function(){ location.reload(); }, 2000);
+
+                }
+
+                else{
+                  swal(result.title, result.res, result.message);
+                }
+
+
+            },
+            error: function(err){
+              spinner.addClass('disp-0');
+              swal("Oops!", error.responseJSON.message, "error");
+            }
+
+
+          });
+
+}
+
+
+function refundMoney(id, val){
+
+  var thisdata;
+  var spinner = $('.spinner'+val+id);
+  var route = "{{ URL('Ajax/refundmoneybacktowallet') }}";
+
+  swal({
+      title: "Are you sure?",
+      text: "Your decision is about to be processed",
+      icon: "info",
+      buttons: true,
+      dangerMode: false,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        thisdata = {id: id, val: val};
+          setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: thisdata,
+            dataType: 'JSON',
+            beforeSend: function(){
+              spinner.removeClass('disp-0');
+            },
+            success: function(result){
+              spinner.addClass('disp-0');
+                
+                if (result.message == "success") {
+
+                  swal(result.title, result.res, result.message);
+                  setTimeout(function(){ location.href = "{{ route('refund money request') }}"; }, 2000);
+
+                }
+
+                else{
+                  swal(result.title, result.res, result.message);
+                }
+
+
+            },
+            error: function(err){
+              spinner.addClass('disp-0');
+              swal("Oops!", error.responseJSON.message, "error");
+            }
+
+          });
+
+      }
+    });
 
 }
 

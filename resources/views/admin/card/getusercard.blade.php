@@ -17,7 +17,9 @@
 
     <!-- Main content -->
     <section class="content">
-
+      <br>
+          <button class="btn btn-secondary btn-block bg-red" onclick="goBack()"><i class="fas fa-chevron-left"></i> Go back</button>
+      <br>
       <!-- Default box -->
       <div class="box">
         
@@ -34,6 +36,7 @@
                   <th>Card Number</th>
                   <th>Expiry Date</th>
                   <th>Card Type</th>
+                  <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -58,6 +61,9 @@
                                 <td>{{ wordwrap($cardNo, 4, '-', true) }}</td>
                                 <td>{{ $data->month.'/'.$data->year }}</td>
                                 <td>{{ $data->card_type }}</td>
+                                <td>
+                                  <a type="button" class="btn btn-primary" href="{{ route('user more detail', $data->user_id) }}">User details</a>
+                                </td>
                                 
                                 
                             </tr>
@@ -66,7 +72,7 @@
                         @endforeach
                     @else
                         <tr>
-                            <td colspan="6" align="center">No record</td>
+                            <td colspan="7" align="center">No record</td>
                         </tr>
                     @endif
                   

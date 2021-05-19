@@ -242,7 +242,29 @@ input[type="radio"] {
 
                                     {{--  @if ($data['getinvoice'][0]->installpay == "Yes" && $data['getinvoice'][0]->installlimit == $data['getinvoice'][0]->installcount)  --}}
 
-                                    
+                                    @else
+
+                                    <div class="form-group disp-0"> <label for="currency">
+                                                <h6>Do you want to pay intallmentally?</h6>
+                                            </label>
+                                            <div class="input-group"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/office/16/000000/circled-dot.png"/> </span> 
+                                                <select name="payInstallment" id="pay_installment" class="form-control">
+                                                    <option value="Yes">Yes</option>
+                                                    <option value="No" selected>No</option>
+                                                </select>
+                                                <div class="input-group-append">  </div>
+                                            </div>
+                                        </div>
+
+
+                                    <div class="form-group topay disp-0"> <label for="currency">
+                                                <h6>Amount to Pay</h6>
+                                            </label>
+                                            <input type="hidden" value="{{ $data['currencyCode'][0]->currencies[0]->code }}" name="currencyCode">
+                                            <div class="input-group"> <span class="input-group-text text-muted"> {{ $data['currencyCode'][0]->currencies[0]->symbol }} </span> <input type="number" min="0.00" step="0.01" name="amount" id="typepayamount" placeholder="50.00" class="form-control" value="{{ $amountInvoiced }}">
+                                                <div class="input-group-append"> </div>
+                                            </div>
+                                        </div>
                                     
 
                                     @endif

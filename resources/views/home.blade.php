@@ -402,10 +402,10 @@
 
                                 @foreach ($data['getmerchantsByCategory'] as $merchants)
 
-                                    <li class="list-group-item" title="{{ $merchants->type_of_service }}">
+                                    <li class="list-group-item" title="{{ $merchants->industry }}">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <a href="{{ route('merchant category', 'service='.$merchants->type_of_service) }}">{{ $merchants->type_of_service }}</a>
+                                                <a href="{{ route('merchant category', 'service='.$merchants->industry) }}">{{ $merchants->industry }}</a>
                                             </div>
                                             
                                         </div>

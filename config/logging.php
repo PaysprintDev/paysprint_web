@@ -35,7 +35,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single', 'slack', 'successlogs'],
+            'channels' => ['single', 'slack', 'successlogs', 'contactus'],
         ],
 
         'single' => [
@@ -61,10 +61,19 @@ return [
 
         'successlogs' => [
             'driver' => 'slack',
-            'url' => 'https://hooks.slack.com/services/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',
+            'url' => env('LOG_SLACK_SUCCESS_URL'),
             'username' => 'Success Log',
             'emoji' => ':boom:',
             'level' => 'info',
+        ],
+
+
+        'contactus' => [
+            'driver' => 'slack',
+            'url' => env('LOG_SLACK_CONTACT_URL'),
+            'username' => 'Contact us',
+            'emoji' => ':boom:',
+            'level' => 'notice',
         ],
 
 

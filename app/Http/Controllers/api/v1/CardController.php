@@ -79,7 +79,7 @@ class CardController extends Controller
 
         $validator = Validator::make($req->all(), [
                      'card_name' => 'required|string',
-                     'card_number' => 'required|string',
+                     'card_number' => 'required|string|unique:add_card',
                      'month' => 'required|string',
                      'year' => 'required|string',
                      'cvv' => 'required|string',
@@ -105,6 +105,10 @@ class CardController extends Controller
                     else{
                         // Do Insert
                     $insertRecord = AddCard::insert(['user_id' => $thisuser->id, 'card_name' => $req->card_name, 'card_number' => $req->card_number, 'month' => $req->month, 'year' => $req->year, 'cvv' => Hash::make($req->cvv), 'card_type' => $userCardType, 'card_provider' => $req->card_provider]);
+
+                    if($req->card_provider != "Credit Card" && $req->card_provider != "Debit Card"){
+                       User::where('api_token', $req->bearerToken())->update(['cardRequest' => 1]); 
+                    }
 
                     $data = $insertRecord;
                     $status = 200;
@@ -156,7 +160,7 @@ class CardController extends Controller
 
         $validator = Validator::make($req->all(), [
                      'bankName' => 'required|string',
-                     'accountNumber' => 'required|string',
+                     'accountNumber' => 'required|string|unique:add_bank',
                      'accountName' => 'required|string',
                      'transitNumber' => 'required|string',
                      'branchCode' => 'required|string',
@@ -214,7 +218,7 @@ class CardController extends Controller
 
         $validator = Validator::make($req->all(), [
                      'bankName' => 'required|string',
-                     'accountNumber' => 'required|string',
+                     'accountNumber' => 'required|string|unique:add_bank',
                      'accountName' => 'required|string',
                      'transitNumber' => 'required|string',
                      'branchCode' => 'required|string',
@@ -272,7 +276,7 @@ class CardController extends Controller
 
         $validator = Validator::make($req->all(), [
                      'card_name' => 'required|string',
-                     'card_number' => 'required|string',
+                     'card_number' => 'required|string|unique:add_card',
                      'month' => 'required|string',
                      'year' => 'required|string',
                      'cvv' => 'required|string',

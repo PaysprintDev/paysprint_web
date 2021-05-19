@@ -49,6 +49,8 @@
 
   <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
 
+
+
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -66,6 +68,10 @@
     .disp-0{
         display: none !important;
     }
+    .reqField{
+      color: red;
+      font-weight: bold;
+    }
   </style>
 
 </head>
@@ -78,6 +84,7 @@
   <div class="login-box-body">
     <p class="login-box-msg">Register Account</p>
 
+    <a href="{{ route('merchant home') }}" type="button" class="btn btn-primary btn-block">Goto Homepage</a> <br>
 
     <?php use \App\Http\Controllers\AnonUsers; ?>
 
@@ -110,30 +117,36 @@
         
 
       <div class="form-group has-feedback">
-        <label for="business_name">Business Name</label>
+        <label for="business_name"><span class="reqField">*</span> Business Name</label>
         <input type="hidden" name="ref_code" id="ref_code" @if($ref_code != "") value="{{ $ref_code }}" readonly @else placeholder="Ref code" @endif>
         <input type="hidden" name="user_id" id="user_id" class="form-control" value="{{ 'PaySprint_'.mt_rand(1000, 9999) }}">
         <input type="text" name="business_name" id="business_name" class="form-control" placeholder="Business Name*">
         <span class="glyphicon glyphicon-briefcase form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
+        <label for="business_telephone"><span class="reqField">*</span> Business Telephone</label>
+        <input type="text" name="business_telephone" id="business_telephone" class="form-control" placeholder="Business Telephone*">
+        <span class="glyphicon glyphicon-phone form-control-feedback"></span>
+      </div>
+
+      <div class="form-group has-feedback disp-0">
         <label for="business_address">Business Street Number & Name</label>
-        <input type="text" name="business_address" id="business_address" class="form-control" placeholder="Business Street Number & Name*">
+        <input type="text" name="business_address" id="business_address" class="form-control" placeholder="Business Street Number & Name*" value="">
         <span class="glyphicon glyphicon-screenshot form-control-feedback"></span>
       </div>
 
-        <div class="form-group has-feedback">
+        <div class="form-group has-feedback disp-0">
         <div class="row">
 
           <div class="col-xs-6">
               <label for="business_city">City</label>
-                <input type="text" name="business_city" id="business_city" class="form-control" placeholder="City*">
+                <input type="text" name="business_city" id="business_city" class="form-control" placeholder="City*" value="">
             </div>
             <!-- /.col -->
 
-            <div class="col-xs-6">
+            <div class="col-xs-6 disp-0">
               <label for="business_zip_code">Postal/Zip Code</label>
-                <input type="text" name="business_zip_code" id="business_zip_code" class="form-control" placeholder="Postal/Zip Code">
+                <input type="text" name="business_zip_code" id="business_zip_code" class="form-control" placeholder="Postal/Zip Code" value="">
             </div>
             <!-- /.col -->
 
@@ -142,18 +155,18 @@
       </div>
 
 
-      <div class="form-group has-feedback">
+      <div class="form-group has-feedback disp-0">
         <label for="business_country">Country</label>
-        <select name="business_country" id="business_country" class="form-control" required></select>
+        <input type="text" name="business_country" id="business_country" value="">
       </div>
 
 
-      <div class="form-group has-feedback">
+      <div class="form-group has-feedback disp-0">
         <label for="business_state">Province/State</label>
-        <select name="business_state" id="business_state" class="form-control"></select>
+        <input name="business_state" id="business_state" class="form-control" value="">
       </div>
 
-      <div class="form-group has-feedback">
+      <div class="form-group has-feedback disp-0">
         <label for="corporate_type">Corporation Type</label>
           <select name="corporate_type" id="corporate_type" class="form-control">
               <option value="">Select Corporation Type</option>
@@ -166,8 +179,8 @@
       </div>
 
 
-      <div class="form-group has-feedback">
-        <label for="type_of_service">Service Offer</label>
+      <div class="form-group has-feedback disp-0">
+        <label for="type_of_service"><span class="reqField">*</span> Service Offer</label>
           <select name="type_of_service" id="type_of_service" class="form-control">
               <option value="">Select Service Offer</option>
               <option value="Add Service Type">Add Service offer</option>
@@ -181,14 +194,14 @@
       </div>
 
       <div class="form-group has-feedback otherservice disp-0">
-        <label for="type_of_service">Add Service offer</label>
+        <label for="type_of_service"><span class="reqField">*</span> Add Service offer</label>
           <input type="text" name="other_type_of_service" id="other_type_of_service" class="form-control" placeholder="Service Type*">
         <span class="glyphicon glyphicon-screenshot form-control-feedback"></span>
       </div>
 
       
       <div class="form-group has-feedback">
-        <label for="industry">Industry</label>
+        <label for="industry"><span class="reqField">*</span> Industry</label>
         <select name="industry" id="industry" class="form-control">
           <option value="">Select Industry</option>
           <option value="Accounting">Accounting</option>
@@ -354,7 +367,7 @@
 
 
       <div class="form-group has-feedback">
-        <label for="firstname">Contact Person</label>
+        <label for="firstname"><span class="reqField">*</span> Contact Person</label>
       <div class="row">
         <div class="col-xs-6">
             <input type="text" name="firstname" id="firstname" class="form-control" @if($fname != "") value="{{ $fname }}" readonly @else placeholder="First Name *" required @endif>
@@ -370,44 +383,82 @@
       
 
       <div class="form-group has-feedback">
-        <label for="country">Telephone</label>
+        <label for="country"><span class="reqField">*</span> Telephone</label>
         <input type="text" name="telephone" id="telephone" class="form-control" placeholder="Telephone*">
       </div>
 
+
+
+        <label for="autocomplete">Auto complete address</label>
+        <input id="autocomplete" placeholder="Enter your address" onFocus="geolocate()" type="text" class="form-control input_box">
+
+        <br>
+
+                <div class="row">
+                <div class="col-md-6">
+                    <label class="control-label"><span class="reqField">*</span> Street number</label>
+                    <input class="form-control input_box" name="street_number" id="street_number" disabled="true" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label class="control-label"><span class="reqField">*</span> Street Name/ Route</label>
+                    <input class="form-control input_box" name="route" id="route" disabled="true" readonly>
+                </div>
+                </div>
+
+        <br>
+
+                <div class="row">
+                <div class="col-md-6">
+                    <label class="control-label"><span class="reqField">*</span> City</label>
+                    <input class="form-control input_box field" name="locality" id="locality" disabled="true">
+                </div>
+                <div class="col-md-6">
+                    <label class="control-label"><span class="reqField">*</span> Postal/Zip code</label>
+                    <input class="form-control input_box" name="postal_code" id="postal_code" disabled="true">
+                </div>
+
+                
+                </div>
+
+        
+
+{{-- 
             <div class="form-group has-feedback">
-        <label for="address">Street Number & Name</label>
+        <label for="address"><span class="reqField">*</span> Street Number & Name</label>
         <input type="text" name="address" id="address" class="form-control" placeholder="Street Number & Name*">
         <span class="glyphicon glyphicon-screenshot form-control-feedback"></span>
-      </div>
+      </div> --}}
 
-        <div class="form-group has-feedback">
+        {{-- <div class="form-group has-feedback">
         <div class="row">
 
           <div class="col-xs-6">
-              <label for="city">City</label>
+              <label for="city"><span class="reqField">*</span> City</label>
                 <input type="text" name="city" id="city" class="form-control" placeholder="City*">
             </div>
             <!-- /.col -->
 
             <div class="col-xs-6">
-              <label for="zip_code">Postal/Zip Code</label>
+              <label for="zip_code"><span class="reqField">*</span> Postal/Zip Code</label>
                 <input type="text" name="zip_code" id="zip_code" class="form-control" placeholder="Postal/Zip Code">
             </div>
             <!-- /.col -->
 
             
         </div>
-      </div>
+      </div> --}}
+
+      <br>
 
 
       <div class="form-group has-feedback">
-        <label for="country">Country</label>
+        <label for="country"><span class="reqField">*</span> Country</label>
         <select name="country" id="country" class="form-control" required></select>
       </div>
 
 
       <div class="form-group has-feedback">
-        <label for="state">Province/State</label>
+        <label for="state"><span class="reqField">*</span> Province/State</label>
         <select name="state" id="state" class="form-control"></select>
       </div>
 
@@ -415,7 +466,7 @@
           <div class="row">
         <div class="col-sm-4">
             <div class="form-group has-feedback">
-                <label for="dayOfBirth">Day of Birth</label>
+                <label for="dayOfBirth"><span class="reqField">*</span> Day of Birth</label>
                 
                 <select name="dayOfBirth" id="dayOfBirth" class="form-control">
                     @for ($i = 1; $i <= 31; $i++)
@@ -426,7 +477,7 @@
         </div>
         <div class="col-sm-4">
             <div class="form-group has-feedback">
-                <label for="monthOfBirth">Month of Birth</label>
+                <label for="monthOfBirth"><span class="reqField">*</span> Month of Birth</label>
                 <select name="monthOfBirth" id="monthOfBirth" class="form-control">
                     <option selected value='1'>January</option>
                     <option value='2'>February</option>
@@ -445,7 +496,7 @@
         </div>
         <div class="col-sm-4">
             <div class="form-group has-feedback">
-                <label for="yearOfBirth">Year of Birth</label>
+                <label for="yearOfBirth"><span class="reqField">*</span> Year of Birth</label>
                 <select name="yearOfBirth" id="yearOfBirth" class="form-control">
                     @for ($i = 1900; $i <= date('Y'); $i++)
                         <option value="{{ $i }}">{{ $i }}</option>
@@ -459,19 +510,19 @@
 
 
       <div class="form-group has-feedback">
-        <label for="username">Username</label>
+        <label for="username"><span class="reqField">*</span> Username</label>
         <input type="text" name="username" id="username" class="form-control" placeholder="Username*">
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
 
       <div class="form-group has-feedback">
-        <label for="email">Email</label>
+        <label for="email"><span class="reqField">*</span> Email</label>
         <input type="email" name="email" id="email" class="form-control" @if($email != "") value="{{ $email }}" readonly @else placeholder="Email Address *" required @endif>
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
 
       <div class="form-group has-feedback">
-        <label for="cemail">Confirm Email</label>
+        <label for="cemail"><span class="reqField">*</span> Confirm Email</label>
         <input type="email" name="cemail" id="cemail" class="form-control" @if($email != "") value="{{ $email }}" readonly @else placeholder="Confirm Email *" required @endif>
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
@@ -479,12 +530,12 @@
       <div class="form-group has-feedback">
         <div class="row">
             <div class="col-xs-6">
-              <label for="password">Password</label>
+              <label for="password"><span class="reqField">*</span> Password</label>
                 <input type="password" name="password" id="password" class="form-control" placeholder="Password*">
             </div>
             <!-- /.col -->
             <div class="col-xs-6">
-              <label for="cpassword">Confirm Password</label>
+              <label for="cpassword"><span class="reqField">*</span> Confirm Password</label>
                 <input type="password" name="cpassword" id="cpassword" class="form-control" placeholder="Confirm Password*">
             </div>
             <!-- /.col -->
@@ -499,7 +550,7 @@
             <label>
               <input type="checkbox" name="checkbox" id="checkBox"> 
             </label>
-            <a href="{{ route('terms of use') }}" target="_blank"lass="text-primary"><strong>Accept Terms and Condition</strong></a>
+            <a href="{{ route('terms of use') }}" target="_blank"lass="text-primary"><strong>Accept Terms and Conditions</strong></a>
           </div>
         </div>
 
@@ -605,9 +656,12 @@
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('ext/dist/js/demo.js') }}"></script>
 
+  <script src="{{ asset('js/auto-complete.js') }}"></script>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4b_d3enQHEGQpGQ1WragPd0L89xG4vGA&libraries=places&callback=initAutocomplete" async defer></script>
+
 
 <script language="javascript">
-    populateCountries("business_country", "business_state");
     populateCountries("country", "state");
 </script>
 
@@ -643,34 +697,11 @@ function signUp(){
     swal('Oops!', 'Business name field can\'t be empty', 'warning');
     return false;
   }
-  else if($('#business_address').val() == ""){
-    swal('Oops!', 'Business Street Number and Name field can\'t be empty', 'warning');
+  else if($('#business_telephone').val() == ""){
+    swal('Oops!', 'Business telephone field can\'t be empty', 'warning');
     return false;
   }
-  else if($('#business_country').val() == ""){
-    swal('Oops!', 'Business Country field can\'t be empty', 'warning');
-    return false;
-  }
-  else if($('#business_state').val() == ""){
-    swal('Oops!', 'Business Province/State field can\'t be empty', 'warning');
-    return false;
-  }
-  else if($('#business_city').val() == ""){
-    swal('Oops!', 'Business City field can\'t be empty', 'warning');
-    return false;
-  }
-  else if($('#address').val() == ""){
-    swal('Oops!', 'Contact Address field can\'t be empty', 'warning');
-    return false;
-  }
-  else if($('#corporate_type').val() == ""){
-    swal('Oops!', 'Select corporration type', 'warning');
-    return false;
-  }
-  else if($('#type_of_service').val() == ""){
-    swal('Oops!', 'Select Type of Service', 'warning');
-    return false;
-  }
+
   else if($('#industry').val() == ""){
     swal('Oops!', 'Select industry', 'warning');
     return false;
@@ -720,8 +751,12 @@ function signUp(){
     swal('Oops!', 'State field can\'t be empty', 'warning');
     return false;
   }
-  else if($('#city').val() == ""){
+  else if($('#locality').val() == ""){
     swal('Oops!', 'City field can\'t be empty', 'warning');
+    return false;
+  }
+  else if($('#postal_code').val() == ""){
+    swal('Oops!', 'Postal/Zip Code field can\'t be empty', 'warning');
     return false;
   }
   else if($('#password').val() == ""){
@@ -733,7 +768,6 @@ function signUp(){
     return false;
   }
 
-
   else if($('#email').val() != $('#cemail').val()){
     swal('Oops!', 'Your email doesn\'t match', 'info');
     return false;
@@ -742,10 +776,7 @@ function signUp(){
     swal('Oops!', 'Your password doesn\'t match', 'info');
     return false;
   }
-  else if($('#type_of_service').val() == "Add Service Type" &&  $('#other_type_of_service').val() == ""){
-    swal('Oops!', 'Please add your service type', 'info');
-    return false;
-  }
+
 
   else if($('#checkBox').prop('checked') == false){
     swal('Oops!', 'You have to accept terms and conditions', 'warning');
@@ -756,8 +787,11 @@ function signUp(){
     user_id: $('#user_id').val(),
     ref_code: $('#ref_code').val(),
     business_name: $('#business_name').val(),
+    business_telephone: $('#business_telephone').val(),
     business_address: $('#business_address').val(),
-    address: $('#address').val(),
+    address: $('#autocomplete').val(),
+    street_number: $('#street_number').val(),
+    street_name: $('#route').val(),
     corporate_type: $('#corporate_type').val(),
     type_of_service: $('#type_of_service').val(),
     other_type_of_service: $('#other_type_of_service').val(),
@@ -773,13 +807,13 @@ function signUp(){
     email: $('#email').val(),
     country: $('#country').val(),
     state: $('#state').val(),
-    city: $('#city').val(),
+    city: $('#locality').val(),
     business_country: $('#business_country').val(),
     business_state: $('#business_state').val(),
     business_city: $('#business_city').val(),
     password: $('#password').val(),
     business_zip_code: $('#business_zip_code').val(),
-    zip_code: $('#zip_code').val(),
+    zip_code: $('#postal_code').val(),
   };
 
         Pace.restart();

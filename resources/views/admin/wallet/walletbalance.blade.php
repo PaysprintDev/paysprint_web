@@ -12,11 +12,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         Wallet Balance
+         Wallet Balance By Country
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Wallet Balance</li>
+        <li class="active">Wallet Balance By Country</li>
       </ol>
     </section>
 
@@ -26,7 +26,7 @@
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Wallet Balance</h3>
+              <h3 class="box-title">Wallet Balance By Country</h3>
               
             </div>
             <!-- /.box-header -->
@@ -45,24 +45,29 @@
                   </div>
                 <tr>
                   <th>S/N</th>
-                  <th>Name</th>
                   <th>Country</th>
-                  <th>Wallet Balance</th>
-                  <th>Date Joined</th>
+                  <th>Total Wallet Balance</th>
+                  <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                    @if (count($data['walletBalance']) > 0)
+                    @if (count($data['walletcategoryBalance']) > 0)
                     <?php $i = 1;?>
-                        @foreach ($data['walletBalance'] as $data)
+                        @foreach ($data['walletcategoryBalance'] as $data)
                         <tr>
                             <td>{{ $i++ }}</td>
-                            
-                            <td>{{ $data->name }}</td>
                             <td>{{ $data->country }}</td>
-                            <td style="font-weight: 700;">{{ $data->currencyCode.' '.number_format($data->wallet_balance, 2) }}</td>
+
+                          @if($totPay = \App\User::where('country', $data->country)->sum('wallet_balance'))
+                                <td style="font-weight: 700;">{{ $data->currencyCode.' '.number_format($totPay, 2) }}</td>
+
+                                @else
+                            <td style="font-weight: 700;">{{ $data->currencyCode.' '.number_format(0, 2) }}</td>
+                            @endif
+
+                            
                             <td>
-                                {{ date('d/M/Y h:i:a', strtotime($data->created_at)) }}
+                                <a href="{{ route('balance by country', 'country='.$data->country) }}" class="btn btn-primary" type="button">View details</a>
                             </td>
 
                         </tr>
@@ -70,7 +75,7 @@
 
                     @else
                     <tr>
-                        <td colspan="5" align="center">No record available</td>
+                        <td colspan="4" align="center">No record available</td>
                     </tr>
                     @endif
                 </tbody>

@@ -38,7 +38,7 @@
               <div class="alert alert-danger responseMessage disp-0"></div>
             <div class="row">
                 <div class="col-md-12">
-                    <p style="color: red; font-weight:bold; text-transform:uppercase">Click on Image to download and view sample</p>
+                    <p style="color: red; font-weight:bold; text-transform:uppercase">Click on Image to download and view a sample</p>
                     <a href="{{ asset('downloadsample/testsample.xlsx') }}" target="_blank" download=""><img src="{{ asset('images/testformat.png') }}" alt="" style="width: 100%"/></a>
                 </div>
             </div>
