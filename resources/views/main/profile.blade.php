@@ -315,6 +315,39 @@
   </div>
 
 
+    <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingSix">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+          Link Other Accounts
+        </a>
+      </h4>
+    </div>
+    <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
+      <div class="panel-body">
+        <form action="#" method="post" id="formElemlinkaccount">
+
+            <div class="form-group">
+                <label for="account_number">Account Number</label><br>
+                <small style="color: red; font-weight: 700;">Kindly enter the PS account number to link</small>
+                <input type="text" name="account_number" id="link_account_number" class="form-control" placeholder="E.g 69212">
+            </div>
+            
+            <div class="form-group">
+                <label for="transaction_pin">Transaction Pin</label><br>
+                <small style="color: red; font-weight: 700;">Kindly provide transaction pin of the account to link</small>
+                <input type="password" name="transaction_pin" id="link_transaction_pin" class="form-control">
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary btn-block" id="linkaccountBtn" onclick="handShake('linkaccount')">Submit</button>
+            </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+
 
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingFive">
@@ -376,49 +409,7 @@
 
 
 
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingSix">
-      <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-          Link Other Accounts
-        </a>
-      </h4>
-    </div>
-    <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
-      <div class="panel-body">
-        <form action="#" method="post" id="formElemlinkaccount">
 
-            <div class="form-group">
-                <label for="account_number">Account Number</label><br>
-                <small style="color: red; font-weight: 700;">Kindly enter the account number to link</small>
-                <input type="text" name="account_number" id="link_account_number" class="form-control" placeholder="69212">
-            </div>
-            <div class="form-group">
-                <label for="security_question">Security Question</label><br>
-                <small style="color: red; font-weight: 700;">Kindly select the security question of the account to link</small>
-                <select name="security_question" id="link_security_question" class="form-control">
-                    <option value="">Select Question</option>
-                    <option value="What was your first pet's name?">What was your first pet's name?</option>
-                    <option value="What's the name of the city where you were born?">What's the name of the city where you were born?</option>
-                    <option value="What was your childhood nickname?">What was your childhood nickname?</option>
-                    <option value="What's the name of the city where your parents met?">What's the name of the city where your parents met?</option>
-                    <option value="What's the first name of your oldest cousin?">What's the first name of your oldest cousin?</option>
-                    <option value="What's the name of the first school you attended?">What's the name of the first school you attended?</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="security_answer">Security Answer</label><br>
-                <small style="color: red; font-weight: 700;">Kindly provide answer to the security question of the account to link</small>
-                <input type="text" name="security_answer" id="link_security_answer" class="form-control">
-            </div>
-            <div class="form-group">
-                <button type="button" class="btn btn-primary btn-block" id="linkaccountBtn" onclick="handShake('linkaccount')">Submit</button>
-            </div>
-
-        </form>
-      </div>
-    </div>
-  </div>
 
 </div>
 

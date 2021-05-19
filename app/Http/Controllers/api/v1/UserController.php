@@ -675,8 +675,7 @@ class UserController extends Controller
 
         $validator = Validator::make($req->all(), [
                      'account_number' => 'required|string',
-                     'security_question' => 'required|string',
-                     'security_answer' => 'required|string',
+                     'transaction_pin' => 'required|string',
                 ]);
 
                 if($validator->passes()){
@@ -688,11 +687,10 @@ class UserController extends Controller
 
                         if(isset($getAccount)){
 
-                            if($getAccount->securityQuestion == $req->security_question && strtolower($getAccount->securityAnswer) == strtolower($req->security_answer)){
-
+                            if(Hash::check($req->transaction_pin, $getAccount->transaction_pin)){
 
                                 // Link Account
-                                $resp = LinkAccount::updateOrInsert(['ref_code' => $thisuser->ref_code, 'link_ref_code' => $getAccount->ref_code], ['ref_code' => $thisuser->ref_code, 'link_ref_code' => $req->account_number]);
+                                $resp = LinkAccount::updateOrInsert(['ref_code' => $thisuser->ref_code, 'link_ref_code' => $getAccount->ref_code], ['ref_code' => $thisuser->ref_code, 'link_ref_code' => $req->account_number, 'user_id' => $thisuser->id]);
 
                                 $info = "Hello ".strtoupper($thisuser->name).", You have linked your account ".$req->account_number." (".$getAccount->currencyCode.") with your primary account ".$thisuser->ref_code." (".$thisuser->currencyCode.")";
 
@@ -708,7 +706,7 @@ class UserController extends Controller
                             }
                             else{
 
-                                $error = "Invalid security question and answer provided";
+                                $error = "Invalid transaction pin";
 
                                 $data = [];
                                 $status = 400;

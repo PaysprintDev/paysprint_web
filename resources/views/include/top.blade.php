@@ -1,3 +1,6 @@
+
+<?php use \App\Http\Controllers\LinkAccount; ?>
+<?php use \App\Http\Controllers\User; ?>
 <!--Top Header_Area -->
 	<section class="top_header_area">
 	    <div class="container">
@@ -146,32 +149,62 @@
                         </li>
 
                         <li class="dropdown submenu">
-                            <a href="{{ route('statement') }}">Transaction History</a>
+                            <a href="{{ route('statement') }}">Transaction</a>
                         </li>
 
-                        
+                        @auth
+                            <li class="dropdown submenu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">SWITCH ACCOUNT<span class="caret"></span></a>
+                                
+                                <ul class="dropdown-menu other_dropdwn">
 
-                        {{-- <li class="dropdown submenu">
-                            <a style="cursor: pointer;" onclick="openModal('access_maintenance')">Rental Management</a>
-                        </li> --}}
+                                    @php
+                                        $account = \App\LinkAccount::where('ref_code', Auth::user()->ref_code)->get();
+                                    @endphp
 
+                                    @if(count($account) > 0)
+                                        @foreach ($account as $item)
 
-                        {{-- <li class="dropdown submenu" onclick="getBronchure('guest')">
-                            <a href="#">Brochure</a>
+                                        @php
+                                            $useraccount = \App\User::where('ref_code', $item->link_ref_code)->first();
+                                        @endphp
 
-                        </li>
-                        <a href="{{ url('/bronchure/PAYca_Brochure.pdf') }}" download="" id="downloaddoc" style="display: none;">Brochure</a>
- --}}
-                        {{-- <li class="dropdown submenu">
-                            <a href="{{ route('contact') }}">Contact Us</a>
-                        </li> --}}
+                                            <li><a href="{{ route('sign out', $useraccount->id) }}">ACCOUNT NO: {{ $item->link_ref_code }}</a></li>
+                                        @endforeach
+                                    @else
+                                        
+                                        @php
+                                            $account = \App\LinkAccount::where('link_ref_code', Auth::user()->ref_code)->get();
+                                        @endphp
+
+                                        @if(count($account) > 0)
+
+                                            @foreach ($account as $item)
+                                            @php
+                                            $useraccount = \App\User::where('ref_code', $item->ref_code)->first();
+                                        @endphp
+                                                <li><a href="{{ route('sign out', $useraccount->id) }}">ACCOUNT NO: {{ $item->ref_code }}</a></li>
+                                            @endforeach
+
+                                            @else
+
+                                            <li><a href="{{ route('profile') }}">SET UP</a></li>
+                                        
+                                        @endif
+                                    @endif
+                                </ul>
+                            </li>
+                        @endauth
 
                         
 
                         
 
                         <li class="dropdown submenu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ (strlen($name) < 20) ? $name : substr($name, 0, 20)."..." }}<span class="caret"></span></a>
+                            @php
+                                $username = explode(" ", $name);
+                            @endphp
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ (strlen($username[0]) < 10) ? $username[0] : substr($username[0], 0, 10)."..." }}<span class="caret"></span></a>
                             
                             <ul class="dropdown-menu other_dropdwn">
                                 <li><a href="javascript:void()">Account NO: {{ Auth::user()->ref_code }}</a></li>
