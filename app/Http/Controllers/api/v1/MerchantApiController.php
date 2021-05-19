@@ -567,16 +567,16 @@ class MerchantApiController extends Controller
 
             if($userCardType == strtoupper("Credit Card")){
                 // Live API
-                $store_id='gwca026583';
-                $api_token='sssLFi2U8VFO0oWvPWax';
+                $store_id=env('MONERIS_STORE_ID_VIM');
+                $api_token=env('MONERIS_API_TOKEN_VIM');
 
                 $indicator = "U";
                 $setMode = false;
             }
             else{
                 // Live API
-                $store_id='gwca045238';
-                $api_token='V9XOY4JBS4JII01xBFch';
+                $store_id=env('MONERIS_STORE_ID');
+                $api_token=env('MONERIS_API_TOKEN');
 
                 $setMode = false;
                 $indicator = "Z";
