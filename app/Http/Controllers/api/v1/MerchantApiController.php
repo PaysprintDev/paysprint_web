@@ -475,6 +475,8 @@ class MerchantApiController extends Controller
         $validator = Validator::make($req->all(), [
             'firstname' => 'required',
             'lastname' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
             'amount' => 'required',
             'country' => 'required',
             'cardNumber' => 'required',
@@ -508,12 +510,283 @@ class MerchantApiController extends Controller
                     // Make Payment
 
                     $response = $this->monerisWalletProcess($thismerchant->ref_code, $req->cardType, $amount, $req->purpose, $mode, $req->country, $req->expiryMonth, $req->cardNumber, $req->expiryYear);
+                    
+
+                    if($response->responseData['Message'] == "APPROVED           *                    ="){
+
+                        $reference_code = $response->responseData['ReceiptId'];
+
+                        $paymentToken = $reference_code;
+
+
+                        try {
+
+                            // Update Wallet
+
+                            $countryInfo = $this->getCountryCode($req->country);
+
+                            $currencyCode = $countryInfo[0]->currencies[0]->code;
+                            $currencySymbol = $countryInfo[0]->currencies[0]->symbol;
+
+                            $code = $countryInfo[0]->callingCodes[0];
+
+                            $service = $req->purpose;
+
+                            if($req->country == $thismerchant->country){
+                                $amount = $req->amount;
+                                $myCurrency = $currencyCode;
+                            }
+                            else{
+                                // Currency converter
+                                $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $currencyCode);
+                                $myCurrency = $thismerchant->currencyCode;
+                            }
+
+                            // Send mail to both parties
+
+                            // $this->to = "bambo@vimfile.com";
+                            $this->to = $thismerchant->email;
+                            $this->name = $req->firstname;
+                            $this->coy_name = $thismerchant->businessname;
+                            // $this->email = "bambo@vimfile.com";
+                            $this->email = $req->email;
+                            $this->amount = $myCurrency." ".number_format($amount, 2);
+                            $this->paypurpose = $service;
+                            $this->subject = "Payment Received from ".$req->firstname." ".$req->lastname." for ".$service;
+                            $this->subject2 = "Your Payment to ".$thismerchant->businessname." was successfull";
+
+                            // Mail to thismerchant
+                            $this->sendEmail($this->to, "Payment Received");
+
+                            // Mail from thisuser
+
+                            $this->sendEmail($this->email, "Payment Successful");
+
+
+                            // Insert Statement
+                            $activity = "Transfer of ".$thismerchant->currencyCode." ".number_format($req->amount, 2)." to ".$thismerchant->businessname." for ".$service;
+                            $credit = 0;
+                            $debit = number_format($req->amount, 2);
+                            $reference_code = $reference_code;
+                            $balance = 0;
+                            $trans_date = date('Y-m-d');
+                            $wallet_status = "Delivered";
+                            $action = "Wallet debit";
+                            $regards = $thismerchant->ref_code;
+
+
+                            $statement_route = "wallet";
+
+
+                            if($thismerchant->auto_deposit == 'on'){
+                                $recWallet = $thismerchant->wallet_balance + $amount;
+                                $walletstatus = "Delivered";
+                                
+                                $recMsg = "Hi ".$thismerchant->businessname.", You have received ".$myCurrency.' '.number_format($amount, 2)." in your PaySprint wallet for ".$service." from ".$thisuser->name.". You now have ".$myCurrency.' '.number_format($recWallet, 2)." balance in your wallet. PaySprint Team";
+
+                            }
+                            else{
+                                $recWallet = $thismerchant->wallet_balance;
+                                $walletstatus = "Pending";
+
+                                $recMsg = "Hi ".$thismerchant->businessname.", You have received ".$myCurrency.' '.number_format($amount, 2)." for ".$service." from ".$thisuser->name.". Your wallet balance is ".$myCurrency.' '.number_format($recWallet, 2).". Kindly login to your wallet account to receive money. PaySprint Team ".route('my account');
+
+                            }
+
+
+                            $sendMsg = "Hi ".$req->firstname." ".$req->lastname.", You have made a ".$activity." Do more with PaySprint. Download our mobile app from Apple Store or Google Play Store. Thanks PaySprint Team";
+                            $sendPhone = "+".$code.$req->phone;
+
+                            $this->sendMessage($sendMsg, $sendPhone);
+
+                            
+                            $recPhone = "+".$thismerchant->code.$thismerchant->telephone;
+
+                            $this->sendMessage($recMsg, $recPhone);
+                            
+                                    
+                            // thismerchant Statement
+                            $this->insStatement($thismerchant->email, $paymentToken, "Received ".$myCurrency.' '.number_format($amount, 2)." in wallet for ".$service." from ".$req->firstname." ".$req->lastname, number_format($amount, 2), 0, $balance, $trans_date, $walletstatus, "Wallet credit", $thismerchant->ref_code, 1, $statement_route, $thismerchant->auto_deposit);
+
+
+                            $data['name'] = $req->firstname.' '.$req->lastname;
+                            $data['email'] = $req->email;
+                            $data['phone'] = $req->phone;
+                            $data['paymentToken'] = $paymentToken;
+                            $data['amount'] = $req->amount;
+                            $data['currency'] = $currencyCode;
+
+                            $status = 200;
+
+                            $resData = ['data' => $data, 'message' => 'Money Sent Successfully', 'status' => $status];
+
+
+                            Log::info("Sent money from ".$req->firstname." ".$req->lastname." to ".$thismerchant->businessname." using 3rd party gateway LIVE MODE");
+
+                            $this->createNotification($thismerchant->ref_code, $recMsg);
+
+
+                            
+                                
+                        } catch (\Exception $th) {
+                            $status = 400;
+
+                            $resData = ['data' => [], 'message' => 'Error: '.$th, 'status' => $status];
+                        }
+
+
+                    }
+                    else{
+
+                        $message = $response->responseData['Message'];
+                        $status = 400;
+
+                        $data = [];
+
+                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                    }
+
+
+
 
                     
                     
 
                 }
                 elseif($mode == strtoupper("test")){
+
+                    // Make Payment
+
+                    $response = $this->monerisWalletProcess($thismerchant->ref_code, $req->cardType, $amount, $req->purpose, $mode, $req->country, $req->expiryMonth, $req->cardNumber, $req->expiryYear);
+                    
+
+                    if($response->responseData['Message'] == "APPROVED           *                    ="){
+
+                        $reference_code = $response->responseData['ReceiptId'];
+
+                        $paymentToken = $reference_code;
+
+
+                        try {
+
+                            // Update Wallet
+
+                            $countryInfo = $this->getCountryCode($req->country);
+
+                            $currencyCode = $countryInfo[0]->currencies[0]->code;
+                            $currencySymbol = $countryInfo[0]->currencies[0]->symbol;
+
+                            $code = $countryInfo[0]->callingCodes[0];
+
+                            $service = $req->purpose;
+
+                            if($req->country == $thismerchant->country){
+                                $amount = $req->amount;
+                                $myCurrency = $currencyCode;
+                            }
+                            else{
+                                // Currency converter
+                                $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $currencyCode);
+                                $myCurrency = $thismerchant->currencyCode;
+                            }
+
+                            // Send mail to both parties
+
+                            // $this->to = "bambo@vimfile.com";
+                            $this->to = $thismerchant->email;
+                            $this->name = $req->firstname;
+                            $this->coy_name = $thismerchant->businessname;
+                            // $this->email = "bambo@vimfile.com";
+                            $this->email = $req->email;
+                            $this->amount = $myCurrency." ".number_format($amount, 2);
+                            $this->paypurpose = $service;
+                            $this->subject = "Payment Received from ".$req->firstname." ".$req->lastname." for ".$service;
+                            $this->subject2 = "Your Payment to ".$thismerchant->businessname." was successfull";
+
+                            // Mail to thismerchant
+                            $this->sendEmail($this->to, "Payment Received");
+
+                            // Mail from thisuser
+
+                            $this->sendEmail($this->email, "Payment Successful");
+
+
+                            // Insert Statement
+                            $activity = "Transfer of ".$thismerchant->currencyCode." ".number_format($req->amount, 2)." to ".$thismerchant->businessname." for ".$service;
+                            $credit = 0;
+                            $debit = number_format($req->amount, 2);
+                            $reference_code = $reference_code;
+                            $balance = 0;
+                            $trans_date = date('Y-m-d');
+                            $wallet_status = "Delivered";
+                            $action = "Wallet debit";
+                            $regards = $thismerchant->ref_code;
+
+
+                            $statement_route = "wallet";
+
+
+                            if($thismerchant->auto_deposit == 'on'){
+                                $recWallet = $thismerchant->wallet_balance + $amount;
+                                $walletstatus = "Delivered";
+                                
+                                $recMsg = "Hi ".$thismerchant->businessname.", You have received ".$myCurrency.' '.number_format($amount, 2)." in your PaySprint wallet for ".$service." from ".$thisuser->name.". You now have ".$myCurrency.' '.number_format($recWallet, 2)." balance in your wallet. PaySprint Team";
+
+                            }
+                            else{
+                                $recWallet = $thismerchant->wallet_balance;
+                                $walletstatus = "Pending";
+
+                                $recMsg = "Hi ".$thismerchant->businessname.", You have received ".$myCurrency.' '.number_format($amount, 2)." for ".$service." from ".$thisuser->name.". Your wallet balance is ".$myCurrency.' '.number_format($recWallet, 2).". Kindly login to your wallet account to receive money. PaySprint Team ".route('my account');
+
+                            }
+
+
+                            $sendMsg = "Hi ".$req->firstname." ".$req->lastname.", You have made a ".$activity." Do more with PaySprint. Download our mobile app from Apple Store or Google Play Store. Thanks PaySprint Team";
+                            $sendPhone = "+".$code.$req->phone;
+
+                            $this->sendMessage($sendMsg, $sendPhone);
+
+                            
+                            $recPhone = "+".$thismerchant->code.$thismerchant->telephone;
+
+                            $this->sendMessage($recMsg, $recPhone);
+                            
+
+                            $data['name'] = $req->firstname.' '.$req->lastname;
+                            $data['email'] = $req->email;
+                            $data['phone'] = $req->phone;
+                            $data['paymentToken'] = $paymentToken;
+                            $data['amount'] = $req->amount;
+                            $data['currency'] = $currencyCode;
+
+                            $status = 200;
+
+                            $resData = ['data' => $data, 'message' => 'Money Sent Successfully', 'status' => $status];
+
+
+                            Log::info("Sent money from ".$req->firstname." ".$req->lastname." to ".$thismerchant->businessname." using 3rd party gateway TEST MODE");
+
+
+                            
+                                
+                        } catch (\Exception $th) {
+                            $status = 400;
+
+                            $resData = ['data' => [], 'message' => 'Error: '.$th, 'status' => $status];
+                        }
+
+
+                    }
+                    else{
+
+                        $message = $response->responseData['Message'];
+                        $status = 400;
+
+                        $data = [];
+
+                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                    }
 
                 }
                 else{
@@ -593,6 +866,8 @@ class MerchantApiController extends Controller
             
         }
 
+        
+
 
 
 
@@ -606,7 +881,7 @@ class MerchantApiController extends Controller
             $amount= number_format($dollaramount, 2);
         }
         else{
-            $amount= $dollaramount;
+            $amount= number_format($dollaramount, 2);
         }
 
         
