@@ -101,8 +101,12 @@ use App\Classes\CofInfo;
 use App\Classes\MCPRate;
 
 
+use App\Traits\PaymentGateway;
+
 class MonerisController extends Controller
 {
+
+    use PaymentGateway;
 
     public $to;
     public $name;
@@ -265,6 +269,8 @@ if($mpgResponse->responseData['Message'] == "APPROVED           *               
 
                             $thisuser = User::where('email', $req->email)->first();
 
+                            
+
 
                     // Insert Statement
                         $activity = "Payment for ".$req->service." to ".$client->business_name;
@@ -282,15 +288,17 @@ if($mpgResponse->responseData['Message'] == "APPROVED           *               
 
 
 
-                        
-
-
                     $resData = ['res' => 'Payment Successful', 'message' => 'success', 'title' => 'Good!'];
                     
                     $response = 'Payment Successful';
                     $action = 'success';
 
+                    
+
                     $this->createNotification($thisuser->ref_code, "Payment successfully made for ".$req->service." to ".$client->business_name);
+
+                    $monerisactivity = "Payment successfully made for ".$req->service." to ".$client->business_name." by ".$thisuser->name;
+                    $this->keepRecord($mpgResponse->responseData['ReceiptId'], $mpgResponse->responseData['Message'], $monerisactivity);
 				}
 				else{
                     $resData = ['res' => 'Something went wrong', 'message' => 'info', 'title' => 'Oops!'];
@@ -325,6 +333,9 @@ else{
     
     $response = $mpgResponse->responseData['Message'];
     $action = 'error';
+
+    $monerisactivity = "Payment error for ".$req->service." to ".$client->business_name." by ".$thisuser->name;
+    $this->keepRecord("", $mpgResponse->responseData['Message'], $activity);
 }
 
     // return $this->returnJSON($resData, 200);
@@ -479,7 +490,7 @@ else{
 
                                         $activity = "Payment for ".$purpose." from ".$req->payment_method;
                                         $credit = 0;
-                                        $debit = number_format($req->amount, 2);
+                                        $debit = $req->amount;
                                         $balance = $newAmount;
                                         $status = "Delivered";
                                         $action = "Wallet debit";
@@ -512,7 +523,7 @@ else{
                                         // Merchant Statement
 
                                         $activity = "Added ".$req->currencyCode.''.number_format($req->amount, 2)." to Wallet";
-                                        $credit = number_format($req->amount, 2);
+                                        $credit = $req->amount;
                                         $debit = 0;
                                         $reference_code = $transactionID;
                                         $balance = 0;
@@ -696,6 +707,8 @@ else{
 
                         $reference_code = $response->responseData['ReceiptId'];
 
+                        
+
                         $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
 
                         $cardNo = str_repeat("*", strlen($cardDetails->card_number)-4) . substr($cardDetails->card_number, -4);
@@ -721,6 +734,9 @@ else{
                         $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
 
                         $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+
+
+                        
 
                         // Notification
 
@@ -748,6 +764,9 @@ else{
                         $this->createNotification($thisuser->ref_code, $sendMsg);
 
                         Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
+
+                        $monerisactivity = $thisuser->name.' '.$sendMsg;
+                        $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity);
                         
 
                     }
@@ -757,6 +776,9 @@ else{
                         $status = 400;
 
                         Log::critical('Oops!! '.$thisuser->name.' '.$message);
+
+                        $monerisactivity = $thisuser->name.' '.$sendMsg;
+                        $this->keepRecord("", $response->responseData['Message'], $monerisactivity);
                     }
                 }
 
@@ -891,7 +913,7 @@ else{
 
                                             $activity = "Withdraw ".$req->currencyCode.''.number_format($req->amount, 2)." from Wallet to EXBC Prepaid Card";
                                             $credit = 0;
-                                            $debit = number_format($req->amount, 2);
+                                            $debit = $req->amount;
                                             $reference_code = $transaction_id;
                                             $balance = 0;
                                             $trans_date = date('Y-m-d');
@@ -921,8 +943,8 @@ else{
 
                                             if(isset($exbcMerchant)){
 
-                                                $activity = "Added ".$req->currencyCode.''.$req->amounttosend." to your Wallet to load EXBC Prepaid Card";
-                                                $credit = number_format($req->amounttosend, 2);
+                                                $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to your Wallet to load EXBC Prepaid Card";
+                                                $credit = $req->amounttosend;
                                                 $debit = 0;
                                                 $reference_code = $transaction_id;
                                                 $balance = 0;
@@ -991,7 +1013,7 @@ else{
 
                                             $activity = "Withdraw ".$req->currencyCode.''.number_format($req->amount, 2)." from Wallet to Bank Account ".$bankDetails->bankName." - ".$bankDetails->accountNumber;
                                             $credit = 0;
-                                            $debit = number_format($req->amount, 2);
+                                            $debit = $req->amount;
                                             $reference_code = $transaction_id;
                                             $balance = 0;
                                             $trans_date = date('Y-m-d');
@@ -1071,7 +1093,7 @@ else{
 
                                                         $activity = "Withdraw ".$req->currencyCode.''.number_format($req->amount, 2)." from Wallet to Credit/Debit card";
                                                         $credit = 0;
-                                                        $debit = number_format($req->amount, 2);
+                                                        $debit = $req->amount;
                                                         // $reference_code = $response->responseData['ReceiptId'];
                                                         $reference_code = $transaction_id;
                                                         $balance = 0;
@@ -1242,8 +1264,8 @@ else{
 
                                             if(isset($exbcMerchant)){
 
-                                                $activity = "Added ".$req->currencyCode.''.$req->amounttosend." to your Wallet to load EXBC Prepaid Card";
-                                                $credit = number_format($req->amounttosend, 2);
+                                                $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to your Wallet to load EXBC Prepaid Card";
+                                                $credit = $req->amounttosend;
                                                 $debit = 0;
                                                 $reference_code = $transaction_id;
                                                 $balance = 0;
@@ -1304,7 +1326,7 @@ else{
 
                                             $activity = "Withdraw ".$req->currencyCode.''.number_format($req->amount, 2)." from Wallet to Bank Account ".$bankDetails->bankName." - ".$bankDetails->accountNumber;
                                             $credit = 0;
-                                            $debit = number_format($req->amount, 2);
+                                            $debit = $req->amount;
                                             $reference_code = $transaction_id;
                                             $balance = 0;
                                             $trans_date = date('Y-m-d');
@@ -1373,7 +1395,7 @@ else{
 
                                                 $activity = "Withdraw ".$req->currencyCode.''.number_format($req->amount, 2)." from Wallet to Credit/Debit card";
                                                 $credit = 0;
-                                                $debit = number_format($req->amount, 2);
+                                                $debit = $req->amount;
                                                 // $reference_code = $response->responseData['ReceiptId'];
                                                 $reference_code = $transaction_id;
                                                 $balance = 0;
@@ -1504,7 +1526,7 @@ else{
             // Insert Statement
             $activity = "Debited ".$data->currencyCode." ".number_format($amount, 2)." for ".$purpose." load request from PaySprint Wallet.";
             $credit = 0;
-            $debit = number_format($amount, 2);
+            $debit = $amount;
             $reference_code = $transaction_id;
             $balance = 0;
             $trans_date = date('Y-m-d');
@@ -1641,6 +1663,9 @@ else{
         $mpgHttpPost = new mpgHttpsPost($store_id,$api_token,$mpgRequest);
         /******************************* Response ************************************/
         $mpgResponse=$mpgHttpPost->getMpgResponse();
+
+
+        
 
         return $mpgResponse;
     }

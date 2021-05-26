@@ -94,9 +94,12 @@ use App\Classes\mcTax;
 use App\Classes\CofInfo;
 use App\Classes\MCPRate;
 
+use App\Traits\PaymentGateway;
+
 class GooglePaymentController extends Controller
 {
 
+    use PaymentGateway;
 
     public $to;
     public $name;
@@ -234,6 +237,8 @@ class GooglePaymentController extends Controller
 
                 $reference_code = $response->responseData['ReceiptId'];
 
+                
+
                 $wallet_balance = $user->wallet_balance;
                 $paymentToken = $reference_code;
                 $status = "Delivered";
@@ -364,6 +369,9 @@ class GooglePaymentController extends Controller
 
             Log::info($sendMsg);
             Log::info($recMsg);
+
+            $monerisactivity = $sendMsg;
+            $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity);
 
 
             try {

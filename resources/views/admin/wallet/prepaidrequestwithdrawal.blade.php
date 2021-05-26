@@ -59,40 +59,44 @@
                     @if (count($data['prepaidRequestWithdrawal']->data) > 0 && $data['prepaidRequestWithdrawal']->status == 200)
                     <?php $i = 1;?>
                         @foreach ($data['prepaidRequestWithdrawal']->data as $items)
-                        <tr>
-                            <td>{{ $i++ }}</td>
 
-                            @if($user = \App\User::where('email', $items->email)->first())
+                          @if ($items->load_status == "NOT PROCESSED" || $items->load_status == "PENDING")
+                              <tr>
+                              <td>{{ $i++ }}</td>
 
-                              @php
-                                  $currencyCode = $user->currencyCode;
-                                  $currencySymbol = $user->currencySymbol;
-                                  $name = $user->name;
-                              @endphp
+                              @if($user = \App\User::where('email', $items->email)->first())
 
-
-                            @else
-
-                              @php
-                                  $currencyCode = '';
-                                  $currencySymbol = '';
-                                  $name = '-';
-                              @endphp
-                            @endif
-                            <td>{{ $name }}</td>
-                            <td>{{ $items->email }}</td>
-                            <td>{{ $items->transaction_id }}</td>
-                            <td>{{ $items->reference_code }}</td>
-                            <td>{{ $items->card_number }}</td>
-
-                            <td style="font-weight: 700;">{{ $currencySymbol.' '.number_format($items->amount, 2) }}</td>
-
-                            <td>{{ date('d/M/Y', strtotime($items->created_at)) }}</td>
-
-                            <td style="font-weight: bold; color: @if($items->load_status == "NOT PROCESSED") red; @elseif($items->load_status == "PENDING") darkorange; @else green; @endif">{{ $items->load_status }}</td>
+                                @php
+                                    $currencyCode = $user->currencyCode;
+                                    $currencySymbol = $user->currencySymbol;
+                                    $name = $user->name;
+                                @endphp
 
 
-                        </tr>
+                              @else
+
+                                @php
+                                    $currencyCode = '';
+                                    $currencySymbol = '';
+                                    $name = '-';
+                                @endphp
+                              @endif
+                              <td>{{ $name }}</td>
+                              <td>{{ $items->email }}</td>
+                              <td>{{ $items->transaction_id }}</td>
+                              <td>{{ $items->reference_code }}</td>
+                              <td>{{ $items->card_number }}</td>
+
+                              <td style="font-weight: 700;">{{ $currencySymbol.' '.number_format($items->amount, 2) }}</td>
+
+                              <td>{{ date('d/M/Y', strtotime($items->created_at)) }}</td>
+
+                              <td style="font-weight: bold; color: @if($items->load_status == "NOT PROCESSED") red; @elseif($items->load_status == "PENDING") darkorange; @else green; @endif">{{ $items->load_status }}</td>
+
+
+                          </tr>
+                          @endif
+                        
                         @endforeach
 
                     @else

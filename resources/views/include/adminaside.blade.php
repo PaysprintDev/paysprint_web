@@ -44,6 +44,7 @@
 
             @if (session('role') == "Super")
             <li><a href="{{ route('platform activity') }}"><i class="fa fa-circle-o"></i> Activity</a></li>
+            <li><a href="{{ route('gateway activity') }}"><i class="fa fa-circle-o"></i> Gateway Activity</a></li>
           @endif
             
           </ul>
@@ -55,6 +56,14 @@
           <a href="{{ route('business report') }}">
             <i class="fa fa-book"></i>
             <span>Business Report</span>
+          </a>
+          
+        </li>
+
+        <li>
+          <a href="{{ route('account report', 'country=Canada') }}">
+            <i class="fa fa-book"></i>
+            <span>Account Report</span>
           </a>
           
         </li>
@@ -189,6 +198,22 @@
           </ul>
         </li>
 
+
+        <li class="treeview">
+          <a href="#">
+            <i class="far fa-handshake"></i>
+            <span>Pending Transactions</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li title="Transfers"><a href="{{ route('pending transfer') }}"><i class="fa fa-circle-o text-red"></i> Transfers</a></li>
+            <li title="Text-Transfer"><a href="{{ route('text to transfer') }}"><i class="fa fa-circle-o text-red"></i>Text-Transfer</a></li>
+
+          </ul>
+        </li>
+
         <li class="treeview">
           <a href="#">
             <i class="far fa-money-bill-alt"></i>
@@ -231,7 +256,7 @@
           </a>
           <ul class="treeview-menu">
             <li title="Balance"><a href="{{ route('wallet balance') }}"><i class="fa fa-circle-o text-red"></i> Balance</a></li>
-            <li title="Processed Payment"><a href="{{ route('processed payment') }}"><i class="fa fa-circle-o text-red"></i> Processed Payment</a></li>
+            {{-- <li title="Processed Payment"><a href="{{ route('processed payment') }}"><i class="fa fa-circle-o text-red"></i> Processed Payment</a></li> --}}
             <li title="Maintenance Fee"><a href="{{ route('maintenance fee detail') }}"><i class="fa fa-circle-o text-red"></i> Maintenance Fee</a></li>
 
           </ul>
@@ -310,7 +335,8 @@
           </a>
           <ul class="treeview-menu">
             <li ><a href="{{ route('create single invoice') }}"><i class="fa fa-circle-o text-green"></i> Single </a></li>
-            <li ><a href="{{ route('create bulk invoice') }}"><i class="fa fa-circle-o text-red"></i> Batch</a></li>
+            {{-- <li ><a href="{{ route('create bulk invoice') }}"><i class="fa fa-circle-o text-red"></i> Batch</a></li> --}}
+            <li onclick="comingSoon()"><a href="javascript:void()"><i class="fa fa-circle-o text-red"></i> Batch [Coming Soon]</a></li>
             {{-- <li><a href="#"><i class="fa fa-circle-o text-info"></i> Check Sold Tickets</a></li>
             <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
           </ul>

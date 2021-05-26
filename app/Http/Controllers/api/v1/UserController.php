@@ -82,36 +82,47 @@ class UserController extends Controller
 
                     $user = User::create(['code' => $newcustomer->code, 'ref_code' => $newcustomer->ref_code, 'name' => $newcustomer->name, 'email' => $newcustomer->email, 'password' => Hash::make($request->password), 'address' => $newcustomer->address, 'city' => $request->city, 'state' => $request->state, 'country' => $newcustomer->country, 'accountType' => 'Individual', 'api_token' => uniqid().md5($request->email), 'telephone' => $newcustomer->telephone, 'wallet_balance' => $newcustomer->wallet_balance, 'approval' => 0, 'currencyCode' => $mycode[0]->currencies[0]->code, 'currencySymbol' => $mycode[0]->currencies[0]->symbol, 'dayOfBirth' => $request->dayOfBirth, 'monthOfBirth' => $request->monthOfBirth, 'yearOfBirth' => $request->yearOfBirth, 'cardRequest' => 0]);
 
-                    Statement::where('user_id', $newcustomer->email)->update(['status' => 'Delivered']);
+                    $getMoney = Statement::where('user_id', $newcustomer->email)->get();
+
+                    if(count($getMoney) > 0){
+                        foreach($getMoney as $key => $value){
+                            Statement::where('reference_code', $value->reference_code)->update(['status' => 'Delivered']);
+                        }
+                    }
+                    else{
+                        // Do nothing
+                    }
 
                     AnonUsers::where('ref_code', $newcustomer->ref_code)->delete();
 
             }
             else{
                 $user = User::create([
-                'ref_code' => $newRefcode,
-                'name' => $request->firstname.' '.$request->lastname,
-                'code' => $mycode[0]->callingCodes[0],
-                'email' => $request->email,
-                'address' => $request->address,
-                'telephone' => $request->telephone,
-                'city' => $request->city,
-                'state' => $request->state,
-                'country' => $request->country,
-                'accountType' => 'Individual',
-                'currencyCode' => $mycode[0]->currencies[0]->code,
-                'currencySymbol' => $mycode[0]->currencies[0]->symbol,
-                'api_token' => uniqid().md5($request->email),
-                'password' => Hash::make($request->password),
-                'approval' => 0, 
-                'dayOfBirth' => $request->dayOfBirth, 
-                'monthOfBirth' => $request->monthOfBirth, 
-                'yearOfBirth' => $request->yearOfBirth, 
-                'cardRequest' => 0
-            ]);
+                    'ref_code' => $newRefcode,
+                    'name' => $request->firstname.' '.$request->lastname,
+                    'code' => $mycode[0]->callingCodes[0],
+                    'email' => $request->email,
+                    'address' => $request->address,
+                    'telephone' => $request->telephone,
+                    'city' => $request->city,
+                    'state' => $request->state,
+                    'country' => $request->country,
+                    'accountType' => 'Individual',
+                    'currencyCode' => $mycode[0]->currencies[0]->code,
+                    'currencySymbol' => $mycode[0]->currencies[0]->symbol,
+                    'api_token' => uniqid().md5($request->email),
+                    'password' => Hash::make($request->password),
+                    'approval' => 0, 
+                    'dayOfBirth' => $request->dayOfBirth, 
+                    'monthOfBirth' => $request->monthOfBirth, 
+                    'yearOfBirth' => $request->yearOfBirth, 
+                    'cardRequest' => 0
+                ]);
             }
 
             $getcurrentUser = User::where('ref_code', $newRefcode)->first();
+
+            Log::info($getcurrentUser);
 
             $url = 'https://api.globaldatacompany.com/verifications/v1/verify';
 
@@ -127,11 +138,15 @@ class UserController extends Controller
                     if(isset($info->TransactionID) == true){
 
                         $result = $this->transStatus($info->TransactionID);
+                        
+                        
 
-                        $res = $this->getTransRec($result->TransactionRecordId);
+                        // $res = $this->getTransRec($result->TransactionRecordId);
+                            
+                            
+                            
 
-
-                        if($res->Record->RecordStatus == "nomatch"){
+                        if($info->Record->RecordStatus == "nomatch"){
                         
                             $message = "error";
                             $title = "Oops!";
@@ -139,7 +154,7 @@ class UserController extends Controller
                             $data = [];
                             $statusCode = 400;
                             
-                            $resInfo = strtoupper($res->Record->RecordStatus).", Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.";
+                            $resInfo = strtoupper($info->Record->RecordStatus).", Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.";
 
                             User::where('id', $getcurrentUser->id)->update(['accountLevel' => 0, 'countryapproval' => 1]);
 
@@ -149,7 +164,7 @@ class UserController extends Controller
                             $message = "success";
                             $title = "Great";
                             $link = "/";
-                            $resInfo = strtoupper($res->Record->RecordStatus).", Congratulations!!!. Your account has been approved. Please complete the Quick Set up to enjoy PaySprint.";
+                            $resInfo = strtoupper($info->Record->RecordStatus).", Congratulations!!!. Your account has been approved. Please complete the Quick Set up to enjoy PaySprint.";
                             $data = $user;
                             $statusCode = 200;
 

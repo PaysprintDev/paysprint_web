@@ -46,7 +46,7 @@
 
               </div>
 
-              <a data-fancybox href="https://youtu.be/A6FGnRpcVok"
+              <a data-fancybox href="https://youtu.be/txfp2Pzbzrg"
                         class="video-link gr-text-color mt-8 gr-flex-y-center justify-content-center justify-content-lg-start">
                         <span class="mr-2 gr-text-color circle-18 border border-black-dynamic">
                             <i class="icon icon-triangle-right-17-2 gr-text-14"></i>
@@ -524,7 +524,7 @@
                     <a href="https://play.google.com/store/apps/details?id=com.fursee.damilare.sprint_mobile" target="_blank" class="btn text-white gr-hover-y px-lg-9">
                         <img src="https://res.cloudinary.com/pilstech/image/upload/v1620148943/paysprint_asset/l6-download-gplay_o9rcfj.png" alt="play store">
                     </a>
-                    <a href="#" class="btn text-white gr-hover-y px-lg-9">
+                    <a href="https://apps.apple.com/gb/app/paysprint/id1567742130" target="_blank" class="btn text-white gr-hover-y px-lg-9">
                         <img src="https://res.cloudinary.com/pilstech/image/upload/v1620148943/paysprint_asset/l6-download-appstore_odcskf.png" alt="apple store">
                     </a>
                     <p class="gr-text-11 mb-0 mt-6" style="color: #433d3d;">It takes only 2 mins!</p>
@@ -535,7 +535,7 @@
                     <center>
 <img src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg" alt="" class="w-100 rounded-8" style="height: 350px !important;width: 350px !important;">
 </center>
-                    <a class="video-play-trigger gr-abs-center bg-white circle-xl gr-flex-all-center gr-abs-hover-y focus-reset" data-fancybox="" href="https://youtu.be/A6FGnRpcVok" tabindex="-1"><i class="icon icon-triangle-right-17-2"></i></a>
+                    <a class="video-play-trigger gr-abs-center bg-white circle-xl gr-flex-all-center gr-abs-hover-y focus-reset" data-fancybox="" href="https://youtu.be/txfp2Pzbzrg" tabindex="-1"><i class="icon icon-triangle-right-17-2"></i></a>
                     {{-- <div class="abs-shape gr-abs-tr-custom gr-z-index-n1">
                       <img src="{{ asset('newpage/image/l4/png/l4-hero-shape.png') }}" alt="" class="w-100" data-aos="zoom-in" data-aos-delay="400" data-aos-duration="800" data-aos-once="true">
                     </div> --}}
@@ -546,7 +546,7 @@
 
             <div class="col-md-3">
                 <center>
-                    <img class="shadow-lg" src="https://res.cloudinary.com/pilstech/image/upload/v1621266225/paysprint_icon_opahry.webp" alt="mobile app" style="width: 80%; border-radius: 10px; position: relative; z-index: 1000;">
+                    <img class="shadow-lg" src="https://res.cloudinary.com/pilstech/image/upload/v1621960721/paysprint_asset/paysprint_front_v55thg.jpg" alt="mobile app" style="width: 80%; border-radius: 10px; position: relative; z-index: 1000;">
                 </center>
             </div>
 

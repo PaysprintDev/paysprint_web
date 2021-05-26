@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
 
+use Illuminate\Support\Facades\Log;
+
+
 trait Trulioo{
 
 
@@ -76,6 +79,8 @@ trait Trulioo{
         ));
 
         $response = curl_exec($curl);
+        
+        
 
         curl_close($curl);
 
@@ -98,12 +103,14 @@ trait Trulioo{
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'GET',
         CURLOPT_HTTPHEADER => array(
-            'Authorization: Basic RVhCQ19EZW1vX0lEVl9BUEk6UGF5c3ByaW50YXBpMjAyMSE=',
+            'Authorization: Basic '.env('TRULLIO_BASIC'),
             'Cookie: secure; secure; incap_ses_1043_2454110=8C7aEUgfLgwzt4iASHt5DkqwjGAAAAAAxg0MovwEfBmOwOQ0rUWiBw==; visid_incap_2454110=Hr+h4VOQRvyVmLwrlcpvTZvRimAAAAAAQUIPAAAAAAC2sDXypQFS5aEhZuG2ZRte'
         ),
         ));
 
         $response = curl_exec($curl);
+        
+        
 
         curl_close($curl);
 
@@ -112,6 +119,8 @@ trait Trulioo{
 
 
     public function getTransRec($transRecordId){
+        
+        Log::info($transRecordId);
 
         $curl = curl_init();
 
@@ -125,22 +134,25 @@ trait Trulioo{
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'GET',
         CURLOPT_HTTPHEADER => array(
-            'Authorization: Basic RVhCQ19EZW1vX0lEVl9BUEk6UGF5c3ByaW50YXBpMjAyMSE=',
+            'Authorization: Basic '.env('TRULLIO_BASIC'),
             'Cookie: secure; secure; incap_ses_1043_2454110=8C7aEUgfLgwzt4iASHt5DkqwjGAAAAAAxg0MovwEfBmOwOQ0rUWiBw==; visid_incap_2454110=Hr+h4VOQRvyVmLwrlcpvTZvRimAAAAAAQUIPAAAAAAC2sDXypQFS5aEhZuG2ZRte'
         ),
         ));
 
         $response = curl_exec($curl);
-
+        
+        // dd($response);
+        
         curl_close($curl);
 
         // Send Response back to User
-        
-
-
         return json_decode($response);
 
     }
+
+
+
+
 
 
 }

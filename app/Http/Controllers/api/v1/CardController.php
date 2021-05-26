@@ -29,14 +29,13 @@ class CardController extends Controller
             $data = $data;
             $status = 200;
             $message = 'Success';
+
         }
         else{
             $data = [];
-            $status = 400;
+            $status = 200;
             $message = "No Card Found";
         }
-
-        Log::info("Get Card details by :=> ".$thisuser->name);
 
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
@@ -60,11 +59,10 @@ class CardController extends Controller
         }
         else{
             $data = [];
-            $status = 400;
+            $status = 200;
             $message = "No Card Issuer Found";
         }
 
-        Log::info("Get Card Issuer details by :=> ".$thisuser->name);
 
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
@@ -79,6 +77,7 @@ class CardController extends Controller
 
         $validator = Validator::make($req->all(), [
                      'card_name' => 'required|string',
+                     'card_provider' => 'required|string',
                      'card_number' => 'required|string|unique:add_card',
                      'month' => 'required|string',
                      'year' => 'required|string',
@@ -112,11 +111,11 @@ class CardController extends Controller
 
                     $data = $insertRecord;
                     $status = 200;
-                    $message = 'You have successfully added a card';
+                    $message = 'You have successfully added your '.$req->card_provider;
 
-                    $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully added a new card.");
+                    $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully added a new ".$req->card_provider.".");
 
-                    Log::info("New card added by :=> ".$thisuser->name);
+                        Log::info("New ".$req->card_provider." added by :=> ".$thisuser->name);
                     }
 
                     
@@ -276,6 +275,7 @@ class CardController extends Controller
 
         $validator = Validator::make($req->all(), [
                      'card_name' => 'required|string',
+                     'card_provider' => 'required|string',
                      'card_number' => 'required|string|unique:add_card',
                      'month' => 'required|string',
                      'year' => 'required|string',
@@ -302,13 +302,13 @@ class CardController extends Controller
 
                     // Log::info("Edit Card Detail :=> ".$cardData);
 
-                    Log::info("Edit card by :=> ".$thisuser->name);
+                    Log::info("Edit ".$req->card_provider." by :=> ".$thisuser->name);
 
                     $data = $cardData;
                     $status = 200;
-                    $message = 'You have successfully updated your card';
+                    $message = 'You have successfully updated your '.$req->card_provider;
 
-                    $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully updated your card detail.");
+                    $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully updated your ".$req->card_provider." detail.");
                 }
                 else{
                     $data = [];

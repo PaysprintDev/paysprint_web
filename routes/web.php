@@ -26,6 +26,8 @@ Route::get('accountactivity', 'CheckSetupController@checkAccountAcvtivity');
 Route::get('updatestatementcountry', 'CheckSetupController@statementCountry');
 Route::get('chargefee', 'CheckSetupController@chargeFee');
 Route::get('insertcountry', 'CheckSetupController@insertCountry');
+Route::get('reportstatus', 'CheckSetupController@reportStatus');
+Route::get('updatefee', 'CheckSetupController@updateMonthlyFee');
 
 Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
 
@@ -172,10 +174,23 @@ Route::get('walletstatement/{key}', ['uses' => 'HomeController@mywalletStatement
 // Client Admin ROute
 Route::get('Admin', ['uses' => 'AdminController@index', 'as' => 'Admin']);
 Route::get('Admin/activity', ['uses' => 'AdminController@platformActivity', 'as' => 'platform activity']);
+Route::get('Admin/gatewayactivity', ['uses' => 'AdminController@gatewayActivity', 'as' => 'gateway activity']);
 Route::get('Admin/allcountries', ['uses' => 'AdminController@allCountries', 'as' => 'all countries']);
 
 Route::get('allusers', ['uses' => 'AdminController@allPlatformUsers', 'as' => 'allusers']);
+
+
+Route::get('approvedusers', ['uses' => 'AdminController@allApprovedUsers', 'as' => 'approvedusers']);
+Route::get('pendingusers', ['uses' => 'AdminController@allPendingUsers', 'as' => 'pendingusers']);
+
+
 Route::get('allusersbycountry', ['uses' => 'AdminController@allPlatformUsersByCountry', 'as' => 'all users by country']);
+
+
+Route::get('approvedusersbycountry', ['uses' => 'AdminController@allApprovedUsersByCountry', 'as' => 'approved users by country']);
+Route::get('pendingusersbycountry', ['uses' => 'AdminController@allPendingUsersByCountry', 'as' => 'pending users by country']);
+
+
 Route::get('usermoredetail/{id}', ['uses' => 'AdminController@userMoreDetail', 'as' => 'user more detail']);
 
 
@@ -197,6 +212,14 @@ Route::prefix('Admin/wallet')->group(function () {
 	Route::get('cardrequestprocessedbycountry', ['uses' => 'AdminController@cardRequestProcessedByCountry', 'as' => 'card processed by country']);
 	Route::get('bankrequestprocessedbycountry', ['uses' => 'AdminController@bankRequestProcessedByCountry', 'as' => 'bank processed by country']);
 
+
+	// Pending Transfers
+
+	Route::get('pendingtransfer', ['uses' => 'AdminController@pendingTransfer', 'as' => 'pending transfer']);
+	Route::get('texttotransfer', ['uses' => 'AdminController@textToTransfer', 'as' => 'text to transfer']);
+
+	Route::get('pendingtransferbycountry', ['uses' => 'AdminController@pendingTransferByCountry', 'as' => 'pending transfer by country']);
+	Route::get('texttotransferbycountry', ['uses' => 'AdminController@textToTransferByCountry', 'as' => 'text to transfer by country']);
 
 	Route::get('prepaidrequestwithdrawal', ['uses' => 'AdminController@prepaidRequestWithdrawal', 'as' => 'prepaid request withdrawal']);
 	Route::get('prepaidcardrequest', ['uses' => 'AdminController@prepaidCardRequest', 'as' => 'prepaid card request']);
@@ -278,6 +301,7 @@ Route::prefix('Admin/performance/report')->group(function () {
 Route::prefix('Admin/overview/report')->group(function () {
 
 	Route::get('business', ['uses' => 'AdminController@businessReport', 'as' => 'business report']);
+	Route::get('accountreport', ['uses' => 'AdminController@accountReport', 'as' => 'account report']);
 	Route::get('businessreport', ['uses' => 'AdminController@getBusinessReport', 'as' => 'get business report']);
 	Route::get('inflow', ['uses' => 'AdminController@inflowReport', 'as' => 'inflow reports']);
 	Route::get('inflowbycountry', ['uses' => 'AdminController@inflowByCountryReport', 'as' => 'inflow by country']);

@@ -4,6 +4,7 @@
 
 
 <?php use \App\Http\Controllers\User; ?>
+<?php use \App\Http\Controllers\AnonUsers; ?>
 <?php use \App\Http\Controllers\Statement; ?>
 
   <!-- Content Wrapper. Contains page content -->
@@ -11,23 +12,25 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         Refund Request
+         Pending Transfers
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Refund Request</li>
+        <li class="active">Pending Transfers</li>
       </ol>
     </section>
 
     <!-- Main content -->
     <section class="content">
+        
+        <br>
+          <button class="btn btn-secondary btn-block bg-red" onclick="goBack()"><i class="fas fa-chevron-left"></i> Go back</button>
+        <br>
+
       <div class="row">
         <div class="col-xs-12">
           <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">Refund Request</h3>
-              
-            </div>
+            
             <!-- /.box-header -->
             <div class="box-body table table-responsive">
 
@@ -44,56 +47,47 @@
                   </div>
                 <tr>
                   <th>S/N</th>
-                  <th>Customer Name</th>
-                  <th>Transaction ID</th>
-                  <th>Amount to Refund</th>
-                  <th>Status</th>
+                  <th>Country</th>
+                  <th>Total Amount</th>
                   <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                    @if (count($data['requestforrefund']) > 0)
+                    @if (count($data['pendingtransfer']) > 0)
                     <?php $i = 1;?>
-                        @foreach ($data['requestforrefund'] as $data)
+                        @foreach ($data['pendingtransfer'] as $data)
                         <tr>
                             <td>{{ $i++ }}</td>
 
-                            @if($user = \App\User::where('id', $data->user_id)->first())
+                            <td>{{ $data->country }}</td>
+
+                            @if($user = \App\User::where('country', $data->country)->first())
 
                             @php
                                 $currencyCode = $user->currencyCode;
-                                $name = $user->name;
                                 $currencySymbol = $user->currencySymbol;
                             @endphp
 
                             @else
 
+
                             @php
                                 $currencyCode = "";
                                 $currencySymbol = "";
-                                $name = "-";
                             @endphp
 
-
-
                             @endif
 
-                            <td>{{ $name }}</td>
+                            @if($amount = \App\Statement::where('status', 'Pending')->where('country', $data->country)->sum('credit'))
+                                <td style="font-weight: 700;">{{ $currencySymbol.' '.number_format($amount, 2) }}</td>
 
-                            <td>{{ $data->transaction_id }}</td>
-
-                            @if($transactionInfo = \App\Statement::where('reference_code', $data->transaction_id)->first())
-                            <td style="font-weight: 700;">{{ $currencySymbol.' '.number_format($transactionInfo->debit, 2) }}</td>
-
-                            @else
-                            <td style="font-weight: 700;">{{ $currencySymbol.' '.number_format(0, 2) }}</td>
+                                @else
+                                <td style="font-weight: 700;">{{ $currencySymbol.' '.number_format(0, 2) }}</td>
                             @endif
-
-                            <td style="@if($data->status == 'PROCESSED') color: green; @elseif($data->status == 'DECLINED') color: red; @else color: darkorange; @endif"><strong>{{ $data->status }}</strong></td>
 
 
                             <td>
-                                <a type="button" href="{{ route('refund details', $data->transaction_id) }}" class="btn btn-primary btn-block">View details</a>
+                                <a type="button" href="{{ route('pending transfer by country', 'country='.$data->country) }}" class="btn btn-primary btn-block">View details</a>
                             </td>
 
                         </tr>
@@ -101,7 +95,7 @@
 
                     @else
                     <tr>
-                        <td colspan="6" align="center">No record available</td>
+                        <td colspan="4" align="center">No record available</td>
                     </tr>
                     @endif
                 </tbody>

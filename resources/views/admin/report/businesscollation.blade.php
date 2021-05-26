@@ -333,10 +333,57 @@
                         @endphp
                     @endif
 
+                    {{-- PaySprint Gateway  --}}
+                    @if($creditAmount = \App\Statement::where('country', Request::get('country'))->whereBetween('trans_date', [Request::get('start'), Request::get('end')])->where('activity', 'LIKE', '%deducted from Card%')->sum('credit'))
+                        @php
+                            $creditAmount = $creditAmount;
+                        @endphp
+                    @endif
 
-                    @if($chargefeeforaddedmoney = \App\Statement::where('country', Request::get('country'))->whereBetween('trans_date', [Request::get('start'), Request::get('end')])->where('activity', 'LIKE', '%Added%')->sum('chargefee'))
+
+                    @if($prepaidAmount = \App\Statement::where('country', Request::get('country'))->whereBetween('trans_date', [Request::get('start'), Request::get('end')])->where('activity', 'LIKE', '%Prepaid Card%')->sum('credit'))
+                        @php
+                            $prepaidAmount = $prepaidAmount;
+                        @endphp
+                    @endif
+
+                    @if($bankAmount = \App\Statement::where('country', Request::get('country'))->whereBetween('trans_date', [Request::get('start'), Request::get('end')])->where('activity', 'LIKE', '%Bank%')->sum('credit'))
+                        @php
+                            $bankAmount = $bankAmount;
+                        @endphp
+                    @endif
+
+                    {{-- @if($transferAmount = \App\Statement::where('country', Request::get('country'))->whereBetween('trans_date', [Request::get('start'), Request::get('end')])->where('activity', 'LIKE', '%in wallet for%')->where('report_status', 'Money received')->sum('credit'))
+                        @php
+                            $transferAmount = $transferAmount;
+                        @endphp
+                    @endif --}}
+
+
+                    @if($chargefeeforaddedmoney = \App\Statement::where('country', Request::get('country'))->whereBetween('trans_date', [Request::get('start'), Request::get('end')])->where('activity', 'LIKE', '%to Wallet%')->sum('chargefee'))
                         @php
                             $chargefeeforaddedmoney = $chargefeeforaddedmoney;
+                        @endphp
+                    @endif
+
+
+                    @if($creditcardchargefeeforaddedmoney = \App\Statement::where('country', Request::get('country'))->whereBetween('trans_date', [Request::get('start'), Request::get('end')])->where('activity', 'LIKE', '%deducted from Card%')->sum('chargefee'))
+                        @php
+                            $creditcardchargefeeforaddedmoney = $creditcardchargefeeforaddedmoney;
+                        @endphp
+                    @endif
+
+
+                    @if($prepaidcardchargefeeforaddedmoney = \App\Statement::where('country', Request::get('country'))->whereBetween('trans_date', [Request::get('start'), Request::get('end')])->where('activity', 'LIKE', '%Prepaid Card%')->sum('chargefee'))
+                        @php
+                            $prepaidcardchargefeeforaddedmoney = $prepaidcardchargefeeforaddedmoney;
+                        @endphp
+                    @endif
+
+
+                    @if($bankchargefeeforaddedmoney = \App\Statement::where('country', Request::get('country'))->whereBetween('trans_date', [Request::get('start'), Request::get('end')])->where('activity', 'LIKE', '%Bank%')->sum('chargefee'))
+                        @php
+                            $bankchargefeeforaddedmoney = $bankchargefeeforaddedmoney;
                         @endphp
                     @endif
 
@@ -349,9 +396,51 @@
                     @endif
 
 
+                    @if($cardwithdrawAmount = \App\Statement::where('country', Request::get('country'))->whereBetween('trans_date', [Request::get('start'), Request::get('end')])->where('activity', 'LIKE', '%from Wallet to Credit/Debit card%')->sum('debit'))
+                        @php
+                            $cardwithdrawAmount = $cardwithdrawAmount;
+                        @endphp
+                    @endif
+
+
+                    @if($prepaidwithdrawAmount = \App\Statement::where('country', Request::get('country'))->whereBetween('trans_date', [Request::get('start'), Request::get('end')])->where('activity', 'LIKE', '%from Wallet to EXBC Prepaid Card%')->sum('debit'))
+                        @php
+                            $prepaidwithdrawAmount = $prepaidwithdrawAmount;
+                        @endphp
+                    @endif
+
+
+                    @if($bankwithdrawAmount = \App\Statement::where('country', Request::get('country'))->whereBetween('trans_date', [Request::get('start'), Request::get('end')])->where('activity', 'LIKE', '%Bank%')->sum('debit'))
+                        @php
+                            $bankwithdrawAmount = $bankwithdrawAmount;
+                        @endphp
+                    @endif
+
+
                     @if($chargefeeforwithdrawmoney = \App\Statement::where('country', Request::get('country'))->whereBetween('trans_date', [Request::get('start'), Request::get('end')])->where('activity', 'LIKE', '%Withdraw%')->sum('chargefee'))
                         @php
                             $chargefeeforwithdrawmoney = $chargefeeforwithdrawmoney;
+                        @endphp
+                    @endif
+
+
+                    @if($creditchargefeeforwithdrawmoney = \App\Statement::where('country', Request::get('country'))->whereBetween('trans_date', [Request::get('start'), Request::get('end')])->where('activity', 'LIKE', '%from Wallet to Credit/Debit card%')->sum('chargefee'))
+                        @php
+                            $creditchargefeeforwithdrawmoney = $creditchargefeeforwithdrawmoney;
+                        @endphp
+                    @endif
+
+
+                    @if($prepaidchargefeeforwithdrawmoney = \App\Statement::where('country', Request::get('country'))->whereBetween('trans_date', [Request::get('start'), Request::get('end')])->where('activity', 'LIKE', '%from Wallet to EXBC Prepaid Card%')->sum('chargefee'))
+                        @php
+                            $prepaidchargefeeforwithdrawmoney = $prepaidchargefeeforwithdrawmoney;
+                        @endphp
+                    @endif
+
+
+                    @if($bankchargefeeforwithdrawmoney = \App\Statement::where('country', Request::get('country'))->whereBetween('trans_date', [Request::get('start'), Request::get('end')])->where('activity', 'LIKE', '%Bank%')->sum('chargefee'))
+                        @php
+                            $bankchargefeeforwithdrawmoney = $bankchargefeeforwithdrawmoney;
                         @endphp
                     @endif
 
@@ -375,9 +464,22 @@
                         
                         @php
                             $addedAmount = 0;
+                            $creditAmount = 0;
+                            // $transferAmount = 0;
+                            $prepaidAmount = 0;
+                            $bankAmount = 0;
                             $chargefeeforaddedmoney = 0;
+                            $creditcardchargefeeforaddedmoney = 0;
+                            $prepaidcardchargefeeforaddedmoney = 0;
+                            $bankchargefeeforaddedmoney = 0;
                             $withdrawAmount = 0;
+                            $cardwithdrawAmount = 0;
+                            $prepaidwithdrawAmount = 0;
+                            $bankwithdrawAmount = 0;
                             $chargefeeforwithdrawmoney = 0;
+                            $creditchargefeeforwithdrawmoney = 0;
+                            $prepaidchargefeeforwithdrawmoney = 0;
+                            $bankchargefeeforwithdrawmoney = 0;
                             $maintenacefee = 0;
                             $expected = 0;
                             $actual = 0;
@@ -399,31 +501,142 @@
                     </tr>
                     
                     <tr>
-                        <td>Net Amount To Wallet (+)</td>
+                        <td>Net Amount To Wallet by Gateway(+)</td>
                         <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($addedAmount, 2) }}</td>
                         <td><a href="{{ route('net amount to wallet', 'country='.Request::get('country').'&start='.Request::get('start').'&end='.Request::get('end')) }}" class="btn btn-primary" type="button">View details</a></td>
                     </tr>
+
+                    
+                    
+                    <tr>
+                        <td colspan="3"><strong>PaySprint</strong></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Credit/Debit Card</td>
+                        <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($creditAmount, 2) }}</td>
+                        <td><a href="#" class="btn btn-primary" type="button">View details</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Prepaid Card</td>
+                        <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($prepaidAmount, 2) }}</td>
+                        <td><a href="#" class="btn btn-primary" type="button">View details</a></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Bank Account</td>
+                        <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($bankAmount, 2) }}</td>
+                        <td><a href="#" class="btn btn-primary" type="button">View details</a></td>
+                    </tr>
+
+                    {{-- <tr>
+                        <td>Wallet to Wallet</td>
+                        <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($transferAmount, 2) }}</td>
+                        <td><a href="#" class="btn btn-primary" type="button">View details</a></td>
+                    </tr> --}}
+                    
+                    <tr>
+                        <td colspan="3">&nbsp;</td>
+                    </tr>
+
                     <tr>
                         <td>Charge on Add Money (+)</td>
                         <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($chargefeeforaddedmoney, 2) }}</td>
                         <td><a href="{{ route('charge on add money', 'country='.Request::get('country').'&start='.Request::get('start').'&end='.Request::get('end')) }}" class="btn btn-primary" type="button">View details</a></td>
                     </tr>
+
+
+                    <tr>
+                        <td colspan="3"><strong>PaySprint</strong></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Credit/Debit Card</td>
+                        <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($creditcardchargefeeforaddedmoney, 2) }}</td>
+                        <td><a href="#" class="btn btn-primary" type="button">View details</a></td>
+                    </tr>
+
+
+                    <tr>
+                        <td>Prepaid Card</td>
+                        <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($prepaidcardchargefeeforaddedmoney, 2) }}</td>
+                        <td><a href="#" class="btn btn-primary" type="button">View details</a></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Bank Account</td>
+                        <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($bankchargefeeforaddedmoney, 2) }}</td>
+                        <td><a href="#" class="btn btn-primary" type="button">View details</a></td>
+                    </tr>
+
                     <tr>
                         <td colspan="3">&nbsp;</td>
                     </tr>
+
                     <tr>
                         <td colspan="3"><strong>Withdrawal (Outflow)</strong></td>
                     </tr>
                     
                     <tr>
-                        <td>Withdraw from Wallet (-)</td>
+                        <td>Withdraw from Wallet By Gateway (-)</td>
                         <td style="font-weight: 900; color: red;">{{ $currency.' '.number_format($withdrawAmount, 2) }}</td>
                         <td><a href="{{ route('amount withdrawn from wallet', 'country='.Request::get('country').'&start='.Request::get('start').'&end='.Request::get('end')) }}" class="btn btn-primary" type="button">View details</a></td>
                     </tr>
+
+                    <tr>
+                        <td colspan="3"><strong>PaySprint</strong></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Credit/Debit Card</td>
+                        <td style="font-weight: 900; color: red;">{{ $currency.' '.number_format($cardwithdrawAmount, 2) }}</td>
+                        <td><a href="#" class="btn btn-primary" type="button">View details</a></td>
+                    </tr>
+
+
+                    <tr>
+                        <td>Prepaid Card</td>
+                        <td style="font-weight: 900; color: red;">{{ $currency.' '.number_format($prepaidwithdrawAmount, 2) }}</td>
+                        <td><a href="#" class="btn btn-primary" type="button">View details</a></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Bank Account</td>
+                        <td style="font-weight: 900; color: red;">{{ $currency.' '.number_format($bankwithdrawAmount, 2) }}</td>
+                        <td><a href="#" class="btn btn-primary" type="button">View details</a></td>
+                    </tr>
+                    
+                    <tr>
+                        <td colspan="3">&nbsp;</td>
+                    </tr>
+
                     <tr>
                         <td>Charge on Withdrawal (+)</td>
                         <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($chargefeeforwithdrawmoney, 2) }}</td>
                         <td><a href="{{ route('charges on withdrawal', 'country='.Request::get('country').'&start='.Request::get('start').'&end='.Request::get('end')) }}" class="btn btn-primary" type="button">View details</a></td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="3"><strong>PaySprint</strong></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Credit/Debit Card</td>
+                        <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($creditchargefeeforwithdrawmoney, 2) }}</td>
+                        <td><a href="#" class="btn btn-primary" type="button">View details</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Prepaid Card</td>
+                        <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($prepaidchargefeeforwithdrawmoney, 2) }}</td>
+                        <td><a href="#" class="btn btn-primary" type="button">View details</a></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Bank Account</td>
+                        <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($bankchargefeeforwithdrawmoney, 2) }}</td>
+                        <td><a href="#" class="btn btn-primary" type="button">View details</a></td>
                     </tr>
 
 

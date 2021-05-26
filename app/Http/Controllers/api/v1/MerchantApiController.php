@@ -27,6 +27,7 @@ use App\Statement as Statement;
 use App\Mail\sendEmail;
 
 use App\Traits\Trulioo;
+use App\Traits\PaymentGateway;
 
 
 use App\Classes\mpgGlobals;
@@ -78,6 +79,7 @@ use App\Classes\MCPRate;
 class MerchantApiController extends Controller
 {
     use Trulioo;
+    use PaymentGateway;
 
     public $to;
     public $name;
@@ -168,25 +170,7 @@ class MerchantApiController extends Controller
 
                                     $service = $req->purpose;
 
-                                    // Send mail to both parties
-
-                                    // $this->to = "bambo@vimfile.com";
-                                    $this->to = $thismerchant->email;
-                                    $this->name = $thisuser->name;
-                                    $this->coy_name = $thismerchant->businessname;
-                                    // $this->email = "bambo@vimfile.com";
-                                    $this->email = $thisuser->email;
-                                    $this->amount = $myCurrency." ".number_format($amount, 2);
-                                    $this->paypurpose = $service;
-                                    $this->subject = "Payment Received from ".$thisuser->name." for ".$service;
-                                    $this->subject2 = "Your Payment to ".$thismerchant->businessname." was successfull";
-
-                                    // Mail to thismerchant
-                                    $this->sendEmail($this->to, "Payment Received");
-
-                                    // Mail from thisuser
-
-                                    $this->sendEmail($this->email, "Payment Successful");
+                                    
 
 
                                     // Insert Statement
@@ -221,7 +205,32 @@ class MerchantApiController extends Controller
 
                                     User::where('ref_code', $thismerchant->ref_code)->update(['wallet_balance' => $recWallet]);
 
+                                    // thisusers statement
+                                    $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $wallet_status, $action, $regards, 1, $statement_route, 'on');
                                     
+                                    // thismerchant Statement
+                                    $this->insStatement($thismerchant->email, $reference_code, "Received ".$myCurrency.' '.number_format($amount, 2)." in wallet for ".$service." from ".$thisuser->name, number_format($amount, 2), 0, $balance, $trans_date, $walletstatus, "Wallet credit", $thismerchant->ref_code, 1, $statement_route, $thismerchant->auto_deposit);
+
+                                    // Send mail to both parties
+
+                                    // $this->to = "bambo@vimfile.com";
+                                    $this->to = $thismerchant->email;
+                                    $this->name = $thisuser->name;
+                                    $this->coy_name = $thismerchant->businessname;
+                                    // $this->email = "bambo@vimfile.com";
+                                    $this->email = $thisuser->email;
+                                    $this->amount = $myCurrency." ".number_format($amount, 2);
+                                    $this->paypurpose = $service;
+                                    $this->subject = "Payment Received from ".$thisuser->name." for ".$service;
+                                    $this->subject2 = "Your Payment to ".$thismerchant->businessname." was successfull";
+
+                                    // Mail to thismerchant
+                                    $this->sendEmail($this->to, "Payment Received");
+
+                                    // Mail from thisuser
+
+                                    $this->sendEmail($this->email, "Payment Successful");
+
 
 
                                     $sendMsg = "Hi ".$thisuser->name.", You have made a ".$activity." Your new Wallet balance is ".$thisuser->currencyCode.' '.number_format($wallet_balance, 2).". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us. PaySprint Team";
@@ -235,11 +244,7 @@ class MerchantApiController extends Controller
 
                                     $this->sendMessage($recMsg, $recPhone);
 
-                                    // thisusers statement
-                                    $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $wallet_status, $action, $regards, 1, $statement_route, 'on');
                                     
-                                    // thismerchant Statement
-                                    $this->insStatement($thismerchant->email, $reference_code, "Received ".$myCurrency.' '.number_format($amount, 2)." in wallet for ".$service." from ".$thisuser->name, number_format($amount, 2), 0, $balance, $trans_date, $walletstatus, "Wallet credit", $thismerchant->ref_code, 1, $statement_route, $thismerchant->auto_deposit);
 
                                     $data = User::select('name', 'businessname as businessName', 'telephone', 'state', 'country', 'avatar')->where('ref_code', $thisuser->ref_code)->first();
 
@@ -519,6 +524,8 @@ class MerchantApiController extends Controller
                         $paymentToken = $reference_code;
 
 
+
+
                         try {
 
                             // Update Wallet
@@ -542,25 +549,7 @@ class MerchantApiController extends Controller
                                 $myCurrency = $thismerchant->currencyCode;
                             }
 
-                            // Send mail to both parties
-
-                            // $this->to = "bambo@vimfile.com";
-                            $this->to = $thismerchant->email;
-                            $this->name = $req->firstname;
-                            $this->coy_name = $thismerchant->businessname;
-                            // $this->email = "bambo@vimfile.com";
-                            $this->email = $req->email;
-                            $this->amount = $myCurrency." ".number_format($amount, 2);
-                            $this->paypurpose = $service;
-                            $this->subject = "Payment Received from ".$req->firstname." ".$req->lastname." for ".$service;
-                            $this->subject2 = "Your Payment to ".$thismerchant->businessname." was successfull";
-
-                            // Mail to thismerchant
-                            $this->sendEmail($this->to, "Payment Received");
-
-                            // Mail from thisuser
-
-                            $this->sendEmail($this->email, "Payment Successful");
+                           
 
 
                             // Insert Statement
@@ -582,16 +571,41 @@ class MerchantApiController extends Controller
                                 $recWallet = $thismerchant->wallet_balance + $amount;
                                 $walletstatus = "Delivered";
                                 
-                                $recMsg = "Hi ".$thismerchant->businessname.", You have received ".$myCurrency.' '.number_format($amount, 2)." in your PaySprint wallet for ".$service." from ".$thisuser->name.". You now have ".$myCurrency.' '.number_format($recWallet, 2)." balance in your wallet. PaySprint Team";
+                                $recMsg = "Hi ".$thismerchant->businessname.", You have received ".$myCurrency.' '.number_format($amount, 2)." in your PaySprint wallet for ".$service." from ".$req->firstname." ".$req->lastname." You now have ".$myCurrency.' '.number_format($recWallet, 2)." balance in your wallet. PaySprint Team";
 
                             }
                             else{
                                 $recWallet = $thismerchant->wallet_balance;
                                 $walletstatus = "Pending";
 
-                                $recMsg = "Hi ".$thismerchant->businessname.", You have received ".$myCurrency.' '.number_format($amount, 2)." for ".$service." from ".$thisuser->name.". Your wallet balance is ".$myCurrency.' '.number_format($recWallet, 2).". Kindly login to your wallet account to receive money. PaySprint Team ".route('my account');
+                                $recMsg = "Hi ".$thismerchant->businessname.", You have received ".$myCurrency.' '.number_format($amount, 2)." for ".$service." from ".$req->firstname." ".$req->lastname." Your wallet balance is ".$myCurrency.' '.number_format($recWallet, 2).". Kindly login to your wallet account to receive money. PaySprint Team ".route('my account');
 
                             }
+
+
+                            User::where('ref_code', $thismerchant->ref_code)->update(['wallet_balance' => $recWallet]);
+
+                            // thismerchant Statement
+                            $this->insStatement($thismerchant->email, $paymentToken, "Received ".$myCurrency.' '.number_format($amount, 2)." in wallet for ".$service." from ".$req->firstname." ".$req->lastname, number_format($amount, 2), 0, $balance, $trans_date, $walletstatus, "Wallet credit", $thismerchant->ref_code, 1, $statement_route, $thismerchant->auto_deposit);
+
+                             // Send mail to both parties
+
+                            // $this->to = "bambo@vimfile.com";
+                            $this->to = $thismerchant->email;
+                            $this->name = $req->firstname;
+                            $this->coy_name = $thismerchant->businessname;
+                            // $this->email = "bambo@vimfile.com";
+                            $this->email = $req->email;
+                            $this->amount = $myCurrency." ".number_format($amount, 2);
+                            $this->paypurpose = $service;
+                            $this->subject = "Payment Received from ".$req->firstname." ".$req->lastname." for ".$service;
+                            $this->subject2 = "Your Payment to ".$thismerchant->businessname." was successfull";
+
+                            // Mail to thismerchant
+                            $this->sendEmail($this->to, "Payment Received");
+
+                            // Mail from thisuser
+                            $this->sendEmail($this->email, "Payment Successful");
 
 
                             $sendMsg = "Hi ".$req->firstname." ".$req->lastname.", You have made a ".$activity." Do more with PaySprint. Download our mobile app from Apple Store or Google Play Store. Thanks PaySprint Team";
@@ -605,8 +619,7 @@ class MerchantApiController extends Controller
                             $this->sendMessage($recMsg, $recPhone);
                             
                                     
-                            // thismerchant Statement
-                            $this->insStatement($thismerchant->email, $paymentToken, "Received ".$myCurrency.' '.number_format($amount, 2)." in wallet for ".$service." from ".$req->firstname." ".$req->lastname, number_format($amount, 2), 0, $balance, $trans_date, $walletstatus, "Wallet credit", $thismerchant->ref_code, 1, $statement_route, $thismerchant->auto_deposit);
+                            
 
 
                             $data['name'] = $req->firstname.' '.$req->lastname;
@@ -624,6 +637,9 @@ class MerchantApiController extends Controller
                             Log::info("Sent money from ".$req->firstname." ".$req->lastname." to ".$thismerchant->businessname." using 3rd party gateway LIVE MODE");
 
                             $this->createNotification($thismerchant->ref_code, $recMsg);
+
+                            $monerisactivity = $recMsg;
+                            $this->keepRecord($paymentToken, $mpgResponse->responseData['Message'], $monerisactivity);
 
 
                             
@@ -644,6 +660,9 @@ class MerchantApiController extends Controller
                         $data = [];
 
                         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                        $monerisactivity = "Payment not successfull";
+                        $this->keepRecord("", $mpgResponse->responseData['Message'], $monerisactivity);
                     }
 
 
@@ -730,14 +749,14 @@ class MerchantApiController extends Controller
                                 $recWallet = $thismerchant->wallet_balance + $amount;
                                 $walletstatus = "Delivered";
                                 
-                                $recMsg = "Hi ".$thismerchant->businessname.", You have received ".$myCurrency.' '.number_format($amount, 2)." in your PaySprint wallet for ".$service." from ".$thisuser->name.". You now have ".$myCurrency.' '.number_format($recWallet, 2)." balance in your wallet. PaySprint Team";
+                                $recMsg = "Hi ".$thismerchant->businessname.", You have received ".$myCurrency.' '.number_format($amount, 2)." in your PaySprint wallet for ".$service." from ".$req->firstname." ".$req->lastname.". You now have ".$myCurrency.' '.number_format($recWallet, 2)." balance in your wallet. PaySprint Team";
 
                             }
                             else{
                                 $recWallet = $thismerchant->wallet_balance;
                                 $walletstatus = "Pending";
 
-                                $recMsg = "Hi ".$thismerchant->businessname.", You have received ".$myCurrency.' '.number_format($amount, 2)." for ".$service." from ".$thisuser->name.". Your wallet balance is ".$myCurrency.' '.number_format($recWallet, 2).". Kindly login to your wallet account to receive money. PaySprint Team ".route('my account');
+                                $recMsg = "Hi ".$thismerchant->businessname.", You have received ".$myCurrency.' '.number_format($amount, 2)." for ".$service." from ".$req->firstname." ".$req->lastname.". Your wallet balance is ".$myCurrency.' '.number_format($recWallet, 2).". Kindly login to your wallet account to receive money. PaySprint Team ".route('my account');
 
                             }
 

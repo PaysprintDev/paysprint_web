@@ -38,7 +38,7 @@
                 <tbody>
                   @if(isset($data['getuserrefunddetails']))
 
-                    @if($userInfo = \App\User::where('id', $data['getuserrefunddetails']->id)->first())
+                    @if($userInfo = \App\User::where('id', $data['getuserrefunddetails']->user_id)->first())
                           @php
                               $currencySymbol = $userInfo->currencySymbol;
                               $currencyCode = $userInfo->currencyCode;

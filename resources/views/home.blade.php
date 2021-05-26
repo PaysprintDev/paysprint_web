@@ -83,6 +83,8 @@
                                                         <td><i class="fas fa-circle {{ ($sendRecData->credit != 0) ? "text-success" : "text-danger" }}"></i></td>
                                                         <td>
 
+
+
                                                                 <div class="row">
                                                                     <div class="col-md-12" style="text-align: left;">
                                                                         {!! $sendRecData->activity !!}
@@ -110,6 +112,9 @@
                                                                 </div>
 
                                                             </td>
+
+
+
                                                         <td style="font-weight: 700" class="{{ ($sendRecData->credit != 0) ? "text-success" : "text-danger" }}">{{ ($sendRecData->credit != 0) ? "+".$data['currencyCode'][0]->currencies[0]->symbol.number_format($sendRecData->credit, 2) : "-".$data['currencyCode'][0]->currencies[0]->symbol.number_format($sendRecData->debit, 2) }}</td>
                                                     </tr>
                                                 @endforeach
@@ -129,6 +134,7 @@
 
                                 </div>
                             </div>
+
                             <div class="col-md-6 col-sm-6 builder">
                                 <br>
                                 <div class="row">

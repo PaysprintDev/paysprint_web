@@ -72,6 +72,8 @@ use App\Traits\RpmApp;
 
 use App\Traits\Trulioo;
 
+
+
 class HomeController extends Controller
 {
 
@@ -107,6 +109,10 @@ class HomeController extends Controller
 
     public function homePage(){
 
+        // To get the actual link from users click
+
+        $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
             if(Auth::check() == true){
                 $this->page = 'Landing';
                 $this->name = Auth::user()->name;
@@ -133,6 +139,8 @@ class HomeController extends Controller
 
             // dd($data);
 
+            
+
 
         return view($view)->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
 
@@ -148,6 +156,8 @@ class HomeController extends Controller
 
     public function index(Request $req)
     {
+
+        
         // dd($req->session());
 
             if(Auth::check() == true){
@@ -2520,7 +2530,18 @@ class HomeController extends Controller
 
                 }
 
-                Statement::where('user_id', $req->email)->update(['status' => 'Delivered']);
+                $getMoney = Statement::where('user_id', $req->email)->get();
+
+                if(count($getMoney) > 0){
+                    foreach($getMoney as $key => $value){
+
+                        Statement::where('reference_code', $value->reference_code)->update(['status' => 'Delivered']);
+
+                    }
+                }
+                else{
+                    // Do nothing
+                }
 
 
                 AnonUsers::where('ref_code', $req->ref_code)->delete();
@@ -3281,53 +3302,51 @@ class HomeController extends Controller
 
 
             
-
-            
             // dd($dataInfo);
 
-        $data = TransactionCost::where('structure', $req->structure)->where('method', $req->structureMethod)->where('country', $thisuser->country)->first();
+            $data = TransactionCost::where('structure', $req->structure)->where('method', $req->structureMethod)->where('country', $thisuser->country)->first();
 
-        /*
-        
-            Calculation
+            /*
+            
+                Calculation
 
-            x = Variable * Amount;
-            y = Fixed + x;
-        */ 
+                x = Variable * Amount;
+                y = Fixed + x;
+            */ 
 
-        if(isset($data) == true){
-            $x = ($data->variable / 100) * $req->amount;
+            if(isset($data) == true){
+                $x = ($data->variable / 100) * $req->amount;
 
-            $y = $data->fixed + $x;
+                $y = $data->fixed + $x;
 
-            $collection = $y;
-        }
-        else{
+                $collection = $y;
+            }
+            else{
 
-            $data = TransactionCost::where('structure', $req->structure)->where('method', $req->structureMethod)->first();
+                $data = TransactionCost::where('structure', $req->structure)->where('method', $req->structureMethod)->first();
 
-            $x = ($data->variable / 100) * $req->amount;
+                $x = ($data->variable / 100) * $req->amount;
 
-            $y = $data->fixed + $x;
+                $y = $data->fixed + $x;
 
-            $collection = $y;
+                $collection = $y;
 
-        }
+            }
 
 
 
-        if($req->check == "true"){
+            if($req->check == "true"){
 
-            $amountReceive = $req->amount - $collection;
+                $amountReceive = $req->amount - $collection;
 
-            $state = "commission available";
-        }
+                $state = "commission available";
+            }
 
-        else{
-            $amountReceive = $req->amount;
-            $state = "commission unavailable";
+            else{
+                $amountReceive = $req->amount;
+                $state = "commission unavailable";
 
-        }
+            }
 
         }
         else{

@@ -220,7 +220,7 @@ class MoneyTransferController extends Controller
                     }
                     else{
                         // Check if its a fund debit
-                        $getStatement = Statement::where('reference_code', $req->transaction_id)->where('credit', '!=', '0')->first();
+                        $getStatement = Statement::where('reference_code', $req->transaction_id)->where('credit', '!=', '0')->where('status', 'Delivered')->first();
 
                         if(isset($getStatement) == true ){
                             $error = "You can request for refund of debit transfer when its a pending deposit or not accepted by the receiver. Thanks";
@@ -248,7 +248,7 @@ class MoneyTransferController extends Controller
                                 else{
                                     
                                     // Then check if money is accepted
-                                    $getStatement = Statement::where('reference_code', $req->transaction_id)->where('auto_deposit', 'on')->first();
+                                    $getStatement = Statement::where('reference_code', $req->transaction_id)->where('auto_deposit', 'on')->where('status', 'Delivered')->first();
 
                                     if(isset($getStatement) == true){
                                         $error = "You cannot request for refund on this transaction. Kindly contact receiver for refund";
