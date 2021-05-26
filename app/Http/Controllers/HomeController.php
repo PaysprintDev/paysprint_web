@@ -72,6 +72,8 @@ use App\Traits\RpmApp;
 
 use App\Traits\Trulioo;
 
+use App\Traits\AccountNotify;
+
 
 
 class HomeController extends Controller
@@ -90,6 +92,7 @@ class HomeController extends Controller
 
     use RpmApp;
     use Trulioo;
+    use AccountNotify;
     /**
      * Create a new controller instance.
      *
@@ -2675,7 +2678,6 @@ class HomeController extends Controller
             // Check User Password if match
             if(Hash::check($req->password, $userExists[0]['password'])){
 
-
                 $countryApproval = AllCountries::where('name', $userExists[0]['country'])->where('approval', 1)->first();
 
 
@@ -2709,6 +2711,12 @@ class HomeController extends Controller
                             // Update API Token
                             User::where('email', $req->email)->update(['api_token' => uniqid().md5($req->email).time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'lastLogin' => date('d-m-Y h:i A'), 'loginCount' => $loginCount]);
 
+                            $city = $this->myLocation()->city;
+                            $country = $this->myLocation()->country;
+                            $ip = $this->myLocation()->query;
+
+                            $this->checkLoginInfo($userExists[0]['ref_code'], $city, $country, $ip);
+
                             $resData = ['res' => 'Welcome back '.$userExists[0]['name'], 'message' => 'success'];
                         }
 
@@ -2723,7 +2731,7 @@ class HomeController extends Controller
                     User::where('email', $req->email)->update(['countryapproval' => 0]);
                 }
 
-
+                
 
                 
             }else{

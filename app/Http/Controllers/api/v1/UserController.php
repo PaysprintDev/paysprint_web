@@ -23,12 +23,14 @@ use App\LinkAccount as LinkAccount;
 use App\Mail\sendEmail;
 
 use App\Traits\Trulioo;
+use App\Traits\AccountNotify;
 
 
 class UserController extends Controller
 {
 
     use Trulioo;
+    use AccountNotify;
 
     // User Registration
 
@@ -292,6 +294,13 @@ class UserController extends Controller
                             $message = 'Login successful';
 
                             $this->createNotification($userData->refCode, "Hello ".$getUser->name.", Your login was successful. Welcome back");
+
+                            $usercity = $this->myLocation()->city;
+                            $usercountry = $this->myLocation()->country;
+                            $userip = $this->myLocation()->query;
+
+                            $this->checkLoginInfo($userData->refCode, $usercity, $usercountry, $userip);
+
                         }
 
                         User::where('email', $request->email)->update(['countryapproval' => 1]);

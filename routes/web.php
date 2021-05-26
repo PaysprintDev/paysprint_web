@@ -289,6 +289,8 @@ Route::prefix('Admin/merchant')->group(function () {
 Route::prefix('Admin/performance/report')->group(function () {
 
 	Route::get('sentinvoice', ['uses' => 'AdminController@sentInvoiceReport', 'as' => 'sent invoice']);
+
+	
 	Route::get('paidinvoice', ['uses' => 'AdminController@paidInvoiceReport', 'as' => 'paid invoice']);
 	Route::get('unpaidinvoice', ['uses' => 'AdminController@unpaidInvoiceReport', 'as' => 'unpaid invoice']);
 	Route::get('customerbalance', ['uses' => 'AdminController@customerBalanceReport', 'as' => 'customer balance report']);

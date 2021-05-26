@@ -181,6 +181,7 @@ class Controller extends BaseController
 
     public function createNotification($ref_code, $activity){
 
+
         Notifications::insert(['ref_code' => $ref_code, 'activity' => $activity, 'notify' => 0]);
 
     }

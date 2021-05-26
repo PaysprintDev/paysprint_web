@@ -49,7 +49,8 @@
                   <th>Name</th>
                   <th>Account Type</th>
                   <th>Activity</th>
-                  <th>Date</th>
+                  <th>Platform</th>
+                  <th>Date & Time</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -84,7 +85,8 @@
                             <td>{{ $accountType }}</td>
                             
                             <td>{{ $data->activity }}</td>
-                            <td>{{ date('d/M/Y', strtotime($data->created_at)) }}</td>
+                            <td>{{ strtoupper($data->platform) }}</td>
+                            <td>{{ date('d/M/Y h:i a', strtotime($data->created_at)) }}</td>
                         </tr>
                         @endforeach
 

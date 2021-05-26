@@ -76,6 +76,7 @@
                                             <select name="card_type" id="card_type" class="form-control" required>
                                                 <option value="">Select option</option>
                                                 <option value="Credit Card">Credit Card</option>
+                                                <option value="Debit Card">Debit VISA/Mastercard</option>
                                                 {{--  <option value="Prepaid Card">Prepaid Card</option>
                                                 <option value="Bank Account">Bank Account</option>  --}}
                                             </select>
@@ -266,7 +267,7 @@ function runCommission(){
 
 
     var route = "{{ URL('Ajax/getCommission') }}";
-    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: "Credit Card", localcurrency: "{{ $data['getuserDetail']->currencyCode }}", foreigncurrency: "USD", structure: "Send Money/Pay Invoice", structureMethod: "CC/Bank"};
+    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $("#card_type").val(), localcurrency: "{{ $data['getuserDetail']->currencyCode }}", foreigncurrency: "USD", structure: "Add Funds/Money", structureMethod: $("#card_type").val()};
 
 
     Pace.restart();

@@ -777,7 +777,7 @@ else{
 
                         Log::critical('Oops!! '.$thisuser->name.' '.$message);
 
-                        $monerisactivity = $thisuser->name.' '.$sendMsg;
+                        $monerisactivity = $thisuser->name.' '.$message;
                         $this->keepRecord("", $response->responseData['Message'], $monerisactivity);
                     }
                 }

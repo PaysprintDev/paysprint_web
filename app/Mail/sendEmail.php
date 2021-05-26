@@ -19,6 +19,7 @@ class sendEmail extends Mailable
     public function __construct($thisMail)
     {
         $this->mail = $thisMail;
+
     }
 
     /**
@@ -61,6 +62,10 @@ class sendEmail extends Mailable
         }
         elseif($this->mail->purpose == "Flagged Account"){
         return $this->subject($this->mail->subject)->view('mails.cardupdate')
+                    ->with('maildata', $this->mail);
+        }
+        elseif($this->mail->purpose == "New Login"){
+        return $this->subject($this->mail->subject)->view('mails.logindetect')
                     ->with('maildata', $this->mail);
         }
         elseif($this->mail->purpose == "Maintenace Request"){
