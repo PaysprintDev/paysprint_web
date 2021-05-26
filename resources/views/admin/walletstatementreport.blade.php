@@ -65,6 +65,18 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
+
+                <table class="table table-bordered table-striped">
+                    <tbody>
+                        <tr>
+                        <td colspan="3" align="center"><strong style="font-size: 24px;">Service Type: {{ Request::get('statement_service') }} | From: {{ date('d-m-Y', strtotime(Request::get('statement_start'))) }} - To: {{ date('d-m-Y', strtotime(Request::get('statement_end'))) }} </strong></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <br>
+                <br>
+
               <table id="example3" class="table table-bordered table-striped">
                 <thead>
                 <tr>
@@ -74,8 +86,8 @@
                 </tr>
                 </thead>
                 <tbody id="statementtab">
-                    @if (count($otherPays) > 0)
-                    @foreach ($otherPays as $walletstatements)
+                    @if (count($thisdata['result']) > 0)
+                    @foreach ($thisdata['result'] as $walletstatements)
                             <tr>
                                 <td><i class="fas fa-circle {{ ($walletstatements->credit != 0) ? "text-success" : "text-danger" }}"></i></td>
                                 <td>

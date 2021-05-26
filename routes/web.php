@@ -173,9 +173,7 @@ Route::get('walletstatement/{key}', ['uses' => 'HomeController@mywalletStatement
 
 // Client Admin ROute
 Route::get('Admin', ['uses' => 'AdminController@index', 'as' => 'Admin']);
-Route::get('Admin/activity', ['uses' => 'AdminController@platformActivity', 'as' => 'platform activity']);
-Route::get('Admin/gatewayactivity', ['uses' => 'AdminController@gatewayActivity', 'as' => 'gateway activity']);
-Route::get('Admin/allcountries', ['uses' => 'AdminController@allCountries', 'as' => 'all countries']);
+
 
 Route::get('allusers', ['uses' => 'AdminController@allPlatformUsers', 'as' => 'allusers']);
 
@@ -271,6 +269,8 @@ Route::prefix('Admin/card')->group(function () {
 	Route::get('editmerchantbankaccount/{id}', ['uses' => 'AdminController@editMerchantBankAccount', 'as' => 'Edit merchant bank account']);
 	
 });
+
+
 Route::prefix('Admin/invoice')->group(function () {
 
 	Route::get('single', ['uses' => 'AdminController@createSingleInvoice', 'as' => 'create single invoice']);
@@ -331,34 +331,51 @@ Route::prefix('Admin/overview/report')->group(function () {
 });
 
 
-Route::get('Admin/invoicetypes', ['uses' => 'AdminController@createServiceTypes', 'as' => 'create service types']);
-Route::get('Admin/setuptax', ['uses' => 'AdminController@setupTax', 'as' => 'setup tax']);
-Route::get('Admin/edittax/{id}', ['uses' => 'AdminController@editTax', 'as' => 'edit tax']);
-Route::get('Admin/api-documentation', ['uses' => 'AdminController@apiDocumentation', 'as' => 'api integration']);
+Route::prefix('Admin/')->group(function () {
+
+	Route::get('invoicetypes', ['uses' => 'AdminController@createServiceTypes', 'as' => 'create service types']);
+	Route::get('setuptax', ['uses' => 'AdminController@setupTax', 'as' => 'setup tax']);
+	Route::get('edittax/{id}', ['uses' => 'AdminController@editTax', 'as' => 'edit tax']);
+	Route::get('api-documentation', ['uses' => 'AdminController@apiDocumentation', 'as' => 'api integration']);
+
+	Route::get('statement', ['uses' => 'AdminController@getStatement', 'as' => 'getStatement']);
+	Route::get('statementreport', ['uses' => 'AdminController@getStatementReport', 'as' => 'statement report']);
+
+	Route::get('walletstatement', ['uses' => 'AdminController@getWalletStatement', 'as' => 'getwalletStatement']);
+	Route::get('walletstatementreport', ['uses' => 'AdminController@getWalletStatementReport', 'as' => 'wallet report']);
+
+	Route::get('payreport', ['uses' => 'AdminController@payreport', 'as' => 'payreport']);
+	Route::get('epayreport', ['uses' => 'AdminController@epayreport', 'as' => 'epayreport']);
+	Route::get('payremittancereport', ['uses' => 'AdminController@payremittancereport', 'as' => 'payremittancereport']);
+	Route::get('epayremittancereport', ['uses' => 'AdminController@epayremittancereport', 'as' => 'epayremittancereport']);
+	Route::get('remittance', ['uses' => 'AdminController@remittance', 'as' => 'remittance']);
+	Route::get('paycaremittance', ['uses' => 'AdminController@paycaremittance', 'as' => 'paycaremittance']);
+	Route::get('remittancepaycareport', ['uses' => 'AdminController@remittancepaycareport', 'as' => 'remittancepaycareport']);
+	Route::get('remittanceepayreport', ['uses' => 'AdminController@remittanceepayreport', 'as' => 'remittanceepayreport']);
+	Route::get('clientfeereport', ['uses' => 'AdminController@clientfeereport', 'as' => 'clientfeereport']);
+	Route::get('collectionfee', ['uses' => 'AdminController@collectionfee', 'as' => 'collectionfee']);
+	Route::get('comissionreport', ['uses' => 'AdminController@comissionreport', 'as' => 'comissionreport']);
+
+	Route::get('customer/{id}', ['uses' => 'AdminController@customer', 'as' => 'customer']);
+
+
+	Route::get('feestructure', ['uses' => 'AdminController@feeStructure', 'as' => 'fee structure']);
+	Route::get('feestructurebycountry', ['uses' => 'AdminController@feeStructureByCountry', 'as' => 'fee structure by country']);
+	Route::get('structurebycountry/{country}', ['uses' => 'AdminController@structureByCountry', 'as' => 'structure by country']);
+
+	Route::get('xpaytrans', ['uses' => 'AdminController@xpaytrans', 'as' => 'xpaytrans']);
+
+	Route::get('xreceivemoney', ['uses' => 'AdminController@xreceivemoney', 'as' => 'xreceivemoney']);
+
+	Route::get('activity', ['uses' => 'AdminController@platformActivity', 'as' => 'platform activity']);
+	Route::get('gatewayactivity', ['uses' => 'AdminController@gatewayActivity', 'as' => 'gateway activity']);
+	Route::get('allcountries', ['uses' => 'AdminController@allCountries', 'as' => 'all countries']);
+	
+});
 
 Route::get('AdminLogin', ['uses' => 'AdminController@adminlogin', 'as' => 'AdminLogin']);
 Route::get('AdminRegister', ['uses' => 'AdminController@adminregister', 'as' => 'AdminRegister']);
 Route::get('otherpay', ['uses' => 'AdminController@Otherpay', 'as' => 'Otherpay']);
-Route::get('Admin/statement', ['uses' => 'AdminController@getStatement', 'as' => 'getStatement']);
-Route::get('Admin/walletstatement', ['uses' => 'AdminController@getWalletStatement', 'as' => 'getwalletStatement']);
-Route::get('Admin/payreport', ['uses' => 'AdminController@payreport', 'as' => 'payreport']);
-Route::get('Admin/epayreport', ['uses' => 'AdminController@epayreport', 'as' => 'epayreport']);
-Route::get('Admin/payremittancereport', ['uses' => 'AdminController@payremittancereport', 'as' => 'payremittancereport']);
-Route::get('Admin/epayremittancereport', ['uses' => 'AdminController@epayremittancereport', 'as' => 'epayremittancereport']);
-Route::get('Admin/remittance', ['uses' => 'AdminController@remittance', 'as' => 'remittance']);
-Route::get('Admin/paycaremittance', ['uses' => 'AdminController@paycaremittance', 'as' => 'paycaremittance']);
-Route::get('Admin/remittancepaycareport', ['uses' => 'AdminController@remittancepaycareport', 'as' => 'remittancepaycareport']);
-Route::get('Admin/remittanceepayreport', ['uses' => 'AdminController@remittanceepayreport', 'as' => 'remittanceepayreport']);
-Route::get('Admin/clientfeereport', ['uses' => 'AdminController@clientfeereport', 'as' => 'clientfeereport']);
-Route::get('Admin/collectionfee', ['uses' => 'AdminController@collectionfee', 'as' => 'collectionfee']);
-Route::get('Admin/comissionreport', ['uses' => 'AdminController@comissionreport', 'as' => 'comissionreport']);
-
-Route::get('Admin/customer/{id}', ['uses' => 'AdminController@customer', 'as' => 'customer']);
-
-
-Route::get('Admin/feestructure', ['uses' => 'AdminController@feeStructure', 'as' => 'fee structure']);
-Route::get('Admin/feestructurebycountry', ['uses' => 'AdminController@feeStructureByCountry', 'as' => 'fee structure by country']);
-Route::get('Admin/structurebycountry/{country}', ['uses' => 'AdminController@structureByCountry', 'as' => 'structure by country']);
 Route::get('editfee/{id}', ['uses' => 'AdminController@editFee', 'as' => 'editfee']);
 Route::post('createfeestructure', ['uses' => 'AdminController@createFeeStructure', 'as' => 'create fee structure']);
 Route::post('editfeestructure/{id}', ['uses' => 'AdminController@editFeeStructure', 'as' => 'edit fee structure']);
@@ -369,9 +386,7 @@ Route::post('createcardissuer', ['uses' => 'AdminController@createCardIssuer', '
 Route::post('editcardissuer/{id}', ['uses' => 'AdminController@editThisCardIssuer', 'as' => 'edit card issuer']);
 Route::post('deletecardissuer/{id}', ['uses' => 'AdminController@deleteCardIssuer', 'as' => 'deletecardissuer']);
 
-Route::get('Admin/xpaytrans', ['uses' => 'AdminController@xpaytrans', 'as' => 'xpaytrans']);
 
-Route::get('Admin/xreceivemoney', ['uses' => 'AdminController@xreceivemoney', 'as' => 'xreceivemoney']);
 
 
 Route::post('updateinvoice', ['uses' => 'AdminController@updateinvoice', 'as' => 'updateinvoice']);

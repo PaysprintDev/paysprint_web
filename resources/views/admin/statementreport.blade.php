@@ -42,7 +42,7 @@
                       @if (count($servicetypes) > 0)
                           @foreach ($servicetypes as $data)
 
-                            <option value="{{ $data->name }}">{{ $data->name }}</option>   
+                            <option value="{{ $data->name }}" {{ (Request::get('statement_service') == $data->name) ? "selected" : "" }} >{{ $data->name }}</option>   
                           @endforeach
                       @else
                         <option value=""> Create Service Type</option>
@@ -74,6 +74,18 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
+
+                <table class="table table-bordered table-striped">
+                    <tbody>
+                        <tr>
+                        <td colspan="3" align="center"><strong style="font-size: 24px;">Service Type: {{ Request::get('statement_service') }} | From: {{ date('d-m-Y', strtotime(Request::get('statement_start'))) }} - To: {{ date('d-m-Y', strtotime(Request::get('statement_end'))) }} </strong></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <br>
+                <br>
+
               <table id="example3" class="table table-bordered table-striped">
                 <thead>
                 <tr>
@@ -87,9 +99,11 @@
                 </tr>
                 </thead>
                 <tbody id="statementtab">
-                    @if (count($otherPays) > 0)
+
+
+                    @if (count($thisdata['result']) > 0)
                     <?php $i = 1; ?>
-                        @foreach ($otherPays as $items)
+                        @foreach ($thisdata['result'] as $items)
                         <tr>
                             <td>{{ $i++ }}</td>
                             <td>{{ date('d/F/Y', strtotime($items->transaction_date)) }}</td>

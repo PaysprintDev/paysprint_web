@@ -5069,6 +5069,57 @@ class AdminController extends Controller
         }
 
     } 
+
+
+    public function getStatementReport(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $otherPays = DB::table('invoice_payment')
+                     ->select(DB::raw('invoice_payment.transactionid, invoice_payment.name, invoice_payment.email, import_excel.amount as invoice_amount, invoice_payment.invoice_no, invoice_payment.service, invoice_payment.created_at as transaction_date, import_excel.description as description, invoice_payment.remaining_balance as runningbalance, invoice_payment.amount as amount_paid, import_excel.status, invoice_payment.mystatus'))->distinct()
+                     ->join('import_excel', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')
+                    ->where('import_excel.uploaded_by', session('user_id'))
+                    ->orderBy('invoice_payment.created_at', 'DESC')->get();
+            }
+
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $servicetypes = $this->getServiceTypes();
+
+            $thisdata = [
+                'result' => $this->getStatementRecordByDate($req->statement_service, $req->statement_start, $req->statement_end),
+            ];  
+
+
+            return view('admin.statementreport')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes, 'thisdata' => $thisdata]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    } 
     
     
     public function sentInvoiceReport(Request $req){
@@ -6388,6 +6439,53 @@ class AdminController extends Controller
     }    
 
 
+
+    public function getWalletStatementReport(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $otherPays = Statement::where('user_id', session('email'))->orderBy('created_at', 'DESC')->get();
+            }
+
+            // dd($otherPays);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $thisdata = [
+                'result' => $this->getWalletStatementRecordByDate($req->statement_service, $req->statement_start, $req->statement_end),
+            ]; 
+
+
+            return view('admin.walletstatementreport')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'thisdata' => $thisdata]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }    
+
+
     public function payreport(Request $req){
     
         if($req->session()->has('username') == true){
@@ -7478,6 +7576,60 @@ class AdminController extends Controller
 
 
         return $this->returnJSON($resData, 200);
+
+
+    }
+
+
+
+
+
+    public function getWalletStatementRecordByDate($service, $from, $nextDay){
+
+                $data = Statement::where('user_id', session('email'))->where('activity', 'LIKE', '%'.$service.'%')->whereBetween('trans_date', [$from, $nextDay])->orderBy('created_at', 'DESC')->get();
+
+
+        return $data;
+
+
+    }
+
+
+
+    public function getStatementRecordByDate($service, $from, $nextDay){
+
+                $payment = DB::table('invoice_payment')
+                            ->select(DB::raw('invoice_payment.transactionid, invoice_payment.name, invoice_payment.email, import_excel.amount as invoice_amount, invoice_payment.invoice_no, invoice_payment.service, invoice_payment.created_at as transaction_date, import_excel.description as description, invoice_payment.remaining_balance as runningbalance, invoice_payment.amount as amount_paid, import_excel.status, invoice_payment.mystatus'))->distinct()
+                            ->join('import_excel', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')
+                            ->where('import_excel.uploaded_by', session('user_id'))
+                            ->where('invoice_payment.service', 'LIKE', '%'.$service.'%')
+                            ->whereBetween('invoice_payment.created_at', [$from, $nextDay])
+                            ->orderBy('invoice_payment.created_at', 'DESC')->get();
+
+
+
+
+                if(isset($payment)){
+                    $data = $payment;
+                }
+                else{
+
+
+                        $getInvoice = DB::table('statement')
+                            ->select(DB::raw('statement.reference_code as transactionid, statement.trans_date as transaction_date, statement.activity as description, statement.credit as invoice_amount, statement.debit as amount_paid'))->distinct()
+                            ->where('statement.regards', session('user_id'))
+                            ->whereBetween('statement.trans_date', [$from, $nextDay])
+                            ->orderBy('statement.created_at', 'DESC')->get();
+
+                        
+                            $data = $getInvoice;
+
+                }
+
+
+        return $data;
+
+
     }
     
 
