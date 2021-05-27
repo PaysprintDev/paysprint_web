@@ -4,7 +4,7 @@
 
 
 <?php use \App\Http\Controllers\User; ?>
-<?php use \App\Http\Controllers\RequestRefund; ?>
+<?php use \App\Http\Controllers\Statement; ?>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -48,8 +48,10 @@
                   </div>
                 <tr>
                   <th>S/N</th>
-                  <th>Country</th>
-                  <th>Count</th>
+                  <th>Customer Name</th>
+                  <th>Transaction ID</th>
+                  <th>Amount to Refund</th>
+                  <th>Status</th>
                   <th>Action</th>
                 </tr>
                 </thead>
@@ -62,38 +64,40 @@
 
                             @if($user = \App\User::where('id', $data->user_id)->first())
 
-                              @php
-                                  $currencyCode = $user->currencyCode;
-                                  $name = $user->name;
-                                  $currencySymbol = $user->currencySymbol;
-                              @endphp
+                            @php
+                                $currencyCode = $user->currencyCode;
+                                $name = $user->name;
+                                $currencySymbol = $user->currencySymbol;
+                            @endphp
 
                             @else
 
-                              @php
-                                  $currencyCode = "";
-                                  $currencySymbol = "";
-                                  $name = "-";
-                              @endphp
+                            @php
+                                $currencyCode = "";
+                                $currencySymbol = "";
+                                $name = "-";
+                            @endphp
+
+
 
                             @endif
 
+                            <td>{{ $name }}</td>
 
-                             
+                            <td>{{ $data->transaction_id }}</td>
 
-                            <td>{{ $data->country }}</td>
-
-                            @if($transactionInfo = \App\RequestRefund::where('country', $data->country)->count())
-                            <td>{{ $transactionInfo }}</td>
+                            @if($transactionInfo = \App\Statement::where('reference_code', $data->transaction_id)->first())
+                            <td style="font-weight: 700;">{{ $currencySymbol.' '.number_format($transactionInfo->debit, 2) }}</td>
 
                             @else
-                            <td>0</td>
+                            <td style="font-weight: 700;">{{ $currencySymbol.' '.number_format(0, 2) }}</td>
                             @endif
 
+                            <td style="@if($data->status == 'PROCESSED') color: green; @elseif($data->status == 'DECLINED') color: red; @else color: darkorange; @endif"><strong>{{ $data->status }}</strong></td>
 
 
                             <td>
-                                <a type="button" href="{{ route('refund details by country', 'country='.$data->country) }}" class="btn btn-primary">View details</a>
+                                <a type="button" href="{{ route('refund details', $data->transaction_id) }}" class="btn btn-primary btn-block">View details</a>
                             </td>
 
                         </tr>

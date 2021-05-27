@@ -28,6 +28,7 @@ Route::get('chargefee', 'CheckSetupController@chargeFee');
 Route::get('insertcountry', 'CheckSetupController@insertCountry');
 Route::get('reportstatus', 'CheckSetupController@reportStatus');
 Route::get('updatefee', 'CheckSetupController@updateMonthlyFee');
+Route::get('refundbycountryupdate', 'CheckSetupController@refundbyCountry');
 
 Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
 
@@ -213,17 +214,19 @@ Route::prefix('Admin/wallet')->group(function () {
 
 	// Pending Transfers
 
-	Route::get('pendingtransfer', ['uses' => 'AdminController@pendingTransfer', 'as' => 'pending transfer']);
-	Route::get('texttotransfer', ['uses' => 'AdminController@textToTransfer', 'as' => 'text to transfer']);
+	Route::get('texttotransfer', ['uses' => 'AdminController@pendingTransfer', 'as' => 'text to transfer']);
 
-	Route::get('pendingtransferbycountry', ['uses' => 'AdminController@pendingTransferByCountry', 'as' => 'pending transfer by country']);
-	Route::get('texttotransferbycountry', ['uses' => 'AdminController@textToTransferByCountry', 'as' => 'text to transfer by country']);
+	Route::get('pendingtransfer', ['uses' => 'AdminController@textToTransfer', 'as' => 'pending transfer']);
+
+	Route::get('texttotransferbycountry', ['uses' => 'AdminController@pendingTransferByCountry', 'as' => 'pending transfer by country']);
+	Route::get('pendingtransferbycountry', ['uses' => 'AdminController@textToTransferByCountry', 'as' => 'text to transfer by country']);
 
 	Route::get('prepaidrequestwithdrawal', ['uses' => 'AdminController@prepaidRequestWithdrawal', 'as' => 'prepaid request withdrawal']);
 	Route::get('prepaidcardrequest', ['uses' => 'AdminController@prepaidCardRequest', 'as' => 'prepaid card request']);
 
 
 	Route::get('refundmoneyrequest', ['uses' => 'AdminController@refundMoneyRequest', 'as' => 'refund money request']);
+	Route::get('refundmoneyrequestbycountry', ['uses' => 'AdminController@refundMoneyRequestByCountry', 'as' => 'refund details by country']);
 	Route::get('processedrefund', ['uses' => 'AdminController@processedRefundMoneyRequest', 'as' => 'refund processed']);
 
 
@@ -290,7 +293,7 @@ Route::prefix('Admin/performance/report')->group(function () {
 
 	Route::get('sentinvoice', ['uses' => 'AdminController@sentInvoiceReport', 'as' => 'sent invoice']);
 
-	
+
 	Route::get('paidinvoice', ['uses' => 'AdminController@paidInvoiceReport', 'as' => 'paid invoice']);
 	Route::get('unpaidinvoice', ['uses' => 'AdminController@unpaidInvoiceReport', 'as' => 'unpaid invoice']);
 	Route::get('customerbalance', ['uses' => 'AdminController@customerBalanceReport', 'as' => 'customer balance report']);

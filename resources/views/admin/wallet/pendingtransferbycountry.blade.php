@@ -12,11 +12,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         Pending Transactions
+         Text-To-Transfer
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Pending Transactions</li>
+        <li class="active">Text-To-Transfer</li>
       </ol>
     </section>
 
@@ -49,69 +49,109 @@
                   </div>
                 <tr>
                   <th>S/N</th>
-                  <th>Name</th>
-                  <th>Amount</th>
-                  <th>Claims</th>
+                  <th>Sender Details</th>
+                  <th>Amount Sent</th>
+                  <th>Receiver Details</th>
                   <th>Transfer Date</th>
                 </tr>
                 </thead>
                 <tbody>
-                    @if (count($data['pendingtransferbycountry']) > 0)
-                    <?php $i = 1;?>
 
-                    @foreach($data['pendingtransferbycountry'] as $data)
-                        <tr>
-                            <td>{{ $i++ }}</td>
+                  @if($affected = \App\Statement::where('status', 'Pending')->where('credit', '>', 0)->where('country', Request::get('country'))->get())
 
-                            @if($currency = \App\User::where('country', $data->country)->first())
-                                @php
-                                    $currencyCode = $currency->currencyCode;
-                                    $currencySymbol = $currency->currencySymbol;
-                                @endphp
-                            @endif
 
-                            @if($user = \App\User::where('email', $data->user_id)->first())
+                      @php
+                        $anonname = "-";
+                        $anonref_code = "-";
+                        $anontelephone = "-";
+                        $anonid = "-";
 
-                                @if (isset($user))
+
+                        $username = "-";
+                        $ref_code = "-";
+                        $city = "-";
+                        $state = "-";
+                        $id = "-";
+
+                    @endphp
+
+                      @if (count($affected) > 0)
+                        @php
+                            $i = 1;
+                        @endphp
+                        @foreach($affected as $data)
+                            <tr>
+                                <td>{{ $i++ }}</td>
+
+                                @if($currency = \App\User::where('country', $data->country)->first())
                                     @php
-                                        $name = $user->name;
+                                        $currencyCode = $currency->currencyCode;
+                                        $currencySymbol = $currency->currencySymbol;
                                     @endphp
-                                @else
-                                    @if($anon = \App\AnonUsers::where('email', $data->user_id)->first())
-                                            @php
-                                                $name = $anon->name;
-                                            @endphp
-                                    @endif
                                 @endif
 
-                                @else
+                                @if($user = \App\User::where('email', $data->user_id)->first())
 
-                                @php
-                                    $name = "-";
-                                @endphp
+                                    @if (isset($user))
+                                        @php
+                                            $username = $user->name;
+                                            $ref_code = $user->ref_code;
+                                            $city = $user->city;
+                                            $state = $user->state;
+                                            $id = $user->id;
+                                        @endphp
+                                        
+                                    @endif
 
-                            @endif
+                                    
 
-                            <td>{{ $name }}</td>
+                                @endif
 
-                            <td>{{ ($data->credit > 0) ? $currencySymbol.' '.number_format($data->credit, 2) : $currencySymbol.' '.number_format($data->debit, 2) }}</td>
+                                @if($anon = \App\AnonUsers::where('email', $data->user_id)->first())
+                                        @php
+                                            $anonname = $anon->name;
+                                            $anonref_code = $anon->ref_code;
+                                            $anontelephone = $anon->telephone;
+                                            $anonid = $anon->id;
+                                        @endphp
+                                @endif
+
+                                <td>
+                                  Account Number: {{ $ref_code }} <br>
+                                  Name: {{ $username }} <br>
+                                  City: {{ $city }} <br>
+                                  State: {{ $state }} <br>
+                                  <a href="{{ route('user more detail', $id) }}" target="_blank" class="btn btn-primary">View more</a>
+                                </td>
+
+                                <td>{{ ($data->credit > 0) ? $currencySymbol.' '.number_format($data->credit, 2) : $currencySymbol.' '.number_format($data->debit, 2) }}</td>
 
 
-                            <td style="font-weight: bold;">{{ ($data->credit > 0) ? "RECEIVER" : "SENDER" }}</td>
+                                <td>
+                                  Account Number: {{ $anonref_code }} <br>
+                                  Name: {{ $anonname }} <br>
+                                  Telephone: {{ $anontelephone }} <br>
+                                </td>
 
-                            <td>
-                                {{ date('d/M/Y', strtotime($data->trans_date)) }}
-                            </td>
 
-                            
+                                <td>
+                                    {{ date('d/M/Y', strtotime($data->trans_date)) }}
+                                </td>
+
+                                
+                            </tr>
+                        @endforeach
+
+                      @else
+                        <tr>
+                            <td colspan="5" align="center">No record available</td>
                         </tr>
-                    @endforeach
+                      @endif
 
-                    @else
-                    <tr>
-                        <td colspan="5" align="center">No record available</td>
-                    </tr>
-                    @endif
+
+                  @endif
+
+                    
                 </tbody>
               </table>
             </div>

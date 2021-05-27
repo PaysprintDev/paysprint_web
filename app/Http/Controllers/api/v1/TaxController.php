@@ -23,7 +23,7 @@ class TaxController extends Controller
 
             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-            Tax::updateOrCreate(['user_id' => $thisuser->id, 'agency' => $req->agency],['user_id' => $thisuser->id, 'name' => $req->name, 'rate' => $req->rate, 'agency' => $req->agency]);
+            Tax::insert(['user_id' => $thisuser->id, 'name' => $req->name, 'rate' => $req->rate, 'agency' => $req->agency]);
 
             $data = Tax::where('user_id', $thisuser->id)->orderBy('created_at', 'DESC')->get();
 

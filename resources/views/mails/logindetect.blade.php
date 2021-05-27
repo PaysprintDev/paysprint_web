@@ -281,7 +281,7 @@
                         style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;">
                         <tr style="border-collapse:collapse;">
                           <td width="560" align="center" valign="top" style="padding:0;Margin:0;">
-                            <table cellpadding="0" cellspacing="0" width="100%"
+                            {{-- <table cellpadding="0" cellspacing="0" width="100%"
                               style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;">
                               <tr style="border-collapse:collapse;">
                                 <td align="center" style="padding:0;Margin:0;"><a href="#" target="_blank"
@@ -290,7 +290,7 @@
                                       style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;"></a>
                                 </td>
                               </tr>
-                            </table>
+                            </table> --}}
                           </td>
                         </tr>
                       </table>
@@ -317,7 +317,7 @@
                               style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;">
                               <tr style="border-collapse:collapse;">
                                 <td align="left" style="padding:0;Margin:0;padding-bottom:15px;">
-                                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png" style="width: 120px; height: 120px;">
+                                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png" style="width: 200px; height: 150px;">
                                   <h3 style="Margin:0;line-height:29px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:24px;font-style:normal;font-weight:normal;color:#333333; text-align: left;">
                                     Hello {{ $maildata->name }},&nbsp;</h3>
                                 </td>

@@ -13,10 +13,13 @@ use Twilio\Rest\Client;
 use App\Notifications as Notifications;
 use App\FeeTransaction as FeeTransaction;
 
+use App\Classes\Mobile_Detect;
+
+
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-
+    
 
     public function getUserIpAddr(){
         if(!empty($_SERVER['HTTP_CLIENT_IP'])){
@@ -68,8 +71,7 @@ class Controller extends BaseController
     }
 
 
-    public function curl_get_file_contents($URL)
-    {
+    public function curl_get_file_contents($URL){
         $c = curl_init();
         curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($c, CURLOPT_URL, $URL);
@@ -127,6 +129,35 @@ class Controller extends BaseController
 
     }
 
+    public function detectMobile(){
+
+        $detect = new Mobile_Detect;
+
+        return $detect;
+    }
+
+    public function minimumWithdrawal($country){
+
+        try{
+            // Get Minimum Withdrawal
+            $minimumBalance = TransactionCost::where('method', 'Minimum')->where('country', $country)->first();
+
+            if(isset($minimumBalance) == true){
+                $data = $minimumBalance->fixed;
+            }
+            else{
+                $data = 0;
+            }
+            
+
+            return $data;
+            
+        }
+        catch (\Throwable $th) {
+            Log::error('Error: '.$th->getMessage());
+        }
+    }
+
 
     public function getCountryCode($country){
 
@@ -166,7 +197,7 @@ class Controller extends BaseController
                 ['from' => $twilio_number, 'body' => $message] );
 
         } catch (\Throwable $th) {
-            Log::error('Error: '.$th);
+            Log::error('Error: '.$th->getMessage());
 
             $response = 'Money sent successfully. However, we are unable to send you a notification through a text message because we detected there is no phone number or you have an invalid phone number on your PaySprint Account. Kindly update your phone number to receive notification via text on your next transaction.';
             $respaction = 'success';
@@ -179,10 +210,18 @@ class Controller extends BaseController
     }
 
 
-    public function createNotification($ref_code, $activity){
+    public function createNotification($ref_code, $activity, $platform = null){
 
+        $platform = ($this->detectMobile()->isMobile() ? ($this->detectMobile()->isTablet() ? 'tablet' : 'mobile') : 'web');
 
-        Notifications::insert(['ref_code' => $ref_code, 'activity' => $activity, 'notify' => 0]);
+        try {
+
+            Notifications::insert(['ref_code' => $ref_code, 'activity' => $activity, 'notify' => 0, 'platform' => $platform]);
+
+        } catch (\Throwable $th) {
+
+            Log::error('Error: '.$th->getMessage());
+        }
 
     }
 

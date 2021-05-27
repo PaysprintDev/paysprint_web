@@ -68,6 +68,7 @@
                   <th>Email</th>
                   <th>Account Type</th>
                   <th>Identification</th>
+                  <th>Platform</th>
                   <th>Date Joined</th>
                   <th>Status</th>
                   <th>Action</th>
@@ -75,7 +76,7 @@
                 </thead>
                 <tbody>
 
-                  @if($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', '>', 0)->get())
+                  @if($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', '>', 0)->where('approval', '!=', 0)->get())
 
 
                     @if (count($allusersdata) > 0)
@@ -122,6 +123,8 @@
 
                                 
                             </td>
+
+                            <td>{{ $datainfo->platform }}</td>
 
                             <td>
                                 {{ date('d/M/Y h:i:a', strtotime($datainfo->created_at)) }}

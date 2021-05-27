@@ -16,6 +16,7 @@ use App\Statement as Statement;
 use App\FeeTransaction as FeeTransaction;
 use App\AllCountries as AllCountries;
 use App\TransactionCost as TransactionCost;
+use App\RequestRefund as RequestRefund;
 
 class CheckSetupController extends Controller
 {
@@ -330,7 +331,7 @@ class CheckSetupController extends Controller
 
     }
 
-        public function maintinsStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route){
+    public function maintinsStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route){
         Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route]);
     }
 
@@ -662,6 +663,28 @@ class CheckSetupController extends Controller
         else{
             // Do nothing
         }
+    }
+
+
+    public function refundbyCountry(){
+        $user = User::all();
+
+
+        try {
+            if(count($user) > 0){
+
+                foreach($user as $key => $value){
+                    // Update user info
+                    RequestRefund::where('user_id', $value->id)->update(['country' => $value->country]);
+                }
+            }
+            else{
+                // 
+            }
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+        }
+
     }
 
 

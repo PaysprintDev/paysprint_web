@@ -51,6 +51,8 @@ use App\AddBank as AddBank;
 
 use App\BankWithdrawal as BankWithdrawal;
 
+use App\TransactionCost as TransactionCost;
+
 
 use App\CcWithdrawal as CcWithdrawal;
 
@@ -826,6 +828,8 @@ else{
 
                     $thisuser = User::where('api_token', $req->bearerToken())->first();
 
+                    $minBal = $this->minimumWithdrawal($thisuser->country);
+
                     // Check amount in wallet
                     if($req->amount > $thisuser->wallet_balance){
                         // Insufficient amount for withdrawal
@@ -836,9 +840,34 @@ else{
 
                         Log::info('OOps!, '.$thisuser->name.' has '.$message);
                     }
+                    elseif($thisuser->wallet_balance <= $minBal){
+                        // Cannot withdraw minimum balance
+
+                        $data = [];
+                        $message = "Your wallet balance must be more than ".$req->currencyCode.' '.number_format($minBal, 2)." before you can make withdrawal.";
+                        $status = 400;
+
+                        Log::info('OOps!, '.$thisuser->name.' has '.$message);
+                    }
                     else{
 
-                            // Do convert amount to dollars
+                        if($req->card_type == "Prepaid Card"){
+                            $cardType = "EXBC Prepaid Card";
+                        }
+                        else{
+                            $cardType = $req->card_type;
+                        }
+
+                        
+
+
+                            $checkTransaction = TransactionCost::where('method', $cardType)->where('country', $thisuser->country)->first();
+
+                            
+
+                            if(isset($checkTransaction) ==  true){
+
+                                // Do convert amount to dollars
 
                             // This 1.35 is commission charge, kindly calculate again
 
@@ -1459,6 +1488,18 @@ else{
                                     }
 
                                 }
+
+                            }
+                            else{
+
+                                $data = [];
+                                $message = "Withdrawal to ".strtoupper($req->card_type)." not yet activated for your country.";
+                                $status = 400;
+
+                                Log::info('OOps!, '.$thisuser->name.', '.$message);
+                            }
+
+                            
 
                     }
                     

@@ -385,6 +385,10 @@ $("#amount").on("keyup", function() {
 
 $('#card_type').change(function(){
     runCardType();
+
+    if($("#amount").val() != ""){
+        runCommission();
+    }
 });
 
 

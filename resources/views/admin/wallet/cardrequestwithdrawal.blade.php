@@ -11,11 +11,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         Credit/Debit Card Withdrawal Request
+         Credit Card Withdrawal Request
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Credit/Debit Card Withdrawal Request</li>
+        <li class="active">Credit Card Withdrawal Request</li>
       </ol>
     </section>
 

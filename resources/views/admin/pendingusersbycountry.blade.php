@@ -63,7 +63,7 @@
                             
                             <td>{{ $data->country }}</td>
 
-                            @if($allusersdata = \App\User::where('country', $data->country)->count())
+                            @if($allusersdata = \App\User::where('country', $data->country)->where('accountLevel', 0)->count())
                                 <td>{{ $allusersdata }}</td>
                             @endif
 

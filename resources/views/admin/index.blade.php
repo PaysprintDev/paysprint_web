@@ -118,12 +118,12 @@
             <div class="inner">
               <h3>{{ count($pending['transfer']) }}</h3>
 
-              <p>Pending Transfers</p>
+              <p>Text-To-Transfer</p>
             </div>
             <div class="icon">
               <i class="ion ion-stats-bars"></i>
             </div>
-            <a href="{{ route('pending transfer') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="{{ route('text to transfer') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         
@@ -133,12 +133,12 @@
             <div class="inner">
               <h3>{{ count($pending['texttotransfer']) }}</h3>
 
-              <p>Text-To-Transfer</p>
+              <p>Pending Transfer</p>
             </div>
             <div class="icon">
               <i class="ion ion-stats-bars"></i>
             </div>
-            <a href="{{ route('text to transfer') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="{{ route('pending transfer') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
 
@@ -227,7 +227,7 @@
               <h3>@if($approvalPending = \App\User::where('accountLevel', 0)->count()) {{ $approvalPending }} @endif</h3>
 
               <p>Pending Users</p>
-              
+
             </div>
             <div class="icon">
               <i class="ion ion-person-add"></i>
@@ -512,7 +512,7 @@
 
                       @else
 
-                        <td align="center" style="font-weight: bold; color: red;">Pending</td>
+                        <td align="center" style="font-weight: bold; color: red;">Unpaid</td>
 
                       @endif
 
