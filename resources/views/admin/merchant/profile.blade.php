@@ -387,7 +387,7 @@
                     <label for="inputName" class="col-sm-2 control-label">Name</label>
 
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" name="name" value="{{ $data['getuserDetail']->name }}" placeholder="Name">
+                      <input type="text" class="form-control" name="name" value="{{ $data['getuserDetail']->name }}" placeholder="Name" readonly>
                     </div>
                   </div>
                   <div class="form-group">

@@ -83,7 +83,7 @@
 
                             <td>{{ $data->country }}</td>
 
-                            @if($transactionInfo = \App\RequestRefund::where('country', $data->country)->count())
+                            @if($transactionInfo = \App\RequestRefund::where('country', $data->country)->where('status', '!=', 'PROCESSED')->count())
                             <td>{{ $transactionInfo }}</td>
 
                             @else
