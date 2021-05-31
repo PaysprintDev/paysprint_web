@@ -64,7 +64,15 @@ trait AccountNotify{
 
                     $this->message = $message;
 
-                    $recPhone = "+".$thisuser->code.$thisuser->telephone;
+                    $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                    if(isset($userPhone)){
+
+                        $recPhone = $thisuser->telephone;
+                    }
+                    else{
+                        $recPhone = "+".$thisuser->code.$thisuser->telephone;
+                    }
 
                     $this->sendMessage($sms, $recPhone);
 

@@ -446,7 +446,7 @@
 
 
                     {{-- Wallet Maintenance --}}
-                    @if($maintenacefee = \App\MonthlyFee::where('country', Request::get('country'))->whereBetween('created_at', [Request::get('start'), Request::get('end')])->sum('amount'))
+                    @if($maintenacefee = \App\MonthlyFee::where('country', Request::get('country'))->whereBetween('created_at', [date('Y-m-d', strtotime(Request::get('start'))), date('Y-m-d', strtotime(Request::get('end')))])->sum('amount'))
                         @php
                             $maintenacefee = $maintenacefee;
                         @endphp

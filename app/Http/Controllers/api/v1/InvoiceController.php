@@ -508,10 +508,19 @@ class InvoiceController extends Controller
                                                 if(isset($getCustomer)){
                                                     // Send SMS
 
+                                                    
+
                                                     $sendMsg = "Hello ".$this->name.", ".$this->subject.". Login to your PaySprint App to make payment. <a href='".route('login')."'>".route('login')."</a>";
 
-                                                    $sendPhone = "+".$getCustomer->code.$getCustomer->telephone;
-                                                    // $sendPhone = "+23408137492316";
+                                                    $getPhone = User::where('email', $key['Customer Email'])->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                                                    if(isset($getPhone)){
+                                                        $sendPhone = $getCustomer->telephone;
+                                                    }
+                                                    else{
+                                                        $sendPhone = "+".$getCustomer->code.$getCustomer->telephone;
+                                                    }
+
 
                                                     $this->sendMessage($sendMsg, $sendPhone);
                                                     $this->createNotification($getCustomer->ref_code, $sendMsg);

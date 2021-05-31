@@ -139,7 +139,7 @@
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">To Prepaid Card</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">Subject to Card Issuer</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">No Fee</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">To Credit Card</p></td>
@@ -148,16 +148,21 @@
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">To Bank Account</p></td>
-                            <td><p class="gr-text-9 mb-0">$1.80</p></td>
-                            <td><p class="gr-text-9 mb-0">1.30%</p></td>
+                            <td><p class="gr-text-9 mb-0">No Fee</p></td>
+                            <td><p class="gr-text-9 mb-0">No Fee/p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">To Debit VISA/Mastercard</p></td>
-                            <td><p class="gr-text-9 mb-0">$1.80</p></td>
-                            <td><p class="gr-text-9 mb-0">1.30%</p></td>
+                            <td><p class="gr-text-9 mb-0">No Fee</p></td>
+                            <td><p class="gr-text-9 mb-0">No Fee/p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Monthly Maintenance Fee</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">$5.00</p></td>
+                        </tr>
+
+                        <tr>
+                            <td><p class="gr-text-9 mb-0">Minimum Wallet Balance</p></td>
                             <td colspan="2"><p class="gr-text-9 mb-0">$5.00</p></td>
                         </tr>
 
@@ -298,6 +303,12 @@
 
                         <tr>
                             <td><p class="gr-text-9 mb-0">Monthly Maintenance Fee</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">$5.00</p></td>
+                        </tr>
+                        
+                        
+                        <tr>
+                            <td><p class="gr-text-9 mb-0">Minimum Wallet Balance</p></td>
                             <td colspan="2"><p class="gr-text-9 mb-0">$5.00</p></td>
                         </tr>
 

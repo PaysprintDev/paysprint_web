@@ -339,7 +339,15 @@ class MoneyTransferController extends Controller
             // Send SMS
             $sendMsg = "Hi ".$data->name.", ".$data->currencyCode." 20.00 was deducted from your PaySprint wallet for ".$card_provider." request. Your new wallet balance is ".$data->currencyCode.' '.number_format($wallet_balance, 2).". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us.";
 
-            $sendPhone = "+".$data->code.$data->telephone;
+            $usergetPhone = User::where('email', $data->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+            if(isset($usergetPhone)){
+
+                $sendPhone = $data->telephone;
+            }
+            else{
+                $sendPhone = "+".$data->code.$data->telephone;
+            }
 
             $this->sendMessage($sendMsg, $sendPhone);
 
@@ -393,8 +401,17 @@ class MoneyTransferController extends Controller
 
             $sendMerchantMsg = "Hi ".$exbcMerchant->name.", ".$data->currencyCode." 20.00 was added to your wallet for ".$card_provider." request from ".$data->name.". Your new wallet balance is ".$data->currencyCode.' '.number_format($merchantwalletBal, 2).". Thanks.";
 
-            $sendPhone = "+".$exbcMerchant->code.$exbcMerchant->telephone;
+                    
+            $usergetPhone = User::where('email', 'prepaidcard@exbc.ca')->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+            if(isset($usergetPhone)){
 
+                $sendPhone = $exbcMerchant->telephone;
+            }
+            else{
+                $sendPhone = "+".$exbcMerchant->code.$exbcMerchant->telephone;
+            }
+            
             $this->sendMessage($sendMerchantMsg, $sendPhone);
 
             $this->createNotification($exbcMerchant->ref_code, $sendMerchantMsg);
@@ -621,13 +638,30 @@ class MoneyTransferController extends Controller
 
 
                     $sendMsg = "Hi ".$sender->name.", You have made a ".$activity." Your new Wallet balance is ".$req->currency.' '.number_format($wallet_balance, 2).". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us. PaySprint Team";
-                    $sendPhone = "+".$sender->code.$sender->telephone;
+
+                    $usergetPhone = User::where('email', $sender->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                    if(isset($usergetPhone)){
+
+                        $sendPhone = $sender->telephone;
+                    }
+                    else{
+                        $sendPhone = "+".$sender->code.$sender->telephone;
+                    }
 
                     $this->sendMessage($sendMsg, $sendPhone);
 
 
-                    
-                    $recPhone = "+".$receiver->code.$receiver->telephone;
+                    $merchantPhone = User::where('email', $receiver->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                    if(isset($merchantPhone)){
+
+                        $recPhone = $receiver->telephone;
+                    }
+                    else{
+                        $recPhone = "+".$receiver->code.$receiver->telephone;
+                    }
+
 
                     $this->sendMessage($recMsg, $recPhone);
 
@@ -706,7 +740,16 @@ class MoneyTransferController extends Controller
                 // Send Message
 
                 $recMsg = "Hi ".$thisuser->name.", You have added a pending transfer of ".$thisuser->currencyCode.' '.number_format($credit, 2)." to your PaySprint wallet. You now have ".$thisuser->currencyCode.' '.number_format($wallet_balance, 2)." balance in your wallet. PaySprint Team";
-                $recPhone = "+".$thisuser->code.$thisuser->telephone;
+
+                $merchantPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                if(isset($merchantPhone)){
+
+                    $recPhone = $thisuser->telephone;
+                }
+                else{
+                    $recPhone = "+".$thisuser->code.$thisuser->telephone;
+                }
                 
 
                 $this->name = $thisuser->name;

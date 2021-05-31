@@ -515,7 +515,16 @@ else{
                                         $this->sendEmail($this->email, "Fund remittance");
 
                                         $sendMsg = 'Hi '.$thisuser->name.' You have successfully paid invoice of '.$req->currencyCode.' '.number_format($req->amount, 2).' to '.$thismerchant->name.' for '.$purpose.'. Your balance on Invoice # ['.$req->invoice_no.'] is '.$req->currencyCode.' '.number_format($newAmount, 2).'. You now have '.$req->currencyCode.' '.number_format($walletBalance, 2).' in PaySprint Wallet account. Thanks PaySprint Team.';
-                                        $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+
+                                        $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                                        if(isset($userPhone)){
+
+                                            $sendPhone = $thisuser->telephone;
+                                        }
+                                        else{
+                                            $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+                                        }
 
                                         $this->sendMessage($sendMsg, $sendPhone);
 
@@ -549,7 +558,16 @@ else{
                                         $this->sendEmail($this->email, "Fund remittance");
 
                                         $recMesg = 'You have received '.$req->currencyCode.' '.number_format($req->amount, 2).' for INVOICE # ['.$req->invoice_no.'] paid by '.$thisuser->name.', invoice balance left is '.$req->currencyCode.' '.number_format($newAmount, 2).'. You now have '.$req->currencyCode.' '.number_format($merchantwalletBalance, 2).' in your wallet account with PaySprint. Thanks PaySprint Team.';
-                                        $recPhone = "+".$thismerchant->code.$thismerchant->telephone;
+
+                                        $userPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                                        if(isset($userPhone)){
+
+                                            $recPhone = $thismerchant->telephone;
+                                        }
+                                        else{
+                                            $recPhone = "+".$thismerchant->code.$thismerchant->telephone;
+                                        }
 
                                         $this->sendMessage($recMesg, $recPhone);
 
@@ -680,7 +698,16 @@ else{
                             $this->message = '<p>You have added <strong>'.$req->currencyCode.' '.number_format($req->amounttosend, 2).'</strong> to your wallet with PaySprint. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your account</p>';
 
                             $sendMsg = 'You have added '.$req->currencyCode.' '.number_format($req->amounttosend, 2).' to your wallet with PaySprint. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
-                            $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+
+                            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                            if(isset($userPhone)){
+
+                                $sendPhone = $thisuser->telephone;
+                            }
+                            else{
+                                $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+                            }
 
 
                             $this->sendMessage($sendMsg, $sendPhone);
@@ -750,7 +777,16 @@ else{
                             $this->message = '<p>You have added <strong>'.$req->currencyCode.' '.number_format($req->amounttosend, 2).'</strong> to your wallet with PaySprint. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your account</p>';
 
                             $sendMsg = 'You have added '.$req->currencyCode.' '.number_format($req->amounttosend, 2).' to your wallet with PaySprint. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
-                            $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+
+                            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                            if(isset($userPhone)){
+
+                                $sendPhone = $thisuser->telephone;
+                            }
+                            else{
+                                $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+                            }
 
 
                             $this->sendMessage($sendMsg, $sendPhone);
@@ -995,7 +1031,16 @@ else{
                                                 $this->createNotification($exbcMerchant->ref_code, "Hello ".strtoupper($exbcMerchant->name).", ".$this->name." has ".$message);
 
                                                 $sendMsg = 'Hello '.strtoupper($exbcMerchant->name).', '.$thisuser->name.' has '.$activity.'. You now have '.$req->currencyCode.' '.number_format($merchantwalletBal, 2).' balance in your account';
-                                                $sendPhone = "+".$exbcMerchant->code.$exbcMerchant->telephone;
+
+                                                $userPhone = User::where('email', $exbcMerchant->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                                                if(isset($userPhone)){
+
+                                                    $sendPhone = $exbcMerchant->telephone;
+                                                }
+                                                else{
+                                                    $sendPhone = "+".$exbcMerchant->code.$exbcMerchant->telephone;
+                                                }
 
                                                 $this->sendMessage($sendMsg, $sendPhone);
 
@@ -1150,7 +1195,16 @@ else{
                                                         
 
                                                         $sendMsg = 'The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your '.$cardDetails->card_name.' and Number: '.wordwrap($cardNo, 4, '-', true).' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your wallet.';
-                                                        $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+
+                                                            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                                                            if(isset($userPhone)){
+
+                                                                $sendPhone = $thisuser->telephone;
+                                                            }
+                                                            else{
+                                                                $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+                                                            }
 
 
                                                         $this->createNotification($thisuser->ref_code, $sendMsg);
@@ -1316,7 +1370,16 @@ else{
                                                 $this->createNotification($exbcMerchant->ref_code, "Hello ".strtoupper($exbcMerchant->name).", ".$this->name." has ".$message);
 
                                                 $sendMsg = 'Hello '.strtoupper($exbcMerchant->name).', '.$thisuser->name.' has '.$activity.'. You now have '.$req->currencyCode.' '.number_format($merchantwalletBal, 2).' balance in your account';
-                                                $sendPhone = "+".$exbcMerchant->code.$exbcMerchant->telephone;
+
+                                                $userPhone = User::where('email', $exbcMerchant->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                                                if(isset($userPhone)){
+
+                                                    $sendPhone = $exbcMerchant->telephone;
+                                                }
+                                                else{
+                                                    $sendPhone = "+".$exbcMerchant->code.$exbcMerchant->telephone;
+                                                }
 
                                                 $this->sendMessage($sendMsg, $sendPhone);
 
@@ -1453,7 +1516,16 @@ else{
                                                 $this->message = '<p>The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Card Name: <strong>'.$cardDetails->card_name.'</strong> and Number: <strong>'.wordwrap($cardNo, 4, '-', true).'</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your wallet.</p>';
 
                                                 $sendMsg = 'The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your '.$cardDetails->card_name.' and Number: '.wordwrap($cardNo, 4, '-', true).' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your wallet.';
-                                                $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+
+                                                    $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                                                if(isset($userPhone)){
+
+                                                    $sendPhone = $thisuser->telephone;
+                                                }
+                                                else{
+                                                    $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+                                                }
 
 
                                                 $this->createNotification($thisuser->ref_code, $sendMsg);
@@ -1556,7 +1628,15 @@ else{
             // Send SMS
             $sendMsg = "Hi ".$data->name.", ".$data->currencyCode." ".number_format($amount, 2)." was deducted from your PaySprint wallet for ".$purpose." load request. Your new wallet balance is ".$data->currencyCode.' '.number_format($wallet_balance, 2).". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us.";
 
-            $sendPhone = "+".$data->code.$data->telephone;
+            $userPhone = User::where('email', $data->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+            if(isset($userPhone)){
+
+                $sendPhone = $data->telephone;
+            }
+            else{
+                $sendPhone = "+".$data->code.$data->telephone;
+            }
 
             $this->sendMessage($sendMsg, $sendPhone);
 

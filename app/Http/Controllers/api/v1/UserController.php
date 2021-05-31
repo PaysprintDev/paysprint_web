@@ -845,8 +845,18 @@ class UserController extends Controller
                         // send Mail and SMS
 
                         $recMsg = "Hi ".$thisuser->name.", You have successfully turned ".$req->auto_deposit." your Auto Deposit Status.  PaySprint Team";
-                        $recPhone = "+".$thisuser->code.$thisuser->telephone;
-                        
+
+                        $merchantPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                        if(isset($merchantPhone)){
+
+                            $recPhone = $thisuser->telephone;
+                        }
+                        else{
+                            $recPhone = "+".$thisuser->code.$thisuser->telephone;
+                        }
+
+
 
                         $this->name = $thisuser->name;
                         // $this->email = "bambo@vimfile.com";

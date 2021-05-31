@@ -8387,7 +8387,15 @@ class AdminController extends Controller
             $this->subject = $subject;
             $this->message = $message;
 
-            $recipients = "+".$data->code.$data->telephone;
+            $usersPhone = User::where('email', $data->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+            if(isset($usersPhone)){
+
+                $recipients = $data->telephone;
+            }
+            else{
+                $recipients = "+".$data->code.$data->telephone;
+            }
 
             $this->createNotification($data->ref_code, $message);
             $this->sendMessage($message, $recipients);
@@ -8478,7 +8486,18 @@ class AdminController extends Controller
         $this->subject = $subject;
         $this->message = $message;
 
-        $recipients = "+".$user->code.$user->telephone;
+
+        $usersPhone = User::where('email', $user->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+        if(isset($usersPhone)){
+
+            $recipients = $user->telephone;
+        }
+        else{
+            $recipients = "+".$user->code.$user->telephone;
+        }
+
+        
 
         $this->createNotification($user->ref_code, $message);
         $this->sendMessage($message, $recipients);
@@ -8509,7 +8528,15 @@ class AdminController extends Controller
         $this->info = "Account is credited";
         $this->message = 'We are glad to notify you that your bank account transaction is processed and your account is credited. '.$thisuser->currencySymbol.''.number_format($data->amountToSend, 2).' has been added to '.$thisbank->bankName.' ('.$thisbank->accountNumber.'). Thanks from PaySprint Support Team';
 
-        $recipients = "+".$thisuser->code.$thisuser->telephone;
+        $usersPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+        if(isset($usersPhone)){
+
+            $recipients = $thisuser->telephone;
+        }
+        else{
+            $recipients = "+".$thisuser->code.$thisuser->telephone;
+        }
 
         $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", ".$this->message);
         $this->sendMessage("Hello ".strtoupper($thisuser->name).", ".$this->message, $recipients);
@@ -8543,7 +8570,15 @@ class AdminController extends Controller
         $this->info = "Account is credited";
         $this->message = 'We are glad to notify you that your '.$thiscard->card_type.' transaction is processed and your bank account is credited. '.$thisuser->currencySymbol.''.number_format($data->amount, 2).' has been added to '.wordwrap($cardNo, 4, '-', true).'. Thanks from PaySprint Support Team';
 
-        $recipients = "+".$thisuser->code.$thisuser->telephone;
+        $usersPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+        if(isset($usersPhone)){
+
+            $recipients = $thisuser->telephone;
+        }
+        else{
+            $recipients = "+".$thisuser->code.$thisuser->telephone;
+        }
 
         $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", ".$this->message);
         $this->sendMessage("Hello ".strtoupper($thisuser->name).", ".$this->message, $recipients);
@@ -8585,7 +8620,15 @@ class AdminController extends Controller
         $this->subject = $subject;
         $this->message = $message;
 
-        $recipients = "+".$thisuser->code.$thisuser->telephone;
+        $usersPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+        if(isset($usersPhone)){
+
+            $recipients = $thisuser->telephone;
+        }
+        else{
+            $recipients = "+".$thisuser->code.$thisuser->telephone;
+        }
 
         $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", ".$message);
         $this->sendMessage("Hello ".strtoupper($thisuser->name).", ".$message, $recipients);
@@ -8693,7 +8736,15 @@ class AdminController extends Controller
         $this->subject = $subject;
         $this->message = $message;
 
-        $recipients = "+".$thisuser->code.$thisuser->telephone;
+        $usersPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+        if(isset($usersPhone)){
+
+            $recipients = $thisuser->telephone;
+        }
+        else{
+            $recipients = "+".$thisuser->code.$thisuser->telephone;
+        }
 
         $this->createNotification($thisuser->ref_code, $message);
         $this->sendMessage($message, $recipients);
@@ -8706,7 +8757,15 @@ class AdminController extends Controller
         $this->subject = $subject2;
         $this->message = $message2;
 
-        $recipients2 = "+".$recuser->code.$recuser->telephone;
+        $users2Phone = User::where('email', $recuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+        if(isset($users2Phone)){
+
+            $recipients2 = $recuser->telephone;
+        }
+        else{
+            $recipients2 = "+".$recuser->code.$recuser->telephone;
+        }
 
         $this->createNotification($recuser->ref_code, $message);
         $this->sendMessage($message2, $recipients2);

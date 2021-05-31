@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Twilio\Rest\Client;
 use App\Notifications as Notifications;
 use App\FeeTransaction as FeeTransaction;
+use App\TransactionCost as TransactionCost;
 
 use App\Classes\Mobile_Detect;
 
@@ -140,7 +141,7 @@ class Controller extends BaseController
 
         try{
             // Get Minimum Withdrawal
-            $minimumBalance = TransactionCost::where('method', 'Minimum')->where('country', $country)->first();
+            $minimumBalance = TransactionCost::where('method', 'Wallet Minimum Balance')->where('country', $country)->first();
 
             if(isset($minimumBalance) == true){
                 $data = $minimumBalance->fixed;
@@ -185,8 +186,7 @@ class Controller extends BaseController
 
     }
 
-    public function sendMessage($message, $recipients)
-    {
+    public function sendMessage($message, $recipients){
 
         try {
             $account_sid = env("TWILIO_SID");

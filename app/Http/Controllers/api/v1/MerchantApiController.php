@@ -231,16 +231,32 @@ class MerchantApiController extends Controller
 
                                     $this->sendEmail($this->email, "Payment Successful");
 
-
+                                    
 
                                     $sendMsg = "Hi ".$thisuser->name.", You have made a ".$activity." Your new Wallet balance is ".$thisuser->currencyCode.' '.number_format($wallet_balance, 2).". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us. PaySprint Team";
-                                    $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+
+                                    $getPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                                    if(isset($getPhone)){
+
+                                        $sendPhone = $thisuser->telephone;
+                                    }
+                                    else{
+                                        $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+                                    }
 
                                     $this->sendMessage($sendMsg, $sendPhone);
 
+                                    $merchantgetPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                                    if(isset($merchantgetPhone)){
 
+                                        $recPhone = $thismerchant->telephone;
+                                    }
+                                    else{
+                                        $recPhone = "+".$thismerchant->code.$thismerchant->telephone;
+                                    }
                                     
-                                    $recPhone = "+".$thismerchant->code.$thismerchant->telephone;
 
                                     $this->sendMessage($recMsg, $recPhone);
 
@@ -394,13 +410,28 @@ class MerchantApiController extends Controller
 
 
                                     $sendMsg = "Hi ".$thisuser->name.", You have made a ".$activity." Your new Wallet balance is ".$thisuser->currencyCode.' '.number_format($wallet_balance, 2).". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us. PaySprint Team";
-                                    $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+
+                                    $getPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                                    if(isset($getPhone)){
+
+                                        $sendPhone = $thisuser->telephone;
+                                    }
+                                    else{
+                                        $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+                                    }
 
                                     $this->sendMessage($sendMsg, $sendPhone);
 
+                                    $merchantgetPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                                    if(isset($merchantgetPhone)){
 
-                                    
-                                    $recPhone = "+".$thismerchant->code.$thismerchant->telephone;
+                                        $recPhone = $thismerchant->telephone;
+                                    }
+                                    else{
+                                        $recPhone = "+".$thismerchant->code.$thismerchant->telephone;
+                                    }
 
                                     $this->sendMessage($recMsg, $recPhone);
 
@@ -766,8 +797,17 @@ class MerchantApiController extends Controller
 
                             $this->sendMessage($sendMsg, $sendPhone);
 
-                            
-                            $recPhone = "+".$thismerchant->code.$thismerchant->telephone;
+
+                            $merchantgetPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                            if(isset($merchantgetPhone)){
+
+                                $recPhone = $thismerchant->telephone;
+                            }
+                            else{
+                                $recPhone = "+".$thismerchant->code.$thismerchant->telephone;
+                            }
+
 
                             $this->sendMessage($recMsg, $recPhone);
                             

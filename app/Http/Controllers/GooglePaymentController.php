@@ -338,16 +338,28 @@ class GooglePaymentController extends Controller
             
 
             $sendMsg = "Hi ".$user->name.", You have made a ".$activity.". Your new wallet balance is ".$req->currency.' '.number_format($wallet_balance, 2).". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us. PaySprint Team";
-            $sendPhone = "+".$user->code.$user->telephone;
+
+            $usersPhone = User::where('email', $user->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+            if(isset($usersPhone)){
+
+                $sendPhone = $user->telephone;
+            }
+            else{
+                $sendPhone = "+".$user->code.$user->telephone;
+            }
 
 
-                
+            $merchantPhone = User::where('email', $client->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+            if(isset($merchantPhone)){
 
+                $recPhone = $client->telephone;
+            }
+            else{
+                $recPhone = "+".$client->code.$client->telephone;
+            }
 
-
-            
-
-            $recPhone = "+".$client->code.$client->telephone;
 
             $this->createNotification($user->ref_code, $sendMsg);
 
@@ -605,7 +617,16 @@ class GooglePaymentController extends Controller
                                 $this->message = '<p>You have sent <strong>'.$foreigncurrency[0]->currencies[0]->code.' '.number_format($req->amount, 2).'</strong> to '.$req->fname.' '.$req->lname.'. You now have <strong>'.$foreigncurrency[0]->currencies[0]->code.' '.number_format($wallet_balance, 2).'</strong> balance in your account</p>';
 
                                 $sendMsg = 'You have sent '.$foreigncurrency[0]->currencies[0]->code.' '.number_format($req->amount, 2).' to '.$req->fname.' '.$req->lname.'. You now have '.$foreigncurrency[0]->currencies[0]->code.' '.number_format($wallet_balance, 2).' balance in your account';
-                                $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+
+                                $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                                if(isset($userPhone)){
+
+                                    $sendPhone = $thisuser->telephone;
+                                }
+                                else{
+                                    $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+                                }
                                 
 
                                 $this->sendEmail($this->email, "Fund remittance");
