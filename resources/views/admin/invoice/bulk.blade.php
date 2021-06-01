@@ -115,6 +115,7 @@
                                             @foreach ($data['getTax'] as $tax)
                                                 <option value="{{ $tax->id }}">{{ number_format($tax->rate, 2).'% '.$tax->name.' -  ('.$tax->agency.')' }}</option>
                                             @endforeach
+                                            <option value="No Tax">No Tax</option>
                                         @else
                                             <option value="Set Up Tax">Set Up Tax</option>
                                         @endif

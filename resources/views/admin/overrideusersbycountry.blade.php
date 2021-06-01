@@ -4,21 +4,19 @@
 
 
 <?php use \App\Http\Controllers\User; ?>
-<?php use \App\Http\Controllers\Admin; ?>
 <?php use \App\Http\Controllers\OrganizationPay; ?>
 <?php use \App\Http\Controllers\ClientInfo; ?>
-<?php use \App\Http\Controllers\AnonUsers; ?>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         Platform Activity Log
+         All Override Users By Country
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Platform Activity Log</li>
+        <li class="active">All Override Users By Country</li>
       </ol>
     </section>
 
@@ -28,7 +26,11 @@
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Platform Activity Log</h3>
+              <div class="row">
+                <div class="col-md-2 col-md-offset-0">
+                <button class="btn btn-secondary btn-block bg-red" onclick="goBack()"><i class="fas fa-chevron-left"></i> Go back</button>
+            </div>
+            </div>
               
             </div>
             <!-- /.box-header -->
@@ -47,65 +49,45 @@
                   </div>
                 <tr>
                   <th>S/N</th>
-                  <th>Name</th>
-                  <th>Email/Username</th>
-                  <th>Account Type</th>
-                  <th>Activity</th>
-                  <th>Platform</th>
-                  <th>Date & Time</th>
+                  <th>Country</th>
+                  <th>Total Count</th>
+                  <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                    @if (count($data['activity']) > 0)
+                    @if (count($allusers) > 0)
                     <?php $i = 1;?>
-                        @foreach ($data['activity'] as $data)
+                        @foreach ($allusers as $data)
                         <tr>
                             <td>{{ $i++ }}</td>
+                            
+                            <td>{{ $data->country }}</td>
 
-                            @if($user = \App\User::where('ref_code', $data->ref_code)->first())
-
-                                @php
-                                    $name = $user->name;
-                                    $email = $user->email;
-                                    $accountType = $user->accountType;
-                                @endphp
-
-                                @else
-
-                                @if($annonUser = \App\AnonUsers::where('ref_code', $data->ref_code)->first())
-
-                                  @php
-                                      $name = $annonUser->name;
-                                      $email = $annonUser->email;
-                                      $accountType = $annonUser->accountType;
-                                  @endphp
-
-                                @endif
-
-
+                            @if($allusersdata = \App\User::where('country', $data->country)->where('accountLevel', 2)->count())
+                                <td>{{ $allusersdata }}</td>
                             @endif
 
-
-
-                            <td>{{ $name }}</td>
-                            <td>{{ $email }}</td>
-                            <td>{{ $accountType }}</td>
                             
-                            <td>{{ $data->activity }}</td>
-                            <td>{{ strtoupper($data->platform) }}</td>
-                            <td>{{ date('d/M/Y h:i a', strtotime($data->created_at)) }}</td>
+
+                            <td>
+
+                              <a href="{{ route('overrideusers', 'country='.$data->country) }}" type="button" class="btn btn-primary">View details</a>
+
+                              
+                            </td>
+
+
                         </tr>
                         @endforeach
 
                         
-                         
+
                     @else
                     <tr>
-                        <td colspan="6" align="center">No record available</td>
+                        <td colspan="4" align="center">No record available</td>
                     </tr>
                     @endif
                 </tbody>
-
               </table>
             </div>
             <!-- /.box-body -->

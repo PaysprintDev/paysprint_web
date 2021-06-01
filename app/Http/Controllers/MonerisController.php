@@ -370,7 +370,17 @@ else{
 
                             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                            // Get My Wallet Balance
+                            if($thisuser->approval == 0 || $thisuser->accountLevel <= 2){
+
+                                $response = 'You cannot pay invoice at the moment because your account is not yet approved.';
+
+                                $data = [];
+                                $status = 400;
+                                $message = $response;
+
+
+                            }else{
+                                                            // Get My Wallet Balance
                             $walletBalance = $thisuser->wallet_balance - $req->amount;
 
                             User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBalance]);
@@ -616,6 +626,11 @@ else{
                         $message = $response;
 
                     }
+                            }
+
+
+
+
                 } catch (\Throwable $th) {
                     $data = [];
                     $status = 400;
@@ -874,7 +889,16 @@ else{
                         $message = "Insufficient amount to withdraw";
                         $status = 400;
 
-                        Log::info('OOps!, '.$thisuser->name.' has '.$message);
+                        Log::info('Oops!, '.$thisuser->name.' has '.$message);
+                    }
+                    elseif($thisuser->approval == 0 || $thisuser->accountLevel <= 2){
+                        // Cannot withdraw minimum balance
+
+                        $data = [];
+                        $message = "You cannot send money at the moment because your account is not yet approved.";
+                        $status = 400;
+
+                        Log::info('Oops!, '.$thisuser->name.' has '.$message);
                     }
                     elseif($thisuser->wallet_balance <= $minBal){
                         // Cannot withdraw minimum balance
@@ -883,7 +907,7 @@ else{
                         $message = "Your wallet balance must be more than ".$req->currencyCode.' '.number_format($minBal, 2)." before you can make withdrawal.";
                         $status = 400;
 
-                        Log::info('OOps!, '.$thisuser->name.' has '.$message);
+                        Log::info('Oops!, '.$thisuser->name.' has '.$message);
                     }
                     else{
 
@@ -920,6 +944,7 @@ else{
                                     if(Hash::check($req->transaction_pin, $thisuser->transaction_pin)){
 
 
+
                                         /*
                                             1. Check card detail
                                             2. If EXBC Prepaid Card, take to EXBC Endpoint to withdraw
@@ -929,7 +954,7 @@ else{
                                         // Get Card Details
                                         $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
 
-                                        if(isset($cardDetails) == true && $cardDetails->card_provider == "EXBC Prepaid Card"){
+                                        if(isset($cardDetails) == true && $cardDetails->card_provider == "EXBC Prepaid Card" || isset($cardDetails) == true && $cardDetails->card_provider == "Prepaid Card"){
 
 
                                             $transaction_id = "wallet-".date('dmY').time();
@@ -1101,7 +1126,16 @@ else{
 
 
                                             $sendMsg = 'Hello '.strtoupper($thisuser->name).', The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Bank Account '.$bankDetails->bankName.' and Account Number: '.$bankDetails->accountNumber.' has been received and will take up to 10 working days to process payment. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+
+                                            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                                            if(isset($userPhone)){
+
+                                                $sendPhone = $thisuser->telephone;
+                                            }
+                                            else{
                                                 $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+                                            }
 
                                             $this->createNotification($thisuser->ref_code, $sendMsg);
 
@@ -1190,11 +1224,11 @@ else{
                                                         $this->email = $thisuser->email;
                                                         $this->subject = $req->currencyCode.' '.number_format($req->amount, 2)." has been Withdrawn from your Wallet with PaySprint";
 
-                                                        $this->message = '<p>The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Card Name: <strong>'.$cardDetails->card_name.'</strong> and Number: <strong>'.wordwrap($cardNo, 4, '-', true).'</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your wallet.</p>';
+                                                        $this->message = '<p>The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your card, Card Name: <strong>'.strtoupper($cardDetails->card_name).'</strong> and Number: <strong>'.wordwrap($cardNo, 4, '-', true).'</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your wallet.</p>';
 
                                                         
 
-                                                        $sendMsg = 'The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your '.$cardDetails->card_name.' and Number: '.wordwrap($cardNo, 4, '-', true).' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your wallet.';
+                                                        $sendMsg = 'The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your card, Card Name: '.strtoupper($cardDetails->card_name).' and Number: '.wordwrap($cardNo, 4, '-', true).' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your wallet.';
 
                                                             $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
                                                     
@@ -1271,7 +1305,7 @@ else{
                                         // Get Card Details
                                         $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
 
-                                        if(isset($cardDetails) == true && $cardDetails->card_provider == "EXBC Prepaid Card"){
+                                        if(isset($cardDetails) == true && $cardDetails->card_provider == "EXBC Prepaid Card" || isset($cardDetails) == true && $cardDetails->card_provider == "Prepaid Card"){
 
                                             $transaction_id = "wallet-".date('dmY').time();
                                             $reference_code = "PS_".$thisuser->ref_code;
@@ -1432,7 +1466,16 @@ else{
 
 
                                             $sendMsg = 'Hello '.strtoupper($thisuser->name).', The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Bank Account '.$bankDetails->bankName.' and Account Number: '.$bankDetails->accountNumber.' has been received and will take up to 10 working days to process payment. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+
+                                            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                
+                                            if(isset($userPhone)){
+
+                                                $sendPhone = $thisuser->telephone;
+                                            }
+                                            else{
                                                 $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+                                            }
 
                                             $this->createNotification($thisuser->ref_code, $sendMsg);
 
@@ -1513,11 +1556,11 @@ else{
                                                 $this->email = $thisuser->email;
                                                 $this->subject = $req->currencyCode.' '.number_format($req->amount, 2)." has been Withdrawn from your Wallet with PaySprint";
 
-                                                $this->message = '<p>The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Card Name: <strong>'.$cardDetails->card_name.'</strong> and Number: <strong>'.wordwrap($cardNo, 4, '-', true).'</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your wallet.</p>';
+                                                $this->message = '<p>The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your card, Card Name: <strong>'.strtoupper($cardDetails->card_name).'</strong> and Number: <strong>'.wordwrap($cardNo, 4, '-', true).'</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your wallet.</p>';
 
-                                                $sendMsg = 'The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your '.$cardDetails->card_name.' and Number: '.wordwrap($cardNo, 4, '-', true).' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your wallet.';
+                                                $sendMsg = 'The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your card, Card Name: '.strtoupper($cardDetails->card_name).' and Number: '.wordwrap($cardNo, 4, '-', true).' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your wallet.';
 
-                                                    $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
                                                     
                                                 if(isset($userPhone)){
 
@@ -1568,7 +1611,7 @@ else{
                                 $message = "Withdrawal to ".strtoupper($req->card_type)." not yet activated for your country.";
                                 $status = 400;
 
-                                Log::info('OOps!, '.$thisuser->name.', '.$message);
+                                Log::info('Oops!, '.$thisuser->name.', '.$message);
                             }
 
                             

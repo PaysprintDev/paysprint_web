@@ -181,6 +181,7 @@ Route::get('allusers', ['uses' => 'AdminController@allPlatformUsers', 'as' => 'a
 
 Route::get('approvedusers', ['uses' => 'AdminController@allApprovedUsers', 'as' => 'approvedusers']);
 Route::get('pendingusers', ['uses' => 'AdminController@allPendingUsers', 'as' => 'pendingusers']);
+Route::get('overrideusers', ['uses' => 'AdminController@allOverrideUsers', 'as' => 'overrideusers']);
 
 
 Route::get('allusersbycountry', ['uses' => 'AdminController@allPlatformUsersByCountry', 'as' => 'all users by country']);
@@ -188,6 +189,7 @@ Route::get('allusersbycountry', ['uses' => 'AdminController@allPlatformUsersByCo
 
 Route::get('approvedusersbycountry', ['uses' => 'AdminController@allApprovedUsersByCountry', 'as' => 'approved users by country']);
 Route::get('pendingusersbycountry', ['uses' => 'AdminController@allPendingUsersByCountry', 'as' => 'pending users by country']);
+Route::get('overrideusersbycountry', ['uses' => 'AdminController@allOverrideUsersByCountry', 'as' => 'override users by country']);
 
 
 Route::get('usermoredetail/{id}', ['uses' => 'AdminController@userMoreDetail', 'as' => 'user more detail']);
@@ -292,11 +294,23 @@ Route::prefix('Admin/merchant')->group(function () {
 Route::prefix('Admin/performance/report')->group(function () {
 
 	Route::get('sentinvoice', ['uses' => 'AdminController@sentInvoiceReport', 'as' => 'sent invoice']);
+	Route::get('sentinvoicebydate', ['uses' => 'AdminController@sentInvoiceReportByDate', 'as' => 'sent invoice by date']);
+
 
 
 	Route::get('paidinvoice', ['uses' => 'AdminController@paidInvoiceReport', 'as' => 'paid invoice']);
+	Route::get('paidinvoicebydate', ['uses' => 'AdminController@paidInvoiceReportByDate', 'as' => 'paid invoice by date']);
+
+
+
 	Route::get('unpaidinvoice', ['uses' => 'AdminController@unpaidInvoiceReport', 'as' => 'unpaid invoice']);
+	Route::get('unpaidinvoicebydate', ['uses' => 'AdminController@unpaidInvoiceReportByDate', 'as' => 'unpaid invoice by date']);
+
+
 	Route::get('customerbalance', ['uses' => 'AdminController@customerBalanceReport', 'as' => 'customer balance report']);
+	Route::get('customerbalancebydate', ['uses' => 'AdminController@customerBalanceReportByDate', 'as' => 'customer balance report by date']);
+
+
 	Route::get('tax', ['uses' => 'AdminController@taxReport', 'as' => 'tax report']);
 	Route::get('invoicetype', ['uses' => 'AdminController@invoiceTypeReport', 'as' => 'invoice type']);
 	Route::get('recurring', ['uses' => 'AdminController@recurringReport', 'as' => 'recurring invoice']);

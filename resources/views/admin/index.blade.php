@@ -208,9 +208,9 @@
           <!-- small box -->
           <div class="small-box bg-green">
             <div class="inner">
-              <h3>@if($approvalAccept = \App\User::where('accountLevel', '>', 0)->count()) {{ $approvalAccept }} @endif</h3>
+              <h3>@if($approvalAccept = \App\User::where('accountLevel', '>', 2)->where('approval', 1)->count()) {{ $approvalAccept }} @endif</h3>
 
-              <p>Approved Users</p>
+              <p>Matched Users</p>
             </div>
             <div class="icon">
               <i class="ion ion-person-add"></i>
@@ -226,13 +226,30 @@
             <div class="inner">
               <h3>@if($approvalPending = \App\User::where('accountLevel', 0)->count()) {{ $approvalPending }} @endif</h3>
 
-              <p>Pending Users</p>
+              <p>Unmatched Users</p>
 
             </div>
             <div class="icon">
               <i class="ion ion-person-add"></i>
             </div>
             <a href="{{ route('pending users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+
+
+          <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-blue">
+            <div class="inner">
+              <h3>@if($override = \App\User::where('accountLevel', 2)->where('approval', 0)->count()) {{ $override }}  @else 0 @endif</h3>
+
+              <p>Override Level 1</p>
+
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('override users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
 

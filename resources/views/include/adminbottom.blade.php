@@ -161,6 +161,9 @@
       runUsercheck(phonenumber, 'telephone');
   });
 
+  
+
+
   });
 
 
@@ -1784,11 +1787,32 @@ $('#single_tax').change(function(){
   else if($('#single_tax').val() == "Set Up Tax"){
     location.href = "{{ route('setup tax') }}";
   }
+  else if($('#single_tax').val() == "No Tax"){
+    $('#single_tax_amount').val(0.00);
+    $('#single_total_amount').val(0.00);
+  }
   else{
-    runTax();
+
+    if($('#single_amount').val() != ""){
+        runTax();
+
+    }
+
+
   }
 
 });
+
+  $('#single_amount').on("keyup", function() {
+
+    if($('#single_tax').val() != "" && $('#single_amount').val() != ""){
+        runTax();
+    }
+    else if($('#single_tax').val() != "" && $('#single_amount').val() == ""){
+      swal('Oops!', 'Please specify an amount', 'info');
+    }
+
+  });
 
 
 function runTax(){

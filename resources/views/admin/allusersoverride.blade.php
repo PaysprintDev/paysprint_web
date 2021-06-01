@@ -12,10 +12,10 @@
     <section class="content-header">
       <h1>
         @if (Request::get('country') != null)
-         All Pending Approvals In {{ Request::get('country') }}
+         All Override Approvals In {{ Request::get('country') }}
 
         @else
-         All Pending Approvals
+         All Override Approvals
             
         @endif
       </h1>
@@ -23,10 +23,10 @@
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
         <li class="active">
           @if (Request::get('country') != null)
-         All Pending Approvals In {{ Request::get('country') }}
+         All Override Approvals In {{ Request::get('country') }}
 
         @else
-         All Pending Approvals
+         All Override Approvals
             
         @endif
         </li>
@@ -76,7 +76,7 @@
                 </thead>
                 <tbody>
 
-                  @if($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', 0)->where('approval', 0)->get())
+                  @if($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', 2)->where('approval', 0)->get())
 
 
                     @if (count($allusersdata) > 0)

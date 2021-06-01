@@ -130,7 +130,20 @@
                                 {{ date('d/M/Y h:i:a', strtotime($datainfo->created_at)) }}
                             </td>
 
-                            <td style="color: {{ ($datainfo->approval == 1) ? 'green' : 'red' }}; font-weight: bold;" align="center">{{ ($datainfo->approval == 1) ? 'Approved' : 'Not approved' }}</td>
+
+                            @if ($datainfo->approval == 1 && $datainfo->accountLevel > 0)
+
+                            <td style="color: green; font-weight: bold;" align="center">Approved</td>
+                                
+                            @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)
+                            <td style="color: navy; font-weight: bold;" align="center">Override Level 1</td>
+
+                            @else
+                            <td style="color: red; font-weight: bold;" align="center">Not Approved</td>
+                                
+                            @endif
+
+                            
                             
                             <td align="center">
 
@@ -140,7 +153,22 @@
                                {{-- <a href="javascript:void()" onclick="checkverification('{{ $datainfo->id }}')"><i class="fas fa-user-check text-success" title="Approve Account"></i> <img class="spinvery{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  --}}
 
 
-                                @if($datainfo->approval == 1) <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Disapprove"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  @else <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-primary"><i class="far fa-lightbulb text-success" style="font-size: 20px;" title="Approve"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  @endif
+                                @if($datainfo->approval == 1 && $datainfo->accountLevel > 0) 
+                                
+                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Disapprove"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  
+                                
+                                
+                                @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)
+
+                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Disapprove"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>
+
+                                @else 
+                                
+                                
+                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-primary"><i class="far fa-lightbulb text-success" style="font-size: 20px;" title="Approve"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
+                                
+                                
+                                @endif
 
                                 {{--  @if ($datainfo->approval == 1)
                                 <button class="btn btn-danger" id="processPay" onclick="approveaccount('{{ $datainfo->id }}')">Disapprove Identification <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></button>

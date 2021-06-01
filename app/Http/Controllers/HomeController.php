@@ -2605,7 +2605,7 @@ class HomeController extends Controller
                                 $title = "Oops!";
                                 $link = "contact";
                                 
-                                $resInfo = strtoupper($res->Record->RecordStatus).", Our system is unable to complete your Sign Up process at this time. You will be directed to the Contact Us page to submit your Name and email. One of our Customer Service Executives would contact you within the next 24 hours for further assistance.";
+                                $resInfo = strtoupper($res->Record->RecordStatus).", Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance. Thank You";
 
                                 User::where('id', Auth::user()->id)->update(['accountLevel' => 0, 'countryapproval' => 1]);
                                 
@@ -2627,7 +2627,7 @@ class HomeController extends Controller
                             $message = "error";
                             $title = "Oops!";
                             $link = "contact";
-                            $resInfo = "Our system is unable to complete your Sign Up process at this time. You will be directed to the Contact Us page to submit your Name and email. One of our Customer Service Executives would contact you within the next 24 hours for further assistance.";
+                            $resInfo = "Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance. Thank You";
 
                             User::where('id', Auth::user()->id)->update(['accountLevel' => 0, 'countryapproval' => 1]);
 
@@ -2690,12 +2690,18 @@ class HomeController extends Controller
 
                         $this->createNotification($userExists[0]['ref_code'], 'Hello '.$userExists[0]['name'].', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.net/contact.');
                     }
-                    elseif($userExists[0]['accountLevel'] == 0){
+                    elseif($userExists[0]['disableAccount'] == 'on'){
 
-                        $resData = ['res' => 'Hello '.$userExists[0]['name'].', Our system is unable to complete your Sign Up process at this time. Kindly Contact Us to submit your Name and email. One of our Customer Service Executives would contact you within the next 24 hours for further assistance.', 'message' => 'error'];
+                        $resData = ['res' => 'Hello '.$userExists[0]['name'].', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.net/contact.', 'message' => 'error'];
 
-                        $this->createNotification($userExists[0]['ref_code'], 'Hello '.$userExists[0]['name'].', Our system is unable to complete your Sign Up process at this time. Kindly Contact Us to submit your Name and email. One of our Customer Service Executives would contact you within the next 24 hours for further assistance.');
+                        $this->createNotification($userExists[0]['ref_code'], 'Hello '.$userExists[0]['name'].', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.net/contact.');
                     }
+                    // elseif($userExists[0]['accountLevel'] == 0){
+
+                    //     $resData = ['res' => 'Hello '.$userExists[0]['name'].', Our system is unable to complete your Sign Up process at this time. Kindly Contact Us to submit your Name and email. One of our Customer Service Executives would contact you within the next 24 hours for further assistance.', 'message' => 'error'];
+
+                    //     $this->createNotification($userExists[0]['ref_code'], 'Hello '.$userExists[0]['name'].', Our system is unable to complete your Sign Up process at this time. Kindly Contact Us to submit your Name and email. One of our Customer Service Executives would contact you within the next 24 hours for further assistance.');
+                    // }
                     else{
                         $countryInfo = $this->getCountryCode($userExists[0]['country']);
 

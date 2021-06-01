@@ -101,7 +101,17 @@
                     $email = $newuser->email;
                 @endphp
 
+            @else
+
+                @php
+                    $ref_code = "";
+                    $fname = "";
+                    $lname = "";
+                    $email = "";
+                @endphp
+
             @endif
+            
         @else
 
             @php

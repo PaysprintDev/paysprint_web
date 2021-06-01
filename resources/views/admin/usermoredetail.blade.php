@@ -153,7 +153,7 @@
                       <tr>
                         <td colspan="2">
 
-                            @if($getthisuser->approval >= 1) 
+                            @if($getthisuser->accountLevel >= 2) 
                             
                                 <a type="button" class="btn btn-danger" href="javascript:void()" onclick="checkverification('{{ $getthisuser->id }}')"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Level 1 Disapproval"></i> Level 1 Disapproval <img class="spinvery{{ $getthisuser->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
                               

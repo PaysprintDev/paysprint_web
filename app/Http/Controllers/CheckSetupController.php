@@ -623,15 +623,15 @@ class CheckSetupController extends Controller
     }
 
     public function updateExbcAccount(){
-                            // Create Statement And Credit EXBC account holder
+        // Create Statement And Credit EXBC account holder
         $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
 
         if(isset($exbcMerchant)){
 
             $transaction_id = "wallet-".date('dmY').time();
 
-            $activity = "Added ".$exbcMerchant->currencyCode.''.number_format(40, 2)." to your Wallet for EXBC Prepaid Card Request";
-            $credit = number_format(40, 2);
+            $activity = "Added ".$exbcMerchant->currencyCode.''.number_format(20, 2)." to your Wallet to load EXBC Prepaid Card";
+            $credit = 20;
             $debit = 0;
             $reference_code = $transaction_id;
             $balance = 0;
@@ -641,7 +641,7 @@ class CheckSetupController extends Controller
             $regards = $exbcMerchant->ref_code;
             $statement_route = "wallet";
 
-            $merchantwalletBal = $exbcMerchant->wallet_balance + 40;
+            $merchantwalletBal = $exbcMerchant->wallet_balance + 20;
 
                 User::where('email', 'prepaidcard@exbc.ca')->update([
                     'wallet_balance' => $merchantwalletBal
@@ -652,7 +652,7 @@ class CheckSetupController extends Controller
             // Senders statement
             $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
 
-            $sendMerchantMsg = "Hi ".$exbcMerchant->name.", ".$exbcMerchant->currencyCode." 40.00 was added to your wallet for EXBC Pepaid Card. Your new wallet balance is ".$exbcMerchant->currencyCode.' '.number_format($merchantwalletBal, 2).". Thanks.";
+            $sendMerchantMsg = "Hi ".$exbcMerchant->name.", ".$exbcMerchant->currencyCode." 20.00 was added to your wallet to load EXBC Prepaid Card. Your new wallet balance is ".$exbcMerchant->currencyCode.' '.number_format($merchantwalletBal, 2).". Thanks.";
 
             $this->createNotification($exbcMerchant->ref_code, $sendMerchantMsg);
 

@@ -151,15 +151,21 @@ class UserController extends Controller
 
                         if($info->Record->RecordStatus == "nomatch"){
                         
-                            $message = "error";
-                            $title = "Oops!";
-                            $link = "contact";
-                            $data = [];
-                            $statusCode = 400;
+                            // $message = "error";
+                            // $title = "Oops!";
+                            // $link = "contact";
+                            $message = "success";
+                            $title = "Great";
+                            $link = "/";
+                            $data = $user;
+                            $statusCode = 200;
                             
-                            $resInfo = strtoupper($info->Record->RecordStatus).", Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.";
+                            $resInfo = strtoupper($info->Record->RecordStatus).", Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance. Thank You";
 
                             User::where('id', $getcurrentUser->id)->update(['accountLevel' => 0, 'countryapproval' => 1]);
+
+
+                            $this->createNotification($newRefcode, "Hello ".$request->firstname.", Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance. Thank You");
 
                             
                         }
@@ -179,14 +185,16 @@ class UserController extends Controller
 
                     }
                     else{
-                        $message = "error";
-                        $title = "Oops!";
-                        $link = "contact";
-                        $resInfo = "Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.";
-                        $data = [];
-                        $statusCode = 400;
+                        $message = "success";
+                        $title = "Great";
+                        $link = "/";
+                        $resInfo = "Our system is yet to complete your registration. Kindly upload a copy of Government Photo ID and also take a Selfie of yourself (if using the mobile app)  and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance.";
+                        $data = $user;
+                        $statusCode = 200;
 
                         User::where('id', $getcurrentUser->id)->update(['accountLevel' => 0, 'countryapproval' => 1]);
+
+                        $this->createNotification($newRefcode, "Hello ".$request->firstname.", Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance. Thank You");
 
                         // $resp = $info->Message;
                     }
@@ -270,13 +278,13 @@ class UserController extends Controller
 
                             $this->createNotification($getUser->refCode, $message);
                         }
-                        elseif($getUser->accountLevel == 0){
-                            $data = [];
-                            $status = 400;
-                            $message = 'Hello '.$getUser->name.', Our system is unable to complete your registration. Kindly contact the admin using the contact us for further assistance.';
+                        // elseif($getUser->accountLevel == 0){
+                        //     $data = [];
+                        //     $status = 400;
+                        //     $message = 'Hello '.$getUser->name.', Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance. Thank You';
 
-                            $this->createNotification($getUser->refCode, $message);
-                        }
+                        //     $this->createNotification($getUser->refCode, $message);
+                        // }
                         else{
 
                             $countryInfo = $this->getCountryCode($getUser->country);

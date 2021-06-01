@@ -548,7 +548,18 @@ class MoneyTransferController extends Controller
                 $resData = ['data' => [], 'message' => 'Insufficient wallet balance', 'status' => $status];
             }
             else{
-                            $amount= number_format($req->amount, 2);
+                
+                
+                if($sender->approval == 0 || $sender->accountLevel <= 2){
+
+                    $status = 404;
+
+                $resData = ['data' => [], 'message' => 'You cannot send money at the moment because your account is not yet approved.', 'status' => $status];
+
+                }
+                else{
+                
+                    $amount= number_format($req->amount, 2);
 
                 $approve_commission = "Yes";
 
@@ -692,6 +703,9 @@ class MoneyTransferController extends Controller
                     }
 
                 }
+                }
+                
+
             }
 
 
