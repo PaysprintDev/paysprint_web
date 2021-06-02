@@ -313,16 +313,18 @@ class UserController extends Controller
                         }
 
                         User::where('email', $request->email)->update(['countryapproval' => 1]);
-                }
-                else{
+                    }
+                    else{
 
-                    $data = [];
-                    $status = 400;
-                    $message = 'Hello '.$getUser->name.', PaySprint is currently not available in your country. You can contact our Customer Service Executives for further enquiries. Thanks';
+                        $data = [];
+                        $status = 400;
+                        $message = 'Hello '.$getUser->name.', PaySprint is currently not available in your country. You can contact our Customer Service Executives for further enquiries. Thanks';
 
-                    User::where('email', $request->email)->update(['countryapproval' => 0]);
+                        User::where('email', $request->email)->update(['countryapproval' => 0]);
+                        
+                        $this->createNotification($getUser->refCode, "PaySprint is currently not available in your country. You can contact our Customer Service Executives for further enquiries. Thanks");
 
-                }
+                    }
 
 
 
@@ -332,7 +334,7 @@ class UserController extends Controller
                 $status = 400;
                 $message = 'Incorrect password';
 
-                $this->createNotification($getUser->ref_code, "You tried to login with an incorrect password");
+                $this->createNotification($getUser->refCode, "You tried to login with an incorrect password");
             }
 
 

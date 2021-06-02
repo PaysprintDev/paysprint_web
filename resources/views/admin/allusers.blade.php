@@ -95,6 +95,15 @@
                             <td>{{ $datainfo->email }}</td>
                             <td>{{ $datainfo->accountType }}</td>
                             <td>
+                                @if (($datainfo->avatar != null))
+                                <small style="font-weight: bold;">
+                                    Selfie : @if($datainfo->avatar != null) <a href="{{ $datainfo->avatar }}" target="_blank">View Avatar</a> @endif
+                                </small>
+                                <hr>
+                                    
+                                @endif
+
+
                                 @if (($datainfo->nin_front != null || $datainfo->nin_back != null))
                                 <small style="font-weight: bold;">
                                     Govnt. issued photo ID : @if($datainfo->nin_front != null) <a href="{{ $datainfo->nin_front }}" target="_blank">Front view</a> @endif | @if($datainfo->nin_back != null) <a href="{{ $datainfo->nin_back }}" target="_blank">Back view</a> @endif
