@@ -126,58 +126,101 @@
 </div>
 
 
-<!-- Feature section -->
-<div class="feature-section pt-14 pt-lg-21 pb-7 bg-default-6">
+
+<div class="content-section pt-13 pt-lg-12 pb-11 pb-lg-22 hover-tilt bg-default-6">
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-5 col-lg-6 col-md-8">
-                <div class="section-title text-center mb-13 mb-lg-21">
-                    <h2 class="title gr-text-4 mb-6">How does it work?</h2>
-                    <p class="gr-text-9 mb-0">We've made PaySprint simple and easy for you.</p>
-                </div>
-            </div>
-        </div>
         <div class="row align-items-center justify-content-center">
-            <div class="col-lg-4 col-md-6 mb-11 mb-lg-19 px-xs-6 px-md-6 px-lg-0 px-xl-8" data-aos="fade-right"
-                data-aos-duration="800" data-aos-once="true">
-                <div class="feature-widget text-center">
-                    <div class="widget-icon square-80 rounded-15 mx-auto mb-9 mb-lg-12 bg-blue shadow-blue">
-                        <img src="newpage/image/svg/feature8-icon1.svg" alt="">
-                    </div>
-                    <div class="widget-text">
-                        <h3 class="title gr-text-6 mb-7">Get Started</h3>
-                        <p class="gr-text-11 mb-0">Login/Sign Up for FREE.</p>
+            {{-- <div class="col-sm-10 col-md-9 col-lg-6 col-xl-5 mb-n7 mb-lg-0">
+                <div class="double-image-group position-relative" data-aos="fade-right" data-aos-duration="1000"
+                    data-aos-once="true">
+                    <img class="main-img w-100 w-lg-auto" src="newpage/image/telemedicine/png/content-3-img.png" alt="" />
+                    <div class="gr-abs-img-custom-2 animation-tilt">
+                        <img src="newpage/image/telemedicine/png/content3-img-sub.png" alt="" class="responsive-scaling">
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-4 col-md-6 mb-11 mb-lg-19 px-xs-6 px-md-6 px-lg-0 px-xl-8" data-aos="fade-right"
-                data-aos-duration="800" data-aos-delay="400" data-aos-once="true">
-                <div class="feature-widget text-center">
-                    <div class="widget-icon square-80 rounded-15 mx-auto mb-9 mb-lg-12 bg-green shadow-green">
-                        {{--  <img src="newpage/image/svg/feature8-icon2.svg" alt="">  --}}
-                        <img src="https://img.icons8.com/cotton/50/000000/money.png"/>
-                    </div>
-                    <div class="widget-text">
-                        <h3 class="title gr-text-6 mb-7">Add Money to Wallet</h3>
-                        <p class="gr-text-11 mb-0">We've prepared your wallet for you to add money.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 mb-11 mb-lg-19 px-xs-6 px-md-6 px-lg-0 px-xl-8" data-aos="fade-right"
-                data-aos-duration="800" data-aos-delay="600" data-aos-once="true">
-                <div class="feature-widget text-center">
-                    <div class="widget-icon square-80 rounded-15 mx-auto mb-9 mb-lg-12 bg-red shadow-red">
-                        <img src="newpage/image/svg/feature8-icon3.svg" alt="">
-                    </div>
-                    <div class="widget-text">
-                        <h3 class="title gr-text-6 mb-7">Send Money</h3>
-                        <p class="gr-text-11 mb-0">Send money anytime, anywhere for FREE!!.</p>
+            </div> --}}
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 offset-xl-1">
+                <div class="content-text pr-lg-7" data-aos="fade-left" data-aos-duration="1200" data-aos-once="true">
+                    <h2 class="gr-text-4 mb-8">Unique Features</h2>
+                    {{-- <p class="gr-text-9 mb-0">We've made telemedicine simple and easy for you. Create your
+                        personal room and start practicing telemedicine today. </p> --}}
+                    <div class="content-widget mt-8">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="single-widget d-flex align-items-center py-2">
+                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
+                                        <i class="icon icon-check-simple"></i>
+                                    </div>
+                                    <h3 class="w-title gr-text-8 mb-0">Unlimited Transactions.</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="single-widget d-flex align-items-center py-2">
+                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
+                                        <i class="icon icon-check-simple"></i>
+                                    </div>
+                                    <h3 class="w-title gr-text-8 mb-0">Add money to Wallet from Debit or Credit Cards.</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="single-widget d-flex align-items-center py-2">
+                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
+                                        <i class="icon icon-check-simple"></i>
+                                    </div>
+                                    <h3 class="w-title gr-text-8 mb-0">Withdraw money to EXBC Prepaid Mastercard for Free.</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="single-widget d-flex align-items-center py-2">
+                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
+                                        <i class="icon icon-check-simple"></i>
+                                    </div>
+                                    <h3 class="w-title gr-text-8 mb-0">Send money Locally and Abroad.</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="single-widget d-flex align-items-center py-2">
+                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
+                                        <i class="icon icon-check-simple"></i>
+                                    </div>
+                                    <h3 class="w-title gr-text-8 mb-0">Pay Invoice at a click of button.</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="single-widget d-flex align-items-center py-2">
+                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
+                                        <i class="icon icon-check-simple"></i>
+                                    </div>
+                                    <h3 class="w-title gr-text-8 mb-0">Create and send professional invoice on the Go.</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="single-widget d-flex align-items-center py-2">
+                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
+                                        <i class="icon icon-check-simple"></i>
+                                    </div>
+                                    <h3 class="w-title gr-text-8 mb-0">Fast-track how you get paid as a merchant.</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="single-widget d-flex align-items-center py-2">
+                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
+                                        <i class="icon icon-check-simple"></i>
+                                    </div>
+                                    <h3 class="w-title gr-text-8 mb-0">Safe and Secure- multi-level security authentications features.</h3>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+<!-- Feature section -->
+
 
 
 <!-- Content section 1 -->
@@ -463,96 +506,63 @@ PaySprint is all you need.</p>
     </div>
 </div>
 <!-- Content section 3 -->
-<div class="content-section pt-13 pt-lg-12 pb-11 pb-lg-22 hover-tilt bg-default-8">
+
+
+
+<div class="feature-section pt-14 pt-lg-21 pb-7 bg-default-8">
     <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-5 col-lg-6 col-md-8">
+                <div class="section-title text-center mb-13 mb-lg-21">
+                    <h2 class="title gr-text-4 mb-6">How does it work?</h2>
+                    <p class="gr-text-9 mb-0">We've made PaySprint simple and easy for you.</p>
+                </div>
+            </div>
+        </div>
         <div class="row align-items-center justify-content-center">
-            {{-- <div class="col-sm-10 col-md-9 col-lg-6 col-xl-5 mb-n7 mb-lg-0">
-                <div class="double-image-group position-relative" data-aos="fade-right" data-aos-duration="1000"
-                    data-aos-once="true">
-                    <img class="main-img w-100 w-lg-auto" src="newpage/image/telemedicine/png/content-3-img.png" alt="" />
-                    <div class="gr-abs-img-custom-2 animation-tilt">
-                        <img src="newpage/image/telemedicine/png/content3-img-sub.png" alt="" class="responsive-scaling">
+            <div class="col-lg-4 col-md-6 mb-11 mb-lg-19 px-xs-6 px-md-6 px-lg-0 px-xl-8" data-aos="fade-right"
+                data-aos-duration="800" data-aos-once="true">
+                <div class="feature-widget text-center">
+                    <div class="widget-icon square-80 rounded-15 mx-auto mb-9 mb-lg-12 bg-blue shadow-blue">
+                        <img src="newpage/image/svg/feature8-icon1.svg" alt="">
+                    </div>
+                    <div class="widget-text">
+                        <h3 class="title gr-text-6 mb-7">Get Started</h3>
+                        <p class="gr-text-11 mb-0">Login/Sign Up for FREE.</p>
                     </div>
                 </div>
-            </div> --}}
-            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 offset-xl-1">
-                <div class="content-text pr-lg-7" data-aos="fade-left" data-aos-duration="1200" data-aos-once="true">
-                    <h2 class="gr-text-4 mb-8">Unique Features</h2>
-                    {{-- <p class="gr-text-9 mb-0">We've made telemedicine simple and easy for you. Create your
-                        personal room and start practicing telemedicine today. </p> --}}
-                    <div class="content-widget mt-8">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="single-widget d-flex align-items-center py-2">
-                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
-                                        <i class="icon icon-check-simple"></i>
-                                    </div>
-                                    <h3 class="w-title gr-text-8 mb-0">Unlimited Transactions.</h3>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="single-widget d-flex align-items-center py-2">
-                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
-                                        <i class="icon icon-check-simple"></i>
-                                    </div>
-                                    <h3 class="w-title gr-text-8 mb-0">Add money to Wallet from Debit or Credit Cards.</h3>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="single-widget d-flex align-items-center py-2">
-                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
-                                        <i class="icon icon-check-simple"></i>
-                                    </div>
-                                    <h3 class="w-title gr-text-8 mb-0">Withdraw money to EXBC Prepaid Mastercard for Free.</h3>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="single-widget d-flex align-items-center py-2">
-                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
-                                        <i class="icon icon-check-simple"></i>
-                                    </div>
-                                    <h3 class="w-title gr-text-8 mb-0">Send money Locally and Abroad.</h3>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="single-widget d-flex align-items-center py-2">
-                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
-                                        <i class="icon icon-check-simple"></i>
-                                    </div>
-                                    <h3 class="w-title gr-text-8 mb-0">Pay Invoice at a click of button.</h3>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="single-widget d-flex align-items-center py-2">
-                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
-                                        <i class="icon icon-check-simple"></i>
-                                    </div>
-                                    <h3 class="w-title gr-text-8 mb-0">Create and send professional invoice on the Go.</h3>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="single-widget d-flex align-items-center py-2">
-                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
-                                        <i class="icon icon-check-simple"></i>
-                                    </div>
-                                    <h3 class="w-title gr-text-8 mb-0">Fast-track how you get paid as a merchant.</h3>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="single-widget d-flex align-items-center py-2">
-                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
-                                        <i class="icon icon-check-simple"></i>
-                                    </div>
-                                    <h3 class="w-title gr-text-8 mb-0">Safe and Secure- multi-level security authentications features.</h3>
-                                </div>
-                            </div>
-                        </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-11 mb-lg-19 px-xs-6 px-md-6 px-lg-0 px-xl-8" data-aos="fade-right"
+                data-aos-duration="800" data-aos-delay="400" data-aos-once="true">
+                <div class="feature-widget text-center">
+                    <div class="widget-icon square-80 rounded-15 mx-auto mb-9 mb-lg-12 bg-green shadow-green">
+                        {{--  <img src="newpage/image/svg/feature8-icon2.svg" alt="">  --}}
+                        <img src="https://img.icons8.com/cotton/50/000000/money.png"/>
+                    </div>
+                    <div class="widget-text">
+                        <h3 class="title gr-text-6 mb-7">Add Money to Wallet</h3>
+                        <p class="gr-text-11 mb-0">We've prepared your wallet for you to add money.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-11 mb-lg-19 px-xs-6 px-md-6 px-lg-0 px-xl-8" data-aos="fade-right"
+                data-aos-duration="800" data-aos-delay="600" data-aos-once="true">
+                <div class="feature-widget text-center">
+                    <div class="widget-icon square-80 rounded-15 mx-auto mb-9 mb-lg-12 bg-red shadow-red">
+                        <img src="newpage/image/svg/feature8-icon3.svg" alt="">
+                    </div>
+                    <div class="widget-text">
+                        <h3 class="title gr-text-6 mb-7">Send Money</h3>
+                        <p class="gr-text-11 mb-0">Send money anytime, anywhere for FREE!!.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+
 <!-- CTA section -->
 <div class="cta-section pt-15 pt-lg-20 pb-5 pb-lg-5 bg-pattern pattern-7" style="background-color: #f2f2f2 !important;">
     <div class="container">
