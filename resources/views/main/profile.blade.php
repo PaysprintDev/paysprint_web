@@ -86,43 +86,41 @@
                                     <ul>
 
                                         @if (Auth::user()->nin_front != null || Auth::user()->nin_back != null)
-                                        <li>Government issued photo ID: <br>
+                                        <li style="font-weight: bold;">Government issued photo ID: <br>
                                             <small style="font-weight: bold;"> <a href="{{ Auth::user()->nin_front }}" target="_blank">Front View</a> | <a href="{{ Auth::user()->nin_back }}" target="_blank">Back View</a></small>
                                              
                                          </li>
                                         @endif
-
+                                         <br>
 
                                         @if (Auth::user()->drivers_license_front != null || Auth::user()->drivers_license_back != null)
 
-                                        <li>Driver's License: <br>
+                                        <li style="font-weight: bold;">Driver's License: <br>
                                             <small style="font-weight: bold;"> <a href="{{ Auth::user()->drivers_license_front }}" target="_blank">Front View</a> | <a href="{{ Auth::user()->drivers_license_back }}" target="_blank">Back View</a> </small>
                                             
                                         </li>
 
 
                                         @endif
-
+                                        <br>
 
                                         @if (Auth::user()->international_passport_front != null || Auth::user()->international_passport_back != null)
 
-                                        <li>International Passport: <br>
+                                        <li style="font-weight: bold;">International Passport: <br>
                                             <small style="font-weight: bold;"> <a href="{{ Auth::user()->international_passport_front }}" target="_blank">Front View</a> | <a href="{{ Auth::user()->international_passport_back }}" target="_blank">Back View</a></small>
                                              
                                         </li>
 
                                         @endif
+                                        <br>
 
+                                        @if (Auth::user()->incorporation_doc_front != null)
 
-                                        @if (Auth::user()->accountType == "Business")
-                                            @if (Auth::user()->incorporation_doc_front != null || Auth::user()->incorporation_doc_back != null)
+                                        <li style="font-weight: bold;">Document: <br>
+                                            <small style="font-weight: bold;"> <a href="{{ Auth::user()->incorporation_doc_front }}" target="_blank">View document</a></small>
+                                            
+                                        </li>
 
-                                            <li>Incorporation Document: <br>
-                                                <small style="font-weight: bold;"> <a href="{{ Auth::user()->incorporation_doc_front }}" target="_blank">Front View</a> | <a href="{{ Auth::user()->incorporation_doc_back }}" target="_blank">Back View</a></small>
-                                                
-                                            </li>
-
-                                            @endif
                                         @endif
                                         
                                         
@@ -587,26 +585,24 @@
                                     </div>
 
 
-                                    @if (Auth::user()->accountType == "Business")
                                         <div class="row">
                                         <div class="col-md-12">
-                                            <b style="color: darkorange;">Upload Incorporation Document</b>
+                                            <b style="color: darkorange;">Upload Document</b>
                                         </div>
                                         <hr>
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="nin_front">Front</label>
+                                                <label for="incorporation_doc_front">Document</label>
                                                 <input type="file" class="form-control" name="incorporation_doc_front" id="incorporation_doc_front">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        {{--  <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="nin_back">Back</label>
                                                 <input type="file" class="form-control" name="incorporation_doc_back" id="incorporation_doc_back">
                                             </div>
-                                        </div>
+                                        </div>  --}}
                                     </div>
-                                    @endif
 
 
                                     <div class="form-group">

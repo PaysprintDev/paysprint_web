@@ -389,6 +389,10 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('activity', ['uses' => 'AdminController@platformActivity', 'as' => 'platform activity']);
 	Route::get('gatewayactivity', ['uses' => 'AdminController@gatewayActivity', 'as' => 'gateway activity']);
 	Route::get('allcountries', ['uses' => 'AdminController@allCountries', 'as' => 'all countries']);
+
+
+	Route::get('sendmessage', ['uses' => 'AdminController@sendUserMessage', 'as' => 'send message']);
+	Route::post('sendusermessage', ['uses' => 'AdminController@sendNewUserMessage', 'as' => 'send user message']);
 	
 });
 

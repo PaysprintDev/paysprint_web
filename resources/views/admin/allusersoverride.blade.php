@@ -128,6 +128,15 @@
                                 <hr>
                                     
                                 @endif
+
+
+                                @if (($datainfo->incorporation_doc_front != null))
+                                <small style="font-weight: bold;">
+                                    Document : @if($datainfo->incorporation_doc_front != null) <a href="{{ $datainfo->incorporation_doc_front }}" target="_blank">View Document</a> @endif
+                                </small>
+                                <hr>
+                                    
+                                @endif
                                 
 
                                 
@@ -176,6 +185,9 @@
                                 
                                 
                                 @endif
+
+
+                                <a href="{{ route('send message', 'id='.$datainfo->id) }}" class="text-info"><i class="far fa-envelope text-success" style="font-size: 20px;" title="Send Mail"></i></a> 
 
                               
                             </td>

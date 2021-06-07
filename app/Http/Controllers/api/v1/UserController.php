@@ -384,12 +384,12 @@ class UserController extends Controller
         if($request->hasFile('incorporation_doc_front')){
             $this->uploadDocument($user->id, $request->file('incorporation_doc_front'), 'document/incorporation_doc_front', 'incorporation_doc_front');
             $this->createNotification($user->refCode, "Incorporation document successfully uploaded");
-            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the front page of your incorporation document.");
+            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded your document.");
         }
-        if($request->hasFile('incorporation_doc_back')){
-            $this->uploadDocument($user->id, $request->file('incorporation_doc_back'), 'document/incorporation_doc_back', 'incorporation_doc_back');
-            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the back page of your incorporation document.");
-        }
+        // if($request->hasFile('incorporation_doc_back')){
+        //     $this->uploadDocument($user->id, $request->file('incorporation_doc_back'), 'document/incorporation_doc_back', 'incorporation_doc_back');
+        //     $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the back page of your incorporation document.");
+        // }
         if($request->hasFile('avatar')){
             $this->uploadDocument($user->id, $request->file('avatar'), 'profilepic/avatar', 'avatar');
             $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully updated your profile picture.");

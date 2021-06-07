@@ -128,6 +128,15 @@
                                 <hr>
                                     
                                 @endif
+
+
+                                @if (($datainfo->incorporation_doc_front != null))
+                                <small style="font-weight: bold;">
+                                    Document : @if($datainfo->incorporation_doc_front != null) <a href="{{ $datainfo->incorporation_doc_front }}" target="_blank">View Document</a> @endif
+                                </small>
+                                <hr>
+                                    
+                                @endif
                                 
 
                                 
@@ -156,10 +165,6 @@
                               <a href="{{ route('user more detail', $datainfo->id) }}"><i class="far fa-eye text-primary" style="font-size: 20px;" title="More details"></i></strong></a> 
 
 
-
-                               {{-- <a href="javascript:void()" onclick="checkverification('{{ $datainfo->id }}')"><i class="fas fa-user-check text-success" title="Pass Level 1"></i> <img class="spinvery{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  --}}
-
-
                                 @if($datainfo->approval == 1 && $datainfo->accountLevel > 0) 
                                 
                                 <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Disapprove Account"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  
@@ -176,6 +181,9 @@
                                 
                                 
                                 @endif
+
+
+                                <a href="{{ route('send message', 'id='.$datainfo->id) }}" class="text-info"><i class="far fa-envelope text-success" style="font-size: 20px;" title="Send Mail"></i></a> 
 
                               
                             </td>

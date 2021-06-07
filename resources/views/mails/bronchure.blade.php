@@ -318,10 +318,14 @@ Download PaySprint App today on <br> <ul style="
     list-style: none;
 ">
     
-    <li><img id="1617200960035100001_imgsrc_url_1" alt="Play Store" style="width :  150px; " src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/google-play-soon_miudnn.png"></li>
+                                                            <li>
+                                                              <a href="https://play.google.com/store/apps/details?id=com.fursee.damilare.sprint_mobile"><img id="1617200960035100001_imgsrc_url_1" alt="Play Store" style="width :  150px; " src="https://res.cloudinary.com/pilstech/image/upload/v1623072511/paysprint_asset/googlePAY_c60zhd.png"></a>
+                                                            </li>
 
     <li>
-<img id="1617200960035100001_imgsrc_url_2" alt="App Store" style="width :  125px; " src="https://res.cloudinary.com/pilstech/image/upload/v1616175829/Coming_Soon_to_the_App_Store_izz7ir.png"></li>
+
+<a href="https://apps.apple.com/gb/app/paysprint/id1567742130"><img id="1617200960035100001_imgsrc_url_2" alt="App Store" style="width :  150px; " src="https://res.cloudinary.com/pilstech/image/upload/v1623072511/paysprint_asset/appleStore_yy6tld.png"></a>
+    </li>
 </ul> <br>
 Visit our website, <a href="{{ route('home') }}">www.paysprint.net</a> to open a Merchant account.
 </p>

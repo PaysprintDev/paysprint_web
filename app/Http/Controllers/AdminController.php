@@ -69,6 +69,9 @@ use App\Tax as Tax;
 
 use App\AllCountries as AllCountries;
 
+use App\InAppMessage as InAppMessage;
+
+
 use App\MonerisActivity as MonerisActivity;
 
 
@@ -2499,8 +2502,86 @@ class AdminController extends Controller
 
     }
 
+
+
+
+    public function sendUserMessage(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'allthecountries' => $this->getAllCountries(),
+                'messageUser' => $this->allUserMessage(),
+                'user' => $this->thisparticularUser($req->get('id'))
+            );
+
+
+            
+            return view('admin.pages.sendmessage')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
     public function getAllCountries(){
         $data = AllCountries::orderBy('approval', 'DESC')->get();
+
+        return $data;
+    }
+
+
+    public function allUserMessage(){
+        $data = InAppMessage::orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
+
+    public function thisparticularUser($id){
+        $data = User::where('id', $id)->first();
 
         return $data;
     }
@@ -9182,6 +9263,43 @@ class AdminController extends Controller
 
         return $this->returnJSON($resData, 200);
 
+    }
+
+
+    public function sendNewUserMessage(Request $req){
+
+
+        $user = User::where('email', $req->send_to)->first();
+
+        if(isset($user)){
+
+            // Send Message
+
+            InAppMessage::insert([
+                'send_to' => $req->send_to,
+                'subject' => $req->subject,
+                'message' => $req->message,
+            ]);
+
+            $this->name = $user->name;
+            $this->to = $user->email;
+            
+            $this->subject = $req->subject;
+            $this->message = $req->message;
+
+
+            $this->sendEmail($this->to, "Refund Request");
+
+            $resData = "Message Sent";
+            $resp = "success";
+        }
+        else{
+            $resData = "We cannot locate this receiver information!";
+            $resp = "error";
+        }
+
+
+        return redirect()->back()->with($resp, $resData);
     }
 
 
