@@ -155,11 +155,11 @@
 
                             @if($getthisuser->accountLevel >= 2) 
                             
-                                <a type="button" class="btn btn-danger" href="javascript:void()" onclick="checkverification('{{ $getthisuser->id }}')"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Level 1 Disapproval"></i> Level 1 Disapproval <img class="spinvery{{ $getthisuser->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
+                                <a type="button" class="btn btn-danger" onclick="checkverification('{{ $getthisuser->id }}')"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Level 1 Disapproval"></i> Level 1 Disapproval <img class="spinvery{{ $getthisuser->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
                               
                             @else
                               
-                                <a type="button" class="btn btn-primary" href="javascript:void()" onclick="checkverification('{{ $getthisuser->id }}')"><i class="far fa-lightbulb" style="font-size: 20px;" title="Level 1 Override"></i>  Level 1 Override <img class="spinvery{{ $getthisuser->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  
+                                <a type="button" class="btn btn-primary" onclick="checkverification('{{ $getthisuser->id }}')"><i class="far fa-lightbulb" style="font-size: 20px;" title="Level 1 Override"></i>  Level 1 Override <img class="spinvery{{ $getthisuser->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  
                             
                             
                             @endif

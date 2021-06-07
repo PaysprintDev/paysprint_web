@@ -1511,12 +1511,13 @@ function checkverification(id){
               spinner.removeClass('disp-0');
             },
             success: function(result){
+
               spinner.addClass('disp-0');
 
                 if (result.message == "success") {
 
                   swal(result.title, result.res, result.message);
-
+                  setTimeout(function(){ location.reload(); }, 2000);
                 }
 
                 else{

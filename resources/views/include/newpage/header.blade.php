@@ -58,7 +58,7 @@
 
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('home') }}" style="color: navy !important; text-decoration: underline">{{ "Are you a USER? ".strtoupper(" CLICK HERE") }}</a>
+                        <a class="nav-link" href="{{ route('home') }}" style="color: #000000 !important; text-decoration: underline; background-color: #e8aa07; border-radius: 10px; font-size: 17px; padding: 5px;">{{ "Are you a USER? ".strtoupper(" CLICK HERE") }}</a>
                     </li>
 
                 @endguest
@@ -364,7 +364,7 @@
 
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('merchant home') }}" style="color: navy; text-decoration: underline">{{ "Are you a Merchant? ".strtoupper(" CLICK HERE") }}</a>
+                        <a class="nav-link" href="{{ route('merchant home') }}"  style="color: #000000 !important; text-decoration: underline; background-color: #e8aa07; border-radius: 10px; font-size: 17px; padding: 5px;">{{ "Are you a Merchant? ".strtoupper(" CLICK HERE") }}</a>
                     </li>
 
 

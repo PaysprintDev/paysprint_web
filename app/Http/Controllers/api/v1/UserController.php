@@ -82,7 +82,7 @@ class UserController extends Controller
 
             if(isset($newcustomer)){
 
-                    $user = User::create(['code' => $newcustomer->code, 'ref_code' => $newcustomer->ref_code, 'name' => $newcustomer->name, 'email' => $newcustomer->email, 'password' => Hash::make($request->password), 'address' => $newcustomer->address, 'city' => $request->city, 'state' => $request->state, 'country' => $newcustomer->country, 'accountType' => 'Individual', 'api_token' => uniqid().md5($request->email), 'telephone' => $newcustomer->telephone, 'wallet_balance' => $newcustomer->wallet_balance, 'approval' => 0, 'currencyCode' => $mycode[0]->currencies[0]->code, 'currencySymbol' => $mycode[0]->currencies[0]->symbol, 'dayOfBirth' => $request->dayOfBirth, 'monthOfBirth' => $request->monthOfBirth, 'yearOfBirth' => $request->yearOfBirth, 'cardRequest' => 0, 'platform' => 'mobile']);
+                    $user = User::create(['code' => $newcustomer->code, 'ref_code' => $newcustomer->ref_code, 'name' => $newcustomer->name, 'email' => $newcustomer->email, 'password' => Hash::make($request->password), 'address' => $newcustomer->address, 'city' => $request->city, 'state' => $request->state, 'country' => $newcustomer->country, 'accountType' => 'Individual', 'api_token' => uniqid().md5($request->email), 'telephone' => $newcustomer->telephone, 'wallet_balance' => $newcustomer->wallet_balance, 'approval' => 0, 'currencyCode' => $mycode[0]->currencies[0]->code, 'currencySymbol' => $mycode[0]->currencies[0]->symbol, 'dayOfBirth' => $request->dayOfBirth, 'monthOfBirth' => $request->monthOfBirth, 'yearOfBirth' => $request->yearOfBirth, 'cardRequest' => 0, 'platform' => 'mobile', 'accountLevel' => 2]);
 
                     $getMoney = Statement::where('user_id', $newcustomer->email)->get();
 
@@ -119,7 +119,8 @@ class UserController extends Controller
                     'monthOfBirth' => $request->monthOfBirth, 
                     'yearOfBirth' => $request->yearOfBirth, 
                     'cardRequest' => 0, 
-                    'platform' => 'mobile'
+                    'platform' => 'mobile', 
+                    'accountLevel' => 2
                 ]);
             }
 
@@ -178,7 +179,7 @@ class UserController extends Controller
                             $statusCode = 200;
 
                             // Udpate User Info
-                            User::where('id', $getcurrentUser->id)->update(['accountLevel' => 1, 'countryapproval' => 1]);
+                            User::where('id', $getcurrentUser->id)->update(['accountLevel' => 3, 'approval' => 1, 'countryapproval' => 1]);
 
                             $this->createNotification($newRefcode, "Hello ".$request->firstname.", PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!. Welcome on board.");
                         }

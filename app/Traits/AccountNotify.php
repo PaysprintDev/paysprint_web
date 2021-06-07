@@ -46,14 +46,17 @@ trait AccountNotify{
                     $sms = "We detected a login into your account from an unrecognized device on ".date('l', strtotime($date)).", ".$date." at ".date('h:ia')."\n\nOperating System: ".$OS." \n\nLocation: ".$city.", ".$country." (IP: ".$ip."). \n\nNote: Location is based on internet service provider information. \n\nIf it was you, please disregard this email. If it wasn't you, please click the link https://paysprint.net/password/reset to secure your account, as someone else may be accessing it. \n\nThanks \n\nThe PaySprint Security Team \n\nPlease note, PaySprint will never request your login information through email.";
                 }
                 else{
-                    // Send Mail
-
-                    $message = "We noticed a recent login to your PaySprint account on ".date('l', strtotime($date)).", ".$date." at ".date('h:ia')."<br><br><br> Operating System: ".$OS." <br><br> Location: ".$city.", ".$country." (IP: ".$ip."). <br><br> Note: Location is based on internet service provider information. <br><br> If it was you, please disregard this email. <br> If it wasn't you, please <a href='https://paysprint.net/password/reset'>secure your account</a>, as someone else may be accessing it. <br><br> Thanks <br> The PaySprint Security Team <br><br> Please note, PaySprint will never request your login information through email.";
-
-
-                    $sms = "We noticed a recent login to your PaySprint account on ".date('l', strtotime($date)).", ".$date." at ".date('h:ia')."\n\nOperating System: ".$OS." \n\nLocation: ".$city.", ".$country." (IP: ".$ip."). \n\nNote: Location is based on internet service provider information. \n\nIf it was you, please disregard this email. If it wasn't you, please click the link https://paysprint.net/password/reset to secure your account, as someone else may be accessing it. \n\nThanks. \n\nThe PaySprint Security Team \n\nPlease note, PaySprint will never request your login information through email.";
-
+                    // Do nothing
                 }
+                // else{
+                //     // Send Mail
+
+                //     $message = "We noticed a recent login to your PaySprint account on ".date('l', strtotime($date)).", ".$date." at ".date('h:ia')."<br><br><br> Operating System: ".$OS." <br><br> Location: ".$city.", ".$country." (IP: ".$ip."). <br><br> Note: Location is based on internet service provider information. <br><br> If it was you, please disregard this email. <br> If it wasn't you, please <a href='https://paysprint.net/password/reset'>secure your account</a>, as someone else may be accessing it. <br><br> Thanks <br> The PaySprint Security Team <br><br> Please note, PaySprint will never request your login information through email.";
+
+
+                //     $sms = "We noticed a recent login to your PaySprint account on ".date('l', strtotime($date)).", ".$date." at ".date('h:ia')."\n\nOperating System: ".$OS." \n\nLocation: ".$city.", ".$country." (IP: ".$ip."). \n\nNote: Location is based on internet service provider information. \n\nIf it was you, please disregard this email. If it wasn't you, please click the link https://paysprint.net/password/reset to secure your account, as someone else may be accessing it. \n\nThanks. \n\nThe PaySprint Security Team \n\nPlease note, PaySprint will never request your login information through email.";
+
+                // }
 
 
 

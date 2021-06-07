@@ -7720,7 +7720,7 @@ class AdminController extends Controller
                         $api_token = uniqid().md5($req->email).time();
 
 
-                        $data = ['code' => $mycode[0]->callingCodes[0], 'ref_code' => $req->ref_code, 'businessname' => $req->business_name, 'name' => $getanonuser->name, 'email' => $getanonuser->email, 'password' => Hash::make($req->password), 'address' => $req->street_number.' '.$req->street_name.', '.$req->city.' '.$req->state.' '.$req->country, 'telephone' => $getanonuser->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $getanonuser->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'wallet_balance' => $getanonuser->wallet_balance, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web'];
+                        $data = ['code' => $mycode[0]->callingCodes[0], 'ref_code' => $req->ref_code, 'businessname' => $req->business_name, 'name' => $getanonuser->name, 'email' => $getanonuser->email, 'password' => Hash::make($req->password), 'address' => $req->street_number.' '.$req->street_name.', '.$req->city.' '.$req->state.' '.$req->country, 'telephone' => $getanonuser->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $getanonuser->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'wallet_balance' => $getanonuser->wallet_balance, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2];
 
 
                         User::updateOrCreate(['email' => $getanonuser->email], $data);
@@ -7789,7 +7789,7 @@ class AdminController extends Controller
                                         $resInfo = strtoupper($res->Record->RecordStatus).", Congratulations!!!. Your account has been approved. Kindly complete the Quick Set up to enjoy the full benefits of  PaySprint.";
 
                                         // Udpate User Info
-                                        User::where('id', $getMerchant->id)->update(['accountLevel' => 1, 'countryapproval' => 1]);
+                                        User::where('id', $getMerchant->id)->update(['accountLevel' => 3, 'approval' => 1, 'countryapproval' => 1]);
                                     }
 
                                 }
@@ -7883,7 +7883,7 @@ class AdminController extends Controller
                     $api_token = uniqid().md5($req->email).time();
 
 
-                        $data = ['code' => $mycode[0]->callingCodes[0], 'ref_code' => $newRefcode, 'businessname' => $req->business_name, 'name' => $req->firstname.' '.$req->lastname, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number.' '.$req->street_name.', '.$req->city.' '.$req->state.' '.$req->country, 'telephone' => $req->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web'];
+                        $data = ['code' => $mycode[0]->callingCodes[0], 'ref_code' => $newRefcode, 'businessname' => $req->business_name, 'name' => $req->firstname.' '.$req->lastname, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number.' '.$req->street_name.', '.$req->city.' '.$req->state.' '.$req->country, 'telephone' => $req->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2];
 
 
                         User::updateOrCreate(['email' => $req->email], $data);
@@ -7913,16 +7913,16 @@ class AdminController extends Controller
 
                                     $result = $this->transStatus($info->TransactionID);
 
-                                    $res = $this->getTransRec($result->TransactionRecordId);
+                                    // $res = $this->getTransRec($result->TransactionRecordId);
 
 
-                                    if($res->Record->RecordStatus == "nomatch"){
+                                    if($info->Record->RecordStatus == "nomatch"){
                                     
                                         $message = "success";
                                         $title = "Great";
                                         $link = "Admin";
                                         
-                                        $resInfo = strtoupper($res->Record->RecordStatus).", Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance. Thank You";
+                                        $resInfo = strtoupper($info->Record->RecordStatus).", Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance. Thank You";
                                         User::where('id', $getMerchant->id)->update(['accountLevel' => 0, 'countryapproval' => 1]);
                                         
                                     }
@@ -7930,10 +7930,10 @@ class AdminController extends Controller
                                         $message = "success";
                                         $title = "Great";
                                         $link = "Admin";
-                                        $resInfo = strtoupper($res->Record->RecordStatus).", Congratulations!!!. Your account has been approved. Kindly complete the Quick Set up to enjoy the full benefits of PaySprint.";
+                                        $resInfo = strtoupper($info->Record->RecordStatus).", Congratulations!!!. Your account has been approved. Kindly complete the Quick Set up to enjoy the full benefits of PaySprint.";
 
                                         // Udpate User Info
-                                        User::where('id', $getMerchant->id)->update(['accountLevel' => 1, 'countryapproval' => 1]);
+                                        User::where('id', $getMerchant->id)->update(['accountLevel' => 3, 'approval' => 1, 'countryapproval' => 1]);
                                     }
 
                                 }
@@ -8875,7 +8875,7 @@ class AdminController extends Controller
 
 
         $data = $user->where('id', $req->id)->update(['accountLevel' => 2]);
-        $message = "success";
+        $successmessage = "success";
         $title = "Great";
 
         $user = $user->where('id', $req->id)->first();
@@ -8909,7 +8909,7 @@ class AdminController extends Controller
 
         $this->sendEmail($this->to, "Refund Request");
         
-        $resData = ['res' => $data, 'message' => $message, 'title' => $title];
+        $resData = ['res' => 'Successfully updated!', 'message' => $successmessage, 'title' => $title];
 
         return $this->returnJSON($resData, 200);
 

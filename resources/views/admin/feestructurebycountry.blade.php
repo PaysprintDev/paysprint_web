@@ -1,5 +1,8 @@
 @extends('layouts.dashboard')
 
+
+<?php use \App\Http\Controllers\TransactionCost; ?>
+
 @section('dashContent')
 
   <!-- Content Wrapper. Contains page content -->
@@ -36,6 +39,7 @@
                   <th>Action</th>
                 </tr>
                 </thead>
+
                 <tbody>
 
                     @if (count($transCost) > 0)
@@ -46,12 +50,14 @@
                     @endphp
                         @foreach ($transCost as $data)
 
-
                                 <tr>
                                 <td>{{ $i++ }}</td>
                                 <td>{{ $data->country }}</td>
                                 <td>{{ date('d/M/Y', strtotime($data->created_at)) }}</td>
-                                <td>{{ date('d/M/Y', strtotime($data->updated_at)) }}</td>
+
+                                @if($countryData = \App\TransactionCost::where('country', $data->country)->orderBy('created_at', 'DESC')->first())
+                                  <td>{{ date('d/M/Y', strtotime($countryData->updated_at)) }}</td>
+                                @endif
                                 
                                 <td><a href="{{ route('structure by country', $data->country) }}" style="color: navy; font-weight: bold;">View detail</a></td>
                                 
