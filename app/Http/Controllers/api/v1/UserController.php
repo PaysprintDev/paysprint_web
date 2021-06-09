@@ -163,7 +163,7 @@ class UserController extends Controller
                             
                             $resInfo = strtoupper($info->Record->RecordStatus).", Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance. Thank You";
 
-                            User::where('id', $getcurrentUser->id)->update(['accountLevel' => 0, 'countryapproval' => 1]);
+                            User::where('id', $getcurrentUser->id)->update(['accountLevel' => 2, 'countryapproval' => 1]);
 
 
                             $this->createNotification($newRefcode, "Hello ".$request->firstname.", Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance. Thank You");
@@ -193,7 +193,7 @@ class UserController extends Controller
                         $data = $user;
                         $statusCode = 200;
 
-                        User::where('id', $getcurrentUser->id)->update(['accountLevel' => 0, 'countryapproval' => 1]);
+                        User::where('id', $getcurrentUser->id)->update(['accountLevel' => 2, 'countryapproval' => 1]);
 
                         $this->createNotification($newRefcode, "Hello ".$request->firstname.", Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance. Thank You");
 
@@ -293,11 +293,24 @@ class UserController extends Controller
                             $currencyCode = $countryInfo[0]->currencies[0]->code;
                             $currencySymbol = $countryInfo[0]->currencies[0]->symbol;
 
+                            
+
 
                             // Update User API Token
-                            User::where('email', $request->email)->update(['api_token' => $token, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol]);
+                            
 
-                            $userData = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'accountLevel', 'cardRequest', 'flagged')->where('email', $request->email)->first();
+                            $userData = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'accountLevel', 'cardRequest', 'flagged', 'loginCount', 'pass_checker', 'pass_date', 'lastLogin')->where('email', $request->email)->first();
+
+                            $loginCount = $userData->loginCount + 1;
+
+                            if($userData->pass_checker > 0){
+                                $pass_date = $userData->pass_date;
+                            }
+                            else{
+                                $pass_date = date('Y-m-d');
+                            }
+
+                            User::where('email', $request->email)->update(['api_token' => $token, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'lastLogin' => date('d-m-Y h:i A'), 'pass_date' => $pass_date, 'loginCount' => $loginCount]);
 
                             $data = $userData;
                             $status = 200;

@@ -1486,6 +1486,107 @@ function approveaccount(id){
     });
 
 }
+
+
+function closeAccount(id){
+
+  var thisdata;
+  var spinner = $('.spinclose'+id);
+  var route = "{{ URL('Ajax/closeuseraccount') }}";
+
+  swal({
+      title: "Are you sure?",
+      text: "This account will permanently be closed and will not have access to PaySprint",
+      icon: "info",
+      buttons: true,
+      dangerMode: false,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        thisdata = {id: id};
+          setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: thisdata,
+            dataType: 'JSON',
+            beforeSend: function(){
+              spinner.removeClass('disp-0');
+            },
+            success: function(result){
+              spinner.addClass('disp-0');
+                
+                if (result.message == "success") {
+
+                  swal(result.title, result.res, result.message);
+                  setTimeout(function(){ location.reload(); }, 2000);
+
+                }
+
+                else{
+                  swal(result.title, result.res, result.message);
+                }
+
+
+            }
+
+          });
+
+      }
+    });
+
+}
+
+function openAccount(id){
+
+  var thisdata;
+  var spinner = $('.spinopen'+id);
+  var route = "{{ URL('Ajax/openuseraccount') }}";
+
+  swal({
+      title: "Are you sure?",
+      text: "This account will be opened and will have access to PaySprint",
+      icon: "info",
+      buttons: true,
+      dangerMode: false,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        thisdata = {id: id};
+          setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: thisdata,
+            dataType: 'JSON',
+            beforeSend: function(){
+              spinner.removeClass('disp-0');
+            },
+            success: function(result){
+              spinner.addClass('disp-0');
+                
+                if (result.message == "success") {
+
+                  swal(result.title, result.res, result.message);
+                  setTimeout(function(){ location.reload(); }, 2000);
+
+                }
+
+                else{
+                  swal(result.title, result.res, result.message);
+                }
+
+
+            }
+
+          });
+
+      }
+    });
+
+}
+
+
 function checkverification(id){
 
   var thisdata;

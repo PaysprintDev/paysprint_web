@@ -4,6 +4,7 @@
 
 
 <?php use \App\Http\Controllers\User; ?>
+<?php use \App\Http\Controllers\UserClosed; ?>
 <?php use \App\Http\Controllers\Admin; ?>
 
   <!-- Content Wrapper. Contains page content -->
@@ -12,10 +13,10 @@
     <section class="content-header">
       <h1>
         @if (Request::get('country') != null)
-         All Pending Approvals In {{ Request::get('country') }}
+         All Closed Users In {{ Request::get('country') }}
 
         @else
-         All Pending Approvals
+         All Closed Users
             
         @endif
       </h1>
@@ -23,10 +24,10 @@
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
         <li class="active">
           @if (Request::get('country') != null)
-         All Pending Approvals In {{ Request::get('country') }}
+         All Closed Users In {{ Request::get('country') }}
 
         @else
-         All Pending Approvals
+         All Closed Users
             
         @endif
         </li>
@@ -69,18 +70,18 @@
                   <th>Account Type</th>
                   <th>Identification</th>
                   <th>Platform</th>
-                  <th>Date Joined</th>
+                  <th>Date Closed</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
 
-                  @if($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', 0)->get())
+                  @if($allusersdata = \App\UserClosed::where('country', Request::get('country'))->get())
 
 
                     @if (count($allusersdata) > 0)
-                    <?php $i = 1;?>
+                        <?php $i = 1;?>
                         @foreach ($allusersdata as $datainfo)
                         <tr>
                             <td>{{ $i++ }}</td>
@@ -96,7 +97,7 @@
                             <td>{{ $datainfo->accountType }}</td>
                             <td>
 
-                              @if (($datainfo->avatar != null))
+                                @if (($datainfo->avatar != null))
                                 <small style="font-weight: bold;">
                                     Selfie : @if($datainfo->avatar != null) <a href="{{ $datainfo->avatar }}" target="_blank">View Avatar</a> @endif
                                 </small>
@@ -165,27 +166,10 @@
                               <a href="{{ route('user more detail', $datainfo->id) }}"><i class="far fa-eye text-primary" style="font-size: 20px;" title="More details"></i></strong></a> 
 
 
-                                @if($datainfo->approval == 1 && $datainfo->accountLevel > 0) 
-                                
-                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Disapprove Account"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  
-                                
-                                
-                                @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)
-
-                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Disapprove Account"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>
-
-                                @else 
-                                
-                                
-                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-primary"><i class="far fa-lightbulb text-success" style="font-size: 20px;" title="Approve Account"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
-                                
-                                
-                                @endif
-
 
                                 <a href="{{ route('send message', 'id='.$datainfo->id) }}" class="text-info"><i class="far fa-envelope text-success" style="font-size: 20px;" title="Send Mail"></i></a> 
 
-                                <a href="javascript:void()" onclick="closeAccount('{{ $datainfo->id }}')" class="text-danger"><i class="far fa-trash text-danger" style="font-size: 20px;" title="Close Account"></i> <img class="spinclose{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
+                                <a href="javascript:void()" onclick="openAccount('{{ $datainfo->id }}')" class="text-success"><i class="far fa-trash text-success" style="font-size: 20px;" title="Open Account"></i> <img class="spinopen{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
 
                               
                             </td>
@@ -203,79 +187,8 @@
                     @endif
 
 
-                    @else
-                    @if (count($allusers) > 0)
-                    <?php $i = 1;?>
-                        @foreach ($allusers as $data)
-                        <tr>
-                            <td>{{ $i++ }}</td>
-                            
-                            <td>{{ $data->ref_code }}</td>
-                            <td>{{ $data->name }}</td>
-                            <td>{{ $data->email }}</td>
-                            <td>{{ $data->accountType }}</td>
-                            <td>
-                                @if (($data->nin_front != null || $data->nin_back != null))
-                                <small style="font-weight: bold;">
-                                    Govnt. issued photo ID : @if($data->nin_front != null) <a href="{{ $data->nin_front }}" target="_blank">Front view</a> @endif | @if($data->nin_back != null) <a href="{{ $data->nin_back }}" target="_blank">Back view</a> @endif
-                                </small>
-                                <hr>
-                                    
-                                @endif
 
-                                @if (($data->drivers_license_front != null || $data->drivers_license_back != null))
-                                <small style="font-weight: bold;">
-                                    Driver's License : @if($data->drivers_license_front != null) <a href="{{ $data->drivers_license_front }}" target="_blank">Front view</a> @endif | @if($data->drivers_license_back != null) <a href="{{ $data->drivers_license_back }}" target="_blank">Back view</a> @endif
-                                </small>
-                                <hr>
-                                    
-                                @endif
-
-
-                                @if (($data->international_passport_front != null || $data->international_passport_back != null))
-                                <small style="font-weight: bold;">
-                                    International Passport : @if($data->international_passport_front != null) <a href="{{ $data->international_passport_front }}" target="_blank">Front view</a> @endif | @if($data->international_passport_back != null) <a href="{{ $data->international_passport_back }}" target="_blank">Back view</a> @endif
-                                </small>
-                                <hr>
-                                    
-                                @endif
-                                
-
-                                
-                            </td>
-
-                            <td>
-                                {{ date('d/M/Y h:i:a', strtotime($data->created_at)) }}
-                            </td>
-
-                            <td style="color: {{ ($data->approval == 1) ? 'green' : 'red' }}; font-weight: bold;" align="center">{{ ($data->approval == 1) ? 'Approved' : 'Not approved' }}</td>
-                            
-                            <td align="center">
-
-                              <a href="{{ route('user more detail', $data->id) }}"><i class="far fa-eye text-primary" style="font-size: 20px;" title="More details"></i></strong></a>  
-                               <a href="javascript:void()" onclick="checkverification('{{ $data->id }}')"><i class="fas fa-user-check text-success" title="Check verification"></i> <img class="spinvery{{ $data->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
-                                @if($data->approval == 1) <a href="javascript:void()" onclick="approveaccount('{{ $data->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Disapprove"></i> <img class="spin{{ $data->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  @else <a href="javascript:void()" onclick="approveaccount('{{ $data->id }}')" class="text-primary"><i class="far fa-lightbulb text-success" style="font-size: 20px;" title="Approve"></i> <img class="spin{{ $data->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  @endif
-
-                                {{--  @if ($data->approval == 1)
-                                <button class="btn btn-danger" id="processPay" onclick="approveaccount('{{ $data->id }}')">Disapprove Identification <img class="spin{{ $data->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></button>
-                                @else
-                                <button class="btn btn-primary" id="processPay" onclick="approveaccount('{{ $data->id }}')">Approve Identification <img class="spin{{ $data->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></button>
-                                @endif  --}}
-
-                              
-                            </td>
-
-
-                        </tr>
-                        @endforeach
-
-                        
-
-                    @else
-                    <tr>
-                        <td colspan="9" align="center">No record available</td>
-                    </tr>
-                    @endif
+                       
 
 
                     @endif

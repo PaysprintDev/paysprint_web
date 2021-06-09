@@ -290,7 +290,7 @@ function signIn(){
             },
             success: function(result){
                 if(result.message == 'success'){
-                    swal("Saved!", result.res, result.message);
+                    swal("Welcome Back!", result.res, result.message);
                     setTimeout(function(){ location.href = result.link; }, 2000);
                 }
                 else{

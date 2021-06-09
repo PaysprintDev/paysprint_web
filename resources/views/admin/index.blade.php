@@ -5,6 +5,7 @@
 
 <?php use \App\Http\Controllers\ClientInfo; ?>
 <?php use \App\Http\Controllers\User; ?>
+<?php use \App\Http\Controllers\UserClosed; ?>
 <?php use \App\Http\Controllers\InvoicePayment; ?>
 <?php use \App\Http\Controllers\AllCountries; ?>
 
@@ -250,6 +251,23 @@
               <i class="ion ion-person-add"></i>
             </div>
             <a href="{{ route('override users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+
+
+          <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-red">
+            <div class="inner">
+              <h3>@if($closed = \App\UserClosed::count()) {{ $closed }}  @else 0 @endif</h3>
+
+              <p>Closed Accounts</p>
+
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('closed users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
 

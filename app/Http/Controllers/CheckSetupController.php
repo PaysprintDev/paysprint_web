@@ -29,7 +29,7 @@ class CheckSetupController extends Controller
 
     public function updateQuickSetup(){
         // Get User
-        $user = User::inRandomOrder()->get();
+        $user = User::where('disableAccount', 'off')->inRandomOrder()->get();
 
         try {
             foreach($user as $key => $value){
@@ -116,9 +116,8 @@ class CheckSetupController extends Controller
     }
 
 
-
     public function autoDepositOff(){
-        $user = User::where('auto_deposit', 'off')->inRandomOrder()->get();
+        $user = User::where('auto_deposit', 'off')->where('disableAccount', 'off')->inRandomOrder()->get();
 
         if(count($user) > 0){
             // Send mail
@@ -143,7 +142,7 @@ class CheckSetupController extends Controller
 
 
     public function checkAccountAcvtivity(){
-        $user = User::where('lastLogin', '!=', null)->inRandomOrder()->get();
+        $user = User::where('lastLogin', '!=', null)->where('disableAccount', 'off')->inRandomOrder()->get();
 
         if(count($user) > 0){
 
@@ -222,7 +221,7 @@ class CheckSetupController extends Controller
 
 
     public function statementCountry(){
-        $query = User::orderBy('created_at', 'DESC')->get();
+        $query = User::where('disableAccount', 'off')->orderBy('created_at', 'DESC')->get();
 
         if(count($query) > 0){
             foreach($query as $value => $key){
@@ -265,7 +264,7 @@ class CheckSetupController extends Controller
 
     public function updateMonthlyFee(Request $req){
 
-        $getUser = User::where('created_at', '<=', '2021-04-30')->inRandomOrder()->get();
+        $getUser = User::where('created_at', '<=', '2021-04-30')->where('disableAccount', 'off')->inRandomOrder()->get();
 
         foreach($getUser as $key => $value){
 
@@ -685,6 +684,46 @@ class CheckSetupController extends Controller
             Log::error($th->getMessage());
         }
 
+    }
+
+
+    public function passwordReminder(){
+        $getUsers = User::where('pass_date', '!=', null)->where('disableAccount', '!=', 'on')->where('countryapproval', 1)->get();
+
+        $today = date('Y-m-d');
+        foreach($getUsers as $users){
+            $passDate = date('Y-m-d', strtotime($users->pass_date));
+            $nextTwoWeeks = date('Y-m-d', strtotime($passDate. ' + 14 days'));
+            $passChecker = $users->pass_checker + 1;
+
+            if($users->pass_date != null){
+                if($today > $passDate){
+                    // Update Passdate
+                    User::where('id', $users->id)->update(['pass_date' => $nextTwoWeeks, 'pass_checker' => $passChecker]);
+                    // Send Mail
+
+                    $this->name = $users->name;
+                    // $this->email = $users->email;
+                    $this->email = 'adenugaadebambo41@gmail.com';
+                    $this->subject = "Kindly reset your password on PaySprint";
+
+                    $this->message = '<p>We wish to notify you to change or reset your password on PaySprint for security resasons.</p><p><a href='.route('password.request').' class="text-primary" style="text-decoration: underline">Click here to reset your password</a></p>';
+
+                    $this->sendEmail($this->email, "Incomplete Setup");
+
+                    Log::info('Reset Password Mail Sent to '.$this->name);
+                    
+                }
+                else{
+
+                }
+            }
+            else{
+                // DO nothing
+            }
+
+
+        }
     }
 
 

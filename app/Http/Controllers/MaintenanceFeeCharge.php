@@ -22,7 +22,7 @@ class MaintenanceFeeCharge extends Controller
 {
     public function monthlyMaintenaceFee(Request $req){
 
-        $getUser = User::inRandomOrder()->get();
+        $getUser = User::where('disableAccount', 'off')->inRandomOrder()->get();
 
         foreach($getUser as $key => $value){
 

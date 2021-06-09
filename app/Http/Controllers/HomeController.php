@@ -2608,7 +2608,7 @@ class HomeController extends Controller
                                 
                                 $resInfo = strtoupper($info->Record->RecordStatus).", Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance. Thank You";
 
-                                User::where('id', Auth::user()->id)->update(['accountLevel' => 0, 'countryapproval' => 1]);
+                                User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'countryapproval' => 1]);
                                 
                             }
                             else{
@@ -2630,7 +2630,7 @@ class HomeController extends Controller
                             $link = "contact";
                             $resInfo = "Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance. Thank You";
 
-                            User::where('id', Auth::user()->id)->update(['accountLevel' => 0, 'countryapproval' => 1]);
+                            User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'countryapproval' => 1]);
 
                             // $resp = $info->Message;
                         }
@@ -2716,8 +2716,16 @@ class HomeController extends Controller
                             $resData = ['res' => 'Hello '.$userExists[0]['name'].', your account exists as a merchant. Kindly login on the merchant section', 'message' => 'error'];
                         }
                         else{
+
+                            if($userExists[0]['pass_checker'] > 0){
+                                $pass_date = $userExists[0]['pass_date'];
+                            }
+                            else{
+                                $pass_date = date('Y-m-d');
+                            }
+
                             // Update API Token
-                            User::where('email', $req->email)->update(['api_token' => uniqid().md5($req->email).time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'lastLogin' => date('d-m-Y h:i A'), 'loginCount' => $loginCount]);
+                            User::where('email', $req->email)->update(['api_token' => uniqid().md5($req->email).time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'lastLogin' => date('d-m-Y h:i A'), 'loginCount' => $loginCount, 'pass_date' => $pass_date]);
 
                             $city = $this->myLocation()->city;
                             $country = $this->myLocation()->country;

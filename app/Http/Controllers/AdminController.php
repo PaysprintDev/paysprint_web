@@ -75,6 +75,9 @@ use App\InAppMessage as InAppMessage;
 use App\MonerisActivity as MonerisActivity;
 
 
+use App\UserClosed as UserClosed;
+
+
 use App\Traits\Trulioo;
 
 use App\Traits\AccountNotify;
@@ -1790,6 +1793,62 @@ class AdminController extends Controller
     }
 
 
+    public function allClosedUsers(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsersClosed();
+
+
+            return view('admin.allusersclosed')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
     public function allPlatformUsersByCountry(Request $req){
 
         if($req->session()->has('username') == true){
@@ -2007,6 +2066,63 @@ class AdminController extends Controller
 
 
             return view('admin.overrideusersbycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
+
+    public function allClosedUsersByCountry(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->closedUsersByCountry();
+
+
+            return view('admin.closedusersbycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
         }
         else{
             return redirect()->route('AdminLogin');
@@ -7671,7 +7787,14 @@ class AdminController extends Controller
                     // Set session
                     $loginCount = $getMerchant->loginCount + 1;
 
-                    User::where('email', $getMerchant->email)->update(['lastLogin' => date('d-m-Y h:i A'), 'loginCount' => $loginCount, 'countryapproval' => 1]);
+                    if($getMerchant->pass_checker > 0){
+                        $pass_date = $getMerchant->pass_date;
+                    }
+                    else{
+                        $pass_date = date('Y-m-d');
+                    }
+
+                    User::where('email', $getMerchant->email)->update(['lastLogin' => date('d-m-Y h:i A'), 'loginCount' => $loginCount, 'countryapproval' => 1, 'pass_date' => $pass_date]);
 
                     $req->session()->put(['user_id' => $adminCheck[0]['user_id'], 'firstname' => $adminCheck[0]['firstname'], 'lastname' => $adminCheck[0]['lastname'], 'username' => $adminCheck[0]['username'], 'role' => 'Merchant', 'email' => $adminCheck[0]['email'], 'api_token' => $api_token, 'myID' => $getMerchant->id, 'country' => $getMerchant->country, 'businessname' => $getMerchant->businessname]);
 
@@ -7860,7 +7983,7 @@ class AdminController extends Controller
                                         $link = "Admin";
                                         
                                         $resInfo = strtoupper($res->Record->RecordStatus).", Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance. Thank You";
-                                        User::where('id', $getMerchant->id)->update(['accountLevel' => 0, 'countryapproval' => 1]);
+                                        User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'countryapproval' => 1]);
                                         
                                     }
                                     else{
@@ -7880,7 +8003,7 @@ class AdminController extends Controller
                                     $link = "Admin";
                                     $resInfo = "Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance. Thank You";
 
-                                    User::where('id', $getMerchant->id)->update(['accountLevel' => 0, 'countryapproval' => 1]);
+                                    User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'countryapproval' => 1]);
 
                                     // $resp = $info->Message;
                                 }
@@ -8893,6 +9016,115 @@ class AdminController extends Controller
 
     }
 
+    public function ajaxCloseUserAccount(Request $req, User $user, UserClosed $userclosed){
+
+        $data = $user->where('id', $req->id)->first();
+
+        if(isset($data)){
+
+            $dataInfo = [
+                'user_id' => $data->id, '_token' => $data->_token, 'code' => $data->code, 'ref_code' => $data->ref_code, 'avatar' => $data->avatar, 'businessname' => $data->businessname, 'name' => $data->name, 'email' => $data->email, 'password' => $data->password, 'address' => $data->address, 'telephone' => $data->telephone, 'city' => $data->city, 'state' => $data->state, 'country' => $data->country, 'dayOfBirth' => $data->dayOfBirth, 'monthOfBirth' => $data->monthOfBirth, 'yearOfBirth' => $data->yearOfBirth, 'currencyCode' => $data->currencyCode, 'currencySymbol' => $data->currencySymbol, 'accountType' => $data->accountType, 'corporationType' => $data->corporationType, 'zip' => $data->zip, 'card_balance' => $data->card_balance, 'nin_front' => $data->nin_front, 'drivers_license_front' => $data->drivers_license_front, 'international_passport_front' => $data->international_passport_front, 'nin_back' => $data->nin_back, 'drivers_license_back' => $data->drivers_license_back, 'international_passport_back' => $data->international_passport_back, 'incorporation_doc_front' => $data->incorporation_doc_front, 'incorporation_doc_back' => $data->incorporation_doc_back, 'wallet_balance' => $data->wallet_balance, 'number_of_withdrawals' => $data->number_of_withdrawals, 'transaction_pin' => $data->transaction_pin, 'securityQuestion' => $data->securityQuestion, 'securityAnswer' => $data->securityAnswer, 'api_token' => $data->api_token, 'flagged' => $data->flagged, 'approval' => $data->approval, 'auto_deposit' => $data->auto_deposit, 'accountLevel' => $data->accountLevel, 'loginCount' => $data->loginCount, 'lastLogin' => $data->lastLogin, 'disableAccount' => $data->disableAccount, 'cardRequest' => $data->cardRequest, 'countryapproval' => $data->countryapproval, 'platform' => $data->platform, 'remember_token' => $data->remember_token
+            ];
+
+            $userclosed->insert($dataInfo);
+
+            $user->where('id', $req->id)->delete();
+
+            $thisuser = $userclosed->where('user_id', $req->id)->first();
+
+            $subject = 'Account currently closed on PaySprint';
+            $message = "This is to inform you that your account is currenctly closed on PaySprint. You will not be able to login or conduct any transaction both on the mobile app and on the web during this period. We regret any inconvenience this action might caused you. If you have any concern, please send us a message on : compliance@paysprint.net";
+
+            // Send Mail to Receiver
+            $this->name = $thisuser->name;
+            $this->to = $thisuser->email;
+            
+            $this->subject = $subject;
+            $this->message = $message;
+
+            $usersPhone = UserClosed::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+            if(isset($usersPhone)){
+
+                $recipients = $thisuser->telephone;
+            }
+            else{
+                $recipients = "+".$thisuser->code.$thisuser->telephone;
+            }
+
+            $this->createNotification($thisuser->ref_code, $message);
+            $this->sendMessage($message, $recipients);
+
+            $this->sendEmail($this->to, "Refund Request");
+
+            $resData = ['res' => 'Account is closed', 'message' => 'success', 'title' => 'Great'];
+        }
+        else{
+
+            $resData = ['res' => 'Account information not found', 'message' => 'success', 'title' => 'Great'];
+        }
+
+
+
+            return $this->returnJSON($resData, 200);
+
+    }
+
+
+    public function ajaxOpenUserAccount(Request $req, User $user, UserClosed $userclosed){
+
+        $data = $userclosed->where('id', $req->id)->first();
+
+        if(isset($data)){
+
+            $dataInfo = [
+                'id' => $data->user_id, '_token' => $data->_token, 'code' => $data->code, 'ref_code' => $data->ref_code, 'avatar' => $data->avatar, 'businessname' => $data->businessname, 'name' => $data->name, 'email' => $data->email, 'password' => $data->password, 'address' => $data->address, 'telephone' => $data->telephone, 'city' => $data->city, 'state' => $data->state, 'country' => $data->country, 'dayOfBirth' => $data->dayOfBirth, 'monthOfBirth' => $data->monthOfBirth, 'yearOfBirth' => $data->yearOfBirth, 'currencyCode' => $data->currencyCode, 'currencySymbol' => $data->currencySymbol, 'accountType' => $data->accountType, 'corporationType' => $data->corporationType, 'zip' => $data->zip, 'card_balance' => $data->card_balance, 'nin_front' => $data->nin_front, 'drivers_license_front' => $data->drivers_license_front, 'international_passport_front' => $data->international_passport_front, 'nin_back' => $data->nin_back, 'drivers_license_back' => $data->drivers_license_back, 'international_passport_back' => $data->international_passport_back, 'incorporation_doc_front' => $data->incorporation_doc_front, 'incorporation_doc_back' => $data->incorporation_doc_back, 'wallet_balance' => $data->wallet_balance, 'number_of_withdrawals' => $data->number_of_withdrawals, 'transaction_pin' => $data->transaction_pin, 'securityQuestion' => $data->securityQuestion, 'securityAnswer' => $data->securityAnswer, 'api_token' => $data->api_token, 'flagged' => $data->flagged, 'approval' => $data->approval, 'auto_deposit' => $data->auto_deposit, 'accountLevel' => $data->accountLevel, 'loginCount' => $data->loginCount, 'lastLogin' => $data->lastLogin, 'disableAccount' => $data->disableAccount, 'cardRequest' => $data->cardRequest, 'countryapproval' => $data->countryapproval, 'platform' => $data->platform, 'remember_token' => $data->remember_token
+            ];
+
+            $user->insert($dataInfo);
+
+            $userclosed->where('id', $req->id)->delete();
+
+            $thisuser = $user->where('id', $req->id)->first();
+
+            $subject = 'Account successfully Open on PaySprint';
+            $message = "We are glad to notify you that your paySprint Account is back to action. Your PaySprint account has been enabled and you will be able to Send Money, Pay Invoice and Request for withdrawal of funds from your PaySprint Wallet from  the Mobile and Web platforms. Thank you for your interest in PaySprint. compliance@paysprint.net";
+
+            // Send Mail to Receiver
+            $this->name = $thisuser->name;
+            $this->to = $thisuser->email;
+            
+            $this->subject = $subject;
+            $this->message = $message;
+
+            $usersPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+            if(isset($usersPhone)){
+
+                $recipients = $thisuser->telephone;
+            }
+            else{
+                $recipients = "+".$thisuser->code.$thisuser->telephone;
+            }
+
+            $this->createNotification($thisuser->ref_code, $message);
+            $this->sendMessage($message, $recipients);
+
+            $this->sendEmail($this->to, "Refund Request");
+
+            $resData = ['res' => 'Account is open', 'message' => 'success', 'title' => 'Great'];
+        }
+        else{
+
+            $resData = ['res' => 'Account information not found', 'message' => 'success', 'title' => 'Great'];
+        }
+
+
+
+            return $this->returnJSON($resData, 200);
+
+    }
+
 
     public function ajaxCheckVerification(Request $req, User $user){
 
@@ -9012,7 +9244,7 @@ class AdminController extends Controller
         
 
         $this->info = "Account is credited";
-        $this->message = 'We are glad to notify you that your bank account transaction is processed and your account is credited. '.$thisuser->currencySymbol.''.number_format($data->amountToSend, 2).' has been added to '.$thisbank->bankName.' ('.$thisbank->accountNumber.'). Thanks from PaySprint Support Team';
+        $this->message = 'We are glad to notify you that the request for withdrawal to your bank account ending with '.$thisbank->accountNumber.' has been processed. The sum of '.$thisuser->currencySymbol.''.number_format($data->amountToSend, 2).' would be credited to your bank '.$thisbank->bankName.' within the next 5 business days. Thanks from PaySprint Support Team';
 
         $usersPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
                                                     
@@ -9054,7 +9286,7 @@ class AdminController extends Controller
         
 
         $this->info = "Account is credited";
-        $this->message = 'We are glad to notify you that your '.$thiscard->card_type.' transaction is processed and your bank account is credited. '.$thisuser->currencySymbol.''.number_format($data->amount, 2).' has been added to '.wordwrap($cardNo, 4, '-', true).'. Thanks from PaySprint Support Team';
+        $this->message = 'We are glad to notify you that the request for withdrawal to your '.$thiscard->card_type.' ending '.wordwrap($cardNo, 4, '-', true).' has been processed. The sum of '.$thisuser->currencySymbol.''.number_format($data->amount, 2).' would be credited to your bank account within the next 5 business days. Thanks from PaySprint Support Team';
 
         $usersPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
                                                     
@@ -9575,6 +9807,14 @@ class AdminController extends Controller
     }
 
 
+    public function allUsersClosed(){
+
+        $data = UserClosed::orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
+
+
     public function allUsersByCountry(){
         $data = User::orderBy('created_at', 'DESC')->groupBy('country')->get();
 
@@ -9597,6 +9837,13 @@ class AdminController extends Controller
 
     public function overrideUsersByCountry(){
         $data = User::where('accountLevel', 2)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+
+        return $data;
+    }
+
+
+    public function closedUsersByCountry(){
+        $data = UserClosed::orderBy('created_at', 'DESC')->groupBy('country')->get();
 
         return $data;
     }
