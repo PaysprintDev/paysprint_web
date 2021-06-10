@@ -7787,7 +7787,7 @@ class AdminController extends Controller
                     // Set session
                     $loginCount = $getMerchant->loginCount + 1;
 
-                    if($getMerchant->pass_checker > 0){
+                    if($getMerchant->pass_checker > 0 && $getMerchant->pass_date <= date('Y-m-d')){
                         $pass_date = $getMerchant->pass_date;
                     }
                     else{

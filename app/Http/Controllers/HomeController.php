@@ -1118,6 +1118,7 @@ class HomeController extends Controller
     public function rentalManagement(Request $req)
     {
 
+
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
                 $this->page = 'Rental Property Management';
@@ -1128,18 +1129,26 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Management';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Management';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
 
         }
         else{
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Management';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+            $data = array(
+                'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            );
         }
 
         return view('main.rentalmanagement')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -1159,17 +1168,28 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Management for Property Owner';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Management for Property Owner';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+
+            
+            Auth::login($user);
+
+
             $this->page = 'Rental Property Management for Property Owner';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+            $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
         return view('main.rentalmanagementadmin')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -1189,17 +1209,26 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Management for Service Providers';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Management for Service Providers';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Management for Service Providers';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+            $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
         $getId = $consultant->where('consultant_email', $this->email)->get();
@@ -1233,17 +1262,26 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Management for Service Providers';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Management for Service Providers';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Management for Service Providers';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+            $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
 
@@ -1266,17 +1304,26 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Management for Service Providers';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Management for Service Providers';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Management for Service Providers';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
 
@@ -1299,17 +1346,26 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Management for Service Providers';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Management for Service Providers';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Management for Service Providers';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
 
@@ -1335,17 +1391,26 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Management for Service Providers';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Management for Service Providers';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Management for Service Providers';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+            $data = array(
+                'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            );
         }
 
 
@@ -1371,17 +1436,26 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Management for Service Providers';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Management for Service Providers';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Management for Service Providers';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
 
@@ -1407,17 +1481,25 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Management for Service Providers';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Management for Service Providers';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Management for Service Providers';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
 
@@ -1433,7 +1515,7 @@ class HomeController extends Controller
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Statement';
+                $this->page = 'Rental Property Management for Property Owner';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $data = array(
@@ -1441,17 +1523,26 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Management for Property Owner';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Management for Property Owner';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Management for Property Owner';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
         return view('main.rentalmanagementadminfacility')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -1463,7 +1554,7 @@ class HomeController extends Controller
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Statement';
+                $this->page = 'Rental Property Management for Property Owner';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $data = array(
@@ -1471,17 +1562,26 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Management for Property Owner';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Management for Property Owner';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Management for Property Owner';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
         $consultant = $this->consultantCheck($id);
@@ -1495,7 +1595,7 @@ class HomeController extends Controller
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Statement';
+                $this->page = 'Rental Property Management for Property Owner';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $data = array(
@@ -1503,17 +1603,26 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Management for Property Owner';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Management for Property Owner';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Management for Property Owner';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
         return view('main.rentalmanagementadminconsultant')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -1528,23 +1637,30 @@ class HomeController extends Controller
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Statement';
+                $this->page = 'Rental Property Management for Property Owner';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $ref_code = Auth::user()->ref_code;
             }
             else{
-                $this->page = 'Rental Property Management for Property Owner';
-                $this->name = '';
-                $ref_code = 0;
+                // $this->page = 'Rental Property Management for Property Owner';
+                // $this->name = '';
+                // $ref_code = 0;
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Management for Property Owner';
-            $this->name = session('name');
-            $this->email = session('email');
-            $ref_code = 0;
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+            $ref_code = Auth::user()->ref_code;
         }
 
         $maintreq = $maintenance->where('post_id', $id)->get();
@@ -1568,7 +1684,7 @@ class HomeController extends Controller
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Statement';
+                $this->page = 'Rental Property Maintenance';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $data = array(
@@ -1577,17 +1693,25 @@ class HomeController extends Controller
                 
             }
             else{
-                $this->page = 'Rental Property Maintenance';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Maintenance';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Maintenance';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+            $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
         // Get Organization & Business
@@ -1603,7 +1727,7 @@ class HomeController extends Controller
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Statement';
+                $this->page = 'Rental Property Maintenance';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $data = array(
@@ -1611,17 +1735,27 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Maintenance';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Maintenance';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
+
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Maintenance';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+            $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
 
@@ -1647,18 +1781,26 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Maintenance for Property Owner';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Maintenance for Property Owner';
+                // $this->name = '';
+                // $data = [];
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Maintenance for Property Owner';
-            $this->name = session('name');
-            $this->email = session('email');
-            $this->ref_code = session('ref_code');
-            $data = [];
+            $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $this->ref_code = Auth::user()->ref_code;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
         // Get Organization & Business
@@ -1682,18 +1824,27 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Maintenance for Property Owner';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Maintenance for Property Owner';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Maintenance for Property Owner';
-            $this->name = session('name');
-            $this->email = session('email');
-            $this->ref_code = session('ref_code');
-            $data = [];
+            $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $this->ref_code = Auth::user()->ref_code;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
         // Get Organization & Business
@@ -1708,7 +1859,7 @@ class HomeController extends Controller
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Statement';
+                $this->page = 'Rental Property Maintenance for Property Owner';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $this->ref_code = Auth::user()->ref_code;
@@ -1717,18 +1868,27 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Maintenance for Property Owner';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Maintenance for Property Owner';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Maintenance for Property Owner';
-            $this->name = session('name');
-            $this->email = session('email');
-            $this->ref_code = session('ref_code');
-            $data = [];
+            $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $this->ref_code = Auth::user()->ref_code;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
         // Get Organization & Business
@@ -1743,7 +1903,7 @@ class HomeController extends Controller
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Statement';
+                $this->page = 'Rental Property Maintenance for Property Owner';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $this->ref_code = Auth::user()->ref_code;
@@ -1752,18 +1912,26 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Maintenance for Property Owner';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Maintenance for Property Owner';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Maintenance for Property Owner';
-            $this->name = session('name');
-            $this->email = session('email');
-            $this->ref_code = session('ref_code');
-            $data = [];
+            $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $this->ref_code = Auth::user()->ref_code;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
         // Get Organization & Business
@@ -1778,7 +1946,7 @@ class HomeController extends Controller
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Statement';
+                $this->page = 'Rental Property Maintenance for Property Owner';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $this->ref_code = Auth::user()->ref_code;
@@ -1787,18 +1955,27 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Maintenance for Property Owner';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Maintenance for Property Owner';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Maintenance for Property Owner';
-            $this->name = session('name');
-            $this->email = session('email');
-            $this->ref_code = session('ref_code');
-            $data = [];
+            $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $this->ref_code = Auth::user()->ref_code;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
 
@@ -1813,7 +1990,7 @@ class HomeController extends Controller
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Statement';
+                $this->page = 'Rental Property Maintenance for Property Owner';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $this->ref_code = Auth::user()->ref_code;
@@ -1822,18 +1999,26 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Maintenance for Property Owner';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Maintenance for Property Owner';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Maintenance for Property Owner';
-            $this->name = session('name');
-            $this->email = session('email');
-            $this->ref_code = session('ref_code');
-            $data = [];
+            $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $this->ref_code = Auth::user()->ref_code;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
         // Get Organization & Business
@@ -1848,7 +2033,7 @@ class HomeController extends Controller
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Statement';
+                $this->page = 'Rental Property Maintenance';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $data = array(
@@ -1856,17 +2041,25 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Maintenance';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Maintenance for Property Owner';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Maintenance';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+            $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
         // Get Organization & Business
@@ -1880,7 +2073,7 @@ class HomeController extends Controller
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Statement';
+                $this->page = 'Rental Property Maintenance';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $data = array(
@@ -1888,17 +2081,25 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Maintenance';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Maintenance';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Maintenance';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+            $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
         // Get Organization & Business
@@ -1914,7 +2115,7 @@ class HomeController extends Controller
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Statement';
+                $this->page = 'Rental Property Maintenance for Property Owner';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $data = array(
@@ -1922,17 +2123,26 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Maintenance for Property Owner';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Maintenance for Property Owner';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Maintenance for Property Owner';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+            $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
         // Get Organization & Business
@@ -1947,7 +2157,7 @@ class HomeController extends Controller
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Statement';
+                $this->page = 'Rental Property Amenities';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $data = array(
@@ -1955,17 +2165,26 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Amenities';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Amenities';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Amenities';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+            $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
         $facilities = $this->facilities();
@@ -1979,7 +2198,7 @@ class HomeController extends Controller
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Statement';
+                $this->page = 'Rental Property Amenities';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $data = array(
@@ -1987,17 +2206,26 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Amenities';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Amenities';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Amenities';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+            $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
         $facilityinfo = $this->facilityInfo($id);
@@ -2011,7 +2239,7 @@ class HomeController extends Controller
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Statement';
+                $this->page = 'Rental Property Messages';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $data = array(
@@ -2019,17 +2247,26 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Messages';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Messages';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Messages';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+            $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
         return view('main.messages')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -2041,7 +2278,7 @@ class HomeController extends Controller
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Statement';
+                $this->page = 'Rental Property Payment History';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $data = array(
@@ -2049,17 +2286,26 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Payment History';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Payment History';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Rental Property Payment History';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+            $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
 
@@ -2074,7 +2320,7 @@ class HomeController extends Controller
         
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Statement';
+                $this->page = 'Rental Property Documents';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $data = array(
@@ -2082,17 +2328,27 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Documents';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Documents';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
+
             $this->page = 'Rental Property Documents';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+            $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
 
@@ -2108,7 +2364,7 @@ class HomeController extends Controller
 
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
-                $this->page = 'Statement';
+                $this->page = 'Rental Property Other Services';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $data = array(
@@ -2116,17 +2372,27 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Rental Property Other Services';
-                $this->name = '';
-                $data = [];
+                // $this->page = 'Rental Property Other Services';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
+
             $this->page = 'Rental Property Other Services';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [];
+            $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                );
         }
 
         return view('main.otherservices')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -2717,7 +2983,7 @@ class HomeController extends Controller
                         }
                         else{
 
-                            if($userExists[0]['pass_checker'] > 0){
+                            if($userExists[0]['pass_checker'] > 0 && $userExists[0]['pass_date'] <= date('Y-m-d')){
                                 $pass_date = $userExists[0]['pass_date'];
                             }
                             else{

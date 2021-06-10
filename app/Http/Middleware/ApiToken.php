@@ -21,7 +21,6 @@ class ApiToken
 
             $user = \App\User::where('api_token', $token)->first();
 
-
             if(!$user){
                 return response()->json(['message' => 'Invalid Authorization Key'], 401);
             }

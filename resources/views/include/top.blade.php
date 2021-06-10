@@ -79,7 +79,10 @@
                             @endguest
 
                             @auth
-                                <a href="{{ route('user home') }}">Home</a>
+
+                                <a {{ (Auth::user()->accountType != "Individual") ? 'href='.route('Admin') :  'href='.route('user home') }}>Home</a>
+
+
                             @endauth
 
                         </li>
@@ -133,23 +136,35 @@
                         @auth
                         <li class="dropdown submenu">
                             
-                            <a href="{{ route('my account') }}">My Wallet</a>
+                            <a {{ (Auth::user()->accountType != "Individual") ? 'href='.route('Admin') :  'href='.route('my account') }}>My Wallet</a>
                         </li>
                         @endauth
 
                         <li class="dropdown submenu">
                             {{-- <a href="{{ route('payorganization') }}">Send Money</a> --}}
                             {{-- COnver to Modal popup --}}
-                            <a href="javascript:void()" onclick="$('#sendMoney').click()">Money Transfer</a>
+                            @if (Auth::check() == true)
+                                @if (Auth::user()->accountType != "Individual")
+                                    <a href="{{ route('send message', 'type=local') }}">Money Transfer</a>
+                                @else
+                                    <a href="javascript:void()" onclick="$('#sendMoney').click()">Money Transfer</a>
+                                @endif
+                            @else
+                                <a href="javascript:void()" onclick="$('#sendMoney').click()">Money Transfer</a>
+                            @endif
+
+                            
 
                         </li>
 
                         <li class="dropdown submenu">
-                            <a href="{{ route('invoice') }}">Invoice</a>
+
+                            <a {{ (Auth::user()->accountType != "Individual") ? 'href='.route('create single invoice') :  'href='.route('invoice') }}>Invoice</a>
+
                         </li>
 
                         <li class="dropdown submenu">
-                            <a href="{{ route('statement') }}">Transaction</a>
+                            <a {{ (Auth::user()->accountType != "Individual") ? 'href='.route('getStatement') :  'href='.route('statement') }}>Transaction</a>
                         </li>
 
                         @auth
@@ -208,7 +223,9 @@
                             
                             <ul class="dropdown-menu other_dropdwn">
                                 <li><a href="javascript:void()">Account NO: {{ Auth::user()->ref_code }}</a></li>
-                                <li><a href="{{ route('profile') }}">Profile</a></li>
+                                <li>
+                                    <a {{ (Auth::user()->accountType != "Individual") ? 'href='.route('merchant profile') :  'href='.route('profile') }}>Profile</a>
+                                </li>
                                 {{-- <li><a href="https://exbc.ca/Product">Goto EXBC</a></li> --}}
                                 <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</a></li>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

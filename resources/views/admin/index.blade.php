@@ -24,9 +24,32 @@
 
               <h4 style="color: green; font-weight: bold;">Account Number: {{ $userInfo->ref_code }}</h4>
 
+
+              @if ($userInfo->approval == 0 || $userInfo->accountLevel == 0)
+            <div class="row">
+                <div class="alert bg-danger alert-dismissible show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                
+                <p>
+                    <strong>Welcome {{ $userInfo->name }}!</strong> <br> Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and <a href="{{ route('merchant profile') }}" style="font-weight: bold; text-decoration: underline; color: navy">upload in your profile setting</a> to complete the verification process. <a href="{{ route('contact') }}" style="font-weight: bold; text-decoration: underline; color: navy">Kindly contact the admin using the contact us form if you require further assistance. Thank You</a>
+                </p>
+
+                
+                
+                </div>
+            </div>
+
+            @endif
+
             @else
               <small>Control panel</small>
             @endif
+
+
+
+            
 
           @endif
         @endif

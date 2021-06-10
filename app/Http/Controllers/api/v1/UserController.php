@@ -303,7 +303,7 @@ class UserController extends Controller
 
                             $loginCount = $userData->loginCount + 1;
 
-                            if($userData->pass_checker > 0){
+                            if($userData->pass_checker > 0 && $userData->pass_date <= date('Y-m-d')){
                                 $pass_date = $userData->pass_date;
                             }
                             else{
@@ -312,17 +312,19 @@ class UserController extends Controller
 
                             User::where('email', $request->email)->update(['api_token' => $token, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'lastLogin' => date('d-m-Y h:i A'), 'pass_date' => $pass_date, 'loginCount' => $loginCount]);
 
-                            $data = $userData;
+                            $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'accountLevel', 'cardRequest', 'flagged', 'loginCount', 'pass_checker', 'pass_date', 'lastLogin')->where('email', $request->email)->first();
+
+                            $data = $userInfo;
                             $status = 200;
                             $message = 'Login successful';
 
-                            $this->createNotification($userData->refCode, "Hello ".$getUser->name.", Your login was successful. Welcome back");
+                            $this->createNotification($userInfo->refCode, "Hello ".$getUser->name.", Your login was successful. Welcome back");
 
                             $usercity = $this->myLocation()->city;
                             $usercountry = $this->myLocation()->country;
                             $userip = $this->myLocation()->query;
 
-                            $this->checkLoginInfo($userData->refCode, $usercity, $usercountry, $userip);
+                            $this->checkLoginInfo($userInfo->refCode, $usercity, $usercountry, $userip);
 
                         }
 

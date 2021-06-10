@@ -190,7 +190,7 @@
 
                                 <a href="{{ route('send message', 'id='.$datainfo->id) }}" class="text-info"><i class="far fa-envelope text-success" style="font-size: 20px;" title="Send Mail"></i></a> 
 
-                                <a href="javascript:void()" onclick="closeAccount('{{ $datainfo->id }}')" class="text-danger"><i class="far fa-trash text-danger" style="font-size: 20px;" title="Close Account"></i> <img class="spinclose{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
+                                <a href="javascript:void()" onclick="closeAccount('{{ $datainfo->id }}')" class="text-danger"><i class="far fa-trash-alt text-danger" style="font-size: 20px;" title="Close Account"></i> <img class="spinclose{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
 
                                 {{--  @if ($datainfo->approval == 1)
                                 <button class="btn btn-danger" id="processPay" onclick="approveaccount('{{ $datainfo->id }}')">Disapprove Identification <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></button>
