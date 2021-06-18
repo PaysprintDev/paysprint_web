@@ -381,6 +381,13 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('customer/{id}', ['uses' => 'AdminController@customer', 'as' => 'customer']);
 
 
+
+
+
+	Route::get('pricingsetup', ['uses' => 'AdminController@pricingSetup', 'as' => 'pricing setup']);
+	Route::post('createpricingsetup', ['uses' => 'AdminController@createPricingSetup', 'as' => 'create pricing setup']);
+
+
 	Route::get('feestructure', ['uses' => 'AdminController@feeStructure', 'as' => 'fee structure']);
 	Route::get('feestructurebycountry', ['uses' => 'AdminController@feeStructureByCountry', 'as' => 'fee structure by country']);
 	Route::get('structurebycountry/{country}', ['uses' => 'AdminController@structureByCountry', 'as' => 'structure by country']);

@@ -1125,7 +1125,7 @@ else{
                                             $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country);
 
 
-                                            $sendMsg = 'Hello '.strtoupper($thisuser->name).', The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Bank Account '.$bankDetails->bankName.' and Account Number: '.$bankDetails->accountNumber.' has been received and will take up to 10 working days to process payment. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+                                            $sendMsg = 'Hello '.strtoupper($thisuser->name).', The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Bank Account '.$bankDetails->bankName.' and Account Number: '.$bankDetails->accountNumber.' has been received and will take up to 5 working days to process payment. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
 
                                             $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
                                                     
@@ -1465,7 +1465,7 @@ else{
                                             $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country);
 
 
-                                            $sendMsg = 'Hello '.strtoupper($thisuser->name).', The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Bank Account '.$bankDetails->bankName.' and Account Number: '.$bankDetails->accountNumber.' has been received and will take up to 10 working days to process payment. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+                                            $sendMsg = 'Hello '.strtoupper($thisuser->name).', The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Bank Account '.$bankDetails->bankName.' and Account Number: '.$bankDetails->accountNumber.' has been received and will take up to 5 working days to process payment. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
 
                                             $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
                                                 

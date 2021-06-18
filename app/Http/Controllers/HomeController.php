@@ -68,6 +68,8 @@ use App\Notifications as Notifications;
 
 use App\AllCountries as AllCountries;
 
+use App\PricingSetup as PricingSetup;
+
 use App\Traits\RpmApp;
 
 use App\Traits\Trulioo;
@@ -230,31 +232,69 @@ class HomeController extends Controller
     public function feeStructure(Request $req)
     {
 
+
+
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
                 $this->page = 'Pricing';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
+                $country = Auth::user()->country;
                 $data = array(
-                    
+                    'country' => $country,
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                 );
             }
             else{
+                $country = $this->myLocation()->country;
                 $this->page = 'Pricing';
                 $this->name = '';
-                $data = [];
+                $data = [
+                    'country' => $country,
+                ];
             }
 
         }
         else{
+            $country = $this->myLocation()->country;
             $this->page = 'Pricing';
             $this->name = session('name');
             $this->email = session('email');
-            $data = [];
+            $data = [
+                'country' => $country,
+            ];
         }
 
+        if($req->get('country') != null){
+            $countrys = $req->get('country');
+        }
+        else{
+            $countrys = $country;
+        }
+
+
+        $prices = $this->pricingFees($countrys);
+
+        if(isset($prices)){
+            $pricings = $prices;
+        }
+        else{
+            $pricings = $this->pricingFees('Canada');
+        }
+
+        $data['pricing'] = $pricings;
+
+
+
+
         return view('main.newpage.shade-pro.pricing')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function pricingFees($country){
+        $data = PricingSetup::where('country', $country)->first();
+
+        return $data;
     }
 
 

@@ -196,7 +196,7 @@ input[type="radio"] {
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group"> <label for="currency">
-                                                    <h6>Currency</h6>
+                                                    <h6>Local Currency</h6>
                                                 </label>
                                                 <input type="hidden" name="localcurrency" value="{{ $data['currencyCode'][0]->currencies[0]->code }}">
                                                 <div class="input-group"> 
@@ -233,8 +233,9 @@ input[type="radio"] {
                                     @if (Request::get('country') != $data['paymentorg']->country)
 
                                         <div class="form-group"> <label for="netwmount">
-                                                <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small></h6>
+                                                <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate </b></small></h6>
                                                 <p style="font-weight: bold;">
+                                                    
                                                     {{ $data['currencyCode'][0]->currencies[0]->code }} <=> {{ $data['othercurrencyCode'][0]->currencies[0]->code }}
                                                 </p>
                                             </label>
@@ -247,7 +248,7 @@ input[type="radio"] {
                                         @else
 
                                         <div class="form-group disp-0"> <label for="netwmount">
-                                                <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small></h6>
+                                                <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate </b></small></h6>
                                                 <p style="font-weight: bold;">
                                                     {{ $data['currencyCode'][0]->currencies[0]->code }} <=> {{ $data['othercurrencyCode'][0]->currencies[0]->code }}
                                                 </p>
@@ -266,7 +267,8 @@ input[type="radio"] {
 
 
                                 <div class="form-group"> <label for="netwmount">
-                                    <h6>Net Amount <br><small class="text-success"><b>Total amount that would be received</b></small></h6>
+                                    <h6>Amount To Receive <br><small class="text-success"><b>Total amount that would be received</b></small></h6>
+                                    {{--  <h6>Net Amount <br><small class="text-success"><b>Total amount that would be received</b></small></h6>  --}}
                                     
                                 </label>
                                 <div class="input-group"> 
@@ -286,8 +288,9 @@ input[type="radio"] {
 
 
                             @if (Request::get('country') != $data['paymentorg']->country)
-                            <div class="form-group">
-                                <span class="text-success">Please note that International transfer are sent in USD conversion</span>
+                            <div class="form-group disp-0">
+                                {{--  <span class="text-success">Please note that International transfer are sent in USD conversion</span>  --}}
+                                <span class="text-success">Alert: </span>
                             </div>
 
                             @endif

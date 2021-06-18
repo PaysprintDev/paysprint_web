@@ -128,6 +128,7 @@ class GooglePaymentController extends Controller
 
     public function orgPaymentInvoice(Request $req){
 
+
         // dd($req->all());
 
         $validator = Validator::make($req->all(), [
@@ -171,7 +172,8 @@ class GooglePaymentController extends Controller
                 return redirect()->back()->with($respaction, $response);
             }
             else{
-                                    $client = User::where('ref_code', $req->user_id)->first();
+                
+                $client = User::where('ref_code', $req->user_id)->first();
 
                 if($req->commission == "on"){
                     $amount= number_format($req->amount, 2);
@@ -202,7 +204,8 @@ class GooglePaymentController extends Controller
                     $statement_route = "wallet";
 
                     if($req->localcurrency != $req->currency){
-                        $dataInfo = $this->convertCurrencyRate($req->localcurrency, $req->currency, $req->amounttosend);
+                        // $dataInfo = $this->convertCurrencyRate($req->localcurrency, $req->currency, $req->amounttosend);
+                        $dataInfo = $req->conversionamount;
                     }
                     else{
                         $dataInfo = $req->amounttosend;
@@ -233,7 +236,8 @@ class GooglePaymentController extends Controller
 
                     if($req->localcurrency != $req->currency){
 
-                        $monerisDeductamount = $this->currencyConvert($req->localcurrency, $req->totalcharge);
+                        // $monerisDeductamount = $this->currencyConvert($req->localcurrency, $req->totalcharge);
+                        $monerisDeductamount = $req->conversionamount;
 
                     }   
                     else{
@@ -241,6 +245,9 @@ class GooglePaymentController extends Controller
                         $monerisDeductamount = $req->totalcharge;
 
                     }
+
+
+
 
 
 
@@ -275,6 +282,9 @@ class GooglePaymentController extends Controller
                     
                 }
 
+
+
+
                 $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $req->user_id, 'user_id' => $userID, 'purpose' => $service, 'amount' => $req->currency.' '.$req->amount, 'withdraws' => $req->currency.' '.$req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $dataInfo, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission, 'amountindollars' => $req->localcurrency.' '.$req->conversionamount, 'request_receive' => $requestReceive]);
 
                 if($insertPay == true){
@@ -306,10 +316,12 @@ class GooglePaymentController extends Controller
 
 
                     // Insert Statement
-                    $activity = $req->payment_method." transfer of ".$req->currency.' '.number_format($req->amount, 2)." to ".$client->name." for ".$service;
+                    // $activity = $req->payment_method." transfer of ".$req->currency.' '.number_format($req->amount, 2)." to ".$client->name." for ".$service;
+                    $activity = $req->payment_method." transfer of ".$req->currency.' '.number_format($dataInfo, 2)." to ".$client->name." for ".$service;
                     $credit = 0;
                     // $debit = $req->conversionamount + $req->commissiondeduct;
-                    $debit = $dataInfo;
+                    // $debit = $dataInfo;
+                    $debit = $req->amount;
                     $reference_code = $paymentToken;
                     $balance = 0;
                     $trans_date = date('Y-m-d');
@@ -346,7 +358,7 @@ class GooglePaymentController extends Controller
                     // Senders statement
                     $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $walletstatus, $action, $regards, 1, $statement_route, 'on', $user->country);
                     
-                    $this->insStatement($client->email, $reference_code, "Received ".$req->currency.' '.number_format($dataInfo, 2)." in wallet for ".$service." from ".$user->name, number_format($dataInfo, 2), 0, $balance, $trans_date, $walletstatus, "Wallet credit", $client->ref_code, 1, $statement_route, $client->auto_deposit, $client->country);
+                    $this->insStatement($client->email, $reference_code, "Received ".$req->currency.' '.number_format($dataInfo, 2)." in wallet for ".$service." from ".$user->name, $dataInfo, 0, $balance, $trans_date, $walletstatus, "Wallet credit", $client->ref_code, 1, $statement_route, $client->auto_deposit, $client->country);
 
                     
 
@@ -397,7 +409,7 @@ class GooglePaymentController extends Controller
 
                     $monerisactivity = $sendMsg;
 
-                    $this->keepRecord($reference_code, $message, $monerisactivity);
+                    $this->keepRecord($reference_code, "WALLET APPROVED", $monerisactivity);
 
 
                     try {

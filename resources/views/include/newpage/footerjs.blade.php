@@ -13,6 +13,17 @@
 <script src="{{ asset('newpage/plugins/tilt/tilt.jquery.js') }}"></script> <!-- Load Tilt.js library -->
 <!-- Activation Script -->
 <script src="{{ asset('newpage/js/custom.js') }}"></script>
+
+
+<script>
+    $('#pricing_country').change(function(){
+        var country = $('#pricing_country').val();
+        
+        location.href = "/pricing?country="+country;
+    });
+</script>
+
+
 </body>
 
 
