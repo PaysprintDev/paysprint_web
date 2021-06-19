@@ -508,9 +508,9 @@ class UserController extends Controller
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-        $data = ClientInfo::select('industry')->where('industry', '!=', null)->where('country', $thisuser->country)->orderBy('created_at', 'DESC')->groupBy('industry')->get();
+        $data = ClientInfo::select('industry')->where('industry', '!=', null)->where('country', $thisuser->country)->orderBy('industry', 'ASC')->groupBy('industry')->get();
 
-        Log::info($data);
+        // Log::info($data);
 
         $status = 200;
 
@@ -524,7 +524,7 @@ class UserController extends Controller
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-        $query = ClientInfo::select('id', 'user_id as userId', 'business_name as businessName', 'address', 'corporate_type as corporateType', 'industry', 'type_of_service as typeOfService', 'website', 'firstname', 'lastname', 'telephone', 'country', 'state', 'city', 'zip_code as zipCode')->where('industry', $req->get('industry'))->where('country', $thisuser->country)->orderBy('created_at', 'DESC')->orderBy('created_at', 'DESC')->get();
+        $query = ClientInfo::select('id', 'user_id as userId', 'business_name as businessName', 'address', 'corporate_type as corporateType', 'industry', 'type_of_service as typeOfService', 'website', 'firstname', 'lastname', 'telephone', 'country', 'state', 'city', 'zip_code as zipCode')->where('industry', $req->get('industry'))->where('country', $thisuser->country)->orderBy('created_at', 'DESC')->orderBy('business_name', 'ASC')->get();
 
         if(count($query) > 0){ 
 

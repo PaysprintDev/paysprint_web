@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use App\User as User;
 use App\AddCard as AddCard;
 use App\AddBank as AddBank;
+use App\AddBeneficiary as AddBeneficiary;
 use App\CardIssuer as CardIssuer;
 
 class CardController extends Controller
@@ -208,6 +209,78 @@ class CardController extends Controller
         return $this->returnJSON($resData, $status);
 
     }
+
+
+
+    public function addUpBeneficiary(Request $req){
+        // Run Validation
+
+        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+
+        // GEt Benefactor name
+        $benefactor = User::where('ref_code', $req->benefactor_account_number)->first();
+
+
+
+        if(isset($benefactor)){
+
+            $addBeneficiary = AddBeneficiary::updateOrCreate(['user_id' => $thisuser->ref_code, 'benefactor_account_number' => $req->benefactor_account_number], ['user_id' => $thisuser->ref_code, 'benefactor_account_number' => $req->benefactor_account_number, 'benefactor_account_name' => $benefactor->name]);
+
+
+            $data = $addBeneficiary;
+            $status = 200;
+            $message = $benefactor->name.' added as a beneficiary';
+
+            $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully added ".$benefactor->name." as a beneficiary.");
+
+        }
+        else{
+            $data = [];
+            $status = 400;
+            $message = "Incorrect beneficiary account number";
+        }
+
+
+        // Log::info("Add Bank account:=> ".$data);
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+
+    }
+
+
+    public function getBeneficiary(Request $req){
+        // Run Validation
+
+        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+
+        $myBeneficiaries = AddBeneficiary::where('user_id', $thisuser->ref_code)->orderBy('benefactor_account_name', 'ASC')->get();
+
+
+        if(count($myBeneficiaries) > 0){
+            $data = $myBeneficiaries;
+            $status = 200;
+            $message = 'success';
+        }
+        else{
+            $data = $myBeneficiaries;
+            $status = 200;
+            $message = 'No record';
+        }
+
+
+        // Log::info("Add Bank account:=> ".$data);
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+
+    }
+
+
 
 
         public function editBank(Request $req){

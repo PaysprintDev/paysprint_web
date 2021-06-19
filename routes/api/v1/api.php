@@ -152,6 +152,10 @@ Route::prefix('/v1')->group(function () {
 
         Route::get('getprepaidcardissuers',  ['uses' => 'api\v1\CardController@getPrepaidCardIssuers'])->name('get prepaid card issuers');
 
+        Route::post('addbeneficiary',  ['uses' => 'api\v1\CardController@addUpBeneficiary'])->name('add beneficiary');
+        
+        Route::get('getbeneficiary',  ['uses' => 'api\v1\CardController@getBeneficiary'])->name('get beneficiary');
+
         Route::post('addnewcard',  ['uses' => 'api\v1\CardController@addNewCard'])->name('add new card');
         
         Route::post('editcard',  ['uses' => 'api\v1\CardController@editCard'])->name('edit card');
