@@ -571,7 +571,7 @@
                                 <div class="form-group has-info">
                                 <td><label class="control-label" for="inputSuccess" style="font-weight: normal;"> Per Month (Personal Account)</label></td>
                                 <td colspan="2">
-                                    <input type="text" class="form-control" name="withdrawal_per_week" id="withdrawal_per_week" placeholder="1000.00" required>
+                                    <input type="text" class="form-control" name="withdrawal_per_month" id="withdrawal_per_month" placeholder="1000.00" required>
                                 </td>
                                 
                                 </div>

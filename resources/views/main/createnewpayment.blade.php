@@ -172,7 +172,7 @@ input[type="radio"] {
                                                 <div class="input-group">
                                                     <select name="countryCode" id="reccountryCode" class="form-control billinginput_box" readonly>
                                                             <option value="{{ Auth::user()->code }}" selected>{{ Auth::user()->country }} (+{{ Auth::user()->code }})</option>
-                                                            {{-- <option data-countryCode="DZ" value="213">Algeria (+213)</option>
+                                                            <option data-countryCode="DZ" value="213">Algeria (+213)</option>
                                                             <option data-countryCode="AD" value="376">Andorra (+376)</option>
                                                             <option data-countryCode="AO" value="244">Angola (+244)</option>
                                                             <option data-countryCode="AI" value="1264">Anguilla (+1264)</option>
@@ -385,7 +385,7 @@ input[type="radio"] {
                                                             <option data-countryCode="YE" value="969">Yemen (North)(+969)</option>
                                                             <option data-countryCode="YE" value="967">Yemen (South)(+967)</option>
                                                             <option data-countryCode="ZM" value="260">Zambia (+260)</option>
-                                                            <option data-countryCode="ZW" value="263">Zimbabwe (+263)</option> --}}
+                                                            <option data-countryCode="ZW" value="263">Zimbabwe (+263)</option>
                                                     </select> 
                                                     <input type="number" min="0" step="1" name="phone" id="phone" placeholder="Telephone" class="form-control">
                                                 </div>
@@ -399,7 +399,7 @@ input[type="radio"] {
                                         <div class="input-group"> 
                                             <select id="country" name="country" class="form-control" readonly>
                                                 <option value="{{ Auth::user()->country }}" selected>{{ Auth::user()->country }}</option>
-                                                {{-- <option value="Afghanistan">Afghanistan</option>
+                                                <option value="Afghanistan">Afghanistan</option>
                                                 <option value="Albania">Albania</option>
                                                 <option value="Algeria">Algeria</option>
                                                 <option value="American Samoa">American Samoa</option>
@@ -644,7 +644,7 @@ input[type="radio"] {
                                                 <option value="Yemen">Yemen</option>
                                                 <option value="Zaire">Zaire</option>
                                                 <option value="Zambia">Zambia</option>
-                                                <option value="Zimbabwe">Zimbabwe</option> --}}
+                                                <option value="Zimbabwe">Zimbabwe</option>
                                             </select>
 
                                             

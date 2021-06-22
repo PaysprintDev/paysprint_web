@@ -330,6 +330,7 @@
                             </td>
                         </tr>
 
+
                         <tr>
                             <td><p class="gr-text-6 font-weight-bold mb-9">1.0 Personal/Business</p></td>
                             <td><p class="gr-text-6 font-weight-bold mb-9">Fixed</p></td>
@@ -337,19 +338,19 @@
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Add Money To Wallet</p></td>
-                            <td><p class="gr-text-9 mb-0">$1.80</p></td>
-                            <td><p class="gr-text-9 mb-0">1.30%</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->user_add_money_fixed }}</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['pricing']->user_add_money_variable }}%</p></td>
                         </tr>
                         <tr>
                             <td colspan="3"><p class="gr-text-6 font-weight-bold mb-9">Send Money: (Both PS User & Non-PS User)</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Local-to-Local</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">No Fee</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['pricing']->user_send_money_local }}</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Local-to-International (for Currency Conversion)</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">2% Currency Conversion</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['pricing']->user_send_money_international }}</p></td>
                         </tr>
 
 
@@ -358,11 +359,11 @@
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Local-to-Local</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">No Fee</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['pricing']->user_receive_money_local }}</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Local-to-International</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">2% Currency Conversion</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['pricing']->user_receive_money_international }}</p></td>
                         </tr>
 
 
@@ -371,11 +372,11 @@
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Local-to-Local</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">No Fee</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['pricing']->user_pay_invoice_local }}</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Local-to-International</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">2% Currency Conversion</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['pricing']->user_pay_invoice_international }}</p></td>
                         </tr>
 
 
@@ -384,11 +385,11 @@
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Local-to-Local</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">No Fee</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['pricing']->user_refund_money_local }}</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Local-to-International</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">2% Currency Conversion</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['pricing']->user_refund_money_international }}</p></td>
                         </tr>
 
                         <tr>
@@ -396,31 +397,32 @@
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">To Prepaid Card</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">No Fee</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->user_prepaid_withdrawal_fixed }}</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['pricing']->user_prepaid_withdrawal_variable }}%</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">To Credit Card</p></td>
-                            <td><p class="gr-text-9 mb-0">$1.80</p></td>
-                            <td><p class="gr-text-9 mb-0">1.30%</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->user_credit_withdrawal_fixed }}</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['pricing']->user_credit_withdrawal_variable }}%</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">To Bank Account</p></td>
-                            <td><p class="gr-text-9 mb-0">No Fee</p></td>
-                            <td><p class="gr-text-9 mb-0">No Fee</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->user_bank_withdrawal_fixed }}</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['pricing']->user_bank_withdrawal_variable }}%</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">To Debit VISA/Mastercard</p></td>
-                            <td><p class="gr-text-9 mb-0">No Fee</p></td>
-                            <td><p class="gr-text-9 mb-0">No Fee</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->user_debit_withdrawal_fixed }}</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['pricing']->user_debit_withdrawal_variable }}%</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Monthly Maintenance Fee</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">$5.00</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->maintenance_fee }}</p></td>
                         </tr>
 
                         <tr>
                             <td><p class="gr-text-9 mb-0">Minimum Wallet Balance</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">$5.00</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->minimum_wallet_balance }}</p></td>
                         </tr>
 
 
@@ -434,19 +436,19 @@
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Per Transaction</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">$500.00</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->withdrawal_per_transaction }}</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Per Day</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">$2,500.00</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->withdrawal_per_day }}</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Per Week</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">$2,500.00</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->withdrawal_per_week }}</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Per Month</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">$4,000.00</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->withdrawal_per_month }}</p></td>
                         </tr>
                         
                     </tbody>
@@ -463,19 +465,19 @@
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Add Money To Wallet</p></td>
-                            <td><p class="gr-text-9 mb-0">$1.80</p></td>
-                            <td><p class="gr-text-9 mb-0">1.30%</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->user_add_money_fixed }}</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['pricing']->user_add_money_variable }}%</p></td>
                         </tr>
                         <tr>
                             <td colspan="3"><p class="gr-text-6 font-weight-bold mb-9">Send Money: (Both PS User & Non-PS User)</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Local-to-Local</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">No Fee</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['pricing']->user_send_money_local }}</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Local-to-International (for Currency Conversion)</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">2% Currency Conversion</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['pricing']->user_send_money_international }}</p></td>
                         </tr>
 
                         <tr>
@@ -483,11 +485,11 @@
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Local-to-Local</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">No Fee</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['pricing']->user_receive_money_local }}</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Local-to-International</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">2% Currency Conversion</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['pricing']->user_receive_money_international }}</p></td>
                         </tr>
 
 
@@ -507,18 +509,18 @@
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">To Credit Card</p></td>
-                            <td><p class="gr-text-9 mb-0">$1.80</p></td>
-                            <td><p class="gr-text-9 mb-0">1.30%</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->user_credit_withdrawal_fixed }}</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['pricing']->user_credit_withdrawal_variable }}%</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">To Bank Account</p></td>
-                            <td><p class="gr-text-9 mb-0">$1.80</p></td>
-                            <td><p class="gr-text-9 mb-0">1.30%</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->user_bank_withdrawal_fixed }}</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['pricing']->user_bank_withdrawal_variable }}%</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">To Debit VISA/Mastercard</p></td>
-                            <td><p class="gr-text-9 mb-0">$1.80</p></td>
-                            <td><p class="gr-text-9 mb-0">1.30%</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->user_debit_withdrawal_fixed }}</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['pricing']->user_debit_withdrawal_variable }}%</p></td>
                         </tr>
 
 
@@ -527,11 +529,11 @@
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Local-to-Local</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">No Fee</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['pricing']->user_refund_money_local }}</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Local-to-International</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">No Fee</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['pricing']->user_refund_money_international }}</p></td>
                         </tr>
 
                         <tr>
@@ -543,30 +545,29 @@
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Into Credit Card</p></td>
-                            <td><p class="gr-text-9 mb-0">$1.80</p></td>
-                            <td><p class="gr-text-9 mb-0">1.30%</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->user_credit_withdrawal_fixed }}</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['pricing']->user_credit_withdrawal_variable }}%</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Into Bank Account</p></td>
-                            <td><p class="gr-text-9 mb-0">$1.80</p></td>
-                            <td><p class="gr-text-9 mb-0">1.30%</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->user_bank_withdrawal_fixed }}</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['pricing']->user_bank_withdrawal_variable }}%</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Into Debit VISA/Mastercard</p></td>
-                            <td><p class="gr-text-9 mb-0">$1.80</p></td>
-                            <td><p class="gr-text-9 mb-0">1.30%</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->user_debit_withdrawal_fixed }}</p></td>
+                            <td><p class="gr-text-9 mb-0">{{ $data['pricing']->user_debit_withdrawal_variable }}%</p></td>
                         </tr>
 
 
                         <tr>
                             <td><p class="gr-text-9 mb-0">Monthly Maintenance Fee</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">$5.00</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->maintenance_fee }}</p></td>
                         </tr>
-                        
-                        
+
                         <tr>
                             <td><p class="gr-text-9 mb-0">Minimum Wallet Balance</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">$5.00</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->minimum_wallet_balance }}</p></td>
                         </tr>
 
 
@@ -580,19 +581,19 @@
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Per Transaction</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">$1,000.00</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->merchant_withdrawal_per_transaction }}</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Per Day</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">$5,000.00</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->merchant_withdrawal_per_day }}</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Per Week</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">$5,000.00</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->merchant_withdrawal_per_week }}</p></td>
                         </tr>
                         <tr>
                             <td><p class="gr-text-9 mb-0">Per Month</p></td>
-                            <td colspan="2"><p class="gr-text-9 mb-0">$20,000.00</p></td>
+                            <td colspan="2"><p class="gr-text-9 mb-0">{{ $data['currency'].$data['pricing']->merchant_withdrawal_per_month }}</p></td>
                         </tr>
                         
                     </tbody>

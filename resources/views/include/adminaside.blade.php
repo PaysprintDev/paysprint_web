@@ -274,7 +274,7 @@
             <li title="Set up"><a href="{{ route('fee structure') }}"><i class="fa fa-circle-o text-red"></i> Set up</a></li>
             <li title="By Country"><a href="{{ route('fee structure by country') }}"><i class="fa fa-circle-o text-red"></i> By Country</a></li>
             <li title="Pricing Set Up"><a href="{{ route('pricing setup') }}"><i class="fa fa-circle-o text-red"></i> Pricing Set Up</a></li>
-            <li title="Pricing Set Up"><a href="#"><i class="fa fa-circle-o text-red"></i> Pricing By Country</a></li>
+            <li title="Pricing Set Up"><a href="{{ route('pricing setup by country') }}"><i class="fa fa-circle-o text-red"></i> Pricing By Country</a></li>
 
           </ul>
         </li>

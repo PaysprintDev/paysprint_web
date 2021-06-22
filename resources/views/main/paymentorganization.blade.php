@@ -198,10 +198,10 @@ input[type="radio"] {
                                             <div class="form-group"> <label for="currency">
                                                     <h6>Local Currency</h6>
                                                 </label>
-                                                <input type="hidden" name="localcurrency" value="{{ $data['currencyCode'][0]->currencies[0]->code }}">
+                                                <input type="hidden" name="currency" value="{{ $data['othercurrencyCode'][0]->currencies[0]->code }}">
                                                 <div class="input-group"> 
-                                                    <select name="currency" id="currency" class="form-control" readonly>
-                                                        <option value="{{ $data['othercurrencyCode'][0]->currencies[0]->code }}" selected>{{ $data['othercurrencyCode'][0]->currencies[0]->code }}</option>
+                                                    <select name="localcurrency" id="localcurrency" class="form-control" readonly>
+                                                        <option value="{{ $data['currencyCode'][0]->currencies[0]->code }}" selected>{{ $data['currencyCode'][0]->currencies[0]->code }}</option>
                                                     </select>
                                                     
                                                 </div>
@@ -234,12 +234,35 @@ input[type="radio"] {
 
                                         <div class="form-group"> <label for="netwmount">
                                                 <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate </b></small></h6>
-                                                <p style="font-weight: bold;">
-                                                    
+                                                {{-- <p style="font-weight: bold;">
                                                     {{ $data['currencyCode'][0]->currencies[0]->code }} <=> {{ $data['othercurrencyCode'][0]->currencies[0]->code }}
-                                                </p>
+                                                </p> --}}
+
+                                                <table class="table table-bordered table-striped">
+                                                        <tbody>
+                                                            <tr style="font-weight: bold;">
+                                                                <td>{{ $data['currencyCode'][0]->currencies[0]->code }}</td>
+                                                                <td>{{ $data['othercurrencyCode'][0]->currencies[0]->code }}</td>
+                                                            </tr>
+                                                            <tr style="font-weight: bold;">
+                                                                <td class="text-success">1</td>
+                                                                <td class="text-primary">{{ round($data['othercurrencyCode']['conversionrate'], 2) }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
                                             </label>
+                                            
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="conversionamount">
+                                                    <p>
+                                                        <h6>Amount To Receive ({{ $data['othercurrencyCode'][0]->currencies[0]->code }}) <br><small class="text-success"><b>Total amount that would be received </b></small></h6>
+                                                    </p>
+                                                </label>
                                             <div class="input-group"> 
+                                                
                                                 <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
                                             </div>
                                         </div>
@@ -264,17 +287,21 @@ input[type="radio"] {
 
 
                                     
+                                    @if (Request::get('country') == $data['paymentorg']->country)
+
+                                        <div class="form-group"> <label for="netwmount">
+                                            <h6>Amount To Receive <br><small class="text-success"><b>Total amount that would be received</b></small></h6>
+                                            </label>
+                                            <div class="input-group"> 
+                                                <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
+                                            </div>
+                                        </div>
+
+                                    @endif
 
 
-                                <div class="form-group"> <label for="netwmount">
-                                    <h6>Amount To Receive <br><small class="text-success"><b>Total amount that would be received</b></small></h6>
-                                    {{--  <h6>Net Amount <br><small class="text-success"><b>Total amount that would be received</b></small></h6>  --}}
-                                    
-                                </label>
-                                <div class="input-group"> 
-                                    <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
-                                </div>
-                            </div>
+                                
+
                                 <div class="form-group"> <label for="netwmount">
                                     <h6>Fee <small class="text-success"><b>(FREE)</b></small></h6>
                                 </label>
