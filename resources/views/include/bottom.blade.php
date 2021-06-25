@@ -7,7 +7,7 @@
                     {{-- <p style="font-weight: bold; font-size: 30px;">Pay<span style="color: #f6b60b">Sprint</span></p> --}}
                     <img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_white_horizotal_mb5ouw.png" style="position: relative; left: -40px;">
                     {{-- <p>Payca or electronic bill payment, is when a seller such as company, organization, or group sends its bills or invoices over the internet, and customers pay the bills electronically.</p> --}}
-                    <p style="padding-top: 0px !important;">PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!</p>
+                    <p style="padding-top: 0px !important;">PaySprint is the fastest and most affordable way to send and receive money. Pay invoices and get paid at anytime!</p>
                     <ul class="socail_icon">
                         <li><a href="https://www.facebook.com/EXPRESSCANADA2014/?modal=admin_todo_tour" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
                         <li><a href="https://twitter.com/EXBC2" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>

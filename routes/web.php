@@ -104,6 +104,8 @@ Route::get('signout/{id}',  ['uses' => 'api\v1\UserController@logout'])->name('s
 
 
 // General Rental Management PAGE
+Route::get('rentalmanagement-start', ['uses' => 'HomeController@rentalManagementStart', 'as' => 'rentalmanagement start']);
+
 Route::get('rentalmanagement', ['uses' => 'HomeController@rentalManagement', 'as' => 'rentalmanagement']);
 
 // Admin Rental Management Page
@@ -517,13 +519,18 @@ Route::post('checkfeeReport', ['uses' => 'AdminController@ajaxcheckfeeReport', '
 Route::post('invoiceVisit', ['uses' => 'AdminController@ajaxinvoiceVisit', 'as' => 'AjaxinvoiceVisit']);
 Route::post('confirmpayment', ['uses' => 'AdminController@ajaxconfirmpayment', 'as' => 'Ajaxconfirmpayment']);
 
+
 Route::post('openuseraccount', ['uses' => 'AdminController@ajaxOpenUserAccount', 'as' => 'Ajaxopenuseraccount']);
 Route::post('closeuseraccount', ['uses' => 'AdminController@ajaxCloseUserAccount', 'as' => 'Ajaxcloseuseraccount']);
 Route::post('approveUser', ['uses' => 'AdminController@ajaxapproveUser', 'as' => 'AjaxapproveUser']);
+
+
+Route::post('moveUser', ['uses' => 'AdminController@ajaxmoveUser', 'as' => 'AjaxmoveUser']);
 Route::post('checkverification', ['uses' => 'AdminController@ajaxCheckVerification', 'as' => 'Ajaxcheckverification']);
 Route::post('paybankwithdrawal', ['uses' => 'AdminController@ajaxpayBankWithdrawal', 'as' => 'Ajaxpaybankwithdrawal']);
 Route::post('paycardwithdrawal', ['uses' => 'AdminController@ajaxpayCardWithdrawal', 'as' => 'Ajaxpaycardwithdrawal']);
 Route::post('flagguser', ['uses' => 'AdminController@ajaxflagUser', 'as' => 'Ajaxflagguser']);
+
 Route::post('singleinvoiceusercheck', ['uses' => 'AdminController@ajaxSingleInvoiceUserCheck', 'as' => 'Ajaxsingleinvoiceusercheck']);
 Route::post('refundmoneybacktowallet', ['uses' => 'AdminController@ajaxRefundMoneyBackToWallet', 'as' => 'Ajaxrefundmoneybacktowallet']);
 Route::post('accesstousepaysprint', ['uses' => 'AdminController@ajaxAccessToUsePaysprint', 'as' => 'grant country']);

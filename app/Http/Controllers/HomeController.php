@@ -853,6 +853,7 @@ class HomeController extends Controller
             'getCard' => $this->getUserCard(),
         );
 
+
         
 
         return view('main.addmoneytowallet')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -1041,6 +1042,12 @@ class HomeController extends Controller
         return $data;
     }
 
+    public function getallRPM($country){
+        $data = Building::where('buildinglocation_country', $country)->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
+
     public function getMerchantsByCategory(){
         $data = ClientInfo::where('industry', '!=', null)->where('country', Auth::user()->country)->orderBy('created_at', 'DESC')->groupBy('industry')->get();
 
@@ -1177,6 +1184,48 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'getRPM' => $this->getallRPM(Auth::user()->country),
+                );
+            }
+            else{
+                // $this->page = 'Rental Property Management';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
+            }
+
+
+        }
+        else{
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
+            $this->page = 'Rental Property Management';
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+            $data = array(
+                'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                'getRPM' => $this->getallRPM(Auth::user()->country),
+            );
+        }
+
+        return view('main.rentalmanagement')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function rentalManagementStart(Request $req)
+    {
+
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'Rental Property Management';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                 );
             }
             else{
@@ -1202,7 +1251,7 @@ class HomeController extends Controller
             );
         }
 
-        return view('main.rentalmanagement')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+        return view('main.rentalmanagementstart')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -1766,10 +1815,11 @@ class HomeController extends Controller
         }
 
         // Get Organization & Business
-        $clientInfo = $this->clientsInformation();
+        $clientInfo = $this->thisClientsInformation($req->get('id'));
+        $buildInfo = $this->thisBuildingInformation($req->get('id'));
 
 
-        return view('main.maintenance')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'clientInfo' => $clientInfo, 'data' => $data]);
+        return view('main.maintenance')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'clientInfo' => $clientInfo, 'data' => $data, 'buildInfo' => $buildInfo]);
     }
 
 
@@ -3569,7 +3619,7 @@ class HomeController extends Controller
 
         if(count($getclient) > 0){
             // Get Facility
-            $ownerfacility = $facility->where('owner_email', $getclient[0]->email)->get();
+            $ownerfacility = $facility->where('owner_email', $getclient[0]->email)->where('buildinglocation_country', Auth::user()->country)->get();
 
             if(count($ownerfacility) > 0){
 
@@ -3668,12 +3718,24 @@ class HomeController extends Controller
 
 
                 $data = TransactionCost::where('structure', $req->structure)->where('method', $req->structureMethod)->first();
+                
+                if(isset($data)){
+                    $x = ($data->variable / 100) * $req->amount;
 
-                $x = ($data->variable / 100) * $req->amount;
+                    $y = $data->fixed + $x;
 
-                $y = $data->fixed + $x;
+                    $collection = $y;
+                }
+                else{
 
-                $collection = $y;
+                    $x = (1.30 / 100) * $req->amount;
+
+                    $y = 1.80 + $x;
+
+                    $collection = $y;
+                }
+
+                
 
             }
 
@@ -3962,6 +4024,24 @@ class HomeController extends Controller
         $clientInfo = ClientInfo::orderBy('created_at', 'DESC')->get();
 
         return $clientInfo;
+    }
+
+
+    public function thisClientsInformation($id){
+        // Get Organization & Businessn JOIN with Building/Facility
+        $thisClient = Building::where('id', $id)->first();
+
+        $clientInfo = ClientInfo::where('email', $thisClient->owner_email)->orderBy('created_at', 'DESC')->get();
+
+        return $clientInfo;
+    }
+
+
+    public function thisBuildingInformation($id){
+        // Get Organization & Businessn JOIN with Building/Facility
+        $thisClient = Building::where('id', $id)->where('buildinglocation_country', Auth::user()->country)->first();
+
+        return $thisClient;
     }
 
 

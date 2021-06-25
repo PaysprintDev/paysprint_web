@@ -7,7 +7,7 @@
                     <div class="single-footer mb-13 mb-lg-9">
                         <p class="footer-title gr-text-11 mb-7" style="font-size: 20px;"><strong>ABOUT OUR COMPANY</strong></p>
                         
-                        <p>PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!</p>
+                        <p>PaySprint is the fastest and most affordable way to send and receive money. Pay invoices and get paid at anytime!</p>
                     </div>
                 </div>
                 <div class="col-6 col-lg-3">

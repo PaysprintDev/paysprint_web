@@ -85,7 +85,7 @@ input[type="radio"] {
                                             <select name="gateway" id="gateway" class="form-control" required>
                                                 <option value="">Select option</option>
                                                 <option value="PaySprint">PaySprint</option>
-                                                {{--  <option value="Google Pay">Google Pay</option>  --}}
+                                                 {{-- <option value="Google Pay">Google Pay</option>  --}}
                                                 {{-- <option value="Prepaid Card">Prepaid Card</option> --}}
                                                 {{-- <option value="Bank Account">Bank Account</option> --}}
                                             </select>
@@ -102,7 +102,7 @@ input[type="radio"] {
                                                 <option value="">Select option</option>
                                                 <option value="Credit Card">Credit Card</option>
                                                 <option value="Debit Card">Debit VISA/Mastercard</option>
-                                                {{--  <option value="Google Pay">Google Pay</option>  --}}
+                                                 {{-- <option value="Google Pay">Google Pay</option>  --}}
                                                 {{-- <option value="Prepaid Card">Prepaid Card</option> --}}
                                                 {{-- <option value="Bank Account">Bank Account</option> --}}
                                             </select>
@@ -206,7 +206,7 @@ input[type="radio"] {
                                             <div id="container"></div>
 
                                             
-    <div id="moneris-google-pay" store-id="monca04155" web-merchant-key="8721CF195A6D59C63304681BB18FA9163808950E2743426DBF11CB7D91A74E03"></div>
+    <div id="moneris-google-pay" store-id="monca04155" web-merchant-key="3AC605265FB6A78820F33EE8E8B2067EEE9E560BE69C6E80D412D25DCFCB5174"></div>
                                         </center>
                                     </div>
 
@@ -665,7 +665,8 @@ function goBack() {
           paymentDataRequest.merchantInfo = {
             // @todo a merchant ID is available for a production environment after approval by Google
             // See {@link https://developers.google.com/pay/api/web/guides/test-and-deploy/integration-checklist|Integration checklist}
-            merchantId: 'BCR2DN6T2PJ3FJ37',
+            // merchantId: 'BCR2DN6T2PJ3FJ37',
+            merchantId: '0030211465333',
             merchantName: "PaySprint",
           };
           return paymentDataRequest;
@@ -790,6 +791,7 @@ function goBack() {
          * @see {@link https://developers.google.com/pay/api/web/reference/response-objects#PaymentData|PaymentData object reference}
          */
         function processPayment(paymentData) {
+            console.log(paymentData);
             var d = new Date();
 
             var totalcharge = $('#totalcharge').val();
@@ -818,6 +820,8 @@ function goBack() {
 
                 MonerisGooglePay.purchase(paymentData, function(response)
                 {
+
+                    console.log(response);
 
                 if ( response && response.receipt && response.receipt.ResponseCode &&
                 !isNaN(response.receipt.ResponseCode) )

@@ -19,7 +19,7 @@
                 <div class=" hero-sm-card-1">
                     <div class="px-7 py-6 d-flex bg-white shadow-10 rounded-15 w-xs-75 w-lg-76 w-xl-68 hero-card-1-animation"
                         id="an-item-1p1">
-                        <p class="gr-text-11 mb-0 text-mirage-2">“I want to send money to my families and friends, but they are not on PaySprint.”</p>
+                        <p class="gr-text-11 mb-0 text-mirage-2">“I want to send money to my family and friends, but they are no on PaySprint.”</p>
                         <div class="small-card-img ml-6">
                             <img src="https://img.icons8.com/bubbles/50/000000/night-man.png" alt="" class="circle-42">
                         </div>
@@ -32,7 +32,7 @@
                         <div class="small-card-img mr-6 text-white">
                             <img src="https://img.icons8.com/bubbles/50/000000/happy-woman.png" alt="" class="circle-42">
                         </div>
-                        <p class="gr-text-11 mb-0 text-white">“Dont worry! With PaySprint, you can send money  through Text message or email to them for FREE!!”</p>
+                        <p class="gr-text-11 mb-0 text-white">“Don’t worry! With PaySprint, you can send money through text message or email for FREE!!”</p>
                     </div>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                 data-aos-once="true">
                 <div class="hero-content section-title text-center text-lg-left">
                     <h1 class="gr-text-2 font-weight-bold mb-8" style="font-size:60px">Safe and Secure <br class="">Way to Send Money for FREE!</h1>
-                    <p class="gr-text-9 gr-text-color pr-md-7">Fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!.</p>
+                    <p class="gr-text-9 gr-text-color pr-md-7">Fastest and affordable method of sending and receiving money, paying invoice and getting Paid at anytime!</p>
                     
                     
                     <div class="hero-btns mt-11">

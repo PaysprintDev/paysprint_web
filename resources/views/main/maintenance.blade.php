@@ -7,6 +7,7 @@
 
 
 
+
 @section('text/css')
 
 <style>
@@ -97,9 +98,7 @@
                                 <select name="property_owner" class="form-control billinginput_box" id="property_owner" required data-live-search="true">
                                     @if (count($clientInfo) > 0)
                                     <option value="">Select Property Owner</option>
-                                    @foreach ($clientInfo as $orgs)
-                                        <option value="{{ $orgs->user_id }}">{{ $orgs->firstname.' '.$orgs->lastname.' - ('.$orgs->address.')' }}</option>
-                                    @endforeach
+                                        <option value="{{ $clientInfo[0]->user_id }}">{{ $clientInfo[0]->firstname.' '.$clientInfo[0]->lastname.' - ('.$buildInfo->buildinglocation_street_number.' '.$buildInfo->buildinglocation_street_name.' '.$buildInfo->buildinglocation_city.' '.$buildInfo->buildinglocation_zipcode.' '.$buildInfo->buildinglocation_state.')' }}</option>
 
                                     @else
                                         <option value="">No available organization</option>

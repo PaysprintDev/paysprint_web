@@ -82,7 +82,7 @@ class UserController extends Controller
 
             if(isset($newcustomer)){
 
-                    $user = User::create(['code' => $newcustomer->code, 'ref_code' => $newcustomer->ref_code, 'name' => $newcustomer->name, 'email' => $newcustomer->email, 'password' => Hash::make($request->password), 'address' => $newcustomer->address, 'city' => $request->city, 'state' => $request->state, 'country' => $newcustomer->country, 'accountType' => 'Individual', 'api_token' => uniqid().md5($request->email), 'telephone' => $newcustomer->telephone, 'wallet_balance' => $newcustomer->wallet_balance, 'approval' => 0, 'currencyCode' => $mycode[0]->currencies[0]->code, 'currencySymbol' => $mycode[0]->currencies[0]->symbol, 'dayOfBirth' => $request->dayOfBirth, 'monthOfBirth' => $request->monthOfBirth, 'yearOfBirth' => $request->yearOfBirth, 'cardRequest' => 0, 'platform' => 'mobile', 'accountLevel' => 2]);
+                    $user = User::create(['code' => $newcustomer->code, 'ref_code' => $newcustomer->ref_code, 'name' => $newcustomer->name, 'email' => $newcustomer->email, 'password' => Hash::make($request->password), 'address' => $newcustomer->address, 'city' => $request->city, 'state' => $request->state, 'country' => $newcustomer->country, 'accountType' => 'Individual', 'api_token' => uniqid().md5($request->email), 'telephone' => $newcustomer->telephone, 'wallet_balance' => $newcustomer->wallet_balance, 'approval' => 0, 'currencyCode' => $mycode[0]->currencies[0]->code, 'currencySymbol' => $mycode[0]->currencies[0]->symbol, 'dayOfBirth' => $request->dayOfBirth, 'monthOfBirth' => $request->monthOfBirth, 'yearOfBirth' => $request->yearOfBirth, 'cardRequest' => 0, 'platform' => 'mobile', 'accountLevel' => 2, 'zip' => $request->zipcode]);
 
                     $getMoney = Statement::where('user_id', $newcustomer->email)->get();
 
@@ -109,6 +109,7 @@ class UserController extends Controller
                     'city' => $request->city,
                     'state' => $request->state,
                     'country' => $request->country,
+                    'zip' => $request->zipcode,
                     'accountType' => 'Individual',
                     'currencyCode' => $mycode[0]->currencies[0]->code,
                     'currencySymbol' => $mycode[0]->currencies[0]->symbol,
@@ -136,7 +137,7 @@ class UserController extends Controller
             $countryApproval = AllCountries::where('name', $request->country)->where('approval', 1)->first();
 
             if(isset($countryApproval)){
-                $info = $this->identificationAPI($url, $request->firstname, $request->lastname, $request->dayOfBirth, $request->monthOfBirth, $request->yearOfBirth, $minimuAge, $request->address, $request->city, $request->country, null, $request->telephone, $request->email, $mycode[0]->alpha2Code);
+                $info = $this->identificationAPI($url, $request->firstname, $request->lastname, $request->dayOfBirth, $request->monthOfBirth, $request->yearOfBirth, $minimuAge, $request->address, $request->city, $request->country, $request->zipcode, $request->telephone, $request->email, $mycode[0]->alpha2Code);
 
 
                     if(isset($info->TransactionID) == true){

@@ -9304,6 +9304,47 @@ class AdminController extends Controller
 
     }
 
+
+    public function ajaxmoveUser(Request $req, User $user){
+
+        $data = $user->where('id', $req->id)->first();
+
+
+            $user->where('id', $req->id)->update(['approval' => 1, 'accountLevel' => 3, 'disableAccount' => 'off']);
+
+            $subject = 'Account information approved';
+            
+            $message = "We have completed the review of the Identification provided on your PaySprint Account. Your PaySprint account has been enabled and you will be able to Send Money, Pay Invoice and Request for withdrawal of funds from your PaySprint Wallet from  the Mobile and Web platforms. Thank you for your interest in PaySprint. compliance@paysprint.net";
+
+            $resData = ['res' => 'Account information approved', 'message' => 'success', 'title' => 'Great'];
+
+            // Send Mail to Receiver
+            $this->name = $data->name;
+            $this->to = $data->email;
+            
+            $this->subject = $subject;
+            $this->message = $message;
+
+            $usersPhone = User::where('email', $data->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+            if(isset($usersPhone)){
+
+                $recipients = $data->telephone;
+            }
+            else{
+                $recipients = "+".$data->code.$data->telephone;
+            }
+
+            $this->createNotification($data->ref_code, $message);
+            $this->sendMessage($message, $recipients);
+
+            $this->sendEmail($this->to, "Refund Request");
+
+
+            return $this->returnJSON($resData, 200);
+
+    }
+
     public function ajaxCloseUserAccount(Request $req, User $user, UserClosed $userclosed){
 
         $data = $user->where('id', $req->id)->first();

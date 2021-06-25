@@ -20,7 +20,7 @@
                     <div class="subtittle">
                         <h2>WHO WE ARE</h2>
                     </div>
-                    <p>PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!</p>
+                    <p>PaySprint is the fastest and affordable way to send and receive money. Pay invoices and get paid anytime!</p>
                     <a href="{{ route('contact') }}" class="button_all">Contact Now</a>
                 </div>
                 <div class="col-md-5 our_skill_inner">
@@ -101,9 +101,9 @@
                         <div class="media-body">
                             <a href="#">RENTAL PROPERTY MANAGEMENT</a>
                             <p>
-                            Are you a Property Manager or a Landlord looking for a good tool to manage end-to-end process of your business or property? With PaySprint, you are able to manage every aspect of the business or property ranging from managing maintenance to booking amenities or invoicing tenants.
-                            Request for a Demo Today  <br>
-                            <a href="{{ route('login') }}" style="font-size: 14px;">Click to login</a> to your Account NOW</p>
+                            Are you a Property Manager or a Landlord looking for a simple, effective, tool for managing the end-to-end processes of your rental property? With PaySprint, you have, at your fingertips, every aspect of the property management business, from maintenance to booking amenities and invoicing tenants. 
+                              <br>
+                            <a href="{{ route('login') }}" style="font-size: 14px;">Request for a Demo Today</a></p>
                         </div>
                     </div>
                     <hr>
@@ -115,7 +115,7 @@
                         </div>
                         <div class="media-body">
                             <a href="#">UTILITY BILL</a>
-                            <p>Do you want to pay a utility bill to the landlord or government? Do you want to be receiving electronic copy (eCopy) of the bills, Open a Free PaySprint Account Today <a href="{{ route('login') }}" style="font-size: 14px;">Login to your account Today</a>.</p>
+                            <p>Do you want to pay a utility bill to the landlord or government? Do you want to receive electronic copies (eCopy) of your bills? <br> <a href="{{ route('login') }}" style="font-size: 14px;">Open a free PaySprint account today!</a>.</p>
                         </div>
                     </div>
                     <hr>
@@ -128,9 +128,9 @@
                         <div class="media-body">
                             <a href="#">PROPERTY TAX</a>
                             <p>
-                            Do you have a bill to pay, or want to check if there is any outstanding on your property tax account with government? PaySprint is all you need. <br>
+                            Do you have a bill to pay, or want to check if there is an outstanding balance on your property tax account? PaySprint is all you need.  <br>
                             {{-- <a href="{{ route('login') }}" style="font-size: 14px;">Click to login</a> to your Account NOW  --}}
-                            <span style="background-color: tomato; color: #fff; border-radius: 10px; padding: 5px">COMING SOON!!</span></p>
+                            <span style="background-color: tomato; color: #fff; border-radius: 10px; padding: 5px">Pre-register for this new service today.</span></p>
                         </div>
                     </div>
                     
@@ -143,7 +143,7 @@
                         </div>
                         <div class="media-body">
                             <a href="#">PARKING TICKETS</a>
-                            <p>You can pay the City parking tickets and most other Provincial Offences Act (POA) violations by telephone, in person or by mail. <span style="background-color: tomato; color: #fff; border-radius: 10px; padding: 5px">COMING SOON!!</span></p>
+                            <p>You can pay parking tickets and most other Provincial Offences Act (POA) violations issued by the City. <br> <span style="background-color: tomato; color: #fff; border-radius: 10px; padding: 5px">Pre-register for this new service today.</span></p>
 
                             {{-- <p>You can pay the City parking tickets and most other Provincial Offences Act (POA) violations by telephone, in person or by mail. If you wish to dispute a ticket, you have to do so in person by asking for a <a href="https://www.brampton.ca/EN/residents/Parking/Pages/Trial-Request.aspx" target="_blank">trial</a>. <br> If you have received a parking ticket or another POA violation, such as a speeding ticket, click on the appropriate button when you login to the account. However, you must also carefully read the specific details on your Parking Infraction/Offence Notice. <a href="{{ route('login') }}" style="font-size: 14px;">Login to your account Today</a>.</p> --}}
                         </div>

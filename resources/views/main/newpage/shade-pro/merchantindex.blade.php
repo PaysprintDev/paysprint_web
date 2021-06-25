@@ -32,7 +32,7 @@
             <div class="hero-content mt-11 mt-lg-0">
               <h4 class="pre-title gr-text-12 text-red text-uppercase mb-7" style="font-size: 22px;">Let’s lift your business</h4>
               <h1 class="title gr-text-2 mb-8" style="font-size:60px">Create and Send Professional Invoices for FREE!</h1>
-              <p class="gr-text-8 mb-11 pr-md-12">Create invoice at a click of a button and accept payment from customers with ease, anytime, anywhere!.</p>
+              <p class="gr-text-8 mb-11 pr-md-12">Create invoices at the click of a button and accept payments from customers with ease, anytime, anywhere!</p>
 
               
 
@@ -87,7 +87,7 @@
                 <img src="{{ asset('newpage/image/l5/png/l5-service-card1.png') }}" alt="...">
               </div>
               <h3 class="card-title gr-text-6 mb-6">Professional Invoicing, Simplified!</h3>
-              <p class="gr-text-9 mb-11">Create and send professional invoices with a click of a button. You can create and send a single invoice or a batch invoice including recurring payments, instalments and taxes!</p>
+              <p class="gr-text-9 mb-11">Create and send professional invoices with a click of a button. You can create and send a single invoice or send batch invoices and set up recurring payments, instalments and pay taxes!</p>
               <a href="{{ route('AdminLogin') }}" class="gr-text-9 btn-link with-icon text-white mt-auto">Get Started <i class="icon icon-tail-right"></i></a>
             </div>
           </div>
@@ -99,7 +99,7 @@
                 <img src="{{ asset('newpage/image/l5/png/l5-service-card2.png') }}" alt="...">
               </div>
               <h3 class="card-title gr-text-6 mb-6">Accept Payments</h3>
-              <p class="gr-text-9 mb-11">You have the option of selecting PaySprint, the seamless method of accepting payments, or use alternative payment gateways to accept payment to your PaySprint Wallet. Connect your bank account and have your payments ready for direct deposits. Customers can pay invoices using multiple methods: credit card, debit card, pre-paid. </p>
+              <p class="gr-text-9 mb-11">You have the option of accepting payment to your PaySprint Wallet through the Online Payment (when you generate and send invoice through PaySprint website or mobile app) or accept payment on your website (by installing PaySprint as a Payment Gateway on your website). Connect your bank account and have your payments ready for direct deposits. </p>
               <a href="{{ route('AdminLogin') }}" class="gr-text-9 btn-link with-icon text-white mt-auto">Get Started <i class="icon icon-tail-right"></i></a>
             </div>
           </div>
@@ -109,8 +109,8 @@
               <div class="card-img mb-11">
                 <img src="{{ asset('newpage/image/l5/png/l5-service-card3.png') }}" alt="...">
               </div>
-              <h3 class="card-title gr-text-6 mb-6">Track Balances on invoice or by customer with ease</h3>
-              <p class="gr-text-9 mb-11">We have made it easier for you to track balance on invoices when you enable the instalment feature on an invoice or for customer. Instalment payment help to give more choices to your customers. Generate timely statements for your business.</p>
+              <h3 class="card-title gr-text-6 mb-6">Track balances on invoice with ease</h3>
+              <p class="gr-text-9 mb-11">We have made it easier for you to track balances on invoices when you enable the installment feature on an invoice or for customer. Installment payments help you give more choices to your customers. Generate timely statements for your business.</p>
               <a href="{{ route('AdminLogin') }}" class="gr-text-9 btn-link with-icon text-white mt-auto">Get Started <i class="icon icon-tail-right"></i></a>
             </div>
             <div class="gr-abs-br-custom gr-z-index-n1" data-aos="zoom-in-right" data-aos-delay="600" data-aos-duration="800" data-aos-once="true">
@@ -149,7 +149,7 @@
                   <img class="rating mb-11" src="{{ asset('newpage/image/l5/png/5-stars.png') }}" alt="">
                   <h4 class="review-text gr-text-6 font-weight-bold mb-9">Professional Invoicing, Simplified!</h4>
                   <div class="reviewer-block d-flex flex-wrap">
-                    <h5 class="name gr-text-9 mr-7 mb-md-0">Create and send professional invoices with a click of a button. You can create and send a single invoice or batch invoices and also set up recurring payments, instalments and taxes!</h5>
+                    <h5 class="name gr-text-9 mr-7 mb-md-0">Create and send professional invoices with a click of a button. You can create and send a single invoice or send batch invoices and set up recurring payments, instalments and pay taxes!</h5>
                   </div>
                 </div>
               </div>
@@ -166,7 +166,7 @@
                   <img class="rating mb-11" src="{{ asset('newpage/image/l5/png/5-stars.png') }}" alt="">
                   <h4 class="review-text gr-text-6 font-weight-bold mb-9">Accept Payments</h4>
                   <div class="reviewer-block d-flex flex-wrap">
-                    <h5 class="name gr-text-9 mr-7 mb-md-0">You have the option of selecting PaySprint, the seamless method of accepting payments, or use alternative payment gateways to accept payment to your PaySprint Wallet. Connect your bank account and have your payments ready for direct deposits. Customers can pay invoices using multiple methods: credit card, debit card, pre-paid. </h5>
+                    <h5 class="name gr-text-9 mr-7 mb-md-0">You have the option of accepting payment to your PaySprint Wallet through the Online Payment (when you generate and send invoice through PaySprint website or mobile app) or accept payment on your website (by installing PaySprint as a Payment Gateway on your website). Connect your bank account and have your payments ready for direct deposits. </h5>
                   </div>
                 </div>
 
@@ -189,9 +189,9 @@
                 </div>
                 <div class="widget-text">
                   <img class="rating mb-11" src="{{ asset('newpage/image/l5/png/5-stars.png') }}" alt="">
-                  <h4 class="review-text gr-text-6 font-weight-bold mb-9">Track Balances on invoice or by customer with ease</h4>
+                  <h4 class="review-text gr-text-6 font-weight-bold mb-9">Track balances on invoice with ease</h4>
                   <div class="reviewer-block d-flex flex-wrap">
-                    <h5 class="name gr-text-9 mr-7 mb-md-0">We have made it easier for you to track balance on invoices when you enable the instalment feature on an invoice or for customer. Instalment payment help to give more choices to your customers. Generate timely statements for your business. </h5>
+                    <h5 class="name gr-text-9 mr-7 mb-md-0">We have made it easier for you to track balances on invoices when you enable the installment feature on an invoice or for customer. Installment payments help you give more choices to your customers. Generate timely statements for your business.</h5>
                   </div>
                 </div>
               </div>
@@ -208,12 +208,12 @@
                   <img class="rating mb-11" src="{{ asset('newpage/image/l5/png/5-stars.png') }}" alt="">
                   <h4 class="review-text gr-text-6 font-weight-bold mb-9">Business Performance Report</h4>
                   <div class="reviewer-block d-flex flex-wrap">
-                    <h5 class="name gr-text-9 mr-7 mb-md-0">Reports enable you to manage and control your business activities. Have important statistics related to your business available with ease. PaySprint Merchant services provides you with robust reports including:
+                    <h5 class="name gr-text-9 mr-7 mb-md-0">Reports enable you to manage and control your business activities. Have important statistics related to your business available with ease. PaySprint Merchant Services provides you with robust reports including:
 
                         <ul style="list-style: none; text-align: left;">
-                            <li>●	Sent Invoice</li>
-                            <li>●	Paid Invoice</li>
-                            <li>●	Unpaid (Pending) Invoice</li>
+                            <li>●	Sent Invoices</li>
+                            <li>●	Paid Invoices</li>
+                            <li>●	Unpaid (Pending) Invoices</li>
                             <li>●	Customer Balance Report</li>
                             <li>●	Taxes Report</li>
                             <li>●	Invoice Type Report</li>
@@ -250,14 +250,14 @@
                   <img class="rating mb-11" src="{{ asset('newpage/image/l5/png/5-stars.png') }}" alt="">
                   <h4 class="review-text gr-text-6 font-weight-bold mb-9">Additional Features</h4>
                   <div class="reviewer-block d-flex flex-wrap">
-                    <h5 class="name gr-text-9 mr-7 mb-md-0">PaySprint Merchant Services is filled with more additional features. Get the full advantage with PaySprint. 
+                    <h5 class="name gr-text-9 mr-7 mb-md-0">PaySprint Merchant Services is filled with more additional features Get the full advantage with PaySprint. 
 
                         <ul style="list-style: none; text-align: left;">
-                            <li>●	Manage Your Business On Any Device, (Mobile, Web etc)</li>
-                            <li>●	Free Lead Generation</li>
+                            <li>●	Manage Your Business On Any Device, (Mobile, Web etc).</li>
+                            <li>●	Free Lead Generation.</li>
                             <li>●	Connect Your Preferred Accounting Software.</li>
                             <li>●	Invite Your Accountant.</li>
-                            <li>●	Safe and Secure Multi-Level Security and Authentication Features</li>
+                            <li>●	Safe and Secure Multi-Level Security and Authentication Features.</li>
                         </ul>
 
 
@@ -536,7 +536,7 @@
                                     <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
                                         <i class="icon icon-check-simple"></i>
                                     </div>
-                                    <h3 class="w-title gr-text-8 mb-0">Unlimited Transactions.</h3>
+                                    <h3 class="w-title gr-text-8 mb-0">Unlimited transactions.</h3>
                                 </div>
                             </div>
                             <div class="col-md-8">
@@ -544,7 +544,7 @@
                                     <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
                                         <i class="icon icon-check-simple"></i>
                                     </div>
-                                    <h3 class="w-title gr-text-8 mb-0">Add money to Wallet from Debit or Credit Cards.</h3>
+                                    <h3 class="w-title gr-text-8 mb-0">Add money to your PaySprint Wallet from debit or credit cards.</h3>
                                 </div>
                             </div>
                             <div class="col-md-8">
@@ -552,7 +552,7 @@
                                     <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
                                         <i class="icon icon-check-simple"></i>
                                     </div>
-                                    <h3 class="w-title gr-text-8 mb-0">Withdraw money to EXBC Prepaid Mastercard for Free.</h3>
+                                    <h3 class="w-title gr-text-8 mb-0">Withdraw money to your EXBC pre-paid Mastercard for Free.</h3>
                                 </div>
                             </div>
                             <div class="col-md-8">
@@ -560,7 +560,7 @@
                                     <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
                                         <i class="icon icon-check-simple"></i>
                                     </div>
-                                    <h3 class="w-title gr-text-8 mb-0">Send money Locally and Abroad.</h3>
+                                    <h3 class="w-title gr-text-8 mb-0">Send money locally and abroad.</h3>
                                 </div>
                             </div>
                             <div class="col-md-8">
@@ -568,7 +568,7 @@
                                     <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
                                         <i class="icon icon-check-simple"></i>
                                     </div>
-                                    <h3 class="w-title gr-text-8 mb-0">Pay Invoice at a click of button.</h3>
+                                    <h3 class="w-title gr-text-8 mb-0">Pay invoice at a click of a button.</h3>
                                 </div>
                             </div>
                             <div class="col-md-8">
@@ -576,7 +576,7 @@
                                     <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
                                         <i class="icon icon-check-simple"></i>
                                     </div>
-                                    <h3 class="w-title gr-text-8 mb-0">Create and send professional invoice on the Go.</h3>
+                                    <h3 class="w-title gr-text-8 mb-0">Create and send professional invoices on the go.</h3>
                                 </div>
                             </div>
                             <div class="col-md-8">
@@ -592,7 +592,7 @@
                                     <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
                                         <i class="icon icon-check-simple"></i>
                                     </div>
-                                    <h3 class="w-title gr-text-8 mb-0">Safe and Secure- multi-level security authentications features.</h3>
+                                    <h3 class="w-title gr-text-8 mb-0">Safe and secure, multi-level security authentication features.</h3>
                                 </div>
                             </div>
                         </div>
