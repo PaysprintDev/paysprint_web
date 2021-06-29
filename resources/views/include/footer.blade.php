@@ -109,10 +109,59 @@ $(document).ready(function(){
 
 
 
+  propeertyOwnerInfo();
+
+
 });
 
 
 
+
+function propeertyOwnerInfo(){
+        if($('#property_owner').val() != ""){
+        var route = "{{ URL('Ajax/getFacility') }}";
+
+        var formData = new FormData();
+        formData.append("user_id", $('#property_owner').val());
+
+        // run ajax
+        Pace.restart();
+        Pace.track(function(){
+            setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: formData,
+            cache: false,
+            processData: false,
+            contentType: false,
+            dataType: 'JSON',
+            beforeSend: function(){
+                $('#property_facility').html(`<option>Please wait...</option>`);
+            },
+            success: function(result){
+                $('#property_facility').html('');
+                if(result.message == "success"){
+                    // Show result
+                    var res = JSON.parse(result.data);
+
+                    // $('#property_facility').html(`<option value="">Select Building/Facility</option>`);
+                    $.each(res, function(v, k){
+                        $('#property_facility').append(`<option value="${k.id}" selected>${k.buildinglocation_street_number+' '+k.buildinglocation_street_name+', '+k.buildinglocation_city+' '+k.buildinglocation_zipcode+', '+k.buildinglocation_state+' '+k.buildinglocation_country}</option>`);
+
+                    });
+
+                }
+                else{
+                    // Show result
+                    $('#property_facility').append(`<option value="">No record</option>`);
+                }
+            }
+
+            });
+        });
+    }
+}
 
 var route;
 var thisdata;
@@ -1887,9 +1936,9 @@ $('#property_owner').on('change', function(){
                     // Show result
                     var res = JSON.parse(result.data);
 
-                    $('#property_facility').html(`<option value="">Select Building/Facility</option>`);
+                    // $('#property_facility').html(`<option value="">Select Building/Facility</option>`);
                     $.each(res, function(v, k){
-                        $('#property_facility').append(`<option value="${k.id}">${k.buildinglocation_street_number+' '+k.buildinglocation_street_name+', '+k.buildinglocation_city+' '+k.buildinglocation_zipcode+', '+k.buildinglocation_state+' '+k.buildinglocation_country}</option>`);
+                        $('#property_facility').append(`<option value="${k.id}" selected>${k.buildinglocation_street_number+' '+k.buildinglocation_street_name+', '+k.buildinglocation_city+' '+k.buildinglocation_zipcode+', '+k.buildinglocation_state+' '+k.buildinglocation_country}</option>`);
 
                     });
 
@@ -2222,6 +2271,52 @@ else if(val == "passwordsettings"){
     formData = new FormData(formElempasswordsettings);
 
     route = "{{ URL('/api/v1/updatepassword') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#passwordBtn').text('Please wait...');
+        },
+        success: function(result){
+
+            $('#passwordBtn').text('Save');
+
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $('#passwordBtn').text('Save');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+else if(val == "bvnverification"){
+
+    formData = new FormData(formElembvnverification);
+
+    route = "{{ URL('/api/v1/bvnverification') }}";
 
 
     Pace.restart();
@@ -2622,6 +2717,52 @@ $("#thiscountry").change(function(){
     else{
         $("#correctcountry").val(country);
     }
+});
+
+
+$("#bank_code").change(function(){
+    var accountNumber = $("#account_number").val();
+    var bankCode = $("#bank_code").val();
+    if($("#accountNumber").val() != ""){
+        
+        var route = "{{ URL('/api/v1/verifyaccountnumber') }}";
+
+        var formData = new FormData();
+        formData.append("bank_code", bankCode);
+        formData.append("account_number", accountNumber);
+
+        Pace.restart();
+        Pace.track(function(){
+            setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: formData,
+            cache: false,
+            processData: false,
+            contentType: false,
+            dataType: 'JSON',
+            
+            success: function(result){
+
+                if(result.status == 200){
+                    $('#account_name').val(result.data.account_name);
+                }
+                else{
+                    $('#account_name').val("ACCOUNT NUMBER NOT VALID");
+                }
+
+            },
+            error: function(err) {
+
+                swal("Oops", err.responseJSON.message, "error");
+
+            } 
+
+        });
+        });
+    }
+
 });
 
 function showForm(val){

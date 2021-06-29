@@ -83,7 +83,7 @@
                                 <thead>
                                     <tr>
                                         <td>#</td>
-                                        <td>Facility</td>
+                                        <td>Building</td>
                                         <td>City</td>
                                         <td>Country</td>
                                         <td>Owner Phone</td>

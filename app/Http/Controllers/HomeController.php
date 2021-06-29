@@ -76,6 +76,8 @@ use App\Traits\Trulioo;
 
 use App\Traits\AccountNotify;
 
+use App\Traits\PaystackPayment;
+
 
 
 class HomeController extends Controller
@@ -95,6 +97,7 @@ class HomeController extends Controller
     use RpmApp;
     use Trulioo;
     use AccountNotify;
+    use PaystackPayment;
     /**
      * Create a new controller instance.
      *
@@ -113,6 +116,7 @@ class HomeController extends Controller
 
 
     public function homePage(){
+
 
         // To get the actual link from users click
 
@@ -198,6 +202,8 @@ class HomeController extends Controller
 
     public function authIndex(Request $req)
     {
+
+
         // dd($req->session());
             if(Auth::check() == true){
                 $this->page = 'Landing';
@@ -2802,6 +2808,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'listbank' => $this->getBankList(),
                 );
 
             }

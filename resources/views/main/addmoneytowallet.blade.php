@@ -85,7 +85,7 @@ input[type="radio"] {
                                             <select name="gateway" id="gateway" class="form-control" required>
                                                 <option value="">Select option</option>
                                                 <option value="PaySprint">PaySprint</option>
-                                                 {{-- <option value="Google Pay">Google Pay</option>  --}}
+                                                 <option value="Google Pay">Google Pay</option> 
                                                 {{-- <option value="Prepaid Card">Prepaid Card</option> --}}
                                                 {{-- <option value="Bank Account">Bank Account</option> --}}
                                             </select>
@@ -102,7 +102,7 @@ input[type="radio"] {
                                                 <option value="">Select option</option>
                                                 <option value="Credit Card">Credit Card</option>
                                                 <option value="Debit Card">Debit VISA/Mastercard</option>
-                                                 {{-- <option value="Google Pay">Google Pay</option>  --}}
+                                                 <option value="Google Pay">Google Pay</option> 
                                                 {{-- <option value="Prepaid Card">Prepaid Card</option> --}}
                                                 {{-- <option value="Bank Account">Bank Account</option> --}}
                                             </select>
@@ -203,10 +203,8 @@ input[type="radio"] {
 
                                     <div class="col-md-12 withCardGoogle disp-0">
                                         <center>
-                                            <div id="container"></div>
-
-                                            
-    <div id="moneris-google-pay" store-id="monca04155" web-merchant-key="3AC605265FB6A78820F33EE8E8B2067EEE9E560BE69C6E80D412D25DCFCB5174"></div>
+                                                <div id="container"></div>
+                                                <div id="moneris-google-pay" store-id="monca04155" web-merchant-key="55DAF4F744E7C36461258B79F750BC5D9D653C7D022FDB2DFC6A3309720C6D06"></div>
                                         </center>
                                     </div>
 
@@ -592,7 +590,6 @@ function goBack() {
           type: 'PAYMENT_GATEWAY',
           parameters: {
             'gateway': 'moneris',
-            // 'gatewayMerchantId': 'gwca026583'
             'gatewayMerchantId': 'monca04155'
           }
         };
@@ -791,7 +788,6 @@ function goBack() {
          * @see {@link https://developers.google.com/pay/api/web/reference/response-objects#PaymentData|PaymentData object reference}
          */
         function processPayment(paymentData) {
-            console.log(paymentData);
             var d = new Date();
 
             var totalcharge = $('#totalcharge').val();
@@ -812,34 +808,33 @@ function goBack() {
 
                 
             var orderId = "ord-"+d.getTime();
-
+            var ticket = "wallet-"+d.getTime();
 
 
                 paymentData["orderId"] = orderId;
+                paymentData["ticket"] = ticket;
                 paymentData["amount"] = ""+charge+"";
 
                 MonerisGooglePay.purchase(paymentData, function(response)
                 {
 
-                    console.log(response);
-
                 if ( response && response.receipt && response.receipt.ResponseCode &&
                 !isNaN(response.receipt.ResponseCode) )
                 {
-                if ( parseInt(response.receipt.ResponseCode) < 50 )
-                {
-                    $('#paymentToken').val(orderId);
+                    if ( parseInt(response.receipt.ResponseCode) < 50 )
+                    {
+                        $('#paymentToken').val(orderId);
 
-                    // alert("Looks like the transaction is approved.");
-                        setTimeout(() => {
-                            handShake('addmoney');
-                        }, 1000);
+                        // alert("Looks like the transaction is approved.");
+                            setTimeout(() => {
+                                handShake('addmoney');
+                            }, 1000);
 
-                }
-                else
-                {
-                    alert("Looks like the transaction is declined.");
-                }
+                    }
+                    else
+                    {
+                        alert("Looks like the transaction is declined.");
+                    }
                 }
                 else
                 {
@@ -881,6 +876,9 @@ function setHeaders(){
   src="https://pay.google.com/gp/p/js/pay.js"
   onload="onGooglePayLoaded()"></script>
   <script async src="{{ asset('js/moneris-googlepay.js') }}" onload="MonerisGooglePay.onReady()"></script>
+
+
+  
 
   </body>
 </html>

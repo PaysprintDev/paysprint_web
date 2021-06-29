@@ -32,14 +32,14 @@
                         <div class="small-card-img mr-6 text-white">
                             <img src="https://img.icons8.com/bubbles/50/000000/happy-woman.png" alt="" class="circle-42">
                         </div>
-                        <p class="gr-text-11 mb-0 text-white">“Don’t worry! With PaySprint, you can send money through text message or email for FREE!!”</p>
+                        <p class="gr-text-11 mb-0 text-white">“Don’t worry! With PaySprint, you can send money through text message or email for Free!”</p>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-md-9 col-lg-7 col-xl-6 order-lg-1" data-aos="fade-right" data-aos-duration="500"
                 data-aos-once="true">
                 <div class="hero-content section-title text-center text-lg-left">
-                    <h1 class="gr-text-2 font-weight-bold mb-8" style="font-size:60px">Safe and Secure <br class="">Way to Send Money for FREE!</h1>
+                    <h1 class="gr-text-2 font-weight-bold mb-8" style="font-size:60px">Safe and Secure <br class="">Way to Send Money for Free!</h1>
                     <p class="gr-text-9 gr-text-color pr-md-7">Fastest and affordable method of sending and receiving money, paying invoice and getting Paid at anytime!</p>
                     
                     
@@ -528,7 +528,7 @@ PaySprint is all you need.</p>
                     </div>
                     <div class="widget-text">
                         <h3 class="title gr-text-6 mb-7">Get Started</h3>
-                        <p class="gr-text-11 mb-0">Login/Sign Up for FREE.</p>
+                        <p class="gr-text-11 mb-0">Login/Sign Up for Free.</p>
                     </div>
                 </div>
             </div>
@@ -553,7 +553,7 @@ PaySprint is all you need.</p>
                     </div>
                     <div class="widget-text">
                         <h3 class="title gr-text-6 mb-7">Send Money</h3>
-                        <p class="gr-text-11 mb-0">Send money anytime, anywhere for FREE!!.</p>
+                        <p class="gr-text-11 mb-0">Send money anytime, anywhere for Free!!.</p>
                     </div>
                 </div>
             </div>

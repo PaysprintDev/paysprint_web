@@ -86,7 +86,7 @@ input[type="radio"] {
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Owner's Name</th>
+                                                <th>Property Manager</th>
                                                 <th>Building Location</th>
                                                 <th>Action</th>
                                             </tr>
@@ -105,14 +105,14 @@ input[type="radio"] {
                                                 <tr>
                                                      <td>{{ $i++ }}</td>
                                                     <td>
-                                                        {{ $data->owner_name }}
+                                                        {{ $data->agent_name }}
                                                     </td>
                                                     <td>
                                                         {{ $data->buildinglocation_street_number.' '.$data->buildinglocation_street_name.' '.$data->buildinglocation_city.' '.$data->buildinglocation_zipcode.' '.$data->buildinglocation_state }}
                                                     </td>
 
                                                     <td>
-                                                         <a href="{{ route('rentalmanagement start', 'id='.$data->id) }}" type="button" class="btn btn-primary btn-block">Request Maintenance</a>
+                                                         <a href="{{ route('rentalmanagement start', 'id='.$data->id) }}" type="button" class="btn btn-primary btn-block">Manage Rented Property</a>
                                                     </td>
                                                     
                                                 </tr>

@@ -24,6 +24,7 @@ use App\Mail\sendEmail;
 
 use App\Traits\Trulioo;
 use App\Traits\AccountNotify;
+use App\Traits\PaystackPayment;
 
 
 class UserController extends Controller
@@ -31,6 +32,7 @@ class UserController extends Controller
 
     use Trulioo;
     use AccountNotify;
+    use PaystackPayment;
 
     // User Registration
 
@@ -719,6 +721,53 @@ class UserController extends Controller
                 return $this->returnJSON($resData, $status);
 
     }
+
+
+    public function bvnVerification(Request $req){
+        $response = $this->verifyBVN($req->bvn, $req->account_number, $req->bank_code, $req->account_name);
+
+        if($response->status == true && $response->data->account_number == true){
+            
+
+            User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'approval' => 1, 'accountLevel' => 3]);
+
+
+            $data = $response->data;
+            $message = $response->message;
+            $status = 200;
+        }
+        else{
+            $data = [];
+            $message = $response->message;
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+    public function accountNumberVerification(Request $req){
+        $response = $this->verifyAccountNumber($req->account_number, $req->bank_code);
+
+        if($response->status == true){
+            $data = $response->data;
+            $message = $response->message;
+            $status = 200;
+        }
+        else{
+
+            $data = [];
+            $message = $response->message;
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
 
 
 

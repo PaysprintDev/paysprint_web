@@ -26,7 +26,7 @@
                    </div>
                    <div class="cns-content">
                         <i class="fa fa-home" aria-hidden="true"></i>
-                        <a href="#">CREATE AMENITIES/FACILITY</a>
+                        <a href="#">CREATE PROPERTY LOCATION</a>
 
                         <center><a type="button" href="{{ route('facility') }}" class="button_all" style="background-color: #f8b81d !important; padding-bottom: 15px; color: #fff !important; border-radius: 5px; margin-top: 5px; cursor: pointer;">Proceed</a></center>
                    </div>

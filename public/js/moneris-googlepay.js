@@ -1,12 +1,12 @@
 function MonerisGooglePay() {
-	this.error = false;
+	this.error = true;
 	this.session = null;
 	this.channel = null;
 	this.container = null;
 	this.validateCallback = null;
 	this.receiptCallback = null;
 	this.host = "esqa.moneris.com";
-	this.debug = false;
+	this.debug = true;
 	this._credentials = null;
 };
 
@@ -59,7 +59,7 @@ MonerisGooglePay.prototype.onContainerReady = function (data) {
 
 MonerisGooglePay.prototype.onReceiptReady = function (receipt) {
 
-    
+	// console.log(receipt);
 	if (this.receiptCallback && this.receiptCallback.resolve)	this.receiptCallback.resolve(JSON.parse(receipt.data));
 }
 

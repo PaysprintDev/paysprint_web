@@ -79,7 +79,7 @@
                         <div id="home" class="tab-pane fade in active">
                         <div class="who_we_area"><br>
                             <div class="subtittle">
-                                <h2>Create Facility / Amenities</h2>
+                                <h2>Create Property Location</h2>
                             </div>
 
                             <form method="POST" action="{{ route('create_facility') }}" enctype="multipart/form-data">
@@ -87,7 +87,7 @@
                             @csrf
 
                             <div class="billingIns">
-                                <h3 style="font-weight: bold;">Owner's Information </h3>
+                                <h3 style="font-weight: bold;">PaySprint Account Information </h3>
                             </div>
                             <hr>
                             <div class="billingIns">
@@ -153,7 +153,7 @@
 
                             <br>
                             <div class="billingIns">
-                                <h3 style="font-weight: bold;">Managing Agent Information </h3>
+                                <h3 style="font-weight: bold;">Property Manager </h3>
                             </div>
                             <hr>
                             <div class="billingIns">
@@ -220,7 +220,7 @@
 
                             <br>
                             <div class="billingIns">
-                                <h3 style="font-weight: bold;">Facility / Amenities Location </h3>
+                                <h3 style="font-weight: bold;">Property Address </h3>
                             </div>
                             <hr>
 
@@ -269,7 +269,7 @@
 
                             <br>
                             <div class="billingIns">
-                                <h3 style="font-weight: bold;">Facility / Amenities Information </h3>
+                                <h3 style="font-weight: bold;">Property Management Contact Information </h3>
                                 <span style="font-weight: bold; color: red;">Contact information for building inspection</span>
                             </div>
                             <hr>
@@ -290,7 +290,7 @@
 
                             <br>
                             <div class="billingIns">
-                                <h3 style="font-weight: bold;">Facility / Amenities Category </h3>
+                                <h3 style="font-weight: bold;">Property Description </h3>
                             </div>
                             <hr>
 

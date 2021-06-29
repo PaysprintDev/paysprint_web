@@ -91,7 +91,7 @@
                                 <input type="hidden" name="unit" id="unit" value="{{ $maintdetail[0]->unit }}">
                                 <input type="hidden" name="ten_name" id="ten_name" value="{{ $name }}">
                                 <input type="hidden" name="ten_email" id="ten_email" value="{{ $email }}">
-                                <label for="property_owner">Select Property Owner <span class="importantfield">*</span></label>
+                                <label for="property_owner">Select Property Manager <span class="importantfield">*</span></label>
 
                                 @if($busInfo = \App\ClientInfo::where('user_id', $maintdetail[0]->owner_id)->get())
 
@@ -103,7 +103,7 @@
                                     @else
                                         <select name="property_owner" class="form-control billinginput_box" id="property_owner" required>
                                             @if (count($clientInfo) > 0)
-                                            <option value="">Select Property Owner</option>
+                                            <option value="">Select Property Manager</option>
                                             @foreach ($clientInfo as $orgs)
                                                 <option value="{{ $orgs->user_id }}">{{ $orgs->firstname.' '.$orgs->lastname.' - ('.$orgs->address.')' }}</option>
                                             @endforeach

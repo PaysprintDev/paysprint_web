@@ -200,6 +200,70 @@
       </div>
     </div>
   </div>
+
+  @if (Auth::user()->country == "Nigeria")
+
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingSeven">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          BVN Verification {!! (Auth::user()->bvn_verification == 1) ? '<img src="https://img.icons8.com/fluent/25/000000/verified-account.png"/>' : ""  !!}
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
+      <div class="panel-body">
+        <form action="#" method="post" id="formElembvnverification">
+
+            <div class="form-group">
+                <label for="bvn">Bank Verification Number @if(Auth::user()->bvn_number == null) <strong><p class="text-warning" style="cursor: pointer;">Enter you bank verification number</p></strong> @endif</label>
+                <input type="number" name="bvn" id="bvn" class="form-control" @if(Auth::user()->bvn_number != null) value="{{ Auth::user()->bvn_number }}" readonly @else placeholder="BVN" @endif >
+            </div>
+
+            @if (Auth::user()->bvn_number == null)
+
+            <div class="form-group">
+                    <label for="account_number">Bank Account Number <strong><p class="text-warning" style="cursor: pointer;">Enter you bank account number</p></strong></label>
+                    <input type="number" name="account_number" id="account_number" class="form-control" placeholder="Account Number">
+                </div>
+
+                <div class="form-group">
+                    <label for="bank_code">Select Bank <strong><p class="text-warning" style="cursor: pointer;">Select your bank</p></strong></label>
+                    <select name="bank_code" id="bank_code" class="form-control">
+
+                        @if (count($data['listbank']) > 0)
+                        <option value="">Select your bank</option>
+                            @foreach ($data['listbank'] as $banksData)
+                                <option value="{{ $banksData->code }}">{{ $banksData->name }}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
+
+                
+
+
+                <div class="form-group">
+                    <label for="account_name">Account Name</label>
+                    <input type="text" name="account_name" id="account_name" class="form-control" value="" readonly>
+                </div>
+                
+                
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary btn-block" id="passwordBtn" onclick="handShake('bvnverification')">Save</button>
+                </div>
+
+            @endif
+
+            
+
+        </form>
+      </div>
+    </div>
+  </div>
+      
+  @endif
+
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingTwo">
       <h4 class="panel-title">

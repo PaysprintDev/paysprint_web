@@ -84,6 +84,10 @@ Route::prefix('/v1')->group(function () {
 
         Route::post('security',  ['uses' => 'api\v1\UserController@updateSecurity'])->name('update security');
 
+        Route::post('bvnverification',  ['uses' => 'api\v1\UserController@bvnVerification'])->name('verify bvn');
+        
+        Route::post('verifyaccountnumber',  ['uses' => 'api\v1\UserController@accountNumberVerification'])->name('verify account number');
+
         Route::post('autodeposit',  ['uses' => 'api\v1\UserController@updateAutoDeposit'])->name('update auto deposit');
 
 

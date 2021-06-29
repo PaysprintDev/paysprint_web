@@ -94,11 +94,12 @@
                                 <input type="hidden" name="ten_name" id="ten_name" value="{{ $name }}">
                                 <input type="hidden" name="ten_email" id="ten_email" value="{{ $email }}">
                                 
-                                <label for="property_owner">Select Property Owner <span class="importantfield">*</span></label>
+                                <label for="property_owner">Select Property Manager <span class="importantfield">*</span></label>
+
+                                
                                 <select name="property_owner" class="form-control billinginput_box" id="property_owner" required data-live-search="true">
                                     @if (count($clientInfo) > 0)
-                                    <option value="">Select Property Owner</option>
-                                        <option value="{{ $clientInfo[0]->user_id }}">{{ $clientInfo[0]->firstname.' '.$clientInfo[0]->lastname.' - ('.$buildInfo->buildinglocation_street_number.' '.$buildInfo->buildinglocation_street_name.' '.$buildInfo->buildinglocation_city.' '.$buildInfo->buildinglocation_zipcode.' '.$buildInfo->buildinglocation_state.')' }}</option>
+                                        <option value="{{ $clientInfo[0]->user_id }}" selected>{{ $clientInfo[0]->firstname.' '.$clientInfo[0]->lastname.' - ('.$buildInfo->buildinglocation_street_number.' '.$buildInfo->buildinglocation_street_name.' '.$buildInfo->buildinglocation_city.' '.$buildInfo->buildinglocation_zipcode.' '.$buildInfo->buildinglocation_state.')' }}</option>
 
                                     @else
                                         <option value="">No available organization</option>
