@@ -206,8 +206,18 @@ input[type="radio"] {
                                                     <span class="input-group-text text-muted"> <i class="fas fa-university"></i></span> 
                                                 </div>
 
-                                                @else
+                                                @elseif (Auth::user()->country == "Nigeria")
 
+                                                <select name="bank_code" id="bank_code" class="form-control">
+                                                    @if (count($data['listbank']) > 0)
+                                                    <option value="">Select your bank</option>
+                                                        @foreach ($data['listbank'] as $banksData)
+                                                            <option value="{{ $banksData->name }}">{{ $banksData->name }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
+
+                                                @else
                                                 <input type="text" name="bankName" id="bankName" class="form-control" required>
                                                 <div class="input-group-append"> 
                                                     <span class="input-group-text text-muted"> <i class="fas fa-university"></i></span> 

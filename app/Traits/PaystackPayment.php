@@ -66,6 +66,8 @@ trait PaystackPayment{
         return $data;
     }
 
+    
+
     // Get List of Banks
     public function listOfBanks(){
 

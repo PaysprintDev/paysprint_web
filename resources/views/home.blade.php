@@ -417,6 +417,29 @@
                             </ul>
                     </div>
 
+                    @if (Auth::user()->country == "Nigeria")
+
+                        <div class="card" style="width: 100%;">
+                                <div class="card-header" style="background-color: #ff8a04; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
+                                    Airtime and Utility Bills
+                                </div>
+                                <ul class="list-group list-group-flush">
+
+                                
+                                    <li class="list-group-item" title="Airtime and Utility Bills">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <a href="{{ route('utility bills') }}">Airtime and Utility Bills</a>
+                                            </div>
+                                        </div>
+
+                                        </li>
+                                    
+                                </ul>
+                        </div>
+
+                    @endif
+
 
                     <div class="card" style="width: 100%;">
                             <div class="card-header" style="background-color: #5ed998; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
@@ -437,6 +460,9 @@
                                 
                             </ul>
                     </div>
+
+
+
 
 
                     <div class="card" style="width: 100%;">

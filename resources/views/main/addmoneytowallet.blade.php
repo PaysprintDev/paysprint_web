@@ -85,7 +85,7 @@ input[type="radio"] {
                                             <select name="gateway" id="gateway" class="form-control" required>
                                                 <option value="">Select option</option>
                                                 <option value="PaySprint">PaySprint</option>
-                                                 <option value="Google Pay">Google Pay</option> 
+                                                 {{-- <option value="Google Pay">Google Pay</option>  --}}
                                                 {{-- <option value="Prepaid Card">Prepaid Card</option> --}}
                                                 {{-- <option value="Bank Account">Bank Account</option> --}}
                                             </select>
@@ -102,7 +102,7 @@ input[type="radio"] {
                                                 <option value="">Select option</option>
                                                 <option value="Credit Card">Credit Card</option>
                                                 <option value="Debit Card">Debit VISA/Mastercard</option>
-                                                 <option value="Google Pay">Google Pay</option> 
+                                                 {{-- <option value="Google Pay">Google Pay</option>  --}}
                                                 {{-- <option value="Prepaid Card">Prepaid Card</option> --}}
                                                 {{-- <option value="Bank Account">Bank Account</option> --}}
                                             </select>

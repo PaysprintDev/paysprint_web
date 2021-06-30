@@ -94,6 +94,8 @@ Route::prefix('mywallet')->group(function () {
 });
 
 Route::get('merchantcategory', ['uses' => 'HomeController@merchantCategory', 'as' => 'merchant category']);
+Route::get('payutilitybills', ['uses' => 'HomeController@expressUtilities', 'as' => 'utility bills']);
+Route::get('buyutilitybills/{id}', ['uses' => 'HomeController@expressBuyUtilities', 'as' => 'buy utility bills']);
 
 Route::get('signout/{id}',  ['uses' => 'api\v1\UserController@logout'])->name('sign out');
 

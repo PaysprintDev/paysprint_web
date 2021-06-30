@@ -78,6 +78,8 @@ use App\Traits\AccountNotify;
 
 use App\Traits\PaystackPayment;
 
+use App\Traits\ExpressPayment;
+
 
 
 class HomeController extends Controller
@@ -98,6 +100,7 @@ class HomeController extends Controller
     use Trulioo;
     use AccountNotify;
     use PaystackPayment;
+    use ExpressPayment;
     /**
      * Create a new controller instance.
      *
@@ -923,6 +926,7 @@ class HomeController extends Controller
         $data = array(
             'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
             'getBankDetail' => $this->getUserBankDetail(),
+            'listbank' => $this->getBankList(),
         );
 
 
@@ -1027,6 +1031,77 @@ class HomeController extends Controller
 
 
         return view('main.merchantcategory')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+
+    public function expressUtilities(Request $req)
+    {
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'Airtime and Utility Bills';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            }
+            else{
+                $this->page = 'Airtime and Utility Bills';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'Airtime and Utility Bills';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+
+        $data = array(
+            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'getNotifications' => $this->getUserNotifications(Auth::user()->ref_code),
+            'getvendors' => $this->getVendors(),
+        );
+
+
+
+        return view('main.payutility')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+
+    public function expressBuyUtilities(Request $req, $id)
+    {
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'Airtime and Utility Bills';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            }
+            else{
+                $this->page = 'Airtime and Utility Bills';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'Airtime and Utility Bills';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+
+        $data = array(
+            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'getNotifications' => $this->getUserNotifications(Auth::user()->ref_code),
+            'getutilityproduct' => $this->getUtilityProduct($id),
+            'getCard' => $this->getUserCard(),
+        );
+
+
+
+        return view('main.buyutility')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
