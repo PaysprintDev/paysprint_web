@@ -85,7 +85,7 @@ Route::prefix('/v1')->group(function () {
         Route::post('security',  ['uses' => 'api\v1\UserController@updateSecurity'])->name('update security');
 
         Route::post('bvnverification',  ['uses' => 'api\v1\UserController@bvnVerification'])->name('verify bvn');
-        
+
         Route::post('verifyaccountnumber',  ['uses' => 'api\v1\UserController@accountNumberVerification'])->name('verify account number');
 
         Route::post('autodeposit',  ['uses' => 'api\v1\UserController@updateAutoDeposit'])->name('update auto deposit');
@@ -173,6 +173,8 @@ Route::prefix('/v1')->group(function () {
         Route::post('addmoneytowallet',  ['uses' => 'MonerisController@addMoneyToWallet'])->name('add money to wallet');
         
         Route::post('moneywithdrawal',  ['uses' => 'MonerisController@moneyWithdrawal'])->name('withdraw from wallet');
+
+        Route::post('payutilitybills',  ['uses' => 'MonerisController@payUtilityBills'])->name('pay utility bills');
         
         Route::get('getmycarddetail',  ['uses' => 'api\v1\CardController@getMyCardDetail'])->name('get card details');
         

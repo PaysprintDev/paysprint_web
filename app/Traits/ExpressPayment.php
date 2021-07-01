@@ -56,6 +56,28 @@ trait ExpressPayment{
         
     }
 
+
+    // Process Transaction
+    public function processTransaction($postRequest){
+        $this->url = env('EXPRESS_PAY_ENDPOINT_URL').'/process-transaction';
+
+        $this->curlPost = json_encode([
+            'billerCode' => '',
+            'productId' => 1,
+            'transDetails' => [
+                [
+                    'fieldName' => '',
+                    'fieldValue' => '',
+                    'fieldControlType' => '',
+                ]
+                
+            ],
+        ]);
+
+        
+        $data = $this->doPost();
+    }
+
     public function doGet(){
         $curl = curl_init();
 
@@ -86,26 +108,29 @@ trait ExpressPayment{
     public function doPost(){
         
         
-        $fields_string = http_build_query($this->curlPost);
-        //open connection
-        $ch = curl_init();
-        
-        //set the url, number of POST vars, POST data
-        curl_setopt($ch,CURLOPT_URL, $this->url);
-        curl_setopt($ch,CURLOPT_POST, true);
-        curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'webkey: '.env('EXPRESS_PAY_WEBKEY'),
-            'Authorization: Basic '.env('EXPRESS_PAY_BASIC')
-        ));
-        
-        //So that curl_exec returns the contents of the cURL; rather than echoing it
-        curl_setopt($ch,CURLOPT_RETURNTRANSFER, true); 
-        
-        //execute post
-        $result = curl_exec($ch);
+        $curl = curl_init();
 
-        return json_decode($result) ;
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => $this->url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS =>$this->curlPost,
+        CURLOPT_HTTPHEADER => array(
+            'webkey: '.env('EXPRESS_PAY_WEBKEY'),
+            'accountid: '.env('EXPRESS_PAY_ACCOUNTID'),
+            'Authorization: Basic '.env('EXPRESS_PAY_BASIC')
+        ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        return json_decode($response);
     }
 
 }

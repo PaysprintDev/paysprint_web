@@ -620,11 +620,11 @@ var route;
 
 var formData;
 
-if(val == 'withdrawmoney'){
+if(val == 'payutility'){
 
     formData = new FormData(formElem);
 
-    route = "{{ URL('/api/v1/moneywithdrawal') }}";
+    route = "{{ URL('/api/v1/payutilitybills') }}";
 
         Pace.restart();
     Pace.track(function(){
