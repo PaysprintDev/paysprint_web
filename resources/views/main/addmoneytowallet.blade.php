@@ -100,7 +100,9 @@ input[type="radio"] {
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/cotton/20/000000/money--v4.png"/> </span> </div>
                                             <select name="card_type" id="card_type" class="form-control" required>
                                                 <option value="">Select option</option>
-                                                <option value="Credit Card">Credit Card</option>
+                                                @if (Auth::user()->country != "Nigeria")
+                                                    <option value="Credit Card">Credit Card</option>
+                                                @endif
                                                 <option value="Debit Card">Debit VISA/Mastercard</option>
                                                  {{-- <option value="Google Pay">Google Pay</option>  --}}
                                                 {{-- <option value="Prepaid Card">Prepaid Card</option> --}}
@@ -197,9 +199,13 @@ input[type="radio"] {
                                 </div>
 
                                 
+                                    @if (Auth::user()->country == "Nigeria")
+                                        <div class="card-footer"> <button type="button" onclick="payWithPaystack('{{ Auth::user()->email }}')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </button></div>
+                                    @else
+                                        <div class="card-footer"> <button type="button" onclick="handShake('addmoney')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </button></div>
+                                    @endif
                                     
                                     
-                                    <div class="card-footer"> <button type="button" onclick="handShake('addmoney')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </button></div>
 
                                     <div class="col-md-12 withCardGoogle disp-0">
                                         <center>
@@ -233,6 +239,7 @@ input[type="radio"] {
 
     <script src="{{ asset('pace/pace.min.js') }}"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
 
 
 
@@ -368,7 +375,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-success');
                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+chargeAmount+" will be charged from your Credit/Debit Card.</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+chargeAmount+" will be charged from your "+$('#card_type').val()+".</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
@@ -386,7 +393,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-danger');
                     $('.commissionInfo').removeClass('alert alert-success');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+(+result.data + +result.collection).toFixed(2)+" will be charged from your Credit/Debit Card.</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+(+result.data + +result.collection).toFixed(2)+" will be charged from your "+$('#card_type').val()+".</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
@@ -539,6 +546,51 @@ else if(val == 'addcard'){
 }
 
 }
+
+
+// PayStack Integration
+  function payWithPaystack(email){
+    var netamount = $('#amounttosend').val();
+    var feeamount = $('#commissiondeduct').val();
+
+    
+
+      var amount = (+netamount + +feeamount).toFixed(2);
+    var handler = PaystackPop.setup({
+      key: '{{ env("PAYSTACK_PUBLIC_KEY") }}',
+      email: email,
+      amount: amount * 100,
+      currency: "NGN",
+      ref: ''+Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+      metadata: {
+         custom_fields: [
+            {
+                display_name: "Full Name",
+                variable_name: "name",
+                value: "{{ Auth::user()->name }}"
+            },
+            {
+                display_name: "Description",
+                variable_name: "description",
+                value: "Added {{ $data['currencyCode'][0]->currencies[0]->code }}"+netamount+" to PaySprint Wallet and a Fee of "+feeamount+" inclusive."
+            }
+         ]
+      },
+      callback: function(response){
+          
+          $('#paymentToken').val(response.reference);
+
+            setTimeout(() => {
+                handShake('addmoney');
+            }, 1000);
+
+      },
+      onClose: function(){
+          swal('','window closed', 'info');
+      }
+    });
+    handler.openIframe();
+  }
 
 function goBack() {
   window.history.back();

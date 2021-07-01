@@ -216,14 +216,14 @@
         <form action="#" method="post" id="formElembvnverification">
 
             <div class="form-group">
-                <label for="bvn">Bank Verification Number @if(Auth::user()->bvn_number == null) <strong><p class="text-warning" style="cursor: pointer;">Enter you bank verification number</p></strong> @endif</label>
+                <label for="bvn">Bank Verification Number @if(Auth::user()->bvn_number == null) <strong><p class="text-warning" style="cursor: pointer;">Enter your bank verification number</p></strong> @endif</label>
                 <input type="number" name="bvn" id="bvn" class="form-control" @if(Auth::user()->bvn_number != null) value="{{ Auth::user()->bvn_number }}" readonly @else placeholder="BVN" @endif >
             </div>
 
             @if (Auth::user()->bvn_number == null)
 
             <div class="form-group">
-                    <label for="account_number">Bank Account Number <strong><p class="text-warning" style="cursor: pointer;">Enter you bank account number</p></strong></label>
+                    <label for="account_number">Bank Account Number <strong><p class="text-warning" style="cursor: pointer;">Enter your bank account number</p></strong></label>
                     <input type="number" name="account_number" id="account_number" class="form-control" placeholder="Account Number">
                 </div>
 

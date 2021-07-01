@@ -356,7 +356,7 @@
                 <div class="col-md-3">
                     
                     <div class="card" style="width: 100%;">
-                            <div class="card-header" style="background-color: #f6b60b; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
+                            <div class="card-header" style="background-color: #ffba01; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
                                 Quick Wallet Setup
                                 @if (Auth::user()->approval == 0 || count($data['getCard']) <= 0 || Auth::user()->transaction_pin == null || Auth::user()->securityQuestion == null)
                                     <a href="javascript:void()" type="button" class="btn btn-danger fa-blink">Incomplete</a>
@@ -414,6 +414,28 @@
                                     
                                 
                                 </li>
+
+
+                                @if (Auth::user()->country == "Nigeria")
+
+                                <li class="list-group-item" title="Bank Verification (BVN)" >
+
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <a href="{{ route('profile') }}">Bank Verification (BVN) </a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! Auth::user()->bvn_verification != null || Auth::user()->bvn_verification > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                
+                                </li>
+
+                                @endif
+
+
                             </ul>
                     </div>
 
@@ -421,15 +443,15 @@
 
                         <div class="card" style="width: 100%;">
                                 <div class="card-header" style="background-color: #ff8a04; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
-                                    Airtime and Utility Bills
+                                    Airtime/Bills Payment
                                 </div>
                                 <ul class="list-group list-group-flush">
 
                                 
-                                    <li class="list-group-item" title="Airtime and Utility Bills">
+                                    <li class="list-group-item" title="Airtime/Bills Payment">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <a href="{{ route('utility bills') }}">Airtime and Utility Bills</a>
+                                                <a href="{{ route('utility bills') }}">Airtime/Bills Payment</a>
                                             </div>
                                         </div>
 
@@ -442,7 +464,7 @@
 
 
                     <div class="card" style="width: 100%;">
-                            <div class="card-header" style="background-color: #5ed998; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
+                            <div class="card-header" style="background-color:#00fd77; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
                                 Property Management
                                 
                             </div>
@@ -466,7 +488,7 @@
 
 
                     <div class="card" style="width: 100%;">
-                            <div class="card-header" style="background-color: #f6b60b; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
+                            <div class="card-header" style="background-color: #ffba00; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
                                 Merchant By Services
                                 
                             </div>

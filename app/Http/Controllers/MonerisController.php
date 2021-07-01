@@ -104,11 +104,13 @@ use App\Classes\MCPRate;
 
 
 use App\Traits\PaymentGateway;
+use App\Traits\PaystackPayment;
 
 class MonerisController extends Controller
 {
 
     use PaymentGateway;
+    use PaystackPayment;
 
     public $to;
     public $name;
@@ -656,6 +658,9 @@ else{
     }
 
 
+    
+
+
 
 
     // Add Money to Wallet
@@ -687,7 +692,7 @@ else{
 
                         $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                        $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to Wallet including a fee charge of ".$req->currencyCode.''.number_format($req->commissiondeduct, 2)." was deducted from your GooglePay Credit/Debit Card";
+                        $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to Wallet including a fee charge of ".$req->currencyCode.''.number_format($req->commissiondeduct, 2)." was deducted from your Debit Card";
                         $credit = $req->amounttosend;
                         $debit = 0;
                         $reference_code = $req->paymentToken;
@@ -729,6 +734,47 @@ else{
 
                             $this->sendEmail($this->email, "Fund remittance");
 
+
+                            $checkBVN = $this->bvnVerificationCharge($req->bearerToken());
+
+                            if($checkBVN == "charge"){
+                                // Update Wallet Balance
+                                $walletBal = $thisuser->wallet_balance - 15;
+                                User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal, 'bvn_verification' => 2]);
+
+                                $activity = "Bank Verification (BVN) Charge of ".$req->currencyCode.''.number_format(15, 2)." was deducted from your Wallet";
+                                $credit = 0;
+                                $debit = 15;
+                                $reference_code = "wallet-".date('dmY').time();
+                                $balance = 0;
+                                $trans_date = date('Y-m-d');
+                                $status = "Delivered";
+                                $action = "Wallet debit";
+                                $regards = $thisuser->ref_code;
+                                $statement_route = "wallet";
+
+                                // Senders statement
+                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+
+                                $this->getfeeTransaction($reference_code, $thisuser->ref_code, 15, 0, 15);
+
+                                $sendMsg = $activity.'. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+
+                                $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                        
+                                if(isset($userPhone)){
+
+                                    $sendPhone = $thisuser->telephone;
+                                }
+                                else{
+                                    $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+                                }
+
+
+                                $this->sendMessage($sendMsg, $sendPhone);
+
+                            }
+
                             $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
 
                         $data = $userInfo;
@@ -746,7 +792,7 @@ else{
 
                     if($thisuser->country == "United States" || $thisuser->country == "USA" || $thisuser->country == "United States of America"){
 
-                        $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $req->amounttosend, "purchase", "PaySprint Add Money to the Wallet of ".$thisuser->name, $req->mode);
+                        // $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $req->amounttosend, "purchase", "PaySprint Add Money to the Wallet of ".$thisuser->name, $req->mode);
                         
 
                         $response = $this->fortisPay($req->amounttosend, $req->card_id, $thisuser->zip, $thisuser->name, $thisuser->email, $thisuser->telephone, $thisuser->city, $thisuser->state);
@@ -1072,6 +1118,9 @@ else{
 
                     }
                     else{
+
+
+                        
                         $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "purchase", "PaySprint Add Money to the Wallet of ".$thisuser->name, $req->mode);
 
 

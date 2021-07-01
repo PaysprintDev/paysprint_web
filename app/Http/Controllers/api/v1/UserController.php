@@ -727,9 +727,9 @@ class UserController extends Controller
         $response = $this->verifyBVN($req->bvn, $req->account_number, $req->bank_code, $req->account_name);
 
         if($response->status == true && $response->data->account_number == true){
-            
 
-            User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'approval' => 1, 'accountLevel' => 3]);
+
+            User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 2]);
 
 
             $data = $response->data;

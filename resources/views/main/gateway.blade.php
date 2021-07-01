@@ -83,12 +83,16 @@ input[type="radio"] {
 
                                 <center>
                                     <div class="row">
-                                    <div @if (Auth::user()->country != 'Canada') class="col-md-6 mb-3" @else class="col-md-3 mb-3" @endif>
-                                        <strong>
-                                            <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('Add card', 'card=Credit Card') }}"><img src="https://img.icons8.com/fluent/53/000000/credit-card-cash-withdrawal.png" title="Credit Card"/> <i class="fas fa-plus-square" title="Credit Card" style="font-size: 16px; color: black"></i><br><br>
-                                            Credit Card</a>
-                                        </strong>
-                                    </div>
+
+                                        @if (Auth::user()->country != 'Nigeria')
+                                            <div @if (Auth::user()->country != 'Canada') class="col-md-6 mb-3" @else class="col-md-3 mb-3" @endif>
+                                                <strong>
+                                                    <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('Add card', 'card=Credit Card') }}"><img src="https://img.icons8.com/fluent/53/000000/credit-card-cash-withdrawal.png" title="Credit Card"/> <i class="fas fa-plus-square" title="Credit Card" style="font-size: 16px; color: black"></i><br><br>
+                                                    Credit Card</a>
+                                                </strong>
+                                            </div>
+                                        @endif
+                                    
 
                                     @if (Auth::user()->country == 'Canada')
                                         <div class="col-md-3 mb-3">
@@ -102,6 +106,17 @@ input[type="radio"] {
                                                 <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('Add card', 'card=Prepaid Card') }}"> <img src="https://img.icons8.com/cotton/53/000000/bank-cards--v2.png" title="Prepaid Card"/> <i class="fas fa-plus-square" title="Prepaid Card" style="font-size: 16px; color: black"></i><br><br>Prepaid Card</a>
                                             </strong>
                                         </div>
+                                    @endif
+
+
+                                    @if (Auth::user()->country == 'Nigeria')
+                                        <div class="col-md-6 mb-3">
+                                            <strong>
+                                                <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important; font-size: 15px;" href="{{ route('Add card', 'card=Debit Card') }}"><img src="https://img.icons8.com/color/53/000000/bank-card-front-side.png" title="Debit VISA/Mastercard"/> <i class="fas fa-plus-square" title="Debit VISA/Mastercard" style="font-size: 16px; color: black"></i><br><br>
+                                                Debit VISA/Mastercard</a>
+                                            </strong>
+                                        </div>
+                                        
                                     @endif
 
                                     

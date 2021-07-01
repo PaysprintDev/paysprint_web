@@ -66,6 +66,30 @@ trait PaystackPayment{
         return $data;
     }
 
+
+    // BVN Verification Charge
+    public function bvnVerificationCharge($api_token){
+
+        $thisuser = User::where('api_token', $api_token)->where('country', 'Nigeria')->first();
+
+        if(isset($thisuser) && $thisuser->wallet_balance > 15){
+
+            if($thisuser->bvn_verification == 1){
+                $data = "charge";
+            }   
+            else{
+                $data = "no charge";
+            }
+        }
+        else{
+            $data = "no charge";
+        }
+
+        
+
+        return $data;
+    }
+
     
 
     // Get List of Banks

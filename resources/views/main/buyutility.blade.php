@@ -260,6 +260,49 @@ input[type="radio"] {
 
 
                                     @endforeach
+
+
+                                    <div class="form-group disp-0">
+                                        <div class="input-group"> 
+                                            <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission" checked> Include fee</p>
+                                            
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group"> <label for="netwmount">
+                                        <h6>Net Amount <br><small class="text-success disp-0"><b>This is the total amount to be received</b></small></h6>
+                                        
+                                    </label>
+                                    <div class="input-group"> 
+                                        <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
+                                    </div>
+                                </div>
+                                    <div class="form-group disp-0"> <label for="netwmount">
+                                        <h6>Fee</h6>
+                                    </label>
+                                    <div class="input-group"> 
+                                        <input type="text" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
+
+                                        <input type="hidden" name="totalcharge" class="form-control" id="totalcharge" value="" placeholder="0.00" readonly>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group disp-0"> <label for="netwmount">
+                                        <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small></h6>
+                                        <p style="font-weight: bold;">
+                                            {{ $data['currencyCode'][0]->currencies[0]->code }} <=> CAD
+                                        </p>
+                                    </label>
+                                    <div class="input-group"> 
+                                        <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="commissionInfo"></div>
+                                </div>
                                         
 
                                     
@@ -495,7 +538,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-success');
                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.toFixed(2)+" will be credited to your "+$('#card_type').val()+". Fee charge inclusive</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.toFixed(2)+" will be deducted from your Wallet.</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
@@ -514,7 +557,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-danger');
                     $('.commissionInfo').removeClass('alert alert-success');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+(+result.data + +result.collection).toFixed(2)+" will be charged from your "+$('#card_type').val()+".</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+(+result.data + +result.collection).toFixed(2)+" will be deducted from your Wallet.</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
