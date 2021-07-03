@@ -1100,7 +1100,6 @@ class HomeController extends Controller
         );
 
 
-
         return view('main.buyutility')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 

@@ -82,6 +82,7 @@ input[type="radio"] {
                                     @foreach ($data['getvendors'] as $vendor)
 
                                             @if (isset($vendor->productfields[0]))
+
                                                 
                                                 <div class="col-md-4 pb-4">
 
@@ -90,7 +91,18 @@ input[type="radio"] {
                                                     <div class="card-body">
                                                         <h5 class="card-title">{{ strtoupper($vendor->billerName) }}</h5>
                                                         
-                                                        <a href="{{ route('buy utility bills', $vendor->productfields[0]->productId) }}" class="btn btn-primary">Get Product</a>
+                                                        @php
+                                                            if(isset($vendor->billerCode)){
+                                                                $billerCode = 'biller='.$vendor->billerCode;
+                                                                $productId = 'productid='.$vendor->productfields[0]->productId;
+                                                            }
+                                                            else{
+                                                                $billerCode = '';
+                                                                $productId = '';
+                                                            }
+                                                        @endphp
+                                                        
+                                                        <a href="{{ route('buy utility bills', $vendor->productfields[0]->productId.'?'.$billerCode.'&'.$productId) }}" class="btn btn-primary">Get Product</a>
                                                     </div>
                                                 </div>
                                                 

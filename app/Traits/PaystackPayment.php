@@ -21,7 +21,7 @@ use Twilio\Rest\Client;
 
 trait PaystackPayment{
 
-    public $url;
+    public $baseUrl;
     public $curlPost;
 
     // Inititalize Transactions
@@ -37,7 +37,7 @@ trait PaystackPayment{
 
 
     public function verifyAccountNumber($account_number, $code){
-        $this->url = "https://api.paystack.co/bank/resolve?account_number=".$account_number."&bank_code=".$code;
+        $this->baseUrl = "https://api.paystack.co/bank/resolve?account_number=".$account_number."&bank_code=".$code;
 
         $data = $this->doCurlGet();
 
@@ -51,7 +51,7 @@ trait PaystackPayment{
 
         $username = explode(" ", $name);
 
-        $this->url = "https://api.paystack.co/bvn/match";
+        $this->baseUrl = "https://api.paystack.co/bvn/match";
 
         $this->curlPost = [
             "bvn" => $bvn,
@@ -95,7 +95,7 @@ trait PaystackPayment{
     // Get List of Banks
     public function listOfBanks(){
 
-        $this->url = 'https://api.paystack.co/bank';
+        $this->baseUrl = 'https://api.paystack.co/bank';
 
         $data = $this->doCurlGet();
 
@@ -134,7 +134,7 @@ trait PaystackPayment{
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => $this->url,
+        CURLOPT_URL => $this->baseUrl,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -162,7 +162,7 @@ trait PaystackPayment{
         $ch = curl_init();
         
         //set the url, number of POST vars, POST data
-        curl_setopt($ch,CURLOPT_URL, $this->url);
+        curl_setopt($ch,CURLOPT_URL, $this->baseUrl);
         curl_setopt($ch,CURLOPT_POST, true);
         curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(

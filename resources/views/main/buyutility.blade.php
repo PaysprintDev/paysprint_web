@@ -100,7 +100,7 @@ input[type="radio"] {
                                     
                                     
                                     @if (count($data['getCard']) > 0)
-                                    <div class="form-group"> <label for="card_id">
+                                    <div class="form-group disp-0"> <label for="card_id">
                                             <h6>Select Card Type/ Bank Account</h6>
                                         </label>
                                         <div class="input-group"> 
@@ -115,7 +115,7 @@ input[type="radio"] {
                                             
                                         </div>
                                     </div>
-                                    <div class="form-group"> <label for="card_id">
+                                    <div class="form-group disp-0"> <label for="card_id">
                                             <h6>Select Card/Bank</h6>
                                         </label>
                                         <div class="input-group"> 
@@ -129,7 +129,7 @@ input[type="radio"] {
 
                                     @else
 
-                                    <div class="form-group"> <label for="amount">
+                                    <div class="form-group disp-0"> <label for="amount">
                                                 <h5>Add a new card</h5>
                                             </label>
 
@@ -213,25 +213,41 @@ input[type="radio"] {
 
                                     @endif
 
+
+                                    <div class="form-group disp-0"> <label for="billerCode">
+                                        <h6>Biller</h6>
+                                    </label>
+                                    <div class="input-group"> 
+                                        <input type="text" name="billerCode" class="form-control" id="billerCode" value="{{ Request::get('biller') }}" readonly>
+                                        <input type="hidden" name="productId" class="form-control" id="productId" value="{{ Request::get('productid') }}" readonly>
+
+                                    </div>
+                                </div>
+
                                         
 
                                     @foreach ($data['getutilityproduct'] as $dataProduct)
 
+
                                         <div class="form-group"> <label for="amount">
                                             <h6>{{ $dataProduct->FieldName }}</h6>
+
+                                            <input type="hidden" name="fieldName[]" value="{{ $dataProduct->FieldName }}">
+                                            <input type="hidden" name="fieldControlType[]" value="{{ $dataProduct->ControlType }}">
                                             </label>
+                                            
                                             <div class="input-group">
                                                 
                                                 @if (isset($dataProduct->ListItems))
 
                                                 @if ($dataProduct->FieldName == "Number of Months")
-                                                    <select name="{{ $dataProduct->PaymentInputKey }}" id="{{ $dataProduct->PaymentInputKey }}" class="form-control">
+                                                    <select name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control">
                                                         @foreach ($dataProduct->ListItems as $listItem)
                                                             <option value="{{ $listItem->ItemType }}">{{ $listItem->ItemName.' month' }}</option>
                                                         @endforeach
                                                     </select>
                                                 @else
-                                                    <select name="{{ $dataProduct->PaymentInputKey }}" id="{{ $dataProduct->PaymentInputKey }}" class="form-control">
+                                                    <select name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control">
                                                         @foreach ($dataProduct->ListItems as $listItem)
                                                             <option value="{{ $listItem->ItemType }}">{{ $listItem->ItemName.': '.Auth::user()->currencySymbol.$listItem->Amount.' ('.$listItem->ItemDesc.')' }}</option>
                                                         @endforeach
@@ -244,11 +260,11 @@ input[type="radio"] {
 
                                                 
                                                     @if ($dataProduct->FieldName == "Email")
-                                                        <div class="input-group-append"> </div> <input type="text" name="{{ $dataProduct->PaymentInputKey }}" id="{{ $dataProduct->PaymentInputKey }}" class="form-control" readonly value="{{ Auth::user()->email }}">
+                                                        <div class="input-group-append"> </div> <input type="text" name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control" readonly value="{{ Auth::user()->email }}">
                                                     @elseif ($dataProduct->FieldName == "Amount")
-                                                        <div class="input-group-append"> </div> <input type="number" min="0.00" max="{{ $dataProduct->MaxAmount }}" step="0.01" name="{{ $dataProduct->PaymentInputKey }}" id="{{ $dataProduct->PaymentInputKey }}" class="form-control" required>
+                                                        <div class="input-group-append"> <span class="input-group-text text-muted"> {{ Auth::user()->currencySymbol }} </span> </div> <input type="number" min="0.00" max="{{ $dataProduct->MaxAmount }}" step="0.01" name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control" required>
                                                     @else
-                                                        <div class="input-group-append"> </div> <input type="text" name="{{ $dataProduct->PaymentInputKey }}" id="{{ $dataProduct->PaymentInputKey }}" class="form-control" required>
+                                                        <div class="input-group-append"> </div> <input type="text" name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control" required>
                                                     @endif
 
                                                 @endif
@@ -274,7 +290,7 @@ input[type="radio"] {
                                         
                                     </label>
                                     <div class="input-group"> 
-                                        <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
+                                        <div class="input-group-append"> <span class="input-group-text text-muted"> {{ Auth::user()->currencySymbol }} </span> </div><input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
                                     </div>
                                 </div>
                                     <div class="form-group disp-0"> <label for="netwmount">
@@ -288,7 +304,7 @@ input[type="radio"] {
                                     </div>
                                 </div>
 
-                                <div class="form-group disp-0"> <label for="netwmount">
+                                {{-- <div class="form-group disp-0"> <label for="netwmount">
                                         <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small></h6>
                                         <p style="font-weight: bold;">
                                             {{ $data['currencyCode'][0]->currencies[0]->code }} <=> CAD
@@ -297,7 +313,7 @@ input[type="radio"] {
                                     <div class="input-group"> 
                                         <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
                                     </div>
-                                </div>
+                                </div> --}}
 
 
                                 <div class="form-group">
@@ -448,8 +464,6 @@ function runCardType(){
             if(result.message == "success"){
                 var res = result.data;
 
-                console.log(res);
-
                 if(result.action == "Bank Account"){
                     $.each(res, function(v, k){
                         $('#card_id').append(`<option value="${k.id}">${k.bankName} - ${k.accountNumber}</option>`);
@@ -485,18 +499,11 @@ function runCommission(){
     
     $('.commissionInfo').html("");
     var amount = $("#amount").val();
-    var structure;
+    var billerCode = $("#billerCode").val();
 
-    if($('#card_type').val() == "Prepaid Card"){
-        structure = "EXBC Prepaid Card";
-    }
-    else{
-        structure = "CC/Bank";
-    }
+    var route = "{{ URL('/api/v1/getutilitydiscount') }}";
 
-
-    var route = "{{ URL('Ajax/getCommission') }}";
-    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $('#card_type').val(), localcurrency: "{{ $data['currencyCode'][0]->currencies[0]->code }}", foreigncurrency: "USD", structure: "Withdrawal", structureMethod: structure};
+    var thisdata = {amount: amount, billerCode: billerCode};
 
 
     Pace.restart();
@@ -515,60 +522,20 @@ function runCommission(){
         
         success: function(result){
 
-            var totalCharge;
+            console.log(result);
 
             if(result.message == "success"){
 
 
-                $(".wallet-info").html(result.walletCheck);
-                $('.withWallet').removeClass('disp-0');
+                $('.commissionInfo').addClass('alert alert-success');
+                $('.commissionInfo').removeClass('alert alert-danger');
 
-                if(result.walletCheck != ""){
-                    $(".sendmoneyBtn").attr("disabled", true);
-                    
+                $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a discounted amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.walletCharge.toFixed(2)+" will be deducted from your Wallet. You have a discount of {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.walletDiscount.toFixed(2)+" on your recharge. Thanks for choosing PaySprint.</span></li></li></ul>");
 
-                }
-                else{
-                    $(".sendmoneyBtn").attr("disabled", false);
-                }
+                $("#amounttosend").val(result.data.walletCharge);
+                $("#commissiondeduct").val(result.data.walletDiscount);
 
-
-                if(result.state == "commission available"){
-
-                    $('.commissionInfo').addClass('alert alert-success');
-                    $('.commissionInfo').removeClass('alert alert-danger');
-
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.toFixed(2)+" will be deducted from your Wallet.</span></li></li></ul>");
-
-                    $("#amounttosend").val(result.data);
-                    $("#commissiondeduct").val(result.collection);
-
-                    $("#totalcharge").val(result.data);
-
-                    totalCharge = $("#amount").val();
-
-
-                    currencyConvert(totalCharge);
-
-
-                }
-                else{
-
-                    $('.commissionInfo').addClass('alert alert-danger');
-                    $('.commissionInfo').removeClass('alert alert-success');
-
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+(+result.data + +result.collection).toFixed(2)+" will be deducted from your Wallet.</span></li></li></ul>");
-
-                    $("#amounttosend").val(result.data);
-                    $("#commissiondeduct").val(result.collection);
-                    $("#totalcharge").val((+result.data + +result.collection));
-
-                    totalCharge = $("#amount").val();
-
-
-                    currencyConvert(totalCharge);
-
-                }
+                $("#totalcharge").val(result.data.walletCharge);
 
 
             }
@@ -582,41 +549,42 @@ function runCommission(){
 }
 
 
-function currencyConvert(amount){
+// function currencyConvert(amount){
 
-    $("#conversionamount").val("");
+//     $("#conversionamount").val("");
 
-    var currency = "CAD";
-    var localcurrency = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
-    var route = "{{ URL('Ajax/getconversion') }}";
-    var thisdata = {currency: currency, amount: amount, val: "send", localcurrency: localcurrency};
+//     var currency = "CAD";
+//     var localcurrency = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
+//     var route = "{{ URL('Ajax/getconversion') }}";
+//     var thisdata = {currency: currency, amount: amount, val: "send", localcurrency: localcurrency};
 
-        setHeaders();
-        jQuery.ajax({
-        url: route,
-        method: 'post',
-        data: thisdata,
-        dataType: 'JSON',
-        success: function(result){
-
-
-            if(result.message == "success"){
-                $("#conversionamount").val(result.data);
-            }
-            else{
-                $("#conversionamount").val("");
-            }
+//         setHeaders();
+//         jQuery.ajax({
+//         url: route,
+//         method: 'post',
+//         data: thisdata,
+//         dataType: 'JSON',
+//         success: function(result){
 
 
-        }
+//             if(result.message == "success"){
+//                 $("#conversionamount").val(result.data);
+//             }
+//             else{
+//                 $("#conversionamount").val("");
+//             }
 
-    });
-}
+
+//         }
+
+//     });
+// }
 
 
 function handShake(val){
 
 var route;
+
 
 var formData;
 
@@ -638,16 +606,15 @@ if(val == 'payutility'){
         contentType: false,
         dataType: 'JSON',
         beforeSend: function(){
-            $('.withdrawmoneyBtn').text('Please wait...');
+            $('.payutilityBtn').text('Please wait...');
         },
         success: function(result){
-            console.log(result);
 
-            $('.withdrawmoneyBtn').text('Withdraw Money');
+            $('.payutilityBtn').text(' Pay ');
 
             if(result.status == 200){
                     swal("Success", result.message, "success");
-                    setTimeout(function(){ location.href="{{ route('my account') }}"; }, 15000);
+                    setTimeout(function(){ location.href="{{ route('my account') }}"; }, 5000);
                 }
                 else{
                     swal("Oops", result.message, "error");
@@ -655,7 +622,7 @@ if(val == 'payutility'){
 
         },
         error: function(err) {
-            $('.withdrawmoneyBtn').text('Withdraw Money');
+            $('.payutilityBtn').text('Pay');
             swal("Oops", err.responseJSON.message, "error");
 
         } 
@@ -690,7 +657,6 @@ else if(val == 'addcard'){
             $('#cardSubmit').text('Please wait...');
         },
         success: function(result){
-            console.log(result);
 
             $('#cardSubmit').text('Submit');
 
