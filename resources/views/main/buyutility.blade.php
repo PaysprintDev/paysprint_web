@@ -15,7 +15,7 @@
 
 <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
 
-    <title>PaySprint | Airtime & Utility</title>
+    <title>PaySprint | {{ Request::get('billername') }}</title>
 
     <style>
         body {
@@ -52,7 +52,7 @@ input[type="radio"] {
         <!-- For demo purpose -->
         <div class="row mb-4">
             <div class="col-lg-8 mx-auto text-center">
-                <h1 class="display-4">{{ $pages }}</h1>
+                <h1 class="display-4">{{ strtoupper(Request::get('billername')) }}</h1>
             </div>
         </div> <!-- End -->
         <div class="row">

@@ -95,14 +95,16 @@ input[type="radio"] {
                                                             if(isset($vendor->billerCode)){
                                                                 $billerCode = 'biller='.$vendor->billerCode;
                                                                 $productId = 'productid='.$vendor->productfields[0]->productId;
+                                                                $billerName = 'billername='.$vendor->billerName;
                                                             }
                                                             else{
                                                                 $billerCode = '';
                                                                 $productId = '';
+                                                                $billerName = '';
                                                             }
                                                         @endphp
                                                         
-                                                        <a href="{{ route('buy utility bills', $vendor->productfields[0]->productId.'?'.$billerCode.'&'.$productId) }}" class="btn btn-primary">Get Product</a>
+                                                        <a href="{{ route('buy utility bills', $vendor->productfields[0]->productId.'?'.$billerCode.'&'.$productId.'&'.$billerName) }}" class="btn btn-primary">Get Product</a>
                                                     </div>
                                                 </div>
                                                 

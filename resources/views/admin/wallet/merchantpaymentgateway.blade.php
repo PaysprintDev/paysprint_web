@@ -53,7 +53,10 @@
                         <div class="col-lg-12 col-xs-12">
           <!-- small box -->
           <div class="small-box">
-              <div class="col-md-3">
+
+              @if (session('country') != "Nigeria")
+
+                  <div @if (session('country') != 'Canada') class="col-md-6 mb-3" @else class="col-md-3 mb-3" @endif>
                   <strong>
                     <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('merchant credit card', $data['getUserDetail']->id) }}"><img src="https://img.icons8.com/fluent/53/000000/credit-card-cash-withdrawal.png" title="Credit Card"/> <i class="fas fa-plus-square" title="Credit Card" style="font-size: 16px; color: black"></i>
                         <br>
@@ -61,26 +64,46 @@
                     </a>
                   </strong>
               </div>
+              @endif
 
-              <div class="col-md-3">
+              @if (session('country') == "Canada")
+
+                  <div class="col-md-3">
+                    <strong>
+                      <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('merchant debit card', $data['getUserDetail']->id) }}"><img src="https://img.icons8.com/color/53/000000/bank-card-front-side.png" title="Credit Card"/> <i class="fas fa-plus-square" title="Credit Card" style="font-size: 16px; color: black"></i>
+                          <br>
+                          Debit VISA/Mastercard
+                      </a>
+                    </strong>
+                </div>
+
+                <div class="col-md-3">
                   <strong>
-                    <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('merchant debit card', $data['getUserDetail']->id) }}"><img src="https://img.icons8.com/color/53/000000/bank-card-front-side.png" title="Credit Card"/> <i class="fas fa-plus-square" title="Credit Card" style="font-size: 16px; color: black"></i>
-                        <br>
-                        Debit VISA/Mastercard
-                    </a>
+                      <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('merchant prepaid card', $data['getUserDetail']->id) }}"> <img src="https://img.icons8.com/cotton/53/000000/bank-cards--v2.png" title="Prepaid Card"/> <i class="fas fa-plus-square" title="Prepaid Card" style="font-size: 16px; color: black"></i>
+                          <br>
+                          Prepaid Card
+                      </a>
                   </strong>
-              </div>
+                </div>
 
-              <div class="col-md-3">
-                <strong>
-                    <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('merchant prepaid card', $data['getUserDetail']->id) }}"> <img src="https://img.icons8.com/cotton/53/000000/bank-cards--v2.png" title="Prepaid Card"/> <i class="fas fa-plus-square" title="Prepaid Card" style="font-size: 16px; color: black"></i>
-                        <br>
-                        Prepaid Card
-                    </a>
-                </strong>
-              </div>
+              @endif
 
-              <div class="col-md-3">
+              @if (session('country') == "Nigeria")
+                <div class="col-md-6 mb-3">
+                    <strong>
+                      <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('merchant debit card', $data['getUserDetail']->id) }}"><img src="https://img.icons8.com/color/53/000000/bank-card-front-side.png" title="Credit Card"/> <i class="fas fa-plus-square" title="Credit Card" style="font-size: 16px; color: black"></i>
+                          <br>
+                          Debit VISA/Mastercard
+                      </a>
+                    </strong>
+                </div>
+              @endif
+
+              
+
+              
+
+              <div @if (session('country') != 'Canada') class="col-md-6 mb-3" @else class="col-md-3 mb-3" @endif>
                 <strong>
                     <a type="button" class="btn btn-warning" style="color: purple; font-weight: bold; background-color: #fff !important;" href="{{ route('merchant bank account', $data['getUserDetail']->id) }}"> <img src="https://img.icons8.com/dusk/53/000000/merchant-account.png" title="Bank Account"/> <i class="fas fa-plus-square" title="Bank Account" style="font-size: 16px; color: black"></i>
                         <br>

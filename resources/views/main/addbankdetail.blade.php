@@ -123,9 +123,9 @@ input[type="radio"] {
 
                                                         <div class="row">
                                                             <div class="col-md-6">
-                                                                <input type="hidden" name="bank_id" value="{{ $myBank->id }}" id="bank_id">
+                                                                <input type="hidden" name="bank_id" value="{{ $myBank->id }}" id="bank_id{{ $myBank->id }}">
                                                                 <a href="{{ route('Edit bank', $myBank->id) }}" title="Edit Bank Detail"><i class="far fa-edit text-secondary"></i></a>
-                                                                <a href="javascript:void(0)" title="Delete Bank Detail" onclick="handShake('deletebank')"><i class="far fa-trash-alt text-danger"></i></a>
+                                                                <a href="javascript:void(0)" title="Delete Bank Detail" onclick="delhandShake('deletebank', '{{ $myBank->id }}')"><i class="far fa-trash-alt text-danger"></i></a>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <img src="https://img.icons8.com/emoji/30/000000/bank-emoji.png"/>
@@ -208,7 +208,7 @@ input[type="radio"] {
 
                                                 @elseif (Auth::user()->country == "Nigeria")
 
-                                                <select name="bank_code" id="bank_code" class="form-control">
+                                                <select name="bankName" id="bankName" class="form-control">
                                                     @if (count($data['listbank']) > 0)
                                                     <option value="">Select your bank</option>
                                                         @foreach ($data['listbank'] as $banksData)
@@ -364,7 +364,12 @@ var formData = new FormData(formElem);
 }
 
 
-else if(val == "deletebank"){
+
+
+}
+
+function delhandShake(val, id){
+    if(val == "deletebank"){
 
     // Ask Are you sure
 
@@ -380,7 +385,7 @@ else if(val == "deletebank"){
     
     // Run Ajax
 
-    var thisdata = {id: $("#bank_id").val()};
+    var thisdata = {id: $("#bank_id"+id).val()};
 
     route = "{{ URL('/api/v1/deletebank') }}";
 
@@ -419,7 +424,6 @@ else if(val == "deletebank"){
 });
 
 }
-
 }
 
 

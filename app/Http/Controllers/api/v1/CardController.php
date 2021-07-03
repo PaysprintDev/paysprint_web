@@ -162,7 +162,7 @@ class CardController extends Controller
                      'bankName' => 'required|string',
                      'accountNumber' => 'required|string|unique:add_bank',
                      'accountName' => 'required|string',
-                     'transitNumber' => 'required|string',
+                    //  'transitNumber' => 'required|string',
                      'branchCode' => 'required|string',
                 ]);
 
@@ -292,7 +292,7 @@ class CardController extends Controller
                      'bankName' => 'required|string',
                      'accountNumber' => 'required|string|unique:add_bank',
                      'accountName' => 'required|string',
-                     'transitNumber' => 'required|string',
+                    //  'transitNumber' => 'required|string',
                      'branchCode' => 'required|string',
                 ]);
 

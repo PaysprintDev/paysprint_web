@@ -114,9 +114,9 @@ input[type="radio"] {
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-md-6">
-                                                            <input type="hidden" name="bank_id" value="{{ $data['getthisBank']->id }}" id="bank_id">
+                                                            <input type="hidden" name="bank_id" value="{{ $data['getthisBank']->id }}" id="bank_id{{ $data['getthisBank']->id }}">
                                                             <a href="{{ route('Edit bank', $data['getthisBank']->id) }}" title="Edit Bank Account"><i class="far fa-edit text-secondary"></i></a>
-                                                            <a href="javascript:void(0)" title="Delete Bank Account" onclick="handShake('deletebank')"><i class="far fa-trash-alt text-danger"></i></a>
+                                                            <a href="javascript:void(0)" title="Delete Bank Account" onclick="delhandShake('deletebank', '{{ $data['getthisBank']->id }}')"><i class="far fa-trash-alt text-danger"></i></a>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <img src="https://img.icons8.com/emoji/30/000000/bank-emoji.png"/>
@@ -334,7 +334,10 @@ var formData = new FormData(formElem);
 }
 
 
-else if(val == "deletebank"){
+}
+
+function delhandShake(val, id){
+    if(val == "deletebank"){
 
     // Ask Are you sure
 
@@ -350,7 +353,7 @@ else if(val == "deletebank"){
     
     // Run Ajax
 
-    var thisdata = {id: $("#bank_id").val()};
+    var thisdata = {id: $("#bank_id"+id).val()};
 
     route = "{{ URL('/api/v1/deletebank') }}";
 
@@ -389,7 +392,6 @@ else if(val == "deletebank"){
 });
 
 }
-
 }
 
 

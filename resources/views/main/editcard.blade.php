@@ -128,9 +128,9 @@ input[type="radio"] {
                                                     <br>
                                                     <div class="row">
                                                         <div class="col-md-6">
-                                                            <input type="hidden" name="card_id" value="{{ $data['getthisCard']->id }}" id="card_id">
+                                                            <input type="hidden" name="card_id" value="{{ $data['getthisCard']->id }}" id="card_id{{ $data['getthisCard']->id }}">
                                                             <a href="#" title="Edit Card"><i class="far fa-edit text-secondary"></i></a>
-                                                            <a href="javascript:void(0)" title="Delete Card" onclick="handShake('deletecard')"><i class="far fa-trash-alt text-danger"></i></a>
+                                                            <a href="javascript:void(0)" title="Delete Card" onclick="delhandShake('deletecard', '{{ $data['getthisCard']->id }}')"><i class="far fa-trash-alt text-danger"></i></a>
                                                         </div>
                                                         <div class="col-md-6">
                                                             {!! $cardImage !!}
@@ -430,7 +430,13 @@ var formData = new FormData(formElem);
 }
 
 
-else if(val == "deletecard"){
+
+
+}
+
+
+function delhandShake(val, id){
+    if(val == "deletecard"){
 
     // Ask Are you sure
 
@@ -446,7 +452,7 @@ else if(val == "deletecard"){
     
     // Run Ajax
 
-    var thisdata = {id: $("#card_id").val()};
+    var thisdata = {id: $("#card_id"+id).val()};
 
     route = "{{ URL('/api/v1/deletecard') }}";
 
@@ -485,7 +491,6 @@ else if(val == "deletecard"){
 });
 
 }
-
 }
 
 
