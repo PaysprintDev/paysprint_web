@@ -179,6 +179,8 @@ Route::prefix('/v1')->group(function () {
         Route::post('getutilitydiscount',  ['uses' => 'MonerisController@getCommissionConversion'])->name('utility discount');
         
         Route::get('getmycarddetail',  ['uses' => 'api\v1\CardController@getMyCardDetail'])->name('get card details');
+
+        Route::get('getbillerslogo',  ['uses' => 'api\v1\ServiceController@getBillersLogo'])->name('get billers logo');
         
         Route::post('addnewbank',  ['uses' => 'api\v1\CardController@addNewBank'])->name('add new bank');
 

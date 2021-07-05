@@ -530,7 +530,7 @@ function runCommission(){
                 $('.commissionInfo').addClass('alert alert-success');
                 $('.commissionInfo').removeClass('alert alert-danger');
 
-                $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a discounted amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.walletCharge.toFixed(2)+" will be deducted from your Wallet. You have a discount of {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.walletDiscount.toFixed(2)+" on your recharge. Thanks for choosing PaySprint.</span></li></li></ul>");
+                $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a discounted amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.walletCharge.toFixed(2)+" will be deducted from your Wallet. You have a discount of {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.walletDiscount.toFixed(2)+" on your {{ strtoupper(Request::get('billername')) }}. Thanks for choosing PaySprint.</span></li></li></ul>");
 
                 $("#amounttosend").val(result.data.walletCharge);
                 $("#commissiondeduct").val(result.data.walletDiscount);

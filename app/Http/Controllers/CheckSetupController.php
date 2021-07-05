@@ -18,6 +18,9 @@ use App\AllCountries as AllCountries;
 use App\TransactionCost as TransactionCost;
 use App\RequestRefund as RequestRefund;
 
+
+use App\Traits\ExpressPayment;
+
 class CheckSetupController extends Controller
 {
 
@@ -25,6 +28,8 @@ class CheckSetupController extends Controller
     public $email;
     public $subject;
     public $message;
+
+    use ExpressPayment;
     // Check user quick wallet setup
 
     public function updateQuickSetup(){
@@ -41,6 +46,8 @@ class CheckSetupController extends Controller
                 else{
                     $approval = "";
                 }
+
+                
                 if($value->transaction_pin == null){
                     $transaction = "<li>Set Up Transaction Pin-You will need the PIN to Send Money, Pay Invoice or Withdraw Money from Your PaySprint Account</li>";
                 }
@@ -724,6 +731,12 @@ class CheckSetupController extends Controller
 
 
         }
+    }
+
+
+    // Update EPS Vendor
+    public function updateEPSVendor(){
+        $data = $this->getVendors();
     }
 
 

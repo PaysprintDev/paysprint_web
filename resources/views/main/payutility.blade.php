@@ -1,4 +1,9 @@
+
 <!doctype html>
+
+<?php use \App\Http\Controllers\EPSVendor; ?>
+
+
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -87,7 +92,17 @@ input[type="radio"] {
                                                 <div class="col-md-4 pb-4">
 
                                                 <div class="card" style="width: 100%;">
-                                                    <img src="https://www.xpresspayments.com/images/portfolio/xpresspayonline.png" class="card-img-top" alt="{{ $vendor->productfields[0]->productId }}">
+
+                                                    @if($logoAsset = \App\EPSVendor::where('billerCode', $vendor->billerCode)->first())
+
+                                                        <img src="{{ $logoAsset->logo }}" class="card-img-top" alt="{{ $vendor->productfields[0]->productId }}" style="width: 100%; height: 200px;">
+
+                                                        @else
+
+                                                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" class="card-img-top" alt="{{ $vendor->productfields[0]->productId }}" style="width: 100%; height: 200px;">
+
+                                                    @endif
+
                                                     <div class="card-body">
                                                         <h5 class="card-title">{{ strtoupper($vendor->billerName) }}</h5>
                                                         

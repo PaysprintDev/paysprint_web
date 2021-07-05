@@ -30,6 +30,7 @@ Route::get('reportstatus', 'CheckSetupController@reportStatus');
 Route::get('updatefee', 'CheckSetupController@updateMonthlyFee');
 Route::get('refundbycountryupdate', 'CheckSetupController@refundbyCountry');
 Route::get('passwordreminder', 'CheckSetupController@passwordReminder');
+Route::get('epsvendorupdate', 'CheckSetupController@updateEPSVendor');
 
 Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
 

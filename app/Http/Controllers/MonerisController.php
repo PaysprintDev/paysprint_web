@@ -2048,6 +2048,8 @@ else{
                      'commissiondeduct' => 'required|string',
                 ]);
 
+                
+
                 if($validator->passes()){
 
                     

@@ -296,6 +296,7 @@ function runCommission(){
         
         success: function(result){
 
+
             var totalCharge;
 
             if(result.message == "success"){

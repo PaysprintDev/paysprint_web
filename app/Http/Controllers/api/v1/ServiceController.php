@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
 use App\ServiceType as ServiceType;
+use App\EPSVendor as EPSVendor;
 
 class ServiceController extends Controller
 {
@@ -59,6 +60,18 @@ class ServiceController extends Controller
             $message = $error;
 
         }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+
+        return $this->returnJSON($resData, $status);
+    }
+
+    public function getBillersLogo(Request $req){
+        $data = EPSVendor::where('billerCode', $req->get('billerCode'))->first();
+
+        $message = 'success';
+        $status = 200;
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 

@@ -163,7 +163,7 @@ class CardController extends Controller
                      'accountNumber' => 'required|string|unique:add_bank',
                      'accountName' => 'required|string',
                     //  'transitNumber' => 'required|string',
-                     'branchCode' => 'required|string',
+                    //  'branchCode' => 'required|string',
                 ]);
 
         if($validator->passes()){
@@ -293,7 +293,7 @@ class CardController extends Controller
                      'accountNumber' => 'required|string|unique:add_bank',
                      'accountName' => 'required|string',
                     //  'transitNumber' => 'required|string',
-                     'branchCode' => 'required|string',
+                    //  'branchCode' => 'required|string',
                 ]);
 
 

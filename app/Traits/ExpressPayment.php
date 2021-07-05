@@ -80,6 +80,7 @@ trait ExpressPayment{
 
             $data = EPSVendor::where('billerCode', $billerCode)->first();
             $ourcharge = PSCharge::where('country', $country)->first();
+
             // Get Commision and Charge
             if($data->commission != 0){
                 $commission = $data->commission;
