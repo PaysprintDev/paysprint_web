@@ -80,6 +80,8 @@ use App\Traits\PaystackPayment;
 
 use App\Traits\ExpressPayment;
 
+use App\Traits\SpecialInfo;
+
 
 
 class HomeController extends Controller
@@ -101,6 +103,7 @@ class HomeController extends Controller
     use AccountNotify;
     use PaystackPayment;
     use ExpressPayment;
+    use SpecialInfo;
     /**
      * Create a new controller instance.
      *
@@ -138,6 +141,7 @@ class HomeController extends Controller
                     'getCard' => $this->getUserCard(),
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                     'getmerchantsByCategory' => $this->getMerchantsByCategory(),
+                    'specialInfo' => $this->getthisInfo(Auth::user()->country),
                 );
 
                 $view = 'home';
@@ -185,6 +189,7 @@ class HomeController extends Controller
                     'getCard' => $this->getUserCard(),
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                     'getmerchantsByCategory' => $this->getMerchantsByCategory(),
+                    'specialInfo' => $this->getthisInfo(Auth::user()->country),
                 );
 
                 $view = 'home';
@@ -221,6 +226,7 @@ class HomeController extends Controller
                     'getCard' => $this->getUserCard(),
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                     'getmerchantsByCategory' => $this->getMerchantsByCategory(),
+                    'specialInfo' => $this->getthisInfo(Auth::user()->country),
                 );
             }
             else{
@@ -1135,7 +1141,7 @@ class HomeController extends Controller
     }
 
     public function updateNotification($ref_code){
-        $data = Notifications::where('ref_code', $ref_code)->update(['notify' => 1]);
+        $data = Notifications::where('ref_code', $ref_code)->update(['notify' => 1, 'platform' => 'web']);
 
         return $data;
     }
@@ -3789,11 +3795,25 @@ class HomeController extends Controller
             */ 
 
             if(isset($data) == true){
-                $x = ($data->variable / 100) * $req->amount;
 
-                $y = $data->fixed + $x;
+                if($thisuser->country == "Nigeria" && $req->amount <= 2500){
 
-                $collection = $y;
+                    $x = ($data->variable / 100) * $req->amount;
+
+                    $y = 0 + $x;
+
+                    $collection = $y;
+                }
+                else{
+
+                    $x = ($data->variable / 100) * $req->amount;
+
+                    $y = $data->fixed + $x;
+
+                    $collection = $y;
+                }
+
+                
             }
             else{
 

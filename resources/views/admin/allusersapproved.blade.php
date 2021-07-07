@@ -76,6 +76,7 @@
                 </thead>
                 <tbody>
 
+
                   @if($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', 3)->get())
 
 
@@ -149,9 +150,13 @@
                                 {{ date('d/M/Y h:i:a', strtotime($datainfo->created_at)) }}
                             </td>
 
-                            @if ($datainfo->approval == 1 && $datainfo->accountLevel > 0)
+                            @if ($datainfo->approval == 2 && $datainfo->accountLevel > 0)
 
                             <td style="color: green; font-weight: bold;" align="center">Approved</td>
+
+                            @elseif ($datainfo->approval == 1 && $datainfo->accountLevel > 0)
+
+                            <td style="color: darkorange; font-weight: bold;" align="center">Awaiting Approval</td>
                                 
                             @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)
                             <td style="color: navy; font-weight: bold;" align="center">Override Level 1</td>
@@ -169,9 +174,14 @@
 
 
 
-                                @if($datainfo->approval == 1 && $datainfo->accountLevel > 0) 
+                                @if($datainfo->approval == 2 && $datainfo->accountLevel > 0) 
                                 
-                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Disapprove Account"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  
+                                <a href="javascript:void()" onclick="downgradetoLevel1('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Downgrade to Level 1"></i> <img class="spindowngrade{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
+                                
+                                
+                                @elseif($datainfo->approval == 1 && $datainfo->accountLevel > 0) 
+                                
+                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Approve Account"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  
                                 
                                 
                                 @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)

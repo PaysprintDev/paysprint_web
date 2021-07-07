@@ -6,18 +6,17 @@
 <?php use \App\Http\Controllers\User; ?>
 <?php use \App\Http\Controllers\OrganizationPay; ?>
 <?php use \App\Http\Controllers\ClientInfo; ?>
-<?php use \App\Http\Controllers\AnonUsers; ?>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         Moneris Activity Log
+         All Matched Users By Country
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Moneris Activity Log</li>
+        <li class="active">All Matched Users By Country</li>
       </ol>
     </section>
 
@@ -27,7 +26,11 @@
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Moneris Activity Log</h3>
+              <div class="row">
+                <div class="col-md-2 col-md-offset-0">
+                <button class="btn btn-secondary btn-block bg-red" onclick="goBack()"><i class="fas fa-chevron-left"></i> Go back</button>
+            </div>
+            </div>
               
             </div>
             <!-- /.box-header -->
@@ -46,38 +49,45 @@
                   </div>
                 <tr>
                   <th>S/N</th>
-                  <th>Transaction ID</th>
-                  <th>Message</th>
-                  <th>Gateway</th>
                   <th>Country</th>
-                  <th>Activity</th>
-                  <th>Date</th>
+                  <th>Total Count</th>
+                  <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                    @if (count($data['activity']) > 0)
+                    @if (count($allusers) > 0)
                     <?php $i = 1;?>
-                        @foreach ($data['activity'] as $data)
+                        @foreach ($allusers as $data)
                         <tr>
                             <td>{{ $i++ }}</td>
+                            
+                            <td>{{ $data->country }}</td>
 
-                            <td>{{ $data->transaction_id }}</td>
-                            <td>{{ $data->message }}</td>
-                            <td>{{ strtoupper($data->gateway) }}</td>
-                            <td>{{ strtoupper($data->country) }}</td>
-                            <td>{{ $data->activity }}</td>
-                            <td>{{ date('d/M/Y', strtotime($data->created_at)) }}</td>
+                            @if($allusersdata = \App\User::where('country', $data->country)->where('accountLevel', 2)->count())
+                                <td>{{ $allusersdata }}</td>
+                            @endif
+
+                            
+
+                            <td>
+
+                              <a href="{{ route('matchedusers', 'country='.$data->country) }}" type="button" class="btn btn-primary">View details</a>
+
+                              
+                            </td>
+
+
                         </tr>
                         @endforeach
 
-                         
+                        
+
                     @else
                     <tr>
-                        <td colspan="6" align="center">No record available</td>
+                        <td colspan="4" align="center">No record available</td>
                     </tr>
                     @endif
                 </tbody>
-
               </table>
             </div>
             <!-- /.box-body -->

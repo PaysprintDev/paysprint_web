@@ -1450,6 +1450,56 @@ function confirmPay(transactionid, user_id, coy_id){
 }
 
 
+function downgradetoLevel1(id){
+
+  var thisdata;
+  var spinner = $('.spindowngrade'+id);
+  var route = "{{ URL('Ajax/downgradeaccount') }}";
+
+  swal({
+      title: "Are you sure?",
+      text: "Please make sure you have thoroughly checked the account before you downgrade",
+      icon: "info",
+      buttons: true,
+      dangerMode: false,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        thisdata = {id: id};
+          setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: thisdata,
+            dataType: 'JSON',
+            beforeSend: function(){
+              spinner.removeClass('disp-0');
+            },
+            success: function(result){
+              spinner.addClass('disp-0');
+                
+                if (result.message == "success") {
+
+                  swal(result.title, result.res, result.message);
+                  setTimeout(function(){ location.reload(); }, 2000);
+
+                }
+
+                else{
+                  swal(result.title, result.res, result.message);
+                }
+
+
+            }
+
+          });
+
+      }
+    });
+
+}
+
+
 function approveaccount(id){
 
   var thisdata;

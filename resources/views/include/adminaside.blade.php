@@ -45,6 +45,8 @@
             @if (session('role') == "Super")
             <li><a href="{{ route('platform activity') }}"><i class="fa fa-circle-o"></i> Activity</a></li>
             <li><a href="{{ route('gateway activity') }}"><i class="fa fa-circle-o"></i> Gateway Activity</a></li>
+            <li><a href="{{ route('generate special information activity') }}"><i class="fa fa-circle-o"></i> Create Special Information</a></li>
+            <li><a href="{{ route('special information activity') }}"><i class="fa fa-circle-o"></i> Special Information</a></li>
           @endif
             
           </ul>

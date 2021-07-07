@@ -59,6 +59,21 @@
     <section class="professional_builder row">
         <div class="container">
 
+            @isset($data['specialInfo'])
+                <div class="row">
+                    <div class="alert alert-success show" role="alert">
+                        <strong><h5>*** Special Information ***</h5></strong><hr>
+                        <p>
+                            {{ $data['specialInfo']->information }}
+                        </p>
+
+                    
+                    </div>
+                </div>
+            @endisset
+
+            
+
             @if (Auth::user()->approval == 0 || Auth::user()->accountLevel == 0)
             <div class="row">
                 <div class="alert alert-danger alert-dismissible show" role="alert">

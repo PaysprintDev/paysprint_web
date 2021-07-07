@@ -148,9 +148,13 @@
                                 {{ date('d/M/Y h:i:a', strtotime($datainfo->created_at)) }}
                             </td>
 
-                            @if ($datainfo->approval == 1 && $datainfo->accountLevel > 0)
+                            @if ($datainfo->approval == 2 && $datainfo->accountLevel > 0)
 
                             <td style="color: green; font-weight: bold;" align="center">Approved</td>
+
+                            @elseif ($datainfo->approval == 1 && $datainfo->accountLevel > 0)
+
+                            <td style="color: darkorange; font-weight: bold;" align="center">Awaiting Approval</td>
                                 
                             @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)
                             <td style="color: navy; font-weight: bold;" align="center">Override Level 1</td>

@@ -20,6 +20,7 @@ use App\Admin as Admin;
 use App\ClientInfo as ClientInfo;
 use App\AllCountries as AllCountries;
 use App\LinkAccount as LinkAccount;
+use App\ListOfBanks as ListOfBanks;
 use App\Mail\sendEmail;
 
 use App\Traits\Trulioo;
@@ -728,8 +729,9 @@ class UserController extends Controller
 
         if($response->status == true && $response->data->account_number == true){
 
-
-            User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 2]);
+            $bank = ListOfBanks::where('code', $req->bank_code)->first();
+            
+            User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 2, 'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
 
 
             $data = $response->data;

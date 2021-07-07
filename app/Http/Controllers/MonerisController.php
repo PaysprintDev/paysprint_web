@@ -53,6 +53,8 @@ use App\BankWithdrawal as BankWithdrawal;
 
 use App\TransactionCost as TransactionCost;
 
+use App\EPSVendor as EPSVendor;
+
 
 use App\CcWithdrawal as CcWithdrawal;
 
@@ -304,7 +306,7 @@ if($mpgResponse->responseData['Message'] == "APPROVED           *               
                     $this->createNotification($thisuser->ref_code, "Payment successfully made for ".$req->service." to ".$client->business_name);
 
                     $monerisactivity = "Payment successfully made for ".$req->service." to ".$client->business_name." by ".$thisuser->name;
-                    $this->keepRecord($mpgResponse->responseData['ReceiptId'], $mpgResponse->responseData['Message'], $monerisactivity);
+                    $this->keepRecord($mpgResponse->responseData['ReceiptId'], $mpgResponse->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
 				}
 				else{
                     $resData = ['res' => 'Something went wrong', 'message' => 'info', 'title' => 'Oops!'];
@@ -341,7 +343,7 @@ else{
     $action = 'error';
 
     $monerisactivity = "Payment error for ".$req->service." to ".$client->business_name." by ".$thisuser->name;
-    $this->keepRecord("", $mpgResponse->responseData['Message'], $activity);
+    $this->keepRecord("", $mpgResponse->responseData['Message'], $activity, 'moneris', $thisuser->country);
 }
 
     // return $this->returnJSON($resData, 200);
@@ -670,6 +672,8 @@ else{
 
         // dd($req->all());
 
+        $gateway = "";
+
         $validator = Validator::make($req->all(), [
                     //  'card_id' => 'required|string',
                      'amount' => 'required|string',
@@ -687,6 +691,9 @@ else{
                 if($req->paymentToken != null){
 
                         $reference_code = $req->paymentToken;
+
+                        $gateway = "Paystack";
+                        
                         
                         // Update Wallet Balance
                         $walletBal = $thisuser->wallet_balance + $req->amounttosend;
@@ -717,9 +724,9 @@ else{
                             $this->email = $thisuser->email;
                             $this->subject = $req->currencyCode.' '.number_format($req->amounttosend, 2)." now added to your wallet with PaySprint";
 
-                            $this->message = '<p>You have added <strong>'.$req->currencyCode.' '.number_format($req->amounttosend, 2).'</strong> to your wallet with PaySprint. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your account</p>';
+                            $this->message = '<p>You have added <strong>'.$req->currencyCode.' '.number_format($req->amounttosend, 2).'</strong> <em>(Gross Amount of '.$req->currencyCode.' '.number_format($req->amount, 2).' less transaction fee '.$req->currencyCode.' '.number_format($req->commissiondeduct, 2).')</em> to your wallet with PaySprint. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your account</p>';
 
-                            $sendMsg = 'You have added '.$req->currencyCode.' '.number_format($req->amounttosend, 2).' to your wallet with PaySprint. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+                            $sendMsg = 'You have added '.$req->currencyCode.' '.number_format($req->amounttosend, 2).' (Gross Amount of '.$req->currencyCode.' '.number_format($req->amount, 2).' less transaction fee '.$req->currencyCode.' '.number_format($req->commissiondeduct, 2).') to your wallet with PaySprint. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
 
                             $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
                                                     
@@ -784,6 +791,8 @@ else{
                         $message = 'You have successfully added '.$req->currencyCode.' '.number_format($req->amounttosend, 2).' to your wallet';
 
                         $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                        $this->keepRecord($reference_code, $message, "Success", $gateway, $thisuser->country);
 
                         Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
@@ -1033,6 +1042,8 @@ else{
 
                             $reference_code = $response->transaction->id;
 
+                            $gateway = "Fortispay";
+
                             
 
                             $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
@@ -1071,9 +1082,9 @@ else{
                                 $this->email = $thisuser->email;
                                 $this->subject = $req->currencyCode.' '.number_format($req->amounttosend, 2)." now added to your wallet with PaySprint";
 
-                                $this->message = '<p>You have added <strong>'.$req->currencyCode.' '.number_format($req->amounttosend, 2).'</strong> to your wallet with PaySprint. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your account</p>';
+                                $this->message = '<p>You have added <strong>'.$req->currencyCode.' '.number_format($req->amounttosend, 2).'</strong> <em>(Gross Amount of '.$req->currencyCode.' '.number_format($req->amount, 2).' less transaction fee '.$req->currencyCode.' '.number_format($req->commissiondeduct, 2).')</em> to your wallet with PaySprint. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your account</p>';
 
-                                $sendMsg = 'You have added '.$req->currencyCode.' '.number_format($req->amounttosend, 2).' to your wallet with PaySprint. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+                                $sendMsg = 'You have added '.$req->currencyCode.' '.number_format($req->amounttosend, 2).' (Gross Amount of '.$req->currencyCode.' '.number_format($req->amount, 2).' less transaction fee '.$req->currencyCode.' '.number_format($req->commissiondeduct, 2).') to your wallet with PaySprint. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
 
                                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
                                                         
@@ -1101,7 +1112,7 @@ else{
                             Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
                             $monerisactivity = $thisuser->name.' '.$sendMsg;
-                            $this->keepRecord($reference_code, $responseCode, $monerisactivity);
+                            $this->keepRecord($reference_code, $responseCode, $monerisactivity, $gateway, $thisuser->country);
                             
 
                         }
@@ -1110,10 +1121,12 @@ else{
                             $message = $responseCode;
                             $status = 400;
 
+                            $gateway = "Fortispay";
+
                             Log::critical('Oops!! '.$thisuser->name.' '.$message);
 
                             $monerisactivity = $thisuser->name.' '.$message;
-                            $this->keepRecord("", $responseCode, $monerisactivity);
+                            $this->keepRecord("", $responseCode, $monerisactivity, $gateway, $thisuser->country);
                         }
 
 
@@ -1168,9 +1181,9 @@ else{
                                 $this->email = $thisuser->email;
                                 $this->subject = $req->currencyCode.' '.number_format($req->amounttosend, 2)." now added to your wallet with PaySprint";
 
-                                $this->message = '<p>You have added <strong>'.$req->currencyCode.' '.number_format($req->amounttosend, 2).'</strong> to your wallet with PaySprint. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your account</p>';
+                                $this->message = '<p>You have added <strong>'.$req->currencyCode.' '.number_format($req->amounttosend, 2).'</strong> <em>(Gross Amount of '.$req->currencyCode.' '.number_format($req->amount, 2).' less transaction fee '.$req->currencyCode.' '.number_format($req->commissiondeduct, 2).')</em> to your wallet with PaySprint. You now have <strong>'.$req->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your account</p>';
 
-                                $sendMsg = 'You have added '.$req->currencyCode.' '.number_format($req->amounttosend, 2).' to your wallet with PaySprint. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+                                $sendMsg = 'You have added '.$req->currencyCode.' '.number_format($req->amounttosend, 2).' (Gross Amount of '.$req->currencyCode.' '.number_format($req->amount, 2).' less transaction fee '.$req->currencyCode.' '.number_format($req->commissiondeduct, 2).') to your wallet with PaySprint. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
 
                                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
                                                         
@@ -1198,7 +1211,7 @@ else{
                             Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
                             $monerisactivity = $thisuser->name.' '.$sendMsg;
-                            $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity);
+                            $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
                             
 
                         }
@@ -1210,7 +1223,7 @@ else{
                             Log::critical('Oops!! '.$thisuser->name.' '.$message);
 
                             $monerisactivity = $thisuser->name.' '.$message;
-                            $this->keepRecord("", $response->responseData['Message'], $monerisactivity);
+                            $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
                         }
                     }
 
@@ -2057,6 +2070,10 @@ else{
                     
                     $minBal = $this->minimumWithdrawal($thisuser->country);
 
+                    $vendorNames = EPSVendor::where('billerCode', $req->billerCode)->first();
+
+                    $billerName = $vendorNames->billerName;
+
                     // Check amount in wallet
                     if($req->totalcharge > $thisuser->wallet_balance){
                         // Insufficient amount for withdrawal
@@ -2113,7 +2130,7 @@ else{
 
                                             $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                                            $activity = "Withdraw ".$thisuser->currencyCode.''.number_format($req->amounttosend, 2)." from Wallet for Airtime/Utility Bill";
+                                            $activity = "Withdraw ".$thisuser->currencyCode.''.number_format($req->amounttosend, 2)." from Wallet for ".strtoupper($billerName);
                                             $credit = 0;
                                             $debit = $req->amounttosend;
                                             // $reference_code = $response->responseData['ReceiptId'];
@@ -2133,11 +2150,11 @@ else{
                                             $this->email = $thisuser->email;
                                             $this->subject = $thisuser->currencyCode.' '.number_format($req->amounttosend, 2)." has been Withdrawn from your Wallet with PaySprint";
 
-                                            $this->message = '<p>Recharge of '.$thisuser->currencyCode.' '.number_format($req->amounttosend, 2).' from your PaySprint wallet is successful. </p><p>You now have <strong>'.$thisuser->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your wallet.</p>';
+                                            $this->message = '<p>Recharge of '.strtoupper($billerName).' for a sum of '.$thisuser->currencyCode.' '.number_format($req->amounttosend, 2).' from your PaySprint wallet is successful. </p><p>You now have <strong>'.$thisuser->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your wallet.</p>';
 
                                             
 
-                                            $sendMsg = 'Recharge of '.$thisuser->currencyCode.' '.number_format($req->amounttosend, 2).' from your PaySprint wallet is successful. You now have '.$thisuser->currencyCode.' '.number_format($walletBal, 2).' balance in your wallet.';
+                                            $sendMsg = 'Recharge of '.strtoupper($billerName).' for a sum of '.$thisuser->currencyCode.' '.number_format($req->amounttosend, 2).' from your PaySprint wallet is successful. You now have '.$thisuser->currencyCode.' '.number_format($walletBal, 2).' balance in your wallet.';
 
                                                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
                                         
@@ -2220,7 +2237,7 @@ else{
 
                                                 $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                                                $activity = "Withdraw ".$thisuser->currencyCode.''.number_format($req->amounttosend, 2)." from Wallet for Airtime/Utility Bill";
+                                                $activity = "Withdraw ".$thisuser->currencyCode.''.number_format($req->amounttosend, 2)." from Wallet for ".strtoupper($billerName);
                                                 $credit = 0;
                                                 $debit = $req->amounttosend;
                                                 // $reference_code = $response->responseData['ReceiptId'];
@@ -2242,9 +2259,9 @@ else{
                                                 $this->email = $thisuser->email;
                                                 $this->subject = $req->currencyCode.' '.number_format($req->amounttosend, 2)." has been Withdrawn from your Wallet with PaySprint";
 
-                                                $this->message = '<p>Recharge of '.$thisuser->currencyCode.' '.number_format($req->amounttosend, 2).' from your PaySprint wallet is successful. </p><p>You now have <strong>'.$thisuser->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your wallet.</p>';
+                                                $this->message = '<p>Recharge of '.strtoupper($billerName).' for a sum of '.$thisuser->currencyCode.' '.number_format($req->amounttosend, 2).' from your PaySprint wallet is successful. </p><p>You now have <strong>'.$thisuser->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your wallet.</p>';
 
-                                                $sendMsg = 'Recharge of '.$thisuser->currencyCode.' '.number_format($req->amounttosend, 2).' from your PaySprint wallet is successful. You now have '.$thisuser->currencyCode.' '.number_format($walletBal, 2).' balance in your wallet.';
+                                                $sendMsg = 'Recharge of '.strtoupper($billerName).' for a sum of '.$thisuser->currencyCode.' '.number_format($req->amounttosend, 2).' from your PaySprint wallet is successful. You now have '.$thisuser->currencyCode.' '.number_format($walletBal, 2).' balance in your wallet.';
 
                                                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
                                                     

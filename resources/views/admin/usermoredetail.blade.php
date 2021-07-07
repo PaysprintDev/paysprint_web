@@ -72,6 +72,30 @@
                         <td>Country</td>
                         <td class="mainText">{{ $getthisuser->country }}</td>
                       </tr>
+
+                      @if ($getthisuser->country == "Nigeria")
+                          <tr>
+                            <td>Bank Verification Number</td>
+                            <td class="mainText">{{ $getthisuser->bvn_number }}</td>
+                          </tr>
+                          <tr>
+                            <td>Bank Name</td>
+                            <td class="mainText">{{ $getthisuser->bvn_bank }}</td>
+                          </tr>
+                          <tr>
+                            <td>Bank Account Number</td>
+                            <td class="mainText">{{ $getthisuser->bvn_account_number }}</td>
+                          </tr>
+                          <tr>
+                            <td>Account Name</td>
+                            <td class="mainText">{{ $getthisuser->bvn_account_name }}</td>
+                          </tr>
+                          <tr>
+                            <td>Verification Status</td>
+                            <td class="mainText">{{ ($getthisuser->bvn_verification == 1) ? "Verified" : "Not verified" }}</td>
+                          </tr>
+                      @endif
+
                       <tr>
                         <td>Date Of Birth</td>
                         <td class="mainText">{{ $getthisuser->dayOfBirth.'/'.$getthisuser->monthOfBirth.'/'.$getthisuser->yearOfBirth }}</td>

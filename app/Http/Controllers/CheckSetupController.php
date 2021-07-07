@@ -20,6 +20,7 @@ use App\RequestRefund as RequestRefund;
 
 
 use App\Traits\ExpressPayment;
+use App\Traits\AccountNotify;
 
 class CheckSetupController extends Controller
 {
@@ -30,6 +31,7 @@ class CheckSetupController extends Controller
     public $message;
 
     use ExpressPayment;
+    use AccountNotify;
     // Check user quick wallet setup
 
     public function updateQuickSetup(){
@@ -737,6 +739,12 @@ class CheckSetupController extends Controller
     // Update EPS Vendor
     public function updateEPSVendor(){
         $data = $this->getVendors();
+    }
+
+
+    // Update Notification Table
+    public function notificationTable(){
+        $data = $this->updateNotificationTable();
     }
 
 

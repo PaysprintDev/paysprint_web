@@ -4,7 +4,6 @@
 
 
 <?php use \App\Http\Controllers\User; ?>
-<?php use \App\Http\Controllers\Admin; ?>
 <?php use \App\Http\Controllers\OrganizationPay; ?>
 <?php use \App\Http\Controllers\ClientInfo; ?>
 <?php use \App\Http\Controllers\AnonUsers; ?>
@@ -14,11 +13,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         Platform Activity Log
+         Special Information
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Platform Activity Log</li>
+        <li class="active">Special Information</li>
       </ol>
     </section>
 
@@ -28,7 +27,7 @@
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Platform Activity Log</h3>
+              <h3 class="box-title">Special Information</h3>
               
             </div>
             <!-- /.box-header -->
@@ -47,13 +46,9 @@
                   </div>
                 <tr>
                   <th>S/N</th>
-                  <th>Name</th>
-                  <th>Email/Username</th>
-                  <th>Account Type</th>
-                  <th>Activity</th>
+                  <th>Message</th>
                   <th>Country</th>
-                  <th>Platform</th>
-                  <th>Date & Time</th>
+                  <th>Date Added</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -63,47 +58,16 @@
                         <tr>
                             <td>{{ $i++ }}</td>
 
-                            @if($user = \App\User::where('ref_code', $data->ref_code)->first())
-
-                                @php
-                                    $name = $user->name;
-                                    $email = $user->email;
-                                    $accountType = $user->accountType;
-                                @endphp
-
-                                @else
-
-                                @if($annonUser = \App\AnonUsers::where('ref_code', $data->ref_code)->first())
-
-                                  @php
-                                      $name = $annonUser->name;
-                                      $email = $annonUser->email;
-                                      $accountType = $annonUser->accountType;
-                                  @endphp
-
-                                @endif
-
-
-                            @endif
-
-
-
-                            <td>{{ $name }}</td>
-                            <td>{{ $email }}</td>
-                            <td>{{ $accountType }}</td>
-                            
-                            <td>{{ $data->activity }}</td>
+                            <td>{{ $data->information }}</td>
                             <td>{{ strtoupper($data->country) }}</td>
-                            <td>{{ strtoupper($data->platform) }}</td>
-                            <td>{{ date('d/M/Y h:i a', strtotime($data->created_at)) }}</td>
+                            <td>{{ date('d/M/Y', strtotime($data->created_at)) }}</td>
                         </tr>
                         @endforeach
 
-                        
                          
                     @else
                     <tr>
-                        <td colspan="7" align="center">No record available</td>
+                        <td colspan="4" align="center">No record available</td>
                     </tr>
                     @endif
                 </tbody>

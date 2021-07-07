@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Mail;
 
 use App\User as User;
 
+use App\Notifications as Notifications;
+
 use App\Mail\sendEmail;
 
 use Twilio\Rest\Client;
@@ -92,6 +94,30 @@ trait AccountNotify{
             Log::error("Error Message on Account Notify: ".$th->getMessage());
         }
 
+    }
+
+
+    public function updateNotificationTable(){
+        $users = User::all();
+
+        try {
+
+            if(count($users)){
+                foreach($users as $key => $value){
+                    $ref_code = $value->ref_code;
+                    $country = $value->country;
+
+                    Notifications::where('ref_code', $ref_code)->update(['country' => $country]);
+                }
+            }
+
+            Notifications::where('notify', 0)->update(['platform' => 'mobile']);
+
+        } catch (\Throwable $th) {
+            Log::info("Error updating notification table: ".$th->getMessage());
+        }
+
+        return "done";
     }
 
 

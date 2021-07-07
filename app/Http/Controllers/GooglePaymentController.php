@@ -409,7 +409,7 @@ class GooglePaymentController extends Controller
 
                     $monerisactivity = $sendMsg;
 
-                    $this->keepRecord($reference_code, "WALLET APPROVED", $monerisactivity);
+                    $this->keepRecord($reference_code, "WALLET APPROVED", $monerisactivity, "PaySprint", $user->country);
 
 
                     try {
