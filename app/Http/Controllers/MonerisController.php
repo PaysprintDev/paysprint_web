@@ -2440,23 +2440,35 @@ else{
             $indicator = "Z";
         }
         else{
-
-            if($cardDetails->card_provider == "Credit Card"){
+            
+            if($thisuser->country == "Nigeria"){
                 // Live API
-                $store_id=env('MONERIS_STORE_ID_VIM');
-                $api_token=env('MONERIS_API_TOKEN_VIM');
+                    $store_id=env('MONERIS_STORE_ID_VIM');
+                    $api_token=env('MONERIS_API_TOKEN_VIM');
 
-                $indicator = "U";
-                $setMode = false;
+                    $indicator = "U";
+                    $setMode = false;
             }
             else{
+                if($cardDetails->card_provider == "Credit Card"){
                 // Live API
-                $store_id=env('MONERIS_STORE_ID');
-                $api_token=env('MONERIS_API_TOKEN');
+                    $store_id=env('MONERIS_STORE_ID_VIM');
+                    $api_token=env('MONERIS_API_TOKEN_VIM');
 
-                $setMode = false;
-                $indicator = "Z";
+                    $indicator = "U";
+                    $setMode = false;
+                }
+                else{
+                    // Live API
+                    $store_id=env('MONERIS_STORE_ID');
+                    $api_token=env('MONERIS_API_TOKEN');
+
+                    $setMode = false;
+                    $indicator = "Z";
+                }
             }
+
+            
 
             
         }

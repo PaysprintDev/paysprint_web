@@ -77,7 +77,7 @@
                 <tbody>
 
 
-                  @if($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', 2)->get())
+                  @if($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', 2)->where('approval', '>', 0)->get())
 
 
                     @if (count($allusersdata) > 0)

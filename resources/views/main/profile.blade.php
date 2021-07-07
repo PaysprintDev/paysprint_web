@@ -206,7 +206,7 @@
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingSeven">
       <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
           BVN Verification {!! (Auth::user()->bvn_verification == 1) ? '<img src="https://img.icons8.com/fluent/25/000000/verified-account.png"/>' : ""  !!}
         </a>
       </h4>

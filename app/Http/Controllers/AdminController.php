@@ -9502,7 +9502,7 @@ class AdminController extends Controller
 
         $data = $user->where('id', $req->id)->first();
 
-        if($data->approval == 1){
+        if($data->approval == 2){
 
             $user->where('id', $req->id)->update(['approval' => 0, 'accountLevel' => 0, 'disableAccount' => 'on']);
 
@@ -9511,8 +9511,17 @@ class AdminController extends Controller
 
             $resData = ['res' => 'Account information disapproved', 'message' => 'success', 'title' => 'Great'];
         }
-        else{
+        elseif($data->approval == 1){
             $user->where('id', $req->id)->update(['approval' => 2, 'accountLevel' => 3, 'disableAccount' => 'off']);
+
+            $subject = 'Account information approved';
+            
+            $message = "We have completed the review of the Identification provided on your PaySprint Account. Your PaySprint account has been enabled and you will be able to Send Money, Pay Invoice and Request for withdrawal of funds from your PaySprint Wallet from  the Mobile and Web platforms. Thank you for your interest in PaySprint. compliance@paysprint.net";
+
+            $resData = ['res' => 'Account information approved', 'message' => 'success', 'title' => 'Great'];
+        }
+        else{
+            $user->where('id', $req->id)->update(['approval' => 1, 'accountLevel' => 2, 'disableAccount' => 'off']);
 
             $subject = 'Account information approved';
             

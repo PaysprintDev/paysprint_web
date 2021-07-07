@@ -882,6 +882,8 @@ class GooglePaymentController extends Controller
 
     public function monerisWalletProcess($bearer, $card_id, $dollaramount, $type, $description, $mode){
 
+        $thisuser = User::where('api_token', $bearer)->first();
+
 
         if($mode == "test"){
             if($type == "purchase"){
@@ -898,11 +900,25 @@ class GooglePaymentController extends Controller
             $setMode = true;
         }
         else{
-            // Live API
-            $store_id=env('MONERIS_STORE_ID');
-            $api_token=env('MONERIS_API_TOKEN');
 
-            $setMode = false;
+            if($thisuser->country == "Nigeria"){
+                // Live API
+                    $store_id=env('MONERIS_STORE_ID_VIM');
+                    $api_token=env('MONERIS_API_TOKEN_VIM');
+
+                    $indicator = "U";
+                    $setMode = false;
+            }
+            else{
+                // Live API
+                $store_id=env('MONERIS_STORE_ID');
+                $api_token=env('MONERIS_API_TOKEN');
+
+                $setMode = false;
+                $indicator = "Z";
+            }
+
+            
         }
 
         
@@ -911,7 +927,6 @@ class GooglePaymentController extends Controller
         
 
 
-        $thisuser = User::where('api_token', $bearer)->first();
 
         // Get Card Details
         $cardDetails = AddCard::where('id', $card_id)->where('user_id', $thisuser->id)->first();
@@ -951,7 +966,7 @@ class GooglePaymentController extends Controller
 
         /******************* Credential on File **********************************/
         $cof = new CofInfo();
-        $cof->setPaymentIndicator("Z");
+        $cof->setPaymentIndicator($indicator);
         $cof->setPaymentInformation("2");
         $cof->setIssuerId("168451306048014");
         $mpgTxn->setCofInfo($cof);
