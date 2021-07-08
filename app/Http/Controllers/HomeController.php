@@ -97,6 +97,7 @@ class HomeController extends Controller
     public $file;
     public $ref_code;
     public $country;
+    public $timezone;
 
     use RpmApp;
     use Trulioo;
@@ -111,7 +112,14 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure']]);
+        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'expressUtilities', 'expressBuyUtilities']]);
+
+        $location = $this->myLocation();
+        
+
+        $this->timezone = explode("/", $location->timezone);
+
+        return $this->timezone;
     }
 
     /**
@@ -142,6 +150,7 @@ class HomeController extends Controller
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                     'getmerchantsByCategory' => $this->getMerchantsByCategory(),
                     'specialInfo' => $this->getthisInfo(Auth::user()->country),
+                    'continent' => $this->timezone[0]
                 );
 
                 $view = 'home';
@@ -150,11 +159,12 @@ class HomeController extends Controller
                 $this->page = 'Homepage';
                 $this->name = '';
                 $view = 'main.newpage.shade-pro.index';
-                $data = [];
+                $data = [
+                    'continent' => $this->timezone[0]
+                ];
             }
 
             // dd($data);
-
             
 
 
@@ -190,6 +200,7 @@ class HomeController extends Controller
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                     'getmerchantsByCategory' => $this->getMerchantsByCategory(),
                     'specialInfo' => $this->getthisInfo(Auth::user()->country),
+                    'continent' => $this->timezone[0]
                 );
 
                 $view = 'home';
@@ -198,10 +209,13 @@ class HomeController extends Controller
                 $this->page = 'Home';
                 $this->name = '';
                 $view = 'main.index';
-                $data = [];
+                $data = [
+                    'continent' => $this->timezone[0]
+                ];
             }
 
             // dd($data);
+
 
 
         return view($view)->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -227,13 +241,16 @@ class HomeController extends Controller
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                     'getmerchantsByCategory' => $this->getMerchantsByCategory(),
                     'specialInfo' => $this->getthisInfo(Auth::user()->country),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
                 $this->page = 'Home';
                 $this->name = '';
                 $this->email = '';
-                $data = [];
+                $data = [
+                    'continent' => $this->timezone[0]
+                ];
             }
 
 
@@ -258,6 +275,7 @@ class HomeController extends Controller
                 $data = array(
                     'country' => $country,
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -266,6 +284,7 @@ class HomeController extends Controller
                 $this->name = '';
                 $data = [
                     'country' => $country,
+                    'continent' => $this->timezone[0]
                 ];
             }
 
@@ -277,6 +296,7 @@ class HomeController extends Controller
             $this->email = session('email');
             $data = [
                 'country' => $country,
+                'continent' => $this->timezone[0]
             ];
         }
 
@@ -342,12 +362,15 @@ class HomeController extends Controller
                     'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
                     'getCard' => $this->getUserCard(),
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
                 $this->page = 'About';
                 $this->name = '';
-                $data = [];
+                $data = [
+                    'continent' => $this->timezone[0]
+                ];
             }
 
         }
@@ -374,12 +397,15 @@ class HomeController extends Controller
                 $data = array(
                     
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
                 $this->page = 'Terms of Use';
                 $this->name = '';
-                $data = [];
+                $data = [
+                    'continent' => $this->timezone[0]
+                ];
             }
 
         }
@@ -387,7 +413,9 @@ class HomeController extends Controller
             $this->page = 'Terms of Use';
             $this->name = session('name');
             $this->email = session('email');
-            $data = [];
+            $data = [
+                'continent' => $this->timezone[0]
+            ];
         }
 
         return view('main.termofuse')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -408,12 +436,15 @@ class HomeController extends Controller
                 $data = array(
                     
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
                 $this->page = 'Privacy Policy';
                 $this->name = '';
-                $data = [];
+                $data = [
+                    'continent' => $this->timezone[0]
+                ];
             }
 
         }
@@ -421,7 +452,9 @@ class HomeController extends Controller
             $this->page = 'Privacy Policy';
             $this->name = session('name');
             $this->email = session('email');
-            $data = [];
+            $data = [
+                'continent' => $this->timezone[0]
+            ];
         }
 
         return view('main.privacy')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -456,6 +489,7 @@ class HomeController extends Controller
         $data = array(
             'getinvoice' => $this->getthisInvoice($invoice),
             'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'continent' => $this->timezone[0]
         );
 
         // dd($data);
@@ -491,6 +525,7 @@ class HomeController extends Controller
             'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
             'othercurrencyCode' => $this->otherCurrencyCode($user_id),
             'getCard' => $this->getUserCard(),
+            'continent' => $this->timezone[0]
         );
 
 
@@ -523,6 +558,7 @@ class HomeController extends Controller
         $data = array(
             'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
             'getCard' => $this->getUserCard(),
+            'continent' => $this->timezone[0]
         );
 
         // dd($data);
@@ -635,6 +671,7 @@ class HomeController extends Controller
         $data = array(
             'getpay' => $this->getthispayment($id),
             'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'continent' => $this->timezone[0]
         );
 
         // dd($data);
@@ -672,6 +709,7 @@ class HomeController extends Controller
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBankDetail(),
             'walletStatement' => $this->walletStatement(),
+            'continent' => $this->timezone[0]
         );
 
         // dd($data);
@@ -705,6 +743,7 @@ class HomeController extends Controller
         $data = array(
             'getCard' => $this->getUserCard(),
             'cardIssuer' => $this->getCardIssuer(),
+            'continent' => $this->timezone[0]
         );
 
 
@@ -737,6 +776,7 @@ class HomeController extends Controller
         $data = array(
             'getCard' => $this->getUserCard(),
             'cardIssuer' => $this->getCardIssuer(),
+            'continent' => $this->timezone[0]
         );
 
 
@@ -769,6 +809,7 @@ class HomeController extends Controller
 
         $data = array(
             'getCard' => $this->getUserCard(),
+            'continent' => $this->timezone[0]
         );
 
 
@@ -801,6 +842,7 @@ class HomeController extends Controller
         $data = array(
             'getthisCard' => $this->getthisCard($id),
             'cardIssuer' => $this->getCardIssuer(),
+            'continent' => $this->timezone[0]
         );
 
 
@@ -834,6 +876,7 @@ class HomeController extends Controller
 
         $data = array(
             'getthisBank' => $this->getthisBank($id),
+            'continent' => $this->timezone[0]
         );
 
 
@@ -866,6 +909,7 @@ class HomeController extends Controller
         $data = array(
             'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
             'getCard' => $this->getUserCard(),
+            'continent' => $this->timezone[0]
         );
 
 
@@ -900,6 +944,7 @@ class HomeController extends Controller
         $data = array(
             'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
             'getCard' => $this->getUserCard(),
+            'continent' => $this->timezone[0]
         );
 
 
@@ -933,6 +978,7 @@ class HomeController extends Controller
             'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
             'getBankDetail' => $this->getUserBankDetail(),
             'listbank' => $this->getBankList(),
+            'continent' => $this->timezone[0]
         );
 
 
@@ -966,6 +1012,7 @@ class HomeController extends Controller
         $data = array(
             'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
             'getBankDetail' => $this->getUserBankDetail(),
+            'continent' => $this->timezone[0]
         );
 
 
@@ -999,6 +1046,7 @@ class HomeController extends Controller
             'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
             'getNotifications' => $this->getUserNotifications(Auth::user()->ref_code),
             'updateNotification' => $this->updateNotification(Auth::user()->ref_code),
+            'continent' => $this->timezone[0]
         );
 
 
@@ -1033,6 +1081,7 @@ class HomeController extends Controller
             'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
             'getNotifications' => $this->getUserNotifications(Auth::user()->ref_code),
             'getMerchantHere' => $this->getMerchantHere($service),
+            'continent' => $this->timezone[0]
         );
 
 
@@ -1060,6 +1109,10 @@ class HomeController extends Controller
             $this->page = 'Airtime and Utility Bills';
             $this->name = session('name');
             $this->email = session('email');
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
         }
 
 
@@ -1067,6 +1120,7 @@ class HomeController extends Controller
             'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
             'getNotifications' => $this->getUserNotifications(Auth::user()->ref_code),
             'getvendors' => $this->getVendors(),
+            'continent' => $this->timezone[0]
         );
 
 
@@ -1095,6 +1149,10 @@ class HomeController extends Controller
             $this->page = 'Airtime and Utility Bills';
             $this->name = session('name');
             $this->email = session('email');
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
         }
 
 
@@ -1103,6 +1161,7 @@ class HomeController extends Controller
             'getNotifications' => $this->getUserNotifications(Auth::user()->ref_code),
             'getutilityproduct' => $this->getUtilityProduct($id),
             'getCard' => $this->getUserCard(),
+            'continent' => $this->timezone[0]
         );
 
 
@@ -1206,12 +1265,15 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
                 $this->page = 'Invoice';
                 $this->name = '';
-                $data = [];
+                $data = [
+                    'continent' => $this->timezone[0]
+                ];
             }
 
         }
@@ -1219,7 +1281,9 @@ class HomeController extends Controller
             $this->page = 'Invoice';
             $this->name = session('name');
             $this->email = session('email');
-            $data = [];
+            $data = [
+                'continent' => $this->timezone[0]
+            ];
         }
 
         $service = $this->myServices();
@@ -1238,12 +1302,15 @@ class HomeController extends Controller
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                     'service' => $this->myServices(),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
                 $this->page = 'Statement';
                 $this->name = '';
-                $data = [];
+                $data = [
+                    'continent' => $this->timezone[0]
+                ];
             }
 
         }
@@ -1251,7 +1318,9 @@ class HomeController extends Controller
             $this->page = 'Statement';
             $this->name = session('name');
             $this->email = session('email');
-            $data = [];
+            $data = [
+                'continent' => $this->timezone[0]
+            ];
         }
 
         return view('main.statement')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -1271,6 +1340,7 @@ class HomeController extends Controller
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                     'getRPM' => $this->getallRPM(Auth::user()->country),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -1294,6 +1364,7 @@ class HomeController extends Controller
             $data = array(
                 'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                 'getRPM' => $this->getallRPM(Auth::user()->country),
+                'continent' => $this->timezone[0]
             );
         }
 
@@ -1312,6 +1383,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -1334,6 +1406,7 @@ class HomeController extends Controller
             $this->email = Auth::user()->email;
             $data = array(
                 'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                'continent' => $this->timezone[0]
             );
         }
 
@@ -1351,6 +1424,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -1375,6 +1449,7 @@ class HomeController extends Controller
             $this->email = Auth::user()->email;
             $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -1392,6 +1467,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -1414,6 +1490,7 @@ class HomeController extends Controller
             $this->email = Auth::user()->email;
             $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -1445,6 +1522,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -1467,6 +1545,7 @@ class HomeController extends Controller
             $this->email = Auth::user()->email;
             $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -1487,6 +1566,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -1509,6 +1589,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -1529,6 +1610,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -1551,6 +1633,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -1574,6 +1657,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -1596,6 +1680,7 @@ class HomeController extends Controller
             $this->email = Auth::user()->email;
             $data = array(
                 'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                'continent' => $this->timezone[0]
             );
         }
 
@@ -1619,6 +1704,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -1641,6 +1727,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -1664,6 +1751,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -1685,6 +1773,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -1706,6 +1795,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -1728,6 +1818,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -1745,6 +1836,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -1767,6 +1859,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -1786,6 +1879,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -1808,6 +1902,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -1855,7 +1950,8 @@ class HomeController extends Controller
         $data = array(
             'maintenance' => $maintreq,
             'consult' => $consult,
-            'getfiveNotifications' => $this->getfiveUserNotifications($ref_code)
+            'getfiveNotifications' => $this->getfiveUserNotifications($ref_code),
+            'continent' => $this->timezone[0]
         );
 
         // dd($data);
@@ -1875,6 +1971,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
                 
             }
@@ -1897,6 +1994,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -1919,6 +2017,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -1942,6 +2041,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -1965,6 +2065,7 @@ class HomeController extends Controller
                 $this->ref_code = Auth::user()->ref_code;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -1987,6 +2088,7 @@ class HomeController extends Controller
                 $this->ref_code = Auth::user()->ref_code;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -2008,6 +2110,7 @@ class HomeController extends Controller
                 $this->ref_code = Auth::user()->ref_code;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -2031,6 +2134,7 @@ class HomeController extends Controller
                 $this->ref_code = Auth::user()->ref_code;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -2052,6 +2156,7 @@ class HomeController extends Controller
                 $this->ref_code = Auth::user()->ref_code;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -2075,6 +2180,7 @@ class HomeController extends Controller
                 $this->ref_code = Auth::user()->ref_code;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -2096,6 +2202,7 @@ class HomeController extends Controller
                 $this->ref_code = Auth::user()->ref_code;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -2118,6 +2225,7 @@ class HomeController extends Controller
                 $this->ref_code = Auth::user()->ref_code;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -2139,6 +2247,7 @@ class HomeController extends Controller
                 $this->ref_code = Auth::user()->ref_code;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -2162,6 +2271,7 @@ class HomeController extends Controller
                 $this->ref_code = Auth::user()->ref_code;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -2183,6 +2293,7 @@ class HomeController extends Controller
                 $this->ref_code = Auth::user()->ref_code;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -2205,6 +2316,7 @@ class HomeController extends Controller
                 $this->ref_code = Auth::user()->ref_code;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -2225,6 +2337,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -2246,6 +2359,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -2265,6 +2379,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -2286,6 +2401,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -2307,6 +2423,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -2329,6 +2446,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -2349,6 +2467,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -2371,6 +2490,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -2390,6 +2510,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -2412,6 +2533,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -2431,6 +2553,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -2453,6 +2576,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -2470,6 +2594,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -2492,6 +2617,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -2512,6 +2638,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -2535,6 +2662,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -2556,6 +2684,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -2579,6 +2708,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
         }
 
@@ -2619,6 +2749,7 @@ class HomeController extends Controller
             'newnotification' => $this->notification($this->email),
             'allnotification' => $this->allnotification($this->email),
             'getfiveNotifications' => $this->getfiveUserNotifications($ref_code),
+            'continent' => $this->timezone[0]
         );
 
 
@@ -2793,6 +2924,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
@@ -2823,12 +2955,15 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
             }
             else{
                 $this->page = 'Services';
                 $this->name = '';
-                $data = [];
+                $data = [
+                    'continent' => $this->timezone[0]
+                ];
             }
 
         }
@@ -2836,7 +2971,9 @@ class HomeController extends Controller
             $this->page = 'Services';
             $this->name = session('name');
             $this->email = session('email');
-            $data = [];
+            $data = [
+                'continent' => $this->timezone[0]
+            ];
         }
 
         return view('main.services')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -2853,6 +2990,7 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
                 );
 
                 $this->getTickets = CreateEvent::where('user_id', $this->email)->orderBy('created_at', 'DESC')->get();
@@ -2860,7 +2998,9 @@ class HomeController extends Controller
             else{
                 $this->page = 'Create a Ticket';
                 $this->name = '';
-                $data = [];
+                $data = [
+                    'continent' => $this->timezone[0]
+                ];
             }
 
         }
@@ -2868,7 +3008,9 @@ class HomeController extends Controller
             $this->page = 'Create a Ticket';
             $this->name = session('name');
             $this->email = session('email');
-            $data = [];
+            $data = [
+                'continent' => $this->timezone[0]
+            ];
 
             $this->getTickets = CreateEvent::where('user_id', $this->email)->orderBy('created_at', 'DESC')->get();
         }
@@ -2889,13 +3031,16 @@ class HomeController extends Controller
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                     'listbank' => $this->getBankList(),
+                    'continent' => $this->timezone[0]
                 );
 
             }
             else{
                 $this->page = 'Profile Information';
                 $this->name = '';
-                $data = [];
+                $data = [
+                    'continent' => $this->timezone[0]
+                ];
             }
 
         }
@@ -2903,7 +3048,9 @@ class HomeController extends Controller
             $this->page = 'Profile Information';
             $this->name = session('name');
             $this->email = session('email');
-            $data = [];
+            $data = [
+                'continent' => $this->timezone[0]
+            ];
 
         }
 

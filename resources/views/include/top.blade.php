@@ -145,7 +145,7 @@
                             {{-- COnver to Modal popup --}}
                             @if (Auth::check() == true)
                                 @if (Auth::user()->accountType != "Individual")
-                                    <a href="{{ route('send message', 'type=local') }}">Money Transfer</a>
+                                    <a href="{{ route('merchant send money', 'type=local') }}">Money Transfer</a>
                                 @else
                                     <a href="javascript:void()" onclick="$('#sendMoney').click()">Money Transfer</a>
                                 @endif

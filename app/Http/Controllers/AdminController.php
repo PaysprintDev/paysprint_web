@@ -86,6 +86,8 @@ use App\Traits\AccountNotify;
 
 use App\Traits\SpecialInfo;
 
+use App\Traits\PaystackPayment;
+
 class AdminController extends Controller
 {
 
@@ -116,10 +118,9 @@ class AdminController extends Controller
     use Trulioo;
     use AccountNotify;
     use SpecialInfo;
+    use PaystackPayment;
     
     
-
-
 
     public function index(Request $req){
 
@@ -1108,7 +1109,8 @@ class AdminController extends Controller
                 'getbusinessDetail' => $this->getmyBusinessDetail(session('user_id')),
                 'merchantservice' => $this->_merchantServices(),
                 'getCard' => $this->getUserCard(session('myID')),
-                'getTax' => $this->getTax(session('myID'))
+                'getTax' => $this->getTax(session('myID')),
+                'listbank' => $this->getBankList(),
             );
 
 

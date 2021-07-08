@@ -484,6 +484,24 @@
                                     
                                 
                                 </li>
+
+                                @if ($getUserDetail->country == "Nigeria")
+                                    <li class="list-group-item" title="Bank Verification (BVN)" >
+
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <a href="{{ route('merchant profile') }}" style="color: navy; font-weight: 700;">Bank Verification (BVN) </a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! $getUserDetail->bvn_verification != null || $getUserDetail->bvn_verification != 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                
+                                </li>
+                                @endif
+                                
                                 <li class="list-group-item" title="Set up Tax" >
 
                                     <div class="row">
@@ -500,6 +518,29 @@
                                 </li>
                             </ul>
                     </div>
+
+                    @if ($getUserDetail->country == "Nigeria")
+
+                        <div class="card" style="width: 100%;">
+                                <div class="card-header" style="background-color: #ff8a04; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
+                                    Airtime/Bills Payment
+                                </div>
+                                <ul class="list-group list-group-flush">
+
+                                
+                                    <li class="list-group-item" title="Airtime/Bills Payment">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <a href="{{ route('utility bills') }}" style="color: navy; font-weight: 700;">Airtime/Bills Payment</a>
+                                            </div>
+                                        </div>
+
+                                        </li>
+                                    
+                                </ul>
+                        </div>
+
+                    @endif
 
 
                 <div class="card" style="width: 100%;">

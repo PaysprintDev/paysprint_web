@@ -2849,6 +2849,53 @@ else if(val == "newtransactionpinsettings"){
 
 }
 
+else if(val == "bvnverification"){
+
+    formData = new FormData(formElembvnverification);
+
+    route = "{{ URL('/api/v1/bvnverification') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#bvnBtn').text('Please wait...');
+        },
+        success: function(result){
+
+            $('#bvnBtn').text('Save');
+
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $('#bvnBtn').text('Save');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
 else if(val == "passwordsettings"){
 
     formData = new FormData(formElempasswordsettings);
@@ -3199,6 +3246,52 @@ else if('createnew'){
 
 
 }
+
+
+$("#bank_code").change(function(){
+    var accountNumber = $("#account_number").val();
+    var bankCode = $("#bank_code").val();
+    if($("#accountNumber").val() != ""){
+        
+        var route = "{{ URL('/api/v1/verifyaccountnumber') }}";
+
+        var formData = new FormData();
+        formData.append("bank_code", bankCode);
+        formData.append("account_number", accountNumber);
+
+        Pace.restart();
+        Pace.track(function(){
+            setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: formData,
+            cache: false,
+            processData: false,
+            contentType: false,
+            dataType: 'JSON',
+            
+            success: function(result){
+
+                if(result.status == 200){
+                    $('#account_name').val(result.data.account_name);
+                }
+                else{
+                    $('#account_name').val("ACCOUNT NUMBER NOT VALID");
+                }
+
+            },
+            error: function(err) {
+
+                swal("Oops", err.responseJSON.message, "error");
+
+            } 
+
+        });
+        });
+    }
+
+});
 
 
 

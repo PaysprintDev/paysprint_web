@@ -15,6 +15,7 @@
 <script src="{{ asset('newpage/js/custom.js') }}"></script>
 
 
+
 <script>
     $('#pricing_country').change(function(){
         var country = $('#pricing_country').val();

@@ -83,6 +83,13 @@ class UserController extends Controller
             // Check Anon Users
             $newcustomer = AnonUsers::where('email', $request->email)->first();
 
+            if($mycode[0]->callingCodes[0] != null){
+                $phoneCode = $mycode[0]->callingCodes[0];
+            }
+            else{
+                $phoneCode = "1";
+            }
+
             if(isset($newcustomer)){
 
                     $user = User::create(['code' => $newcustomer->code, 'ref_code' => $newcustomer->ref_code, 'name' => $newcustomer->name, 'email' => $newcustomer->email, 'password' => Hash::make($request->password), 'address' => $newcustomer->address, 'city' => $request->city, 'state' => $request->state, 'country' => $newcustomer->country, 'accountType' => 'Individual', 'api_token' => uniqid().md5($request->email), 'telephone' => $newcustomer->telephone, 'wallet_balance' => $newcustomer->wallet_balance, 'approval' => 0, 'currencyCode' => $mycode[0]->currencies[0]->code, 'currencySymbol' => $mycode[0]->currencies[0]->symbol, 'dayOfBirth' => $request->dayOfBirth, 'monthOfBirth' => $request->monthOfBirth, 'yearOfBirth' => $request->yearOfBirth, 'cardRequest' => 0, 'platform' => 'mobile', 'accountLevel' => 2, 'zip' => $request->zipcode]);
@@ -102,10 +109,14 @@ class UserController extends Controller
 
             }
             else{
+
+                
+
+
                 $user = User::create([
                     'ref_code' => $newRefcode,
                     'name' => $request->firstname.' '.$request->lastname,
-                    'code' => $mycode[0]->callingCodes[0],
+                    'code' => $phoneCode,
                     'email' => $request->email,
                     'address' => $request->address,
                     'telephone' => $request->telephone,
@@ -484,7 +495,7 @@ class UserController extends Controller
 
         $user = User::where('api_token', $request->bearerToken())->first();
 
-        $clientinfo->where('email', $user->email)->update(['business_name' => $request->businessName, 'address' => $request->businessAddress, 'corporate_type' => $request->corporate_type, 'industry' => $request->industry, 'website' => $request->businessWebsite, 'type_of_service' => $request->type_of_service]);
+        $clientinfo->where('email', $user->email)->update(['business_name' => $request->businessName, 'address' => $request->businessAddress, 'corporate_type' => $request->corporate_type, 'industry' => $request->industry, 'website' => $request->businessWebsite, 'type_of_service' => $request->type_of_service, 'description' => $request->businessDescription]);
 
         if($request->hasFile('incorporation_doc_front')){
             $this->uploadDocument($user->id, $request->file('incorporation_doc_front'), 'document/incorporation_doc_front', 'incorporation_doc_front');

@@ -96,6 +96,27 @@
                                     
                                 
                                 </li>
+
+                                @if ($data['getuserDetail']->country == "Nigeria")
+
+                                    <li class="list-group-item" title="Bank Verification (BVN)" >
+
+                                      <div class="row">
+                                          <div class="col-md-10">
+                                              <a href="{{ route('merchant profile') }}">Bank Verification (BVN) </a>
+                                          </div>
+                                          <div class="col-md-2">
+                                              {!! $data['getuserDetail']->bvn_verification != null || $data['getuserDetail']->bvn_verification != 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                          </div>
+                                      </div>
+                                      
+                                      
+                                  
+                                  </li>
+
+                                @endif
+
+                                
                                 <li class="list-group-item" title="Set Up Tax" >
 
                                     <div class="row">
@@ -132,6 +153,9 @@
               <li class="active"><a href="#business" data-toggle="tab">Business Information</a></li>
               <li><a href="#settings" data-toggle="tab">Personal Information</a></li>
               <li><a href="#myconnection" data-toggle="tab">Transaction Pin</a></li>
+              @if ($data['getbusinessDetail']->country == "Nigeria")
+                  <li><a href="#mybvn" data-toggle="tab">BVN {!! ($data['getuserDetail']->bvn_verification == 1) ? '<img src="https://img.icons8.com/fluent/20/000000/verified-account.png"/>' : ""  !!}</a></li>
+              @endif
               <li><a href="#myreferral" data-toggle="tab">Password</a></li>
               <li><a href="#accountsettings" data-toggle="tab">Security</a></li>
               {{--  <li><a href="#accountsettings" data-toggle="tab">Auto Deposit</a></li>  --}}
@@ -346,6 +370,7 @@
         </select>
                     </div>
                   </div>
+
                   <div class="form-group">
                     <label for="inputWebsite" class="col-sm-2 control-label">Website</label>
 
@@ -353,6 +378,17 @@
                       <input type="text" class="form-control" name="businessWebsite" value="{{ $data['getbusinessDetail']->website }}" placeholder="www.example.com">
                     </div>
                   </div>
+
+
+                  <div class="form-group">
+                    <label for="inputDescription" class="col-sm-2 control-label">Description</label>
+
+                    <div class="col-sm-10">
+                      <textarea name="businessDescription" class="form-control" id="businessDescription" cols="30" rows="10" maxlength="500">{{ $data['getbusinessDetail']->description }}</textarea>
+                    </div>
+                  </div>
+
+
                   <div class="form-group">
                     <label for="inputCorporationDocument" class="col-sm-2 control-label">Document</label>
 
@@ -604,6 +640,57 @@
                         </form>
                             
                         @endif
+              </div>
+              <!-- /.tab-pane -->
+
+
+               <!-- /.tab-pane -->
+              <div class="tab-pane" id="mybvn">
+                    <form action="#" method="post" id="formElembvnverification">
+
+                      <div class="form-group">
+                          <label for="bvn">Bank Verification Number @if($data['getuserDetail']->bvn_number == null) <strong><p class="text-warning" style="cursor: pointer;">Enter your bank verification number</p></strong> @endif</label>
+                          <input type="number" name="bvn" id="bvn" class="form-control" @if($data['getuserDetail']->bvn_number != null) value="{{ $data['getuserDetail']->bvn_number }}" readonly @else placeholder="BVN" @endif >
+                      </div>
+
+                      @if ($data['getuserDetail']->bvn_number == null)
+
+                      <div class="form-group">
+                              <label for="account_number">Bank Account Number <strong><p class="text-warning" style="cursor: pointer;">Enter your bank account number</p></strong></label>
+                              <input type="number" name="account_number" id="account_number" class="form-control" placeholder="Account Number">
+                          </div>
+
+                          <div class="form-group">
+                              <label for="bank_code">Select Bank <strong><p class="text-warning" style="cursor: pointer;">Select your bank</p></strong></label>
+                              <select name="bank_code" id="bank_code" class="form-control">
+
+                                  @if (count($data['listbank']) > 0)
+                                  <option value="">Select your bank</option>
+                                      @foreach ($data['listbank'] as $banksData)
+                                          <option value="{{ $banksData->code }}">{{ $banksData->name }}</option>
+                                      @endforeach
+                                  @endif
+                              </select>
+                          </div>
+
+                          
+
+
+                          <div class="form-group">
+                              <label for="account_name">Account Name</label>
+                              <input type="text" name="account_name" id="account_name" class="form-control" value="" readonly>
+                          </div>
+                          
+                          
+                          <div class="form-group">
+                              <button type="button" class="btn btn-primary btn-block" id="bvnBtn" onclick="handShake('bvnverification')">Save</button>
+                          </div>
+
+                      @endif
+
+                      
+
+                  </form>
               </div>
               <!-- /.tab-pane -->
 
