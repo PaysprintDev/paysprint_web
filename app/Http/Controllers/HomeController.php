@@ -1154,6 +1154,7 @@ class HomeController extends Controller
             
             Auth::login($user);
         }
+        
 
 
         $data = array(

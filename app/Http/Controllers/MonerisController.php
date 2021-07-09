@@ -2146,6 +2146,7 @@ else{
 
     public function getCommissionConversion(Request $req){
 
+
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
         $thisData = $this->getCommissionData($req->amount, $req->billerCode, $thisuser->country);
@@ -2156,8 +2157,32 @@ else{
 
     }
 
+
+    public function paymentLookUp(Request $req){
+
+
+        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+        $thisData = $this->getLookUp($req->billerCode, $req->accountNumber);
+
+        if($thisData->responseCode == "0"){
+            $status = 200;
+            $resData = ['data' => $thisData, 'message' => 'success', 'status' => $status];
+
+        }
+        else{
+            $status = 400;
+            $resData = ['data' => $thisData, 'message' => 'error', 'status' => $status];
+        }
+
+
+        return $this->returnJSON($resData, $status);
+    }
+
     
     public function payUtilityBills(Request $req){
+
+        // dd($req->all());
 
         // Payment for UTILITY
         

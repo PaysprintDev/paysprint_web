@@ -224,9 +224,9 @@ input[type="radio"] {
                                     </div>
                                 </div>
 
-                                        
 
                                     @foreach ($data['getutilityproduct'] as $dataProduct)
+
 
 
                                         <div class="form-group"> <label for="amount">
@@ -240,32 +240,36 @@ input[type="radio"] {
                                                 
                                                 @if (isset($dataProduct->ListItems))
 
-                                                @if ($dataProduct->FieldName == "Number of Months")
-                                                    <select name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control">
-                                                        @foreach ($dataProduct->ListItems as $listItem)
-                                                            <option value="{{ $listItem->ItemType }}">{{ $listItem->ItemName.' month' }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                @else
-                                                    <select name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control">
-                                                        @foreach ($dataProduct->ListItems as $listItem)
-                                                            <option value="{{ $listItem->ItemType }}">{{ $listItem->ItemName.': '.Auth::user()->currencySymbol.$listItem->Amount.' ('.$listItem->ItemDesc.')' }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                @endif
+                                                    @if ($dataProduct->FieldName == "Number of Months")
+                                                        <select name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control">
+                                                            <option value="">{{ $dataProduct->FieldName }}</option>
+                                                            @foreach ($dataProduct->ListItems as $listItem)
+                                                                <option value="{{ $listItem->ItemType }}">{{ $listItem->ItemName.' month' }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    @else
+                                                        <select name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control">
+                                                            <option value="">{{ $dataProduct->FieldName }}</option>
+                                                            @foreach ($dataProduct->ListItems as $listItem)
+                                                                <option value="{{ $listItem->ItemType }}">{{ $listItem->ItemName.': '.Auth::user()->currencySymbol.$listItem->Amount.' ('.$listItem->ItemDesc.')' }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        
+                                                    @endif
 
                                                     
 
-                                                @else
-
-                                                
-                                                    @if ($dataProduct->FieldName == "Email")
-                                                        <div class="input-group-append"> </div> <input type="text" name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control" readonly value="{{ Auth::user()->email }}">
-                                                    @elseif ($dataProduct->FieldName == "Amount")
-                                                        <div class="input-group-append"> <span class="input-group-text text-muted"> {{ Auth::user()->currencySymbol }} </span> </div> <input type="number" min="0.00" max="{{ $dataProduct->MaxAmount }}" step="0.01" name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control" required>
                                                     @else
-                                                        <div class="input-group-append"> </div> <input type="text" name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control" required>
-                                                    @endif
+
+                                                    
+                                                        @if ($dataProduct->FieldName == "Email")
+                                                            <div class="input-group-append"> </div> <input type="text" name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control" readonly value="{{ Auth::user()->email }}">
+                                                        @elseif ($dataProduct->FieldName == "Amount")
+                                                            <div class="input-group-append"> <span class="input-group-text text-muted"> {{ Auth::user()->currencySymbol }} </span> </div> <input type="number" min="0.00" max="{{ $dataProduct->MaxAmount }}" step="0.01" name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control" required>
+                                                        @else
+                                                            <div class="input-group-append"> </div> <input type="text" name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control" required>
+                                                        @endif
+                                                        
 
                                                 @endif
 
@@ -276,6 +280,18 @@ input[type="radio"] {
 
 
                                     @endforeach
+
+                                    @if (Request::get('billername') == "DSTV2" || Request::get('billername') == "ABUJA POSTPAID" || Request::get('billername') == "ABUJA PREPAID" || Request::get('billername') == "EKO ELECTRIC POSTPAID" || Request::get('billername') == "EKO ELECTRIC PREPAID" || Request::get('billername') == "GOTV2" || Request::get('billername') == "IKEJA ELECTRIC POSTPAID" || Request::get('billername') == "IKEJA ELECTRIC PREPAID" || Request::get('billername') == "JOS ELECTRIC POSTPAID" || Request::get('billername') == "JOS ELECTRIC PREPAID" || Request::get('billername') == "KADUNA ELECTRIC POSTPAID" || Request::get('billername') == "KADUNA ELECTRIC PREPAID" || Request::get('billername') == "KANO POSTPAID" || Request::get('billername') == "KANO PREPAID" || Request::get('billername') == "PHED2")
+                                        <hr>
+                                        <button class="btn btn-success" onclick="getaccountLookup()" id="verifyAccount">Verify Account</button>
+                                        <hr>
+                                    @endif
+
+                                    
+
+                                    <div class="form-group">
+                                        <div class="accountInfo"></div>
+                                    </div>
 
 
                                     <div class="form-group disp-0">
@@ -430,6 +446,8 @@ $("#amount").on("keyup", function() {
 });
 
 
+
+
 });
 
 $('#card_type').change(function(){
@@ -439,6 +457,8 @@ $('#card_type').change(function(){
         runCommission();
     }
 });
+
+
 
 
 function runCardType(){
@@ -495,6 +515,8 @@ function runCardType(){
 
 }
 
+
+
 function runCommission(){
     
     $('.commissionInfo').html("");
@@ -522,7 +544,6 @@ function runCommission(){
         
         success: function(result){
 
-            console.log(result);
 
             if(result.message == "success"){
 
@@ -542,6 +563,62 @@ function runCommission(){
 
 
         }
+
+    });
+
+    });
+}
+
+
+function getaccountLookup(){
+    
+    $('.accountInfo').html("");
+    var billerCode = $("#billerCode").val();
+    var accountNumber = $("#customerAccountNumber").val();
+
+    var route = "{{ URL('/api/v1/getaccountinfo') }}";
+
+    var thisdata = {billerCode: billerCode, accountNumber: accountNumber};
+
+
+    Pace.restart();
+    Pace.track(function(){
+
+        setHeaders();
+        
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: thisdata,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('.accountInfo').addClass('');
+            $('#verifyAccount').text('Checking account...');
+        },
+        
+        success: function(result){
+
+            $('#verifyAccount').text('Verify Account');
+
+            if(result.message == "success"){
+
+
+                $('.accountInfo').addClass('alert alert-success');
+                $('.accountInfo').removeClass('alert alert-danger');
+
+                $('.accountInfo').html("<ul><li><span style='font-weight: bold;'>Customer Name: "+result.data.customerName+"</span></li></li></ul>");
+
+
+            }
+
+
+        },
+        error: function(err) {
+            $('#verifyAccount').text('Verify Account');
+            $('.accountInfo').html("");
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
 
     });
 
