@@ -81,6 +81,7 @@ trait ExpressPayment{
             $data = EPSVendor::where('billerCode', $billerCode)->first();
             $ourcharge = PSCharge::where('country', $country)->first();
 
+
             // Get Commision and Charge
             if($data->commission != 0){
                 $commission = $data->commission;
@@ -99,24 +100,50 @@ trait ExpressPayment{
             $data['commission'] = $commission;
             $data['charge'] = $charge;
 
+
             if($commission != 0){
                 $newPercent = $commission * ($ourcharge->percent / 100);
+                $data['discountPercent'] = $newPercent;
+                $data['walletDiscount'] = $amount * $newPercent;
+
+                $data['walletCharge'] = $amount - $data['walletDiscount'];
+
+
             }
             else{
                 $newPercent = $charge * ($ourcharge->percent / 100);
+                $data['discountPercent'] = $newPercent;
+                $data['walletDiscount'] = $newPercent;
+                $data['walletCharge'] = $amount - $data['walletDiscount'];
+
+
             }
 
-            $data['discountPercent'] = $newPercent;
 
-            $data['walletDiscount'] = $amount * $newPercent;
-
-
-            $data['walletCharge'] = $amount - $data['walletDiscount'];
 
             // Get our charge
 
             return $data;
             
+
+    }
+
+
+    public function getLookUp($billerCode, $accountNumber){
+        $this->Base_Url = env('EXPRESS_PAY_ENDPOINT_URL').'/lookup';
+
+        $this->curlPost = json_encode([
+            'billerCode' => $billerCode,
+            'customerAccountNumber' => $accountNumber
+        ]);
+
+
+        
+        $data = $this->doPost();
+
+        dd($data);
+
+        return $data;
 
     }
 

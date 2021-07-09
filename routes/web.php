@@ -77,6 +77,7 @@ Route::get('new/payment/createuser', ['uses' => 'HomeController@createnewPayment
 Route::get('payment/receivemoney/{id}', ['uses' => 'HomeController@receiveMoney', 'as' => 'receivemoney payment']);
 
 
+
 // Wallet Page
 
 Route::prefix('mywallet')->group(function () {
