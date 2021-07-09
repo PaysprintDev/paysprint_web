@@ -11,9 +11,9 @@
             <div class="col-9 col-md-7 col-lg-5 offset-xl-1 align-self-sm-end order-lg-2">
                 <div class="hero-img image-group-p12 position-relative mb-9 mb-sm-15 mb-lg-0" data-aos="fade-left"
                     data-aos-duration="500" data-aos-once="true">
-                    <img class="w-100" src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg" alt="" style="border-radius: 100%">
+                    <img class="w-100" src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg" alt="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg" style="border-radius: 100%">
                     <div class="image-bg-positioning">
-                        <img src="{{ asset('newpage/image/telemedicine/png/hero-img-sub.png') }}" alt="">
+                        <img src="{{ asset('newpage/image/telemedicine/png/hero-img-sub.png') }}" alt="hero-img-sub.png">
                     </div>
                 </div>
                 <div class=" hero-sm-card-1">
@@ -21,7 +21,7 @@
                         id="an-item-1p1">
                         <p class="gr-text-11 mb-0 text-mirage-2">“I want to send money to my family and friends, but they are no on PaySprint.”</p>
                         <div class="small-card-img ml-6">
-                            <img src="https://img.icons8.com/bubbles/50/000000/night-man.png" alt="" class="circle-42">
+                            <img src="https://img.icons8.com/bubbles/50/000000/night-man.png" alt="night-man.png" class="circle-42">
                         </div>
                     </div>
                     
@@ -30,7 +30,7 @@
                     <div class="px-7 py-6 d-flex shadow-9 rounded-15 w-xs-80 w-xl-68 hero-sm-card-2 hero-card-2-animation"
                         id="an-item-1p2" style="background-color: #bc8900 !important;">
                         <div class="small-card-img mr-6 text-white">
-                            <img src="https://img.icons8.com/bubbles/50/000000/happy-woman.png" alt="" class="circle-42">
+                            <img src="https://img.icons8.com/bubbles/50/000000/happy-woman.png" alt="happy-woman.png" class="circle-42">
                         </div>
                         <p class="gr-text-11 mb-0 text-white">“Don’t worry! With PaySprint, you can send money through text message or email for Free!”</p>
                     </div>
@@ -101,23 +101,23 @@
                     class="brand-logos d-flex justify-content-center justify-content-xl-between align-items-center mx-n9 flex-wrap">
                     <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                         data-aos-duration="500" data-aos-once="true">
-                        <img src="image/l4/png/l4-brand1.png" alt="" class="w-100">
+                        <img src="image/l4/png/l4-brand1.png" alt="l4-brand1.png" class="w-100">
                     </div>
                     <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                         data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
-                        <img src="image/l4/png/l4-brand2.png" alt="" class="w-100">
+                        <img src="image/l4/png/l4-brand2.png" alt="l4-brand2.png" class="w-100">
                     </div>
                     <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                         data-aos-duration="500" data-aos-delay="400" data-aos-once="true">
-                        <img src="image/l4/png/l4-brand3.png" alt="" class="w-100">
+                        <img src="image/l4/png/l4-brand3.png" alt="l4-brand3.png" class="w-100">
                     </div>
                     <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                         data-aos-duration="500" data-aos-delay="600" data-aos-once="true">
-                        <img src="image/l4/png/l4-brand4.png" alt="" class="w-100">
+                        <img src="image/l4/png/l4-brand4.png" alt="l4-brand4.png" class="w-100">
                     </div>
                     <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                         data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
-                        <img src="image/l4/png/l4-brand6.png" alt="" class="w-100">
+                        <img src="image/l4/png/l4-brand6.png" alt="l4-brand6.png" class="w-100">
                     </div>
                 </div>
             </div>
@@ -241,7 +241,7 @@
                 <div class="tel-content-image-group-1" data-aos="zoom-in" data-aos-duration="1200" data-aos-once="true">
                     <div class="abs-image-1 responsive-scaling-2">
                         <div class="animation-item">
-                            <img class="main-img" src="https://res.cloudinary.com/pilstech/image/upload/v1620204676/paysprint_asset/seattle_apartmentbuildings_krjuam_ku2nsv.webp" alt=""
+                            <img class="main-img" src="https://res.cloudinary.com/pilstech/image/upload/v1620204676/paysprint_asset/seattle_apartmentbuildings_krjuam_ku2nsv.webp" alt="seattle_apartmentbuildings_krjuam_ku2nsv.webp"
                                 id="an-item-2p1" style="width: 100%; border-radius: 10px;">
                         </div>
                     </div>
@@ -252,7 +252,7 @@
                         </div>
                     </div>  --}}
                     <div class="gr-abs-center gr-z-index-n1">
-                        <img src="{{ asset('newpage/image/telemedicine/png/content1-img-sub.png') }}" alt="" class="responsive-scaling-2">
+                        <img src="{{ asset('newpage/image/telemedicine/png/content1-img-sub.png') }}" alt="content1-img-sub.png" class="responsive-scaling-2">
                     </div>
                 </div>
             </div>
@@ -276,15 +276,15 @@
             <div class="col-sm-10 col-md-7 col-lg-6 col-xl-5 offset-xl-2 order-lg-2 mb-9 mb-lg-0">
                 <div class="double-image-group tel-content-image-group-2" data-aos="fade-left" data-aos-duration="1200"
                     data-aos-once="true">
-                    <img class="main-img" src="https://res.cloudinary.com/pilstech/image/upload/v1620147888/paysprint_asset/photo-1565514417878-a66a6b0f2c7f_hypubo.jpg" alt="" style="width: 150%; border-radius: 10px;" />
+                    <img class="main-img" src="https://res.cloudinary.com/pilstech/image/upload/v1620147888/paysprint_asset/photo-1565514417878-a66a6b0f2c7f_hypubo.jpg" alt="photo-1565514417878-a66a6b0f2c7f_hypubo.jpg" style="width: 150%; border-radius: 10px;" />
                     <div class="abs-image-1 gr-z-index-n1" data-aos="zoom-in" data-aos-duration="1000"
                         data-aos-delay="800" data-aos-once="true">
-                        <img src="{{ asset('newpage/image/telemedicine/png/content2-img-sub-1.png') }}" alt=""
+                        <img src="{{ asset('newpage/image/telemedicine/png/content2-img-sub-1.png') }}" alt="content2-img-sub-1.png"
                             class="h-sm-100  anim-shadow-up rounded-10">
                     </div>
                     <div class="abs-image-2" data-aos="zoom-in" data-aos-duration="1000" data-aos-delay="800"
                         data-aos-once="true">
-                        <img src="{{ asset('newpage/image/telemedicine/png/content2-img-sub.png') }}" alt="">
+                        <img src="{{ asset('newpage/image/telemedicine/png/content2-img-sub.png') }}" alt="content2-img-sub.png">
                     </div>
                 </div>
             </div>
@@ -307,7 +307,7 @@
                 <div class="tel-content-image-group-1" data-aos="zoom-in" data-aos-duration="1200" data-aos-once="true">
                     <div class="abs-image-1 responsive-scaling-2">
                         <div class="animation-item">
-                            <img class="main-img" src="https://res.cloudinary.com/pilstech/image/upload/v1620147595/paysprint_asset/photo-1554224155-8d04cb21cd6c_d8e2wn.jpg" alt=""
+                            <img class="main-img" src="https://res.cloudinary.com/pilstech/image/upload/v1620147595/paysprint_asset/photo-1554224155-8d04cb21cd6c_d8e2wn.jpg" alt="photo-1554224155-8d04cb21cd6c_d8e2wn.jpg"
                                 id="an-item-2p1" style="width: 100%; border-radius: 10px;">
                         </div>
                     </div>
@@ -318,7 +318,7 @@
                         </div>
                     </div>  --}}
                     <div class="gr-abs-center gr-z-index-n1">
-                        <img src="{{ asset('newpage/image/telemedicine/png/content1-img-sub.png') }}" alt="" class="responsive-scaling-2">
+                        <img src="{{ asset('newpage/image/telemedicine/png/content1-img-sub.png') }}" alt="content1-img-sub.png" class="responsive-scaling-2">
                     </div>
                 </div>
             </div>
@@ -340,15 +340,15 @@ PaySprint is all you need.</p>
             <div class="col-sm-10 col-md-7 col-lg-6 col-xl-5 offset-xl-2 order-lg-2 mb-9 mb-lg-0">
                 <div class="double-image-group tel-content-image-group-2" data-aos="fade-left" data-aos-duration="1200"
                     data-aos-once="true">
-                    <img class="main-img" src="https://images.unsplash.com/photo-1613314188851-2c04697535ab?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=648&q=80" alt="" style="width: 150%; border-radius: 10px;" />
+                    <img class="main-img" src="https://images.unsplash.com/photo-1613314188851-2c04697535ab?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=648&q=80" alt="https://images.unsplash.com/photo-1613314188851-2c04697535ab?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=648&q=80" style="width: 150%; border-radius: 10px;" />
                     <div class="abs-image-1 gr-z-index-n1" data-aos="zoom-in" data-aos-duration="1000"
                         data-aos-delay="800" data-aos-once="true">
-                        <img src="{{ asset('newpage/image/telemedicine/png/content2-img-sub-1.png') }}" alt=""
+                        <img src="{{ asset('newpage/image/telemedicine/png/content2-img-sub-1.png') }}" alt="content2-img-sub-1.png"
                             class="h-sm-100  anim-shadow-up rounded-10">
                     </div>
                     <div class="abs-image-2" data-aos="zoom-in" data-aos-duration="1000" data-aos-delay="800"
                         data-aos-once="true">
-                        <img src="{{ asset('newpage/image/telemedicine/png/content2-img-sub.png') }}" alt="">
+                        <img src="{{ asset('newpage/image/telemedicine/png/content2-img-sub.png') }}" alt="content2-img-sub.png">
                     </div>
                 </div>
             </div>
@@ -380,7 +380,7 @@ PaySprint is all you need.</p>
                 data-aos-duration="800" data-aos-once="true">
                 <div class="team-widget media">
                     <a href="#" class="widget-img mr-7">
-                        <img src="../image/telemedicine/png/team-1.html" alt="" class=" circle-96">
+                        <img src="../image/telemedicine/png/team-1.html" alt="team-1.html" class=" circle-96">
                     </a>
                     <div class="widget-text">
                         <a href="#">
@@ -394,7 +394,7 @@ PaySprint is all you need.</p>
                 data-aos-duration="800" data-aos-once="true">
                 <div class="team-widget media">
                     <a href="#" class="widget-img mr-7">
-                        <img src="../image/telemedicine/png/team-2.html" alt="" class=" circle-96">
+                        <img src="../image/telemedicine/png/team-2.html" alt="team-2.html" class=" circle-96">
                     </a>
                     <div class="widget-text">
                         <a href="#">
@@ -408,7 +408,7 @@ PaySprint is all you need.</p>
                 data-aos-duration="800" data-aos-once="true">
                 <div class="team-widget media">
                     <a href="#" class="widget-img mr-7">
-                        <img src="../image/telemedicine/png/team-3.html" alt="" class=" circle-96">
+                        <img src="../image/telemedicine/png/team-3.html" alt="telemedicine/png/team-3.html" class=" circle-96">
                     </a>
                     <div class="widget-text">
                         <a href="#">
@@ -422,7 +422,7 @@ PaySprint is all you need.</p>
                 data-aos-duration="800" data-aos-once="true">
                 <div class="team-widget media">
                     <a href="#" class="widget-img mr-7">
-                        <img src="../image/telemedicine/png/team-4.html" alt="" class=" circle-96">
+                        <img src="../image/telemedicine/png/team-4.html" alt="telemedicine/png/team-4.html" class=" circle-96">
                     </a>
                     <div class="widget-text">
                         <a href="#">
@@ -436,7 +436,7 @@ PaySprint is all you need.</p>
                 data-aos-duration="800" data-aos-once="true">
                 <div class="team-widget media">
                     <a href="#" class="widget-img mr-7">
-                        <img src="../image/telemedicine/png/team-5.html" alt="" class=" circle-96">
+                        <img src="../image/telemedicine/png/team-5.html" alt="telemedicine/png/team-5.html" class=" circle-96">
                     </a>
                     <div class="widget-text">
                         <a href="#">
@@ -450,7 +450,7 @@ PaySprint is all you need.</p>
                 data-aos-duration="800" data-aos-once="true">
                 <div class="team-widget media">
                     <a href="#" class="widget-img mr-7">
-                        <img src="../image/telemedicine/png/team-6.html" alt="" class=" circle-96">
+                        <img src="../image/telemedicine/png/team-6.html" alt="telemedicine/png/team-6.html" class=" circle-96">
                     </a>
                     <div class="widget-text">
                         <a href="#">
@@ -464,7 +464,7 @@ PaySprint is all you need.</p>
                 data-aos-duration="800" data-aos-once="true">
                 <div class="team-widget media">
                     <a href="#" class="widget-img mr-7">
-                        <img src="../image/telemedicine/png/team-7.png" alt="" class=" circle-96">
+                        <img src="../image/telemedicine/png/team-7.png" alt="telemedicine/png/team-7.png" class=" circle-96">
                     </a>
                     <div class="widget-text">
                         <a href="#">
@@ -478,7 +478,7 @@ PaySprint is all you need.</p>
                 data-aos-duration="800" data-aos-once="true">
                 <div class="team-widget media">
                     <a href="#" class="widget-img mr-7">
-                        <img src="../image/telemedicine/png/team-8.html" alt="" class=" circle-96">
+                        <img src="../image/telemedicine/png/team-8.html" alt="telemedicine/png/team-8.html" class=" circle-96">
                     </a>
                     <div class="widget-text">
                         <a href="#">
@@ -492,7 +492,7 @@ PaySprint is all you need.</p>
                 data-aos-duration="800" data-aos-once="true">
                 <div class="team-widget media">
                     <a href="#" class="widget-img mr-7">
-                        <img src="../image/telemedicine/png/team-9.png" alt="" class=" circle-96">
+                        <img src="../image/telemedicine/png/team-9.png" alt="telemedicine/png/team-9.png" class=" circle-96">
                     </a>
                     <div class="widget-text">
                         <a href="#">
@@ -524,7 +524,7 @@ PaySprint is all you need.</p>
                 data-aos-duration="800" data-aos-once="true">
                 <div class="feature-widget text-center">
                     <div class="widget-icon square-80 rounded-15 mx-auto mb-9 mb-lg-12 bg-blue shadow-blue">
-                        <img src="newpage/image/svg/feature8-icon1.svg" alt="">
+                        <img src="newpage/image/svg/feature8-icon1.svg" alt="image/svg/feature8-icon1.svg">
                     </div>
                     <div class="widget-text">
                         <h3 class="title gr-text-6 mb-7">Get Started</h3>
@@ -549,7 +549,7 @@ PaySprint is all you need.</p>
                 data-aos-duration="800" data-aos-delay="600" data-aos-once="true">
                 <div class="feature-widget text-center">
                     <div class="widget-icon square-80 rounded-15 mx-auto mb-9 mb-lg-12 bg-red shadow-red">
-                        <img src="newpage/image/svg/feature8-icon3.svg" alt="">
+                        <img src="newpage/image/svg/feature8-icon3.svg" alt="feature8-icon3.svg">
                     </div>
                     <div class="widget-text">
                         <h3 class="title gr-text-6 mb-7">Send Money</h3>
@@ -583,7 +583,7 @@ PaySprint is all you need.</p>
                 <div class="hero-img" data-aos="fade-left" data-aos-duration="500" data-aos-once="true">
                     <div class="hero-video-thumb position-relative gr-z-index-1">
                         <center>
-                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg" alt="" class="w-100 rounded-8" style="height: 350px !important;width: 350px !important;">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg" alt="paysprint_jpeg_black_bk_ft8qly.jpg" class="w-100 rounded-8" style="height: 350px !important;width: 350px !important;">
                         </center>
                         <a class="video-play-trigger gr-abs-center bg-white circle-xl gr-flex-all-center gr-abs-hover-y focus-reset" data-fancybox="" href="https://youtu.be/txfp2Pzbzrg" tabindex="-1"><i class="icon icon-triangle-right-17-2"></i></a>
                         {{-- <div class="abs-shape gr-abs-tr-custom gr-z-index-n1">
