@@ -384,7 +384,7 @@
                                             <a href="{{ route('profile') }}">Identity Verification</a>
                                         </div>
                                         <div class="col-md-2">
-                                            {!! Auth::user()->approval == 1 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                            {!! Auth::user()->approval > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
                                         </div>
                                     </div>
 

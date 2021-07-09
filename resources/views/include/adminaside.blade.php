@@ -439,7 +439,7 @@
                                             <a href="{{ route('merchant profile') }}" style="color: navy; font-weight: 700;">Identity Verification</a>
                                         </div>
                                         <div class="col-md-2">
-                                            {!! $getUserDetail->approval == 1 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                            {!! $getUserDetail->approval > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
                                         </div>
                                     </div>
 

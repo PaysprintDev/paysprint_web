@@ -807,7 +807,7 @@ else{
 
                     if($thisuser->country == "United States" || $thisuser->country == "USA" || $thisuser->country == "United States of America"){
 
-                        // $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $req->amounttosend, "purchase", "PaySprint Add Money to the Wallet of ".$thisuser->name, $req->mode);
+                        // $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $req->amounttosend, "purchase", "PaySprint/Vimfile Add Money to the Wallet of ".$thisuser->name, $req->mode);
                         
 
                         $response = $this->fortisPay($req->amounttosend, $req->card_id, $thisuser->zip, $thisuser->name, $thisuser->email, $thisuser->telephone, $thisuser->city, $thisuser->state);
@@ -1139,7 +1139,7 @@ else{
 
                         else{
 
-                                $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "purchase", "PaySprint Add Money to the Wallet of ".$thisuser->name, $req->mode);
+                                $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "purchase", "PaySprint/Vimfile Add Money to the Wallet of ".$thisuser->name, $req->mode);
 
 
                             if($response->responseData['Message'] == "APPROVED           *                    ="){
@@ -1241,7 +1241,7 @@ else{
 
 
                         
-                        $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "purchase", "PaySprint Add Money to the Wallet of ".$thisuser->name, $req->mode);
+                        $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "purchase", "PaySprint/Vimfile Add Money to the Wallet of ".$thisuser->name, $req->mode);
 
 
                         if($response->responseData['Message'] == "APPROVED           *                    ="){
