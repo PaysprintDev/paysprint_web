@@ -498,7 +498,296 @@ class GooglePaymentController extends Controller
 
     // Send Money to Anonymous
     public function sendMoneyToAnonymous(Request $req){
-        // dd($req->all());
+
+        if(isset($req->mode) && $req->mode == "test"){
+
+            // dd($req->all());
+
+        $validator = Validator::make($req->all(), [
+            'fname' => 'required',
+            'lname' => 'required',
+            'email' => 'required',
+            'countryCode' => 'required',
+            'phone' => 'required',
+            'country' => 'required',
+            'payment_method' => 'required',
+            'service' => 'required',
+            'amount' => 'required',
+        ]);
+
+
+            if($validator->passes()){
+            
+                // Get User Info
+                $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+                if(isset($thisuser)){
+
+
+                    // Check Anon user existence
+                    $checkExist = User::where('email', $req->email)->first();
+
+                    if(isset($checkExist) == true){
+                        $response = 'This user already exist on PaySprint.';
+                        $data = [];
+                        $message = $response;
+                        $status = 403;
+                        
+
+                        $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'link' => URL('payment/sendmoney/'.$checkExist->ref_code.'?country='.$thisuser->country)];
+
+                        return $this->returnJSON($resData, $status);
+                    }
+                    else{
+
+                        if($thisuser->approval == 0 || $thisuser->accountLevel <= 2){
+                            $response = 'You cannot send money at the moment because your account is not yet approved.';
+                            $data = [];
+                            $message = $response;
+                            $status = 403;
+                            
+
+                            $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                            return $this->returnJSON($resData, $status);
+                        }
+                        else{
+                            
+                            $ref_code = mt_rand(00000, 99999);
+
+                            // Get all ref_codes
+                            $ref = User::all();
+
+                            if(count($ref) > 0){
+                                foreach($ref as $key => $value){
+                                    if($value->ref_code == $ref_code){
+                                        $newRefcode = mt_rand(000000, 999999);
+                                    }
+                                    else{
+                                        $newRefcode = $ref_code;
+                                    }
+                                }
+                            }
+                            else{
+                                $newRefcode = $ref_code;
+                            }
+                            
+                            $newcustomer = AnonUsers::where('email', $req->email)->first();
+
+                            
+                            $approve_commission = "No";
+
+                                $foreigncurrency = $this->getCountryCode($req->country);
+
+
+                            if($thisuser->country != $req->country){
+
+                                // Get Country Currency code
+
+                                
+                                // COnvert Currency for Wallet credit to receiver
+                                $amount = $this->convertCurrencyRate($foreigncurrency[0]->currencies[0]->code, $req->currency, $req->amount);
+
+
+                            }
+                            else{
+                                $amount = $req->amount;
+                            }
+
+
+                            // Getting the payer
+                            $userID = $thisuser->email;
+                            $payerID = $thisuser->ref_code;
+
+                            // $req->user_id is for the receiver::
+
+                            // Do Insert
+                            if($req->service != "Others"){
+                                $service = $req->service;
+                            }
+                            else{
+                                $service = $req->purpose;
+                            }
+
+
+                            if($req->amount > $thisuser->wallet_balance){
+                                $response = 'Insufficient wallet balance';
+                                $data = [];
+                                $message = $response;
+                                $status = 400;
+                            }
+                            else{
+                                $statement_route = "wallet";
+
+
+                                $wallet_balance = $thisuser->wallet_balance - $req->amount;
+                                $paymentToken = "wallet-".date('dmY').time();
+                                $paystatus = "Pending";
+                                $action = "Wallet debit";
+                                $requestReceive = 2;
+
+
+                            $insertPay = 1;
+
+                            if($insertPay == 1){
+
+
+                                // Update Wallet
+                                // User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $wallet_balance]);
+
+
+                                // Create or update Other party account
+                                if(isset($newcustomer)){
+
+                                    $ref_code = $newcustomer->ref_code;
+                                    // Update account
+                                    $newwalletBal = $newcustomer->wallet_balance + $amount;
+                                    // AnonUsers::where('email', $newcustomer->email)->update(['wallet_balance' => $newwalletBal]);
+                                }
+                                else{
+                                    $ref_code = $newRefcode;
+                                    // Create account
+                                    $newwalletBal = $amount;
+                                    // AnonUsers::insert(['code' => $req->countryCode, 'ref_code' => $newRefcode, 'name' => $req->fname.' '.$req->lname, 'email' => $req->email, 'telephone' => $req->phone, 'country' => $req->country, 'wallet_balance' => $newwalletBal, 'accountType' => $thisuser->accountType]);
+                                }
+
+                                
+                                $getInviteType = AnonUsers::where('email', $req->email)->first();
+                                // Send mail to both parties
+
+                                // Notification to Sender
+                                $this->name = $thisuser->name;
+                                // $this->email = "bambo@vimfile.com";
+                                $this->email = $thisuser->email;
+                                $this->subject = $foreigncurrency[0]->currencies[0]->code.' '.number_format($req->amount, 2)." has been sent through Text-To-Transfer Platform from your Wallet with PaySprint.";
+
+                                $this->message = '<p>You have sent <strong>'.$foreigncurrency[0]->currencies[0]->code.' '.number_format($req->amount, 2).'</strong> to '.$req->fname.' '.$req->lname.'. You now have <strong>'.$foreigncurrency[0]->currencies[0]->code.' '.number_format($wallet_balance, 2).'</strong> balance in your account</p>';
+
+                                $sendMsg = 'You have sent '.$foreigncurrency[0]->currencies[0]->code.' '.number_format($req->amount, 2).' to '.$req->fname.' '.$req->lname.'. You now have '.$foreigncurrency[0]->currencies[0]->code.' '.number_format($wallet_balance, 2).' balance in your account';
+
+                                $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+                                if(isset($userPhone)){
+
+                                    $sendPhone = $thisuser->telephone;
+                                }
+                                else{
+                                    $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+                                }
+                                
+
+                                // $this->sendEmail($this->email, "Fund remittance");
+
+                                // $this->sendMessage($sendMsg, $sendPhone);
+
+                                
+
+                                // Notification for receiver
+                                $this->name = $req->fname.' '.$req->lname;
+                                // $this->to = "bambo@vimfile.com";
+                                $this->to = $req->email;
+                                $this->subject = $thisuser->name." has sent you ".$foreigncurrency[0]->currencies[0]->code.' '.number_format($amount, 2)." on PaySprint";
+
+
+                                if($thisuser->accountType == "Individual" || $getInviteType->accountType == "Individual"){
+                                    $route = route('register', 'user='.$ref_code);
+                                }
+                                else{
+                                    $route = route('AdminRegister', 'user='.$ref_code);
+                                }
+
+                                $this->message = '<p>You have received <strong>'.$foreigncurrency[0]->currencies[0]->code.' '.number_format($amount, 2).'</strong> from '.$thisuser->name.'. You now have <strong>'.$foreigncurrency[0]->currencies[0]->code.' '.number_format($newwalletBal, 2).'</strong> balance in your account</p><hr><p>To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE </p><p><a href="'.$route.'">'.$route.'</a></p>';
+
+                                $recMesg = 'You have received '.$foreigncurrency[0]->currencies[0]->code.' '.number_format($amount, 2).' from '.$thisuser->name.'. You now have '.$foreigncurrency[0]->currencies[0]->code.' '.number_format($newwalletBal, 2).' balance in your account. To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE '.$route;
+                                $recPhone = "+".$req->countryCode.$req->phone;
+                                
+
+                                // $this->sendEmail($this->to, "Fund remittance");
+
+                                // $this->sendMessage($recMesg, $recPhone);
+
+
+                                
+
+
+                                // Insert Statement
+                                $activity = $req->payment_method." transfer of ".$req->currency.' '.number_format($req->amount, 2)." to ".$req->fname.' '.$req->lname." for ".$service;
+                                $credit = 0;
+                                // $debit = $req->conversionamount + $req->commissiondeduct;
+                                $debit = $amount;
+                                $reference_code = $paymentToken;
+                                $balance = 0;
+                                $trans_date = date('Y-m-d');
+                                
+                                $regards = $ref_code;
+
+                                // Senders statement
+                                $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $paystatus, $action, $regards, 1, $statement_route, 'on', $thisuser->country);
+                                
+                                // Receiver Statement
+                                $this->insStatement($req->email, $reference_code, "Received ".$foreigncurrency[0]->currencies[0]->code.''.$amount." in wallet for ".$service." from ".$thisuser->name, $amount, 0, $balance, $trans_date, $paystatus, "Wallet credit", $ref_code, 1, $statement_route, 'on', $req->country);
+
+                                
+
+                                $response = 'Money sent successfully';
+
+                                // $data = $insertPay;
+                                $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                $status = 200;
+                                $message = $response;
+
+
+                                // $this->createNotification($thisuser->ref_code, $sendMsg);
+                                
+                                // $this->createNotification($ref_code, $recMesg);
+
+                                Log::info("Congratulations!, ".$thisuser->name." ".$sendMsg.". This is a test environment");
+                                Log::info("Congratulations!, ".$this->name." ".$recMesg.". This is a test environment");
+
+                            }
+                            else{
+
+                                $response = 'Something went wrong';
+                                $data = [];
+                                $message = $response;
+                                $status = 400;
+                            }
+                            }
+                        }
+
+
+
+                                
+                    }
+
+
+                }
+                
+                else{
+                    $response = 'Cannot find your account record, to continue payment.';
+
+                    $data = [];
+                    $message = $response;
+                    $status = 400;
+                }
+
+        }
+        else{
+
+            $error = implode(",",$validator->messages()->all());
+
+            $data = [];
+            $status = 400;
+            $message = $error;
+        }
+
+
+        }
+
+
+
+        else{
+            // dd($req->all());
 
         $validator = Validator::make($req->all(), [
             'fname' => 'required',
@@ -778,6 +1067,9 @@ class GooglePaymentController extends Controller
             $message = $error;
         }
 
+        }
+
+        
 
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];

@@ -165,6 +165,7 @@ trait ExpressPayment{
     // Process Transaction
     public function processTransaction($postRequest){
 
+        Log::info($postRequest);
 
         $this->Base_Url = env('EXPRESS_PAY_ENDPOINT_URL').'/process-transaction';
         $transaction = [];
