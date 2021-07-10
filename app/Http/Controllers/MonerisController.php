@@ -2213,7 +2213,7 @@ else{
                             }
                             else{
                                 $data = [];
-                                $message = $response->responseData['Message'];
+                                $message = $response->responseData['Message'].". Kindly visit our website https://paysprint.net to add money to your wallet.";
                                 $status = 400;
 
                                 Log::critical('Oops!! '.$thisuser->name.' '.$message);
@@ -2315,7 +2315,7 @@ else{
                         }
                         else{
                             $data = [];
-                            $message = $response->responseData['Message'];
+                            $message = $response->responseData['Message'].". Kindly visit our website https://paysprint.net to add money to your wallet.";
                             $status = 400;
 
                             Log::critical('Oops!! '.$thisuser->name.' '.$message);
