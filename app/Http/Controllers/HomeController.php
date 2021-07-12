@@ -88,6 +88,7 @@ class HomeController extends Controller
 {
 
     public $to = "info@paysprint.net";
+    public $customerserviceto = "customerserviceafrica@paysprint.net";
     public $page;
     public $email;
     public $name;
@@ -2931,7 +2932,9 @@ class HomeController extends Controller
             else{
                 $this->page = 'Contact';
                 $this->name = '';
-                $data = [];
+                $data = [
+                    'continent' => $this->timezone[0]
+                ];
             }
 
         }
@@ -2939,7 +2942,9 @@ class HomeController extends Controller
             $this->page = 'Contact';
             $this->name = session('name');
             $this->email = session('email');
-            $data = [];
+            $data = [
+                'continent' => $this->timezone[0]
+            ];
         }
 
         return view('main.contact')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -3689,7 +3694,17 @@ class HomeController extends Controller
 
             Log::notice("Name: ".$this->name."\n Email: ".$this->email."\n Subject: ".$this->subject."\n Website: ".$this->website."\n Country: ".$this->country."\n Message: ".$this->message);
 
-            $this->sendEmail($this->to, "Contact us");
+            if($this->timezone[0] == "Africa"){
+
+                $this->sendEmail($this->customerserviceto, "Contact us");
+
+            }
+            else{
+
+                $this->sendEmail($this->to, "Contact us");
+
+            }
+
 
             $resData = ['res' => 'Thanks for sending us a message, we will get back to you as soon as possible', 'message' => 'success'];
         }

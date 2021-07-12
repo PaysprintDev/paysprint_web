@@ -13,11 +13,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         {{ strtoupper(Request::get('gateway')) }} Activity Log
+         Support Agents
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">{{ strtoupper(Request::get('gateway')) }} Activity Log</li>
+        <li class="active">Support Agents</li>
       </ol>
     </section>
 
@@ -27,7 +27,7 @@
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">{{ strtoupper(Request::get('gateway')) }} Activity Log</h3>
+              <h3 class="box-title">Support Agents</h3>
               
             </div>
             <!-- /.box-header -->
@@ -46,12 +46,12 @@
                   </div>
                 <tr>
                   <th>S/N</th>
-                  <th>Transaction ID</th>
-                  <th>Message</th>
-                  <th>Gateway</th>
-                  <th>Country</th>
-                  <th>Activity</th>
+                  <th>Username</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
                   <th>Date</th>
+                  <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -61,12 +61,14 @@
                         <tr>
                             <td>{{ $i++ }}</td>
 
-                            <td>{{ $data->transaction_id }}</td>
-                            <td>{{ $data->message }}</td>
-                            <td>{{ strtoupper($data->gateway) }}</td>
-                            <td>{{ strtoupper($data->country) }}</td>
-                            <td>{{ $data->activity }}</td>
+                            <td>{{ $data->username }}</td>
+                            <td>{{ $data->firstname." ".$data->lastname }}</td>
+                            <td>{{ $data->email }}</td>
+                            <td>{{ $data->role }}</td>
                             <td>{{ date('d/M/Y', strtotime($data->created_at)) }}</td>
+                            <td>
+                                <a href="{{ route('edit support agent', $data->id) }}">Edit</a> | <form action="{{ route('delete support agent', $data->id) }}" method="post" class="disp-0" id="delSupport{{ $data->id }}">@csrf</form><a href="javascript:void(0)" onclick="delSupport('{{ $data->id }}')">Delete</a>
+                            </td>
                         </tr>
                         @endforeach
 

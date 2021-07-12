@@ -33,7 +33,17 @@
                         </div>
                         <div class="address">
                             <a href="#">PaySprint by Express Ca Corp, <br>10 George St. North, Brampton. ON. L6X1R2. Canada </a>
+
+                            @if ($data['continent'] != "Africa")
+                                
                             <a href="#">info@paysprint.net</a>
+
+                            @else
+                            
+                            <a href="#">customerserviceafrica@paysprint.net</a>
+                                
+                            @endif
+
                         </div>
                     </div>
                 </div>

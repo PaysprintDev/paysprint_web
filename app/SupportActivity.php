@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SuperAdmin extends Model
+class SupportActivity extends Model
 {
     protected $guarded = [];
 
-    protected $table = "super_admin";
+    protected $table = "support_activity";
 }

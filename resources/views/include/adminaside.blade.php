@@ -12,7 +12,7 @@
         </div>
         <div class="pull-left info">
           <p>{{ session('firstname').' '.session('lastname') }}</p>
-          @if (session('role') != "Super")
+          @if (session('role') != "Super" && session('role') != "Access to Level 1 only" && session('role') != "Access to Level 1 and 2 only")
             <a href="#"><i class="fa fa-circle text-success"></i> Account No: {{ session('user_id') }}</a>
           @endif
         </div>
@@ -43,16 +43,78 @@
             <li><a href="{{ route('merchant home') }}"><i class="fa fa-circle-o text-primary"></i> Main Page</a></li>
 
             @if (session('role') == "Super")
-            <li><a href="{{ route('platform activity') }}"><i class="fa fa-circle-o"></i> Activity</a></li>
-            <li><a href="{{ route('gateway activity') }}"><i class="fa fa-circle-o"></i> Gateway Activity</a></li>
-            <li><a href="{{ route('generate special information activity') }}"><i class="fa fa-circle-o"></i> Create Special Information</a></li>
-            <li><a href="{{ route('special information activity') }}"><i class="fa fa-circle-o"></i> Special Information</a></li>
+
+            <li class="treeview">
+              <a href="#">
+                <i class="fa fa-book"></i>
+                <span>Special Information</span>
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="{{ route('generate special information activity') }}"><i class="fa fa-circle-o"></i> Create</a></li>
+              <li><a href="{{ route('special information activity') }}"><i class="fa fa-circle-o"></i> View All</a></li>
+
+              </ul>
+            </li>
+
+
+            <li class="treeview">
+              <a href="#">
+                <i class="fa fa-book"></i>
+                <span>Support Agent</span>
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="{{ route('create user support agent') }}"><i class="fa fa-circle-o"></i> Create</a></li>
+              <li><a href="{{ route('view user support agent') }}"><i class="fa fa-circle-o"></i> View All</a></li>
+
+              </ul>
+            </li>
+
+
+            
           @endif
             
           </ul>
         </li>
 
         @if(session('role') == "Super")
+
+
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-book"></i>
+            <span>Activities</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li title="Platform"><a href="{{ route('platform activity') }}"><i class="fa fa-circle-o text-red"></i> Platform</a></li>
+            <li title="Support"><a href="{{ route('support activity') }}"><i class="fa fa-circle-o text-red"></i> Support</a></li>
+
+
+            <li class="treeview">
+              <a href="#">
+                <i class="fa fa-book"></i>
+                <span>Gateway</span>
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                <li title="Moneris"><a href="{{ route('gateway activity', 'gateway=moneris') }}"><i class="fa fa-circle-o text-red"></i> Moneris</a></li>
+                <li title="PayStack"><a href="{{ route('gateway activity', 'gateway=paystack') }}"><i class="fa fa-circle-o text-red"></i> PayStack</a></li>
+
+              </ul>
+            </li>
+
+          </ul>
+        </li>
 
         <li>
           <a href="{{ route('business report') }}">
@@ -78,6 +140,9 @@
           </a>
           
         </li>
+
+
+        
 
 
         {{-- <li class="treeview">
@@ -328,7 +393,11 @@
 
 
 
-        @else
+        @elseif(session('role') != "Super" && session('role') != "Access to Level 1 only" && session('role') != "Access to Level 1 and 2 only")
+
+
+        
+
         <li class="treeview" title="Create and Send Invoice">
           <a href="#">
             <i class="fa fa-book"></i>
@@ -422,7 +491,9 @@
         <br>
         <br>
 
-        @if ($pages == "My Dashboard")
+
+
+            @if ($pages == "My Dashboard")
                     <li>
                 <div class="card" style="width: auto;">
                             <div class="card-header" style="background-color: #f6b60b; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">

@@ -409,8 +409,20 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('xreceivemoney', ['uses' => 'AdminController@xreceivemoney', 'as' => 'xreceivemoney']);
 
 	Route::get('activity', ['uses' => 'AdminController@platformActivity', 'as' => 'platform activity']);
+
 	Route::get('gatewayactivity', ['uses' => 'AdminController@gatewayActivity', 'as' => 'gateway activity']);
+	Route::get('supportactivity', ['uses' => 'AdminController@supportPlatformActivity', 'as' => 'support activity']);
+
 	Route::get('generatespecialinfoactivity', ['uses' => 'AdminController@generateSpecialInfoActivity', 'as' => 'generate special information activity']);
+
+	Route::get('createusersupportagent', ['uses' => 'AdminController@createSupportAgent', 'as' => 'create user support agent']);
+	Route::get('editusersupportagent/{id}', ['uses' => 'AdminController@editSupportAgent', 'as' => 'edit support agent']);
+	Route::get('viewusersupportagent', ['uses' => 'AdminController@viewSupportAgent', 'as' => 'view user support agent']);
+	Route::post('generateusersupportagent', ['uses' => 'AdminController@generateSupportAgent', 'as' => 'generate account for support']);
+	Route::post('editthisusersupportagent', ['uses' => 'AdminController@editThisSupportAgent', 'as' => 'edit account for support']);
+	Route::post('deletesupport/{id}', ['uses' => 'AdminController@deleteSupportAgent', 'as' => 'delete support agent']);
+
+
 	Route::get('specialinfoactivity', ['uses' => 'AdminController@specialInfoActivity', 'as' => 'special information activity']);
 	Route::post('createspecialinfoactivity', ['uses' => 'AdminController@createSpecialInfoActivity', 'as' => 'create special information']);
 	Route::get('allcountries', ['uses' => 'AdminController@allCountries', 'as' => 'all countries']);

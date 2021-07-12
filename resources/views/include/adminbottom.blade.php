@@ -86,6 +86,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
 
+
+@if (session('role') != "Super")
+    
     <!--Start of Tawk.to Script-->
 <script type="text/javascript">
 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
@@ -99,6 +102,10 @@ s0.parentNode.insertBefore(s1,s0);
 })();
 </script>
 <!--End of Tawk.to Script-->
+
+@endif
+
+
 
 
 <!-- CK Editor -->
@@ -1395,6 +1402,26 @@ if(val == "deletefee" || val == "deletecardissuer"){
       }
     });
 }
+}
+
+function delSupport(id){
+      swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this data",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+
+        $("#delSupport"+id).submit();
+
+      } 
+      else {
+
+      }
+    });
 }
 
 

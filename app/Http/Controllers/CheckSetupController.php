@@ -39,7 +39,9 @@ class CheckSetupController extends Controller
         $user = User::where('disableAccount', 'off')->inRandomOrder()->get();
 
         try {
+            
             foreach($user as $key => $value){
+
                 $info = $this->accountInfo($value->id);
 
                 if($value->approval == 0){
@@ -51,7 +53,7 @@ class CheckSetupController extends Controller
 
                 
                 if($value->transaction_pin == null){
-                    $transaction = "<li>Set Up Transaction Pin-You will need the PIN to Send Money, Pay Invoice or Withdraw Money from Your PaySprint Account</li>";
+                    $transaction = "<li>Set Up Transaction Pin-You will need the PIN to Send Money, Pay Invoice/Bill or Withdraw Money from Your PaySprint Account</li>";
                 }
                 else{
                     $transaction = "";
@@ -77,7 +79,8 @@ class CheckSetupController extends Controller
                     $this->email = $value->email;
                     $this->subject = "You have some incomplete information on your PaySprint account";
 
-                    $this->message = '<p>We noticed you are yet to properly set-up your PaySprint Account. You need to set up the following in order to enjoy the full benefits of a PaySprint Account.</p><p><ul>'.$approval.''.$transaction.''.$security.''.$card.'</ul></p><p>Kindly complete these important steps in your profile. <a href='.route('profile').' class="text-primary" style="text-decoration: underline">Click here to login to your account</a></p>';
+                    $this->message = '<p>We noticed you are yet to properly complete the set-up your PaySprint Account. You need to provide the outstanding information and complete the quick set up in order to enjoy the full benefits of a PaySprint Account.</p><p><ul>'.$approval.''.$transaction.''.$security.''.$card.'</ul></p><p>Kindly complete these important steps in your profile. <a href='.route('profile').' class="text-primary" style="text-decoration: underline">Click here to login to your account</a></p>';
+
 
                     $this->sendEmail($this->email, "Incomplete Setup");
 

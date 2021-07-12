@@ -13,11 +13,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         {{ strtoupper(Request::get('gateway')) }} Activity Log
+         Support Activity Log
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">{{ strtoupper(Request::get('gateway')) }} Activity Log</li>
+        <li class="active">Support Activity Log</li>
       </ol>
     </section>
 
@@ -27,7 +27,7 @@
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">{{ strtoupper(Request::get('gateway')) }} Activity Log</h3>
+              <h3 class="box-title">Support Activity Log</h3>
               
             </div>
             <!-- /.box-header -->
@@ -46,10 +46,7 @@
                   </div>
                 <tr>
                   <th>S/N</th>
-                  <th>Transaction ID</th>
-                  <th>Message</th>
-                  <th>Gateway</th>
-                  <th>Country</th>
+                  <th>Name</th>
                   <th>Activity</th>
                   <th>Date</th>
                 </tr>
@@ -61,10 +58,7 @@
                         <tr>
                             <td>{{ $i++ }}</td>
 
-                            <td>{{ $data->transaction_id }}</td>
-                            <td>{{ $data->message }}</td>
-                            <td>{{ strtoupper($data->gateway) }}</td>
-                            <td>{{ strtoupper($data->country) }}</td>
+                            <td>{{ strtoupper($data->name) }}</td>
                             <td>{{ $data->activity }}</td>
                             <td>{{ date('d/M/Y', strtotime($data->created_at)) }}</td>
                         </tr>
@@ -73,7 +67,7 @@
                          
                     @else
                     <tr>
-                        <td colspan="7" align="center">No record available</td>
+                        <td colspan="4" align="center">No record available</td>
                     </tr>
                     @endif
                 </tbody>
