@@ -181,12 +181,14 @@
                                 
                                 @elseif($datainfo->approval == 1 && $datainfo->accountLevel > 0) 
                                 
-                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Approve Account"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  
+                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-check-square text-success" style="font-size: 20px;" title="Approve Account"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  
+
+                                <a href="javascript:void()" onclick="disapproveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Disapprove Account"></i> <img class="spindis{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  
                                 
                                 
                                 @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)
 
-                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Disapprove Account"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>
+                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-check-square text-danger" style="font-size: 20px;" title="Approve Account"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>
 
                                 @else 
                                 

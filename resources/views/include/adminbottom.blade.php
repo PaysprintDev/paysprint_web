@@ -1576,6 +1576,56 @@ function approveaccount(id){
 
 }
 
+
+function disapproveaccount(id){
+
+  var thisdata;
+  var spinner = $('.spindis'+id);
+  var route = "{{ URL('Ajax/disapproveUser') }}";
+
+  swal({
+      title: "Are you sure?",
+      text: "You are about to disapprove this user from using PaySprint",
+      icon: "info",
+      buttons: true,
+      dangerMode: false,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        thisdata = {id: id};
+          setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: thisdata,
+            dataType: 'JSON',
+            beforeSend: function(){
+              spinner.removeClass('disp-0');
+            },
+            success: function(result){
+              spinner.addClass('disp-0');
+                
+                if (result.message == "success") {
+
+                  swal(result.title, result.res, result.message);
+                  setTimeout(function(){ location.reload(); }, 2000);
+
+                }
+
+                else{
+                  swal(result.title, result.res, result.message);
+                }
+
+
+            }
+
+          });
+
+      }
+    });
+
+}
+
 function moveaccount(id){
 
   var thisdata;

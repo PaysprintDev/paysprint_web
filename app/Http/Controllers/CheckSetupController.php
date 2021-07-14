@@ -64,6 +64,12 @@ class CheckSetupController extends Controller
                 else{
                     $security = "";
                 }
+                if($value->$country == "Nigeria" && $value->bvn_verification == null){
+                    $bankVerify = "<li>Verify your account with your bank verification number</li>";
+                }
+                else{
+                    $bankVerify = "";
+                }
                 if($info == 0){
                     $card = "<li>Add Credit Card/Prepaid Card/Bank Account-You need this to add money to your PaySprint Wallet.</li>";
                 }
@@ -79,7 +85,7 @@ class CheckSetupController extends Controller
                     $this->email = $value->email;
                     $this->subject = "You have some incomplete information on your PaySprint account";
 
-                    $this->message = '<p>We noticed you are yet to properly complete the set-up your PaySprint Account. You need to provide the outstanding information and complete the quick set up in order to enjoy the full benefits of a PaySprint Account.</p><p><ul>'.$approval.''.$transaction.''.$security.''.$card.'</ul></p><p>Kindly complete these important steps in your profile. <a href='.route('profile').' class="text-primary" style="text-decoration: underline">Click here to login to your account</a></p>';
+                    $this->message = '<p>We noticed you are yet to properly complete the set-up your PaySprint Account. You need to provide the outstanding information and complete the quick set up in order to enjoy the full benefits of a PaySprint Account.</p><p><ul>'.$approval.''.$transaction.''.$security.''.$bankVerify.''.$card.'</ul></p><p>Kindly complete these important steps in your profile. <a href='.route('profile').' class="text-primary" style="text-decoration: underline">Click here to login to your account</a></p>';
 
 
                     $this->sendEmail($this->email, "Incomplete Setup");

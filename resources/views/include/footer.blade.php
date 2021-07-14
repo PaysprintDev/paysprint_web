@@ -526,9 +526,10 @@ function getStatement(){
                             today = new Date(today.getTime() - 3000000);
                             var date_format_str = (today.getDate().toString().length==2?today.getDate().toString():"0"+today.getDate().toString())+"/"+((today.getMonth()+1).toString().length==2?(today.getMonth()+1).toString():"0"+(today.getMonth()+1).toString())+"/"+today.getFullYear().toString();
 
-                            $('tbody#statementRec').append(statements);
+                            $('tbody#statementRec').append("<tr><td colspan='6'><button class='btn btn-success px-2 mb-3' onclick=transactionExport('excel')>Export to Excel <img src='https://img.icons8.com/ios/30/000000/xls.png'/></button> <button class='btn btn-danger px-2 mb-3' onclick=transactionExport('pdf')>Export to PDF <img src='https://img.icons8.com/ios/30/000000/pdf-2--v1.png'/></button> <img src='https://img.icons8.com/material-outlined/24/000000/spinner--v2.png' class='fa fa-spin disp-0 exportSpin'> </td></tr>"+statements);
                             // $('tbody#statementRec').append(statements+"<tr><td colspan='3' align='right' style='font-size: 14px; font-weight: bold;'>Total as of "+date_format_str+"</td><td style='font-size: 14px; font-weight: bold;'>"+total.toFixed(2)+"</td><td colspan='3'></td></tr>");
 
+                            
 
                         }
 
@@ -548,6 +549,20 @@ function getStatement(){
 
 
     }
+}
+
+
+function transactionExport(exportType){
+
+    $("#doc_type").val(exportType);
+    $("#start_date_excel").val($('#start_date').val());
+    $("#end_date_excel").val($('#end_date').val());
+    $("#service_excel").val($('#invoiceService').val());
+
+    $("#exporttoExcel").submit();
+
+
+    
 }
 
 

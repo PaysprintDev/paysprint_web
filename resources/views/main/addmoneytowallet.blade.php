@@ -579,6 +579,8 @@ else if(val == 'addcard'){
       callback: function(response){
           
           $('#paymentToken').val(response.reference);
+        //   $('#paymentToken').val(response.transaction);
+
 
             setTimeout(() => {
                 handShake('addmoney');

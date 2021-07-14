@@ -411,6 +411,7 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('activity', ['uses' => 'AdminController@platformActivity', 'as' => 'platform activity']);
 
 	Route::get('gatewayactivity', ['uses' => 'AdminController@gatewayActivity', 'as' => 'gateway activity']);
+	Route::get('checktransaction/{id}', ['uses' => 'AdminController@checkTransaction', 'as' => 'check transaction']);
 	Route::get('supportactivity', ['uses' => 'AdminController@supportPlatformActivity', 'as' => 'support activity']);
 
 	Route::get('generatespecialinfoactivity', ['uses' => 'AdminController@generateSpecialInfoActivity', 'as' => 'generate special information activity']);
@@ -484,7 +485,8 @@ Route::post('completedworkorder', ['uses' => 'ConsultantController@completedwork
 
 Route::post('create_facility', ['uses' => 'BuildingController@createFacility', 'as' => 'create_facility']);
 
-
+Route::post('exporttoExcel', ['uses' => 'HomeController@exportToExcel', 'as' => 'export to excel']);
+Route::post('exporttoPdf', ['uses' => 'HomeController@exportToPdf', 'as' => 'export to pdf']);
 
 Auth::routes();
 
@@ -507,7 +509,10 @@ Route::post('checkmyBills', ['uses' => 'HomeController@checkmyBills', 'as' => 'c
 Route::post('getmyInvoice', ['uses' => 'HomeController@getmyInvoice', 'as' => 'getmyInvoice']);
 Route::post('getPayment', ['uses' => 'HomeController@getPayment', 'as' => 'getPayment']);
 Route::post('getmystatement', ['uses' => 'HomeController@getmystatement', 'as' => 'getmystatement']);
+
 Route::post('getOrganization', ['uses' => 'HomeController@getOrganization', 'as' => 'getOrganization']);
+
+
 
 Route::post('PaymentInvoice', ['uses' => 'MonerisController@purchase', 'as' => 'PaymentInvoice']);
 // Route::post('orgPaymentInvoice', ['uses' => 'MonerisController@orgPaymentInvoice', 'as' => 'orgPaymentInvoice']);
@@ -545,6 +550,7 @@ Route::post('confirmpayment', ['uses' => 'AdminController@ajaxconfirmpayment', '
 Route::post('openuseraccount', ['uses' => 'AdminController@ajaxOpenUserAccount', 'as' => 'Ajaxopenuseraccount']);
 Route::post('closeuseraccount', ['uses' => 'AdminController@ajaxCloseUserAccount', 'as' => 'Ajaxcloseuseraccount']);
 Route::post('approveUser', ['uses' => 'AdminController@ajaxapproveUser', 'as' => 'AjaxapproveUser']);
+Route::post('disapproveUser', ['uses' => 'AdminController@ajaxdisapproveUser', 'as' => 'AjaxdisapproveUser']);
 Route::post('downgradeaccount', ['uses' => 'AdminController@ajaxdowngradeaccount', 'as' => 'Ajaxdowngradeaccount']);
 
 

@@ -542,7 +542,7 @@ class MoneyTransferController extends Controller
 
     public function sendMoney(Request $req){
 
-        if(isset($reqq->mode) && $req->mode == "test"){
+        if(isset($req->mode) && $req->mode == "test"){
 
             // Get Sender in User
         $sender = User::where('api_token', $req->bearerToken())->first();
@@ -564,11 +564,11 @@ class MoneyTransferController extends Controller
             else{
                 
                 
-                if($sender->approval == 0 || $sender->accountLevel <= 2){
+                if($sender->approval < 2 && $sender->accountLevel <= 2){
 
                     $status = 404;
 
-                $resData = ['data' => [], 'message' => 'You cannot send money at the moment because your account is not yet approved.', 'status' => $status];
+                $resData = ['data' => [], 'message' => 'You cannot send money at the moment because your account is still on review.', 'status' => $status];
 
                 }
                 else{
@@ -764,11 +764,11 @@ class MoneyTransferController extends Controller
             else{
                 
                 
-                if($sender->approval == 0 || $sender->accountLevel <= 2){
+                if($sender->approval < 2 && $sender->accountLevel <= 2){
 
                     $status = 404;
 
-                $resData = ['data' => [], 'message' => 'You cannot send money at the moment because your account is not yet approved.', 'status' => $status];
+                $resData = ['data' => [], 'message' => 'You cannot send money at the moment because your account is still on review.', 'status' => $status];
 
                 }
                 else{

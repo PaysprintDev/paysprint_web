@@ -174,7 +174,7 @@
                         </tr>
                       
 
-                      <tr>
+                      <tr class="disp-0">
                         <td colspan="2">
 
                             @if($getthisuser->accountLevel >= 2) 

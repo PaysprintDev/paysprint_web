@@ -52,6 +52,9 @@
                   <th>Country</th>
                   <th>Activity</th>
                   <th>Date</th>
+                  @if (Request::get('gateway') == "paystack")
+                    <th>Action</th>
+                  @endif
                 </tr>
                 </thead>
                 <tbody>
@@ -67,6 +70,11 @@
                             <td>{{ strtoupper($data->country) }}</td>
                             <td>{{ $data->activity }}</td>
                             <td>{{ date('d/M/Y', strtotime($data->created_at)) }}</td>
+                            @if (Request::get('gateway') == "paystack")
+                              <td>
+                                <a href="{{ route('check transaction', $data->transaction_id) }}">Details</a>
+                              </td>
+                            @endif
                         </tr>
                         @endforeach
 

@@ -31,7 +31,14 @@ trait PaystackPayment{
 
 
     // Verify Transactions
-    public function verifyTransaction(){
+    public function verifyTransaction($transaction){
+
+        $this->baseUrl = 'https://api.paystack.co/transaction/verify/'.$transaction;
+
+        $data = $this->doCurlGet();
+        
+
+        return $data;
 
     }
 
@@ -89,6 +96,7 @@ trait PaystackPayment{
 
         return $data;
     }
+
 
     
 

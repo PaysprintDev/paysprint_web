@@ -175,21 +175,22 @@
 
                                 @if($datainfo->approval == 1 && $datainfo->accountLevel > 0) 
                                 
-                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Disapprove Account"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>
+                                <a href="javascript:void()" onclick="disapproveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Disapprove Account"></i> <img class="spindis{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>
+
+                                {{--  <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-check-square text-success" style="font-size: 20px;" title="Disapprove Account"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  --}}
 
                                   
                                 
-                                
                                 @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)
 
-                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Disapprove Account"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> <br>
+                                <a href="javascript:void()" onclick="disapproveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Disapprove Account"></i> <img class="spindis{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> <br>
 
                                 <a href="javascript:void()" onclick="moveaccount('{{ $datainfo->id }}')" class="text-success"><i class="fas fa-exchange-alt text-success" style="font-size: 20px;" title="Move to Level 2"></i> <img class="spinmove{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>
 
                                 @else 
                                 
                                 
-                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-primary"><i class="far fa-lightbulb text-success" style="font-size: 20px;" title="Approve Account"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
+                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-primary"><i class="fas fa-check-square text-success" style="font-size: 20px;" title="Approve Account"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
                                 
                                 
                                 @endif

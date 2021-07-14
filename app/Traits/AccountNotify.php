@@ -64,7 +64,7 @@ trait AccountNotify{
                             $recPhone = "+".$thisuser->code.$thisuser->telephone;
                         }
 
-                        $this->sendMessage($sms, $recPhone);
+                        // $this->sendMessage($sms, $recPhone);
 
                         $this->myEmailSender($thisuser->email, "New Login");
 

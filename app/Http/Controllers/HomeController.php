@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Session;
 
 use App\Mail\sendEmail;
+use App\Exports\TransactionExport;
 
 use Illuminate\Http\Request;
 
@@ -21,6 +22,8 @@ use Illuminate\Support\Facades\Mail;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 use Illuminate\Support\Facades\Log;
+
+use Maatwebsite\Excel\Facades\Excel;
 
 use App\User as User;
 
@@ -3606,6 +3609,34 @@ class HomeController extends Controller
 
 
         return $this->returnJSON($resData, 200);
+    }
+
+
+    public function exportToExcel(Request $req){
+
+        $query = [
+            'email' => Auth::user()->email,
+            'currencyCode' => Auth::user()->currencyCode,
+            'service' => $req->service,
+            'from' => $req->start_date,
+            'nextDay' => $req->end_date,
+        ];
+
+
+        $transExport = new TransactionExport($query);
+
+        if($req->type == "excel"){
+        
+            return Excel::download($transExport, mt_rand().date('dmYhis').'.xlsx');
+
+        }
+        else{
+
+            return Excel::download($transExport, mt_rand().date('dmYhis').'.pdf');
+
+        }
+
+
     }
 
     public function ajaxgetBronchure(Request $req){

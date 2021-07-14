@@ -378,9 +378,9 @@ else{
 
                             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                            if($thisuser->approval == 0 || $thisuser->accountLevel <= 2){
+                            if($thisuser->approval < 2 && $thisuser->accountLevel <= 2){
 
-                                $response = 'You cannot pay invoice at the moment because your account is not yet approved.';
+                                $response = 'You cannot pay invoice at the moment because your account is still on review.';
 
                                 $data = [];
                                 $status = 400;
@@ -679,9 +679,9 @@ else{
 
                             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                            if($thisuser->approval == 0 || $thisuser->accountLevel <= 2){
+                            if($thisuser->approval < 2 && $thisuser->accountLevel <= 2){
 
-                                $response = 'You cannot pay invoice at the moment because your account is not yet approved.';
+                                $response = 'You cannot pay invoice at the moment because your account is still on review.';
 
                                 $data = [];
                                 $status = 400;
@@ -1003,9 +1003,20 @@ else{
 
                 if($req->paymentToken != null){
 
-                        $reference_code = $req->paymentToken;
 
-                        $gateway = "Paystack";
+                        $getTransactionCode = $this->verifyTransaction($req->paymentToken);
+
+                        if($getTransactionCode->status == true){
+
+                            $gateway = "Paystack";
+                            $reference_code = $getTransactionCode->data->id;
+                        }
+                        else{
+                            $gateway = "Google Pay";
+                            $reference_code = $req->paymentToken;
+
+                        }
+
                         
                         
                         // Update Wallet Balance
@@ -1123,7 +1134,7 @@ else{
 
 
 
-                        if($response != null){
+                        if($response->status != 401){
 
                             $responseCode = $response->transaction->reason_code_id;
 
@@ -1687,9 +1698,18 @@ else{
 
                 if($req->paymentToken != null){
 
-                        $reference_code = $req->paymentToken;
+                        $getTransactionCode = $this->verifyTransaction($req->paymentToken);
 
-                        $gateway = "Paystack";
+                        if($getTransactionCode->status == true){
+
+                            $gateway = "Paystack";
+                            $reference_code = $getTransactionCode->data->id;
+                        }
+                        else{
+                            $gateway = "Google Pay";
+                            $reference_code = $req->paymentToken;
+
+                        }
                         
                         
                         // Update Wallet Balance
@@ -1805,9 +1825,11 @@ else{
 
                         $response = $this->fortisPay($req->amounttosend, $req->card_id, $thisuser->zip, $thisuser->name, $thisuser->email, $thisuser->telephone, $thisuser->city, $thisuser->state, "live");
 
+                        
+                        
 
+                        if($response->status != 401){
 
-                        if($response != null){
 
                             $responseCode = $response->transaction->reason_code_id;
 
@@ -2389,11 +2411,11 @@ else{
 
                         Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
                     }
-                    elseif($thisuser->approval == 0 || $thisuser->accountLevel <= 2){
+                    elseif($thisuser->approval < 2 && $thisuser->accountLevel <= 2){
                         // Cannot withdraw minimum balance
 
                         $data = [];
-                        $message = "You cannot send money at the moment because your account is not yet approved.";
+                        $message = "You cannot send money at the moment because your account is still on review.";
                         $status = 400;
 
                         Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
@@ -3159,11 +3181,11 @@ else{
 
                         Log::info('Oops!, '.$thisuser->name.' has '.$message);
                     }
-                    elseif($thisuser->approval == 0 || $thisuser->accountLevel <= 2){
+                    elseif($thisuser->approval < 2 && $thisuser->accountLevel <= 2){
                         // Cannot withdraw minimum balance
 
                         $data = [];
-                        $message = "You cannot send money at the moment because your account is not yet approved.";
+                        $message = "You cannot send money at the moment because your account is still on review.";
                         $status = 400;
 
                         Log::info('Oops!, '.$thisuser->name.' has '.$message);
@@ -3982,11 +4004,11 @@ else{
 
                         Log::info('Oops!, '.$thisuser->name.' has '.$message);
                     }
-                    elseif($thisuser->approval == 0 || $thisuser->accountLevel <= 2){
+                    elseif($thisuser->approval < 2 && $thisuser->accountLevel <= 2){
                         // Cannot withdraw minimum balance
 
                         $data = [];
-                        $message = "You cannot pay for utility at the moment because your account is not yet approved.";
+                        $message = "You cannot pay for utility at the moment because your account is still on review.";
                         $status = 400;
 
                         Log::info('Oops!, '.$thisuser->name.' has '.$message);
