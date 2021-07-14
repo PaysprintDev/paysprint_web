@@ -73,41 +73,48 @@
                         <td>IP ADDRESS</td>
                         <td class="mainText" colspan="2">{{ $data['transaction']->data->ip_address }}</td>
                       </tr>
-                      <tr>
-                        <td>META DATA</td>
-                        @foreach ($data['transaction']->data->metadata->custom_fields as $customData)
 
-                            <td class="mainText">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        {!! strtoupper($customData->display_name).": <br>".$customData->value !!}
+                      @if (isset($data['transaction']->data->metadata) && $data['transaction']->data->metadata != "")
+                          <tr>
+                            <td>META DATA</td>
+                            @foreach ($data['transaction']->data->metadata->custom_fields as $customData)
+
+                                <td class="mainText">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            {!! strtoupper($customData->display_name).": <br>".$customData->value !!}
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                            
-                        @endforeach
-                      </tr>
-
+                                </td>
+                                
+                            @endforeach
+                          </tr>
 
                           <tr>
                             <td>REFERRER</td>
                             <td class="mainText" colspan="2">{{ $data['transaction']->data->metadata->referrer }}</td>
                           </tr>
+                      @endif
+                      
 
-                          <tr>
-                        <td>LOG DATA</td>
-                        @foreach ($data['transaction']->data->log->history as $historyData)
 
-                            <td class="mainText">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        {!! strtoupper($historyData->type).": <br>".$historyData->message !!}
-                                    </div>
-                                </div>
-                            </td>
-                            
-                        @endforeach
-                      </tr>
+                          
+                          @if (isset($data['transaction']->data->log) && $data['transaction']->data->log != "")
+                            <tr>
+                              <td>LOG DATA</td>
+                              @foreach ($data['transaction']->data->log->history as $historyData)
+
+                                  <td class="mainText">
+                                      <div class="row">
+                                          <div class="col-md-12">
+                                              {!! strtoupper($historyData->type).": <br>".$historyData->message !!}
+                                          </div>
+                                      </div>
+                                  </td>
+                                  
+                              @endforeach
+                          </tr>
+                        @endif
 
                           <tr>
                             <td>CARD AUTHORIZATION</td>
@@ -140,12 +147,18 @@
                                     <div class="col-md-12">
                                         ACCOUNT NAME: {{ $data['transaction']->data->authorization->account_name }}
                                     </div>
-                                    <div class="col-md-12">
-                                        ACCOUNT NUMBER: {{ $data['transaction']->data->authorization->receiver_bank_account_number }}
-                                    </div>
-                                    <div class="col-md-12">
-                                        BANK NAME: {{ $data['transaction']->data->authorization->receiver_bank }}
-                                    </div>
+
+                                    @if (isset($data['transaction']->data->authorization->receiver_bank_account_number))
+                                        <div class="col-md-12">
+                                          ACCOUNT NUMBER: {{ $data['transaction']->data->authorization->receiver_bank_account_number }}
+                                      </div>
+                                    @endif
+
+                                    @if (isset($data['transaction']->data->authorization->receiver_bank))
+                                      <div class="col-md-12">
+                                          BANK NAME: {{ $data['transaction']->data->authorization->receiver_bank }}
+                                      </div>
+                                    @endif
                                 </div>
                             </td>
                           </tr>

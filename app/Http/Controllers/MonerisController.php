@@ -977,6 +977,7 @@ else{
     // Add Money to Wallet
     public function addMoneyToWallet(Request $req){
 
+
         // Write for Test 
 
         if(isset($req->mode) && $req->mode == "test"){
@@ -1009,15 +1010,14 @@ else{
                         if($getTransactionCode->status == true){
 
                             $gateway = "Paystack";
-                            $reference_code = $getTransactionCode->data->id;
+                            $referenced_code = $req->paymentToken;
                         }
                         else{
                             $gateway = "Google Pay";
-                            $reference_code = $req->paymentToken;
+                            $referenced_code = $req->paymentToken;
 
                         }
 
-                        
                         
                         // Update Wallet Balance
                         $walletBal = $thisuser->wallet_balance + $req->amounttosend;
@@ -1028,7 +1028,7 @@ else{
                         $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to Wallet including a fee charge of ".$req->currencyCode.''.number_format($req->commissiondeduct, 2)." was deducted from your Debit Card";
                         $credit = $req->amounttosend;
                         $debit = 0;
-                        $reference_code = $req->paymentToken;
+                        $reference_code = $referenced_code;
                         $balance = 0;
                         $trans_date = date('Y-m-d');
                         $status = "Delivered";
@@ -1078,7 +1078,7 @@ else{
                                 $activity = "Bank Verification (BVN) Charge of ".$req->currencyCode.''.number_format(15, 2)." was deducted from your Wallet";
                                 $credit = 0;
                                 $debit = 15;
-                                $reference_code = "wallet-".date('dmY').time();
+                                $reference_number = "wallet-".date('dmY').time();
                                 $balance = 0;
                                 $trans_date = date('Y-m-d');
                                 $status = "Delivered";
@@ -1087,9 +1087,9 @@ else{
                                 $statement_route = "wallet";
 
                                 // Senders statement
-                                // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                                // $this->insStatement($thisuser->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
 
-                                // $this->getfeeTransaction($reference_code, $thisuser->ref_code, 15, 0, 15);
+                                // $this->getfeeTransaction($reference_number, $thisuser->ref_code, 15, 0, 15);
 
                                 $sendMsg = $activity.'. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
 
@@ -1116,7 +1116,7 @@ else{
 
                         $this->createNotification($thisuser->ref_code, $sendMsg);
 
-                        $this->keepRecord($reference_code, $message, "Success", $gateway, $thisuser->country);
+                        // $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country);
 
                         Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg.". This is a test environment");
 
@@ -1703,13 +1703,14 @@ else{
                         if($getTransactionCode->status == true){
 
                             $gateway = "Paystack";
-                            $reference_code = $getTransactionCode->data->id;
+                            $referenced_code = $req->paymentToken;
                         }
                         else{
                             $gateway = "Google Pay";
-                            $reference_code = $req->paymentToken;
+                            $referenced_code = $req->paymentToken;
 
                         }
+
                         
                         
                         // Update Wallet Balance
@@ -1721,7 +1722,7 @@ else{
                         $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to Wallet including a fee charge of ".$req->currencyCode.''.number_format($req->commissiondeduct, 2)." was deducted from your Debit Card";
                         $credit = $req->amounttosend;
                         $debit = 0;
-                        $reference_code = $req->paymentToken;
+                        $reference_code = $referenced_code;
                         $balance = 0;
                         $trans_date = date('Y-m-d');
                         $status = "Delivered";
@@ -1771,7 +1772,7 @@ else{
                                 $activity = "Bank Verification (BVN) Charge of ".$req->currencyCode.''.number_format(15, 2)." was deducted from your Wallet";
                                 $credit = 0;
                                 $debit = 15;
-                                $reference_code = "wallet-".date('dmY').time();
+                                $reference_number = "wallet-".date('dmY').time();
                                 $balance = 0;
                                 $trans_date = date('Y-m-d');
                                 $status = "Delivered";
@@ -1780,9 +1781,9 @@ else{
                                 $statement_route = "wallet";
 
                                 // Senders statement
-                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                                $this->insStatement($thisuser->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
 
-                                $this->getfeeTransaction($reference_code, $thisuser->ref_code, 15, 0, 15);
+                                $this->getfeeTransaction($reference_number, $thisuser->ref_code, 15, 0, 15);
 
                                 $sendMsg = $activity.'. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
 
@@ -1809,7 +1810,7 @@ else{
 
                         $this->createNotification($thisuser->ref_code, $sendMsg);
 
-                        $this->keepRecord($reference_code, $message, "Success", $gateway, $thisuser->country);
+                        $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country);
 
                         Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 

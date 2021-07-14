@@ -92,9 +92,16 @@ class MoneyTransferController extends Controller
             $amount = $req->amount;
             // Get Commission
 
-            Log::info("Structure: ".$req->structure." \nMethod: ".$req->method." \nCountry: ".$thisuser->country);
+            if($req->method == "Debit Card/Bank"){
+                $method = "Debit Card";
+            }
+            else{
+                $method = $req->method;
+            }
+
+            Log::info("Structure: ".$req->structure." \nMethod: ".$method." \nCountry: ".$thisuser->country);
             
-            $data = TransactionCost::where('structure', $req->structure)->where('method', $req->method)->where('country', $thisuser->country)->first();
+            $data = TransactionCost::where('structure', $req->structure)->where('method', $method)->where('country', $thisuser->country)->first();
 
             if(isset($data) == true){
 
@@ -117,7 +124,7 @@ class MoneyTransferController extends Controller
             }
             else{
 
-                $data = TransactionCost::where('structure', $req->structure)->where('method', $req->method)->first();
+                $data = TransactionCost::where('structure', $req->structure)->where('method', $method)->first();
 
                 $x = ($data->variable / 100) * $req->amount;
 

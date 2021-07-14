@@ -58,14 +58,23 @@ trait PaystackPayment{
 
         $username = explode(" ", $name);
 
+        if(is_array($username)){
+            $firstname = $username[1];
+            $lastname = $username[0];
+        }
+        else{
+            $firstname = $name;
+            $lastname = "";
+        }
+
         $this->baseUrl = "https://api.paystack.co/bvn/match";
 
         $this->curlPost = [
             "bvn" => $bvn,
             "account_number" => $account_number,
             "bank_code" => $bank_code,
-            "first_name" => $username[1],
-            "last_name" => $username[0]
+            "first_name" => $firstname,
+            "last_name" => $lastname
         ];
 
         $data = $this->doCurlPost();

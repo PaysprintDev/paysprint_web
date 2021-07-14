@@ -90,9 +90,8 @@ input[type="radio"] {
                                                 <th>Address</th>
                                                 <th>Phone</th>
                                                 <th>Website</th>
-                                                <th>City</th>
-                                                <th>Province/State</th>
-                                                <th>Country</th>
+                                                <th>Location</th>
+                                                <th>Description</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -121,13 +120,10 @@ input[type="radio"] {
                                                         {{ ($merchantData->website != null) ? $merchantData->website : "N/A" }}
                                                     </td>
                                                     <td>
-                                                        {{ $merchantData->city }}
+                                                        {{ $merchantData->city.', '.$merchantData->state }}
                                                     </td>
                                                     <td>
-                                                        {{ $merchantData->state }}
-                                                    </td>
-                                                    <td>
-                                                        {{ $merchantData->country }}
+                                                        {{ ($merchantData->description != null) ? $merchantData->description : "N/A" }}
                                                     </td>
                                                     
                                                     
@@ -138,7 +134,7 @@ input[type="radio"] {
                                             @else
 
                                             <tr>
-                                                <td align="center" colspan="8">
+                                                <td align="center" colspan="7">
                                                     No record in your country
                                                 </td>
                                             </tr>
