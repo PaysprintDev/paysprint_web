@@ -9,9 +9,10 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Support\Responsable;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 
-class TransactionExport implements FromCollection
+class TransactionExport implements FromCollection, ShouldAutoSize
 {
     /**
     * @return \Illuminate\Support\Collection
