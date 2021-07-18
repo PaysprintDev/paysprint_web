@@ -71,17 +71,27 @@
                                     $accountType = $user->accountType;
                                 @endphp
 
-                                @else
+                            @else
 
                                 @if($annonUser = \App\AnonUsers::where('ref_code', $data->ref_code)->first())
 
-                                  @php
-                                      $name = $annonUser->name;
-                                      $email = $annonUser->email;
-                                      $accountType = $annonUser->accountType;
-                                  @endphp
+                                    @php
+                                        $name = $annonUser->name;
+                                        $email = $annonUser->email;
+                                        $accountType = $annonUser->accountType;
+                                    @endphp
+
+                                  @else
+
+                                    @php
+                                        $name = "-";
+                                        $email = "-";
+                                        $accountType = "-";
+                                    @endphp
 
                                 @endif
+
+                              
 
 
                             @endif

@@ -302,7 +302,6 @@
                         
                     @endif
 
-
                     <hr>
                         <div class="table table-responsive">
                             {{-- <label>Receiver Information/Detail</label> --}}

@@ -187,7 +187,7 @@ class Controller extends BaseController
 
         try{
             // Get Minimum Withdrawal
-            $minimumBalance = TransactionCost::where('method', 'Wallet Minimum Balance')->where('country', $country)->first();
+            $minimumBalance = TransactionCost::where('method', 'Minimum Balance')->where('country', $country)->first();
 
             if(isset($minimumBalance) == true){
                 $data = $minimumBalance->fixed;

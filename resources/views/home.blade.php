@@ -393,7 +393,7 @@
 
                                     <div class="row">
                                         <div class="col-md-10">
-                                             <a href="{{ route('Add card') }}">Add Credit Card/Prepaid Card/Bank Account </a>
+                                             <a href="{{ route('payment gateway', 'gateway=PaySprint') }}">Add Credit Card/Prepaid Card/Bank Account </a>
                                         </div>
                                         <div class="col-md-2">
                                             {!! count($data['getCard']) > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}

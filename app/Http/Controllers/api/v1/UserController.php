@@ -83,7 +83,7 @@ class UserController extends Controller
             // Check Anon Users
             $newcustomer = AnonUsers::where('email', $request->email)->first();
 
-            if($mycode[0]->callingCodes[0] != null){
+            if(isset($mycode[0]->callingCodes[0])){
                 $phoneCode = $mycode[0]->callingCodes[0];
             }
             else{
@@ -738,7 +738,8 @@ class UserController extends Controller
     public function bvnVerification(Request $req){
         $response = $this->verifyBVN($req->bvn, $req->account_number, $req->bank_code, $req->account_name);
 
-        if($response->status == true && $response->data->account_number == true){
+        try {
+            if($response->status == true && $response->data->account_number == true){
 
             $bank = ListOfBanks::where('code', $req->bank_code)->first();
             
@@ -755,9 +756,14 @@ class UserController extends Controller
             $status = 400;
         }
 
-        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+            $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
-        return $this->returnJSON($resData, $status);
+            return $this->returnJSON($resData, $status);
+        } catch (\Throwable $th) {
+            Log::critical("BVN Verification Error: ".$th->getMessage());
+        }
+
+        
     }
 
 

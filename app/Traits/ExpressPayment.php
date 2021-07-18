@@ -141,7 +141,6 @@ trait ExpressPayment{
         
         $data = $this->doPost();
 
-        dd($data);
 
         return $data;
 
@@ -163,44 +162,137 @@ trait ExpressPayment{
     }
 
     // Process Transaction
-    public function processTransaction($postRequest){
+    public function processTransaction($postRequest, $bearerToken){
 
-        Log::info($postRequest);
+        $checks = $this->checkAccount($postRequest, $bearerToken);
 
-        $this->Base_Url = env('EXPRESS_PAY_ENDPOINT_URL').'/process-transaction';
+        // Log::info($postRequest);
+
+
+        if($checks == true){
+                $this->Base_Url = env('EXPRESS_PAY_ENDPOINT_URL').'/process-transaction';
+                $transaction = [];
+
+                for ($i=0; $i < count($postRequest['fieldName']); $i++) { 
+
+
+                        
+                    if($postRequest['fieldName'] != null){
+                        
+                        $transaction []= [
+                            'fieldName' => $postRequest['fieldName'][$i],
+                            'fieldValue' => $postRequest['fieldValue'][$i],
+                            'fieldControlType' => $postRequest['fieldControlType'][$i],
+                        ];
+                    }
+                    else{
+                        $transaction []= [
+                            'fieldName' => $postRequest['fieldName'],
+                            'fieldValue' => $postRequest['fieldValue'],
+                            'fieldControlType' => $postRequest['fieldControlType'],
+                        ];
+                    }
+                }   
+
+
+
+                $this->curlPost = json_encode([
+                    'billerCode' => $postRequest['billerCode'],
+                    'productId' => $postRequest['productId'],
+                    'transDetails' => $transaction,
+                ]);
+
+
+                
+                $data = $this->doPost();
+
+                return $data;
+        }
+        else{
+
+            $responseCode = 00;
+            $responseMessage = "Unable to continue with your transaction amount.";
+            $status = 400;
+
+            $data = [
+                'responseCode' => $responseCode,
+                'responseMessage' => $responseMessage,
+                'status' => $status
+            ];
+
+            $result = json_encode($data);
+
+            return json_decode($result);
+
+        }
+        
+
+    }
+
+
+    public function checkAccount($data, $bearerToken){
+        $thisuser = User::where('api_token', $bearerToken)->first();
+
+        $walletBalance = $thisuser->wallet_balance;
+
         $transaction = [];
 
-        for ($i=0; $i < count($postRequest['fieldName']); $i++) { 
-                
-            if($postRequest['fieldName'] != null){
-                $transaction []= [
-                    'fieldName' => $postRequest['fieldName'][$i],
-                    'fieldValue' => $postRequest['fieldValue'][$i],
-                    'fieldControlType' => $postRequest['fieldControlType'][$i],
-                ];
+
+        $inputamount = $data['commissiondeduct'] + $data['amounttosend'];
+
+
+        for ($i=0; $i < count($data['fieldName']); $i++) { 
+
+            if($walletBalance >= $inputamount){
+
+                    if($data['fieldName'] != null){
+
+                    if($data['fieldName'][$i] == "Amount" || $data['fieldName'][$i] == "amount"){
+
+                        if($inputamount >= $data['fieldValue'][$i]){
+                            $response = true;
+                        }
+                        else{
+                            $response = false;
+                        }
+
+                    }
+
+                    // For DSTV and GOTV
+
+                    if($data['billerCode'] == "DSTV2" || $data['billerCode'] == "GOTV2" || $data['billerCode'] == "startimes"){
+
+                        if($data['fieldName'][$i] == "Select Package (Amount)" || $data['fieldName'][$i] == "Select Package" || $data['fieldName'][$i] == "Product"){
+                            
+                            if($inputamount >= $data['fieldValue'][$i]){
+                                $response = true;
+                            }
+                            else{
+                                $response = false;
+                            }
+                        }
+
+                    }
+
+                }
+                else{
+                    $response = false;
+                }
             }
             else{
-                $transaction []= [
-                    'fieldName' => $postRequest['fieldName'],
-                    'fieldValue' => $postRequest['fieldValue'],
-                    'fieldControlType' => $postRequest['fieldControlType'],
-                ];
+                $response = false;
             }
-        }   
+
+                
+            
 
 
-
-        $this->curlPost = json_encode([
-            'billerCode' => $postRequest['billerCode'],
-            'productId' => $postRequest['productId'],
-            'transDetails' => $transaction,
-        ]);
+        }
 
 
-        
-        $data = $this->doPost();
+        return $response;
 
-        return $data;
+
     }
 
     public function doGet(){

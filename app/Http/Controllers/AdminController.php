@@ -1574,7 +1574,7 @@ class AdminController extends Controller
     }
 
     public function cardCategory(){
-        $data = AddCard::select('users.*', 'add_card.*')->join('users', 'users.id', '=', 'add_card.user_id')->orderBy('add_card.created_at', 'DESC')->groupBy('users.name')->get();
+        $data = AddCard::select('users.*', 'add_card.*')->join('users', 'users.id', '=', 'add_card.user_id')->where('users.flagged', 0)->orderBy('add_card.created_at', 'DESC')->groupBy('users.name')->get();
 
         return $data;
     }
@@ -10152,13 +10152,13 @@ class AdminController extends Controller
         $data = $user->where('id', $req->id)->first();
 
 
-            $user->where('id', $req->id)->update(['approval' => 1, 'accountLevel' => 3, 'disableAccount' => 'off']);
+            $user->where('id', $req->id)->update(['approval' => 1, 'accountLevel' => 2, 'disableAccount' => 'off']);
 
-            $subject = 'Account information approved';
+            $subject = 'Your account is currently under review';
             
-            $message = "We have completed the review of the Identification provided on your PaySprint Account. Your PaySprint account has been enabled and you will be able to Send Money, Pay Invoice and Request for withdrawal of funds from your PaySprint Wallet from  the Mobile and Web platforms. Thank you for your interest in PaySprint. compliance@paysprint.net";
+            $message = "Thanks for opening a PaySprint. Your account is currently under review. We would contact you on the result of the review shortly. Thanks for choosing PaySprint. <br> Compliance Team @ PaySprint";
 
-            $resData = ['res' => 'Account information approved', 'message' => 'success', 'title' => 'Great'];
+            $resData = ['res' => 'Account under review', 'message' => 'success', 'title' => 'Great'];
 
             // Send Mail to Receiver
             $this->name = $data->name;
@@ -10877,7 +10877,7 @@ class AdminController extends Controller
 
     public function userActivity(){
 
-        $data = Notifications::orderBy('created_at', 'DESC')->get();
+        $data = Notifications::orderBy('created_at', 'DESC')->take(2000)->get();
 
         return $data;
     }
@@ -10885,7 +10885,7 @@ class AdminController extends Controller
 
     public function gatewaypayActivity($gateway){
 
-        $data = MonerisActivity::where('gateway', 'LIKE', '%'.$gateway.'%')->orderBy('created_at', 'DESC')->get();
+        $data = MonerisActivity::where('gateway', 'LIKE', '%'.$gateway.'%')->orderBy('created_at', 'DESC')->take(2000)->get();
 
         return $data;
     }

@@ -118,7 +118,9 @@ s0.parentNode.insertBefore(s1,s0);
 
 <script>
   $(document).ready(function(){
-    $('#example4').DataTable();
+    $('#example4').DataTable({
+      'pageLength'   : 200,
+    });
     $('#message').summernote({
       height: 300,
     });
@@ -127,18 +129,22 @@ s0.parentNode.insertBefore(s1,s0);
 
 <script>
   $(function () {
-    $('#example1').DataTable();
+    $('#example1').DataTable({
+      'pageLength'   : 200,
+    });
     $('#example2').DataTable({
       'paging'      : true,
       'lengthChange': false,
       'searching'   : false,
       'ordering'    : true,
       'info'        : true,
-      'autoWidth'   : false
+      'autoWidth'   : false,
+      'pageLength'   : 200,
     });
 
     $('#example3').DataTable( {
       'paging'      : true,
+      'pageLength'   : 200,
       'lengthChange': true,
       'searching'   : true,
       'ordering'    : true,
@@ -3628,6 +3634,7 @@ function checkDetail(val){
 
                            datainfo += datarec;
                         });
+                        
 
                         
 

@@ -31,8 +31,8 @@
           <div class="col-11 col-md-10 col-lg-7 col-xl-6 order-lg-1" data-aos="fade-right" data-aos-duration="500" data-aos-once="true">
             <div class="hero-content mt-11 mt-lg-0">
               <h4 class="pre-title gr-text-12 text-red text-uppercase mb-7" style="font-size: 22px;">Let’s lift your business</h4>
-              <h1 class="title gr-text-2 mb-8" style="font-size:60px">Create and Send Professional Invoices for Free!</h1>
-              <p class="gr-text-8 mb-11 pr-md-12">Create invoices at the click of a button and accept payments from customers with ease, anytime, anywhere!</p>
+              <h1 class="title gr-text-2 mb-8" style="font-size:60px">Connect with Customers nearby for Free!</h1>
+              <p class="gr-text-8 mb-11 pr-md-12">Create invoices at the click of a button and accept payments with ease, anytime, anywhere!</p>
 
               
 

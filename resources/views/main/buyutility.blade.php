@@ -251,7 +251,7 @@ input[type="radio"] {
                                                         <select name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control">
                                                             <option value="">{{ $dataProduct->FieldName }}</option>
                                                             @foreach ($dataProduct->ListItems as $listItem)
-                                                                <option value="{{ $listItem->ItemType }}">{{ $listItem->ItemName.': '.Auth::user()->currencySymbol.$listItem->Amount.' ('.$listItem->ItemDesc.')' }}</option>
+                                                                <option value="{{ $listItem->Amount }}">{{ $listItem->ItemName.': '.Auth::user()->currencySymbol.$listItem->Amount.' ('.$listItem->ItemDesc.')' }}</option>
                                                             @endforeach
                                                         </select>
                                                         
@@ -280,8 +280,9 @@ input[type="radio"] {
 
 
                                     @endforeach
+                                    
 
-                                    @if (Request::get('billername') == "DSTV2" || Request::get('billername') == "ABUJA POSTPAID" || Request::get('billername') == "ABUJA PREPAID" || Request::get('billername') == "EKO ELECTRIC POSTPAID" || Request::get('billername') == "EKO ELECTRIC PREPAID" || Request::get('billername') == "GOTV2" || Request::get('billername') == "IKEJA ELECTRIC POSTPAID" || Request::get('billername') == "IKEJA ELECTRIC PREPAID" || Request::get('billername') == "JOS ELECTRIC POSTPAID" || Request::get('billername') == "JOS ELECTRIC PREPAID" || Request::get('billername') == "KADUNA ELECTRIC POSTPAID" || Request::get('billername') == "KADUNA ELECTRIC PREPAID" || Request::get('billername') == "KANO POSTPAID" || Request::get('billername') == "KANO PREPAID" || Request::get('billername') == "PHED2")
+                                    @if (Request::get('billername') == "DSTV2" || Request::get('billername') == "GOTV2" || Request::get('billername') == "ABUJA POSTPAID" || Request::get('billername') == "ABUJA PREPAID" || Request::get('billername') == "EKO ELECTRIC POSTPAID" || Request::get('billername') == "EKO ELECTRIC PREPAID" || Request::get('billername') == "GOTV2" || Request::get('billername') == "IKEJA ELECTRIC POSTPAID" || Request::get('billername') == "IKEJA ELECTRIC PREPAID" || Request::get('billername') == "JOS ELECTRIC POSTPAID" || Request::get('billername') == "JOS ELECTRIC PREPAID" || Request::get('billername') == "KADUNA ELECTRIC POSTPAID" || Request::get('billername') == "KADUNA ELECTRIC PREPAID" || Request::get('billername') == "KANO POSTPAID" || Request::get('billername') == "KANO PREPAID" || Request::get('billername') == "PHED2" || Request::get('billername') == "STARTIMES")
                                         <hr>
                                         <button class="btn btn-success" onclick="getaccountLookup()" id="verifyAccount">Verify Account</button>
                                         <hr>
@@ -408,6 +409,8 @@ input[type="radio"] {
 
                                 </form>
                             </div>
+
+                            
 
                             @else
 

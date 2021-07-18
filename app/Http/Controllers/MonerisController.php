@@ -1071,9 +1071,13 @@ else{
                             $checkBVN = $this->bvnVerificationCharge($req->bearerToken());
 
                             if($checkBVN == "charge"){
+
+                                $getUser = User::where('api_token', $req->bearerToken())->first();
+                                
+
                                 // Update Wallet Balance
-                                $walletBal = $thisuser->wallet_balance - 15;
-                                // User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal, 'bvn_verification' => 2]);
+                                $walletBalance = $getUser->wallet_balance - 15;
+                                // User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBalance, 'bvn_verification' => 2]);
 
                                 $activity = "Bank Verification (BVN) Charge of ".$req->currencyCode.''.number_format(15, 2)." was deducted from your Wallet";
                                 $credit = 0;
@@ -1091,16 +1095,16 @@ else{
 
                                 // $this->getfeeTransaction($reference_number, $thisuser->ref_code, 15, 0, 15);
 
-                                $sendMsg = $activity.'. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+                                $sendMsg = $activity.'. You now have '.$req->currencyCode.' '.number_format($walletBalance, 2).' balance in your account';
 
-                                $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                $userPhone = User::where('email', $getUser->email)->where('telephone', 'LIKE', '%+%')->first();
                                                         
                                 if(isset($userPhone)){
 
-                                    $sendPhone = $thisuser->telephone;
+                                    $sendPhone = $getUser->telephone;
                                 }
                                 else{
-                                    $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+                                    $sendPhone = "+".$getUser->code.$getUser->telephone;
                                 }
 
 
@@ -1765,9 +1769,11 @@ else{
                             $checkBVN = $this->bvnVerificationCharge($req->bearerToken());
 
                             if($checkBVN == "charge"){
+
+                                $getUser = User::where('api_token', $req->bearerToken())->first();
                                 // Update Wallet Balance
-                                $walletBal = $thisuser->wallet_balance - 15;
-                                User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal, 'bvn_verification' => 2]);
+                                $walletBalance = $getUser->wallet_balance - 15;
+                                User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBalance, 'bvn_verification' => 2]);
 
                                 $activity = "Bank Verification (BVN) Charge of ".$req->currencyCode.''.number_format(15, 2)." was deducted from your Wallet";
                                 $credit = 0;
@@ -1777,7 +1783,7 @@ else{
                                 $trans_date = date('Y-m-d');
                                 $status = "Delivered";
                                 $action = "Wallet debit";
-                                $regards = $thisuser->ref_code;
+                                $regards = $getUser->ref_code;
                                 $statement_route = "wallet";
 
                                 // Senders statement
@@ -1785,7 +1791,7 @@ else{
 
                                 $this->getfeeTransaction($reference_number, $thisuser->ref_code, 15, 0, 15);
 
-                                $sendMsg = $activity.'. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+                                $sendMsg = $activity.'. You now have '.$req->currencyCode.' '.number_format($walletBalance, 2).' balance in your account';
 
                                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
                                                         
@@ -3935,7 +3941,6 @@ else{
 
     public function getCommissionConversion(Request $req){
 
-
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
         $thisData = $this->getCommissionData($req->amount, $req->billerCode, $thisuser->country);
@@ -3971,8 +3976,6 @@ else{
     
     public function payUtilityBills(Request $req){
 
-        // dd($req->all());
-
         // Payment for UTILITY
         
 
@@ -4000,7 +4003,7 @@ else{
                         // Insufficient amount for withdrawal
 
                         $data = [];
-                        $message = "Insufficient amount to withdraw";
+                        $message = "Insufficient amount to complete transaction";
                         $status = 400;
 
                         Log::info('Oops!, '.$thisuser->name.' has '.$message);
@@ -4018,7 +4021,7 @@ else{
                         // Cannot withdraw minimum balance
 
                         $data = [];
-                        $message = "Your wallet balance must be more than ".$thisuser->currencyCode.' '.number_format($minBal, 2)." before you can make withdrawal.";
+                        $message = "Your wallet balance must be more than ".$thisuser->currencyCode.' '.number_format($minBal, 2)." before you can use the utility bill.";
                         $status = 400;
 
                         Log::info('Oops!, '.$thisuser->name.' has '.$message);
@@ -4031,89 +4034,111 @@ else{
                                     if(Hash::check($req->transaction_pin, $thisuser->transaction_pin)){
 
                                         // Load Utility Bill.
-                                        $billPayResponse = $this->processTransaction($req->all());
-
-                                        if(isset($billPayResponse)){
-
-                                            $transaction_id = $billPayResponse->transRef;
+                                        $billPayResponse = $this->processTransaction($req->all(), $req->bearerToken());
 
 
-                                                // Proceed to Withdrawal
+                                        if($billPayResponse->responseCode == 00){
 
-                                            $walletBal = $thisuser->wallet_balance - $req->amounttosend;
+                                            if(isset($billPayResponse->status) && $billPayResponse->status == 400){
 
+                                                $data = [];
+                                                $message = $billPayResponse->responseMessage;
+                                                $status = 400;
 
-                                            User::where('api_token', $req->bearerToken())->update([
-                                                'wallet_balance' => $walletBal
-                                            ]);
+                                                Log::info('Oops!, '.$thisuser->name.' has '.$message);
+                                            }
+                                            else{
 
-                                            // Update Statement
+                                                if(isset($billPayResponse)){
 
-                                            $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
-
-                                            $activity = "Withdraw ".$thisuser->currencyCode.''.number_format($req->amounttosend, 2)." from Wallet for ".strtoupper($billerName);
-                                            $credit = 0;
-                                            $debit = $req->amounttosend;
-                                            // $reference_code = $response->responseData['ReceiptId'];
-                                            $reference_code = $transaction_id;
-                                            $balance = 0;
-                                            $trans_date = date('Y-m-d');
-                                            $status = "Delivered";
-                                            $action = "Wallet debit";
-                                            $regards = $thisuser->ref_code;
-                                            $statement_route = "wallet";
-
-                                            // Senders statement
-                                            $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                                                    $transaction_id = $billPayResponse->transRef;
 
 
-                                            $this->name = $thisuser->name;
-                                            $this->email = $thisuser->email;
-                                            $this->subject = $thisuser->currencyCode.' '.number_format($req->amounttosend, 2)." has been Withdrawn from your Wallet with PaySprint";
+                                                        // Proceed to Withdrawal
 
-                                            $this->message = '<p>Recharge of '.strtoupper($billerName).' for a sum of '.$thisuser->currencyCode.' '.number_format($req->amounttosend, 2).' from your PaySprint wallet is successful. </p><p>You now have <strong>'.$thisuser->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your wallet.</p>';
+                                                    $walletBal = $thisuser->wallet_balance - $req->amounttosend;
 
-                                            
 
-                                            $sendMsg = 'Recharge of '.strtoupper($billerName).' for a sum of '.$thisuser->currencyCode.' '.number_format($req->amounttosend, 2).' from your PaySprint wallet is successful. You now have '.$thisuser->currencyCode.' '.number_format($walletBal, 2).' balance in your wallet.';
+                                                    User::where('api_token', $req->bearerToken())->update([
+                                                        'wallet_balance' => $walletBal
+                                                    ]);
 
-                                                $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-                                        
-                                                if(isset($userPhone)){
+                                                    // Update Statement
 
-                                                    $sendPhone = $thisuser->telephone;
+                                                    $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
+
+                                                    $activity = "Withdraw ".$thisuser->currencyCode.''.number_format($req->amounttosend, 2)." from Wallet for ".strtoupper($billerName);
+                                                    $credit = 0;
+                                                    $debit = $req->amounttosend;
+                                                    // $reference_code = $response->responseData['ReceiptId'];
+                                                    $reference_code = $transaction_id;
+                                                    $balance = 0;
+                                                    $trans_date = date('Y-m-d');
+                                                    $status = "Delivered";
+                                                    $action = "Wallet debit";
+                                                    $regards = $thisuser->ref_code;
+                                                    $statement_route = "wallet";
+
+                                                    // Senders statement
+                                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+
+
+                                                    $this->name = $thisuser->name;
+                                                    $this->email = $thisuser->email;
+                                                    $this->subject = $thisuser->currencyCode.' '.number_format($req->amounttosend, 2)." has been Withdrawn from your Wallet with PaySprint";
+
+                                                    $this->message = '<p>'.$billPayResponse->responseMessage.'</p><br><p>Recharge of '.strtoupper($billerName).' for a sum of '.$thisuser->currencyCode.' '.number_format($req->amounttosend, 2).' from your PaySprint wallet is successful. </p><p>You now have <strong>'.$thisuser->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your wallet.</p>';
+
+                                                    
+
+                                                    $sendMsg = $billPayResponse->responseMessage.' .Recharge of '.strtoupper($billerName).' for a sum of '.$thisuser->currencyCode.' '.number_format($req->amounttosend, 2).' from your PaySprint wallet is successful. You now have '.$thisuser->currencyCode.' '.number_format($walletBal, 2).' balance in your wallet.';
+
+                                                        $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                
+                                                        if(isset($userPhone)){
+
+                                                            $sendPhone = $thisuser->telephone;
+                                                        }
+                                                        else{
+                                                            $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+                                                        }
+
+
+                                                    $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                                                    $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amounttosend, $req->commissiondeduct, $req->amounttosend);
+
+
+                                                    $this->sendMessage($sendMsg, $sendPhone);
+
+                                                    $this->sendEmail($this->email, "Fund remittance");
+
+                                                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                                    $status = 200;
+
+                                                    $message = $sendMsg;
+
+                                                    Log::info('Congratulations!, '.$thisuser->name.' '.$message);
                                                 }
                                                 else{
-                                                    $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+
+                                                    $data = [];
+                                                    $message = "Something went wrong!. Please try again later.";
+                                                    $status = 400;
+
+                                                    Log::critical("Check EPS end for this error!.");
                                                 }
+                                            }
 
-
-                                            $this->createNotification($thisuser->ref_code, $sendMsg);
-
-                                            $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amounttosend, $req->commissiondeduct, $req->amounttosend);
-
-
-                                            $this->sendMessage($sendMsg, $sendPhone);
-
-                                            $this->sendEmail($this->email, "Fund remittance");
-
-                                            $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-                                            $status = 200;
-
-                                            $message = $sendMsg;
-
-                                            Log::info('Congratulations!, '.$thisuser->name.' '.$message);
                                         }
                                         else{
 
                                             $data = [];
-                                            $message = "Something went wrong!. Please try again later.";
+                                            $message = $billPayResponse->responseMessage;
                                             $status = 400;
 
-                                            Log::critical("Check EPS end for this error!.");
+                                            Log::info('Oops!, '.$message);
                                         }
-
-                                        
 
 
                                     }
@@ -4141,86 +4166,108 @@ else{
                                             User::where('api_token', $req->bearerToken())->update(['transaction_pin' => Hash::make($req->transaction_pin)]);
 
                                             // Load Utility Bill.
-                                            $billPayResponse = $this->processTransaction($req->all());
+                                            $billPayResponse = $this->processTransaction($req->all(), $req->bearerToken());
 
-                                            if(isset($billPayResponse)){
-
-                                                $transaction_id = $billPayResponse->transRef;
+                                            if($billPayResponse->responseCode == 00){
 
 
-                                                $walletBal = $thisuser->wallet_balance - $req->amounttosend;
+                                                    if(isset($billPayResponse->status) && $billPayResponse->status == 400){
 
-                                                User::where('api_token', $req->bearerToken())->update([
-                                                    'wallet_balance' => $walletBal
-                                                ]);
+                                                        $data = [];
+                                                        $message = $billPayResponse->responseMessage;
+                                                        $status = 400;
 
-                                                // Update Statement
+                                                        Log::info('Oops!, '.$thisuser->name.' has '.$message);
+                                                    }
+                                                    else{
 
-                                                $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
+                                                        if(isset($billPayResponse)){
 
-                                                $activity = "Withdraw ".$thisuser->currencyCode.''.number_format($req->amounttosend, 2)." from Wallet for ".strtoupper($billerName);
-                                                $credit = 0;
-                                                $debit = $req->amounttosend;
-                                                // $reference_code = $response->responseData['ReceiptId'];
-                                                $reference_code = $transaction_id;
-                                                $balance = 0;
-                                                $trans_date = date('Y-m-d');
-                                                $status = "Delivered";
-                                                $action = "Wallet debit";
-                                                $regards = $thisuser->ref_code;
-                                                $statement_route = "wallet";
-
-                                                // Senders statement
-                                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
-
-                                                $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                                        $transaction_id = $billPayResponse->transRef;
 
 
-                                                $this->name = $thisuser->name;
-                                                $this->email = $thisuser->email;
-                                                $this->subject = $req->currencyCode.' '.number_format($req->amounttosend, 2)." has been Withdrawn from your Wallet with PaySprint";
+                                                        $walletBal = $thisuser->wallet_balance - $req->amounttosend;
 
-                                                $this->message = '<p>Recharge of '.strtoupper($billerName).' for a sum of '.$thisuser->currencyCode.' '.number_format($req->amounttosend, 2).' from your PaySprint wallet is successful. </p><p>You now have <strong>'.$thisuser->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your wallet.</p>';
+                                                        User::where('api_token', $req->bearerToken())->update([
+                                                            'wallet_balance' => $walletBal
+                                                        ]);
 
-                                                $sendMsg = 'Recharge of '.strtoupper($billerName).' for a sum of '.$thisuser->currencyCode.' '.number_format($req->amounttosend, 2).' from your PaySprint wallet is successful. You now have '.$thisuser->currencyCode.' '.number_format($walletBal, 2).' balance in your wallet.';
+                                                        // Update Statement
 
-                                                $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-                                                    
-                                                if(isset($userPhone)){
+                                                        $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                                                    $sendPhone = $thisuser->telephone;
+                                                        $activity = "Withdraw ".$thisuser->currencyCode.''.number_format($req->amounttosend, 2)." from Wallet for ".strtoupper($billerName);
+                                                        $credit = 0;
+                                                        $debit = $req->amounttosend;
+                                                        // $reference_code = $response->responseData['ReceiptId'];
+                                                        $reference_code = $transaction_id;
+                                                        $balance = 0;
+                                                        $trans_date = date('Y-m-d');
+                                                        $status = "Delivered";
+                                                        $action = "Wallet debit";
+                                                        $regards = $thisuser->ref_code;
+                                                        $statement_route = "wallet";
+
+                                                        // Senders statement
+                                                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+
+                                                        $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+
+
+                                                        $this->name = $thisuser->name;
+                                                        $this->email = $thisuser->email;
+                                                        $this->subject = $req->currencyCode.' '.number_format($req->amounttosend, 2)." has been Withdrawn from your Wallet with PaySprint";
+
+                                                        $this->message = '<p>'.$billPayResponse->responseMessage.'</p><br><p>Recharge of '.strtoupper($billerName).' for a sum of '.$thisuser->currencyCode.' '.number_format($req->amounttosend, 2).' from your PaySprint wallet is successful. </p><p>You now have <strong>'.$thisuser->currencyCode.' '.number_format($walletBal, 2).'</strong> balance in your wallet.</p>';
+
+                                                        $sendMsg = $billPayResponse->responseMessage.' .Recharge of '.strtoupper($billerName).' for a sum of '.$thisuser->currencyCode.' '.number_format($req->amounttosend, 2).' from your PaySprint wallet is successful. You now have '.$thisuser->currencyCode.' '.number_format($walletBal, 2).' balance in your wallet.';
+
+                                                        $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                            
+                                                        if(isset($userPhone)){
+
+                                                            $sendPhone = $thisuser->telephone;
+                                                        }
+                                                        else{
+                                                            $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+                                                        }
+
+
+                                                        $this->createNotification($thisuser->ref_code, $sendMsg);
+
+
+                                                        $this->sendMessage($sendMsg, $sendPhone);
+
+                                                        $this->sendEmail($this->email, "Fund remittance");
+
+
+                                                        $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+
+                                                        $data = $userInfo;
+                                                        $status = 200;
+                                                        $message = $sendMsg;
+
+                                                        Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$message);
+                                                    }
+                                                    else{
+
+                                                        $data = [];
+                                                        $message = "Something went wrong!. Please try again later.";
+                                                        $status = 400;
+
+                                                        Log::critical("Check EPS end for this error!.");
+                                                    }
+
                                                 }
-                                                else{
-                                                    $sendPhone = "+".$thisuser->code.$thisuser->telephone;
-                                                }
 
-
-                                                $this->createNotification($thisuser->ref_code, $sendMsg);
-
-
-                                                $this->sendMessage($sendMsg, $sendPhone);
-
-                                                $this->sendEmail($this->email, "Fund remittance");
-
-
-                                                $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-
-                                                $data = $userInfo;
-                                                $status = 200;
-                                                $message = $sendMsg;
-
-                                                Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$message);
                                             }
                                             else{
-
                                                 $data = [];
-                                                $message = "Something went wrong!. Please try again later.";
+                                                $message = $billPayResponse->responseMessage;
                                                 $status = 400;
 
-                                                Log::critical("Check EPS end for this error!.");
+                                                Log::info('Oops!, '.$message);
                                             }
-
-                                            
 
 
                                         }

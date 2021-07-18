@@ -110,7 +110,7 @@ input[type="radio"] {
                                                             if(isset($vendor->billerCode)){
                                                                 $billerCode = 'biller='.$vendor->billerCode;
                                                                 $productId = 'productid='.$vendor->productfields[0]->productId;
-                                                                $billerName = 'billername='.$vendor->billerName;
+                                                                $billerName = 'billername='.strtoupper($vendor->billerName);
                                                             }
                                                             else{
                                                                 $billerCode = '';

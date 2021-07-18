@@ -404,7 +404,7 @@ input[type="radio"] {
                                             </div>
                                             <div class="col-md-12 withWallet">
 
-                                                @if (Auth::user()->approval == 1)
+                                                @if (Auth::user()->approval == 3)
                                                     <button type="button" onclick="orgmonerisPay()" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Send Money </button>
                                                 @else
 

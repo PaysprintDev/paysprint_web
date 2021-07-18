@@ -160,7 +160,7 @@ class CardController extends Controller
 
         $validator = Validator::make($req->all(), [
                      'bankName' => 'required|string',
-                     'accountNumber' => 'required|string|unique:add_bank',
+                     'accountNumber' => 'required|string',
                      'accountName' => 'required|string',
                     //  'transitNumber' => 'required|string',
                     //  'branchCode' => 'required|string',
@@ -290,7 +290,7 @@ class CardController extends Controller
 
         $validator = Validator::make($req->all(), [
                      'bankName' => 'required|string',
-                     'accountNumber' => 'required|string|unique:add_bank',
+                     'accountNumber' => 'required|string',
                      'accountName' => 'required|string',
                     //  'transitNumber' => 'required|string',
                     //  'branchCode' => 'required|string',
