@@ -540,7 +540,7 @@ class GooglePaymentController extends Controller
                     }
                     else{
 
-                        if($thisuser->approval == 2 && $thisuser->accountLevel == 3){
+                        if($thisuser->approval < 2 && $thisuser->accountLevel <= 2){
                             $response = 'You cannot send money at the moment because your account is still on review.';
                             $data = [];
                             $message = $response;
@@ -826,7 +826,7 @@ class GooglePaymentController extends Controller
                     }
                     else{
 
-                        if($thisuser->approval == 2 && $thisuser->accountLevel == 3){
+                        if($thisuser->approval < 2 && $thisuser->accountLevel <= 2){
                             $response = 'You cannot send money at the moment because your account is still on review.';
                             $data = [];
                             $message = $response;

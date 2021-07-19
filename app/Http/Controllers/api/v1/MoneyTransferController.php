@@ -571,7 +571,7 @@ class MoneyTransferController extends Controller
             else{
                 
                 
-                if($sender->approval == 2 && $sender->accountLevel == 3){
+                if($sender->approval < 2 && $sender->accountLevel <= 2){
 
                     $status = 404;
 
@@ -771,7 +771,7 @@ class MoneyTransferController extends Controller
             else{
                 
                 
-                if($sender->approval == 2 && $sender->accountLevel == 3){
+                if($sender->approval < 2 && $sender->accountLevel <= 2){
 
                     $status = 404;
 
