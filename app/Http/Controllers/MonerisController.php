@@ -378,7 +378,7 @@ else{
 
                             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                            if($thisuser->approval < 2 && $thisuser->accountLevel <= 2){
+                            if($thisuser->approval == 2 && $thisuser->accountLevel == 3){
 
                                 $response = 'You cannot pay invoice at the moment because your account is still on review.';
 
@@ -679,7 +679,7 @@ else{
 
                             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                            if($thisuser->approval < 2 && $thisuser->accountLevel <= 2){
+                            if($thisuser->approval == 2 && $thisuser->accountLevel == 3){
 
                                 $response = 'You cannot pay invoice at the moment because your account is still on review.';
 
@@ -2418,7 +2418,7 @@ else{
 
                         Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
                     }
-                    elseif($thisuser->approval < 2 && $thisuser->accountLevel <= 2){
+                    elseif($thisuser->approval == 2 && $thisuser->accountLevel == 3){
                         // Cannot withdraw minimum balance
 
                         $data = [];
@@ -3188,7 +3188,7 @@ else{
 
                         Log::info('Oops!, '.$thisuser->name.' has '.$message);
                     }
-                    elseif($thisuser->approval < 2 && $thisuser->accountLevel <= 2){
+                    elseif($thisuser->approval == 2 && $thisuser->accountLevel == 3){
                         // Cannot withdraw minimum balance
 
                         $data = [];
@@ -4008,7 +4008,7 @@ else{
 
                         Log::info('Oops!, '.$thisuser->name.' has '.$message);
                     }
-                    elseif($thisuser->approval < 2 && $thisuser->accountLevel <= 2){
+                    elseif($thisuser->approval == 2 && $thisuser->accountLevel == 3){
                         // Cannot withdraw minimum balance
 
                         $data = [];

@@ -39,8 +39,10 @@ trait AccountNotify{
 
             if(isset($thisuser)){
 
+                Log::info("Detected City: ".$city."\nRegistered City: ".$thisuser->city."\nDetected Country: ".$country."\nRegistered Country: ".$thisuser->country."\nDetected IP Address: ".$ip);
 
-                if($city != $thisuser->city){
+
+                if($ip != $thisuser->ip_address){
 
                     $message = "We detected a login into your account from an unrecognized device on ".date('l', strtotime($date)).", ".$date." at ".date('h:ia')."<br><br><br> Operating System: ".$OS." <br><br> Location: ".$city.", ".$country." (IP: ".$ip."). <br><br> Note: Location is based on internet service provider information. <br><br> If it was you, please disregard this email. <br> If it wasn't you, please <a href='https://paysprint.net/password/reset'>secure your account</a>, as someone else may be accessing it. <br><br> Thanks <br> The PaySprint Security Team <br><br> Please note, PaySprint will never request your login information through email.";
 
@@ -54,7 +56,11 @@ trait AccountNotify{
 
                         $this->message = $message;
 
+                        User::where('email', $thisuser->email)->update(['ip_address' => $ip]);
+
                         $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+
                                                         
                         if(isset($userPhone)){
 

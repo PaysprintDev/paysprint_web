@@ -59,8 +59,8 @@ trait PaystackPayment{
         $username = explode(" ", $name);
 
         if(is_array($username)){
-            $firstname = $username[1];
             $lastname = $username[0];
+            $firstname = $username[1];
         }
         else{
             $firstname = $name;
@@ -76,6 +76,7 @@ trait PaystackPayment{
             "first_name" => $firstname,
             "last_name" => $lastname
         ];
+
 
         $data = $this->doCurlPost();
 

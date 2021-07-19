@@ -64,7 +64,7 @@ class CheckSetupController extends Controller
                 else{
                     $security = "";
                 }
-                if($value->$country == "Nigeria" && $value->bvn_verification == null){
+                if($value->country == "Nigeria" && $value->bvn_verification == null){
                     $bankVerify = "<li>Verify your account with your bank verification number</li>";
                 }
                 else{
@@ -101,7 +101,7 @@ class CheckSetupController extends Controller
             }
 
         } catch (\Throwable $th) {
-            echo "Error: ".$th;
+            Log::critical('Cannot send quick setup mail '.$th->getMessage());
         }
 
 
@@ -749,6 +749,159 @@ class CheckSetupController extends Controller
     public function updateEPSVendor(){
         $data = $this->getVendors();
     }
+
+
+    // Transaction history for the month
+    // public function monthlyTransactionHistory(){
+    //     // Get this month
+    //     $from = date('Y-m-01');
+    //     $nextDay = date('Y-m-28');
+
+    //     $currentMonth = date('F');
+
+    //     $thisuser = User::all();
+
+    //     $table = "";
+    //     $body = "";
+
+    //     foreach($thisuser as $users){
+
+    //         $email = $users->email;
+    //         $walletBalance = $users->wallet_balance;
+    //         $currencyCode = $users->currencyCode;
+
+    //         // Check the statement
+    //         $myStatement = Statement::where('user_id', $email)->whereBetween('trans_date', [$from, $nextDay])->get();
+
+    //         if(count($myStatement)){
+    //             $i = 1;
+    //             foreach ($myStatement as $key => $value) {
+
+    //                 if($value->credit > 0){
+    //                     $amount = "+".$currencyCode.number_format($value->credit, 2);
+    //                 }
+    //                 else{
+    //                     $amount = "-".$currencyCode.number_format($value->debit, 2);
+    //                 }
+
+    //                 $body .= "<tbody><tr><td>".$i++."</td><td>".$value->activity."</td><td>".$amount."</td><td>".$value->trans_date."</td></tr></tbody>";
+
+
+    //             }
+    //         }
+
+    //         $table .= "<table>".$body."</table>";
+            
+            
+    //         echo $table;
+    //         echo "<hr>";
+            
+
+    //     }
+
+
+        
+
+    // }
+
+
+    public function monthlyTransactionHistory(){
+
+    	// Get Statement Information
+    	$getusers = User::inRandomOrder()->orderBy('created_at', 'DESC')->get();
+
+
+    	if(count($getusers) > 0){
+    		$from = date('Y-m-01');
+    		$nextDay = date('Y-m-d');
+
+    		foreach ($getusers as $key => $value) {
+
+                $email = $value->email;
+                
+    			
+
+
+    			$myStatement = Statement::where('user_id', $email)->whereBetween('trans_date', [$from, $nextDay])->orderBy('created_at', 'DESC')->get();
+
+    			if(count($myStatement) > 0){
+    				// Send Mail
+
+                    $walletBalance = $value->wallet_balance;
+                    $currencyCode = $value->currencyCode;
+
+	    			$name = $value->name;
+	    			$subject = "Your monthly statement on PaySprint";
+
+	    			$tabledetails = "";
+		    		$table = "";
+
+	    			foreach ($myStatement as $key => $valueAdded) {
+
+
+	    				if($valueAdded->credit != 0){
+	    					$color = "green";
+	    					$amount = "+".$currencyCode.number_format($valueAdded->credit, 2);
+	    				}
+	    				elseif($valueAdded->debit != 0){
+	    					$color = "red";
+	    					$amount = "-".$currencyCode.number_format($valueAdded->debit, 2);
+	    				}
+
+		    			$tabledetails = "<tr>
+		    			<td>".date('d/F/Y', strtotime($valueAdded->trans_date))."</td>
+		    			<td>".$valueAdded->activity."</td>
+		    			<td style='color:".$color."; font-weight: bold;' align='center'>".$amount."</td>
+		    			<td>".$valueAdded->status."</td>
+		    			</tr>";
+
+		    			$table .= $tabledetails;
+	    			}
+
+	    			$message = "<p>Hello ".strtoupper($name).",</p><p>Below is the statement of your transactions on PaySprint for this month.</p> <br><br> <table width='700' border='1' cellpadding='1' cellspacing='0'><thead><tr><th>Trans. Date</th><th>Desc.</th><th>Amount</th><th>Status</th></tr></thead><tbody>".$table."</tbody></table> <br><br> Thanks <br><br> Client Services Team <br> PaySprint <br><br>";
+
+
+
+	    			$this->mailprocess($email, $name, $subject, $message);
+
+
+    			}
+
+
+
+    		}
+
+
+    	}
+    	else{
+
+    		// Do nothing
+    	}
+
+    	
+
+    	
+    }    
+
+
+    public function mailprocess($email, $name, $subject, $message){
+
+    	$this->email = $email;
+    	// $this->email = "bambo@vimfile.com";
+        $this->name = $name;
+        $this->subject = $subject;
+
+        $this->message = $message;
+
+        $this->sendEmail($this->email, "Incomplete Setup");
+
+
+        Log::info('Monthly Transaction Statement: '.$this->name."\n Message: ".$message);
+
+
+
+    }
+
 
 
     // Update Notification Table

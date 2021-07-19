@@ -739,7 +739,7 @@ class UserController extends Controller
         $response = $this->verifyBVN($req->bvn, $req->account_number, $req->bank_code, $req->account_name);
 
         try {
-            if($response->status == true && $response->data->account_number == true){
+            if($response->status == true && $response->data->is_blacklisted == false && $response->data->account_number == true){
 
             $bank = ListOfBanks::where('code', $req->bank_code)->first();
             

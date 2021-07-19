@@ -32,6 +32,7 @@ Route::get('refundbycountryupdate', 'CheckSetupController@refundbyCountry');
 Route::get('passwordreminder', 'CheckSetupController@passwordReminder');
 Route::get('epsvendorupdate', 'CheckSetupController@updateEPSVendor');
 Route::get('notification-table', 'CheckSetupController@notificationTable');
+Route::get('monthlytransaction', 'CheckSetupController@monthlyTransactionHistory');
 
 Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
 

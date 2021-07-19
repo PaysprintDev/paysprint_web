@@ -283,7 +283,7 @@
           <!-- small box -->
           <div class="small-box bg-blue">
             <div class="inner">
-              <h3>@if($override = \App\User::where('accountLevel', 2)->count()) {{ $override }}  @else 0 @endif</h3>
+              <h3>@if($override = \App\User::where('accountLevel', 2)->where('approval', 0)->count()) {{ $override }}  @else 0 @endif</h3>
 
               <p>Override Level 1</p>
 
@@ -371,7 +371,7 @@
           <!-- small box -->
           <div class="small-box bg-blue">
             <div class="inner">
-              <h3>@if($override = \App\User::where('accountLevel', 2)->count()) {{ $override }}  @else 0 @endif</h3>
+              <h3>@if($override = \App\User::where('accountLevel', 2)->where('approval', 0)->count()) {{ $override }}  @else 0 @endif</h3>
 
               <p>Override Level 1</p>
 
@@ -411,7 +411,7 @@
           <!-- small box -->
           <div class="small-box bg-blue">
             <div class="inner">
-              <h3>@if($override = \App\User::where('accountLevel', 2)->count()) {{ $override }}  @else 0 @endif</h3>
+              <h3>@if($override = \App\User::where('accountLevel', 2)->where('approval', 0)->count()) {{ $override }}  @else 0 @endif</h3>
 
               <p>Override Level 1</p>
 

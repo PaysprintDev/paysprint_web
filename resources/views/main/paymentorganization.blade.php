@@ -404,7 +404,7 @@ input[type="radio"] {
                                             </div>
                                             <div class="col-md-12 withWallet">
 
-                                                @if (Auth::user()->approval == 3)
+                                                @if (Auth::user()->approval == 2 && Auth::user()->accountLevel == 3)
                                                     <button type="button" onclick="orgmonerisPay()" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Send Money </button>
                                                 @else
 
@@ -978,7 +978,7 @@ function beginApplePay() {
 
  function restriction(val, name){
     if(val == "sendmoney"){
-        swal('Hello '+name, 'Your account need to be verified before you can send money', 'info');
+        swal('Hello '+name, 'Your account needs to be verified before you can send money', 'info');
     }
  }
 

@@ -81,6 +81,7 @@ Route::prefix('/v1')->group(function () {
         Route::post('updatetransactionpin',  ['uses' => 'api\v1\UserController@updateTransactionPin'])->name('update transaction pin');
 
         Route::post('updatepassword',  ['uses' => 'api\v1\UserController@updatePassword'])->name('update password');
+        
 
         Route::post('security',  ['uses' => 'api\v1\UserController@updateSecurity'])->name('update security');
 

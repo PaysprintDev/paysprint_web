@@ -76,7 +76,7 @@
                 </thead>
                 <tbody>
 
-                  @if($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', 2)->get())
+                  @if($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', 2)->where('approval', 0)->get())
 
 
                     @if (count($allusersdata) > 0)
@@ -152,7 +152,7 @@
 
                             <td style="color: green; font-weight: bold;" align="center">Approved</td>
 
-                            @elseif ($datainfo->approval == 1 && $datainfo->accountLevel > 0)
+                            @elseif ($datainfo->approval == 1 && $datainfo->accountLevel == 2)
 
                             <td style="color: darkorange; font-weight: bold;" align="center">Awaiting Approval</td>
                                 

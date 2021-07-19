@@ -11012,7 +11012,7 @@ class AdminController extends Controller
 
     public function allUsersOverride(){
 
-        $data = User::where('accountLevel', 2)->orderBy('created_at', 'DESC')->get();
+        $data = User::where('accountLevel', 2)->where('approval', 0)->orderBy('created_at', 'DESC')->get();
 
         return $data;
     }
@@ -11053,7 +11053,7 @@ class AdminController extends Controller
 
 
     public function overrideUsersByCountry(){
-        $data = User::where('accountLevel', 2)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        $data = User::where('accountLevel', 2)->where('approval', 0)->orderBy('created_at', 'DESC')->groupBy('country')->get();
 
         return $data;
     }
