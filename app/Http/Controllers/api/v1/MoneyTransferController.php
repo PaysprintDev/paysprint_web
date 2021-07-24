@@ -95,6 +95,9 @@ class MoneyTransferController extends Controller
             if($req->method == "Debit Card/Bank"){
                 $method = "Debit Card";
             }
+            elseif($req->method == "CC/Bank"){
+                $method = "Bank Account";
+            }
             else{
                 $method = $req->method;
             }
@@ -163,53 +166,67 @@ class MoneyTransferController extends Controller
             $url = "https://exbc.ca/api/v1/paysprint/requestcard";
         }
 
-        if($req->amount > $thisuser->wallet_balance){
+        if($thisuser->country == "Canada"){
+            if($req->amount > $thisuser->wallet_balance){
 
-            $data = [];
-            $message = "Insufficient wallet balance";
-            $status = 400;
-
-
-            $resData = ['data' => $data,'message' => $message, 'status' => $status];
-        }
-        else{
-
-        $data = $req->all();
-
-        $token = "base64:HgMO6FDHGziGl01OuLH9mh7CeP095shB6uuDUUClhks=";
+                $data = [];
+                $message = "Insufficient wallet balance";
+                $status = 400;
 
 
-        $response = $this->curlPost($url, $data, $token);
+                $resData = ['data' => $data,'message' => $message, 'status' => $status];
+            }
+            else{
 
-        if($response->status == 200){
-           $resData = $this->debitWalletForCard($req->ref_code, $req->card_provider);
-           $status = $resData['status'];
-           $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'cardRequest')->where('api_token', $req->bearerToken())->first();
+            $data = $req->all();
 
-           User::where('api_token', $req->bearerToken())->update(['cardRequest' => 2]);
+            $token = "base64:HgMO6FDHGziGl01OuLH9mh7CeP095shB6uuDUUClhks=";
 
-           $message = $response->message;
-           $resData = ['data' => $data,'message' => $message, 'status' => $status];
-        }
-        else{
-            $status = $response->status;
+
+            $response = $this->curlPost($url, $data, $token);
+
+            if($response->status == 200){
+            $resData = $this->debitWalletForCard($req->ref_code, $req->card_provider);
+            $status = $resData['status'];
             $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'cardRequest')->where('api_token', $req->bearerToken())->first();
 
             User::where('api_token', $req->bearerToken())->update(['cardRequest' => 2]);
 
             $message = $response->message;
             $resData = ['data' => $data,'message' => $message, 'status' => $status];
+            }
+            else{
+                $status = $response->status;
+                $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'cardRequest')->where('api_token', $req->bearerToken())->first();
+
+                User::where('api_token', $req->bearerToken())->update(['cardRequest' => 2]);
+
+                $message = $response->message;
+                $resData = ['data' => $data,'message' => $message, 'status' => $status];
+            }
+
+
+                Log::info("Request for Exbc prepaid card  by ".$thisuser->name);
+
+                $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", ".$message);
+
+
+
+
+            }
+
+        }
+        else{
+
+            $data = [];
+            $message = "Prepaid Card Request not yet available for ".$thisuser->country;
+            $status = 400;
+
+
+            $resData = ['data' => $data,'message' => $message, 'status' => $status];
+
         }
 
-
-            Log::info("Request for Exbc prepaid card  by ".$thisuser->name);
-
-            $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", ".$message);
-
-
-
-
-        }
 
 
 

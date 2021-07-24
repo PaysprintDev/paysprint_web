@@ -83,7 +83,7 @@
                                 <td>{{ $item->issuer_card }}</td>
                                 <td>{{ date('d/M/Y', strtotime($item->created_at)) }}</td>
                                 <td>{{ date('d/M/Y', strtotime($item->updated_at)) }}</td>
-                                <td><a href="{{ route('editcardissuer', $item->id) }}" style="color: navy; font-weight: bold;">Edit</a> | <form action="{{ route('deletecardissuer', $item->id) }}" method="POST" id="deletecardissuer" class="disp-0">@csrf</form> <a href="#" style="color: red; font-weight: bold;" onclick="del('deletecardissuer')">Delete</a></td>
+                                <td><a href="{{ route('editcardissuer', $item->id) }}" style="color: navy; font-weight: bold;">Edit</a> | <form action="{{ route('deletecardissuer', $item->id) }}" method="POST" id="deletecardissuer{{ $item->id }}" class="disp-0">@csrf</form> <a href="#" style="color: red; font-weight: bold;" onclick="del('deletecardissuer', {{ $item->id }})">Delete</a></td>
                             </tr>
                             
                         @endforeach

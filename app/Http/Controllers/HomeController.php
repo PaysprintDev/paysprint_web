@@ -1129,6 +1129,7 @@ class HomeController extends Controller
 
 
 
+
         return view('main.payutility')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
@@ -3962,6 +3963,7 @@ class HomeController extends Controller
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
+
         if($req->pay_method != "Wallet"){
 
             if($req->foreigncurrency != $req->localcurrency){
@@ -3987,6 +3989,8 @@ class HomeController extends Controller
                 x = Variable * Amount;
                 y = Fixed + x;
             */ 
+
+
 
             if(isset($data) == true){
 
@@ -4058,13 +4062,24 @@ class HomeController extends Controller
 
 
 
+        $minimumBal = TransactionCost::where('structure', "Wallet Balance")->where('method', "Minimum Balance")->where('country', $thisuser->country)->first();
+
+        if(isset($minimumBal)){
+            $available = $minimumBal->fixed;
+        }
+        else{
+            $available = 5;
+        }
+
         // Check if Wallet is chosen
         $walletCheck = "";
 
-        if($req->pay_method == "Wallet"){
+        // if($req->pay_method == "Wallet"){
             $wallet = $thisuser->wallet_balance;
 
-            if($wallet < $amountReceive){
+            $availableWalletBalance = $thisuser->wallet_balance - $available;
+
+            if($availableWalletBalance <= $amountReceive){
 
                 if($thisuser->accountType == "Individual"){
                     $route = route('Add Money');
@@ -4073,13 +4088,15 @@ class HomeController extends Controller
                     $route = route('merchant add money');
                 }
 
-                $walletCheck = 'Wallet Balance: <strong>'.$req->localcurrency. number_format($wallet,2).'</strong>. <br> Insufficient balance. <a href="'.$route.'">Add money <i class="fa fa-plus" style="font-size: 15px;border-radius: 100%;border: 1px solid grey;padding: 3px;" aria-hidden="true"></i></a>';
+                $walletCheck = 'Wallet Balance: <strong>'.$req->localcurrency. number_format($wallet,2).'</strong>. <br> Available Wallet Balance: <strong>'.$req->localcurrency. number_format($availableWalletBalance,2).'</strong>. <br> Insufficient balance. <a href="'.$route.'">Add money <i class="fa fa-plus" style="font-size: 15px;border-radius: 100%;border: 1px solid grey;padding: 3px;" aria-hidden="true"></i></a>';
             }
-        }
+        // }
 
         
 
-        $resData = ['data' => $amountReceive, 'message' => 'success', 'state' => $state, 'collection' => $collection, 'walletCheck' => $walletCheck];
+        $resData = ['data' => $amountReceive, 'message' => 'success', 'state' => $state, 'collection' => $collection, 'walletCheck' => $walletCheck, ''];
+
+        // dd($resData);
 
         return $this->returnJSON($resData, 200);
 

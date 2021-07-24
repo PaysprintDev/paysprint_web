@@ -2409,7 +2409,7 @@ else{
                     $minBal = $this->minimumWithdrawal($thisuser->country);
 
                     // Check amount in wallet
-                    if($req->amount > $thisuser->wallet_balance){
+                    if($req->amount > ($thisuser->wallet_balance - $minBal)){
                         // Insufficient amount for withdrawal
 
                         $data = [];
@@ -2427,7 +2427,7 @@ else{
 
                         Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
                     }
-                    elseif($thisuser->wallet_balance <= $minBal){
+                    elseif(($thisuser->wallet_balance - $minBal) <= $minBal){
                         // Cannot withdraw minimum balance
 
                         $data = [];
@@ -2456,7 +2456,7 @@ else{
 
                                 // Do convert amount to dollars
 
-                            // This 1.35 is commission charge, kindly calculate again
+                                // This 1.35 is commission charge, kindly calculate again
 
                                 // $monerisDeductamount = $req->conversionamount - 1.35;
                                 $monerisDeductamount = $req->conversionamount;
@@ -2625,7 +2625,9 @@ else{
 
                                             $status = 200;
                                             $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-                                            $message = "Your wallet withdrawal to Bank Account ".$bankDetails->accountNumber." - ".$bankDetails->bankName." has been received. This will take 5 working days to process payment. Thanks";
+                                            $message = "Your wallet withdrawal to Bank Account ".$bankDetails->accountNumber." - ".$bankDetails->bankName." has been received. The Direct deposit into your Bank account would be done within the next 5 business days. Thanks";
+
+                                            
 
 
                                             $walletBal = $thisuser->wallet_balance - $req->amount;
@@ -2652,7 +2654,11 @@ else{
                                             $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country);
 
 
-                                            $sendMsg = 'Hello '.strtoupper($thisuser->name).', The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Bank Account '.$bankDetails->bankName.' and Account Number: '.$bankDetails->accountNumber.' has been received and will take up to 5 working days to process payment. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+                                            $sendMsg = 'Hello '.strtoupper($thisuser->name).', The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Bank Account '.$bankDetails->bankName.' and Account Number: '.$bankDetails->accountNumber.' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+
+
+                                            
+
 
                                             $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
                                                     
@@ -2965,7 +2971,9 @@ else{
 
                                             $status = 200;
                                             $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-                                            $message = "Your wallet withdrawal to Bank Account ".$bankDetails->accountNumber." - ".$bankDetails->bankName." has been received. This will take 5 working days to process payment. Thanks";
+                                            $message = "Your wallet withdrawal to Bank Account ".$bankDetails->accountNumber." - ".$bankDetails->bankName." has been received. The Direct deposit into your Bank account would be done within the next 5 business days. Thanks";
+
+                                            
 
 
                                             $walletBal = $thisuser->wallet_balance - $req->amount;
@@ -2992,7 +3000,10 @@ else{
                                             $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country);
 
 
-                                            $sendMsg = 'Hello '.strtoupper($thisuser->name).', The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Bank Account '.$bankDetails->bankName.' and Account Number: '.$bankDetails->accountNumber.' has been received and will take up to 5 working days to process payment. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+                                            $sendMsg = 'Hello '.strtoupper($thisuser->name).', The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Bank Account '.$bankDetails->bankName.' and Account Number: '.$bankDetails->accountNumber.' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+
+
+                                            
 
                                             $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
                                                 
@@ -3178,8 +3189,9 @@ else{
 
                     $minBal = $this->minimumWithdrawal($thisuser->country);
 
+
                     // Check amount in wallet
-                    if($req->amount > $thisuser->wallet_balance){
+                    if($req->amount > ($thisuser->wallet_balance - $minBal)){
                         // Insufficient amount for withdrawal
 
                         $data = [];
@@ -3197,7 +3209,7 @@ else{
 
                         Log::info('Oops!, '.$thisuser->name.' has '.$message);
                     }
-                    elseif($thisuser->wallet_balance <= $minBal){
+                    elseif(($thisuser->wallet_balance - $minBal) <= $minBal){
                         // Cannot withdraw minimum balance
 
                         $data = [];
@@ -3395,7 +3407,9 @@ else{
 
                                             $status = 200;
                                             $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-                                            $message = "Your wallet withdrawal to Bank Account ".$bankDetails->accountNumber." - ".$bankDetails->bankName." has been received. This will take 5 working days to process payment. Thanks";
+                                            $message = "Your wallet withdrawal to Bank Account ".$bankDetails->accountNumber." - ".$bankDetails->bankName." has been received. The Direct deposit into your Bank account would be done within the next 5 business days. Thanks";
+
+                                            
 
 
                                             $walletBal = $thisuser->wallet_balance - $req->amount;
@@ -3422,7 +3436,9 @@ else{
                                             $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country);
 
 
-                                            $sendMsg = 'Hello '.strtoupper($thisuser->name).', The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Bank Account '.$bankDetails->bankName.' and Account Number: '.$bankDetails->accountNumber.' has been received and will take up to 5 working days to process payment. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+                                            $sendMsg = 'Hello '.strtoupper($thisuser->name).', The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Bank Account '.$bankDetails->bankName.' and Account Number: '.$bankDetails->accountNumber.' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+
+                                            
 
                                             $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
                                                     
@@ -3735,7 +3751,9 @@ else{
 
                                             $status = 200;
                                             $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-                                            $message = "Your wallet withdrawal to Bank Account ".$bankDetails->accountNumber." - ".$bankDetails->bankName." has been received. This will take 5 working days to process payment. Thanks";
+                                            $message = "Your wallet withdrawal to Bank Account ".$bankDetails->accountNumber." - ".$bankDetails->bankName." has been received. The Direct deposit into your Bank account would be done within the next 5 business days. Thanks";
+
+                                            
 
 
                                             $walletBal = $thisuser->wallet_balance - $req->amount;
@@ -3762,7 +3780,9 @@ else{
                                             $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country);
 
 
-                                            $sendMsg = 'Hello '.strtoupper($thisuser->name).', The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Bank Account '.$bankDetails->bankName.' and Account Number: '.$bankDetails->accountNumber.' has been received and will take up to 5 working days to process payment. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+                                            $sendMsg = 'Hello '.strtoupper($thisuser->name).', The withdrawal of '.$req->currencyCode.' '.number_format($req->amount, 2).' to your Bank Account '.$bankDetails->bankName.' and Account Number: '.$bankDetails->accountNumber.' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. You now have '.$req->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+
+                                            
 
                                             $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
                                                 
@@ -3951,6 +3971,22 @@ else{
 
     }
 
+    public function getProductDetails($id){
+
+        try {
+            $thisData = $this->getUtilityProduct($id);
+            $status = 200;
+            $resData = ['data' => $thisData, 'message' => 'success', 'status' => $status];
+
+        } catch (\Throwable $th) {
+
+            $status = 400;
+            $resData = ['data' => $th->getMessage(), 'message' => 'error', 'status' => $status];
+        }
+
+        return $this->returnJSON($resData, $status);
+    }
+
 
     public function paymentLookUp(Request $req){
 
@@ -4008,7 +4044,7 @@ else{
 
                         Log::info('Oops!, '.$thisuser->name.' has '.$message);
                     }
-                    elseif($thisuser->approval < 2 && $thisuser->accountLevel <= 2){
+                    elseif($thisuser->approval < 2 && $thisuser->accountLevel < 3){
                         // Cannot withdraw minimum balance
 
                         $data = [];

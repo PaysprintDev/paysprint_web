@@ -33,6 +33,7 @@ Route::get('passwordreminder', 'CheckSetupController@passwordReminder');
 Route::get('epsvendorupdate', 'CheckSetupController@updateEPSVendor');
 Route::get('notification-table', 'CheckSetupController@notificationTable');
 Route::get('monthlytransaction', 'CheckSetupController@monthlyTransactionHistory');
+Route::get('exbccardrequest', 'CheckSetupController@checkExbcCardRequest');
 
 Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
 
@@ -190,19 +191,29 @@ Route::get('allusers', ['uses' => 'AdminController@allPlatformUsers', 'as' => 'a
 
 Route::get('approvedusers', ['uses' => 'AdminController@allApprovedUsers', 'as' => 'approvedusers']);
 Route::get('matchedusers', ['uses' => 'AdminController@allMatchedUsers', 'as' => 'matchedusers']);
+Route::get('leveltwousers', ['uses' => 'AdminController@allLevelTwoUsers', 'as' => 'leveltwousers']);
 Route::get('pendingusers', ['uses' => 'AdminController@allPendingUsers', 'as' => 'pendingusers']);
 Route::get('overrideusers', ['uses' => 'AdminController@allOverrideUsers', 'as' => 'overrideusers']);
 Route::get('closedusers', ['uses' => 'AdminController@allClosedUsers', 'as' => 'closedusers']);
+Route::get('newusers', ['uses' => 'AdminController@allNewusers', 'as' => 'newusers']);
+Route::get('newmerchants', ['uses' => 'AdminController@allNewMerchants', 'as' => 'newmerchants']);
+
+
 
 
 Route::get('allusersbycountry', ['uses' => 'AdminController@allPlatformUsersByCountry', 'as' => 'all users by country']);
 
 
 Route::get('approvedusersbycountry', ['uses' => 'AdminController@allApprovedUsersByCountry', 'as' => 'approved users by country']);
+Route::get('leveltwousersbycountry', ['uses' => 'AdminController@levelTwoUsersByCountry', 'as' => 'level two users by country']);
 Route::get('matchedusersbycountry', ['uses' => 'AdminController@allMatchedUsersByCountry', 'as' => 'matched users by country']);
 Route::get('pendingusersbycountry', ['uses' => 'AdminController@allPendingUsersByCountry', 'as' => 'pending users by country']);
 Route::get('overrideusersbycountry', ['uses' => 'AdminController@allOverrideUsersByCountry', 'as' => 'override users by country']);
 Route::get('closedusersbycountry', ['uses' => 'AdminController@allClosedUsersByCountry', 'as' => 'closed users by country']);
+
+
+Route::get('newusersbycountry', ['uses' => 'AdminController@newUsersByCountry', 'as' => 'new users by country']);
+Route::get('newmerchantsbycountry', ['uses' => 'AdminController@newMerchantsByCountry', 'as' => 'new merchants by country']);
 
 
 Route::get('usermoredetail/{id}', ['uses' => 'AdminController@userMoreDetail', 'as' => 'user more detail']);

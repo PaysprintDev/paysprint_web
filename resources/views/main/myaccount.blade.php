@@ -407,7 +407,7 @@ input[type="radio"] {
                                             <a type="button" href="{{ route('Add Money') }}" class="btn btn-info btn-block">Add Money <i class="fa fa-plus"></i></a>
                                         </div>
 
-                                        @if (Auth::user()->approval == 1)
+                                        @if (Auth::user()->approval == 2 && Auth::user()->accountLevel == 3)
                                             <div class="col-md-6 mb-3">
                                                 <a type="button" href="{{ route('Withdraw Money') }}" class="btn btn-secondary btn-block">Withdraw Money <i class="fa fa-credit-card"></i></a>
                                             </div>

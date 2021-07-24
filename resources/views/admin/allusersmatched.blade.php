@@ -66,6 +66,7 @@
                   <th>Name</th>
                   <th>Username</th>
                   <th>Email</th>
+                  <th>Telephone</th>
                   <th>Account Type</th>
                   <th>Identification</th>
                   <th>Platform</th>
@@ -77,7 +78,7 @@
                 <tbody>
 
 
-                  @if($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', 2)->where('approval', '>', 0)->get())
+                  @if($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', 1)->get())
 
 
                     @if (count($allusersdata) > 0)
@@ -94,6 +95,7 @@
                               <td>-</td>
                             @endif
                             <td>{{ $datainfo->email }}</td>
+                            <td>{{ $datainfo->telephone }}</td>
                             <td>{{ $datainfo->accountType }}</td>
                             <td>
 
@@ -214,7 +216,7 @@
 
                     @else
                     <tr>
-                        <td colspan="9" align="center">No record available</td>
+                        <td colspan="10" align="center">No record available</td>
                     </tr>
                     @endif
 

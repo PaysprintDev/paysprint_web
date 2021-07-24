@@ -7,6 +7,7 @@
 <?php use \App\Http\Controllers\OrganizationPay; ?>
 <?php use \App\Http\Controllers\ClientInfo; ?>
 <?php use \App\Http\Controllers\AnonUsers; ?>
+<?php use \App\Http\Controllers\Statement; ?>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -47,6 +48,7 @@
                 <tr>
                   <th>S/N</th>
                   <th>Transaction ID</th>
+                  <th>Name</th>
                   <th>Message</th>
                   <th>Gateway</th>
                   <th>Country</th>
@@ -65,6 +67,26 @@
                             <td>{{ $i++ }}</td>
 
                             <td>{{ $data->transaction_id }}</td>
+
+                            @if($userStatement = \App\Statement::where('reference_code', $data->transaction_id)->first())
+                              @if (isset($userStatement))
+                                  @if($userStatement = \App\User::where('email', $userStatement->user_id)->first())
+
+                                    <td>{{ $userStatement->name }}</td>
+
+                                  @else
+                                    <td>-</td>
+                                  @endif
+                              @else
+
+                              <td>-</td>
+
+                              @endif
+
+                            @else
+                              <td>-</td>
+                            @endif
+
                             <td>{{ $data->message }}</td>
                             <td>{{ strtoupper($data->gateway) }}</td>
                             <td>{{ strtoupper($data->country) }}</td>

@@ -60,6 +60,7 @@
         <div class="container">
 
             @isset($data['specialInfo'])
+
                 <div class="row">
                     <div class="alert alert-success show" role="alert">
                         <strong><h5>*** Special Information ***</h5></strong><hr>

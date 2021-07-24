@@ -391,7 +391,7 @@
                                 <td>{{ $item->variable }}</td>
                                 <td>{{ date('d/M/Y', strtotime($item->created_at)) }}</td>
                                 <td>{{ date('d/M/Y', strtotime($item->updated_at)) }}</td>
-                                <td><a href="{{ route('editfee', $item->id) }}" style="color: navy; font-weight: bold;">Edit</a> | <form action="{{ route('deletefee', $item->id) }}" method="POST" id="deletefee" class="disp-0">@csrf</form> <a href="#" style="color: red; font-weight: bold;" onclick="del('deletefee')">Delete</a></td>
+                                <td><a href="{{ route('editfee', $item->id) }}" style="color: navy; font-weight: bold;">Edit</a> | <form action="{{ route('deletefee', $item->id) }}" method="POST" id="deletefee{{ $item->id }}" class="disp-0">@csrf</form> <a href="#" style="color: red; font-weight: bold;" onclick="del('deletefee', {{ $item->id }})">Delete</a></td>
                             </tr>
                             
                         @endforeach

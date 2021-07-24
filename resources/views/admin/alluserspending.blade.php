@@ -66,6 +66,7 @@
                   <th>Name</th>
                   <th>Username</th>
                   <th>Email</th>
+                  <th>Telephone</th>
                   <th>Account Type</th>
                   <th>Identification</th>
                   <th>Platform</th>
@@ -93,6 +94,7 @@
                               <td>-</td>
                             @endif
                             <td>{{ $datainfo->email }}</td>
+                            <td>{{ $datainfo->telephone }}</td>
                             <td>{{ $datainfo->accountType }}</td>
                             <td>
 
@@ -198,7 +200,7 @@
 
                     @else
                     <tr>
-                        <td colspan="9" align="center">No record available</td>
+                        <td colspan="10" align="center">No record available</td>
                     </tr>
                     @endif
 

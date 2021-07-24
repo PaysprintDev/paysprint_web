@@ -4,6 +4,7 @@
 
 <!-- jQuery 3 -->
 <script src="{{ asset('ext/bower_components/jquery/dist/jquery.min.js') }}"></script>
+
 <script src="https://raw.githubusercontent.com/HubSpot/pace/v1.0.0/pace.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
@@ -78,6 +79,7 @@
 {{--  <script src="{{ asset('ext/dist/js/main.js') }}"></script>  --}}
 
 <script src="{{ asset('js/country-state-select.js') }}"></script>
+
 
 <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
@@ -1388,7 +1390,7 @@ function invoiceVisit(id, val){
 
 }
 
-function del(val){
+function del(val, id){
 if(val == "deletefee" || val == "deletecardissuer"){
       swal({
       title: "Are you sure?",
@@ -1400,7 +1402,7 @@ if(val == "deletefee" || val == "deletecardissuer"){
     .then((willDelete) => {
       if (willDelete) {
 
-        $("#"+val).submit();
+        $("#"+val+id).submit();
 
       } 
       else {

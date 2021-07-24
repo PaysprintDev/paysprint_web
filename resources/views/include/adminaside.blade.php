@@ -12,7 +12,7 @@
         </div>
         <div class="pull-left info">
           <p>{{ session('firstname').' '.session('lastname') }}</p>
-          @if (session('role') != "Super" && session('role') != "Access to Level 1 only" && session('role') != "Access to Level 1 and 2 only")
+          @if (session('role') != "Super" && session('role') != "Access to Level 1 only" && session('role') != "Access to Level 1 and 2 only" && session('role') != "Customer Marketing")
             <a href="#"><i class="fa fa-circle text-success"></i> Account No: {{ session('user_id') }}</a>
           @endif
         </div>
@@ -41,6 +41,10 @@
           <ul class="treeview-menu">
             <li class="active"><a href="{{ route('Admin') }}"><i class="fa fa-circle-o text-red"></i> Dashboard</a></li>
             <li><a href="{{ route('merchant home') }}"><i class="fa fa-circle-o text-primary"></i> Main Page</a></li>
+
+            @if (session('role') == "Customer Marketing")
+                <li title="Platform"><a href="{{ route('platform activity') }}"><i class="fa fa-circle-o text-red"></i> Platform</a></li>
+            @endif
 
             @if (session('role') == "Super")
 
@@ -393,7 +397,7 @@
 
 
 
-        @elseif(session('role') != "Super" && session('role') != "Access to Level 1 only" && session('role') != "Access to Level 1 and 2 only")
+        @elseif(session('role') != "Super" && session('role') != "Access to Level 1 only" && session('role') != "Access to Level 1 and 2 only" && session('role') != "Customer Marketing")
 
 
         
@@ -409,7 +413,7 @@
           <ul class="treeview-menu">
             <li ><a href="{{ route('create single invoice') }}"><i class="fa fa-circle-o text-green"></i> Single </a></li>
             {{-- <li ><a href="{{ route('create bulk invoice') }}"><i class="fa fa-circle-o text-red"></i> Batch</a></li> --}}
-            <li onclick="comingSoon()"><a href="javascript:void()"><i class="fa fa-circle-o text-red"></i> Batch [Coming Soon]</a></li>
+             <li onclick="comingSoon()"><a href="javascript:void()"><i class="fa fa-circle-o text-red"></i> Batch [Coming Soon]</a></li> 
             {{-- <li><a href="#"><i class="fa fa-circle-o text-info"></i> Check Sold Tickets</a></li>
             <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
           </ul>
@@ -424,7 +428,7 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="{{ route('getStatement') }}"><i class="fa fa-circle-o text-info"></i> Service Type</a></li>
+            <li><a href="{{ route('getStatement') }}"><i class="fa fa-circle-o text-info"></i> Invoice</a></li>
             <li><a href="{{ route('getwalletStatement') }}"><i class="fa fa-circle-o text-info"></i> Wallet</a></li>
             {{-- <li><a href="#"><i class="fa fa-circle-o text-info"></i> Check Sold Tickets</a></li>
             <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}

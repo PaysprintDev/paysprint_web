@@ -4,6 +4,7 @@
 
 
 <?php use \App\Http\Controllers\User; ?>
+<?php use \App\Http\Controllers\UserClosed; ?>
 <?php use \App\Http\Controllers\OrganizationPay; ?>
 <?php use \App\Http\Controllers\ClientInfo; ?>
 
@@ -12,11 +13,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         All Matched Users By Country
+         All {{ strtoupper(Request::get('user')) }} Merchants By Country
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">All Matched Users By Country</li>
+        <li class="active">All {{ strtoupper(Request::get('user')) }} Merchants By Country</li>
       </ol>
     </section>
 
@@ -63,15 +64,23 @@
                             
                             <td>{{ $data->country }}</td>
 
-                            @if($allusersdata = \App\User::where('country', $data->country)->where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', 1)->count())
+                            @if (Request::get('user') == "new")
+
+                                @if($allusersdata = \App\User::where('accountType', 'Merchant')->where('country', $data->country)->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->count())
+                                    <td>{{ $allusersdata }}</td>
+                                @endif
+                                
+                            @else
+                                @if($allusersdata = \App\User::where('accountType', 'Merchant')->where('country', $data->country)->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->count())
                                 <td>{{ $allusersdata }}</td>
+                                @endif
                             @endif
 
                             
 
                             <td>
 
-                              <a href="{{ route('matchedusers', 'country='.$data->country) }}" type="button" class="btn btn-primary">View details</a>
+                              <a href="{{ route('newmerchants', 'country='.$data->country.'&user='.Request::get('user')) }}" type="button" class="btn btn-primary">View details</a>
 
                               
                             </td>

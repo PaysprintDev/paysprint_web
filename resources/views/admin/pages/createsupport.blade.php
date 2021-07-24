@@ -57,6 +57,7 @@
                             <option value="Super">Super Admin</option>
                             <option value="Access to Level 1 only">Access to Level 1 only</option>
                             <option value="Access to Level 1 and 2 only">Access to Level 1 and 2 only</option>
+                            <option value="Customer Marketing">Customer Marketing</option>
                         </select>
 
                     </div>

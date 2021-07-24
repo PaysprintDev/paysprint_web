@@ -130,7 +130,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -221,7 +221,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -262,7 +262,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -309,7 +309,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -357,7 +357,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -404,7 +404,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -452,7 +452,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -502,7 +502,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -557,7 +557,7 @@ class AdminController extends Controller
                 if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -620,7 +620,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -683,7 +683,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -745,7 +745,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -822,7 +822,7 @@ class AdminController extends Controller
                 if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -885,7 +885,7 @@ class AdminController extends Controller
                 if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -944,7 +944,7 @@ class AdminController extends Controller
                 if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -1003,7 +1003,7 @@ class AdminController extends Controller
                 if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -1065,7 +1065,7 @@ class AdminController extends Controller
                 if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -1130,7 +1130,7 @@ class AdminController extends Controller
                 if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -1190,7 +1190,7 @@ class AdminController extends Controller
                 if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -1252,7 +1252,7 @@ class AdminController extends Controller
                 if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -1332,7 +1332,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -1393,7 +1393,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -1456,7 +1456,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -1517,7 +1517,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -1602,7 +1602,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -1660,7 +1660,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -1716,7 +1716,7 @@ class AdminController extends Controller
                 if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -1773,7 +1773,7 @@ class AdminController extends Controller
                 if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -1848,7 +1848,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -1904,7 +1904,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -1969,7 +1969,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -2028,13 +2028,77 @@ class AdminController extends Controller
     }
 
 
+    public function allLevelTwoUsers(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+
+                $query = [
+                    'user_id' => session('user_id'),
+                    'name' => session('firstname').' '.session('lastname'),
+                    'activity' => 'Access to all matched users page today: '.date('d-M-Y h:i:a'),
+                ];
+
+                $this->createSupportActivity($query);
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsersForLevelTwo();
+
+
+            return view('admin.allusersforleveltwo')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
 
     public function allPendingUsers(Request $req){
 
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -2100,7 +2164,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -2164,7 +2228,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -2223,12 +2287,140 @@ class AdminController extends Controller
     }
 
 
+    public function allNewusers(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+
+                $query = [
+                    'user_id' => session('user_id'),
+                    'name' => session('firstname').' '.session('lastname'),
+                    'activity' => 'Access to all closed users page today: '.date('d-M-Y h:i:a'),
+                ];
+
+                $this->createSupportActivity($query);
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allNewUser($req->get('country'), $req->get('user'));
+
+
+            return view('admin.allnewusers')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
+    public function allNewMerchants(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+
+                $query = [
+                    'user_id' => session('user_id'),
+                    'name' => session('firstname').' '.session('lastname'),
+                    'activity' => 'Access to all closed users page today: '.date('d-M-Y h:i:a'),
+                ];
+
+                $this->createSupportActivity($query);
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allMerchantsNew($req->get('country'), $req->get('user'));
+
+
+            return view('admin.allnewmerchants')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
     public function allPlatformUsersByCountry(Request $req){
 
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -2293,7 +2485,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -2357,7 +2549,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -2415,12 +2607,76 @@ class AdminController extends Controller
 
     }
 
+
+    public function levelTwoUsersByCountry(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+
+                $query = [
+                    'user_id' => session('user_id'),
+                    'name' => session('firstname').' '.session('lastname'),
+                    'activity' => 'Access to all matched users page by country today: '.date('d-M-Y h:i:a'),
+                ];
+
+                $this->createSupportActivity($query);
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->level2UsersByCountry();
+
+
+            return view('admin.level2usersbycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
     public function allPendingUsersByCountry(Request $req){
 
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -2485,7 +2741,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -2550,7 +2806,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -2609,12 +2865,140 @@ class AdminController extends Controller
     }
 
 
+    public function newUsersByCountry(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+
+                $query = [
+                    'user_id' => session('user_id'),
+                    'name' => session('firstname').' '.session('lastname'),
+                    'activity' => 'Access to all closed users page by country today: '.date('d-M-Y h:i:a'),
+                ];
+
+                $this->createSupportActivity($query);
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->newaccountUsersByCountry($req->get('user'));
+
+
+            return view('admin.newusersbycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
+    public function newMerchantsByCountry(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+
+                $query = [
+                    'user_id' => session('user_id'),
+                    'name' => session('firstname').' '.session('lastname'),
+                    'activity' => 'Access to all closed users page by country today: '.date('d-M-Y h:i:a'),
+                ];
+
+                $this->createSupportActivity($query);
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->newaccountMerchantsByCountry($req->get('user'));
+
+
+            return view('admin.newmerchantsbycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
     public function userMoreDetail(Request $req, $id){
 
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -2682,7 +3066,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -2744,7 +3128,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -2805,7 +3189,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -2866,7 +3250,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -2927,7 +3311,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -2988,7 +3372,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -3048,7 +3432,7 @@ class AdminController extends Controller
                 if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -3108,7 +3492,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -3169,7 +3553,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -3282,7 +3666,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -3343,7 +3727,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -3404,7 +3788,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -3466,7 +3850,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -3528,7 +3912,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -3591,7 +3975,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -3680,7 +4064,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -3740,7 +4124,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -3798,7 +4182,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -3860,7 +4244,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -3923,7 +4307,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -3983,7 +4367,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -4045,7 +4429,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -4107,7 +4491,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -4168,7 +4552,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -4229,7 +4613,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -4291,7 +4675,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -4353,7 +4737,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -4414,7 +4798,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -4476,7 +4860,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -4537,7 +4921,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -4598,7 +4982,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -4659,7 +5043,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -4720,7 +5104,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -4780,7 +5164,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -4839,7 +5223,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -4883,7 +5267,8 @@ class AdminController extends Controller
             $data = array(
                 'bankRequestProcessed' => $this->requestFromBankProcessed(),
                 'getuserDetail' => $this->getmyPersonalDetail(session('user_id')),
-                'getCard' => $this->getUserCard(session('user_id'))
+                'getCard' => $this->getUserCard(session('user_id')),
+                'minimumWallet' => $this->getMinimumBalance(session('country')),
             );
 
 
@@ -4903,7 +5288,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -4969,7 +5354,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -5034,7 +5419,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -5097,7 +5482,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -5162,7 +5547,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -5231,7 +5616,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -5292,7 +5677,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -5353,7 +5738,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -5412,7 +5797,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -5471,7 +5856,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -5531,7 +5916,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -5592,7 +5977,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -5653,7 +6038,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -5731,6 +6116,21 @@ class AdminController extends Controller
         $data = AddCard::where('user_id', $id)->orderBy('created_at', 'DESC')->get();
 
         return $data;
+
+    }
+
+    public function getMinimumBalance($country){
+
+        $data = TransactionCost::where('structure', "Wallet Balance")->where('method', "Minimum Balance")->where('country', $country)->first();
+
+        if(isset($data)){
+            $balance = $data->fixed;
+        }
+        else{
+            $balance = 5;
+        }
+
+        return $balance;
 
     }
     public function getMyUserCard($id){
@@ -6104,7 +6504,7 @@ class AdminController extends Controller
 
         if($req->session()->has('username') == true){
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -6150,7 +6550,7 @@ class AdminController extends Controller
     }
 
     public function updateinvoice(Request $req){
-        if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+        if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -6318,7 +6718,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -6363,7 +6763,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -6408,7 +6808,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -6453,7 +6853,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -6501,7 +6901,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -6553,7 +6953,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -6606,7 +7006,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -6658,7 +7058,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -6709,7 +7109,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -6761,7 +7161,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -6813,7 +7213,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -6864,7 +7264,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -6917,7 +7317,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -6970,7 +7370,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -7023,7 +7423,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -7075,7 +7475,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -7129,7 +7529,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -7179,7 +7579,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -7231,7 +7631,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -7282,7 +7682,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -7333,7 +7733,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -7386,7 +7786,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -7440,7 +7840,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -7495,7 +7895,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -7549,7 +7949,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -7603,7 +8003,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -7656,7 +8056,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -7711,7 +8111,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -7765,7 +8165,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -7818,7 +8218,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -8067,7 +8467,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -8109,7 +8509,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -8155,7 +8555,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -8200,7 +8600,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -8241,7 +8641,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -8283,7 +8683,7 @@ class AdminController extends Controller
         if($req->session()->has('username') == true){
             // dd(Session::all());
 
-            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only"){
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
@@ -10002,28 +10402,8 @@ class AdminController extends Controller
 
                 $this->createSupportActivity($query);
 
-            $resData = ['res' => 'Account information approved', 'message' => 'success', 'title' => 'Great'];
-        }
-        else{
-            $user->where('id', $req->id)->update(['approval' => 1, 'accountLevel' => 2, 'disableAccount' => 'off']);
 
-            $subject = 'Account information approved';
-            
-            $message = "We have completed the review of the Identification provided on your PaySprint Account. Your PaySprint account has been enabled and you will be able to Send Money, Pay Invoice and Request for withdrawal of funds from your PaySprint Wallet from  the Mobile and Web platforms. Thank you for your interest in PaySprint. compliance@paysprint.net";
-
-            $query = [
-                    'user_id' => session('user_id'),
-                    'name' => session('firstname').' '.session('lastname'),
-                    'activity' => 'Approved '.strtoupper($data->name).' account to level 2 today: '.date('d-M-Y h:i:a'),
-                ];
-
-                $this->createSupportActivity($query);
-
-            $resData = ['res' => 'Account information approved', 'message' => 'success', 'title' => 'Great'];
-        }
-
-
-            // Send Mail to Receiver
+                // Send Mail to Receiver
             $this->name = $data->name;
             $this->to = $data->email;
             
@@ -10045,7 +10425,28 @@ class AdminController extends Controller
 
             $this->sendEmail($this->to, "Refund Request");
 
+            $resData = ['res' => 'Account information approved', 'message' => 'success', 'title' => 'Great'];
+
+
+        }
+        else{
+            $user->where('id', $req->id)->update(['approval' => 1, 'accountLevel' => 2, 'disableAccount' => 'off']);
+
+            $subject = 'Account information approved';
             
+            $message = "Thanks for opening a PaySprint. Your account is currently under review. We would contact you on the result of the review shortly. Thanks for choosing PaySprint. <br> Compliance Team @ PaySprint";
+
+            $query = [
+                    'user_id' => session('user_id'),
+                    'name' => session('firstname').' '.session('lastname'),
+                    'activity' => 'Approved '.strtoupper($data->name).' account to level 2 today: '.date('d-M-Y h:i:a'),
+                ];
+
+                $this->createSupportActivity($query);
+
+            $resData = ['res' => 'Account information approved', 'message' => 'success', 'title' => 'Great'];
+        }
+
 
 
             return $this->returnJSON($resData, 200);
@@ -10180,7 +10581,7 @@ class AdminController extends Controller
             $this->createNotification($data->ref_code, $message);
             $this->sendMessage($message, $recipients);
 
-            $this->sendEmail($this->to, "Refund Request");
+            // $this->sendEmail($this->to, "Refund Request");
 
             $query = [
                     'user_id' => session('user_id'),
@@ -10997,7 +11398,15 @@ class AdminController extends Controller
 
     public function allUsersMatched(){
 
-        $data = User::where('accountLevel', 2)->where('approval', '>', 0)->orderBy('created_at', 'DESC')->get();
+        $data = User::where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', 1)->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
+
+
+    public function allUsersForLevelTwo(){
+
+        $data = User::where('accountLevel', 2)->where('approval', 0)->where('bvn_verification', 0)->orderBy('created_at', 'DESC')->get();
 
         return $data;
     }
@@ -11025,6 +11434,34 @@ class AdminController extends Controller
         return $data;
     }
 
+    public function allNewUser($country, $usertype){
+
+        if ($usertype == "new") {
+            $data = User::where('accountType', 'Individual')->where('country', $country)->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->orderBy('created_at', 'DESC')->get();
+        }
+        else{
+            $data = User::where('accountType', 'Individual')->where('country', $country)->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->orderBy('created_at', 'DESC')->get();
+        }
+
+        
+
+        return $data;
+    }
+
+    public function allMerchantsNew($country, $usertype){
+
+        if ($usertype == "new") {
+            $data = User::where('accountType', 'Merchant')->where('country', $country)->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->orderBy('created_at', 'DESC')->get();
+        }
+        else{
+            $data = User::where('accountType', 'Merchant')->where('country', $country)->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->orderBy('created_at', 'DESC')->get();
+        }
+
+        
+
+        return $data;
+    }
+
 
     public function allUsersByCountry(){
         $data = User::orderBy('created_at', 'DESC')->groupBy('country')->get();
@@ -11040,7 +11477,14 @@ class AdminController extends Controller
     }
 
     public function matchedUsersByCountry(){
-        $data = User::where('accountLevel', 2)->where('approval', '>', 0)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        $data = User::where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', 1)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+
+        return $data;
+    }
+
+
+    public function level2UsersByCountry(){
+        $data = User::where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', 0)->orderBy('created_at', 'DESC')->groupBy('country')->get();
 
         return $data;
     }
@@ -11053,7 +11497,7 @@ class AdminController extends Controller
 
 
     public function overrideUsersByCountry(){
-        $data = User::where('accountLevel', 2)->where('approval', 0)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        $data = User::where('accountLevel', 2)->where('approval', 0)->where('bvn_verification', 0)->orderBy('created_at', 'DESC')->groupBy('country')->get();
 
         return $data;
     }
@@ -11061,6 +11505,33 @@ class AdminController extends Controller
 
     public function closedUsersByCountry(){
         $data = UserClosed::orderBy('created_at', 'DESC')->groupBy('country')->get();
+
+        return $data;
+    }
+
+    public function newaccountUsersByCountry($usertype){
+
+        if($usertype == "new"){
+            $data = User::where('accountType', 'Individual')->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+        }
+        else{
+            $data = User::where('accountType', 'Individual')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+        }
+
+
+        return $data;
+    }
+
+
+    public function newaccountMerchantsByCountry($usertype){
+
+        if($usertype == "new"){
+            $data = User::where('accountType', 'Merchant')->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+        }
+        else{
+            $data = User::where('accountType', 'Merchant')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+        }
+
 
         return $data;
     }

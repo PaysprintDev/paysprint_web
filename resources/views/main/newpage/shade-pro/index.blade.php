@@ -19,7 +19,7 @@
                 <div class=" hero-sm-card-1">
                     <div class="px-7 py-6 d-flex bg-white shadow-10 rounded-15 w-xs-75 w-lg-76 w-xl-68 hero-card-1-animation"
                         id="an-item-1p1">
-                        <p class="gr-text-11 mb-0 text-mirage-2">“I want to send money to my family and friends, but they are no on PaySprint.”</p>
+                        <p class="gr-text-11 mb-0 text-mirage-2">“I want to send money to my family and friends, but they are not on PaySprint.”</p>
                         <div class="small-card-img ml-6">
                             <img src="https://img.icons8.com/bubbles/50/000000/night-man.png" alt="" class="circle-42">
                         </div>

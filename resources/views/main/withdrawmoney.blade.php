@@ -268,6 +268,13 @@ input[type="radio"] {
                                 </div>
 
 
+                                <hr>
+
+                            <div class="form-group">
+                                <strong><span class="text-danger wallet-info"></span></strong>
+                            </div>
+
+
                                 <div class="form-group">
                                     <div class="commissionInfo"></div>
                                 </div>
@@ -415,8 +422,6 @@ function runCardType(){
             if(result.message == "success"){
                 var res = result.data;
 
-                console.log(res);
-
                 if(result.action == "Bank Account"){
                     $.each(res, function(v, k){
                         $('#card_id').append(`<option value="${k.id}">${k.bankName} - ${k.accountNumber}</option>`);
@@ -458,7 +463,7 @@ function runCommission(){
         structure = "EXBC Prepaid Card";
     }
     else{
-        structure = "CC/Bank";
+        structure = $("#card_type").val();
     }
 
 
@@ -491,16 +496,16 @@ function runCommission(){
                 $('.withWallet').removeClass('disp-0');
 
                 if(result.walletCheck != ""){
-                    $(".sendmoneyBtn").attr("disabled", true);
-                    
-
+                    $(".withdrawmoneyBtn").attr("disabled", true);
+                    $('.commissionInfo').addClass('disp-0');
                 }
                 else{
-                    $(".sendmoneyBtn").attr("disabled", false);
+                    $(".withdrawmoneyBtn").attr("disabled", false);
+                    $('.commissionInfo').removeClass('disp-0');
                 }
 
 
-                if(result.state == "commission available"){
+                if(result.state == "commission available" && result.walletCheck == ""){
 
                     $('.commissionInfo').addClass('alert alert-success');
                     $('.commissionInfo').removeClass('alert alert-danger');
@@ -519,23 +524,23 @@ function runCommission(){
 
 
                 }
-                else{
+                // else{
 
-                    $('.commissionInfo').addClass('alert alert-danger');
-                    $('.commissionInfo').removeClass('alert alert-success');
+                //     $('.commissionInfo').addClass('alert alert-danger');
+                //     $('.commissionInfo').removeClass('alert alert-success');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+(+result.data + +result.collection).toFixed(2)+" will be charged from your "+$('#card_type').val()+".</span></li></li></ul>");
+                //     $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+(+result.data + +result.collection).toFixed(2)+" will be charged from your "+$('#card_type').val()+".</span></li></li></ul>");
 
-                    $("#amounttosend").val(result.data);
-                    $("#commissiondeduct").val(result.collection);
-                    $("#totalcharge").val((+result.data + +result.collection));
+                //     $("#amounttosend").val(result.data);
+                //     $("#commissiondeduct").val(result.collection);
+                //     $("#totalcharge").val((+result.data + +result.collection));
 
-                    totalCharge = $("#amount").val();
+                //     totalCharge = $("#amount").val();
 
 
-                    currencyConvert(totalCharge);
+                //     currencyConvert(totalCharge);
 
-                }
+                // }
 
 
             }

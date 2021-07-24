@@ -250,7 +250,7 @@
           <!-- small box -->
           <div class="small-box bg-orange">
             <div class="inner">
-              <h3>@if($matchedUsers = \App\User::where('accountLevel', 2)->where('approval', '>', 0)->count()) {{ $matchedUsers }} @else 0 @endif</h3>
+              <h3>@if($matchedUsers = \App\User::where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', 1)->count()) {{ $matchedUsers }} @else 0 @endif</h3>
 
               <p>Matched Users</p>
             </div>
@@ -258,6 +258,22 @@
               <i class="ion ion-person-add"></i>
             </div>
             <a href="{{ route('matched users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-blue">
+            <div class="inner">
+              <h3>@if($levelTwoUsers = \App\User::where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', 0)->count()) {{ $levelTwoUsers }}  @else 0 @endif</h3>
+
+              <p>Level 2 Account</p>
+
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('level two users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
 
@@ -312,6 +328,70 @@
           </div>
         </div>
 
+
+
+
+          <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-purple">
+            <div class="inner">
+              <h3>@if($newUsers = \App\User::where('accountType', 'Individual')->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->count()) {{ $newUsers }}  @else 0 @endif</h3>
+
+              <p>New Users</p>
+
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('new users by country', 'user=new') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+          <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-purple">
+            <div class="inner">
+              <h3>@if($existingUsers = \App\User::where('accountType', 'Individual')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->count()) {{ $existingUsers }}  @else 0 @endif</h3>
+
+              <p>Existing Users</p>
+
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('new users by country', 'user=existing') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+          <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-blue">
+            <div class="inner">
+              <h3>@if($newMerchant = \App\User::where('accountType', 'Merchant')->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->count()) {{ $newMerchant }}  @else 0 @endif</h3>
+
+              <p>New Merchants</p>
+
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('new merchants by country', 'user=new') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+          <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-blue">
+            <div class="inner">
+              <h3>@if($existingMerchant = \App\User::where('accountType', 'Merchant')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->count()) {{ $existingMerchant }}  @else 0 @endif</h3>
+
+              <p>Existing Merchants</p>
+
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('new merchants by country', 'user=existing') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+
         
         <!-- ./col -->
 
@@ -338,7 +418,7 @@
           <!-- small box -->
           <div class="small-box bg-orange">
             <div class="inner">
-              <h3>@if($matchedUsers = \App\User::where('accountLevel', 2)->where('approval', '>', 0)->count()) {{ $matchedUsers }} @else 0 @endif</h3>
+              <h3>@if($matchedUsers = \App\User::where('accountLevel', 2)->where('approval', '>', 1)->where('bvn_verification', 1)->count()) {{ $matchedUsers }} @else 0 @endif</h3>
 
               <p>Matched Users</p>
             </div>
@@ -348,6 +428,25 @@
             <a href="{{ route('matched users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
+
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-blue">
+            <div class="inner">
+              <h3>@if($levelTwoUsers = \App\User::where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', 0)->count()) {{ $levelTwoUsers }}  @else 0 @endif</h3>
+
+              <p>Level 2 Account</p>
+
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('level two users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+
+
+        
 
 
           <div class="col-lg-3 col-xs-6">
@@ -423,6 +522,73 @@
           </div>
         </div>
 
+        
+        @elseif (session('role') == "Customer Marketing")
+
+          <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-purple">
+            <div class="inner">
+              <h3>@if($newUsers = \App\User::where('accountType', 'Individual')->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->count()) {{ $newUsers }}  @else 0 @endif</h3>
+
+              <p>New Users</p>
+
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('new users by country', 'user=new') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+          <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-purple">
+            <div class="inner">
+              <h3>@if($existingUsers = \App\User::where('accountType', 'Individual')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->count()) {{ $existingUsers }}  @else 0 @endif</h3>
+
+              <p>Existing Users</p>
+
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('new users by country', 'user=existing') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+          <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-blue">
+            <div class="inner">
+              <h3>@if($newMerchant = \App\User::where('accountType', 'Merchant')->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->count()) {{ $newMerchant }}  @else 0 @endif</h3>
+
+              <p>New Merchants</p>
+
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('new merchants by country', 'user=new') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+          <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-blue">
+            <div class="inner">
+              <h3>@if($existingMerchant = \App\User::where('accountType', 'Merchant')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->count()) {{ $existingMerchant }}  @else 0 @endif</h3>
+
+              <p>Existing Merchants</p>
+
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('new merchants by country', 'user=existing') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+
+
+          
+
       @else
 
 
@@ -450,7 +616,7 @@
             <div class="inner">
             <h3>{{ $getUserDetail->number_of_withdrawals }}</h3>
 
-              <p>Number of Withdrawals</p>
+              <p>Number of Withdrawal Requests</p>
             </div>
             <div class="icon">
               <i class="ion ion-archive"></i>
@@ -522,7 +688,9 @@
               @else
                   <h3>&nbsp;</h3>
 
-                <p>Add a new card</p>
+                <p>
+                  <a href="{{ route('merchant payment gateway', 'gateway=PaySprint') }}">Add a new card</a>
+                </p>
               @endif
 
 
@@ -561,7 +729,7 @@
             </div>
 
             <div class="col-md-4 mb-3">
-              @if ($getUserDetail->approval == 1)
+              @if ($getUserDetail->approval == 2 && $getUserDetail->accountLevel == 3)
                   <a style="font-size: 12.5px;" type="button" href="{{ route('merchant withdrawal') }}" class="btn btn-success btn-block">Withdraw Money <i class="fas fa-credit-card"></i></a>
               @else
                       <a style="font-size: 12.5px;" type="button" href="javascript:void()" class="btn btn-success btn-block" onclick="restriction('withdrawal', '{{ $getUserDetail->name }}')">Withdraw Money <i class="fa fa-credit-card"></i></a>
@@ -633,7 +801,7 @@
       <br>
       <br>
 
-      @if(session('role') != "Super" && session('role') != "Access to Level 1 and 2 only" && session('role') != "Access to Level 1 only")
+      @if(session('role') != "Super" && session('role') != "Access to Level 1 and 2 only" && session('role') != "Access to Level 1 only" && session('role') != "Customer Marketing")
       <!-- /.row -->
       <!-- Main row -->
       <div class="row">

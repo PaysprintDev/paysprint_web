@@ -705,6 +705,54 @@ class CheckSetupController extends Controller
     }
 
 
+    // EXBC PREPAID CARD CHECK
+    public function checkExbcCardRequest(){
+
+        // RUN CRON GET
+
+        // $access_key = '6173fa628b16d8ce1e0db5cfa25092ac';
+
+        // if(env('APP_ENV') == "local"){
+        //     $url = "http://localhost:4000/api/v1/paysprint/cardrequest";
+        // }
+        // else{
+        //     $url = "https://exbc.ca/api/v1/paysprint/cardrequest";
+        // }
+
+        $url = "https://exbc.ca/api/v1/paysprint/cardrequest";
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: Bearer base64:HgMO6FDHGziGl01OuLH9mh7CeP095shB6uuDUUClhks='
+        ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        $result = json_decode($response);
+
+
+        if(count($result->data)){
+            foreach ($result->data as $key => $value) {
+                $userDetail = User::where('ref_code', '!=', $value->ref_code)->update(['cardRequest' => 0]);
+            }
+        }
+        
+    }
+
+
     public function passwordReminder(){
         $getUsers = User::where('pass_date', '!=', null)->where('disableAccount', '!=', 'on')->where('countryapproval', 1)->get();
 

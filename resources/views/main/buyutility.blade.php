@@ -248,10 +248,10 @@ input[type="radio"] {
                                                             @endforeach
                                                         </select>
                                                     @else
-                                                        <select name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control">
+                                                        <select name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control priceChecker">
                                                             <option value="">{{ $dataProduct->FieldName }}</option>
                                                             @foreach ($dataProduct->ListItems as $listItem)
-                                                                <option value="{{ $listItem->Amount }}">{{ $listItem->ItemName.': '.Auth::user()->currencySymbol.$listItem->Amount.' ('.$listItem->ItemDesc.')' }}</option>
+                                                                <option value="{{ $listItem->ItemType }}">{{ $listItem->ItemName.': '.Auth::user()->currencySymbol.$listItem->Amount.' ('.$listItem->ItemDesc.')' }}</option>
                                                             @endforeach
                                                         </select>
                                                         
@@ -760,6 +760,91 @@ else if(val == 'addcard'){
 }
 
 }
+
+$('.priceChecker').change(function(){
+
+    var selectedOption = $(".priceChecker option:selected").text();
+
+    var productCode = "{{ Request::get('productid') }}";
+
+    var currencySymbol = "{{ Auth::user()->currencySymbol }}";
+    var currencyCode = "{{ $listItem->ItemName.': '.Auth::user()->currencySymbol.$listItem->Amount.' ('.$listItem->ItemDesc.')' }}";
+
+    // Do Ajax
+    if($('.priceChecker').val() != null){
+
+        var route;
+
+    route = "/api/v1/getproductdetails/"+productCode;
+
+        Pace.restart();
+    Pace.track(function(){
+            setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'get',
+            dataType: 'JSON',
+            
+            success: function(result){
+
+                var data = result.data;
+
+                if(result.status == 200){
+
+                    $.each(data, function(v,k){
+
+                        if(k.FieldName == "Amount"){
+                            var payInput = k.PaymentInputKey;
+                        }
+                        
+
+
+                        if(k.FieldName == "Product type"){
+
+                            $.each(k.ListItems, function(i,j){
+
+                                var checkerItem = j.ItemName+': '+currencySymbol+j.Amount+' ('+j.ItemDesc+')';
+
+                                if(checkerItem == selectedOption){
+
+                                    if(payInput == "amount"){
+                                        $("#"+payInput).val(j.Amount);
+                                        $("#"+payInput).attr('readonly', true);
+                                    }
+                                    else{
+                                        $("#amount").val(j.Amount);
+                                        $("#amount").attr('readonly', true);
+                                    }
+                                    
+                                }
+                                else{
+                                    $("#amount").val(j.Amount);
+                                    $("#amount").attr('readonly', false);
+                                }
+
+                            });
+                        }
+
+                    });
+                        runCommission();
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+            },
+            error: function(err) {
+                
+                swal("Oops", err.responseJSON.message, "error");
+
+            } 
+
+        });
+    });
+
+       
+    }
+});
 
 function goBack() {
   window.history.back();

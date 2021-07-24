@@ -142,7 +142,6 @@ class StatementController extends Controller
 
                 if($req->get('start') != null && $req->get('end') != null && $req->get('service') == null){
 
-                    Log::info("Here 1st");
 
                     $from = date('Y-m-d', strtotime($req->get('start')));
                     $nextDay = date('Y-m-d', strtotime($req->get('end')));
@@ -152,13 +151,11 @@ class StatementController extends Controller
                 }
                 elseif($req->get('service')){
 
-                    Log::info("Here 2nd");
 
                     $mystatement = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%'.$req->get('service').'%')->orderBy('created_at', 'DESC')->get();
                 }
                 elseif($req->get('start') != null && $req->get('end') != null && $req->get('service') != null){
 
-                    Log::info("Here 3rd");
 
                     $from = date('Y-m-d', strtotime($req->get('start')));
                     $nextDay = date('Y-m-d', strtotime($req->get('end')));

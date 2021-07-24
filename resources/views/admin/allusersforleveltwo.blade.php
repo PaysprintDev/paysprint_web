@@ -12,10 +12,10 @@
     <section class="content-header">
       <h1>
         @if (Request::get('country') != null)
-         All Users In {{ Request::get('country') }}
+         All Level 2 In {{ Request::get('country') }}
 
         @else
-         All Users
+         All Level 2
             
         @endif
       </h1>
@@ -23,10 +23,10 @@
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
         <li class="active">
           @if (Request::get('country') != null)
-         All Users In {{ Request::get('country') }}
+         All Level 2 In {{ Request::get('country') }}
 
         @else
-         All Users
+         All Level 2
             
         @endif
         </li>
@@ -77,7 +77,8 @@
                 </thead>
                 <tbody>
 
-                  @if($allusersdata = \App\User::where('country', Request::get('country'))->get())
+
+                  @if($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', 0)->get())
 
 
                     @if (count($allusersdata) > 0)
@@ -97,15 +98,16 @@
                             <td>{{ $datainfo->telephone }}</td>
                             <td>{{ $datainfo->accountType }}</td>
                             <td>
-                                @if (($datainfo->avatar != null))
+
+
+                              @if (($datainfo->avatar != null))
                                 <small style="font-weight: bold;">
                                     Selfie : @if($datainfo->avatar != null) <a href="{{ $datainfo->avatar }}" target="_blank">View Avatar</a> @endif
                                 </small>
                                 <hr>
                                     
                                 @endif
-
-
+                                
                                 @if (($datainfo->nin_front != null || $datainfo->nin_back != null))
                                 <small style="font-weight: bold;">
                                     Govnt. issued photo ID : @if($datainfo->nin_front != null) <a href="{{ $datainfo->nin_front }}" target="_blank">Front view</a> @endif | @if($datainfo->nin_back != null) <a href="{{ $datainfo->nin_back }}" target="_blank">Back view</a> @endif
@@ -159,37 +161,41 @@
                             <td style="color: darkorange; font-weight: bold;" align="center">Awaiting Approval</td>
                                 
                             @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)
-                            
                             <td style="color: navy; font-weight: bold;" align="center">Override Level 1</td>
 
                             @else
                             <td style="color: red; font-weight: bold;" align="center">Not Approved</td>
                                 
                             @endif
-
-                            
                             
                             <td align="center">
 
                               <a href="{{ route('user more detail', $datainfo->id) }}"><i class="far fa-eye text-primary" style="font-size: 20px;" title="More details"></i></strong></a>  
 
+                               {{-- <a href="javascript:void()" onclick="checkverification('{{ $datainfo->id }}')"><i class="fas fa-user-check text-success" title="Pass Level 1"></i> <img class="spinvery{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  --}}
 
-                               {{-- <a href="javascript:void()" onclick="checkverification('{{ $datainfo->id }}')"><i class="fas fa-user-check text-success" title="Approve Account"></i> <img class="spinvery{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  --}}
 
 
-                                @if($datainfo->approval == 1 && $datainfo->accountLevel > 0) 
+                                @if($datainfo->approval == 2 && $datainfo->accountLevel > 0) 
                                 
-                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Disapprove"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  
+                                <a href="javascript:void()" onclick="downgradetoLevel1('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Downgrade to Level 1"></i> <img class="spindowngrade{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
+                                
+                                
+                                @elseif($datainfo->approval == 1 && $datainfo->accountLevel > 0) 
+                                
+                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-check-square text-success" style="font-size: 20px;" title="Approve Account"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  
+
+                                <a href="javascript:void()" onclick="disapproveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Disapprove Account"></i> <img class="spindis{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  
                                 
                                 
                                 @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)
 
-                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Disapprove"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>
+                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-check-square text-danger" style="font-size: 20px;" title="Approve Account"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>
 
                                 @else 
                                 
                                 
-                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-primary"><i class="far fa-lightbulb text-success" style="font-size: 20px;" title="Approve"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
+                                <a href="javascript:void()" onclick="approveaccount('{{ $datainfo->id }}')" class="text-primary"><i class="far fa-lightbulb text-success" style="font-size: 20px;" title="Approve Account"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
                                 
                                 
                                 @endif
@@ -198,11 +204,6 @@
 
                                 <a href="javascript:void()" onclick="closeAccount('{{ $datainfo->id }}')" class="text-danger"><i class="far fa-trash-alt text-danger" style="font-size: 20px;" title="Close Account"></i> <img class="spinclose{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
 
-                                {{--  @if ($datainfo->approval == 1)
-                                <button class="btn btn-danger" id="processPay" onclick="approveaccount('{{ $datainfo->id }}')">Disapprove Identification <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></button>
-                                @else
-                                <button class="btn btn-primary" id="processPay" onclick="approveaccount('{{ $datainfo->id }}')">Approve Identification <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></button>
-                                @endif  --}}
 
                               
                             </td>

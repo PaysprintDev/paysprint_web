@@ -738,12 +738,23 @@ class UserController extends Controller
     public function bvnVerification(Request $req){
         $response = $this->verifyBVN($req->bvn, $req->account_number, $req->bank_code, $req->account_name);
 
+        Log::info(json_encode($response));
+
         try {
             if($response->status == true && $response->data->is_blacklisted == false && $response->data->account_number == true){
 
             $bank = ListOfBanks::where('code', $req->bank_code)->first();
+
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            if($thisuser->approval == 2 && $thisuser->accountLevel == 3){
+                User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 3, 'approval' => 2,  'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
+            }
+            else{
+                User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 2, 'approval' => 1,  'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
+            }
             
-            User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 2, 'approval' => 1,  'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
+            
 
 
             $data = $response->data;

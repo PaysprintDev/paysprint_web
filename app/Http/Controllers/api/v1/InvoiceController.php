@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Rap2hpoutre\FastExcel\FastExcel;
+use Maatwebsite\Excel\Facades\Excel;
+
+use App\Imports\InvoiceImport;
 
 use Illuminate\Support\Facades\Log;
 
@@ -326,6 +329,8 @@ class InvoiceController extends Controller
 
         // dd($req->all());
 
+        $queryData;
+
         $validator = Validator::make($req->all(), [
                      'excel_file' => ['required','mimes:xls,xlsx'],
                      'service' => 'required|string',
@@ -350,12 +355,15 @@ class InvoiceController extends Controller
                                 $extension = $req->file('excel_file')->getClientOriginalExtension();
 
 
+
                                 if($extension == "xlsx" || $extension == "xls"){
 
                                     $path = $req->file('excel_file')->getRealPath();
 
+
                                     // $data = Excel::import($path)->get();
-                                    $data = (new FastExcel)->import($path);
+                                    // $data = (new FastExcel)->import($path);
+
 
                                     // Get Client Name & Address
 
@@ -381,7 +389,15 @@ class InvoiceController extends Controller
 
                                     $getTax = Tax::where('id', $req->single_tax)->first();
 
-                                    
+
+                                    $query = $req->all();
+                                    $query['ref_code'] = $thisuser->ref_code;
+                                    $query['client_realname'] = $client_realname;
+
+
+                                    $data = Excel::import(new InvoiceImport($query), $req->file('excel_file'));
+
+                                    dd($data);
 
                                     if($data->count() > 0){
                                         foreach ($data->toArray() as $key) {
@@ -456,7 +472,7 @@ class InvoiceController extends Controller
                                                     'tax' => $req->single_tax,
                                                     'tax_amount' => $taxAmount,
                                                     'total_amount' => $totalAmount, 
-                                                    'remaining_balance' => $req->single_total_amount
+                                                    'remaining_balance' => $totalAmount
                                                     
                                                 );
 
@@ -542,11 +558,9 @@ class InvoiceController extends Controller
                                     }
 
                                     // Filename to store
-                                $fileNameToStore = rand().'_'.time().'.'.$extension;
+                                    // $fileNameToStore = rand().'_'.time().'.'.$extension;
 
-                                // $req->file('excel_file')->move(public_path('/excelUpload/'), $fileNameToStore);
-
-                                $req->file('excel_file')->move(public_path('../../excelUpload/'), $fileNameToStore);
+                                    // $req->file('excel_file')->move(public_path('../../excelUpload/'), $fileNameToStore);
 
 
                                     $status = 200;
@@ -557,13 +571,13 @@ class InvoiceController extends Controller
                                 else{
                                     $status = 400;
                                     $data = [];
-                                    $message = "Something went wrong";
+                                    $message = "Unable to process ".strtoupper($extension)." file";
                                 }
                         }
                         else{
                             $status = 400;
                             $data = [];
-                            $message = "We recommend uploading excel (xls or xlsx) format.";
+                            $message = "Please upload a file!";
                         }
 
                         
@@ -573,7 +587,7 @@ class InvoiceController extends Controller
                 catch (\Throwable $th) {
                     $status = 400;
                     $data = [];
-                    $message = "Error: ".$th;
+                    $message = "Error: ".$th->getMessage();
                 }
 
             $resData = ['data' => $data, 'message' => $message, 'status' => $status];

@@ -34,7 +34,8 @@
             <div class="inner">
               <h3>{{ $data['getuserDetail']->currencySymbol.number_format($data['getuserDetail']->wallet_balance, 2) }}</h3>
 
-              <p>Balance</p>
+              <p>Wallet Balance <br><br> <strong class="text-danger">Available Balance: {{ $data['getuserDetail']->currencySymbol.number_format(($data['getuserDetail']->wallet_balance - $data['minimumWallet']), 2) }}</strong></p>
+              
             </div>
             <div class="icon">
               <i class="ion ion-pricetag"></i>
@@ -111,6 +112,12 @@
                                         <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
                                     </div>
                                 </div>
+
+                                <hr>
+
+                            <div class="form-group">
+                                <strong><span class="text-danger wallet-info"></span></strong>
+                            </div>
 
 
                                 <div class="form-group">
@@ -270,7 +277,7 @@ function runCommission(){
 
 
     var route = "{{ URL('Ajax/getCommission') }}";
-    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $('#card_type').val(), localcurrency: "{{ $data['getuserDetail']->currencyCode }}", foreigncurrency: "USD", structure: "Withdrawal", structureMethod: "CC/Bank"};
+    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $('#card_type').val(), localcurrency: "{{ $data['getuserDetail']->currencyCode }}", foreigncurrency: "USD", structure: "Withdrawal", structureMethod: $("#card_type").val()};
 
 
     Pace.restart();
@@ -289,6 +296,7 @@ function runCommission(){
         
         success: function(result){
 
+
             var totalCharge;
 
             if(result.message == "success"){
@@ -297,21 +305,21 @@ function runCommission(){
                 $('.withWallet').removeClass('disp-0');
 
                 if(result.walletCheck != ""){
-                    $(".sendmoneyBtn").attr("disabled", true);
-                    
-
+                    $(".withdrawmoneyBtn").attr("disabled", true);
+                    $('.commissionInfo').addClass('disp-0');
                 }
                 else{
-                    $(".sendmoneyBtn").attr("disabled", false);
+                    $(".withdrawmoneyBtn").attr("disabled", false);
+                    $('.commissionInfo').removeClass('disp-0');
                 }
 
 
-                if(result.state == "commission available"){
+                if(result.state == "commission available" && result.walletCheck == ""){
 
                     $('.commissionInfo').addClass('alert alert-success');
                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['getuserDetail']->currencySymbol }}"+result.data.toFixed(2)+" will be credited to your "+$('#card_type').val()+". Fee charge inclusive</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['getuserDetail']->currencySymbol }}"+result.data.toFixed(2)+" will be credited to your "+$('#card_type').val()+".</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
@@ -325,23 +333,23 @@ function runCommission(){
 
 
                 }
-                else{
+                // else{
 
-                    $('.commissionInfo').addClass('alert alert-danger');
-                    $('.commissionInfo').removeClass('alert alert-success');
+                //     $('.commissionInfo').addClass('alert alert-danger');
+                //     $('.commissionInfo').removeClass('alert alert-success');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['getuserDetail']->currencySymbol }}"+(+result.data + +result.collection).toFixed(2)+" will be charged from your "+$('#card_type').val()+".</span></li></li></ul>");
+                //     $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['getuserDetail']->currencySymbol }}"+(+result.data + +result.collection).toFixed(2)+" will be charged from your "+$('#card_type').val()+".</span></li></li></ul>");
 
-                    $("#amounttosend").val(result.data);
-                    $("#commissiondeduct").val(result.collection);
-                    $("#totalcharge").val((+result.data + +result.collection));
+                //     $("#amounttosend").val(result.data);
+                //     $("#commissiondeduct").val(result.collection);
+                //     $("#totalcharge").val((+result.data + +result.collection));
 
-                    totalCharge = $("#amount").val();
+                //     totalCharge = $("#amount").val();
 
 
-                    currencyConvert(totalCharge);
+                //     currencyConvert(totalCharge);
 
-                }
+                // }
 
 
             }

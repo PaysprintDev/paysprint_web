@@ -13,10 +13,10 @@
     <section class="content-header">
       <h1>
         @if (Request::get('country') != null)
-         All Closed Users In {{ Request::get('country') }}
+         All {{ strtoupper(Request::get('user')) }} Merchants In {{ Request::get('country') }}
 
         @else
-         All Closed Users
+         All {{ strtoupper(Request::get('user')) }} Merchants
             
         @endif
       </h1>
@@ -24,10 +24,10 @@
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
         <li class="active">
           @if (Request::get('country') != null)
-         All Closed Users In {{ Request::get('country') }}
+         All {{ strtoupper(Request::get('user')) }} Merchants In {{ Request::get('country') }}
 
         @else
-         All Closed Users
+         All {{ strtoupper(Request::get('user')) }} Merchants
             
         @endif
         </li>
@@ -67,17 +67,27 @@
                   <th>Name</th>
                   <th>Username</th>
                   <th>Email</th>
+                  <th>Telephone</th>
                   <th>Account Type</th>
                   <th>Identification</th>
                   <th>Platform</th>
-                  <th>Date Closed</th>
-                  <th>Status</th>
-                  <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
 
-                  @if($allusersdata = \App\UserClosed::where('country', Request::get('country'))->get())
+                    @if (Request::get('user') == "new")
+
+                        @php
+                            $allusersdata = \App\User::where('accountType', 'Merchant')->where('country', Request::get('country'))->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->get();
+                        @endphp
+                        
+                    @else
+
+                        @php
+                            $allusersdata = \App\User::where('accountType', 'Merchant')->where('country', Request::get('country'))->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->get()
+                        @endphp
+                    @endif
+                    
 
 
                     @if (count($allusersdata) > 0)
@@ -94,6 +104,7 @@
                               <td>-</td>
                             @endif
                             <td>{{ $datainfo->email }}</td>
+                            <td>{{ $datainfo->telephone }}</td>
                             <td>{{ $datainfo->accountType }}</td>
                             <td>
 
@@ -145,34 +156,6 @@
 
                             <td>{{ $datainfo->platform }}</td>
 
-                            <td>
-                                {{ date('d/M/Y h:i:a', strtotime($datainfo->created_at)) }}
-                            </td>
-
-                            @if ($datainfo->approval == 1 && $datainfo->accountLevel > 0)
-
-                            <td style="color: green; font-weight: bold;" align="center">Approved</td>
-                                
-                            @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)
-                            <td style="color: navy; font-weight: bold;" align="center">Override Level 1</td>
-
-                            @else
-                            <td style="color: red; font-weight: bold;" align="center">Not Approved</td>
-                                
-                            @endif
-                            
-                            <td align="center">
-
-                              <a href="{{ route('closed user more detail', $datainfo->id) }}"><i class="far fa-eye text-primary" style="font-size: 20px;" title="More details"></i></strong></a> 
-
-
-
-                                <a href="{{ route('send message', 'id='.$datainfo->id) }}" class="text-info"><i class="far fa-envelope text-success" style="font-size: 20px;" title="Send Mail"></i></a> 
-
-                                <a href="javascript:void()" onclick="openAccount('{{ $datainfo->id }}')" class="text-success"><i class="fas fa-lock-open text-success" style="font-size: 20px;" title="Open Account"></i> <img class="spinopen{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
-
-                              
-                            </td>
 
 
                         </tr>
@@ -186,12 +169,6 @@
                     </tr>
                     @endif
 
-
-
-                       
-
-
-                    @endif
 
 
 
