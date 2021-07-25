@@ -523,6 +523,8 @@ function runCardType(){
 function runCommission(){
     
     $('.commissionInfo').html("");
+    $('.payutilityBtn').addClass('disp-0');
+    
     var amount = $("#amount").val();
     var billerCode = $("#billerCode").val();
 
@@ -543,10 +545,11 @@ function runCommission(){
         dataType: 'JSON',
         beforeSend: function(){
             $('.commissionInfo').addClass('');
+            $('.payutilityBtn').addClass('disp-0');
         },
         
         success: function(result){
-
+            $('.payutilityBtn').removeClass('disp-0');
 
             if(result.message == "success"){
 
@@ -765,13 +768,17 @@ $('.priceChecker').change(function(){
 
     var selectedOption = $(".priceChecker option:selected").text();
 
+    var quantity = $("#quantity option:selected").text();
+
     var productCode = "{{ Request::get('productid') }}";
 
     var currencySymbol = "{{ Auth::user()->currencySymbol }}";
-    var currencyCode = "{{ $listItem->ItemName.': '.Auth::user()->currencySymbol.$listItem->Amount.' ('.$listItem->ItemDesc.')' }}";
+
+    $('.payutilityBtn').addClass('disp-0');
 
     // Do Ajax
     if($('.priceChecker').val() != null){
+        
 
         var route;
 
@@ -784,22 +791,45 @@ $('.priceChecker').change(function(){
             url: route,
             method: 'get',
             dataType: 'JSON',
-            
+            beforeSend: function(){
+                $('.payutilityBtn').addClass('disp-0');
+            },
             success: function(result){
 
+                $('.payutilityBtn').removeClass('disp-0');
+
                 var data = result.data;
+                var getAmount = 0;
+                var payInput = "";
+                var numberOfMonths = 1;
 
                 if(result.status == 200){
 
                     $.each(data, function(v,k){
 
                         if(k.FieldName == "Amount"){
-                            var payInput = k.PaymentInputKey;
+                            payInput = k.PaymentInputKey;
                         }
-                        
+
+                        if(k.FieldName == "Number of Months"){
+
+                            $.each(k.ListItems, function(k,l){
+
+                                var monthCheck = l.ItemName+' month';
 
 
-                        if(k.FieldName == "Product type"){
+                                if(monthCheck == quantity){
+
+                                    numberOfMonths =  l.ItemType;
+                                    
+                                }  
+                                
+
+                            });
+                        }
+
+
+                        if(k.FieldName == "Product type" || k.FieldName == "Select Package (Amount)" || k.FieldName == "Select Package" || k.FieldName == "Product"){
 
                             $.each(k.ListItems, function(i,j){
 
@@ -807,25 +837,34 @@ $('.priceChecker').change(function(){
 
                                 if(checkerItem == selectedOption){
 
-                                    if(payInput == "amount"){
-                                        $("#"+payInput).val(j.Amount);
-                                        $("#"+payInput).attr('readonly', true);
-                                    }
-                                    else{
-                                        $("#amount").val(j.Amount);
-                                        $("#amount").attr('readonly', true);
-                                    }
+                                    getAmount =  j.Amount * numberOfMonths;
                                     
                                 }
-                                else{
-                                    $("#amount").val(j.Amount);
-                                    $("#amount").attr('readonly', false);
-                                }
+                                
 
                             });
                         }
 
                     });
+
+
+                    if(payInput == "amount"){
+
+                        if(getAmount != 0){
+                            $("#"+payInput).val(getAmount);
+                            $("#"+payInput).attr('readonly', true);
+                        }
+                        else{
+                            $("#"+payInput).attr('readonly', false);
+                        }
+
+                        
+                    }
+                    else{
+                        $("#amount").val(getAmount);
+                        $("#amount").attr('readonly', true);
+                    }
+
                         runCommission();
                 }
                 else{

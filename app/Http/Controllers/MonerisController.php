@@ -1561,6 +1561,16 @@ else{
 
 
                     }
+
+                    elseif($thisuser->country == "Nigeria"){
+
+                        $data = [];
+                        $message = "We cannot process your transaction. Kindly update your app from the Google Play Store or Apple Store. Thanks";
+                        $status = 400;
+
+                        Log::critical('Oops!! '.$thisuser->name.' '.$message.". This is a test environment");
+                    }
+
                     else{
 
 
@@ -2259,6 +2269,16 @@ else{
 
 
                     }
+
+                    elseif($thisuser->country == "Nigeria"){
+
+                        $data = [];
+                        $message = "We cannot process your transaction. Kindly update your app from the Google Play Store or Apple Store. Thanks";
+                        $status = 400;
+
+                        Log::critical('Oops!! '.$thisuser->name.' '.$message);
+                    }
+
                     else{
 
 

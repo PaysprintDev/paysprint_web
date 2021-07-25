@@ -508,6 +508,8 @@ class MerchantApiController extends Controller
 
     // Receive Money From Visitors
     public function receiveMoneyFromVisitors(Request $req){
+
+
         $validator = Validator::make($req->all(), [
             'firstname' => 'required',
             'lastname' => 'required',
@@ -524,15 +526,23 @@ class MerchantApiController extends Controller
         ]);
 
 
+
         if($validator->passes()){
+
+
 
             $merchantInfo = ClientInfo::where('api_secrete_key', $req->bearerToken())->first();
 
+
             if(isset($merchantInfo) == true){
+
+
 
                 $thismerchant = User::where('ref_code', $merchantInfo->user_id)->first();
 
                 $mode = strtoupper($req->mode);
+
+
 
                 $countryInfo = $this->getCountryCode($req->country);
 
@@ -540,6 +550,8 @@ class MerchantApiController extends Controller
 
                 // Currency converter
                 $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $myCurrency);
+
+
 
                 if($mode == strtoupper("live")){
 
@@ -584,7 +596,7 @@ class MerchantApiController extends Controller
 
 
                             // Insert Statement
-                            $activity = "Transfer of ".$thismerchant->currencyCode." ".number_format($req->amount, 2)." to ".$thismerchant->businessname." for ".$service;
+                            $activity = "Transfer of ".$myCurrency." ".number_format($req->amount, 2)." to ".$thismerchant->businessname." for ".$service;
                             $credit = 0;
                             $debit = number_format($req->amount, 2);
                             $reference_code = $reference_code;
@@ -639,7 +651,10 @@ class MerchantApiController extends Controller
                             $this->sendEmail($this->email, "Payment Successful");
 
 
-                            $sendMsg = "Hi ".$req->firstname." ".$req->lastname.", You have made a ".$activity." Do more with PaySprint. Download our mobile app from Apple Store or Google Play Store. Thanks PaySprint Team";
+                            $receiverSMS = "Transfer of ".$countryInfo[0]->currencies[0]->code." ".number_format($req->amount, 2)." to ".$thismerchant->businessname." for ".$service;
+
+
+                            $sendMsg = "Hi ".$req->firstname." ".$req->lastname.", You have made a ".$receiverSMS." Do more with PaySprint. Download our mobile app from Apple Store or Google Play Store. Thanks PaySprint Team";
                             $sendPhone = "+".$code.$req->phone;
 
                             $this->sendMessage($sendMsg, $sendPhone);
@@ -670,7 +685,7 @@ class MerchantApiController extends Controller
                             $this->createNotification($thismerchant->ref_code, $recMsg);
 
                             $monerisactivity = $recMsg;
-                            $this->keepRecord($paymentToken, $mpgResponse->responseData['Message'], $monerisactivity);
+                            $this->keepRecord($paymentToken, $response->responseData['Message'], $monerisactivity, "Moneris", $req->country);
 
 
                             
@@ -690,20 +705,22 @@ class MerchantApiController extends Controller
 
                         $data = [];
 
-                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                        
 
                         $monerisactivity = "Payment not successfull";
-                        $this->keepRecord("", $mpgResponse->responseData['Message'], $monerisactivity);
+                        
+                        $this->keepRecord("", $response->responseData['Message'], $monerisactivity, "Moneris", $req->country);
+                        
+                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
                     }
-
-
-
 
                     
                     
 
                 }
                 elseif($mode == strtoupper("test")){
+
+
 
                     // Make Payment
 
@@ -878,6 +895,9 @@ class MerchantApiController extends Controller
 
 
 
+
+
+
         return $this->returnJSON($resData, $status);
     }
 
@@ -887,6 +907,7 @@ class MerchantApiController extends Controller
         $thisuser = User::where('ref_code', $ref_code)->first();
 
         $userCardType = strtoupper($cardType);
+        
 
         if($mode == strtoupper("test")){
             // Test API
@@ -984,7 +1005,7 @@ class MerchantApiController extends Controller
         */
         $mpgHttpPost = new mpgHttpsPost($store_id,$api_token,$mpgRequest);
         /******************************* Response ************************************/
-        $mpgResponse=$mpgHttpPost->getMpgResponse();
+        $mpgResponse = $mpgHttpPost->getMpgResponse();
 
         return $mpgResponse;
     }

@@ -59,8 +59,28 @@ trait PaystackPayment{
         $username = explode(" ", $name);
 
         if(is_array($username)){
-            $lastname = $username[0];
-            $firstname = $username[1];
+            
+            if(isset($username[0])){
+
+                $userlastname = $username[0];
+            }
+            else{
+                $userlastname = "";
+
+            }
+
+            if(isset($username[1])){
+                $userfirstname = $username[1];
+            }
+            else{
+                $userfirstname = "";
+            }
+
+
+            $lastname = $userfirstname;
+            $firstname = $userlastname;
+
+
         }
         else{
             $firstname = $name;

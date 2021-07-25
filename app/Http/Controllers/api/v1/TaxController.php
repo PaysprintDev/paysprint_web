@@ -112,9 +112,15 @@ class TaxController extends Controller
             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
             $taxRec = Tax::where('id', $req->id)->first();
+            
+            if(isset($taxRec)){
+                $taxAmount = ($taxRec->rate / 100) * $req->amount;
+            }
+            else{
+                $taxAmount = 0;
+            }
 
             // Tax amount in %...
-            $taxAmount = ($taxRec->rate / 100) * $req->amount;
 
             $totalAmount = $req->amount + $taxAmount;
 
