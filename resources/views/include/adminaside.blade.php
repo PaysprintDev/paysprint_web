@@ -413,8 +413,8 @@
           </a>
           <ul class="treeview-menu">
             <li ><a href="{{ route('create single invoice') }}"><i class="fa fa-circle-o text-green"></i> Single </a></li>
-            <li ><a href="{{ route('create bulk invoice') }}"><i class="fa fa-circle-o text-red"></i> Batch</a></li>
-             {{--  <li onclick="comingSoon()"><a href="javascript:void()"><i class="fa fa-circle-o text-red"></i> Batch [Coming Soon]</a></li>   --}}
+            {{-- <li ><a href="{{ route('create bulk invoice') }}"><i class="fa fa-circle-o text-red"></i> Batch</a></li> --}}
+             <li onclick="comingSoon()"><a href="javascript:void()"><i class="fa fa-circle-o text-red"></i> Batch [Coming Soon]</a></li> 
             {{-- <li><a href="#"><i class="fa fa-circle-o text-info"></i> Check Sold Tickets</a></li>
             <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
           </ul>
