@@ -737,6 +737,19 @@
               @endif
             </div>
 
+            
+
+            <div class="col-md-4 mt-5 mb-3">
+              @if ($getUserDetail->approval == 2 && $getUserDetail->accountLevel == 3)
+              <br>
+                  <a style="font-size: 12.5px;" type="button" href="{{ route('invoice') }}" class="btn btn-danger btn-block">Pay Invoice <i class="fas fa-credit-card"></i></a>
+              @else
+              <br>
+                      <a style="font-size: 12.5px;" type="button" href="javascript:void()" class="btn btn-danger btn-block" onclick="restriction('invoice', '{{ $getUserDetail->name }}')">Pay Invoice <i class="fa fa-credit-card"></i></a>
+                  
+              @endif
+            </div>
+
 
 
 

@@ -3421,9 +3421,11 @@ function payOrg(user_id){
 
 
  function restriction(val, name){
-    if(val == "withdrawal"){
+    if(val == "withdrawal")
         swal('Hello '+name, 'Your account need to be verified before you can make withdrawal', 'info');
-    }
+    
+    if(val == "invoice")
+        swal('Hello '+name, 'Your account need to be verified before you can pay for invoice', 'info');
  }
 
   function comingSoon(){

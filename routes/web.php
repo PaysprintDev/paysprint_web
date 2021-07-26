@@ -217,6 +217,7 @@ Route::get('newmerchantsbycountry', ['uses' => 'AdminController@newMerchantsByCo
 
 
 Route::get('usermoredetail/{id}', ['uses' => 'AdminController@userMoreDetail', 'as' => 'user more detail']);
+Route::get('closedusermoredetail/{id}', ['uses' => 'AdminController@closedUserMoreDetail', 'as' => 'closed user more detail']);
 
 
 Route::prefix('Admin/wallet')->group(function () {
@@ -284,7 +285,9 @@ Route::prefix('Admin/card')->group(function () {
 	Route::get('editcardissuer/{id}', ['uses' => 'AdminController@editCardIssuer', 'as' => 'editcardissuer']);
 
 	Route::get('addedcards', ['uses' => 'AdminController@allAddedCards', 'as' => 'all added cards']);
+	Route::get('deletedcards', ['uses' => 'AdminController@allDeletedCards', 'as' => 'all deleted cards']);
 	Route::get('getusercard/{user_id}', ['uses' => 'AdminController@getUsersCard', 'as' => 'get user card']);
+	Route::get('getuserdeletedcard/{user_id}', ['uses' => 'AdminController@getUsersDeletedCard', 'as' => 'get user deleted card']);
 	Route::get('redflagged', ['uses' => 'AdminController@redFlaggedAccount', 'as' => 'red flagged account']);
 
 

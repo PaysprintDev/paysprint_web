@@ -116,7 +116,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'expressUtilities', 'expressBuyUtilities']]);
+        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'expressUtilities', 'expressBuyUtilities']]);
 
         $location = $this->myLocation();
         
@@ -1104,19 +1104,24 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
             }
             else{
-                $this->page = 'Airtime and Utility Bills';
-                $this->name = '';
+                // $this->page = 'Airtime and Utility Bills';
+                // $this->name = '';
+
+                return redirect()->route('login');
             }
 
         }
         else{
-            $this->page = 'Airtime and Utility Bills';
-            $this->name = session('name');
-            $this->email = session('email');
 
             $user = User::where('email', session('email'))->first();
             
             Auth::login($user);
+
+            $this->page = 'Airtime and Utility Bills';
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+
+            
         }
 
 
@@ -1265,6 +1270,7 @@ class HomeController extends Controller
     {
         // dd($req->session());
         if($req->session()->has('email') == false){
+
             if(Auth::check() == true){
                 $this->page = 'Invoice';
                 $this->name = Auth::user()->name;
@@ -1275,22 +1281,27 @@ class HomeController extends Controller
                 );
             }
             else{
-                $this->page = 'Invoice';
-                $this->name = '';
-                $data = [
-                    'continent' => $this->timezone[0]
-                ];
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Invoice';
-            $this->name = session('name');
-            $this->email = session('email');
-            $data = [
-                'continent' => $this->timezone[0]
-            ];
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+            
+            $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
+                );
         }
+
+
 
         $service = $this->myServices();
 

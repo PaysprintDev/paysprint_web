@@ -313,6 +313,7 @@
             <li title="Prepaid Card Issuer"><a href="{{ route('card issuer') }}"><i class="fa fa-circle-o text-red"></i> Prepaid Card Issuer</a></li>
             <li title="Prepaid Card Request"><a href="{{ route('prepaid card request') }}"><i class="fa fa-circle-o text-red"></i> Prepaid Card Request</a></li>
             <li title="Added Cards"><a href="{{ route('all added cards') }}"><i class="fa fa-circle-o text-red"></i> Added Cards</a></li>
+            <li title="Deleted Cards"><a href="{{ route('all deleted cards') }}"><i class="fa fa-circle-o text-red"></i> Deleted Cards</a></li>
           </ul>
         </li>
 
@@ -412,8 +413,8 @@
           </a>
           <ul class="treeview-menu">
             <li ><a href="{{ route('create single invoice') }}"><i class="fa fa-circle-o text-green"></i> Single </a></li>
-            {{-- <li ><a href="{{ route('create bulk invoice') }}"><i class="fa fa-circle-o text-red"></i> Batch</a></li> --}}
-             <li onclick="comingSoon()"><a href="javascript:void()"><i class="fa fa-circle-o text-red"></i> Batch [Coming Soon]</a></li> 
+            <li ><a href="{{ route('create bulk invoice') }}"><i class="fa fa-circle-o text-red"></i> Batch</a></li>
+             {{--  <li onclick="comingSoon()"><a href="javascript:void()"><i class="fa fa-circle-o text-red"></i> Batch [Coming Soon]</a></li>   --}}
             {{-- <li><a href="#"><i class="fa fa-circle-o text-info"></i> Check Sold Tickets</a></li>
             <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
           </ul>

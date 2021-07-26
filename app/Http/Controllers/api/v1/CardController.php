@@ -14,6 +14,8 @@ use App\AddCard as AddCard;
 use App\AddBank as AddBank;
 use App\AddBeneficiary as AddBeneficiary;
 use App\CardIssuer as CardIssuer;
+use App\DeletedCards as DeletedCards;
+use App\DeletedBanks as DeletedBanks;
 
 class CardController extends Controller
 {
@@ -424,6 +426,21 @@ class CardController extends Controller
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
+       $getCard = AddCard::where('id', $req->id)->first();
+
+
+        DeletedCards::insert([
+            "user_id" => $getCard->user_id,
+            "card_name" => $getCard->card_name,
+            "card_number" => $getCard->card_number,
+            "card_provider" => $getCard->card_provider,
+            "month" => $getCard->month,
+            "year" => $getCard->year,
+            "cvv" => $getCard->cvv,
+            "card_type" => $getCard->card_type,
+            "gateway" => $getCard->gateway
+        ]);
+
        $query = AddCard::where('id', $req->id)->delete();
 
         $data = $query;
@@ -450,7 +467,22 @@ class CardController extends Controller
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
         
+       $getBank = AddBank::where('id', $req->id)->first();
+
+
+       DeletedBanks::insert([
+            "user_id" => $getBank->user_id,
+            "bankName" => $getBank->bankName,
+            "transitNumber" => $getBank->transitNumber,
+            "branchCode" => $getBank->branchCode,
+            "accountName" => $getBank->accountName,
+            "accountNumber" => $getBank->accountNumber
+        ]);
+
+
        $query = AddBank::where('id', $req->id)->delete();
+
+
 
         $data = $query;
         $status = 200;
