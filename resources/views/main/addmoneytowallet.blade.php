@@ -13,6 +13,7 @@
 
 <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
 <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
+<script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ Auth::user()->currencyCode }}"></script>
 
     <title>PaySprint | Payment</title>
 
@@ -201,8 +202,11 @@ input[type="radio"] {
                                 
                                     @if (Auth::user()->country == "Nigeria")
                                         <div class="card-footer"> <button type="button" onclick="payWithPaystack('{{ Auth::user()->email }}')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </button></div>
-                                    @else
+                                    @elseif(Auth::user()->country == "Canada")
                                         <div class="card-footer"> <button type="button" onclick="handShake('addmoney')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </button></div>
+                                    @else
+                                    {{--  PayPal  --}}
+                                        <div class="card-footer" id="paypal-button-container"></div>
                                     @endif
                                     
                                     
@@ -906,6 +910,54 @@ function goBack() {
 
 
 // Gpay Ends
+
+
+// Paypal Integration Start
+
+paypal.Buttons({
+
+    createOrder: function(data, actions) {
+
+    var netamount = $('#amounttosend').val();
+    var feeamount = $('#commissiondeduct').val();
+    var amount = (+netamount + +feeamount).toFixed(2);
+
+      // Set up the transaction
+      return actions.order.create({
+        purchase_units: [{
+          amount: {
+            value: amount
+          }
+        }]
+      });
+    },
+    onApprove: function(data, actions) {
+      // This function captures the funds from the transaction.
+      return actions.order.capture().then(function(details) {
+
+          if(details.status == "COMPLETED"){
+                $('#paymentToken').val(data.orderID);
+
+                // alert("Looks like the transaction is approved.");
+                setTimeout(() => {
+                    handShake('addmoney');
+                }, 1000);
+          }
+
+        // This function shows a transaction success message to your buyer.
+        // alert('Transaction completed by ' + details.payer.name.given_name);
+      });
+    },
+    onCancel: function (data) {
+        alert("Transaction cancelled for "+data.orderID);
+    },
+    onError: function (err) {
+        alert(err);
+    }
+  }).render('#paypal-button-container');
+  
+
+// PayPal Integration End
 
 
 function setHeaders(){

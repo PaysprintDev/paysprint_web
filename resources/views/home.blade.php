@@ -374,7 +374,7 @@
                     <div class="card" style="width: 100%;">
                             <div class="card-header" style="background-color: #ffba01; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
                                 Quick Wallet Setup
-                                @if (Auth::user()->approval == 0 || count($data['getCard']) <= 0 || Auth::user()->transaction_pin == null || Auth::user()->securityQuestion == null)
+                                @if (Auth::user()->approval == 0 || count($data['getCard']) <= 0 && count($data['getBank']) <= 0 || Auth::user()->transaction_pin == null || Auth::user()->securityQuestion == null)
                                     <a href="javascript:void()" type="button" class="btn btn-danger fa-blink">Incomplete</a>
                                 @endif
                             </div>
@@ -397,7 +397,7 @@
                                              <a href="{{ route('payment gateway', 'gateway=PaySprint') }}">Add Credit Card/Prepaid Card/Bank Account </a>
                                         </div>
                                         <div class="col-md-2">
-                                            {!! count($data['getCard']) > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                            {!! count($data['getCard']) > 0 || count($data['getBank']) > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
                                         </div>
                                     </div>
 

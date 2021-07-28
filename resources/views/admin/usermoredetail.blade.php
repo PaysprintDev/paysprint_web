@@ -92,7 +92,7 @@
                           </tr>
                           <tr>
                             <td>Verification Status</td>
-                            <td style="font-weight: bold;" class="mainText {{ ($getthisuser->bvn_verification == 1) ? 'text-success' : 'text-danger' }}">{{ ($getthisuser->bvn_verification == 1) ? "Verified" : "Not verified" }}</td>
+                            <td style="font-weight: bold;" class="mainText {{ ($getthisuser->bvn_verification >= 1) ? 'text-success' : 'text-danger' }}">{{ ($getthisuser->bvn_verification >= 1) ? "Verified" : "Not verified" }}</td>
                           </tr>
                       @endif
 

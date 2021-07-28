@@ -164,6 +164,7 @@ class AdminController extends Controller
             $getUserDetail = $this->getmyPersonalDetail(session('user_id'));
 
             $getCard = $this->getUserCard(session('myID'));
+            $getBank = $this->getUserBank(session('myID'));
 
             $getTax = $this->getTax(session('myID'));
 
@@ -190,7 +191,7 @@ class AdminController extends Controller
         
 
 
-            return view('admin.index')->with(['pages' => 'My Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'allusers' => $allusers, 'getUserDetail' => $getUserDetail, 'getCard' => $getCard, 'getTax' => $getTax, 'withdraws' => $withdraws, 'pending' => $pending, 'allcountries' => $allcountries, 'refund' => $refund]);
+            return view('admin.index')->with(['pages' => 'My Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'allusers' => $allusers, 'getUserDetail' => $getUserDetail, 'getCard' => $getCard, 'getBank' => $getBank, 'getTax' => $getTax, 'withdraws' => $withdraws, 'pending' => $pending, 'allcountries' => $allcountries, 'refund' => $refund]);
         }
         else{
             return redirect()->route('AdminLogin');
@@ -1112,6 +1113,7 @@ class AdminController extends Controller
                 'getbusinessDetail' => $this->getmyBusinessDetail(session('user_id')),
                 'merchantservice' => $this->_merchantServices(),
                 'getCard' => $this->getUserCard(session('myID')),
+                'getBank' => $this->getUserBank(session('myID')),
                 'getTax' => $this->getTax(session('myID')),
                 'listbank' => $this->getBankList(),
             );
@@ -2361,6 +2363,7 @@ class AdminController extends Controller
         }
 
     }
+    
 
 
     public function allClosedUsers(Request $req){
@@ -6328,6 +6331,14 @@ class AdminController extends Controller
 
     }
 
+    public function getUserBank($id){
+
+        $data = AddBank::where('user_id', $id)->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+
+    }
+
     public function getMinimumBalance($country){
 
         $data = TransactionCost::where('structure', "Wallet Balance")->where('method', "Minimum Balance")->where('country', $country)->first();
@@ -9344,6 +9355,7 @@ class AdminController extends Controller
                 }
 
                 $mycode = $this->getCountryCode($checkApikey->country);
+                
 
                 $currencyCode = $mycode[0]->currencies[0]->code;
                 $currencySymbol = $mycode[0]->currencies[0]->symbol;
@@ -9615,6 +9627,18 @@ class AdminController extends Controller
 
                                     // $resp = $info->Message;
                                 }
+
+                                $this->name = $req->firstname.' '.$req->lastname;
+                                // $this->email = "bambo@vimfile.com";
+                                $this->to = $req->email;
+                                $this->subject = "Welcome to PaySprint";
+
+                                $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You can also withdraw funds from your wallet FREE of Costs. <br> Thank you for your interest in PaySprint. <br><br> Customer Success Team <br> info@paysprint.net";
+
+                                $this->message = '<p>'.$message.'</p>';
+
+
+                                $this->sendEmail($this->to, "Refund Request");
                         }
                         else{
                             $message = "error";
@@ -10027,6 +10051,7 @@ class AdminController extends Controller
                 $this->to = session('email');
                 
 
+                $this->subject = "Account is credited";
                 $this->info = "Account is credited";
                 $this->message = 'We are glad to notify you that your withdrawal request of <b>$'.$req->amount.'</b> has been received. Your money has been  transferred to your PaySprint Wallet where you can withdraw by available method. Thanks';
 
@@ -11038,7 +11063,7 @@ class AdminController extends Controller
 
         $this->name = $thisuser->name;
         $this->to = $thisuser->email;
-        
+        $this->subject = "Request for Funds Withdrawal has been Processed";
 
         $this->info = "Account is credited";
         $this->message = 'We are glad to notify you that the request for withdrawal to your bank account ending with '.$thisbank->accountNumber.' has been processed. The sum of '.$thisuser->currencySymbol.''.number_format($data->amountToSend, 2).' would be credited to your bank '.$thisbank->bankName.' within the next 5 business days. Thanks from PaySprint Support Team';
@@ -11082,6 +11107,7 @@ class AdminController extends Controller
         $cardNo = str_repeat("*", strlen($thiscard->card_number)-4) . substr($thiscard->card_number, -4);
         
 
+        $this->subject = "Account is credited";
         $this->info = "Account is credited";
         $this->message = 'We are glad to notify you that the request for withdrawal to your '.$thiscard->card_type.' ending '.wordwrap($cardNo, 4, '-', true).' has been processed. The sum of '.$thisuser->currencySymbol.''.number_format($data->amount, 2).' would be credited to your bank account within the next 5 business days. Thanks from PaySprint Support Team';
 
@@ -11607,7 +11633,7 @@ class AdminController extends Controller
 
     public function allUsersMatched(){
 
-        $data = User::where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', 1)->orderBy('created_at', 'DESC')->get();
+        $data = User::where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', '>=', 1)->orderBy('created_at', 'DESC')->get();
 
         return $data;
     }
@@ -11686,7 +11712,7 @@ class AdminController extends Controller
     }
 
     public function matchedUsersByCountry(){
-        $data = User::where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', 1)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        $data = User::where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', '>=', 1)->orderBy('created_at', 'DESC')->groupBy('country')->get();
 
         return $data;
     }

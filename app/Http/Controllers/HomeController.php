@@ -151,6 +151,7 @@ class HomeController extends Controller
                     'urgentnotification' => $this->urgentNotification(Auth::user()->email),
                     'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
                     'getCard' => $this->getUserCard(),
+                    'getBank' => $this->getUserBank(),
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                     'getmerchantsByCategory' => $this->getMerchantsByCategory(),
                     'specialInfo' => $this->getthisInfo(Auth::user()->country),
@@ -201,6 +202,7 @@ class HomeController extends Controller
                     'urgentnotification' => $this->urgentNotification(Auth::user()->email),
                     'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
                     'getCard' => $this->getUserCard(),
+                    'getBank' => $this->getUserBank(),
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                     'getmerchantsByCategory' => $this->getMerchantsByCategory(),
                     'specialInfo' => $this->getthisInfo(Auth::user()->country),
@@ -242,6 +244,7 @@ class HomeController extends Controller
                     'urgentnotification' => $this->urgentNotification(Auth::user()->email),
                     'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
                     'getCard' => $this->getUserCard(),
+                    'getBank' => $this->getUserBank(),
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                     'getmerchantsByCategory' => $this->getMerchantsByCategory(),
                     'specialInfo' => $this->getthisInfo(Auth::user()->country),
@@ -365,6 +368,7 @@ class HomeController extends Controller
                     'urgentnotification' => $this->urgentNotification(Auth::user()->email),
                     'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
                     'getCard' => $this->getUserCard(),
+                    'getBank' => $this->getUserBank(),
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                     'continent' => $this->timezone[0]
                 );
@@ -529,6 +533,7 @@ class HomeController extends Controller
             'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
             'othercurrencyCode' => $this->otherCurrencyCode($user_id),
             'getCard' => $this->getUserCard(),
+            'getBank' => $this->getUserBank(),
             'continent' => $this->timezone[0]
         );
 
@@ -562,6 +567,7 @@ class HomeController extends Controller
         $data = array(
             'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
             'getCard' => $this->getUserCard(),
+            'getBank' => $this->getUserBank(),
             'continent' => $this->timezone[0]
         );
 
@@ -602,6 +608,14 @@ class HomeController extends Controller
     public function getUserCard(){
 
         $data = AddCard::where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+
+    }
+
+    public function getUserBank(){
+
+        $data = AddBank::where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
 
         return $data;
 
@@ -746,6 +760,7 @@ class HomeController extends Controller
 
         $data = array(
             'getCard' => $this->getUserCard(),
+            'getBank' => $this->getUserBank(),
             'cardIssuer' => $this->getCardIssuer(),
             'continent' => $this->timezone[0]
         );
@@ -779,6 +794,7 @@ class HomeController extends Controller
 
         $data = array(
             'getCard' => $this->getUserCard(),
+            'getBank' => $this->getUserBank(),
             'cardIssuer' => $this->getCardIssuer(),
             'continent' => $this->timezone[0]
         );
@@ -813,6 +829,7 @@ class HomeController extends Controller
 
         $data = array(
             'getCard' => $this->getUserCard(),
+            'getBank' => $this->getUserBank(),
             'continent' => $this->timezone[0]
         );
 
@@ -913,6 +930,7 @@ class HomeController extends Controller
         $data = array(
             'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
             'getCard' => $this->getUserCard(),
+            'getBank' => $this->getUserBank(),
             'continent' => $this->timezone[0]
         );
 
@@ -948,6 +966,7 @@ class HomeController extends Controller
         $data = array(
             'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
             'getCard' => $this->getUserCard(),
+            'getBank' => $this->getUserBank(),
             'continent' => $this->timezone[0]
         );
 
@@ -1172,6 +1191,7 @@ class HomeController extends Controller
             'getNotifications' => $this->getUserNotifications(Auth::user()->ref_code),
             'getutilityproduct' => $this->getUtilityProduct($id),
             'getCard' => $this->getUserCard(),
+            'getBank' => $this->getUserBank(),
             'continent' => $this->timezone[0]
         );
 
@@ -3256,6 +3276,18 @@ class HomeController extends Controller
 
                             // $resp = $info->Message;
                         }
+
+                    $this->name = Auth::user()->name;
+                    // $this->email = "bambo@vimfile.com";
+                    $this->email = Auth::user()->email;
+                    $this->subject = "Welcome to PaySprint";
+
+                    $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You can also withdraw funds from your wallet FREE of Costs. <br> Thank you for your interest in PaySprint. <br><br> Customer Success Team <br> info@paysprint.net";
+
+                    $this->message = '<p>'.$message.'</p>';
+
+
+                    $this->sendEmail($this->email, "Fund remittance");
                 }
                 else{
 
@@ -4563,6 +4595,13 @@ class HomeController extends Controller
             $objDemo->file = $this->file;
             $objDemo->message = $this->message;
         }
+
+        elseif($purpose == 'Fund remittance'){
+              $objDemo->name = $this->name;
+              $objDemo->email = $this->email;
+              $objDemo->subject = $this->subject;
+              $objDemo->message = $this->message;
+          }
 
       Mail::to($objDemoa)
             ->send(new sendEmail($objDemo));

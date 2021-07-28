@@ -207,7 +207,7 @@
     <div class="panel-heading" role="tab" id="headingSeven">
       <h4 class="panel-title">
         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
-          BVN Verification {!! (Auth::user()->bvn_verification == 1) ? '<img src="https://img.icons8.com/fluent/25/000000/verified-account.png"/>' : ""  !!}
+          BVN Verification {!! (Auth::user()->bvn_verification >= 1) ? '<img src="https://img.icons8.com/fluent/25/000000/verified-account.png"/>' : ""  !!}
         </a>
       </h4>
     </div>
@@ -216,11 +216,11 @@
         <form action="#" method="post" id="formElembvnverification">
 
             <div class="form-group">
-                <label for="bvn">Bank Verification Number @if(Auth::user()->bvn_number == null) <strong><p class="text-warning" style="cursor: pointer;">Enter your bank verification number</p></strong> @endif</label>
+                <label for="bvn">Bank Verification Number @if(Auth::user()->bvn_verification == null || Auth::user()->bvn_verification == 0) <strong><p class="text-warning" style="cursor: pointer;">Enter your bank verification number</p></strong> @endif</label>
                 <input type="number" name="bvn" id="bvn" class="form-control" @if(Auth::user()->bvn_number != null) value="{{ Auth::user()->bvn_number }}" readonly @else placeholder="BVN" @endif >
             </div>
 
-            @if (Auth::user()->bvn_number == null)
+            @if (Auth::user()->bvn_verification == null || Auth::user()->bvn_verification == 0)
 
             <div class="form-group">
                     <label for="account_number">Bank Account Number <strong><p class="text-warning" style="cursor: pointer;">Enter your bank account number</p></strong></label>

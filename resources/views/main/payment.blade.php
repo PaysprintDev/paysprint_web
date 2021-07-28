@@ -335,11 +335,13 @@ input[type="radio"] {
                                     </div>
                                     {{-- onclick="monerisPay()" --}}
 
-                                    @if (Auth::user()->approval == 2 && Auth::user()->accountLevel == 3)
+                                    <div class="card-footer"> <button type="button" onclick="handShake('payinvoice')" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Pay Invoice </button></div>
+
+                                    {{--  @if (Auth::user()->approval == 2 && Auth::user()->accountLevel == 3)
                                         <div class="card-footer"> <button type="button" onclick="handShake('payinvoice')" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Pay Invoice </button></div>
                                     @else
                                         <div class="card-footer"> <button type="button" onclick="restriction('payinvoice', '{{ Auth::user()->name }}')" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Pay Invoice </button></div>
-                                    @endif
+                                    @endif  --}}
                                     
 
                                     

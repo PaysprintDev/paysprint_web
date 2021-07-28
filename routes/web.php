@@ -569,6 +569,9 @@ Route::post('disapproveUser', ['uses' => 'AdminController@ajaxdisapproveUser', '
 Route::post('downgradeaccount', ['uses' => 'AdminController@ajaxdowngradeaccount', 'as' => 'Ajaxdowngradeaccount']);
 
 
+Route::post('paychargeback', ['uses' => 'MonerisController@paymentChargeBack', 'as' => 'Ajaxpaychargeback']);
+
+
 Route::post('moveUser', ['uses' => 'AdminController@ajaxmoveUser', 'as' => 'AjaxmoveUser']);
 Route::post('checkverification', ['uses' => 'AdminController@ajaxCheckVerification', 'as' => 'Ajaxcheckverification']);
 Route::post('paybankwithdrawal', ['uses' => 'AdminController@ajaxpayBankWithdrawal', 'as' => 'Ajaxpaybankwithdrawal']);

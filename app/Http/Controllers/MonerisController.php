@@ -55,6 +55,10 @@ use App\TransactionCost as TransactionCost;
 
 use App\EPSVendor as EPSVendor;
 
+use App\ChargeBack as ChargeBack;
+
+use App\MonerisActivity as MonerisActivity;
+
 
 use App\CcWithdrawal as CcWithdrawal;
 
@@ -108,13 +112,12 @@ use App\Classes\MCPRate;
 use App\Traits\PaymentGateway;
 use App\Traits\PaystackPayment;
 use App\Traits\ExpressPayment;
+use App\Traits\ElavonPayment;
 
 class MonerisController extends Controller
 {
 
-    use PaymentGateway;
-    use PaystackPayment;
-    use ExpressPayment;
+    use PaymentGateway, PaystackPayment, ExpressPayment, ElavonPayment;
 
     public $to;
     public $name;
@@ -378,7 +381,7 @@ else{
 
                             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                            if($thisuser->approval < 2 && $thisuser->accountLevel <= 2){
+                            if($thisuser->approval < 1 && $thisuser->accountLevel < 1){
 
                                 $response = 'You cannot pay invoice at the moment because your account is still on review.';
 
@@ -679,7 +682,7 @@ else{
 
                             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                            if($thisuser->approval < 2 && $thisuser->accountLevel <= 2){
+                            if($thisuser->approval < 1 && $thisuser->accountLevel < 1){
 
                                 $response = 'You cannot pay invoice at the moment because your account is still on review.';
 
@@ -688,7 +691,8 @@ else{
                                 $message = $response;
 
 
-                            }else{
+                            }
+                            else{
                                                             // Get My Wallet Balance
                             $walletBalance = $thisuser->wallet_balance - $req->amount;
 
@@ -976,8 +980,6 @@ else{
 
     // Add Money to Wallet
     public function addMoneyToWallet(Request $req){
-
-
         // Write for Test 
 
         if(isset($req->mode) && $req->mode == "test"){
@@ -1013,7 +1015,7 @@ else{
                             $referenced_code = $req->paymentToken;
                         }
                         else{
-                            $gateway = "Google Pay";
+                            $gateway = "PayPal";
                             $referenced_code = $req->paymentToken;
 
                         }
@@ -1720,7 +1722,7 @@ else{
                             $referenced_code = $req->paymentToken;
                         }
                         else{
-                            $gateway = "Google Pay";
+                            $gateway = "PayPal";
                             $referenced_code = $req->paymentToken;
 
                         }
@@ -3979,6 +3981,108 @@ else{
     }
 
 
+    public function paymentChargeBack(Request $req){
+
+
+        try {
+            // Get Transaction Info
+        $data = Statement::where('reference_code', $req->reference_code)->first();
+
+
+        // Insert Record to ChargeBack
+        $query = [
+            'user_id' => $data->user_id, 
+            'reference_code' => $data->reference_code, 
+            'activity' => $data->activity, 
+            'credit' => $data->credit, 
+            'debit' => $data->debit, 
+            'balance' => $data->balance, 
+            'chargefee' => $data->chargefee, 
+            'auto_deposit' => $data->auto_deposit, 
+            'trans_date' => $data->trans_date, 
+            'status' => $data->status, 
+            'comment' => $data->comment, 
+            'action' => $data->action, 
+            'regards' => $data->regards, 
+            'notify' => $data->notify, 
+            'state' => $data->state, 
+            'country' => $data->country, 
+            'statement_route' => $data->statement_route, 
+            'report_status' => $data->report_status
+        ];
+
+        ChargeBack::insert($query);
+
+        $thisuser = User::where('email', $data->user_id)->first();
+
+        
+
+        $walletBal = $thisuser->wallet_balance - $data->credit;
+
+
+        User::where('email', $thisuser->email)->update([
+            'wallet_balance' => $walletBal
+        ]);
+
+
+    $activity = "Charge back of ".$thisuser->currencyCode.''.number_format($data->credit, 2)." from PaySprint to your Bank Account has been processed.";
+    $credit = 0;
+    $debit = $data->credit;
+    $reference_code = $data->reference_code;
+    $balance = 0;
+    $trans_date = date('Y-m-d');
+    $thistatus = "Reversal";
+    $action = "Wallet Reversal";
+    $regards = $thisuser->ref_code;
+    $statement_route = "wallet";
+
+    // Senders statement
+    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country);
+
+
+    MonerisActivity::where('transaction_id', $req->reference_code)->update(['reversal_state' => 1]);
+
+
+    $sendMsg = 'Hello '.strtoupper($thisuser->name).', The charge back request of '.$thisuser->currencyCode.' '.number_format($data->credit, 2).' from PaySprint to your Bank Account has been processed. The Direct deposit into your Bank account would be done within the next 5 business days. You now have '.$thisuser->currencyCode.' '.number_format($walletBal, 2).' balance in your account';
+
+    
+
+    $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+        
+    if(isset($userPhone)){
+
+        $sendPhone = $thisuser->telephone;
+    }
+    else{
+        $sendPhone = "+".$thisuser->code.$thisuser->telephone;
+    }
+
+
+    $this->createNotification($thisuser->ref_code, $sendMsg);
+
+    $this->sendMessage($sendMsg, $sendPhone);
+
+
+
+        Log::info("Reversal successfull! ".strtoupper($thisuser->name)." ".$sendMsg);
+
+
+        $message = "Reversal successfully completed";
+        $status = 200;
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+            $status = 400;
+            $thisuser = [];
+        }
+        
+
+        $resData = ['data' => $thisuser, 'message' => $message, 'status' => $status];
+
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
     public function getCommissionConversion(Request $req){
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
@@ -4064,7 +4168,7 @@ else{
 
                         Log::info('Oops!, '.$thisuser->name.' has '.$message);
                     }
-                    elseif($thisuser->approval < 2 && $thisuser->accountLevel < 3){
+                    elseif($thisuser->approval < 1 && $thisuser->accountLevel < 1){
                         // Cannot withdraw minimum balance
 
                         $data = [];
@@ -4073,7 +4177,7 @@ else{
 
                         Log::info('Oops!, '.$thisuser->name.' has '.$message);
                     }
-                    elseif($thisuser->wallet_balance <= $minBal){
+                    elseif(($thisuser->wallet_balance - $minBal) <= $minBal){
                         // Cannot withdraw minimum balance
 
                         $data = [];

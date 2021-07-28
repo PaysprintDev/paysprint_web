@@ -3,6 +3,9 @@
 
 @section('dashContent')
 
+<script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ $data['getuserDetail']->currencyCode }}"></script>
+
+
 <?php use \App\Http\Controllers\ClientInfo; ?>
 <?php use \App\Http\Controllers\User; ?>
 <?php use \App\Http\Controllers\InvoicePayment; ?>
@@ -29,6 +32,9 @@
         </div>
 
       <div class="row">
+
+
+        
 
 
 
@@ -156,10 +162,13 @@
                                     <div class="form-group">
                                       <button type="button" class="btn btn-primary btn-block cardSubmit" onclick="payWithPaystack('{{ session('email') }}')" >Confirm</button>
                                   </div>
-                                @else
+                                @elseif(session('country') == "Canada")
                                     <div class="form-group">
                                       <button type="button" class="btn btn-primary btn-block cardSubmit" onclick="handShake('addmoney')" >Confirm</button>
                                   </div>
+                                  @else
+                                  {{--  PayPal  --}}
+                                  <div class="form-group text-center" id="paypal-button-container"></div>
                                 @endif
 
                                 
@@ -747,6 +756,53 @@ function currencyConvert(amount){
 
 
 // Gpay Ends
+
+
+// Paypal Integration Start
+
+paypal.Buttons({
+
+    createOrder: function(data, actions) {
+    var netamount = $('#amounttosend').val();
+    var feeamount = $('#commissiondeduct').val();
+    var amount = (+netamount + +feeamount).toFixed(2);
+
+      // Set up the transaction
+      return actions.order.create({
+        purchase_units: [{
+          amount: {
+            value: amount
+          }
+        }]
+      });
+    },
+    onApprove: function(data, actions) {
+      // This function captures the funds from the transaction.
+      return actions.order.capture().then(function(details) {
+
+          if(details.status == "COMPLETED"){
+                $('#paymentToken').val(data.orderID);
+
+                // alert("Looks like the transaction is approved.");
+                setTimeout(() => {
+                    handShake('addmoney');
+                }, 1000);
+          }
+
+        // This function shows a transaction success message to your buyer.
+        // alert('Transaction completed by ' + details.payer.name.given_name);
+      });
+    },
+    onCancel: function (data) {
+        alert("Transaction cancelled for "+data.orderID);
+    },
+    onError: function (err) {
+        alert(err);
+    }
+  }).render('#paypal-button-container');
+  
+
+// PayPal Integration End
 
 
 

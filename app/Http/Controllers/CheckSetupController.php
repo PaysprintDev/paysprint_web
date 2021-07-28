@@ -906,7 +906,7 @@ class CheckSetupController extends Controller
 		    			$table .= $tabledetails;
 	    			}
 
-	    			$message = "<p>Hello ".strtoupper($name).",</p><p>Below is the statement of your transactions on PaySprint for this month.</p> <br><br> <table width='700' border='1' cellpadding='1' cellspacing='0'><thead><tr><th>Trans. Date</th><th>Desc.</th><th>Amount</th><th>Status</th></tr></thead><tbody>".$table."</tbody></table> <br><br> Thanks <br><br> Client Services Team <br> PaySprint <br><br>";
+	    			$message = "<p>Below is the statement of your transactions on PaySprint for this month.</p> <br> <table width='700' border='1' cellpadding='1' cellspacing='0'><thead><tr><th>Trans. Date</th><th>Desc.</th><th>Amount</th><th>Status</th></tr></thead><tbody>".$table."</tbody></table> <br><br> Thanks <br><br> Client Services Team <br> PaySprint <br><br>";
 
 
 

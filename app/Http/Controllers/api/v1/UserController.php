@@ -214,6 +214,21 @@ class UserController extends Controller
 
                         // $resp = $info->Message;
                     }
+
+
+                    $this->name = $request->firstname.' '.$request->lastname;
+                    // $this->email = "bambo@vimfile.com";
+                    $this->email = $request->email;
+                    $this->subject = "Welcome to PaySprint";
+
+                    $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You can also withdraw funds from your wallet FREE of Costs. <br> Thank you for your interest in PaySprint. <br><br> Customer Success Team <br> info@paysprint.net";
+
+                    $this->message = '<p>'.$message.'</p>';
+
+
+                    $this->sendEmail($this->email, "Fund remittance");
+
+
             }
             else{
 
@@ -980,6 +995,7 @@ class UserController extends Controller
 
 
                         $this->sendEmail($this->email, "Fund remittance");
+
                         $this->sendMessage($recMsg, $recPhone);
 
                         $data = $resp;

@@ -56,6 +56,7 @@
                   <th>Date</th>
                   @if (Request::get('gateway') == "paystack")
                     <th>Action</th>
+                    <th>&nbsp;</th>
                   @endif
                 </tr>
                 </thead>
@@ -94,7 +95,15 @@
                             <td>{{ date('d/M/Y', strtotime($data->created_at)) }}</td>
                             @if (Request::get('gateway') == "paystack")
                               <td>
-                                <a href="{{ route('check transaction', $data->transaction_id) }}">Details</a>
+                                <a type="button" class="btn btn-primary" href="{{ route('check transaction', $data->transaction_id) }}">Details</a>
+                              </td>
+                              <td>
+                                @if ($data->reversal_state == 0)
+                                    <a type="button" class="btn btn-danger" href="javascript:void(0)" onclick="reverseFee('{{ $data->transaction_id }}')">Reverse <img src="https://img.icons8.com/office/20/000000/spinner-frame-4.png" class="fa fa-spin spin{{ $data->transaction_id }} disp-0"></a>
+                                @else
+                                    <a type="button" class="btn btn-info" href="javascript:void(0)" style="cursor: not-allowed">Reversed</a>
+                                @endif
+                                
                               </td>
                             @endif
                         </tr>
@@ -103,7 +112,11 @@
                          
                     @else
                     <tr>
-                        <td colspan="7" align="center">No record available</td>
+                      @if (Request::get('gateway') == "paystack")
+                        <td colspan="10" align="center">No record available</td>
+                        @else
+                        <td colspan="8" align="center">No record available</td>
+                      @endif
                     </tr>
                     @endif
                 </tbody>
