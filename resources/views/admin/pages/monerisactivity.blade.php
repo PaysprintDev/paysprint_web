@@ -57,6 +57,7 @@
                   @if (Request::get('gateway') == "paystack")
                     <th>Action</th>
                     <th>&nbsp;</th>
+                    <th>&nbsp;</th>
                   @endif
                 </tr>
                 </thead>
@@ -73,19 +74,21 @@
                               @if (isset($userStatement))
                                   @if($userStatement = \App\User::where('email', $userStatement->user_id)->first())
 
-                                    <td>{{ $userStatement->name }}</td>
+                                    <td>
+                                      {{ $userStatement->name }} {!! ($data->flag_state == 1) ? '<img src="https://img.icons8.com/emoji/20/000000/triangular-flag.png"/>' : '' !!} 
+                                    </td>
 
                                   @else
-                                    <td>-</td>
+                                    <td>- {!! ($data->flag_state == 1) ? '<img src="https://img.icons8.com/emoji/20/000000/triangular-flag.png"/>' : '' !!}</td>
                                   @endif
                               @else
 
-                              <td>-</td>
+                              <td>- {!! ($data->flag_state == 1) ? '<img src="https://img.icons8.com/emoji/20/000000/triangular-flag.png"/>' : '' !!}</td>
 
                               @endif
 
                             @else
-                              <td>-</td>
+                              <td>- {!! ($data->flag_state == 1) ? '<img src="https://img.icons8.com/emoji/20/000000/triangular-flag.png"/>' : '' !!}</td>
                             @endif
 
                             <td>{{ $data->message }}</td>
@@ -97,6 +100,19 @@
                               <td>
                                 <a type="button" class="btn btn-primary" href="{{ route('check transaction', $data->transaction_id) }}">Details</a>
                               </td>
+                              @if ($data->flag_state == 0)
+                              <td>
+
+                                <form action="{{ route('flag this money') }}" method="post" id="flag{{ $data->transaction_id }}">@csrf <input type="hidden" name="transaction_id" value="{{ $data->transaction_id }}"></form>
+
+                                <a type="button" class="btn btn-warning" href="javascript:void(0)" onclick="flagMoney('flag', '{{ $data->transaction_id }}')">Flag</a>
+
+                              </td>
+                              @else
+                              <td>
+                                <a type="button" class="btn btn-default" style="background: black; color: white; cursor: not-allowed;" href="javascript:void(0)" style="cursor: not-allowed">Flagged</a>
+                              </td>
+                              @endif
                               <td>
                                 @if ($data->reversal_state == 0)
                                     <a type="button" class="btn btn-danger" href="javascript:void(0)" onclick="reverseFee('{{ $data->transaction_id }}')">Reverse <img src="https://img.icons8.com/office/20/000000/spinner-frame-4.png" class="fa fa-spin spin{{ $data->transaction_id }} disp-0"></a>

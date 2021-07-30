@@ -17,6 +17,10 @@
 
   <!-- iCheck for checkboxes and radio inputs -->
   <link rel="stylesheet" href="{{ asset('ext/plugins/iCheck/all.css') }}">
+
+  <!-- Tour Guide plugin -->
+    <link rel="stylesheet" href="{{ asset('hopscotch/dist/css/hopscotch.css') }}">
+
   <!-- Bootstrap Color Picker -->
   <link rel="stylesheet" href="{{ asset('ext/bower_components/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css') }}">
   <!-- Bootstrap time Picker -->
@@ -39,7 +43,7 @@
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="{{ asset('ext/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
     <!-- DataTables -->
-  <link rel="stylesheet" href="{{ asset('ext/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
+  {{--  <link rel="stylesheet" href="{{ asset('ext/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">  --}}
 
   <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 
@@ -61,6 +65,7 @@
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.25/b-1.7.1/b-html5-1.7.1/datatables.min.css"/>
 
   
   <style>

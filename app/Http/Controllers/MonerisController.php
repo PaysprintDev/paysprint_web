@@ -4015,9 +4015,11 @@ else{
 
         $thisuser = User::where('email', $data->user_id)->first();
 
-        
+        $checkTransaction = TransactionCost::where('method', 'Wallet')->where('structure', 'Wallet Maintenance fee')->where('country', $data->country)->first();
 
-        $walletBal = $thisuser->wallet_balance - $data->credit;
+        $transDeduct = $data->credit + $checkTransaction->fixed;
+
+        $walletBal = $thisuser->wallet_balance - $transDeduct;
 
 
         User::where('email', $thisuser->email)->update([
@@ -4025,7 +4027,8 @@ else{
         ]);
 
 
-    $activity = "Charge back of ".$thisuser->currencyCode.''.number_format($data->credit, 2)." from PaySprint to your Bank Account has been processed.";
+    $activity = "Charge back of ".$thisuser->currencyCode.''.number_format($transDeduct, 2)." (Charge back amount of ".$thisuser->currencyCode.''.number_format($data->credit, 2)." and Wallet maintenance fee of ".$thisuser->currencyCode.''.number_format($checkTransaction->fixed, 2)." inclusive.) from PaySprint to your Bank Account has been processed.";
+    
     $credit = 0;
     $debit = $data->credit;
     $reference_code = $data->reference_code;

@@ -34,6 +34,8 @@ Route::get('epsvendorupdate', 'CheckSetupController@updateEPSVendor');
 Route::get('notification-table', 'CheckSetupController@notificationTable');
 Route::get('monthlytransaction', 'CheckSetupController@monthlyTransactionHistory');
 Route::get('exbccardrequest', 'CheckSetupController@checkExbcCardRequest');
+Route::get('migratetolevelone', 'CheckSetupController@migrateUsersToLevelOne');
+Route::get('insertspecialinfoactivity', 'CheckSetupController@insertspecialinfoActivity');
 
 Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
 
@@ -289,6 +291,7 @@ Route::prefix('Admin/card')->group(function () {
 	Route::get('getusercard/{user_id}', ['uses' => 'AdminController@getUsersCard', 'as' => 'get user card']);
 	Route::get('getuserdeletedcard/{user_id}', ['uses' => 'AdminController@getUsersDeletedCard', 'as' => 'get user deleted card']);
 	Route::get('redflagged', ['uses' => 'AdminController@redFlaggedAccount', 'as' => 'red flagged account']);
+	Route::get('redflaggedmoney', ['uses' => 'AdminController@redFlaggedMoney', 'as' => 'red flagged money']);
 
 
 	Route::get('merchantcreditcard/{id}', ['uses' => 'AdminController@merchantCreditCard', 'as' => 'merchant credit card']);
@@ -439,8 +442,14 @@ Route::prefix('Admin/')->group(function () {
 	Route::post('deletesupport/{id}', ['uses' => 'AdminController@deleteSupportAgent', 'as' => 'delete support agent']);
 
 
+
+	Route::post('flagthismoney', ['uses' => 'AdminController@flagThisMoney', 'as' => 'flag this money']);
+
+
 	Route::get('specialinfoactivity', ['uses' => 'AdminController@specialInfoActivity', 'as' => 'special information activity']);
+	Route::get('editspecialinfoactivity/{id}', ['uses' => 'AdminController@editspecialInfoActivity', 'as' => 'edit special activity']);
 	Route::post('createspecialinfoactivity', ['uses' => 'AdminController@createSpecialInfoActivity', 'as' => 'create special information']);
+	Route::post('deletespecialactivity', ['uses' => 'AdminController@deleteSpecialInfoActivity', 'as' => 'delete special activity']);
 	Route::get('allcountries', ['uses' => 'AdminController@allCountries', 'as' => 'all countries']);
 
 

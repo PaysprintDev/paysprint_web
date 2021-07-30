@@ -86,7 +86,7 @@
           </ul>
         </li>
 
-        @if(session('role') == "Super")
+        @if(session('role') == "Super" || session('role') == "Access to Level 1 and 2 only")
 
 
         <li class="treeview">
@@ -362,6 +362,7 @@
           </a>
           <ul class="treeview-menu">
             <li title="Red Flagged"><a href="{{ route('red flagged account') }}"><i class="fa fa-circle-o text-red"></i> Red Flagged</a></li>
+            <li title="Flagged Money"><a href="{{ route('red flagged money') }}"><i class="fa fa-circle-o text-red"></i> Flagged Money</a></li>
           </ul>
         </li>
 

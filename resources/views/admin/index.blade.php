@@ -721,35 +721,25 @@
 
             <div class="col-md-4 mb-3">
 
-              <a style="font-size: 12.5px;" type="button" href="{{ route('merchant add money') }}" class="btn btn-info btn-block">Add Money <i class="fas fa-plus"></i></a>
+              <a style="font-size: 14px; font-weight: bold;" type="button" href="{{ route('merchant add money') }}" class="btn btn-info btn-block">Add Money <i class="fas fa-plus"></i></a>
             </div>
 
             <div class="col-md-4 mb-3">
-              <a style="font-size: 12.5px;" type="button" href="{{ route('merchant send money', 'type=local') }}" class="btn btn-warning btn-block">Send Money <i class="fas fa-paper-plane"></i></a>
+              <a style="font-size: 14px; font-weight: bold;" type="button" href="{{ route('merchant send money', 'type=local') }}" class="btn btn-warning btn-block">Send Money <i class="fas fa-paper-plane"></i></a>
             </div>
 
             <div class="col-md-4 mb-3">
               @if ($getUserDetail->approval == 2 && $getUserDetail->accountLevel == 3)
-                  <a style="font-size: 12.5px;" type="button" href="{{ route('merchant withdrawal') }}" class="btn btn-success btn-block">Withdraw Money <i class="fas fa-credit-card"></i></a>
+                  <a style="font-size: 14px; font-weight: bold;" type="button" href="{{ route('merchant withdrawal') }}" class="btn btn-success btn-block">Withdraw Money <i class="fas fa-credit-card"></i></a>
               @else
-                      <a style="font-size: 12.5px;" type="button" href="javascript:void()" class="btn btn-success btn-block" onclick="restriction('withdrawal', '{{ $getUserDetail->name }}')">Withdraw Money <i class="fa fa-credit-card"></i></a>
+                      <a style="font-size: 14px; font-weight: bold;" type="button" href="javascript:void()" class="btn btn-success btn-block" onclick="restriction('withdrawal', '{{ $getUserDetail->name }}')">Withdraw Money <i class="fa fa-credit-card"></i></a>
                   
               @endif
             </div>
+
 
             
-
-            <div class="col-md-4 mt-5 mb-3">
-              @if ($getUserDetail->approval == 2 && $getUserDetail->accountLevel == 3)
-              <br>
-                  <a style="font-size: 12.5px;" type="button" href="{{ route('invoice') }}" class="btn btn-danger btn-block">Pay Invoice <i class="fas fa-credit-card"></i></a>
-              @else
-              <br>
-                      <a style="font-size: 12.5px;" type="button" href="javascript:void()" class="btn btn-danger btn-block" onclick="restriction('invoice', '{{ $getUserDetail->name }}')">Pay Invoice <i class="fa fa-credit-card"></i></a>
-                  
-              @endif
-            </div>
-
+            
 
 
 
@@ -798,7 +788,16 @@
           </div>
 
           
+          <div class="col-md-4 mt-5 mb-3">
+              <a style="font-size: 14px; font-weight: bold;" type="button" href="{{ route('invoice') }}" class="btn btn-danger btn-block mt-5 mb-3">Pay Invoice <i class="fas fa-credit-card"></i></a>
+            </div>
 
+            @if ($getUserDetail->country == "Nigeria")
+                <div class="col-md-4 mt-5 mb-3">
+                  <a style="font-size: 14px; font-weight: bold; background: black; color: white;" type="button" href="{{ route('utility bills') }}" class="btn btn-info btn-block mt-5 mb-3">Pay Utility Bill <i class="fas fa-credit-card"></i></a>
+                </div>
+            @endif
+          
 
           
 
@@ -818,6 +817,105 @@
       <!-- /.row -->
       <!-- Main row -->
       <div class="row">
+
+
+                <!-- Left col -->
+        <section class="col-lg-12 connectedSortable">
+
+
+          <!-- TO DO List -->
+          <div class="box box-primary">
+            <div class="box-header">
+              <i class="ion ion-clipboard"></i>
+
+              <h3 class="box-title">Received Invoice</h3>
+
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table table-responsive">
+               <table id="example3" class="table table-bordered table-hover">
+                   {{-- @if(session('role') != "Super")<caption><button type="button" class="btn btn-success" style="float:right" id="recurAll" onclick="recurring('All', {{ session('user_id') }})">Recur All</button></caption>@endif --}}
+                <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Description</th>
+                  <th>Invoice #</th>
+                  <th>Status</th>
+                  <th>Amount</th>
+                  <th>Created Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                @if (isset($received['payInvoice']))
+                <?php $i = 1;?>
+                @foreach (json_decode($received['payInvoice']) as $payInv)
+
+                    <tr>
+
+
+                      <td>{{ $i++ }}</td>
+                      <td>
+                        {!! 'Invoice for '.$payInv->service.' to '.$payInv->merchantName !!}
+                      </td>
+
+                      <td>{{ $payInv->invoice_no }}</td>
+                      
+                      @if ($payInv->payment_status == 0)
+                          <td>
+                            <a href="{{ route('payment', $payInv->invoice_no) }}" type="button" class='btn btn-danger'>Pay Invoice</a>
+                          </td>
+                        @elseif($payInv->payment_status == 2)
+                        <td>
+                          <a href="{{ route('payment', $payInv->invoice_no) }}" type="button" class='btn btn-danger' style='cursor: pointer;'>Pay Balance</a>
+                        </td>
+                        @else
+                          <td style="font-weight: bold; color: green;">Paid</td>
+                      @endif
+
+                      <td style="font-weight: 700">
+                          @php
+                            if($payInv->total_amount != null || $payInv->total_amount != 0){
+                                $totalAmount = $payInv->total_amount;
+                            }else{
+                                $totalAmount = $payInv->amount;
+                            }
+                        @endphp
+
+                        @if ($payInv->payment_status == 0)
+                            {{ "+".$getUserDetail->currencySymbol.number_format($totalAmount, 2) }}
+                        @elseif($payInv->payment_status == 2)
+                            {{ "-".$getUserDetail->currencySymbol.number_format($payInv->remaining_balance, 2) }}
+                        @else
+                            {{ "-".$getUserDetail->currencySymbol.number_format($totalAmount, 2) }}
+                        @endif
+                      
+                      </td>
+                    
+                    <td>{{ date('d/m/Y h:i a', strtotime($payInv->created_at)) }}</td>
+
+                   
+                </tr>
+                @endforeach
+                
+                @else
+                  <tr>
+                  <td colspan="6" align="center"> No uploaded Invoice yet</td>
+                </tr>
+                @endif
+
+
+                </tbody>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+
+
+        </section>
+        <!-- /.Left col -->
+
+
         <!-- Left col -->
         <section class="col-lg-12 connectedSortable">
 

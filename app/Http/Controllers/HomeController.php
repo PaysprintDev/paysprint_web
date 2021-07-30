@@ -116,7 +116,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'expressUtilities', 'expressBuyUtilities']]);
+        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'expressUtilities', 'expressBuyUtilities']]);
 
         $location = $this->myLocation();
         
@@ -482,22 +482,29 @@ class HomeController extends Controller
                 
             }
             else{
-                $this->page = 'Payment';
-                $this->name = '';
+                
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Payment';
-            $this->name = session('name');
-            $this->email = session('email');
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
         }
 
 
         $data = array(
             'getinvoice' => $this->getthisInvoice($invoice),
             'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
-            'continent' => $this->timezone[0]
+            'continent' => $this->timezone[0],
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+
         );
 
         // dd($data);
@@ -517,15 +524,20 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
             }
             else{
-                $this->page = 'Payment';
-                $this->name = '';
+                
+                return redirect()->route('login');
             }
 
         }
         else{
+
+            $user = User::where('email', session('email'))->first();
+            
+            Auth::login($user);
+
             $this->page = 'Payment';
-            $this->name = session('name');
-            $this->email = session('email');
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
         }
 
         $data = array(
@@ -4047,11 +4059,38 @@ class HomeController extends Controller
                 }
                 else{
 
-                    $x = ($data->variable / 100) * $req->amount;
+                    if($thisuser->country == "Canada"){
 
-                    $y = $data->fixed + $x;
+                        $x = ($data->variable / 100) * $req->amount;
 
-                    $collection = $y;
+                        $y = $data->fixed + $x;
+
+                        $collection = $y;
+
+                    }
+                    else{
+
+                        $data = TransactionCost::where('structure', $req->structure)->where('method', "Debit Card")->where('country', $thisuser->country)->first();
+
+                        if(isset($data)){
+                            $x = ($data->variable / 100) * $req->amount;
+
+                            $y = $data->fixed + $x;
+
+                            $collection = $y;
+                        }
+                        else{
+                            $x = (3.00 / 100) * $req->amount;
+
+                            $y = 0.33 + $x;
+
+                            $collection = $y;
+
+                        }
+
+                    }
+
+                    
                 }
 
                 
@@ -4070,9 +4109,9 @@ class HomeController extends Controller
                 }
                 else{
 
-                    $x = (1.30 / 100) * $req->amount;
+                    $x = (3.00 / 100) * $req->amount;
 
-                    $y = 1.80 + $x;
+                    $y = 0.33 + $x;
 
                     $collection = $y;
                 }

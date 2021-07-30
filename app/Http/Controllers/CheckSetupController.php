@@ -17,6 +17,7 @@ use App\FeeTransaction as FeeTransaction;
 use App\AllCountries as AllCountries;
 use App\TransactionCost as TransactionCost;
 use App\RequestRefund as RequestRefund;
+use App\SpecialInformation as SpecialInformation;
 
 
 use App\Traits\ExpressPayment;
@@ -906,6 +907,7 @@ class CheckSetupController extends Controller
 		    			$table .= $tabledetails;
 	    			}
 
+
 	    			$message = "<p>Below is the statement of your transactions on PaySprint for this month.</p> <br> <table width='700' border='1' cellpadding='1' cellspacing='0'><thead><tr><th>Trans. Date</th><th>Desc.</th><th>Amount</th><th>Status</th></tr></thead><tbody>".$table."</tbody></table> <br><br> Thanks <br><br> Client Services Team <br> PaySprint <br><br>";
 
 
@@ -929,7 +931,49 @@ class CheckSetupController extends Controller
     	
 
     	
-    }    
+    } 
+    
+    
+    public function migrateUsersToLevelOne(){
+
+        $user = User::where('accountLevel', 0)->get();
+
+
+        foreach ($user as $users) {
+            // Check Country Approval
+            $checkCountry = AllCountries::where('name', $users->country)->where('approval', 1)->first();
+
+
+            if(isset($checkCountry) == true){
+                // Update User
+                User::where('id', $users->id)->update(['accountLevel' => 2, 'countryApproval' => 1]);
+            }
+
+        }
+
+        echo "Done migration";
+        
+    }
+
+
+    // Copy special information details
+    public function insertspecialinfoActivity(){
+
+        $country = AllCountries::all();
+
+        $getInfo = SpecialInformation::where('country', "United States")->first();
+
+        foreach($country as $countries){
+            SpecialInformation::updateOrCreate(['country' => $countries->name],[
+                'country' => $countries->name,
+                'information' => $getInfo->information
+            ]);
+        }
+
+        echo "Done Insertion";
+
+    }
+
 
 
     public function mailprocess($email, $name, $subject, $message){

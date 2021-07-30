@@ -18,6 +18,13 @@ trait SpecialInfo{
         return $data;
     }
 
+    public function deleteInfo($id){
+
+        $data = SpecialInformation::where('id', $id)->delete();
+
+        return $data;
+    }
+
 
     public function getInfo(){
 
@@ -29,6 +36,13 @@ trait SpecialInfo{
     public function getthisInfo($country){
 
         $data = SpecialInformation::where('country', $country)->first();
+
+        return $data;
+    }
+
+    public function getselectedInfo($id){
+
+        $data = SpecialInformation::where('id', $id)->first();
 
         return $data;
     }

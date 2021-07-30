@@ -116,11 +116,37 @@ class MoneyTransferController extends Controller
                     $collection = $y;
                 }
                 else{
-                    $x = ($data->variable / 100) * $req->amount;
 
-                    $y = $data->fixed + $x;
+                    if($thisuser->country == "Canada"){
 
-                    $collection = $y;
+                        $x = ($data->variable / 100) * $req->amount;
+
+                        $y = $data->fixed + $x;
+
+                        $collection = $y;
+
+                    }
+                    else{
+                        $data = TransactionCost::where('structure', $req->structure)->where('method', "Debit Card")->where('country', $thisuser->country)->first();
+
+                        if(isset($data)){
+                            $x = ($data->variable / 100) * $req->amount;
+
+                            $y = $data->fixed + $x;
+
+                            $collection = $y;
+                        }
+                        else{
+                            $x = (3.00 / 100) * $req->amount;
+
+                            $y = 0.33 + $x;
+
+                            $collection = $y;
+
+                        }
+                    }
+
+                    
                 }
 
                 
