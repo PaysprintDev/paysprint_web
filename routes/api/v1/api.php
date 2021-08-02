@@ -32,6 +32,9 @@ Route::prefix('/v1')->group(function () {
         // Get Service Types
         Route::get('getservicestypes',  ['uses' => 'api\v1\ServiceController@getServicetype']);
 
+        // Get payment gateways
+        Route::get('paymentgateway',  ['uses' => 'api\v1\ServiceController@paymentGateway']);
+
         // Get Tranasaction Structure
         Route::get('get-transaction-structure',  ['uses' => 'api\v1\MoneyTransferController@getTransactionStructure']);
 

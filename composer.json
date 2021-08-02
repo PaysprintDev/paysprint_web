@@ -16,13 +16,14 @@
         "lcobucci/jwt": "3.3.3",
         "maatwebsite/excel": "^3.1",
         "mobiledetect/mobiledetectlib": "^2.8",
+        "paypal/rest-api-sdk-php": "*",
         "rap2hpoutre/fast-excel": "^1.7",
         "rap2hpoutre/laravel-log-viewer": "^1.7",
         "simplesoftwareio/simple-qrcode": "~4",
         "spatie/laravel-permission": "^2.29",
+        "stripe/stripe-php": "^7.92",
         "trulioo/trulioo-sdk": "^1.0",
-        "twilio/sdk": "^6.20",
-        "paypal/rest-api-sdk-php": "*"
+        "twilio/sdk": "^6.20"
     },
     "require-dev": {
         "filp/whoops": "^2.0",

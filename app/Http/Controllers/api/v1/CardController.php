@@ -351,7 +351,7 @@ class CardController extends Controller
         $validator = Validator::make($req->all(), [
                      'card_name' => 'required|string',
                      'card_provider' => 'required|string',
-                     'card_number' => 'required|string|unique:add_card',
+                     'card_number' => 'required|string',
                      'month' => 'required|string',
                      'year' => 'required|string',
                      'cvv' => 'required|string',

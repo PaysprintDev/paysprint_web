@@ -165,7 +165,7 @@
 
                         <button class="btn btn-success print" type="button" onclick="print()">Print <img src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" class="spinneredit disp-0" style="width: 30px; height: 30px;"></button>
 
-                        <button class="btn btn-default updt disp-0" type="submit">Update <img src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" class="spinnerupdate disp-0" style="width: 30px; height: 30px;"></button>
+                        <button class="btn btn-default updt disp-0" type="submit">Update and Resend <img src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" class="spinnerupdate disp-0" style="width: 30px; height: 30px;"></button>
                       </div>
                       <br><br>
 

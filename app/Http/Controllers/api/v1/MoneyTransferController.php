@@ -87,7 +87,10 @@ class MoneyTransferController extends Controller
     }
 
     public function commissionFee(Request $req){
-        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+        try {
+            
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
 
             $amount = $req->amount;
             // Get Commission
@@ -99,7 +102,7 @@ class MoneyTransferController extends Controller
                 $method = "Bank Account";
             }
             else{
-                $method = $req->method;
+                $method = "Debit Card";
             }
 
             Log::info("Structure: ".$req->structure." \nMethod: ".$method." \nCountry: ".$thisuser->country);
@@ -163,17 +166,18 @@ class MoneyTransferController extends Controller
 
             }
 
-
-
-            // $fixed = $amount * ($data->fixed / 100);
-
-            // $variable = $data->fixed * 1;
-
-            // $collection = $fixed + $variable;
-
             $status = 200;
+            $message = "success";
 
-            $resData = ['data' => $collection,'message' => 'success', 'status' => $status];
+        } catch (\Throwable $th) {
+            $collection = [];
+            $message = "Oops!. Please ensure you have set up your card and bank details";
+            $status = 400;
+
+        }
+
+
+            $resData = ['data' => $collection,'message' => $message, 'status' => $status];
 
 
 

@@ -82,6 +82,11 @@ Route::get('payment/receivemoney/{id}', ['uses' => 'HomeController@receiveMoney'
 
 
 
+// Stripe Route
+Route::post('create-payment-intent', ['uses' => 'MonerisController@paymentIntent', 'as' => 'stripe payment intent']);
+
+
+
 // Wallet Page
 
 Route::prefix('mywallet')->group(function () {
@@ -511,6 +516,10 @@ Route::post('create_facility', ['uses' => 'BuildingController@createFacility', '
 
 Route::post('exporttoExcel', ['uses' => 'HomeController@exportToExcel', 'as' => 'export to excel']);
 Route::post('exporttoPdf', ['uses' => 'HomeController@exportToPdf', 'as' => 'export to pdf']);
+
+
+
+
 
 Auth::routes();
 

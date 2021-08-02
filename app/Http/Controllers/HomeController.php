@@ -633,6 +633,14 @@ class HomeController extends Controller
 
     }
 
+    public function getPaymentGateway($country){
+
+        $data = AllCountries::where('name', $country)->first();
+
+        return $data;
+
+    }
+
     public function getCardIssuer(){
 
         $data = CardIssuer::orderBy('created_at', 'DESC')->get();
@@ -943,7 +951,8 @@ class HomeController extends Controller
             'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBank(),
-            'continent' => $this->timezone[0]
+            'continent' => $this->timezone[0],
+            'paymentgateway' => $this->getPaymentGateway(Auth::user()->country)
         );
 
 
@@ -4035,7 +4044,7 @@ class HomeController extends Controller
             
             // dd($dataInfo);
 
-            $data = TransactionCost::where('structure', $req->structure)->where('method', $req->structureMethod)->where('country', $thisuser->country)->first();
+            $data = TransactionCost::where('structure', $req->structure)->where('method', "Debit Card")->where('country', $thisuser->country)->first();
 
             /*
             
@@ -4098,7 +4107,7 @@ class HomeController extends Controller
             else{
 
 
-                $data = TransactionCost::where('structure', $req->structure)->where('method', $req->structureMethod)->first();
+                $data = TransactionCost::where('structure', $req->structure)->where('method', "Debit Card")->first();
                 
                 if(isset($data)){
                     $x = ($data->variable / 100) * $req->amount;

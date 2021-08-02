@@ -5635,6 +5635,7 @@ class AdminController extends Controller
 
 
 
+
     public function merchantAddMoney(Request $req){
 
 
@@ -5687,6 +5688,7 @@ class AdminController extends Controller
                 'getuserDetail' => $this->getmyPersonalDetail(session('user_id')),
                 'getCard' => $this->getUserCard(session('user_id')),
                 'alpha2Code' => $this->getCountryCode(session('country')),
+                'paymentgateway' => $this->getPaymentGateway(session('country'))
             );
 
             // dd($data);
@@ -11883,6 +11885,15 @@ class AdminController extends Controller
         $data = User::where('accountLevel', 2)->where('approval', 0)->where('bvn_verification', 0)->orderBy('created_at', 'DESC')->groupBy('country')->get();
 
         return $data;
+    }
+
+    
+    public function getPaymentGateway($country){
+
+        $data = AllCountries::where('name', $country)->first();
+
+        return $data;
+
     }
 
 

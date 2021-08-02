@@ -21,6 +21,9 @@ use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Support\Facades\Log;
 
+use Stripe\Stripe as Stripe;
+use Stripe\PaymentIntent as PaymentIntent;
+
 use App\User as User;
 
 use App\Mail\sendEmail;
@@ -58,6 +61,8 @@ use App\EPSVendor as EPSVendor;
 use App\ChargeBack as ChargeBack;
 
 use App\MonerisActivity as MonerisActivity;
+
+use App\AllCountries as AllCountries;
 
 
 use App\CcWithdrawal as CcWithdrawal;
@@ -1004,20 +1009,21 @@ else{
                 $monerisDeductamount = $req->conversionamount;
                 // $monerisDeductamount = $this->currencyConvert($req->currencyCode, $req->amount);
 
+                $getGateway = AllCountries::where('name', $thisuser->country)->first();
+
                 if($req->paymentToken != null){
 
 
                         $getTransactionCode = $this->verifyTransaction($req->paymentToken);
 
+                        $gateway = ucfirst($getGateway->gateway);
+
                         if($getTransactionCode->status == true){
 
-                            $gateway = "Paystack";
                             $referenced_code = $req->paymentToken;
                         }
                         else{
-                            $gateway = "PayPal";
                             $referenced_code = $req->paymentToken;
-
                         }
 
                         
@@ -1712,19 +1718,20 @@ else{
                 $monerisDeductamount = $req->conversionamount;
                 // $monerisDeductamount = $this->currencyConvert($req->currencyCode, $req->amount);
 
+                $getGateway = AllCountries::where('name', $thisuser->country)->first();
+
                 if($req->paymentToken != null){
 
                         $getTransactionCode = $this->verifyTransaction($req->paymentToken);
 
+                            $gateway = ucfirst($getGateway->gateway);
+
                         if($getTransactionCode->status == true){
 
-                            $gateway = "Paystack";
                             $referenced_code = $req->paymentToken;
                         }
                         else{
-                            $gateway = "PayPal";
                             $referenced_code = $req->paymentToken;
-
                         }
 
                         
@@ -1775,7 +1782,6 @@ else{
 
                             $this->sendMessage($sendMsg, $sendPhone);
 
-                            $this->sendEmail($this->email, "Fund remittance");
 
 
                             $checkBVN = $this->bvnVerificationCharge($req->bearerToken());
@@ -1831,6 +1837,9 @@ else{
                         $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country);
 
                         Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
+
+                        $this->sendEmail($this->email, "Fund remittance");
+
 
 
                 }
@@ -4230,7 +4239,7 @@ else{
 
                                                     $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                                                    $activity = "Withdraw ".$thisuser->currencyCode.''.number_format($req->amounttosend, 2)." from Wallet for ".strtoupper($billerName);
+                                                    $activity = $billPayResponse->responseMessage." | Withdraw ".$thisuser->currencyCode.''.number_format($req->amounttosend, 2)." from Wallet for ".strtoupper($billerName);
                                                     $credit = 0;
                                                     $debit = $req->amounttosend;
                                                     // $reference_code = $response->responseData['ReceiptId'];
@@ -4359,7 +4368,7 @@ else{
 
                                                         $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                                                        $activity = "Withdraw ".$thisuser->currencyCode.''.number_format($req->amounttosend, 2)." from Wallet for ".strtoupper($billerName);
+                                                        $activity = $billPayResponse->responseMessage." | Withdraw ".$thisuser->currencyCode.''.number_format($req->amounttosend, 2)." from Wallet for ".strtoupper($billerName);
                                                         $credit = 0;
                                                         $debit = $req->amounttosend;
                                                         // $reference_code = $response->responseData['ReceiptId'];
@@ -5050,6 +5059,54 @@ public function receivemoneyProcess(Request $req){
             curl_close($curl);
 
             return json_decode($response);
+    }
+
+
+    public function paymentIntent(Request $req){
+        
+        if(env('APP_ENV') == "local"){
+            Stripe::setApiKey(env('STRIPE_LOCAL_SECRET_KEY'));
+        }
+        else{
+            Stripe::setApiKey(env('STRIPE_LIVE_SECRET_KEY'));
+        }
+
+            // This is your real test secret API key.
+            
+            header('Content-Type: application/json');
+            
+            try {
+
+            $paymentIntent = PaymentIntent::create([
+                'amount' => $req->amount * 100,
+                'currency' => $req->currencyCode,
+                'receipt_email' => $req->email,
+                'description' => "Add ".$req->currencyCode." ".number_format($req->amounttosend, 2)." to PaySprint wallet, Charge fee of: ".$req->currencyCode." ".number_format($req->commissiondeduct, 2)." inclusive",
+            ]);
+
+
+            $output = [
+                'clientSecret' => $paymentIntent->client_secret,
+                'transactionId' => $paymentIntent->id,
+            ];
+
+            $data = $output;
+            $message = 'success';
+            $status = 200;
+
+            } catch (Error $e) {
+            
+                $data = [];
+                $message = json_encode(['error' => $e->getMessage()]);
+                $status = 500;
+            }
+
+
+            $resData = ['res' => $data, 'message' => $message, 'status' => $status];
+
+
+            return $this->returnJSON($resData, $status);
+
     }
 
 

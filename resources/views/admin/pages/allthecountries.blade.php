@@ -47,6 +47,7 @@
                   <th>S/N</th>
                   <th>Countries</th>
                   <th>Code</th>
+                  <th>Gateway</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -60,6 +61,7 @@
 
                             <td>{{ $data->name }}</td>
                             <td>{{ $data->code }}</td>
+                            <td>{{ $data->gateway }}</td>
                             <td style="{{ ($data->approval == 1) ? "color: green;" : "color: red;" }} font-weight: bold;">{{ ($data->approval == 1) ? "Access Granted" : "Not Granted Access" }}</td>
                             
                             <form action="{{ route('grant country') }}" method="POST" id="grantform{{ $data->id }}">

@@ -13,7 +13,20 @@
 
 <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
 <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
+
+
+@if($data['paymentgateway']->gateway == "Stripe")
+
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+
+@endif
+
+@if($data['paymentgateway']->gateway == "PayPal")
+
 <script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ Auth::user()->currencyCode }}"></script>
+
+@endif
 
     <title>PaySprint | Payment</title>
 
@@ -77,14 +90,14 @@ input[type="radio"] {
                                     @csrf
 
 
-                                    <div class="form-group"> <label for="gateway">
+                                    <div class="form-group disp-0"> <label for="gateway">
                                             {{--  <h6>Select Card Type/ Bank Account</h6>  --}}
                                             <h6>Select Payment Gateway</h6>
                                         </label>
                                         <div class="input-group"> 
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/cotton/20/000000/money--v4.png"/> </span> </div>
                                             <select name="gateway" id="gateway" class="form-control" required>
-                                                <option value="">Select option</option>
+                                                <option value="NULL" selected>Select option</option>
                                                 <option value="PaySprint">PaySprint</option>
                                                  {{-- <option value="Google Pay">Google Pay</option>  --}}
                                                 {{-- <option value="Prepaid Card">Prepaid Card</option> --}}
@@ -94,13 +107,13 @@ input[type="radio"] {
                                         </div>
                                     </div>
 
-                                    <div class="form-group"> <label for="card_type">
+                                    <div class="form-group  disp-0"> <label for="card_type">
                                             <h6>Select Card Type/ Bank Account</h6>
                                         </label>
                                         <div class="input-group"> 
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/cotton/20/000000/money--v4.png"/> </span> </div>
                                             <select name="card_type" id="card_type" class="form-control" required>
-                                                <option value="">Select option</option>
+                                                <option value="Debit Card" selected>Select option</option>
                                                 @if (Auth::user()->country != "Nigeria")
                                                     <option value="Credit Card">Credit Card</option>
                                                 @endif
@@ -114,12 +127,13 @@ input[type="radio"] {
                                     </div>
 
 
-                                    <div class="form-group selectCard"> <label for="card_id">
+                                    <div class="form-group selectCard  disp-0"> <label for="card_id">
                                             <h6>Select Card</h6>
                                         </label>
                                         <div class="input-group"> 
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/fluent/20/000000/bank-card-back-side.png"/> </span> </div>
                                             <select name="card_id" id="card_id" class="form-control" required>
+                                                <option value="NULL" selected>Select option</option>
                                                 {{-- @if (count($data['getCard']) > 0)
                                                 
                                                     @foreach ($data['getCard'] as $mycard)
@@ -144,6 +158,8 @@ input[type="radio"] {
                                         <div class="input-group"> <div class="input-group-append"> <span class="input-group-text text-muted"> {{ $data['currencyCode'][0]->currencies[0]->symbol }} </span> </div> <input type="number" min="0.00" step="0.01" name="amount" id="amount" class="form-control" required>
 
                                         <input type="hidden" name="currencyCode" class="form-control" id="curCurrency" value="{{ $data['currencyCode'][0]->currencies[0]->code }}" readonly>
+                                        <input type="hidden" name="name" class="form-control" id="nameInput" value="{{ Auth::user()->name }}" readonly>
+                                         <input type="hidden" name="email" class="form-control" id="emailInput" value="{{ Auth::user()->email }}" readonly>
 
                                         <input type="hidden" name="paymentToken" class="form-control" id="paymentToken" value="" readonly>
 
@@ -194,19 +210,33 @@ input[type="radio"] {
                                     </div>
                                 </div>
 
+                                @if($data['paymentgateway']->gateway == "Stripe")
+                                <div class="form-group"> <label for="card-elemet">
+                                            <h6>Card Detail</h6>
+                                    </label>
+                                    <div id="card-element"></div>
+                                </div>
+                                @endif
+
 
                                 <div class="form-group">
                                     <div class="commissionInfo"></div>
                                 </div>
 
                                 
-                                    @if (Auth::user()->country == "Nigeria")
+                                    @if ($data['paymentgateway']->gateway == "PayStack")
+                                    
                                         <div class="card-footer"> <button type="button" onclick="payWithPaystack('{{ Auth::user()->email }}')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </button></div>
-                                    @elseif(Auth::user()->country == "Canada")
-                                        <div class="card-footer"> <button type="button" onclick="handShake('addmoney')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </button></div>
-                                    @else
-                                    {{--  PayPal  --}}
+
+                                    @elseif($data['paymentgateway']->gateway == "Stripe")
+                                    
+                                        <div class="card-footer"> <button type="submit" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Pay Now</button></div>
+
+                                    @elseif($data['paymentgateway']->gateway == "PayPal")
+                                        {{--  PayPal  --}}
                                         <div class="card-footer" id="paypal-button-container"></div>
+                                    @else
+                                        <div class="card-footer"> <button type="button" onclick="handShake('addmoney')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </button></div>
                                     @endif
                                     
                                     
@@ -244,6 +274,7 @@ input[type="radio"] {
     <script src="{{ asset('pace/pace.min.js') }}"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://js.paystack.co/v1/inline.js"></script>
+    
 
 
 
@@ -333,10 +364,11 @@ function runCommission(){
     $('.commissionInfo').html("");
     var amount = $("#amount").val();
     // var amount = $("#conversionamount").val();
+    var card_type = $("#card_type").val();
 
 
     var route = "{{ URL('Ajax/getCommission') }}";
-    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $("#card_type").val(), localcurrency: "{{ $data['currencyCode'][0]->currencies[0]->code }}", foreigncurrency: "USD", structure: "Add Funds/Money", structureMethod: $("#card_type").val()};
+    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $("#card_type").val(), localcurrency: "{{ $data['currencyCode'][0]->currencies[0]->code }}", foreigncurrency: "USD", structure: "Add Funds/Money", structureMethod: "Debit Card"};
 
 
     Pace.restart();
@@ -523,12 +555,12 @@ else if(val == 'addcard'){
         contentType: false,
         dataType: 'JSON',
         beforeSend: function(){
-            $('#cardSubmit').text('Please wait...');
+            $('.cardSubmit').text('Please wait...');
         },
         success: function(result){
             console.log(result);
 
-            $('#cardSubmit').text('Submit');
+            $('.cardSubmit').text('Submit');
 
             if(result.status == 200){
                     swal("Success", result.message, "success");
@@ -912,7 +944,26 @@ function goBack() {
 // Gpay Ends
 
 
-// Paypal Integration Start
+
+
+function setHeaders(){
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': "{{csrf_token()}}",
+            'Authorization': "Bearer "+"{{ Auth::user()->api_token }}"
+        }
+        });
+
+}
+
+
+        </script>
+
+
+@if($data['paymentgateway']->gateway == "PayPal")
+        <script>
+            // Paypal Integration Start
 
 paypal.Buttons({
 
@@ -958,22 +1009,153 @@ paypal.Buttons({
   
 
 // PayPal Integration End
-
-
-function setHeaders(){
-
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': "{{csrf_token()}}",
-            'Authorization': "Bearer "+"{{ Auth::user()->api_token }}"
-        }
-        });
-
-}
-
-
         </script>
 
+
+
+@endif
+
+
+
+@if($data['paymentgateway']->gateway == "Stripe")
+
+<script>
+
+    // Stripe Integration Starts
+
+    
+
+document.addEventListener('DOMContentLoaded', async () => {
+
+    var stripe = Stripe('{{ env("STRIPE_LIVE_PUBLIC_KEY") }}');
+    // var stripe = Stripe('{{ env("STRIPE_LOCAL_PUBLIC_KEY") }}');
+
+    var elements = stripe.elements();
+
+    var cardElement = elements.create('card');
+    cardElement.mount('#card-element');
+
+
+    var form = document.querySelector('#formElem');
+
+    form.addEventListener('submit', async(e) => {
+      e.preventDefault();
+
+    var netamount = $('#amounttosend').val();
+    var feeamount = $('#commissiondeduct').val();
+    var amount = (+netamount + +feeamount).toFixed(2);
+
+    // TODO: Try Ajax here
+     var route = '/create-payment-intent';   
+
+     var formData = new FormData(formElem);
+
+     formData.append('paymentMethodType', 'card');
+     formData.append('amount', amount);
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('.cardSubmit').text('Please wait...');
+        },
+        success: function(result){
+
+            if(result.status == 200){
+
+                // swal("Success", result.message, "success");
+                // setTimeout(function(){ location.reload(); }, 2000);
+
+                var nameInput = document.querySelector('#nameInput');
+                var emailInput = document.querySelector('#emailInput');
+
+                var paymentIntent = stripe.confirmCardPayment(
+                    result.res.clientSecret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            name: nameInput.value,
+                            email: emailInput.value,
+                        }
+                    }
+                    }
+                ).then(function(result){
+                    $('.cardSubmit').text('Pay Now');
+
+                    if(result.error){
+                        swal("Oops", result.error.message, "error");
+                    }else{
+
+                        $('#paymentToken').val(result.paymentIntent.id);
+
+                        setTimeout(() => {
+                            handShake('addmoney');
+                        }, 1000);
+
+                    }
+
+                });
+
+
+            }
+            else{
+                swal("Oops", result.message, "error");
+            }
+
+
+
+        },
+        error: function(err) {
+            $('.cardSubmit').text('Pay Now');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+
+      // Create PaymentIntent on the server
+    //   var {clientSecret} = await fetch('/create-payment-intent', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'X-CSRF-TOKEN': "{{csrf_token()}}",
+    //     },
+    //     body: JSON.stringify({
+    //       paymentMethodType: 'card',
+    //       currency: $('#curCurrency').val(),
+    //       amount: amount,
+    //     }),
+        
+    //   }).then(resp=>resp.json);
+
+
+
+      
+
+    //   console.log(paymentIntent);
+
+    });
+
+});
+
+
+
+// Stripe Integration Ends
+
+
+</script>
+
+@endif
 
 
         {{-- Google Pay API --}}

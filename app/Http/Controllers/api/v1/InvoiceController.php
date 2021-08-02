@@ -211,9 +211,12 @@ class InvoiceController extends Controller
 
                                     if(isset($getCustomer)){
                                         $address = $getCustomer->address;
+                                        $customerRefcode = $getCustomer->ref_code;
                                         $telephone = "+".$getCustomer->code.$getCustomer->telephone;
                                     }
                                     else{
+
+                                        $customerRefcode = null;
                                         $address = null;
                                         $telephone = $req->single_telephone;
                                     }
@@ -290,7 +293,11 @@ class InvoiceController extends Controller
 
                                     Log::info("Single Invoice prepared by ".$this->clientname." for :=> ".$this->name);
 
-                                    $this->createNotification($getCustomer->ref_code, $sendMsg);
+                                    if($customerRefcode != null){
+
+                                        $this->createNotification($customerRefcode, $sendMsg);
+                                    }
+
 
                                     $getinvoiceData = ImportExcel::where('invoice_no', $req->single_invoiceno)->first();
 
@@ -305,7 +312,7 @@ class InvoiceController extends Controller
                         catch (\Throwable $th) {
                             $status = 400;
                             $data = [];
-                            $message = "Error: ".$th;
+                            $message = "Error: ".$th->getMessage();
                         }
                 }
                 else{

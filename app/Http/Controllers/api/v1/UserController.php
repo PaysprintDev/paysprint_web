@@ -277,7 +277,9 @@ class UserController extends Controller
 
     public function userLogin(Request $request, User $user){
 
-        // Validate Login
+        try {
+            
+            // Validate Login
 
         $validator = $request->validate([
             'email' => 'required|email',
@@ -386,7 +388,12 @@ class UserController extends Controller
 
         }
 
-        
+        } catch (\Throwable $th) {
+            $data = [];
+            $status = 400;
+            $message = $th->getMessage();
+        }
+
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 

@@ -362,7 +362,7 @@
           </a>
           <ul class="treeview-menu">
             <li title="Red Flagged"><a href="{{ route('red flagged account') }}"><i class="fa fa-circle-o text-red"></i> Red Flagged</a></li>
-            <li title="Flagged Money"><a href="{{ route('red flagged money') }}"><i class="fa fa-circle-o text-red"></i> Flagged Money</a></li>
+            <li title="Added Money - Flagged"><a href="{{ route('red flagged money') }}"><i class="fa fa-circle-o text-red"></i> Added Money - Flagged</a></li>
           </ul>
         </li>
 
