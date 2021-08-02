@@ -408,9 +408,25 @@ input[type="radio"] {
                                         </div>
 
                                         @if (Auth::user()->approval == 2 && Auth::user()->accountLevel == 3)
+
+                                        @if (isset($data['specialInfo']))
+
+                                        
+
+                                            <div class="col-md-6 mb-3">
+                                                <a type="button" href="javascript:void()" class="btn btn-secondary btn-block" onclick="restriction('specialinfo', '{{ Auth::user()->name }}')">Withdraw Money <i class="fa fa-credit-card"></i></a>
+
+                                            </div>
+
+                                            @else
+
                                             <div class="col-md-6 mb-3">
                                                 <a type="button" href="{{ route('Withdraw Money') }}" class="btn btn-secondary btn-block">Withdraw Money <i class="fa fa-credit-card"></i></a>
                                             </div>
+
+                                        @endif
+                                        
+                                            
                                         @else
 
                                         <div class="col-md-6 mb-3">
@@ -422,6 +438,18 @@ input[type="radio"] {
                                         
                                     </div>
 
+                                    @if (isset($data['specialInfo']))
+
+                                    <div class="alert alert-danger alert-dismissible show specialText disp-0" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="$('.specialText').addClass('disp-0')">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        {!! $data['specialInfo']->information !!}
+                                    </div>
+
+                                    @endif
+
+                                    
                                     
 
                                     <div class="form-group"> 
@@ -826,8 +854,12 @@ function comingSoon(val){
  }
 
  function restriction(val, name){
+     $('.specialText').addClass("disp-0");
     if(val == "withdrawal"){
         swal('Hello '+name, 'Your account need to be verified before you can make withdrawal', 'info');
+    }
+    else if(val == "specialinfo"){
+        $('.specialText').removeClass("disp-0");
     }
  }
 

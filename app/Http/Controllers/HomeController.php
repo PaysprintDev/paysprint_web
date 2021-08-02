@@ -747,7 +747,8 @@ class HomeController extends Controller
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBankDetail(),
             'walletStatement' => $this->walletStatement(),
-            'continent' => $this->timezone[0]
+            'continent' => $this->timezone[0],
+            'specialInfo' => $this->getthisInfo(Auth::user()->country),
         );
 
         // dd($data);
@@ -3171,7 +3172,7 @@ class HomeController extends Controller
             if(count($ref) > 0){
                 foreach($ref as $key => $value){
                     if($value->ref_code == $ref_code){
-                        $newRefcode = mt_rand(000000, 999999);
+                        $newRefcode = mt_rand(0000000, 9999999);
                     }
                     else{
                         $newRefcode = $ref_code;

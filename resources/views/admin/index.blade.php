@@ -730,9 +730,16 @@
 
             <div class="col-md-4 mb-3">
               @if ($getUserDetail->approval == 2 && $getUserDetail->accountLevel == 3)
-                  <a style="font-size: 14px; font-weight: bold;" type="button" href="{{ route('merchant withdrawal') }}" class="btn btn-success btn-block">Withdraw Money <i class="fas fa-credit-card"></i></a>
+
+                @if (isset($withdraws['specialInfo']))
+                    <a style="font-size: 14px; font-weight: bold;" type="button" href="javascript:void(0)" class="btn btn-success btn-block" onclick="restriction('specialinfo', '{{ $getUserDetail->name }}')">Withdraw Money <i class="fa fa-credit-card"></i></a>
+                @else
+                    <a style="font-size: 14px; font-weight: bold;" type="button" href="{{ route('merchant withdrawal') }}" class="btn btn-success btn-block">Withdraw Money <i class="fas fa-credit-card"></i></a>
+                @endif
+
+                  
               @else
-                      <a style="font-size: 14px; font-weight: bold;" type="button" href="javascript:void()" class="btn btn-success btn-block" onclick="restriction('withdrawal', '{{ $getUserDetail->name }}')">Withdraw Money <i class="fa fa-credit-card"></i></a>
+                      <a style="font-size: 14px; font-weight: bold;" type="button" href="javascript:void(0)" class="btn btn-success btn-block" onclick="restriction('withdrawal', '{{ $getUserDetail->name }}')">Withdraw Money <i class="fa fa-credit-card"></i></a>
                   
               @endif
             </div>
@@ -746,6 +753,7 @@
 
 
         </div>
+
 
 
         <div class="col-lg-6 col-xs-6">
@@ -817,6 +825,16 @@
       <!-- /.row -->
       <!-- Main row -->
       <div class="row">
+        @if (isset($withdraws['specialInfo']))
+
+          <section class="col-lg-12 connectedSortable">
+            <div class="alert alert-danger specialText disp-0" role="alert">
+                
+                {!! $withdraws['specialInfo']->information !!}
+            </div>
+          </section>
+
+        @endif
 
 
                 <!-- Left col -->

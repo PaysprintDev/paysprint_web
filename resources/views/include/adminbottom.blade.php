@@ -3535,11 +3535,16 @@ function payOrg(user_id){
 
 
  function restriction(val, name){
+   $('.specialText').addClass("disp-0");
+
     if(val == "withdrawal")
         swal('Hello '+name, 'Your account need to be verified before you can make withdrawal', 'info');
     
     if(val == "invoice")
         swal('Hello '+name, 'Your account need to be verified before you can pay for invoice', 'info');
+
+    if(val == "specialinfo")
+        $('.specialText').removeClass("disp-0");
  }
 
   function comingSoon(){

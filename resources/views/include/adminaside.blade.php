@@ -114,6 +114,7 @@
                 <li title="Moneris"><a href="{{ route('gateway activity', 'gateway=moneris') }}"><i class="fa fa-circle-o text-red"></i> Moneris</a></li>
                 <li title="PayStack"><a href="{{ route('gateway activity', 'gateway=paystack') }}"><i class="fa fa-circle-o text-red"></i> PayStack</a></li>
                 <li title="Paypal"><a href="{{ route('gateway activity', 'gateway=PayPal') }}"><i class="fa fa-circle-o text-red"></i> Paypal</a></li>
+                <li title="Stripe"><a href="{{ route('gateway activity', 'gateway=Stripe') }}"><i class="fa fa-circle-o text-red"></i> Stripe</a></li>
 
               </ul>
             </li>

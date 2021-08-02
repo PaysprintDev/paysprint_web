@@ -64,6 +64,8 @@ use App\MonerisActivity as MonerisActivity;
 
 use App\AllCountries as AllCountries;
 
+use App\SpecialInformation as SpecialInformation;
+
 
 use App\CcWithdrawal as CcWithdrawal;
 
@@ -2439,6 +2441,8 @@ else{
 
                     $minBal = $this->minimumWithdrawal($thisuser->country);
 
+                    $specialInfo = SpecialInformation::where('country', $thisuser->country)->first();
+
                     // Check amount in wallet
                     if($req->amount > ($thisuser->wallet_balance - $minBal)){
                         // Insufficient amount for withdrawal
@@ -2469,12 +2473,23 @@ else{
                     }
                     else{
 
-                        if($req->card_type == "Prepaid Card"){
-                            $cardType = "EXBC Prepaid Card";
+                        if(isset($specialInfo)){
+                            $messageOut = $specialInfo->information;
+
+                            $data = [];
+                            $message = $messageOut;
+                            $status = 400;
+
+                            Log::info('Oops!, Though this is a test, but '.$thisuser->name.', '.$message);
                         }
                         else{
-                            $cardType = $req->card_type;
-                        }
+
+                            if($req->card_type == "Prepaid Card"){
+                                $cardType = "EXBC Prepaid Card";
+                            }
+                            else{
+                                $cardType = $req->card_type;
+                            }
 
                         
 
@@ -3183,7 +3198,7 @@ else{
                                 Log::info('Oops!, Though this is a test, but '.$thisuser->name.', '.$message);
                             }
 
-                            
+                        }
 
                     }
                     
@@ -3220,6 +3235,10 @@ else{
 
                     $minBal = $this->minimumWithdrawal($thisuser->country);
 
+                    $specialInfo = SpecialInformation::where('country', $thisuser->country)->first();
+
+                    
+
 
                     // Check amount in wallet
                     if($req->amount > ($thisuser->wallet_balance - $minBal)){
@@ -3251,12 +3270,28 @@ else{
                     }
                     else{
 
-                        if($req->card_type == "Prepaid Card"){
-                            $cardType = "EXBC Prepaid Card";
+
+                        if(isset($specialInfo)){
+
+                            $messageOut = $specialInfo->information;
+
+                            $data = [];
+                            $message = $messageOut;
+                            $status = 400;
+
+                            Log::info('Oops!, '.$thisuser->name.', '.$message);
+
                         }
                         else{
-                            $cardType = $req->card_type;
-                        }
+                            
+
+
+                            if($req->card_type == "Prepaid Card"){
+                                $cardType = "EXBC Prepaid Card";
+                            }
+                            else{
+                                $cardType = $req->card_type;
+                            }
 
                         
 
@@ -3961,6 +3996,8 @@ else{
 
                                 Log::info('Oops!, '.$thisuser->name.', '.$message);
                             }
+                        }
+
 
                             
 

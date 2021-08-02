@@ -68,7 +68,7 @@ class UserController extends Controller
             if(count($ref) > 0){
                 foreach($ref as $key => $value){
                     if($value->ref_code == $ref_code){
-                        $newRefcode = mt_rand(000000, 999999);
+                        $newRefcode = mt_rand(0000000, 9999999);
                     }
                     else{
                         $newRefcode = $ref_code;
