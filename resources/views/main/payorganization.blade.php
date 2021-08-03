@@ -98,7 +98,7 @@
         
                                         </select> --}}
         
-                                        @if (Request::get('type') == "international")
+                                        @if (Request::get('type') == base64_encode("international"))
         
                                         <div class="row">
                                             <div class="col-md-3 disp-0">

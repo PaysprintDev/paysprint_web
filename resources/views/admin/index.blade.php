@@ -22,7 +22,7 @@
 
             @if(isset($userInfo))
 
-              <h4 style="color: green; font-weight: bold;">Account Number: {{ $userInfo->ref_code }}</h4>
+              <h4 class="welcome" style="color: green; font-weight: bold;">Account Number: {{ $userInfo->ref_code }}</h4>
 
 
               @if ($userInfo->approval == 0 || $userInfo->accountLevel == 0)
@@ -593,7 +593,7 @@
 
 
 
-      <div class="col-lg-6 col-xs-6">
+      <div class="col-lg-6 col-xs-6 walletBal">
           <!-- small box -->
           <div class="small-box bg-warning">
             <div class="inner">
@@ -610,7 +610,7 @@
         <!-- ./col -->
         
         <!-- ./col -->
-        <div class="col-lg-6 col-xs-6">
+        <div class="col-lg-6 col-xs-6 walletWithdrawal">
           <!-- small box -->
           <div class="small-box bg-info">
             <div class="inner">
@@ -625,7 +625,7 @@
           </div>
         </div>
 
-        <div class="col-lg-6 col-xs-6">
+        <div class="col-lg-6 col-xs-6 myCardInfo">
           <!-- small box -->
           <div class="small-box bg-success">
             <div class="inner">
@@ -703,7 +703,7 @@
           </div>
 
 
-            <div class="col-md-12">
+            <div class="col-md-12 paymentMethods">
           <h3><strong>Payment Method</strong></h3>
               <hr>
             </div>
@@ -719,16 +719,16 @@
             <br>
             </div>
 
-            <div class="col-md-4 mb-3">
+            <div class="col-md-4 mb-3 addMoney">
 
               <a style="font-size: 14px; font-weight: bold;" type="button" href="{{ route('merchant add money') }}" class="btn btn-info btn-block">Add Money <i class="fas fa-plus"></i></a>
             </div>
 
-            <div class="col-md-4 mb-3">
-              <a style="font-size: 14px; font-weight: bold;" type="button" href="{{ route('merchant send money', 'type=local') }}" class="btn btn-warning btn-block">Send Money <i class="fas fa-paper-plane"></i></a>
+            <div class="col-md-4 mb-3 sendMoney">
+              <a style="font-size: 14px; font-weight: bold;" type="button" href="{{ route('merchant send money', 'type='.base64_encode("local")) }}" class="btn btn-warning btn-block">Send Money <i class="fas fa-paper-plane"></i></a>
             </div>
 
-            <div class="col-md-4 mb-3">
+            <div class="col-md-4 mb-3 withdrawMoney">
               @if ($getUserDetail->approval == 2 && $getUserDetail->accountLevel == 3)
 
                 @if (isset($withdraws['specialInfo']))
@@ -742,12 +742,28 @@
                       <a style="font-size: 14px; font-weight: bold;" type="button" href="javascript:void(0)" class="btn btn-success btn-block" onclick="restriction('withdrawal', '{{ $getUserDetail->name }}')">Withdraw Money <i class="fa fa-credit-card"></i></a>
                   
               @endif
+              <br>
             </div>
 
 
             
             
+            <div class="col-md-4 mt-5 mb-3 payinvoiceMoney">
+              <a style="font-size: 14px; font-weight: bold;" type="button" href="{{ route('invoice') }}" class="btn btn-danger btn-block mt-5 mb-3">Pay Invoice <i class="fas fa-credit-card"></i></a>
+            </div>
 
+            @if ($getUserDetail->country == "Nigeria")
+                <div class="col-md-4 mt-5 mb-3 payutilityMoney">
+                  <a style="font-size: 14px; font-weight: bold; background: black; color: white;" type="button" href="{{ route('utility bills') }}" class="btn btn-info btn-block mt-5 mb-3">Pay Utility Bill <i class="fas fa-credit-card"></i></a>
+                </div>
+
+                @else
+
+                <div class="col-md-4 mt-5 mb-3 payutilityMoney">
+                  <a style="font-size: 14px; font-weight: bold; background: black; color: white;" type="button" href="javascript:void(0)" class="btn btn-info btn-block mt-5 mb-3" onclick="comingSoon()">Pay Utility Bill <i class="fas fa-credit-card"></i></a>
+                </div>
+
+            @endif
 
 
 
@@ -758,7 +774,7 @@
 
         <div class="col-lg-6 col-xs-6">
           <!-- small box -->
-          <div class="small-box bg-danger">
+          <div class="small-box bg-danger paidInvoices">
             <div class="inner">
 
               @php
@@ -796,15 +812,7 @@
           </div>
 
           
-          <div class="col-md-4 mt-5 mb-3">
-              <a style="font-size: 14px; font-weight: bold;" type="button" href="{{ route('invoice') }}" class="btn btn-danger btn-block mt-5 mb-3">Pay Invoice <i class="fas fa-credit-card"></i></a>
-            </div>
-
-            @if ($getUserDetail->country == "Nigeria")
-                <div class="col-md-4 mt-5 mb-3">
-                  <a style="font-size: 14px; font-weight: bold; background: black; color: white;" type="button" href="{{ route('utility bills') }}" class="btn btn-info btn-block mt-5 mb-3">Pay Utility Bill <i class="fas fa-credit-card"></i></a>
-                </div>
-            @endif
+          
           
 
           
@@ -827,7 +835,7 @@
       <div class="row">
         @if (isset($withdraws['specialInfo']))
 
-          <section class="col-lg-12 connectedSortable">
+          <section class="col-lg-12 specialText disp-0">
             <div class="alert alert-danger specialText disp-0" role="alert">
                 
                 {!! $withdraws['specialInfo']->information !!}
@@ -842,7 +850,7 @@
 
 
           <!-- TO DO List -->
-          <div class="box box-primary">
+          <div class="box box-primary receivedMoney">
             <div class="box-header">
               <i class="ion ion-clipboard"></i>
 
@@ -939,7 +947,7 @@
 
 
           <!-- TO DO List -->
-          <div class="box box-primary">
+          <div class="box box-primary importList">
             <div class="box-header">
               <i class="ion ion-clipboard"></i>
 
@@ -1039,7 +1047,7 @@
         <section class="col-lg-12 connectedSortable">
 
           <!-- TO DO List -->
-          <div class="box box-primary">
+          <div class="box box-primary receivePaid">
             <div class="box-header">
               <i class="ion ion-clipboard"></i>
 

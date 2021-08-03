@@ -47,6 +47,7 @@
                   </div>
                 <tr>
                   <th>S/N</th>
+                  <th>Acct. No</th>
                   <th>Name</th>
                   <th>Email/Username</th>
                   <th>Account Type</th>
@@ -66,6 +67,7 @@
                             @if($user = \App\User::where('ref_code', $data->ref_code)->first())
 
                                 @php
+                                    $ref_code = $user->ref_code;
                                     $name = $user->name;
                                     $email = $user->email;
                                     $accountType = $user->accountType;
@@ -76,6 +78,7 @@
                                 @if($annonUser = \App\AnonUsers::where('ref_code', $data->ref_code)->first())
 
                                     @php
+                                        $ref_code = $annonUser->ref_code;
                                         $name = $annonUser->name;
                                         $email = $annonUser->email;
                                         $accountType = $annonUser->accountType;
@@ -84,6 +87,7 @@
                                   @else
 
                                     @php
+                                        $ref_code = "-";
                                         $name = "-";
                                         $email = "-";
                                         $accountType = "-";
@@ -98,6 +102,7 @@
 
 
 
+                            <td>{{ $ref_code }}</td>
                             <td>{{ $name }}</td>
                             <td>{{ $email }}</td>
                             <td>{{ $accountType }}</td>

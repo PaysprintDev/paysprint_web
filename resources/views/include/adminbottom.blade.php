@@ -7,6 +7,7 @@
 
   <!-- Tour Guide plugin -->
 <script src="{{ asset('hopscotch/dist/js/hopscotch.js') }}"></script>
+<script src="{{ asset('js/my_first_tour.js') }}"></script>
 
 <script src="https://raw.githubusercontent.com/HubSpot/pace/v1.0.0/pace.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -3776,6 +3777,11 @@ function checkDetail(val){
     }
 
 }
+
+
+ function cannotSend(){
+     swal('International Transfer Coming Soon!', 'We detected this is an international transaction. We\'ll notify you when it is available', 'info');
+ }
 
  function setHeaders(){
     $.ajaxSetup({

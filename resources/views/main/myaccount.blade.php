@@ -459,9 +459,9 @@ input[type="radio"] {
                                                     <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Credit <i class="fas fa-circle text-success"></i></button>
                                                     <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Debit <i class="fas fa-circle text-danger"></i></button>
                                                     @if (Auth::user()->accountType == "Individual")
-                                                        <button class="nav-link" data-bs-toggle="tab" type="button" role="tab" aria-selected="false" onclick="location.href='{{ url('payorganization?type=local') }}'">Send Money <i class="fas fa-circle text-warning"></i></button>
+                                                        <button class="nav-link" data-bs-toggle="tab" type="button" role="tab" aria-selected="false" onclick="location.href='{{ url('payorganization?type='.base64_encode('local')) }}'">Send Money <i class="fas fa-circle text-warning"></i></button>
                                                     @else
-                                                        <button class="nav-link" data-bs-toggle="tab" type="button" role="tab" aria-selected="false" onclick="location.href='{{ route('merchant send money', 'type=local') }}'">Send Money <i class="fas fa-circle text-warning"></i></button>
+                                                        <button class="nav-link" data-bs-toggle="tab" type="button" role="tab" aria-selected="false" onclick="location.href='{{ route('merchant send money', 'type='.base64_encode('local')) }}'">Send Money <i class="fas fa-circle text-warning"></i></button>
                                                     @endif
                                                     
 

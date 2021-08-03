@@ -57,7 +57,7 @@ class UserController extends Controller
 
         if($validator->passes()){
 
-            $ref_code = mt_rand(00000, 99999);
+            $ref_code = mt_rand(0000000, 9999999);
 
             $mycode = $this->getCountryCode($request->country);
 
@@ -84,7 +84,14 @@ class UserController extends Controller
             $newcustomer = AnonUsers::where('email', $request->email)->first();
 
             if(isset($mycode[0]->callingCodes[0])){
-                $phoneCode = $mycode[0]->callingCodes[0];
+
+                if($request->country == "United States"){
+                    $phoneCode = "1";
+                }
+                else{
+                    $phoneCode = $mycode[0]->callingCodes[0];
+                }
+                
             }
             else{
                 $phoneCode = "1";

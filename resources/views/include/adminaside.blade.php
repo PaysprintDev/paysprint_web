@@ -406,7 +406,7 @@
 
         
 
-        <li class="treeview" title="Create and Send Invoice">
+        <li class="treeview createandSendInvoice" title="Create and Send Invoice">
           <a href="#">
             <i class="fa fa-book"></i>
             <span> Create and Send Invoice</span>
@@ -423,7 +423,7 @@
           </ul>
         </li>
 
-        <li class="treeview">
+        <li class="treeview transactionHistory">
           <a href="#">
             <i class="fa fa-book"></i>
             <span>Transaction History</span>
@@ -440,7 +440,7 @@
         </li>
 
 
-        <li class="treeview">
+        <li class="treeview performanceReport">
           <a href="#">
             <i class="fa fa-book"></i>
             <span>Performance Report</span>
@@ -460,7 +460,7 @@
         </li>
 
 
-        <li>
+        <li class="createInvoiceType">
           <a href="{{ route('create service types') }}">
             <i class="fa fa-book"></i>
             <span>Create Invoice Type</span>
@@ -468,7 +468,7 @@
         </li>
 
 
-        <li>
+        <li class="setupTax">
           <a href="{{ route('setup tax') }}">
             <i class="fa fa-book"></i>
             <span>Set Up Tax</span>
@@ -476,14 +476,14 @@
         </li>
 
 
-        <li>
+        <li class="apiIntegration">
           <a href="{{ route('api integration') }}">
             <i class="fa fa-book"></i>
             <span>API Integration</span>
           </a>
         </li>
 
-        <li class="treeview">
+        <li class="treeview accountsettings">
           <a href="#">
             <i class="fa fa-wrench"></i>
             <span>Settings</span>
@@ -502,7 +502,7 @@
 
 
             @if ($pages == "My Dashboard")
-                    <li>
+                    <li class="quicksetup">
                 <div class="card" style="width: auto;">
                             <div class="card-header" style="background-color: #f6b60b; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
                                 Quick Wallet Setup
@@ -600,7 +600,7 @@
 
                     @if ($getUserDetail->country == "Nigeria")
 
-                        <div class="card" style="width: 100%;">
+                        <div class="card utilityBills" style="width: 100%;">
                                 <div class="card-header" style="background-color: #ff8a04; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
                                     Airtime/Bills Payment
                                 </div>
@@ -622,7 +622,7 @@
                     @endif
 
 
-                <div class="card" style="width: 100%;">
+                <div class="card propertyManagement" style="width: 100%;">
                             <div class="card-header" style="background-color: #5ed998; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
                                 Property Management
                                 

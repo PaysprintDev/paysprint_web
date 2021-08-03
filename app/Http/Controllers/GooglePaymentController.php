@@ -553,7 +553,7 @@ class GooglePaymentController extends Controller
                         }
                         else{
                             
-                            $ref_code = mt_rand(00000, 99999);
+                            $ref_code = mt_rand(0000000, 9999999);
 
                             // Get all ref_codes
                             $ref = User::all();

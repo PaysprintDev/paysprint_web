@@ -5761,6 +5761,7 @@ class AdminController extends Controller
             );
 
 
+
             return view('admin.wallet.sendmoney')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
         }
         else{
@@ -9817,7 +9818,7 @@ class AdminController extends Controller
                     }
                     else{
 
-                        $ref_code = mt_rand(00000, 99999);
+                        $ref_code = mt_rand(0000000, 9999999);
 
 
                         $ref = User::all();
@@ -9860,10 +9861,24 @@ class AdminController extends Controller
 
                         // Insert to User
 
-                    $api_token = uniqid().md5($req->email).time();
+                        $api_token = uniqid().md5($req->email).time();
+
+                        if(isset($mycode[0]->callingCodes[0])){
+
+                            if($req->country == "United States"){
+                                $phoneCode = "1";
+                            }
+                            else{
+                                $phoneCode = $mycode[0]->callingCodes[0];
+                            }
+                            
+                        }
+                        else{
+                            $phoneCode = "1";
+                        }
 
 
-                        $data = ['code' => $mycode[0]->callingCodes[0], 'ref_code' => $newRefcode, 'businessname' => $req->business_name, 'name' => $req->firstname.' '.$req->lastname, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number.' '.$req->street_name.', '.$req->city.' '.$req->state.' '.$req->country, 'telephone' => $req->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2];
+                        $data = ['code' => $phoneCode, 'ref_code' => $newRefcode, 'businessname' => $req->business_name, 'name' => $req->firstname.' '.$req->lastname, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number.' '.$req->street_name.', '.$req->city.' '.$req->state.' '.$req->country, 'telephone' => $req->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2];
 
 
                         User::updateOrCreate(['email' => $req->email], $data);
