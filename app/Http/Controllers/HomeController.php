@@ -4038,6 +4038,8 @@ class HomeController extends Controller
 
     public function ajaxgetCommission(Request $req){
 
+        // TODO: Money corrected from Elijah Ogbe #7759.67 instead of #8000 Date: 04/08/21
+
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
@@ -4058,7 +4060,14 @@ class HomeController extends Controller
             
             // dd($dataInfo);
 
-            $data = TransactionCost::where('structure', $req->structure)->where('method', "Debit Card")->where('country', $thisuser->country)->first();
+            if($req->structure == "Withdrawal"){
+                $data = TransactionCost::where('structure', $req->structure)->where('method', "Bank Account")->where('country', $thisuser->country)->first();
+            }
+            else{
+                $data = TransactionCost::where('structure', $req->structure)->where('method', "Debit Card")->where('country', $thisuser->country)->first();
+            }
+
+            
 
             /*
             
@@ -4093,7 +4102,14 @@ class HomeController extends Controller
                     }
                     else{
 
-                        $data = TransactionCost::where('structure', $req->structure)->where('method', "Debit Card")->where('country', $thisuser->country)->first();
+                        if($req->structure == "Withdrawal"){
+                            $data = TransactionCost::where('structure', $req->structure)->where('method', "Bank Account")->where('country', $thisuser->country)->first();
+                        }
+                        else{
+                            $data = TransactionCost::where('structure', $req->structure)->where('method', "Debit Card")->where('country', $thisuser->country)->first();
+                        }
+
+                        
 
                         if(isset($data)){
                             $x = ($data->variable / 100) * $req->amount;
@@ -4120,8 +4136,14 @@ class HomeController extends Controller
             }
             else{
 
+                if($req->structure == "Withdrawal"){
+                    $data = TransactionCost::where('structure', $req->structure)->where('method', "Bank Account")->first();
+                }
+                else{
+                    $data = TransactionCost::where('structure', $req->structure)->where('method', "Debit Card")->first();
+                }
 
-                $data = TransactionCost::where('structure', $req->structure)->where('method', "Debit Card")->first();
+                
                 
                 if(isset($data)){
                     $x = ($data->variable / 100) * $req->amount;

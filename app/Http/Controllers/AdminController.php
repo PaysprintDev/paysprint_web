@@ -6197,6 +6197,7 @@ class AdminController extends Controller
 
             $data = array(
                 'getBankDetail' => $this->getUserBankDetail($id),
+                'listbank' => $this->getBankList(),
             );
 
 

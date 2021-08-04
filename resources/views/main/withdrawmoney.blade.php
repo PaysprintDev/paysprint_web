@@ -466,6 +466,7 @@ function runCommission(){
         structure = $("#card_type").val();
     }
 
+    
 
     var route = "{{ URL('Ajax/getCommission') }}";
     var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $('#card_type').val(), localcurrency: "{{ $data['currencyCode'][0]->currencies[0]->code }}", foreigncurrency: "USD", structure: "Withdrawal", structureMethod: structure};

@@ -892,7 +892,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     var feeamount = $('#commissiondeduct').val();
     var amount = (+netamount + +feeamount).toFixed(2);
 
-    // TODO: Try Ajax here
      var route = '/create-payment-intent';   
 
      var formData = new FormData(formElem);

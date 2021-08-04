@@ -625,6 +625,13 @@ class MoneyTransferController extends Controller
                 $resData = ['data' => [], 'message' => 'You cannot send money at the moment because your account is still on review.', 'status' => $status];
 
                 }
+                elseif($receiver->country != $sender->country){
+                    $status = 404;
+
+                    $resData = ['data' => [], 'message' => 'International money transfer is not available at the moment', 'status' => $status];
+
+                    Log::info("International Transfer  between ".$sender->name." and ".$receiver->name.". Not available This is a test environment");
+                }
                 else{
                 
                     $amount= number_format($req->amount, 2);
@@ -824,6 +831,13 @@ class MoneyTransferController extends Controller
 
                 $resData = ['data' => [], 'message' => 'You cannot send money at the moment because your account is still on review.', 'status' => $status];
 
+                }
+                elseif($receiver->country != $sender->country){
+                    $status = 404;
+
+                    $resData = ['data' => [], 'message' => 'International money transfer is not available at the moment', 'status' => $status];
+
+                    Log::info("International Transfer  between ".$sender->name." and ".$receiver->name.". Not available.");
                 }
                 else{
                 

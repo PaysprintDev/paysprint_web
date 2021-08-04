@@ -712,6 +712,54 @@ class CheckSetupController extends Controller
     }
 
 
+    //TODO: DO Fee Setup
+    public function setupFeeStructure(){
+        $countries = AllCountries::where('approval', 1)->where('gateway', 'PayPal')->where('name', '!=', 'Canada')->get();
+
+        if (count($countries) > 0) {
+
+            $query;
+
+            foreach ($countries as $key => $value) {
+
+
+                $countryName = $value->name;
+
+
+                // Get TRansaction
+                $getSpecific = TransactionCost::where('country', "United States")->get();
+
+                for ($i=0; $i < count($getSpecific); $i++) { 
+                    $query []= [
+                        '_token' => $getSpecific[$i]->_token,
+                        'variable' => $getSpecific[$i]->variable,
+                        'fixed' => $getSpecific[$i]->fixed,
+                        'structure' => $getSpecific[$i]->structure,
+                        'method' => $getSpecific[$i]->method,
+                        'country' => $countryName
+                    ];
+                }
+
+
+                foreach ($query as $insertSpecifics) {
+
+                    // dd($insertSpecifics);
+
+                    // Insert Transcation Cost
+                    TransactionCost::updateOrCreate(['country' => $countryName], $insertSpecifics);
+                }
+
+                echo "Done for ".$countryName;
+                echo "<hr>";
+
+            }
+
+            
+        }
+
+    }
+
+
     // EXBC PREPAID CARD CHECK
     public function checkExbcCardRequest(){
 

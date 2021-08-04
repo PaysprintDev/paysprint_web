@@ -388,6 +388,8 @@ else{
 
                             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
+                            $thismerchant = User::where('ref_code', $req->merchant_id)->first();
+
                             if($thisuser->approval < 1 && $thisuser->accountLevel < 1){
 
                                 $response = 'You cannot pay invoice at the moment because your account is still on review.';
@@ -397,7 +399,17 @@ else{
                                 $message = $response;
 
 
-                            }else{
+                            }
+                            elseif ($thisuser->country != $thismerchant->country) {
+                                $response = 'International money transfer is not available at the moment';
+
+                                $data = [];
+                                $status = 400;
+                                $message = $response;
+                            }
+                            
+                            
+                            else{
                                                             // Get My Wallet Balance
                             $walletBalance = $thisuser->wallet_balance - $req->amount;
 
@@ -405,7 +417,7 @@ else{
 
                             // Update Merchant Wallet 
 
-                            $thismerchant = User::where('ref_code', $req->merchant_id)->first();
+                            
 
                             // Update Merchant Wallet Balance
                             $merchantwalletBalance = $thismerchant->wallet_balance + $req->amount;
@@ -689,6 +701,8 @@ else{
 
                             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
+                            $thismerchant = User::where('ref_code', $req->merchant_id)->first();
+
                             if($thisuser->approval < 1 && $thisuser->accountLevel < 1){
 
                                 $response = 'You cannot pay invoice at the moment because your account is still on review.';
@@ -699,6 +713,13 @@ else{
 
 
                             }
+                            elseif ($thisuser->country != $thismerchant->country) {
+                                $response = 'International money transfer is not available at the moment';
+
+                                $data = [];
+                                $status = 400;
+                                $message = $response;
+                            }
                             else{
                                                             // Get My Wallet Balance
                             $walletBalance = $thisuser->wallet_balance - $req->amount;
@@ -706,8 +727,7 @@ else{
                             User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBalance]);
 
                             // Update Merchant Wallet 
-
-                            $thismerchant = User::where('ref_code', $req->merchant_id)->first();
+                            
 
                             // Update Merchant Wallet Balance
                             $merchantwalletBalance = $thismerchant->wallet_balance + $req->amount;

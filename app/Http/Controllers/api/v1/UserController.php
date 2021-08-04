@@ -770,7 +770,7 @@ class UserController extends Controller
         Log::info(json_encode($response));
 
         try {
-            if($response->status == true && $response->data->is_blacklisted == false && $response->data->account_number == true){
+            if($response->status == true && $response->data->is_blacklisted == false){
 
             $bank = ListOfBanks::where('code', $req->bank_code)->first();
 
@@ -792,7 +792,7 @@ class UserController extends Controller
         }
         else{
             $data = [];
-            $message = $response->message;
+            $message = "Bank Verification Number does not match your account";
             $status = 400;
         }
 

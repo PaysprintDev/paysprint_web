@@ -160,6 +160,8 @@ class GooglePaymentController extends Controller
         }
         else{
 
+                $client = User::where('ref_code', $req->user_id)->first();
+
             // Check for Wallet Balance
 
             if($req->amount > $user->wallet_balance){
@@ -171,9 +173,16 @@ class GooglePaymentController extends Controller
 
                 return redirect()->back()->with($respaction, $response);
             }
+            elseif ($user->country != $client->country) {
+                $resData = ['res' => 'International money transfer is not available at the moment', 'message' => 'error', 'title' => 'Oops!'];
+
+                $response = 'International money transfer is not available at the moment';
+                $respaction = 'error';
+
+                return redirect()->back()->with($respaction, $response);
+            }
             else{
                 
-                $client = User::where('ref_code', $req->user_id)->first();
 
                 if($req->commission == "on"){
                     $amount= number_format($req->amount, 2);
@@ -357,7 +366,9 @@ class GooglePaymentController extends Controller
 
                     // Senders statement
                     $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $walletstatus, $action, $regards, 1, $statement_route, 'on', $user->country);
-                    
+
+
+                    // Receiver
                     $this->insStatement($client->email, $reference_code, "Received ".$req->currency.' '.number_format($dataInfo, 2)." in wallet for ".$service." from ".$user->name, $dataInfo, 0, $balance, $trans_date, $walletstatus, "Wallet credit", $client->ref_code, 1, $statement_route, $client->auto_deposit, $client->country);
 
                     
@@ -535,6 +546,16 @@ class GooglePaymentController extends Controller
                         
 
                         $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'link' => URL('payment/sendmoney/'.$checkExist->ref_code.'?country='.$thisuser->country)];
+
+                        return $this->returnJSON($resData, $status);
+                    }
+                    elseif ($thisuser->country != $req->country) {
+                        $response = 'International money transfer is not available at the moment';
+                        $data = [];
+                        $message = $response;
+                        $status = 403;
+
+                        $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'link' => '#'];
 
                         return $this->returnJSON($resData, $status);
                     }
@@ -822,6 +843,15 @@ class GooglePaymentController extends Controller
 
                         $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'link' => URL('payment/sendmoney/'.$checkExist->ref_code.'?country='.$thisuser->country)];
 
+                        return $this->returnJSON($resData, $status);
+                    }
+                    elseif ($thisuser->country != $req->country) {
+                        $response = 'International money transfer is not available at the moment';
+                        $data = [];
+                        $message = $response;
+                        $status = 403;
+
+                        $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'link' => '#'];
                         return $this->returnJSON($resData, $status);
                     }
                     else{
