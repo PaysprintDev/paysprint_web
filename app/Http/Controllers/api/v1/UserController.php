@@ -201,7 +201,7 @@ class UserController extends Controller
                             $statusCode = 200;
 
                             // Udpate User Info
-                            User::where('id', $getcurrentUser->id)->update(['accountLevel' => 3, 'approval' => 1, 'countryapproval' => 1]);
+                            User::where('id', $getcurrentUser->id)->update(['accountLevel' => 3, 'approval' => 2, 'countryapproval' => 1]);
 
                             $this->createNotification($newRefcode, "Hello ".$request->firstname.", PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!. Welcome on board.");
                         }

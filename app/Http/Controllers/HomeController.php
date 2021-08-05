@@ -119,6 +119,7 @@ class HomeController extends Controller
         $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'expressUtilities', 'expressBuyUtilities']]);
 
         $location = $this->myLocation();
+
         
 
         $this->timezone = explode("/", $location->timezone);
@@ -1133,6 +1134,41 @@ class HomeController extends Controller
         return view('main.merchantcategory')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
+    public function allMerchantCategory(Request $req)
+    {
+        $service = $req->get('service');
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'Merchant By Services';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            }
+            else{
+                $this->page = 'Merchant By Services';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'Merchant By Services';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+
+        $data = array(
+            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'getNotifications' => $this->getUserNotifications(Auth::user()->ref_code),
+            'getMerchantHere' => $this->getMerchantHere($service),
+            'allMerchants' => $this->getAllMerchantsByCategory(),
+            'continent' => $this->timezone[0]
+        );
+
+
+        return view('main.allmerchantcategory')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
 
 
     public function expressUtilities(Request $req)
@@ -1247,6 +1283,12 @@ class HomeController extends Controller
     }
 
     public function getMerchantsByCategory(){
+        $data = ClientInfo::where('industry', '!=', null)->where('country', Auth::user()->country)->orderBy('created_at', 'DESC')->groupBy('industry')->take(8)->get();
+
+        return $data;
+    }
+
+    public function getAllMerchantsByCategory(){
         $data = ClientInfo::where('industry', '!=', null)->where('country', Auth::user()->country)->orderBy('created_at', 'DESC')->groupBy('industry')->get();
 
         return $data;
@@ -3297,7 +3339,7 @@ class HomeController extends Controller
                                 
 
                                 // Udpate User Info
-                                User::where('id', Auth::user()->id)->update(['accountLevel' => 3, 'approval' => 1, 'countryapproval' => 1]);
+                                User::where('id', Auth::user()->id)->update(['accountLevel' => 3, 'approval' => 2, 'countryapproval' => 1]);
                             }
 
                         }

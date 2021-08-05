@@ -525,6 +525,10 @@
                                     </li>
                                     
                                 @endforeach
+
+                                @if (count($data['getmerchantsByCategory']) == 8)
+                                    <a href="{{ route('all merchant') }}" type="button" class="btn btn-danger btn-block">View more <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></a>
+                                @endif
                                     
                                 @else
 

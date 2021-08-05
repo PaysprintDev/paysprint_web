@@ -73,21 +73,21 @@
                                 @csrf
 
 
-                                <div class="form-group disp-0"> 
+                                <div @if($data['paymentgateway']->gateway == "Moneris") class="form-group" @else class="form-group disp-0" @endif> 
                                     <label for="card_id">
                                             
                                         Select Payment Gateway
                                         </label>
                                             <select name="gateway" id="gateway" class="form-control" required>
-                                                <option value="NULL" selected>Select option</option>
-                                                <option value="PaySprint">PaySprint</option>
+                                                <option value="PaySprint">Select option</option>
+                                                <option value="PaySprint" selected>PaySprint</option>
                                                 {{--  <option value="Google Pay">Google Pay</option>  --}}
                                             </select>
                                             
                                     </div>
 
 
-                                <div class="form-group disp-0"> 
+                                <div  @if($data['paymentgateway']->gateway == "Moneris") class="form-group" @else class="form-group disp-0" @endif> 
                                     <label for="card_id">
                                             
                                         Select Card Type/ Bank Account
@@ -200,6 +200,11 @@
                                   @elseif($data['paymentgateway']->gateway == "PayPal")
                                   {{--  PayPal  --}}
                                   <div class="form-group text-center" id="paypal-button-container"></div>
+
+                                  @else
+
+                                  <div class="form-group"> <button type="button" onclick="handShake('addmoney')" class="btn btn-primary btn-block cardSubmit"> Confirm </button></div>
+
                                 @endif
 
                                 

@@ -333,6 +333,8 @@
             {{-- <li title="Processed Payment"><a href="{{ route('processed payment') }}"><i class="fa fa-circle-o text-red"></i> Processed Payment</a></li> --}}
             <li title="Maintenance Fee"><a href="{{ route('maintenance fee detail') }}"><i class="fa fa-circle-o text-red"></i> Maintenance Fee</a></li>
 
+            <li title="Wallet Statement"><a href="{{ route('users wallet statement') }}"><i class="fa fa-circle-o text-red"></i> Wallet Statement</a></li>
+
           </ul>
         </li>
 

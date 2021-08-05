@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://paysprint.net/</loc>
+  <lastmod>2021-07-09T16:13:32+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://paysprint.net/about</loc>
+  <lastmod>2021-07-09T16:13:32+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://paysprint.net/contact</loc>
+  <lastmod>2021-07-09T16:13:32+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://paysprint.net/login</loc>
+  <lastmod>2021-07-09T16:13:32+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://paysprint.net/register</loc>
+  <lastmod>2021-07-09T16:13:32+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://paysprint.net/merchant-home</loc>
+  <lastmod>2021-07-09T16:13:32+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://paysprint.net/terms-of-service</loc>
+  <lastmod>2021-07-09T16:13:32+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://paysprint.net/privacy-policy</loc>
+  <lastmod>2021-07-09T16:13:32+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://paysprint.net/pricing</loc>
+  <lastmod>2021-07-09T16:13:32+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://paysprint.net/password/reset</loc>
+  <lastmod>2021-07-09T16:13:32+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://paysprint.net/AdminLogin</loc>
+  <lastmod>2021-07-09T16:13:32+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://paysprint.net/AdminRegister</loc>
+  <lastmod>2021-07-09T16:13:32+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://paysprint.net/reset/mypassword</loc>
+  <lastmod>2021-07-09T16:13:32+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+
+
+</urlset>

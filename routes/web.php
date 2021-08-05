@@ -40,6 +40,24 @@ Route::get('autofeestructure', 'CheckSetupController@setupFeeStructure');
 
 Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
 
+Route::get('/run-queue', function() {
+
+    Artisan::call('queue:work');
+    return "Queue work done!";
+    
+});
+
+Route::get('/clear', function() {
+
+    Artisan::call('config:clear');
+    Artisan::call('config:cache');
+    Artisan::call('cache:clear');
+    Artisan::call('route:clear');
+    Artisan::call('view:clear');
+    return "Package Cleared!";
+    
+});
+
 // Major Routes
 
 Route::get('/', ['uses' => 'HomeController@homePage', 'as' => 'home']);
@@ -107,6 +125,7 @@ Route::prefix('mywallet')->group(function () {
 });
 
 Route::get('merchantcategory', ['uses' => 'HomeController@merchantCategory', 'as' => 'merchant category']);
+Route::get('allmerchantcategory', ['uses' => 'HomeController@allMerchantCategory', 'as' => 'all merchant']);
 Route::get('payutilitybills', ['uses' => 'HomeController@expressUtilities', 'as' => 'utility bills']);
 Route::get('buyutilitybills/{id}', ['uses' => 'HomeController@expressBuyUtilities', 'as' => 'buy utility bills']);
 
@@ -231,8 +250,10 @@ Route::get('closedusermoredetail/{id}', ['uses' => 'AdminController@closedUserMo
 Route::prefix('Admin/wallet')->group(function () {
 
 	Route::get('/', ['uses' => 'AdminController@walletBalance', 'as' => 'wallet balance']);
+	Route::get('/user-statement', ['uses' => 'AdminController@userWalletStatement', 'as' => 'users wallet statement']);
 	Route::get('bankrequestwithdrawal', ['uses' => 'AdminController@bankRequestWithdrawal', 'as' => 'bank request withdrawal']);
 	Route::get('bankrequestwithdrawalbycountry', ['uses' => 'AdminController@bankRequestWithdrawalByCountry', 'as' => 'bank withdrawal by country']);
+	Route::get('returnwithdrawal/{id}', ['uses' => 'AdminController@returnWithdrawal', 'as' => 'return withdrawal request']);
 	Route::get('cardrequestwithdrawal', ['uses' => 'AdminController@cardRequestWithdrawal', 'as' => 'card request withdrawal']);
 
 
@@ -267,6 +288,8 @@ Route::prefix('Admin/wallet')->group(function () {
 
 	Route::get('bankrequestprocessed', ['uses' => 'AdminController@bankRequestProcessed', 'as' => 'processed payment']);
 	Route::get('refunddetails/{transid}', ['uses' => 'AdminController@getRefundDetails', 'as' => 'refund details']);
+
+	Route::post('returnrefundmoney/{reference_code}', ['uses' => 'AdminController@returnRefundMoney', 'as' => 'return refund money']);
 
 	Route::get('balancebycountry', ['uses' => 'AdminController@balanceByCountry', 'as' => 'balance by country']);
 	Route::get('maintenancefee', ['uses' => 'AdminController@maintenancefeeDetail', 'as' => 'maintenance fee detail']);
@@ -398,6 +421,7 @@ Route::prefix('Admin/')->group(function () {
 
 	Route::get('walletstatement', ['uses' => 'AdminController@getWalletStatement', 'as' => 'getwalletStatement']);
 	Route::get('walletstatementreport', ['uses' => 'AdminController@getWalletStatementReport', 'as' => 'wallet report']);
+	Route::get('user-wallet-report', ['uses' => 'AdminController@getUserWalletStatementReport', 'as' => 'user wallet report']);
 
 	Route::get('payreport', ['uses' => 'AdminController@payreport', 'as' => 'payreport']);
 	Route::get('epayreport', ['uses' => 'AdminController@epayreport', 'as' => 'epayreport']);

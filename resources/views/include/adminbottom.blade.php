@@ -97,6 +97,8 @@
 {{--  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>  --}}
 {{--  <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>  --}}
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
+
 
 @if (session('role') != "Super")
     

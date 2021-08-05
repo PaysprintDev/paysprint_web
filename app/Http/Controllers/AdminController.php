@@ -92,6 +92,8 @@ use App\Traits\SpecialInfo;
 
 use App\Traits\PaystackPayment;
 
+use App\Traits\PaymentGateway;
+
 use App\Traits\FlagPayment;
 
 class AdminController extends Controller
@@ -121,7 +123,7 @@ class AdminController extends Controller
     public $infomessage;
     public $customer_id;
 
-    use Trulioo, AccountNotify, SpecialInfo, PaystackPayment, FlagPayment;
+    use Trulioo, AccountNotify, SpecialInfo, PaystackPayment, FlagPayment, PaymentGateway;
     
     
 
@@ -3400,6 +3402,69 @@ class AdminController extends Controller
     }
 
 
+    public function userWalletStatement(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'walletBalance' => $this->userWalletBalance(),
+                'walletcategoryBalance' => $this->userWalletBalancebyCategory(),
+                'allusers' => $this->userWalletBalance(),
+            );
+
+
+            
+            return view('admin.wallet.userstatement')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
     public function balanceByCountry(Request $req){
 
         if($req->session()->has('username') == true){
@@ -4464,6 +4529,7 @@ class AdminController extends Controller
             );
 
 
+
             return view('admin.wallet.bankrequestwithdrawal')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
         }
         else{
@@ -4524,6 +4590,7 @@ class AdminController extends Controller
             );
 
 
+
             return view('admin.wallet.bankrequestwithdrawalbycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
         }
         else{
@@ -4531,6 +4598,69 @@ class AdminController extends Controller
         }
 
     }
+
+
+    public function returnWithdrawal(Request $req, $id){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'returnRequest' => $this->returnFromBankWithdrawal($id),
+            );
+
+
+            return view('admin.wallet.returnwithdrawal')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
+    
     public function cardRequestWithdrawal(Request $req){
 
         if($req->session()->has('username') == true){
@@ -6589,6 +6719,13 @@ class AdminController extends Controller
 
         return $data;
         
+    }
+
+    public function returnFromBankWithdrawal($id){
+
+        $data = Statement::where('reference_code', $id)->first();
+
+        return $data;
     }
 
 
@@ -8916,6 +9053,53 @@ class AdminController extends Controller
     }    
 
 
+    public function getUserWalletStatementReport(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $otherPays = Statement::where('user_id', session('email'))->orderBy('created_at', 'DESC')->get();
+            }
+
+            // dd($otherPays);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $thisdata = [
+                'result' => $this->getUserWalletStatementRecordByDate($req->user_id, $req->statement_start, $req->statement_end),
+                'allusers' => $this->userWalletBalance(),
+            ]; 
+
+
+            return view('admin.userwalletstatementreport')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'thisdata' => $thisdata]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }    
+
+
     public function payreport(Request $req){
     
         if($req->session()->has('username') == true){
@@ -9759,7 +9943,7 @@ class AdminController extends Controller
                                         $resInfo = strtoupper($res->Record->RecordStatus).", Congratulations!!!. Your account has been approved. Kindly complete the Quick Set up to enjoy the full benefits of  PaySprint.";
 
                                         // Udpate User Info
-                                        User::where('id', $getMerchant->id)->update(['accountLevel' => 3, 'approval' => 1, 'countryapproval' => 1]);
+                                        User::where('id', $getMerchant->id)->update(['accountLevel' => 3, 'approval' => 2, 'countryapproval' => 1]);
                                     }
 
                                 }
@@ -10086,6 +10270,14 @@ class AdminController extends Controller
 
         return $data;
 
+
+    }
+
+    public function getUserWalletStatementRecordByDate($user_id, $from, $nextDay){
+
+        $data = Statement::where('user_id', $user_id)->whereBetween('trans_date', [$from, $nextDay])->orderBy('created_at', 'DESC')->get();
+
+        return $data;
 
     }
 
@@ -10828,7 +11020,7 @@ class AdminController extends Controller
 
             $subject = 'Account information approved';
             
-            $message = "Thanks for opening a PaySprint. Your account is currently under review. We would contact you on the result of the review shortly. Thanks for choosing PaySprint. <br> Compliance Team @ PaySprint";
+            $message = "Thanks for opening a Paysprint account. Your  account is still under review; however, its already activated for your use. The account activation enables you to: \na. Add money/funds to your wallet on PaySprint\nb. Receive money/funds from other PS users\nc. Create and Send Invoice (if you are a merchant)\nd. Pay Invoice from your wallet\ne. Pay Utility Bills at discounted price from your wallet\nHowever, you will not be able to Send money or Withdrawal funds from your wallet until the review process is completed. In order to fast-track the review process, kindly upload the following documents if you are yet to do so: \na. Government Issued Photo ID like Driver Licence etc.\nb. A copy of the utility bill or bank statement to confirm your residential address\nc. Complete the BVN verification under your profile on the web app (if applicable).\nThanks for choosing PaySprint\nCompliance Team @ PaySprint";
 
             $query = [
                     'user_id' => session('user_id'),
@@ -10951,7 +11143,7 @@ class AdminController extends Controller
 
             $subject = 'Your account is currently under review';
             
-            $message = "Thanks for opening a PaySprint. Your account is currently under review. We would contact you on the result of the review shortly. Thanks for choosing PaySprint. <br> Compliance Team @ PaySprint";
+            $message = "Thanks for opening a Paysprint account. Your  account is still under review; however, its already activated for your use. The account activation enables you to: \na. Add money/funds to your wallet on PaySprint\nb. Receive money/funds from other PS users\nc. Create and Send Invoice (if you are a merchant)\nd. Pay Invoice from your wallet\ne. Pay Utility Bills at discounted price from your wallet\nHowever, you will not be able to Send money or Withdrawal funds from your wallet until the review process is completed. In order to fast-track the review process, kindly upload the following documents if you are yet to do so: \na. Government Issued Photo ID like Driver Licence etc.\nb. A copy of the utility bill or bank statement to confirm your residential address\nc. Complete the BVN verification under your profile on the web app (if applicable).\nThanks for choosing PaySprint\nCompliance Team @ PaySprint";
 
             $resData = ['res' => 'Account under review', 'message' => 'success', 'title' => 'Great'];
 
@@ -11478,6 +11670,37 @@ class AdminController extends Controller
 
         return $this->returnJSON($resData, 200);
 
+    }
+
+
+    public function returnRefundMoney(Request $req, $reference_code){
+
+        $data = $this->processRefundMoney($reference_code, $req->message);
+
+        if($data == "Successful"){
+
+            // Notify User
+
+            $this->name = $req->receiver_name;
+            $this->to = $req->send_to;
+            $this->subject = "Withdrawal Refund";
+            $this->message = $req->message;
+
+            $this->sendEmail($this->to, "Refund Request");
+
+            $resData = $data;
+            $resp = "success";
+
+
+        }
+        else{
+
+            $resData = $data;
+            $resp = "error";
+        }
+
+
+        return redirect()->route('bank request withdrawal')->with($resp, $resData);
     }
 
 

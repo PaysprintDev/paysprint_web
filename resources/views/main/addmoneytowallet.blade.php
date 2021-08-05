@@ -90,15 +90,15 @@ input[type="radio"] {
                                     @csrf
 
 
-                                    <div class="form-group disp-0"> <label for="gateway">
+                                    <div @if($data['paymentgateway']->gateway == "Moneris") class="form-group" @else class="form-group disp-0" @endif> <label for="gateway">
                                             {{--  <h6>Select Card Type/ Bank Account</h6>  --}}
                                             <h6>Select Payment Gateway</h6>
                                         </label>
                                         <div class="input-group"> 
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/cotton/20/000000/money--v4.png"/> </span> </div>
                                             <select name="gateway" id="gateway" class="form-control" required>
-                                                <option value="NULL" selected>Select option</option>
-                                                <option value="PaySprint">PaySprint</option>
+                                                <option value="PaySprint">Select option</option>
+                                                <option value="PaySprint" selected>PaySprint</option>
                                                  {{-- <option value="Google Pay">Google Pay</option>  --}}
                                                 {{-- <option value="Prepaid Card">Prepaid Card</option> --}}
                                                 {{-- <option value="Bank Account">Bank Account</option> --}}
@@ -107,7 +107,7 @@ input[type="radio"] {
                                         </div>
                                     </div>
 
-                                    <div class="form-group  disp-0"> <label for="card_type">
+                                    <div @if($data['paymentgateway']->gateway == "Moneris") class="form-group" @else class="form-group disp-0" @endif> <label for="card_type">
                                             <h6>Select Card Type/ Bank Account</h6>
                                         </label>
                                         <div class="input-group"> 
@@ -127,13 +127,13 @@ input[type="radio"] {
                                     </div>
 
 
-                                    <div class="form-group selectCard  disp-0"> <label for="card_id">
+                                    <div @if($data['paymentgateway']->gateway == "Moneris") class="form-group selectCard" @else class="form-group selectCard disp-0" @endif> <label for="card_id">
                                             <h6>Select Card</h6>
                                         </label>
                                         <div class="input-group"> 
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/fluent/20/000000/bank-card-back-side.png"/> </span> </div>
                                             <select name="card_id" id="card_id" class="form-control" required>
-                                                <option value="NULL" selected>Select option</option>
+                                                <option value="NULL">Select option</option>
                                                 {{-- @if (count($data['getCard']) > 0)
                                                 
                                                     @foreach ($data['getCard'] as $mycard)

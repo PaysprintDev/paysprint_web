@@ -44,9 +44,9 @@ class Controller extends BaseController
     public function myLocation(){
         // $ip_server = $_SERVER['SERVER_ADDR'];
 
+
         $userIP = $this->getUserIpAddr();
         // $userIP = "129.205.113.93";
-
         
         try {
 
