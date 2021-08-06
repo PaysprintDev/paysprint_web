@@ -96,6 +96,8 @@ use App\Traits\PaymentGateway;
 
 use App\Traits\FlagPayment;
 
+use App\Traits\Xwireless;
+
 class AdminController extends Controller
 {
 
@@ -123,7 +125,7 @@ class AdminController extends Controller
     public $infomessage;
     public $customer_id;
 
-    use Trulioo, AccountNotify, SpecialInfo, PaystackPayment, FlagPayment, PaymentGateway;
+    use Trulioo, AccountNotify, SpecialInfo, PaystackPayment, FlagPayment, PaymentGateway, Xwireless;
     
     
 
@@ -9300,6 +9302,8 @@ class AdminController extends Controller
             {
                 //Get filename with extension
                 $filenameWithExt = $req->file('event_file')->getClientOriginalName();
+
+                dd($filenameWithEx);
                 // Get just filename
                 $filename = pathinfo($filenameWithExt , PATHINFO_FILENAME);
                 // Get just extension

@@ -26,14 +26,13 @@ use App\Mail\sendEmail;
 use App\Traits\Trulioo;
 use App\Traits\AccountNotify;
 use App\Traits\PaystackPayment;
+use App\Traits\Xwireless;
 
 
 class UserController extends Controller
 {
 
-    use Trulioo;
-    use AccountNotify;
-    use PaystackPayment;
+    use Trulioo, AccountNotify, PaystackPayment, Xwireless;
 
     // User Registration
 

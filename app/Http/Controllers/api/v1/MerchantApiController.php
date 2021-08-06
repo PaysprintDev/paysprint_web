@@ -29,6 +29,8 @@ use App\Mail\sendEmail;
 use App\Traits\Trulioo;
 use App\Traits\PaymentGateway;
 
+use App\Traits\Xwireless;
+
 
 use App\Classes\mpgGlobals;
 use App\Classes\httpsPost;
@@ -78,8 +80,7 @@ use App\Classes\MCPRate;
 
 class MerchantApiController extends Controller
 {
-    use Trulioo;
-    use PaymentGateway;
+    use Trulioo, PaymentGateway, Xwireless;
 
     public $to;
     public $name;

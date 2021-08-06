@@ -120,11 +120,12 @@ use App\Traits\PaymentGateway;
 use App\Traits\PaystackPayment;
 use App\Traits\ExpressPayment;
 use App\Traits\ElavonPayment;
+use App\Traits\Xwireless;
 
 class MonerisController extends Controller
 {
 
-    use PaymentGateway, PaystackPayment, ExpressPayment, ElavonPayment;
+    use PaymentGateway, PaystackPayment, ExpressPayment, ElavonPayment, Xwireless;
 
     public $to;
     public $name;

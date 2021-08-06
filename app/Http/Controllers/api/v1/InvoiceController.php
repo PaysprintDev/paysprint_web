@@ -22,8 +22,12 @@ use App\ClientInfo as ClientInfo;
 use App\Statement as Statement;
 use App\Tax as Tax;
 
+use App\Traits\Xwireless;
+
 class InvoiceController extends Controller
-{
+{   
+
+    use Xwireless;
 
     public $to = "info@paysprint.net";
     public $name;

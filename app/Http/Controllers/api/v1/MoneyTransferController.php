@@ -43,9 +43,12 @@ use App\CardRequest as CardRequest;
 
 use App\RequestRefund as RequestRefund;
 
+use App\Traits\Xwireless;
+
 class MoneyTransferController extends Controller
 {
 
+    use Xwireless;
 
     public $to;
     public $name;

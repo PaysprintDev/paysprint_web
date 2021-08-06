@@ -12,8 +12,13 @@ use App\User as User;
 use App\Statement as Statement;
 use App\Notifications as Notifications;
 
+use App\Traits\Xwireless;
+
 class NotificationController extends Controller
 {
+
+    use Xwireless;
+
     public function getNotifications(Request $req){
 
         $user = User::where('api_token', $req->bearerToken())->first();

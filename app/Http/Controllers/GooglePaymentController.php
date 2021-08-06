@@ -95,11 +95,12 @@ use App\Classes\CofInfo;
 use App\Classes\MCPRate;
 
 use App\Traits\PaymentGateway;
+use App\Traits\Xwireless;
 
 class GooglePaymentController extends Controller
 {
 
-    use PaymentGateway;
+    use PaymentGateway, Xwireless;
 
     public $to;
     public $name;

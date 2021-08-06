@@ -10,8 +10,13 @@ use App\ServiceType as ServiceType;
 use App\EPSVendor as EPSVendor;
 use App\AllCountries as AllCountries;
 
+use App\Traits\Xwireless;
+
 class ServiceController extends Controller
 {
+
+    use Xwireless;
+
     public function getServicetype(){
 
         $resp = ServiceType::all();

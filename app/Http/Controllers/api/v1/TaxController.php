@@ -10,8 +10,13 @@ use Illuminate\Support\Facades\Validator;
 use App\User as User;
 use App\Tax as Tax;
 
+use App\Traits\Xwireless;
+
 class TaxController extends Controller
 {
+
+    use Xwireless;
+
     public function setupTax(Request $req){
         $validator = Validator::make($req->all(), [
                 'name' => 'required|string',

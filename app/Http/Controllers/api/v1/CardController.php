@@ -17,9 +17,12 @@ use App\CardIssuer as CardIssuer;
 use App\DeletedCards as DeletedCards;
 use App\DeletedBanks as DeletedBanks;
 
+use App\Traits\Xwireless;
+
 class CardController extends Controller
 {
 
+    use Xwireless;
 
     public function getCard(Request $req){
         // Get My Cards

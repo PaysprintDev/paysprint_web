@@ -85,6 +85,8 @@ use App\Traits\ExpressPayment;
 
 use App\Traits\SpecialInfo;
 
+use App\Traits\Xwireless;
+
 
 
 class HomeController extends Controller
@@ -103,12 +105,7 @@ class HomeController extends Controller
     public $country;
     public $timezone;
 
-    use RpmApp;
-    use Trulioo;
-    use AccountNotify;
-    use PaystackPayment;
-    use ExpressPayment;
-    use SpecialInfo;
+    use RpmApp, Trulioo, AccountNotify, PaystackPayment, ExpressPayment, SpecialInfo, Xwireless;
     /**
      * Create a new controller instance.
      *
@@ -135,7 +132,6 @@ class HomeController extends Controller
 
 
     public function homePage(){
-
 
         // To get the actual link from users click
 
@@ -1283,13 +1279,13 @@ class HomeController extends Controller
     }
 
     public function getMerchantsByCategory(){
-        $data = ClientInfo::where('industry', '!=', null)->where('country', Auth::user()->country)->orderBy('created_at', 'DESC')->groupBy('industry')->take(8)->get();
+        $data = ClientInfo::where('industry', '!=', null)->where('country', Auth::user()->country)->orderBy('industry', 'ASC')->groupBy('industry')->take(8)->get();
 
         return $data;
     }
 
     public function getAllMerchantsByCategory(){
-        $data = ClientInfo::where('industry', '!=', null)->where('country', Auth::user()->country)->orderBy('created_at', 'DESC')->groupBy('industry')->get();
+        $data = ClientInfo::where('industry', '!=', null)->where('country', Auth::user()->country)->orderBy('industry', 'ASC')->groupBy('industry')->get();
 
         return $data;
     }

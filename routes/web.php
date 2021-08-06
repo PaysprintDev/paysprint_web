@@ -37,6 +37,7 @@ Route::get('exbccardrequest', 'CheckSetupController@checkExbcCardRequest');
 Route::get('migratetolevelone', 'CheckSetupController@migrateUsersToLevelOne');
 Route::get('insertspecialinfoactivity', 'CheckSetupController@insertspecialinfoActivity');
 Route::get('autofeestructure', 'CheckSetupController@setupFeeStructure');
+Route::get('checktelephone', 'CheckSetupController@checkTelephone');
 
 Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
 

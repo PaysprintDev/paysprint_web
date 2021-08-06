@@ -15,8 +15,13 @@ use App\Statement as Statement;
 
 use App\ImportExcel as ImportExcel;
 
+use App\Traits\Xwireless;
+
 class StatementController extends Controller
 {
+
+    use Xwireless;
+
     public function getAllStatement(Request $req){
 
         $user = User::where('api_token', $req->bearerToken())->first();

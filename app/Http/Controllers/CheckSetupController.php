@@ -22,6 +22,7 @@ use App\SpecialInformation as SpecialInformation;
 
 use App\Traits\ExpressPayment;
 use App\Traits\AccountNotify;
+use App\Traits\Xwireless;
 
 class CheckSetupController extends Controller
 {
@@ -31,8 +32,7 @@ class CheckSetupController extends Controller
     public $subject;
     public $message;
 
-    use ExpressPayment;
-    use AccountNotify;
+    use ExpressPayment, AccountNotify, Xwireless;
     // Check user quick wallet setup
 
     public function updateQuickSetup(){
@@ -714,18 +714,19 @@ class CheckSetupController extends Controller
 
     //TODO: DO Fee Setup
     public function setupFeeStructure(){
-        $countries = AllCountries::where('approval', 1)->where('gateway', 'PayPal')->where('name', '!=', 'Canada')->get();
+        $countries = AllCountries::where('approval', 1)->where('gateway', 'PayPal')->where('name', '!=', 'United States')->get();
 
         if (count($countries) > 0) {
 
             $query;
+            $countries;
 
             foreach ($countries as $key => $value) {
 
 
                 $countryName = $value->name;
 
-
+                $availCountries []=$countryName;
                 // Get TRansaction
                 $getSpecific = TransactionCost::where('country', "United States")->get();
 
@@ -741,22 +742,42 @@ class CheckSetupController extends Controller
                 }
 
 
-                foreach ($query as $insertSpecifics) {
+            }
 
-                    // dd($insertSpecifics);
 
-                    // Insert Transcation Cost
-                    TransactionCost::updateOrCreate(['country' => $countryName], $insertSpecifics);
+
+                foreach($query as $queries){
+
+                    TransactionCost::insert($queries);
+
+                    echo "Done";
+                    echo "<hr>";
+                    
+
                 }
 
-                echo "Done for ".$countryName;
-                echo "<hr>";
+            
 
-            }
 
             
         }
+        
 
+    }
+
+
+    public function checkTelephone(){
+        $user = User::all();
+
+        foreach($user as $users){
+            $phone = $users->telephone;
+
+            $correctPhone = preg_replace("/[^0-9]/", "", $phone);
+
+            User::where('id', $users->id)->update(['telephone' => $correctPhone]);
+        }
+
+        echo "Done";
     }
 
 
