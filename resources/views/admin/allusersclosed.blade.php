@@ -70,6 +70,7 @@
                   <th>Account Type</th>
                   <th>Identification</th>
                   <th>Platform</th>
+                  <th>Wallet Balance</th>
                   <th>Date Closed</th>
                   <th>Status</th>
                   <th>Action</th>
@@ -145,9 +146,17 @@
 
                             <td>{{ $datainfo->platform }}</td>
 
+
+                            <td>
+                                {{ $datainfo->currencySymbol.number_format($datainfo->wallet_balance, 2) }}
+                            </td>
+
                             <td>
                                 {{ date('d/M/Y h:i:a', strtotime($datainfo->created_at)) }}
                             </td>
+
+
+                            
 
                             @if ($datainfo->approval == 1 && $datainfo->accountLevel > 0)
 

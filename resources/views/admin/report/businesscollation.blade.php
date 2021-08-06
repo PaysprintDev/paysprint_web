@@ -6,6 +6,7 @@
 <?php use \App\Http\Controllers\User; ?>
 <?php use \App\Http\Controllers\Statement; ?>
 <?php use \App\Http\Controllers\MonthlyFee; ?>
+<?php use \App\Http\Controllers\UserClosed; ?>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -453,8 +454,17 @@
                     @endif
 
 
+                    {{--  Closed Account Balances  --}}
+
+                    @if($closedWalletFee = \App\UserClosed::where('country', Request::get('country'))->sum('wallet_balance'))
                         @php
-                            $expected = $addedAmount + $chargefeeforaddedmoney - $withdrawAmount + $chargefeeforwithdrawmoney - $maintenacefee;
+                            $closedWalletFee = $closedWalletFee;
+                        @endphp
+                    @endif
+
+
+                        @php
+                            $expected = $addedAmount + $chargefeeforaddedmoney - $withdrawAmount + $chargefeeforwithdrawmoney - $maintenacefee - $closedWalletFee;
                             $actual = $chargefeeforaddedmoney + $chargefeeforwithdrawmoney + $maintenacefee;
                         @endphp
 
@@ -481,6 +491,7 @@
                             $prepaidchargefeeforwithdrawmoney = 0;
                             $bankchargefeeforwithdrawmoney = 0;
                             $maintenacefee = 0;
+                            $closedWalletFee = 0;
                             $expected = 0;
                             $actual = 0;
                         @endphp
@@ -651,6 +662,20 @@
                         <td>Maintenace Fee (-)</td>
                         <td style="font-weight: 900; color: red;">{{ $currency.' '.number_format($maintenacefee, 2) }}</td>
                         <td><a href="{{ route('wallet maintenance fee', 'country='.Request::get('country').'&start='.Request::get('start').'&end='.Request::get('end')) }}" class="btn btn-primary" type="button">View details</a></td>
+                    </tr>
+
+
+                    <tr>
+                        <td colspan="3">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><strong>Closed Account Balance</strong></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Wallet Balance (-)</td>
+                        <td style="font-weight: 900; color: red;">{{ $currency.' '.number_format($closedWalletFee, 2) }}</td>
+                        <td><a href="javascript:void(0)" class="btn btn-primary" type="button">View details</a></td>
                     </tr>
 
 
