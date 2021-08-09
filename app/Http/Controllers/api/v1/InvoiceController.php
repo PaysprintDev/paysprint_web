@@ -292,7 +292,15 @@ class InvoiceController extends Controller
                                     $sendPhone = $telephone;
                                     // $sendPhone = "+23408137492316";
 
-                                    $this->sendMessage($sendMsg, $sendPhone);
+                                    if($thisuser->country == "Nigeria"){
+
+                                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                        $this->sendSms($sendMsg, $correctPhone);
+                                    }
+                                    else{
+                                        $this->sendMessage($sendMsg, $sendPhone);
+
+                                    }
 
 
                                     Log::info("Single Invoice prepared by ".$this->clientname." for :=> ".$this->name);
@@ -548,8 +556,15 @@ class InvoiceController extends Controller
                                                         $sendPhone = "+".$getCustomer->code.$getCustomer->telephone;
                                                     }
 
+                                                    if($getCustomer->country == "Nigeria"){
 
-                                                    $this->sendMessage($sendMsg, $sendPhone);
+                                                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                            $this->sendSms($sendMsg, $correctPhone);
+                                                        }
+                                                        else{
+                                                            $this->sendMessage($sendMsg, $sendPhone);
+
+                                                        }
                                                     $this->createNotification($getCustomer->ref_code, $sendMsg);
 
                                                 }

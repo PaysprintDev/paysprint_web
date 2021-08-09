@@ -410,11 +410,28 @@ class GooglePaymentController extends Controller
                     $respaction = 'success';
 
                     
+                    if($user->country == "Nigeria"){
+
+                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                        $this->sendSms($sendMsg, $correctPhone);
+                    }
+                    else{
+                        $this->sendMessage($sendMsg, $sendPhone);
+                    }
 
 
-                    $this->sendMessage($sendMsg, $sendPhone);
+                    if($client->country == "Nigeria"){
 
-                    $this->sendMessage($recMsg, $recPhone);
+                        $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                        $this->sendSms($recMsg, $correctPhone);
+                    }
+                    else{
+                        $this->sendMessage($recMsg, $recPhone);
+                    }
+
+                    
+
+                    
 
                     Log::info($sendMsg);
                     Log::info($recMsg);
@@ -995,7 +1012,16 @@ class GooglePaymentController extends Controller
 
                                 $this->sendEmail($this->email, "Fund remittance");
 
-                                $this->sendMessage($sendMsg, $sendPhone);
+                                if($thisuser->country == "Nigeria"){
+
+                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                    $this->sendSms($sendMsg, $correctPhone);
+                                }
+                                else{
+                                    $this->sendMessage($sendMsg, $sendPhone);
+                                }
+
+                                
 
                                 
 
@@ -1016,12 +1042,22 @@ class GooglePaymentController extends Controller
                                 $this->message = '<p>You have received <strong>'.$foreigncurrency[0]->currencies[0]->code.' '.number_format($amount, 2).'</strong> from '.$thisuser->name.'. You now have <strong>'.$foreigncurrency[0]->currencies[0]->code.' '.number_format($newwalletBal, 2).'</strong> balance in your account</p><hr><p>To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE </p><p><a href="'.$route.'">'.$route.'</a></p>';
 
                                 $recMesg = 'You have received '.$foreigncurrency[0]->currencies[0]->code.' '.number_format($amount, 2).' from '.$thisuser->name.'. You now have '.$foreigncurrency[0]->currencies[0]->code.' '.number_format($newwalletBal, 2).' balance in your account. To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE '.$route;
+                                
                                 $recPhone = "+".$req->countryCode.$req->phone;
                                 
 
                                 $this->sendEmail($this->to, "Fund remittance");
 
-                                $this->sendMessage($recMesg, $recPhone);
+                                
+
+                                if($req->country == "Nigeria"){
+
+                                    $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                                    $this->sendSms($recMesg, $correctPhone);
+                                }
+                                else{
+                                    $this->sendMessage($recMesg, $recPhone);
+                                }
 
 
                                 

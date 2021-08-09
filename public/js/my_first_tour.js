@@ -5,7 +5,7 @@
     steps: [
       {
         title: "Welcome to PaySprint Merchant Services",
-        content: "My Name is Sprinter! \nPaySprint is committed to helping you improve the business administration processes while saving you much more money as well.\nI will assist you with a short tour of your merchant account if you dont mind.",
+        content: "My Name is Sprinter! Your PaySprint Account Number is here. ITS VERY IMPORTANT YOU REMEMBER IT!!! \nPaySprint is committed to helping you improve the business administration processes while saving you much more money as well.\nI will assist you with a short tour of your merchant account if you dont mind.",
         target: document.querySelector(".welcome"),
         placement: "bottom"
       },

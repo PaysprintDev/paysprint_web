@@ -246,7 +246,15 @@ class MerchantApiController extends Controller
                                         $sendPhone = "+".$thisuser->code.$thisuser->telephone;
                                     }
 
-                                    $this->sendMessage($sendMsg, $sendPhone);
+                                    if($thisuser->country == "Nigeria"){
+
+                                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                        $this->sendSms($sendMsg, $correctPhone);
+                                    }
+                                    else{
+                                        $this->sendMessage($sendMsg, $sendPhone);
+
+                                    }
 
                                     $merchantgetPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
                                                     
@@ -257,9 +265,18 @@ class MerchantApiController extends Controller
                                     else{
                                         $recPhone = "+".$thismerchant->code.$thismerchant->telephone;
                                     }
+
+                                    if($thismerchant->country == "Nigeria"){
+
+                                        $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                                        $this->sendSms($recMsg, $correctPhone);
+                                    }
+                                    else{
+                                        $this->sendMessage($recMsg, $recPhone);
+                                    }
                                     
 
-                                    $this->sendMessage($recMsg, $recPhone);
+                                    
 
                                     
 
@@ -422,7 +439,16 @@ class MerchantApiController extends Controller
                                         $sendPhone = "+".$thisuser->code.$thisuser->telephone;
                                     }
 
-                                    $this->sendMessage($sendMsg, $sendPhone);
+                                    if($thisuser->country == "Nigeria"){
+
+                                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                        $this->sendSms($sendMsg, $correctPhone);
+                                    }
+                                    else{
+                                        $this->sendMessage($sendMsg, $sendPhone);
+                                    }
+
+                                    
 
                                     $merchantgetPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
                                                     
@@ -434,7 +460,14 @@ class MerchantApiController extends Controller
                                         $recPhone = "+".$thismerchant->code.$thismerchant->telephone;
                                     }
 
-                                    $this->sendMessage($recMsg, $recPhone);
+                                    if($thismerchant->country == "Nigeria"){
+
+                                        $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                                        $this->sendSms($recMsg, $correctPhone);
+                                    }
+                                    else{
+                                        $this->sendMessage($recMsg, $recPhone);
+                                    }
 
                                     
                                     $data = User::select('name', 'businessname as businessName', 'telephone', 'state', 'country', 'avatar')->where('ref_code', $thisuser->ref_code)->first();
@@ -656,14 +689,33 @@ class MerchantApiController extends Controller
 
 
                             $sendMsg = "Hi ".$req->firstname." ".$req->lastname.", You have made a ".$receiverSMS." Do more with PaySprint. Download our mobile app from Apple Store or Google Play Store. Thanks PaySprint Team";
+
                             $sendPhone = "+".$code.$req->phone;
 
-                            $this->sendMessage($sendMsg, $sendPhone);
+                            if($req->country == "Nigeria"){
+
+                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                $this->sendSms($sendMsg, $correctPhone);
+                            }
+                            else{
+                                $this->sendMessage($sendMsg, $sendPhone);
+                            }
+
+                            
 
                             
                             $recPhone = "+".$thismerchant->code.$thismerchant->telephone;
 
-                            $this->sendMessage($recMsg, $recPhone);
+                            if($thismerchant->country == "Nigeria"){
+
+                                $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                                $this->sendSms($recMsg, $correctPhone);
+                            }
+                            else{
+                                $this->sendMessage($recMsg, $recPhone);
+                            }
+
+                            
                             
                                     
                             
@@ -813,7 +865,16 @@ class MerchantApiController extends Controller
                             $sendMsg = "Hi ".$req->firstname." ".$req->lastname.", You have made a ".$activity." Do more with PaySprint. Download our mobile app from Apple Store or Google Play Store. Thanks PaySprint Team";
                             $sendPhone = "+".$code.$req->phone;
 
-                            $this->sendMessage($sendMsg, $sendPhone);
+                            if($req->country == "Nigeria"){
+
+                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                $this->sendSms($sendMsg, $correctPhone);
+                            }
+                            else{
+                                $this->sendMessage($sendMsg, $sendPhone);
+                            }
+
+                            
 
 
                             $merchantgetPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
@@ -827,7 +888,14 @@ class MerchantApiController extends Controller
                             }
 
 
-                            $this->sendMessage($recMsg, $recPhone);
+                            if($thismerchant->country == "Nigeria"){
+
+                                $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                                $this->sendSms($recMsg, $correctPhone);
+                            }
+                            else{
+                                $this->sendMessage($recMsg, $recPhone);
+                            }
                             
 
                             $data['name'] = $req->firstname.' '.$req->lastname;

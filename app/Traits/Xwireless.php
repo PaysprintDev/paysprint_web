@@ -17,17 +17,21 @@ trait Xwireless{
     public $x_curlPost;
     public $x_baseUrl;
 
-    public function sendSms(){
+
+
+    // This module is to send SMS to users... Majorly Nigeria.
+
+    public function sendSms($message, $phone){
         $this->x_baseUrl = $this->x_url."/SendSMS";
 
         $this->x_curlPost = json_encode([
-                "SenderId" => "IMPORTANT",
+                "SenderId" => env('X_WIRELESS_SENDER_ID'),
                 "Is_Unicode" => true,
                 "Is_Flash" => true,
-                "Message" => "<p>This is my message from the application</p>",
-                "MobileNumbers" => "23408137492316",
-                "ApiKey" => "OQJBCJKZNAJv/TC8XHtmlqX4bcvOIDdbE65nEHZiJNw=",
-                "ClientId" => "fdbffd06-6221-4b1c-9528-3aa63b37de6c"
+                "Message" => $message,
+                "MobileNumbers" => $phone,
+                "ApiKey" => env('X_WIRELESS_API_KEY'),
+                "ClientId" => env('X_WIRELESS_CLIENT_ID')
             ]);
 
         $data = $this->thisPostCurl();
@@ -36,6 +40,61 @@ trait Xwireless{
         return $data;
     }
 
+
+    // Get sent SMS
+    public function getSentSmsList(){
+
+        $this->x_baseUrl = $this->x_url."/SMS?ApiKey=".env('X_WIRELESS_API_KEY')."&ClientId=".env('X_WIRELESS_CLIENT_ID')."&start=1&length=100&fromdate=".date("2021-08-d")."&enddate=".date('Y-m-d');
+
+        $data = $this->thisGetCurl();
+        
+        
+
+        return $data;
+    }
+
+
+    // Get My Credit balance
+    public function getCreditBalance(){
+
+        $this->x_baseUrl = $this->x_url."/Balance?ApiKey=".env('X_WIRELESS_API_KEY')."&ClientId=".env('X_WIRELESS_CLIENT_ID');
+
+        $data = $this->thisGetCurl();
+        
+
+        return $data;
+    }
+
+    // Manage SMS Groups 
+
+    // - GET Group List
+    public function getGroupList(){
+
+        $this->x_baseUrl = $this->x_url."/Group?ApiKey=".env('X_WIRELESS_API_KEY')."&ClientId=".env('X_WIRELESS_CLIENT_ID');
+
+        $data = $this->thisGetCurl();
+        
+
+        return $data;
+    }
+
+
+    // - CREATE New Group
+    public function createNewGroup($groupName){
+
+        $this->x_baseUrl = $this->x_url."/Group";
+
+        $this->x_curlPost = json_encode([
+                "GroupName" => $groupName,
+                "ApiKey" => env('X_WIRELESS_API_KEY'),
+                "ClientId" => env('X_WIRELESS_CLIENT_ID')
+            ]);
+
+        $data = $this->thisPostCurl();
+        
+
+        return $data;
+    }
 
 
     public function thisPostCurl(){

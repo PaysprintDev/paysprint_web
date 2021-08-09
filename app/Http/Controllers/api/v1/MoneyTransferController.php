@@ -418,7 +418,15 @@ class MoneyTransferController extends Controller
                 $sendPhone = "+".$data->code.$data->telephone;
             }
 
-            $this->sendMessage($sendMsg, $sendPhone);
+            if($data->country == "Nigeria"){
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                $this->sendSms($sendMsg, $correctPhone);
+            }
+            else{
+                $this->sendMessage($sendMsg, $sendPhone);
+
+            }
 
             $this->createNotification($ref_code, $sendMsg);
 
@@ -480,8 +488,18 @@ class MoneyTransferController extends Controller
             else{
                 $sendPhone = "+".$exbcMerchant->code.$exbcMerchant->telephone;
             }
+
+            if($exbcMerchant->country == "Nigeria"){
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                $this->sendSms($sendMerchantMsg, $correctPhone);
+            }
+            else{
+                $this->sendMessage($sendMerchantMsg, $sendPhone);
+
+            }
             
-            $this->sendMessage($sendMerchantMsg, $sendPhone);
+            
 
             $this->createNotification($exbcMerchant->ref_code, $sendMerchantMsg);
 
@@ -738,7 +756,15 @@ class MoneyTransferController extends Controller
                         $sendPhone = "+".$sender->code.$sender->telephone;
                     }
 
-                    $this->sendMessage($sendMsg, $sendPhone);
+                    if($sender->country == "Nigeria"){
+
+                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                        $this->sendSms($sendMsg, $correctPhone);
+                    }
+                    else{
+                        $this->sendMessage($sendMsg, $sendPhone);
+
+                    }
 
 
                     $merchantPhone = User::where('email', $receiver->email)->where('telephone', 'LIKE', '%+%')->first();
@@ -751,8 +777,15 @@ class MoneyTransferController extends Controller
                         $recPhone = "+".$receiver->code.$receiver->telephone;
                     }
 
+                    if($receiver->country == "Nigeria"){
 
-                    $this->sendMessage($recMsg, $recPhone);
+                        $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                        $this->sendSms($recMsg, $correctPhone);
+                    }
+                    else{
+                        $this->sendMessage($recMsg, $recPhone);
+
+                    }
 
                     // Senders statement
                     // $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on');
@@ -945,7 +978,15 @@ class MoneyTransferController extends Controller
                         $sendPhone = "+".$sender->code.$sender->telephone;
                     }
 
-                    $this->sendMessage($sendMsg, $sendPhone);
+                    if($sender->country == "Nigeria"){
+
+                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                        $this->sendSms($sendMsg, $correctPhone);
+                    }
+                    else{
+                        $this->sendMessage($sendMsg, $sendPhone);
+
+                    }
 
 
                     $merchantPhone = User::where('email', $receiver->email)->where('telephone', 'LIKE', '%+%')->first();
@@ -958,8 +999,15 @@ class MoneyTransferController extends Controller
                         $recPhone = "+".$receiver->code.$receiver->telephone;
                     }
 
+                    if($receiver->country == "Nigeria"){
 
-                    $this->sendMessage($recMsg, $recPhone);
+                        $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                        $this->sendSms($recMsg, $correctPhone);
+                    }
+                    else{
+                        $this->sendMessage($recMsg, $recPhone);
+
+                    }
 
                     // Senders statement
                     $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on');
@@ -1063,7 +1111,16 @@ class MoneyTransferController extends Controller
                 
 
                 $this->sendEmail($this->email, "Fund remittance");
-                $this->sendMessage($recMsg, $recPhone);
+
+                if($thisuser->country == "Nigeria"){
+
+                    $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                    $this->sendSms($recMsg, $correctPhone);
+                }
+                else{
+                    $this->sendMessage($recMsg, $recPhone);
+
+                }
 
 
                 $this->createNotification($thisuser->ref_code, $recMsg);

@@ -227,6 +227,9 @@ Route::get('newusers', ['uses' => 'AdminController@allNewusers', 'as' => 'newuse
 Route::get('newmerchants', ['uses' => 'AdminController@allNewMerchants', 'as' => 'newmerchants']);
 
 
+Route::get('Admin/x-wireless', ['uses' => 'AdminController@smsWirelessPlatform', 'as' => 'sms wireless platform']);
+
+
 
 
 Route::get('allusersbycountry', ['uses' => 'AdminController@allPlatformUsersByCountry', 'as' => 'all users by country']);

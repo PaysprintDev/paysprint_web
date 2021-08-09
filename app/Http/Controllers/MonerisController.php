@@ -567,7 +567,16 @@ else{
                                             $sendPhone = "+".$thisuser->code.$thisuser->telephone;
                                         }
 
-                                        $this->sendMessage($sendMsg, $sendPhone);
+                                        if($thisuser->country == "Nigeria"){
+
+                                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                            $this->sendSms($sendMsg, $correctPhone);
+                                        }
+                                        else{
+                                            $this->sendMessage($sendMsg, $sendPhone);
+                                        }
+
+                                        
 
                                         
                                         /*---------------------------------------------------------------------------------------------------------------------*/ 
@@ -610,7 +619,15 @@ else{
                                             $recPhone = "+".$thismerchant->code.$thismerchant->telephone;
                                         }
 
-                                        $this->sendMessage($recMesg, $recPhone);
+                                        if($thismerchant->country == "Nigeria"){
+
+                                            $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                                            $this->sendSms($recMesg, $correctPhone);
+                                        }
+                                        else{
+                                            $this->sendMessage($recMesg, $recPhone);
+                                        }
+
 
 
                                         $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
@@ -877,7 +894,16 @@ else{
                                             $sendPhone = "+".$thisuser->code.$thisuser->telephone;
                                         }
 
-                                        $this->sendMessage($sendMsg, $sendPhone);
+                                        if($thisuser->country == "Nigeria"){
+
+                                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                            $this->sendSms($sendMsg, $correctPhone);
+                                        }
+                                        else{
+                                            $this->sendMessage($sendMsg, $sendPhone);
+
+                                        }
+
 
                                         
                                         /*---------------------------------------------------------------------------------------------------------------------*/ 
@@ -920,7 +946,17 @@ else{
                                             $recPhone = "+".$thismerchant->code.$thismerchant->telephone;
                                         }
 
-                                        $this->sendMessage($recMesg, $recPhone);
+                                        if($thismerchant->country == "Nigeria"){
+
+                                            $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                                            $this->sendSms($recMesg, $correctPhone);
+                                        }
+                                        else{
+                                            $this->sendMessage($recMesg, $recPhone);
+
+                                        }
+
+                                        
 
 
                                         $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
@@ -1093,8 +1129,16 @@ else{
                                 $sendPhone = "+".$thisuser->code.$thisuser->telephone;
                             }
 
+                            if($thisuser->country == "Nigeria"){
 
-                            $this->sendMessage($sendMsg, $sendPhone);
+                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                $this->sendSms($sendMsg, $correctPhone);
+                            }
+                            else{
+                                $this->sendMessage($sendMsg, $sendPhone);
+
+                            }
+
 
                             $this->sendEmail($this->email, "Fund remittance");
 
@@ -1138,8 +1182,16 @@ else{
                                     $sendPhone = "+".$getUser->code.$getUser->telephone;
                                 }
 
+                                if($getUser->country == "Nigeria"){
 
-                                $this->sendMessage($sendMsg, $sendPhone);
+                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                    $this->sendSms($sendMsg, $correctPhone);
+                                }
+                                else{
+                                    $this->sendMessage($sendMsg, $sendPhone);
+
+                                }
+
 
                             }
 
@@ -1458,8 +1510,16 @@ else{
                                         $sendPhone = "+".$thisuser->code.$thisuser->telephone;
                                     }
 
+                                    if($thisuser->country == "Nigeria"){
 
-                                    $this->sendMessage($sendMsg, $sendPhone);
+                                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                        $this->sendSms($sendMsg, $correctPhone);
+                                    }
+                                    else{
+                                        $this->sendMessage($sendMsg, $sendPhone);
+
+                                    }
+
 
                                     $this->sendEmail($this->email, "Fund remittance");
 
@@ -1553,8 +1613,17 @@ else{
                                         $sendPhone = "+".$thisuser->code.$thisuser->telephone;
                                     }
 
+                                    if($thisuser->country == "Nigeria"){
 
-                                    $this->sendMessage($sendMsg, $sendPhone);
+                                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                        $this->sendSms($sendMsg, $correctPhone);
+                                    }
+                                    else{
+                                        $this->sendMessage($sendMsg, $sendPhone);
+
+                                    }
+
+                                    
 
                                     $this->sendEmail($this->email, "Fund remittance");
 
@@ -1665,8 +1734,15 @@ else{
                                     $sendPhone = "+".$thisuser->code.$thisuser->telephone;
                                 }
 
+                                if($thisuser->country == "Nigeria"){
 
-                                $this->sendMessage($sendMsg, $sendPhone);
+                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                    $this->sendSms($sendMsg, $correctPhone);
+                                }
+                                else{
+                                    $this->sendMessage($sendMsg, $sendPhone);
+
+                                }
 
                                 $this->sendEmail($this->email, "Fund remittance");
 
@@ -1802,8 +1878,18 @@ else{
                                 $sendPhone = "+".$thisuser->code.$thisuser->telephone;
                             }
 
+                            if($thisuser->country == "Nigeria"){
 
-                            $this->sendMessage($sendMsg, $sendPhone);
+                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                $this->sendSms($sendMsg, $correctPhone);
+                            }
+                            else{
+                                $this->sendMessage($sendMsg, $sendPhone);
+
+                            }
+
+
+                            
 
 
 
@@ -1844,8 +1930,15 @@ else{
                                     $sendPhone = "+".$thisuser->code.$thisuser->telephone;
                                 }
 
+                                if($thisuser->country == "Nigeria"){
 
-                                $this->sendMessage($sendMsg, $sendPhone);
+                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                    $this->sendSms($sendMsg, $correctPhone);
+                                }
+                                else{
+                                    $this->sendMessage($sendMsg, $sendPhone);
+
+                                }
 
                             }
 
@@ -2169,8 +2262,15 @@ else{
                                         $sendPhone = "+".$thisuser->code.$thisuser->telephone;
                                     }
 
+                                    if($thisuser->country == "Nigeria"){
 
-                                    $this->sendMessage($sendMsg, $sendPhone);
+                                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                        $this->sendSms($sendMsg, $correctPhone);
+                                    }
+                                    else{
+                                        $this->sendMessage($sendMsg, $sendPhone);
+
+                                    }
 
                                     $this->sendEmail($this->email, "Fund remittance");
 
@@ -2264,8 +2364,15 @@ else{
                                         $sendPhone = "+".$thisuser->code.$thisuser->telephone;
                                     }
 
+                                    if($thisuser->country == "Nigeria"){
 
-                                    $this->sendMessage($sendMsg, $sendPhone);
+                                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                        $this->sendSms($sendMsg, $correctPhone);
+                                    }
+                                    else{
+                                        $this->sendMessage($sendMsg, $sendPhone);
+
+                                    }
 
                                     $this->sendEmail($this->email, "Fund remittance");
 
@@ -2376,8 +2483,15 @@ else{
                                     $sendPhone = "+".$thisuser->code.$thisuser->telephone;
                                 }
 
+                                if($thisuser->country == "Nigeria"){
 
-                                $this->sendMessage($sendMsg, $sendPhone);
+                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                    $this->sendSms($sendMsg, $correctPhone);
+                                }
+                                else{
+                                    $this->sendMessage($sendMsg, $sendPhone);
+
+                                }
 
                                 $this->sendEmail($this->email, "Fund remittance");
 
@@ -2483,7 +2597,7 @@ else{
 
                         Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
                     }
-                    elseif(($thisuser->wallet_balance - $minBal) <= $minBal){
+                    elseif($thisuser->wallet_balance <= $minBal){
                         // Cannot withdraw minimum balance
 
                         $data = [];
@@ -2661,7 +2775,15 @@ else{
                                                     $sendPhone = "+".$exbcMerchant->code.$exbcMerchant->telephone;
                                                 }
 
-                                                $this->sendMessage($sendMsg, $sendPhone);
+                                                if($exbcMerchant->country == "Nigeria"){
+
+                                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                    $this->sendSms($sendMsg, $correctPhone);
+                                                }
+                                                else{
+                                                    $this->sendMessage($sendMsg, $sendPhone);
+
+                                                }
 
                                             }
                                             else{
@@ -2845,8 +2967,15 @@ else{
 
                                                         $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
+                                                        if($thisuser->country == "Nigeria"){
 
-                                                        $this->sendMessage($sendMsg, $sendPhone);
+                                                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                            $this->sendSms($sendMsg, $correctPhone);
+                                                        }
+                                                        else{
+                                                            $this->sendMessage($sendMsg, $sendPhone);
+
+                                                        }
 
                                                         $this->sendEmail($this->email, "Fund remittance");
 
@@ -3015,7 +3144,15 @@ else{
                                                     $sendPhone = "+".$exbcMerchant->code.$exbcMerchant->telephone;
                                                 }
 
-                                                $this->sendMessage($sendMsg, $sendPhone);
+                                                if($exbcMerchant->country == "Nigeria"){
+
+                                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                    $this->sendSms($sendMsg, $correctPhone);
+                                                }
+                                                else{
+                                                    $this->sendMessage($sendMsg, $sendPhone);
+
+                                                }
 
                                             }
                                             else{
@@ -3178,8 +3315,15 @@ else{
 
                                                 // $this->createNotification($thisuser->ref_code, $sendMsg);
 
+                                                if($thisuser->country == "Nigeria"){
 
-                                                $this->sendMessage($sendMsg, $sendPhone);
+                                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                    $this->sendSms($sendMsg, $correctPhone);
+                                                }
+                                                else{
+                                                    $this->sendMessage($sendMsg, $sendPhone);
+
+                                                }
 
                                                 $this->sendEmail($this->email, "Fund remittance");
 
@@ -3280,7 +3424,7 @@ else{
 
                         Log::info('Oops!, '.$thisuser->name.' has '.$message);
                     }
-                    elseif(($thisuser->wallet_balance - $minBal) <= $minBal){
+                    elseif($thisuser->wallet_balance <= $minBal){
                         // Cannot withdraw minimum balance
 
                         $data = [];
@@ -3463,7 +3607,17 @@ else{
                                                     $sendPhone = "+".$exbcMerchant->code.$exbcMerchant->telephone;
                                                 }
 
-                                                $this->sendMessage($sendMsg, $sendPhone);
+                                                if($exbcMerchant->country == "Nigeria"){
+
+                                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                    $this->sendSms($sendMsg, $correctPhone);
+                                                }
+                                                else{
+                                                    $this->sendMessage($sendMsg, $sendPhone);
+
+                                                }
+
+                                                
 
                                             }
                                             else{
@@ -3645,8 +3799,15 @@ else{
 
                                                         $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
+                                                        if($thisuser->country == "Nigeria"){
 
-                                                        $this->sendMessage($sendMsg, $sendPhone);
+                                                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                            $this->sendSms($sendMsg, $correctPhone);
+                                                        }
+                                                        else{
+                                                            $this->sendMessage($sendMsg, $sendPhone);
+
+                                                        }
 
                                                         $this->sendEmail($this->email, "Fund remittance");
 
@@ -3815,7 +3976,15 @@ else{
                                                     $sendPhone = "+".$exbcMerchant->code.$exbcMerchant->telephone;
                                                 }
 
-                                                $this->sendMessage($sendMsg, $sendPhone);
+                                                if($exbcMerchant->country == "Nigeria"){
+
+                                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                    $this->sendSms($sendMsg, $correctPhone);
+                                                }
+                                                else{
+                                                    $this->sendMessage($sendMsg, $sendPhone);
+
+                                                }
 
                                             }
                                             else{
@@ -3977,8 +4146,15 @@ else{
 
                                                 $this->createNotification($thisuser->ref_code, $sendMsg);
 
+                                                if($thisuser->country == "Nigeria"){
 
-                                                $this->sendMessage($sendMsg, $sendPhone);
+                                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                    $this->sendSms($sendMsg, $correctPhone);
+                                                }
+                                                else{
+                                                    $this->sendMessage($sendMsg, $sendPhone);
+
+                                                }
 
                                                 $this->sendEmail($this->email, "Fund remittance");
 
@@ -4130,7 +4306,15 @@ else{
 
     $this->createNotification($thisuser->ref_code, $sendMsg);
 
-    $this->sendMessage($sendMsg, $sendPhone);
+    if($thisuser->country == "Nigeria"){
+
+        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+        $this->sendSms($sendMsg, $correctPhone);
+    }
+    else{
+        $this->sendMessage($sendMsg, $sendPhone);
+
+    }
 
 
 
@@ -4338,8 +4522,15 @@ else{
 
                                                     $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amounttosend, $req->commissiondeduct, $req->amounttosend);
 
+                                                    if($thisuser->country == "Nigeria"){
 
-                                                    $this->sendMessage($sendMsg, $sendPhone);
+                                                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                        $this->sendSms($sendMsg, $correctPhone);
+                                                    }
+                                                    else{
+                                                        $this->sendMessage($sendMsg, $sendPhone);
+
+                                                    }
 
                                                     $this->sendEmail($this->email, "Fund remittance");
 
@@ -4465,8 +4656,15 @@ else{
 
                                                         $this->createNotification($thisuser->ref_code, $sendMsg);
 
+                                                        if($thisuser->country == "Nigeria"){
 
-                                                        $this->sendMessage($sendMsg, $sendPhone);
+                                                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                            $this->sendSms($sendMsg, $correctPhone);
+                                                        }
+                                                        else{
+                                                            $this->sendMessage($sendMsg, $sendPhone);
+
+                                                        }
 
                                                         $this->sendEmail($this->email, "Fund remittance");
 
@@ -4577,7 +4775,15 @@ else{
                 $sendPhone = "+".$data->code.$data->telephone;
             }
 
-            $this->sendMessage($sendMsg, $sendPhone);
+            if($data->country == "Nigeria"){
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                $this->sendSms($sendMsg, $correctPhone);
+            }
+            else{
+                $this->sendMessage($sendMsg, $sendPhone);
+
+            }
 
             // $this->createNotification($ref_code, $sendMsg);
 
@@ -4630,7 +4836,15 @@ else{
                 $sendPhone = "+".$data->code.$data->telephone;
             }
 
-            $this->sendMessage($sendMsg, $sendPhone);
+            if($data->country == "Nigeria"){
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                $this->sendSms($sendMsg, $correctPhone);
+            }
+            else{
+                $this->sendMessage($sendMsg, $sendPhone);
+
+            }
 
             $this->createNotification($ref_code, $sendMsg);
 

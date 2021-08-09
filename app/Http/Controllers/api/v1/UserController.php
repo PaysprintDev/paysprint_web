@@ -1009,7 +1009,15 @@ class UserController extends Controller
 
                         $this->sendEmail($this->email, "Fund remittance");
 
-                        $this->sendMessage($recMsg, $recPhone);
+                        if($thisuser->country == "Nigeria"){
+
+                            $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                            $this->sendSms($recMsg, $correctPhone);
+                        }
+                        else{
+                            $this->sendMessage($recMsg, $recPhone);
+
+                        }
 
                         $data = $resp;
                         $message = "Saved";

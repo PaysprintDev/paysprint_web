@@ -123,6 +123,13 @@
         </li>
 
         <li>
+          <a href="{{ route('sms wireless platform') }}">
+            <i class="fa fa-book"></i>
+            <span>SMS Platform</span>
+          </a>
+          
+        </li>
+        <li>
           <a href="{{ route('business report') }}">
             <i class="fa fa-book"></i>
             <span>Business Report</span>

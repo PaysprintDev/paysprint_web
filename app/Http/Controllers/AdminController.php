@@ -208,6 +208,53 @@ class AdminController extends Controller
 
     }
 
+
+
+    public function smsWirelessPlatform(Request $req){
+
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = OrganizationPay::orderBy('created_at', 'DESC')->get();
+
+
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = OrganizationPay::where('coy_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $this->recurBills(session('user_id'));
+            }
+
+
+
+            $transCost = $this->transactionCost();
+
+
+            $data = [
+                'smsbalance' => $this->getCreditBalance(),
+            ];
+
+
+            return view('admin.xwireless')->with(['pages' => 'My Dashboard', 'transCost' => $transCost, 'data' => $data]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
     public function getmyPersonalDetail($ref_code){
         $data = User::where('ref_code', $ref_code)->first();
 
@@ -11011,7 +11058,17 @@ class AdminController extends Controller
             }
 
             $this->createNotification($data->ref_code, $message);
-            $this->sendMessage($message, $recipients);
+
+            if($data->country == "Nigeria"){
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+
+                $this->sendSms($message, $correctPhone);
+            }
+            else{
+                $this->sendMessage($message, $recipients);
+            }
+
 
             $this->sendEmail($this->to, "Refund Request");
 
@@ -11073,7 +11130,17 @@ class AdminController extends Controller
             }
 
             $this->createNotification($data->ref_code, $message);
-            $this->sendMessage($message, $recipients);
+
+
+            if($data->country == "Nigeria"){
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+
+                $this->sendSms($message, $correctPhone);
+            }
+            else{
+                $this->sendMessage($message, $recipients);
+            }
 
             $this->sendEmail($this->to, "Refund Request");
 
@@ -11120,7 +11187,16 @@ class AdminController extends Controller
             }
 
             $this->createNotification($data->ref_code, $message);
-            $this->sendMessage($message, $recipients);
+
+            if($data->country == "Nigeria"){
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+
+                $this->sendSms($message, $correctPhone);
+            }
+            else{
+                $this->sendMessage($message, $recipients);
+            }
 
             $this->sendEmail($this->to, "Refund Request");
 
@@ -11169,7 +11245,16 @@ class AdminController extends Controller
             }
 
             $this->createNotification($data->ref_code, $message);
-            $this->sendMessage($message, $recipients);
+
+            if($data->country == "Nigeria"){
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+
+                $this->sendSms($message, $correctPhone);
+            }
+            else{
+                $this->sendMessage($message, $recipients);
+            }
 
             // $this->sendEmail($this->to, "Refund Request");
 
@@ -11223,7 +11308,16 @@ class AdminController extends Controller
             }
 
             $this->createNotification($thisuser->ref_code, $message);
-            $this->sendMessage($message, $recipients);
+
+            if($thisuser->country == "Nigeria"){
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+
+                $this->sendSms($message, $correctPhone);
+            }
+            else{
+                $this->sendMessage($message, $recipients);
+            }
 
             $this->sendEmail($this->to, "Refund Request");
 
@@ -11286,7 +11380,15 @@ class AdminController extends Controller
             }
 
             $this->createNotification($thisuser->ref_code, $message);
-            $this->sendMessage($message, $recipients);
+            if($thisuser->country == "Nigeria"){
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+
+                $this->sendSms($message, $correctPhone);
+            }
+            else{
+                $this->sendMessage($message, $recipients);
+            }
 
             $this->sendEmail($this->to, "Refund Request");
 
@@ -11396,7 +11498,15 @@ class AdminController extends Controller
         
 
         $this->createNotification($user->ref_code, $message);
-        $this->sendMessage($message, $recipients);
+        if($user->country == "Nigeria"){
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+
+                $this->sendSms($message, $correctPhone);
+            }
+            else{
+                $this->sendMessage($message, $recipients);
+            }
 
         $this->sendEmail($this->to, "Refund Request");
         
@@ -11435,7 +11545,17 @@ class AdminController extends Controller
         }
 
         $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", ".$this->message);
-        $this->sendMessage("Hello ".strtoupper($thisuser->name).", ".$this->message, $recipients);
+
+        if($thisuser->country == "Nigeria"){
+
+            $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+            $this->sendSms("Hello ".strtoupper($thisuser->name).", ".$this->message, $correctPhone);
+        }
+        else{
+            $this->sendMessage("Hello ".strtoupper($thisuser->name).", ".$this->message, $recipients);
+        }
+
+        
 
         $this->sendEmail($this->to, "Account is credited");
 
@@ -11478,7 +11598,16 @@ class AdminController extends Controller
         }
 
         $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", ".$this->message);
-        $this->sendMessage("Hello ".strtoupper($thisuser->name).", ".$this->message, $recipients);
+
+        if($thisuser->country == "Nigeria"){
+
+            $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+            $this->sendSms("Hello ".strtoupper($thisuser->name).", ".$this->message, $correctPhone);
+        }
+        else{
+            $this->sendMessage("Hello ".strtoupper($thisuser->name).", ".$this->message, $recipients);
+        }
+
 
         $this->sendEmail($this->to, "Account is credited");
 
@@ -11525,10 +11654,21 @@ class AdminController extends Controller
         }
         else{
             $recipients = "+".$thisuser->code.$thisuser->telephone;
+            
         }
 
         $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", ".$message);
-        $this->sendMessage("Hello ".strtoupper($thisuser->name).", ".$message, $recipients);
+
+        if($thisuser->country == "Nigeria"){
+
+            $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+            $this->sendSms("Hello ".strtoupper($thisuser->name).", ".$message, $correctPhone);
+        }
+        else{
+            $this->sendMessage("Hello ".strtoupper($thisuser->name).", ".$message, $recipients);
+        }
+
+        
 
         $this->sendEmail($this->to, "Flagged Account");
 
@@ -11644,7 +11784,17 @@ class AdminController extends Controller
         }
 
         $this->createNotification($thisuser->ref_code, $message);
-        $this->sendMessage($message, $recipients);
+        
+
+        if($thisuser->country == "Nigeria"){
+
+            $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+            $this->sendSms($message, $correctPhone);
+        }
+        else{
+            $this->sendMessage($message, $recipients);
+        }
+
 
         $this->sendEmail($this->to, "Refund Request");
 
@@ -11665,7 +11815,17 @@ class AdminController extends Controller
         }
 
         $this->createNotification($recuser->ref_code, $message);
-        $this->sendMessage($message2, $recipients2);
+
+        if($recuser->country == "Nigeria"){
+
+            $correctPhone = preg_replace("/[^0-9]/", "", $recipients2);
+            $this->sendSms($message2, $correctPhone);
+        }
+        else{
+            $this->sendMessage($message2, $recipients2);
+        }
+
+        
 
         $this->sendEmail($recuser->email, "Refund Request");
 
