@@ -279,6 +279,29 @@ class Controller extends BaseController
     }
 
 
+    // (string) $message - message to be passed to Slack
+    // (string) $room - room in which to write the message, too
+    // (string) $icon - You can set up custom emoji icons to use with each message
+    public function slack($message, $room = "success-logs", $icon = ":longbox:", $webhook) {
+        $room = ($room) ? $room : "success-logs";
+        $data = "payload=" . json_encode(array(
+                "channel"       =>  "#{$room}",
+                "text"          =>  $message,
+                "icon_emoji"    =>  $icon
+            ));
+	
+        // You can get your webhook endpoint from your Slack settings
+        $ch = curl_init($webhook);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        return $result;
+    }
+
+
     public function curlPost($url, $data, $token){
 
         $curl = curl_init();

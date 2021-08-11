@@ -2679,7 +2679,8 @@ else{
                                                 'transaction_id' => $transaction_id, 
                                                 'reference_code' => $reference_code, 
                                                 'email' => $thisuser->email, 
-                                                'amount' => $req->amounttosend, 
+                                                // 'amount' => $req->amounttosend, 
+                                                'amount' => $req->amount, 
                                                 'card_number' => $cardDetails->card_number,
                                                 'name' => $thisuser->name,
                                             );
@@ -2741,8 +2742,10 @@ else{
 
                                             if(isset($exbcMerchant)){
 
-                                                $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to your Wallet to load EXBC Prepaid Card";
-                                                $credit = $req->amounttosend;
+                                                // $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to your Wallet to load EXBC Prepaid Card";
+                                                // $credit = $req->amounttosend;
+                                                $activity = "Added ".$req->currencyCode.''.number_format($req->amount, 2)." to your Wallet to load EXBC Prepaid Card";
+                                                $credit = $req->amount;
                                                 $debit = 0;
                                                 $reference_code = $transaction_id;
                                                 $balance = 0;
@@ -2752,7 +2755,8 @@ else{
                                                 $regards = $exbcMerchant->ref_code;
                                                 $statement_route = "wallet";
 
-                                                $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amounttosend;
+                                                // $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amounttosend;
+                                                $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amount;
 
                                                     // User::where('email', 'prepaidcard@exbc.ca')->update([
                                                     //     'wallet_balance' => $merchantwalletBal
@@ -2965,7 +2969,8 @@ else{
 
                                                         $this->createNotification($thisuser->ref_code, $sendMsg);
 
-                                                        $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                                        // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                                        $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
                                                         if($thisuser->country == "Nigeria"){
 
@@ -3050,7 +3055,8 @@ else{
                                                 'transaction_id' => $transaction_id, 
                                                 'reference_code' => $reference_code, 
                                                 'email' => $thisuser->email, 
-                                                'amount' => $req->amounttosend, 
+                                                // 'amount' => $req->amounttosend, 
+                                                'amount' => $req->amount, 
                                                 'card_number' => $cardDetails->card_number,
                                                 'name' => $thisuser->name,
                                             );
@@ -3102,7 +3108,8 @@ else{
 
                                             Log::info("Hello ".strtoupper($thisuser->name).", ".$message);
 
-                                            $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                            // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                            $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
 
                                             // Create Statement And Credit EXBC account holder
@@ -3110,8 +3117,10 @@ else{
 
                                             if(isset($exbcMerchant)){
 
-                                                $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to your Wallet to load EXBC Prepaid Card";
-                                                $credit = $req->amounttosend;
+                                                // $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to your Wallet to load EXBC Prepaid Card";
+                                                // $credit = $req->amounttosend;
+                                                $activity = "Added ".$req->currencyCode.''.number_format($req->amount, 2)." to your Wallet to load EXBC Prepaid Card";
+                                                $credit = $req->amount;
                                                 $debit = 0;
                                                 $reference_code = $transaction_id;
                                                 $balance = 0;
@@ -3121,7 +3130,8 @@ else{
                                                 $regards = $exbcMerchant->ref_code;
                                                 $statement_route = "wallet";
 
-                                                $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amounttosend;
+                                                // $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amounttosend;
+                                                $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amount;
 
                                                     User::where('email', 'prepaidcard@exbc.ca')->update([
                                                         'wallet_balance' => $merchantwalletBal
@@ -3167,7 +3177,8 @@ else{
                                             $bankDetails = AddBank::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();                                            
                                             $transaction_id = "wallet-".date('dmY').time();
                                             // Save Payment for Admin
-                                            $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amounttosend, 'country' => $thisuser->country]);
+                                            // $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amounttosend, 'country' => $thisuser->country]);
+                                            $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amount, 'country' => $thisuser->country]);
 
 
                                             $mydata = BankWithdrawal::where('transaction_id', $transaction_id)->first();
@@ -3221,7 +3232,8 @@ else{
 
                                             $this->createNotification($thisuser->ref_code, $sendMsg);
 
-                                            $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                            // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                            $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
 
                                             Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$sendMsg);
@@ -3511,7 +3523,8 @@ else{
                                                 'transaction_id' => $transaction_id, 
                                                 'reference_code' => $reference_code, 
                                                 'email' => $thisuser->email, 
-                                                'amount' => $req->amounttosend, 
+                                                // 'amount' => $req->amounttosend, 
+                                                'amount' => $req->amount, 
                                                 'card_number' => $cardDetails->card_number,
                                                 'name' => $thisuser->name,
                                             );
@@ -3565,7 +3578,8 @@ else{
 
                                             $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", ".$message);
 
-                                            $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                            // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                            $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
 
                                             // Create Statement And Credit EXBC account holder
@@ -3573,8 +3587,10 @@ else{
 
                                             if(isset($exbcMerchant)){
 
-                                                $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to your Wallet to load EXBC Prepaid Card";
-                                                $credit = $req->amounttosend;
+                                                // $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to your Wallet to load EXBC Prepaid Card";
+                                                // $credit = $req->amounttosend;
+                                                $activity = "Added ".$req->currencyCode.''.number_format($req->amount, 2)." to your Wallet to load EXBC Prepaid Card";
+                                                $credit = $req->amount;
                                                 $debit = 0;
                                                 $reference_code = $transaction_id;
                                                 $balance = 0;
@@ -3584,7 +3600,8 @@ else{
                                                 $regards = $exbcMerchant->ref_code;
                                                 $statement_route = "wallet";
 
-                                                $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amounttosend;
+                                                // $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amounttosend;
+                                                $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amount;
 
                                                     User::where('email', 'prepaidcard@exbc.ca')->update([
                                                         'wallet_balance' => $merchantwalletBal
@@ -3640,7 +3657,8 @@ else{
 
                                                 $transaction_id = "wallet-".date('dmY').time();
                                             // Save Payment for Admin
-                                            $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amounttosend, 'country' => $thisuser->country]);
+                                            // $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amounttosend, 'country' => $thisuser->country]);
+                                            $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amount, 'country' => $thisuser->country]);
 
 
                                             $mydata = BankWithdrawal::where('transaction_id', $transaction_id)->first();
@@ -3693,7 +3711,8 @@ else{
 
                                             $this->createNotification($thisuser->ref_code, $sendMsg);
 
-                                            $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                            // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                            $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
 
                                             Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
@@ -3797,7 +3816,8 @@ else{
 
                                                         $this->createNotification($thisuser->ref_code, $sendMsg);
 
-                                                        $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                                        // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                                        $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
                                                         if($thisuser->country == "Nigeria"){
 
@@ -3882,7 +3902,8 @@ else{
                                                 'transaction_id' => $transaction_id, 
                                                 'reference_code' => $reference_code, 
                                                 'email' => $thisuser->email, 
-                                                'amount' => $req->amounttosend, 
+                                                // 'amount' => $req->amounttosend, 
+                                                'amount' => $req->amount, 
                                                 'card_number' => $cardDetails->card_number,
                                                 'name' => $thisuser->name,
                                             );
@@ -3934,7 +3955,8 @@ else{
 
                                             Log::info("Hello ".strtoupper($thisuser->name).", ".$message);
 
-                                            $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                            // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                            $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
 
                                             // Create Statement And Credit EXBC account holder
@@ -3942,8 +3964,10 @@ else{
 
                                             if(isset($exbcMerchant)){
 
-                                                $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to your Wallet to load EXBC Prepaid Card";
-                                                $credit = $req->amounttosend;
+                                                // $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to your Wallet to load EXBC Prepaid Card";
+                                                // $credit = $req->amounttosend;
+                                                $activity = "Added ".$req->currencyCode.''.number_format($req->amount, 2)." to your Wallet to load EXBC Prepaid Card";
+                                                $credit = $req->amount;
                                                 $debit = 0;
                                                 $reference_code = $transaction_id;
                                                 $balance = 0;
@@ -3953,7 +3977,8 @@ else{
                                                 $regards = $exbcMerchant->ref_code;
                                                 $statement_route = "wallet";
 
-                                                $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amounttosend;
+                                                // $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amounttosend;
+                                                $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amount;
 
                                                     User::where('email', 'prepaidcard@exbc.ca')->update([
                                                         'wallet_balance' => $merchantwalletBal
@@ -3999,7 +4024,8 @@ else{
                                             $bankDetails = AddBank::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();                                            
                                             $transaction_id = "wallet-".date('dmY').time();
                                             // Save Payment for Admin
-                                            $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amounttosend, 'country' => $thisuser->country]);
+                                            // $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amounttosend, 'country' => $thisuser->country]);
+                                            $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amount, 'country' => $thisuser->country]);
 
 
                                             $mydata = BankWithdrawal::where('transaction_id', $transaction_id)->first();
@@ -4052,7 +4078,8 @@ else{
 
                                             $this->createNotification($thisuser->ref_code, $sendMsg);
 
-                                            $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                            // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                            $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
 
                                             Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$sendMsg);
@@ -4116,7 +4143,8 @@ else{
                                                 // Senders statement
                                                 $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
 
-                                                $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                                // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                                $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
 
                                                 // Notification

@@ -714,7 +714,8 @@ class CheckSetupController extends Controller
 
     //TODO: DO Fee Setup
     public function setupFeeStructure(){
-        $countries = AllCountries::where('approval', 1)->where('gateway', 'PayPal')->where('name', '!=', 'United States')->get();
+        // $countries = AllCountries::where('approval', 1)->where('gateway', 'PayPal')->where('name', '!=', 'United States')->get();
+        $countries = AllCountries::where('gateway', 'Stripe')->get();
 
         if (count($countries) > 0) {
 

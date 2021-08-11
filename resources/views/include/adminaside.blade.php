@@ -11,7 +11,13 @@
           
         </div>
         <div class="pull-left info">
-          <p>{{ session('firstname').' '.session('lastname') }}</p>
+
+          @php
+              $usersName = (strlen(session('firstname').' '.session('lastname')) < 15) ? session('firstname').' '.session('lastname') : substr(session('firstname').' '.session('lastname'), 0, 15)."***";
+              $usersBusiness = (strlen(session('businessname')) < 15) ? session('businessname') : substr(session('businessname'), 0, 15)."***";
+          @endphp
+
+          <p>{{ (session('businessname') != NULL) ? $usersBusiness : $usersName }}</p>
           @if (session('role') != "Super" && session('role') != "Access to Level 1 only" && session('role') != "Access to Level 1 and 2 only" && session('role') != "Customer Marketing")
             <a href="#"><i class="fa fa-circle text-success"></i> Account No: {{ session('user_id') }}</a>
           @endif

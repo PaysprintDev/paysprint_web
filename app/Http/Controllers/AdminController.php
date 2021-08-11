@@ -130,10 +130,10 @@ class AdminController extends Controller
     
 
     public function index(Request $req){
-
+        // dd(Session::all());
 
         if($req->session()->has('username') == true){
-            // dd(Session::all());
+            
 
             if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
@@ -9789,7 +9789,7 @@ class AdminController extends Controller
 
                     User::where('email', $getMerchant->email)->update(['lastLogin' => date('d-m-Y h:i A'), 'loginCount' => $loginCount, 'countryapproval' => 1, 'pass_date' => $pass_date]);
 
-                    $req->session()->put(['user_id' => $adminCheck[0]['user_id'], 'firstname' => $adminCheck[0]['firstname'], 'lastname' => $adminCheck[0]['lastname'], 'username' => $adminCheck[0]['username'], 'role' => 'Merchant', 'email' => $adminCheck[0]['email'], 'api_token' => $api_token, 'myID' => $getMerchant->id, 'country' => $getMerchant->country, 'businessname' => $getMerchant->businessname]);
+                    $req->session()->put(['user_id' => $adminCheck[0]['user_id'], 'firstname' => $adminCheck[0]['firstname'], 'lastname' => $adminCheck[0]['lastname'], 'username' => $adminCheck[0]['username'], 'role' => 'Merchant', 'email' => $adminCheck[0]['email'], 'api_token' => $api_token, 'myID' => $getMerchant->id, 'country' => $getMerchant->country, 'businessname' => $getMerchant->businessname, 'loginCount' => $loginCount]);
 
                             $usercity = $this->myLocation()->city;
                             $usercountry = $this->myLocation()->country;
@@ -9822,7 +9822,7 @@ class AdminController extends Controller
             // COnfirm Password
             if(Hash::check($req->password, $superCheck[0]['password'])){
                 // Set session
-                $req->session()->put(['user_id' => $superCheck[0]['user_id'], 'firstname' => $superCheck[0]['firstname'], 'lastname' => $superCheck[0]['lastname'], 'username' => $superCheck[0]['username'], 'role' => $superCheck[0]['role'], 'email' => $superCheck[0]['email'], 'myID' => $superCheck[0]['id']]);
+                $req->session()->put(['user_id' => $superCheck[0]['user_id'], 'firstname' => $superCheck[0]['firstname'], 'lastname' => $superCheck[0]['lastname'], 'username' => $superCheck[0]['username'], 'role' => $superCheck[0]['role'], 'email' => $superCheck[0]['email'], 'myID' => $superCheck[0]['id'], 'loginCount' => 1]);
 
                 $query = [
                     'user_id' => $superCheck[0]['user_id'],
@@ -9857,7 +9857,7 @@ class AdminController extends Controller
 
                 
 
-                $req->session()->put(['user_id' => $adminCheck[0]['user_id'], 'firstname' => $adminCheck[0]['firstname'], 'lastname' => $adminCheck[0]['lastname'], 'username' => $adminCheck[0]['username'], 'role' => 'Merchant', 'email' => $adminCheck[0]['email']]);
+                $req->session()->put(['user_id' => $adminCheck[0]['user_id'], 'firstname' => $adminCheck[0]['firstname'], 'lastname' => $adminCheck[0]['lastname'], 'username' => $adminCheck[0]['username'], 'role' => 'Merchant', 'email' => $adminCheck[0]['email'], 'loginCount' => 1]);
 
                 $resData = ['res' => 'Logging in...', 'message' => 'success', 'link' => 'Admin'];
 
@@ -9935,7 +9935,7 @@ class AdminController extends Controller
                             $getMerchant = User::where('ref_code', $req->ref_code)->first();
 
 
-                        $req->session()->put(['user_id' => $req->ref_code, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $req->username, 'role' => 'Merchant', 'email' => $getanonuser->email, 'api_token' => $api_token, 'myID' => $getMerchant->id, 'country' => $getanonuser->country, 'businessname' => $getanonuser->businessname]);
+                        $req->session()->put(['user_id' => $req->ref_code, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $req->username, 'role' => 'Merchant', 'email' => $getanonuser->email, 'api_token' => $api_token, 'myID' => $getMerchant->id, 'country' => $getanonuser->country, 'businessname' => $getanonuser->businessname, 'loginCount' => $getMerchant->loginCount]);
 
                         $getMoney = Statement::where('user_id', $getanonuser->email)->get();
 
@@ -10125,7 +10125,7 @@ class AdminController extends Controller
 
                             // Set session
 
-                            $req->session()->put(['user_id' => $newRefcode, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $req->username, 'role' => 'Merchant', 'email' => $req->email, 'api_token' => $api_token, 'myID' => $getMerchant->id, 'country' => $req->country]);
+                            $req->session()->put(['user_id' => $newRefcode, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $req->username, 'role' => 'Merchant', 'email' => $req->email, 'api_token' => $api_token, 'myID' => $getMerchant->id, 'country' => $req->country, 'loginCount' => $getMerchant->loginCount]);
 
                             Log::info("New merchant registration via web by: ".$req->firstname.' '.$req->lastname." from ".$req->state.", ".$req->country);
 

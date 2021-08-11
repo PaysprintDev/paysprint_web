@@ -5,8 +5,14 @@
 <!-- jQuery 3 -->
 <script src="{{ asset('ext/bower_components/jquery/dist/jquery.min.js') }}"></script>
 
+
+@if (Session::has('username') == true)
+    @if (session('loginCount') < 1)
+      <script src="{{ asset('hopscotch/dist/js/hopscotch.js') }}"></script>
+    @endif
+@endif
+
   <!-- Tour Guide plugin -->
-<script src="{{ asset('hopscotch/dist/js/hopscotch.js') }}"></script>
 <script src="{{ asset('js/my_first_tour.js') }}"></script>
 
 <script src="https://raw.githubusercontent.com/HubSpot/pace/v1.0.0/pace.min.js"></script>

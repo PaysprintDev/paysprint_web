@@ -84,6 +84,7 @@ input[type="radio"] {
 
                                 @if (count($data['getvendors']))
                                         <div class="row">
+
                                     @foreach ($data['getvendors'] as $vendor)
 
                                             @if (isset($vendor->productfields[0]))

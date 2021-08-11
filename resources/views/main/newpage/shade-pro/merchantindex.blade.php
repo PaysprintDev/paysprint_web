@@ -67,6 +67,70 @@
         </div>
       </div>
     </div>
+
+
+    <!-- Featured On -->
+
+
+    <div class="brand-section pt-13 pt-lg-17 pb-11 border-bottom bg-default-6">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-8">
+                {{-- <p class="gr-text-9 text-center mb-7">Trusted and Featured on:
+                </p> --}}
+                <h2 class="gr-text-4 text-center mb-8">Featured on</h2>
+            </div>
+            <div class="col-12">
+                <div
+                    class="brand-logos d-flex justify-content-center justify-content-xl-between align-items-center mx-n9 flex-wrap">
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/questrade_znhne7.png" alt="" class="w-100" width="80" height="80">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-delay="600" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/YahooFinanceLogo_geieeb.png" alt="" class="w-100" width="60" height="60">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/private_capital_lxc1jr.png" alt="" class="w-100" width="60" height="60">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/benzinga_qpr7ot.png" alt="" class="w-100" width="100" height="100">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/reuters_o3wnje.png" alt="" class="w-100" width="100" height="100">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-delay="400" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/canadianbusinessjournal_e3mobm.png" alt="" class="w-100" width="100" height="100">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628673759/paysprint_asset/featuredon/magazinetoday_nsudvk.jpg" alt="" class="w-100" width="80" height="80">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/morningstar_ehxgue.png" alt="" class="w-100" width="100" height="100">
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <!-- End Featured On -->
+
+
     <!-- Service section  -->
     <div class="service-section bg-default-4 pt-15 pb-13 py-lg-25 disp-0">
       <div class="container">

@@ -59,6 +59,7 @@ trait ExpressPayment{
                     'commission' => $commission,
                     'charge' => $charge,
                 ];
+                
 
                 EPSVendor::updateOrCreate(['billerCode' => $dataItem->billerCode], $query);
 

@@ -14,6 +14,7 @@ trait Xwireless{
 
 
     public $x_url = "http://154.16.202.38:6005/api/v2";
+    public $x_url_live = "https://secure.xwireless.net/api/v2";
     public $x_curlPost;
     public $x_baseUrl;
 
@@ -22,7 +23,13 @@ trait Xwireless{
     // This module is to send SMS to users... Majorly Nigeria.
 
     public function sendSms($message, $phone){
-        $this->x_baseUrl = $this->x_url."/SendSMS";
+        if(env('APP_ENV') == "local"){
+            $this->x_baseUrl = $this->x_url."/SendSMS";
+
+        }
+        else{
+            $this->x_baseUrl = $this->x_url_live."/SendSMS";
+        }
 
         $this->x_curlPost = json_encode([
                 "SenderId" => env('X_WIRELESS_SENDER_ID'),
@@ -44,7 +51,15 @@ trait Xwireless{
     // Get sent SMS
     public function getSentSmsList(){
 
-        $this->x_baseUrl = $this->x_url."/SMS?ApiKey=".env('X_WIRELESS_API_KEY')."&ClientId=".env('X_WIRELESS_CLIENT_ID')."&start=1&length=100&fromdate=".date("2021-08-d")."&enddate=".date('Y-m-d');
+        
+
+        if(env('APP_ENV') == "local"){
+            $this->x_baseUrl = $this->x_url."/SMS?ApiKey=".env('X_WIRELESS_API_KEY')."&ClientId=".env('X_WIRELESS_CLIENT_ID')."&start=1&length=100&fromdate=".date("2021-08-d")."&enddate=".date('Y-m-d');
+
+        }
+        else{
+            $this->x_baseUrl = $this->x_url_live."/SMS?ApiKey=".env('X_WIRELESS_API_KEY')."&ClientId=".env('X_WIRELESS_CLIENT_ID')."&start=1&length=100&fromdate=".date("2021-08-d")."&enddate=".date('Y-m-d');
+        }
 
         $data = $this->thisGetCurl();
         
@@ -57,7 +72,13 @@ trait Xwireless{
     // Get My Credit balance
     public function getCreditBalance(){
 
-        $this->x_baseUrl = $this->x_url."/Balance?ApiKey=".env('X_WIRELESS_API_KEY')."&ClientId=".env('X_WIRELESS_CLIENT_ID');
+
+        if(env('APP_ENV') == "local"){
+            $this->x_baseUrl = $this->x_url."/Balance?ApiKey=".env('X_WIRELESS_API_KEY')."&ClientId=".env('X_WIRELESS_CLIENT_ID');
+        }
+        else{
+            $this->x_baseUrl = $this->x_url_live."/Balance?ApiKey=".env('X_WIRELESS_API_KEY')."&ClientId=".env('X_WIRELESS_CLIENT_ID');
+        }
 
         $data = $this->thisGetCurl();
         
@@ -70,7 +91,13 @@ trait Xwireless{
     // - GET Group List
     public function getGroupList(){
 
-        $this->x_baseUrl = $this->x_url."/Group?ApiKey=".env('X_WIRELESS_API_KEY')."&ClientId=".env('X_WIRELESS_CLIENT_ID');
+
+        if(env('APP_ENV') == "local"){
+            $this->x_baseUrl = $this->x_url."/Group?ApiKey=".env('X_WIRELESS_API_KEY')."&ClientId=".env('X_WIRELESS_CLIENT_ID');
+        }
+        else{
+            $this->x_baseUrl = $this->x_url_live."/Group?ApiKey=".env('X_WIRELESS_API_KEY')."&ClientId=".env('X_WIRELESS_CLIENT_ID');
+        }
 
         $data = $this->thisGetCurl();
         
@@ -82,7 +109,13 @@ trait Xwireless{
     // - CREATE New Group
     public function createNewGroup($groupName){
 
-        $this->x_baseUrl = $this->x_url."/Group";
+
+        if(env('APP_ENV') == "local"){
+            $this->x_baseUrl = $this->x_url."/Group";
+        }
+        else{
+            $this->x_baseUrl = $this->x_url_live."/Group";
+        }
 
         $this->x_curlPost = json_encode([
                 "GroupName" => $groupName,
