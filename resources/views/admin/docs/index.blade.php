@@ -6,11 +6,11 @@
     <meta name="author" content="Softnio">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description"
-        content="A powerful and conceptual apps base dashboard template that especially build for developers and programmers.">
+        content="Fastest and affordable method of sending and receiving money, paying invoice and getting Paid at anytime!">
     <!-- Fav Icon  -->
     <link rel="shortcut icon" href="images/favicon.png">
     <title>PaySprint | API Documentation</title>
-    <link rel="stylesheet" href="assets/css/docs.css">
+    <link rel="stylesheet" href="{{ asset('api_doc/assets/css/docs.css') }}">
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-91615293-4"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -66,7 +66,7 @@
                                 </li>
                                 <li class="nk-menu-item">
                                     <a href="#quickStart" class="nk-menu-link">
-                                        <span class="nk-menu-text">Api Key</span>
+                                        <span class="nk-menu-text">Bearer Token</span>
                                     </a>
                                 </li>
                                 <li class="nk-menu-item">
@@ -119,12 +119,12 @@
                                         <div class="dropdown-inner">
                                             <p class="lead-text text-soft pt-4 mb-0 d-lg-none">View Dashboard</p>
                                             <ul class="docs-nav">
-                                                <li><a href="#introduction">INTRODUCTION</a></li>
-                                                <li><a href="#fileFolders">BASE URL</a></li>
-                                                <li><a href="#quickStart">API KEY</a></li>
-                                                <li><a href="#jsList">RECEIVE MONEY </a></li>
-                                                <li><a href="#cssList">RESPONSE</a></li>
-                                                <li><a href="#rtl">POSTMAN REFERENCE</a></li>
+                                                <li><a href="#introduction" class="nk-menu-link">Introduction</a></li>
+                                                <li><a href="#fileFolders" class="nk-menu-link">Base Url</a></li>
+                                                <li><a href="#quickStart" class="nk-menu-link">Bearer Token</a></li>
+                                                <li><a href="#jsList" class="nk-menu-link">Receive Money </a></li>
+                                                <li><a href="#cssList" class="nk-menu-link">Response</a></li>
+                                                <li><a href="#rtl" class="nk-menu-link">Postman Reference</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -143,17 +143,19 @@
                                     <!-- content @s -->
                                     <div class="nk-block-head wide-sm">
                                         <div class="nk-block-head-content pt-2">
-                                            <h3 class="nk-block-title">PaySprint Documentation</h3>
+                                            <h3 class="nk-block-title">PaySprint for Developers</h3>
 
                                         </div>
                                     </div>
 
                                     <div class="nk-block-head" id="introduction">
                                         <div class="nk-block-head-content pt-2">
-                                            <h5 class="nk-block-title">Introduction</h5>
+                                            <h5 class="nk-block-title">Getting Started</h5>
+                                            
                                             <div class="nk-block-des">
-                                                <p>PaySprint is the fastest and affordable method of Sending and
-                                                    Receiving money, Paying Invoice and Getting Paid at anytime!</p>
+                                                <p>
+PaySprint offers developers the ability to receive money from third-party application directly to their paysprint wallet leveraging on our REST API’s. Entrepreneur’s, Startup companies, SME's (Small and Medium Enterprises), MSME’s & Enterprises deploy with these solutions.
+</p>
                                             </div>
                                         </div>
                                     </div>
@@ -167,9 +169,7 @@
 
 
                                         <div class="code-block">
-                                            <pre class="prettyprint lang-js" id="filesandfolder">
- https://paysprint.net/api/v1
-</pre>
+                                            <pre class="prettyprint lang-html" id="filesandfolder">https://paysprint.net/api/v1</pre>
                                         </div>
                                     </div><!-- nk-block -->
 
@@ -177,18 +177,17 @@
                                     <div class="nk-block" id="quickStart">
                                         <div class="nk-block-head">
                                             <div class="nk-block-head-content pt-2">
-                                                <h5 class="nk-block-title">API KEY</h5>
+                                                <h5 class="nk-block-title">BEARER TOKEN</h5>
                                             </div>
                                         </div>
 
                                         <div class="card card-bordered">
                                             <div class="card-inner">
                                                 <p>Your api key is unique to your account, this has been generated
-                                                    during your sign up. This can be found in your
-                                                    dasboard</p>
+                                                    during your sign up.</p>
                                                 <ul class="gy-2">
                                                     <pre
-                                                        class="prettyprint lang-html">2d55fce450eb59d0699f33c6f42b2a73050520211620214476</pre>
+                                                        class="prettyprint lang-html"> {{ (isset($data['getbusinessDetail'])) ? $data['getbusinessDetail']->api_secrete_key : "4d55fce450eb59d0699f33c6f42b2a73050520211620214476" }} </pre>
 
 
 
@@ -200,7 +199,7 @@
                                     <div class="nk-block" id="jsList">
                                         <div class="nk-block-head wide-sm">
                                             <div class="nk-block-head-content pt-2">
-                                                <h5 class="nk-block-title">Receive Money Paysprint User</h5>
+                                                <h5 class="nk-block-title">Receive Money Paysprint User <span class="badge badge-pill badge-primary">POST</span></h5>
                                             </div>
                                         </div>
 
@@ -211,12 +210,12 @@
                                                     customers that have a PaySprint account</p>
 
                                                 <pre class="prettyprint lang-html">
-curl --location --request POST 'https://paysprint.net/api/v1/customers' \
---header 'Authorization: Bearer 962c160c878eaf8f696e2d7e4b1dfa4029042021161*******' \
---form 'accountNumber="69212"' \
---form 'amount="50"' \
---form 'purpose="Contribution"' \
---form 'mode="test"' //live
+curl --location --request POST '{baseUrl}/customers' \
+--header 'Authorization: Bearer {bearerKey}' \
+--form 'accountNumber="69212"' \ //Customer's PaySprint account number
+--form 'amount="50"' \ //Amount to charge
+--form 'purpose="Contribution"' \ // Purpose of Payment
+--form 'mode="test"' //live or test
 </pre>
                                             </div>
                                         </div>
@@ -227,7 +226,7 @@ curl --location --request POST 'https://paysprint.net/api/v1/customers' \
                                     <div class="nk-block" id="jsList">
                                         <div class="nk-block-head wide-sm">
                                             <div class="nk-block-head-content pt-2">
-                                                <h5 class="nk-block-title">Receive Money Guest</h5>
+                                                <h5 class="nk-block-title">Receive Money Guest <span class="badge badge-pill badge-primary">POST</span></h5>
                                             </div>
                                         </div>
 
@@ -239,8 +238,8 @@ curl --location --request POST 'https://paysprint.net/api/v1/customers' \
                                                     customers that does not have a PaySprint account</p>
 
                                                 <pre class="prettyprint lang-html">
-curl --location --request POST 'https://paysprint.net/api/v1/visitors' \
---header 'Authorization: Bearer 962c160c878eaf8f696e2d7e4b1dfa4029042021161*******'' \
+curl --location --request POST '{baseUrl}/visitors' \
+--header 'Authorization: Bearer {bearerKey}'' \
 --form 'firstname="Shawn"' \
 --form 'lastname="Davids"' \
 --form 'amount="3"' \
@@ -261,13 +260,13 @@ curl --location --request POST 'https://paysprint.net/api/v1/visitors' \
 
 
                                     </div>
-                                </div><!-- nk-block -->
 
-                                <hr class="hr border-light mt-5 mb-4">
+
+<hr class="hr border-light mt-5 mb-4">
                                 <div class="nk-block" id="cssList">
                                     <div class="nk-block-head wide-sm">
                                         <div class="nk-block-head-content pt-2">
-                                            <h5 class="nk-block-title">RESPONSE
+                                            <h5 class="nk-block-title">RESPONSE <span class="badge badge-pill badge-success">200</span>
 
                                             </h5>
                                         </div>
@@ -295,7 +294,26 @@ curl --location --request POST 'https://paysprint.net/api/v1/visitors' \
                                     </div>
                                 </div><!-- nk-block -->
 
+                                <hr class="hr border-light mt-5 mb-4">
+                                <div class="nk-block" id="cssList">
+                                    <div class="nk-block-head wide-sm">
+                                        <div class="nk-block-head-content pt-2">
+                                            <h5 class="nk-block-title">RESPONSE <span class="badge badge-pill badge-danger">400</span>
 
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div class="code-block">
+                                        <!-- <h6 class="overline-title title">Status code</h6> -->
+                                        <pre class="prettyprint lang-html">
+{
+    "data": {},
+    "message": "Insufficient balance!. Your current wallet balance is CAD 1.00",
+    "status": 400
+}
+</pre>
+                                    </div>
+                                </div><!-- nk-block -->
 
 
                                 <hr class="hr border-light mt-5 mb-4">
@@ -311,7 +329,9 @@ curl --location --request POST 'https://paysprint.net/api/v1/visitors' \
                                                 <div class="card-inner">
                                                     <h6 class="overline-title">Run it on POSTMAN
                                                     </h6>
-                                                    <p>https://www.getpostman.com/collections/7135ceea9cd86961f373</p>
+                                                    <p>
+                                                        <a href="https://www.getpostman.com/collections/7135ceea9cd86961f373" target="_blank">https://www.getpostman.com/collections/7135ceea9cd86961f373</a>
+                                                    </p>
                                                     <div class="postman-run-button"
                                                         data-postman-action="collection/import"
                                                         data-postman-var-1="7135ceea9cd86961f373"
@@ -339,6 +359,19 @@ curl --location --request POST 'https://paysprint.net/api/v1/visitors' \
                                 </div><!-- nk-block -->
 
 
+
+                                </div><!-- nk-block -->
+
+                                
+
+                                
+
+
+
+
+                                
+
+
                             </div><!-- nk-block -->
                             <!-- content @e -->
                         </div>
@@ -353,8 +386,8 @@ curl --location --request POST 'https://paysprint.net/api/v1/visitors' \
     </div>
     <!-- app-root @e -->
     <!-- JavaScript -->
-    <script src="assets/js/bundle.js?ver=1.0.0"></script>
-    <script src="assets/js/scripts.js?ver=1.0.0"></script>
+    <script src="{{ asset('api_doc/assets/js/bundle.js?ver=1.0.0') }}"></script>
+    <script src="{{ asset('api_doc/assets/js/scripts.js?ver=1.0.0') }}"></script>
 </body>
 
 </html>

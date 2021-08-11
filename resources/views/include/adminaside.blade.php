@@ -492,7 +492,7 @@
 
 
         <li class="apiIntegration">
-          <a href="{{ route('api integration') }}">
+          <a href="{{ route('api integration') }}" target="_blank">
             <i class="fa fa-book"></i>
             <span>API Integration</span>
           </a>

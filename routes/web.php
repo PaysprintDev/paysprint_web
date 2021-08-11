@@ -412,13 +412,14 @@ Route::prefix('Admin/overview/report')->group(function () {
 	
 });
 
+	// Api documentation
+	Route::get('api/documentation', ['uses' => 'AdminController@apiDocumentation', 'as' => 'api integration']);
 
 Route::prefix('Admin/')->group(function () {
 
 	Route::get('invoicetypes', ['uses' => 'AdminController@createServiceTypes', 'as' => 'create service types']);
 	Route::get('setuptax', ['uses' => 'AdminController@setupTax', 'as' => 'setup tax']);
 	Route::get('edittax/{id}', ['uses' => 'AdminController@editTax', 'as' => 'edit tax']);
-	Route::get('api-documentation', ['uses' => 'AdminController@apiDocumentation', 'as' => 'api integration']);
 
 	Route::get('statement', ['uses' => 'AdminController@getStatement', 'as' => 'getStatement']);
 	Route::get('statementreport', ['uses' => 'AdminController@getStatementReport', 'as' => 'statement report']);
