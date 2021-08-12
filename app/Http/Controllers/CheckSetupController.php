@@ -91,7 +91,9 @@ class CheckSetupController extends Controller
 
                     $this->sendEmail($this->email, "Incomplete Setup");
 
-                    Log::info('Quick wallet set up cron sent to '.$this->name);
+                    // Log::info('Quick wallet set up cron sent to '.$this->name);
+
+                    $this->slack('Quick wallet set up cron sent to '.$this->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
                     echo "Sent to ".$this->name."<hr>";
@@ -102,7 +104,9 @@ class CheckSetupController extends Controller
             }
 
         } catch (\Throwable $th) {
-            Log::critical('Cannot send quick setup mail '.$th->getMessage());
+            // Log::critical('Cannot send quick setup mail '.$th->getMessage());
+
+            $this->slack('Cannot send quick setup mail '.$th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
 
 
@@ -149,7 +153,9 @@ class CheckSetupController extends Controller
 
                 $this->sendEmail($this->email, "Incomplete Setup");
 
-                Log::info('Auto Deposit Status cron sent to '.$this->name);
+                // Log::info('Auto Deposit Status cron sent to '.$this->name);
+
+                $this->slack('Auto Deposit Status cron sent to '.$this->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                 echo "Sent to ".$this->name."<hr>";
             }
@@ -193,7 +199,9 @@ class CheckSetupController extends Controller
                     $this->message = '<p>You have been away for a while on PaySprint. Your last activity was recorded on <b>'.date($value->lastLogin).'</b>. <br><br> We hope to see you soon. <br><br> Thanks, PaySprint Team</p>';
 
 
-                    Log::info('We missed you on PaySprint: '.$this->name.'. Been away for '.$diff.' Last login was '.date($value->lastLogin));
+                    // Log::info('We missed you on PaySprint: '.$this->name.'. Been away for '.$diff.' Last login was '.date($value->lastLogin));
+
+                    $this->slack('We missed you on PaySprint: '.$this->name.'. Been away for '.$diff.' Last login was '.date($value->lastLogin), $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                     $this->sendEmail($this->email, "Incomplete Setup");
                 }
@@ -205,7 +213,9 @@ class CheckSetupController extends Controller
                     $this->message = '<p>We noticed you have been away for about '.$diff.' months. Your last activity was recorded on <b>'.$value->lastLogin.'</b>. <br><br> Your PaySprint Account would be disabled if there are no activity in the next days. The qualifying activities include, Add and send money, Pay invoice or withdraw money from your PaySprint Account. <br><br> We hope to see you soon. <br><br> Thanks, PaySprint Team</p>';
 
 
-                    Log::info('We missed you on PaySprint: '.$this->name.'. Been away for '.$diff.' Last login was '.$value->lastLogin);
+                    // Log::info('We missed you on PaySprint: '.$this->name.'. Been away for '.$diff.' Last login was '.$value->lastLogin);
+
+                    $this->slack('We missed you on PaySprint: '.$this->name.'. Been away for '.$diff.' Last login was '.$value->lastLogin, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                     $this->sendEmail($this->email, "Incomplete Setup");
                 }
@@ -219,7 +229,9 @@ class CheckSetupController extends Controller
 
                     $this->message = '<p>Your last activity was recorded on <b>'.$value->lastLogin.'</b>. <br><br> Your account is now suspended due to inactive use. Kindly contact the admin using contact us form, providing Account number and your name for your account to be activated. <br><br> Thanks, PaySprint Team</p>';
 
-                    Log::info('We missed you on PaySprint: '.$this->name.'. Been away for '.$diff.' Last login was '.$value->lastLogin.' and account is disabled');
+                    // Log::info('We missed you on PaySprint: '.$this->name.'. Been away for '.$diff.' Last login was '.$value->lastLogin.' and account is disabled');
+
+                    $this->slack('We missed you on PaySprint: '.$this->name.'. Been away for '.$diff.' Last login was '.$value->lastLogin.' and account is disabled', $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                     $this->sendEmail($this->email, "Incomplete Setup");
                 }
@@ -327,7 +339,9 @@ class CheckSetupController extends Controller
                     $this->message = '<p>'.$activity.'</p><p>You now have <strong>'.$value->currencyCode.' '.number_format($walletBalance, 2).'</strong> balance in your account</p>';
 
 
-                    Log::info($sendMsg);
+                    // Log::info($sendMsg);
+
+                    $this->slack($sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                     // $this->sendMessage($sendMsg, $sendPhone);
 
@@ -680,7 +694,9 @@ class CheckSetupController extends Controller
 
             $this->createNotification($exbcMerchant->ref_code, $sendMerchantMsg);
 
-            Log::info($sendMerchantMsg);
+            // Log::info($sendMerchantMsg);
+
+            $this->slack($sendMerchantMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
         }
@@ -706,7 +722,9 @@ class CheckSetupController extends Controller
                 // 
             }
         } catch (\Throwable $th) {
-            Log::error($th->getMessage());
+            // Log::error($th->getMessage());
+
+            $this->slack($th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
 
     }
@@ -854,7 +872,9 @@ class CheckSetupController extends Controller
 
                     $this->sendEmail($this->email, "Incomplete Setup");
 
-                    Log::info('Reset Password Mail Sent to '.$this->name);
+                    // Log::info('Reset Password Mail Sent to '.$this->name);
+
+                    $this->slack('Reset Password Mail Sent to '.$this->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                     
                 }
                 else{
@@ -1064,7 +1084,9 @@ class CheckSetupController extends Controller
         $this->sendEmail($this->email, "Incomplete Setup");
 
 
-        Log::info('Monthly Transaction Statement: '.$this->name."\n Message: ".$message);
+        // Log::info('Monthly Transaction Statement: '.$this->name."\n Message: ".$message);
+
+        $this->slack('Monthly Transaction Statement: '.$this->name."\n Message: ".$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
 

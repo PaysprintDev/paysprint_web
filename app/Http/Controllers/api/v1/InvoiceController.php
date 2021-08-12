@@ -70,7 +70,9 @@ class InvoiceController extends Controller
         
                 $resData = ['data' => $data, 'message' => 'success', 'status' => $status];
 
-                Log::info("Get all invoice for :=> ".$user->name);
+                // Log::info("Get all invoice for :=> ".$user->name);
+
+                $this->slack("Get all invoice for :=> ".$user->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
            }
            else{
                 $status = 400;
@@ -101,7 +103,9 @@ class InvoiceController extends Controller
            if(count($data) > 0){
             $status = 200;
             
-            Log::info("Get specific invoice for :=> ".$user->name);
+            // Log::info("Get specific invoice for :=> ".$user->name);
+
+            $this->slack("Get specific invoice for :=> ".$user->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
             $resData = ['data' => $data, 'message' => 'success', 'status' => $status];
        }
@@ -114,7 +118,9 @@ class InvoiceController extends Controller
         if(count($data) > 0){
             $status = 200;
 
-            Log::info("Get specific invoice for :=> ".$user->name);
+            // Log::info("Get specific invoice for :=> ".$user->name);
+
+            $this->slack("Get specific invoice for :=> ".$user->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
     
             $resData = ['data' => $data, 'message' => 'success', 'status' => $status];
        }
@@ -151,7 +157,9 @@ class InvoiceController extends Controller
            if(count($data) > 0){
             $status = 200;
 
-            Log::info("Get invoice by ".$req->get('service')." for :=> ".$user->name);
+            // Log::info("Get invoice by ".$req->get('service')." for :=> ".$user->name);
+
+            $this->slack("Get invoice by ".$req->get('service')." for :=> ".$user->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
     
             $resData = ['data' => $data, 'message' => 'success', 'status' => $status];
        }
@@ -303,7 +311,10 @@ class InvoiceController extends Controller
                                     }
 
 
-                                    Log::info("Single Invoice prepared by ".$this->clientname." for :=> ".$this->name);
+                                    // Log::info("Single Invoice prepared by ".$this->clientname." for :=> ".$this->name);
+
+
+                                    $this->slack("Single Invoice prepared by ".$this->clientname." for :=> ".$this->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                     if($customerRefcode != null){
 
@@ -536,7 +547,9 @@ class InvoiceController extends Controller
 
                                                 $this->sendEmail($this->to, $this->subject);
 
-                                                Log::info("Bulk Invoice prepared by ".$this->clientname);
+                                                // Log::info("Bulk Invoice prepared by ".$this->clientname);
+
+                                                $this->slack("Bulk Invoice prepared by ".$this->clientname, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                                 $getCustomer = User::where('email', $key['Customer Email'])->first();
 

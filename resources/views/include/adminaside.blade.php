@@ -348,6 +348,8 @@
 
             <li title="Wallet Statement"><a href="{{ route('users wallet statement') }}"><i class="fa fa-circle-o text-red"></i> Wallet Statement</a></li>
 
+            <li title="Wallet Purchase"><a href="{{ route('users wallet purchase') }}"><i class="fa fa-circle-o text-red"></i> Wallet Purchase</a></li>
+
           </ul>
         </li>
 

@@ -433,8 +433,11 @@ class GooglePaymentController extends Controller
 
                     
 
-                    Log::info($sendMsg);
-                    Log::info($recMsg);
+                    // Log::info($sendMsg);
+                    // Log::info($recMsg);
+
+                    $this->slack($sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                    $this->slack($recMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                     $monerisactivity = $sendMsg;
 
@@ -780,8 +783,12 @@ class GooglePaymentController extends Controller
                                 
                                 // $this->createNotification($ref_code, $recMesg);
 
-                                Log::info("Congratulations!, ".$thisuser->name." ".$sendMsg.". This is a test environment");
-                                Log::info("Congratulations!, ".$this->name." ".$recMesg.". This is a test environment");
+                                // Log::info("Congratulations!, ".$thisuser->name." ".$sendMsg.". This is a test environment");
+                                // Log::info("Congratulations!, ".$this->name." ".$recMesg.". This is a test environment");
+
+                                $this->slack("Congratulations!, ".$thisuser->name." ".$sendMsg.". This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                                $this->slack("Congratulations!, ".$this->name." ".$recMesg.". This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                             }
                             else{
@@ -1094,8 +1101,11 @@ class GooglePaymentController extends Controller
                                 
                                 $this->createNotification($ref_code, $recMesg);
 
-                                Log::info("Congratulations!, ".$thisuser->name." ".$sendMsg);
-                                Log::info("Congratulations!, ".$this->name." ".$recMesg);
+                                // Log::info("Congratulations!, ".$thisuser->name." ".$sendMsg);
+                                // Log::info("Congratulations!, ".$this->name." ".$recMesg);
+
+                                $this->slack("Congratulations!, ".$thisuser->name." ".$sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                                $this->slack("Congratulations!, ".$this->name." ".$recMesg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                             }
                             else{

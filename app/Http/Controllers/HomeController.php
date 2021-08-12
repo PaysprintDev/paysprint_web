@@ -3377,7 +3377,9 @@ class HomeController extends Controller
                 
 
 
-                        Log::info("New user registration via web by: ".$name." from ".$req->state.", ".$req->country." \n\n STATUS: ".$resInfo);
+                        // Log::info("New user registration via web by: ".$name." from ".$req->state.", ".$req->country." \n\n STATUS: ".$resInfo);
+
+                        $this->slack("New user registration via web by: ".$name." from ".$req->state.", ".$req->country." \n\n STATUS: ".$resInfo, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
                         // This is the response for now until trulioo activates us to LIVE..
@@ -3840,7 +3842,9 @@ class HomeController extends Controller
             $this->country = $req->country;
             $this->message = $req->message;
 
-            Log::notice("Name: ".$this->name."\n Email: ".$this->email."\n Subject: ".$this->subject."\n Website: ".$this->website."\n Country: ".$this->country."\n Message: ".$this->message);
+            // Log::notice("Name: ".$this->name."\n Email: ".$this->email."\n Subject: ".$this->subject."\n Website: ".$this->website."\n Country: ".$this->country."\n Message: ".$this->message);
+
+            $this->slack("Name: ".$this->name."\n Email: ".$this->email."\n Subject: ".$this->subject."\n Website: ".$this->website."\n Country: ".$this->country."\n Message: ".$this->message, $room = "contactus", $icon = ":longbox:", env('LOG_SLACK_CONTACT_URL'));
 
             if($this->timezone[0] == "Africa"){
 

@@ -291,7 +291,9 @@ class MerchantApiController extends Controller
                                     $resData = ['data' => $data, 'message' => 'Money Sent Successfully', 'status' => $status];
 
 
-                                    Log::info("Sent money from ".$thisuser->name." to ".$thismerchant->businessname." using 3rd party gateway LIVE MODE");
+                                    // Log::info("Sent money from ".$thisuser->name." to ".$thismerchant->businessname." using 3rd party gateway LIVE MODE");
+
+                                    $this->slack("Sent money from ".$thisuser->name." to ".$thismerchant->businessname." using 3rd party gateway LIVE MODE", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                     $this->createNotification($thismerchant->ref_code, $recMsg);
 
@@ -481,7 +483,9 @@ class MerchantApiController extends Controller
                                     $resData = ['data' => $data, 'message' => 'Money Sent Successfully', 'status' => $status];
 
 
-                                    Log::info("Sent money from ".$thisuser->name." to ".$thismerchant->businessname." using 3rd party gateway TEST MODE");
+                                    // Log::info("Sent money from ".$thisuser->name." to ".$thismerchant->businessname." using 3rd party gateway TEST MODE");
+
+                                    $this->slack("Sent money from ".$thisuser->name." to ".$thismerchant->businessname." using 3rd party gateway TEST MODE", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                     
                                         
@@ -733,7 +737,9 @@ class MerchantApiController extends Controller
                             $resData = ['data' => $data, 'message' => 'Money Sent Successfully', 'status' => $status];
 
 
-                            Log::info("Sent money from ".$req->firstname." ".$req->lastname." to ".$thismerchant->businessname." using 3rd party gateway LIVE MODE");
+                            // Log::info("Sent money from ".$req->firstname." ".$req->lastname." to ".$thismerchant->businessname." using 3rd party gateway LIVE MODE");
+
+                            $this->slack("Sent money from ".$req->firstname." ".$req->lastname." to ".$thismerchant->businessname." using 3rd party gateway LIVE MODE", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                             $this->createNotification($thismerchant->ref_code, $recMsg);
 
@@ -910,7 +916,9 @@ class MerchantApiController extends Controller
                             $resData = ['data' => $data, 'message' => 'Money Sent Successfully', 'status' => $status];
 
 
-                            Log::info("Sent money from ".$req->firstname." ".$req->lastname." to ".$thismerchant->businessname." using 3rd party gateway TEST MODE");
+                            // Log::info("Sent money from ".$req->firstname." ".$req->lastname." to ".$thismerchant->businessname." using 3rd party gateway TEST MODE");
+
+                            $this->slack("Sent money from ".$req->firstname." ".$req->lastname." to ".$thismerchant->businessname." using 3rd party gateway TEST MODE", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
                             

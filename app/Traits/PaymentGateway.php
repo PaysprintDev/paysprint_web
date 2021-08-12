@@ -48,7 +48,7 @@ trait PaymentGateway{
 
             // Delete Bank WithDrawal
             BankWithdrawal::where('transaction_id', $reference_code)->delete();
-
+            Statement::where('reference_code', $reference_code)->update(["refund_state" => "1"]);
             // Update Statement
             $query = [
                 "user_id" => $getUser->email,
@@ -66,10 +66,13 @@ trait PaymentGateway{
                 "regards" => $getUser->ref_code,
                 "country" => $getUser->country,
                 "statement_route" => "wallet",
+                "refund_state" => "1",
                 "flag_state" => 0
             ];
 
             Statement::insert($query);
+
+            
 
             $respMessage = "Successful";
 

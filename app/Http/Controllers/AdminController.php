@@ -3515,6 +3515,69 @@ class AdminController extends Controller
     }
 
 
+    public function userWalletPurchase(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'walletBalance' => $this->userWalletBalance(),
+                'walletcategoryBalance' => $this->userWalletBalancebyCategory(),
+                'allusers' => $this->userWalletBalance(),
+            );
+
+
+            
+            return view('admin.wallet.userpurchase')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
     public function balanceByCountry(Request $req){
 
         if($req->session()->has('username') == true){
@@ -4090,6 +4153,8 @@ class AdminController extends Controller
 
         Log::info("Hello  ".$this->name.', You have been assigned a role on PaySprint. Below are your login details; Username: '.$req->user_id." \n Password: ".$req->firstname);
 
+        $this->slack("Hello  ".$this->name.', You have been assigned a role on PaySprint. Below are your login details; Username: '.$req->user_id." \n Password: ".$req->firstname, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
         $this->sendEmail($this->email, "Fund remittance");
 
         return redirect()->route('view user support agent')->with('success', 'Successfully created!');
@@ -4109,6 +4174,8 @@ class AdminController extends Controller
 
 
         Log::info("Hello  ".$this->name.', You have been assigned a role on PaySprint. Below are your login details; Username: '.$req->user_id." \n Password: ".$req->firstname);
+
+        $this->slack("Hello  ".$this->name.', You have been assigned a role on PaySprint. Below are your login details; Username: '.$req->user_id." \n Password: ".$req->firstname, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
         $this->sendEmail($this->email, "Fund remittance");
 
@@ -9150,6 +9217,52 @@ class AdminController extends Controller
     }    
 
 
+    public function getUserWalletPurchaseStatementReport(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $otherPays = Statement::where('user_id', session('email'))->orderBy('created_at', 'DESC')->get();
+            }
+
+            // dd($otherPays);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $thisdata = [
+                'result' => $this->getUserWalletPurchaseStatementRecordByDate($req->user_id, $req->statement_start, $req->statement_end),
+                'allusers' => $this->userWalletBalance(),
+            ]; 
+
+            return view('admin.userwalletpurchasestatementreport')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'thisdata' => $thisdata]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }    
+
+
     public function payreport(Request $req){
     
         if($req->session()->has('username') == true){
@@ -9956,6 +10069,8 @@ class AdminController extends Controller
 
                         Log::info("New merchant registration via web by: ".$req->firstname.' '.$req->lastname." from ".$req->state.", ".$req->country);
 
+                        $this->slack("New merchant registration via web by: ".$req->firstname.' '.$req->lastname." from ".$req->state.", ".$req->country, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
 
                         $url = 'https://api.globaldatacompany.com/verifications/v1/verify';
 
@@ -10035,6 +10150,8 @@ class AdminController extends Controller
                         
 
                                 Log::info("New merchant registration via web by: ".$req->firstname.' '.$req->lastname." from ".$req->state.", ".$req->country." STATUS: ".$resInfo);
+
+                                $this->slack("New merchant registration via web by: ".$req->firstname.' '.$req->lastname." from ".$req->state.", ".$req->country." STATUS: ".$resInfo, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
                                  // This is the response for now until trulioo activates us to LIVE..
@@ -10130,6 +10247,8 @@ class AdminController extends Controller
 
                             Log::info("New merchant registration via web by: ".$req->firstname.' '.$req->lastname." from ".$req->state.", ".$req->country);
 
+                            $this->slack("New merchant registration via web by: ".$req->firstname.' '.$req->lastname." from ".$req->state.", ".$req->country, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
                             $countryApproval = AllCountries::where('name', $req->country)->where('approval', 1)->first();
 
                             $url = 'https://api.globaldatacompany.com/verifications/v1/verify';
@@ -10194,6 +10313,8 @@ class AdminController extends Controller
 
 
                                 Log::info("New merchant registration via web by: ".$req->firstname.' '.$req->lastname." from ".$req->state.", ".$req->country." STATUS: ".$resInfo);
+
+                                $this->slack("New merchant registration via web by: ".$req->firstname.' '.$req->lastname." from ".$req->state.", ".$req->country." STATUS: ".$resInfo, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
                                 // $message = "success";
@@ -10328,6 +10449,15 @@ class AdminController extends Controller
     public function getUserWalletStatementRecordByDate($user_id, $from, $nextDay){
 
         $data = Statement::where('user_id', $user_id)->whereBetween('trans_date', [$from, $nextDay])->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+
+    }
+
+
+    public function getUserWalletPurchaseStatementRecordByDate($user_id, $from, $nextDay){
+
+        $data = Statement::where('reference_code', 'LIKE', '%822%')->where('report_status', 'Withdraw from wallet')->where('user_id', $user_id)->whereBetween('trans_date', [$from, $nextDay])->orderBy('created_at', 'DESC')->get();
 
         return $data;
 
@@ -11865,7 +11995,8 @@ class AdminController extends Controller
         }
 
 
-        return redirect()->route('bank request withdrawal')->with($resp, $resData);
+        return redirect()->route('Admin')->with($resp, $resData);
+        // return back()->with($resp, $resData);
     }
 
 

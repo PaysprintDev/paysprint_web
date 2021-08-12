@@ -71,7 +71,9 @@ class MaintenanceFeeCharge extends Controller
                     $this->message = '<p>'.$activity.'</p><p>You now have <strong>'.$value->currencyCode.' '.number_format($walletBalance, 2).'</strong> balance in your account</p>';
 
 
-                    Log::info($sendMsg);
+                    // Log::info($sendMsg);
+
+                    $this->slack($sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                     // $this->sendMessage($sendMsg, $sendPhone);
 
@@ -84,12 +86,16 @@ class MaintenanceFeeCharge extends Controller
 
                 }
                 else{
-                    Log::info($value->name." was not charged because they are in ".$value->country." and the fee charge is not yet available");
+                    // Log::info($value->name." was not charged because they are in ".$value->country." and the fee charge is not yet available");
+
+                    $this->slack($value->name." was not charged because they are in ".$value->country." and the fee charge is not yet available", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                 }
             }
             else{
                 // This is a new user account
-                Log::info($value->name." was not charged because account has ".$value->wallet_balance." in their wallet");
+                // Log::info($value->name." was not charged because account has ".$value->wallet_balance." in their wallet");
+
+                $this->slack($value->name." was not charged because account has ".$value->wallet_balance." in their wallet", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
             }
 
             

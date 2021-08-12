@@ -255,6 +255,7 @@ Route::prefix('Admin/wallet')->group(function () {
 
 	Route::get('/', ['uses' => 'AdminController@walletBalance', 'as' => 'wallet balance']);
 	Route::get('/user-statement', ['uses' => 'AdminController@userWalletStatement', 'as' => 'users wallet statement']);
+	Route::get('/user-wallet-purchase', ['uses' => 'AdminController@userWalletPurchase', 'as' => 'users wallet purchase']);
 	Route::get('bankrequestwithdrawal', ['uses' => 'AdminController@bankRequestWithdrawal', 'as' => 'bank request withdrawal']);
 	Route::get('bankrequestwithdrawalbycountry', ['uses' => 'AdminController@bankRequestWithdrawalByCountry', 'as' => 'bank withdrawal by country']);
 	Route::get('returnwithdrawal/{id}', ['uses' => 'AdminController@returnWithdrawal', 'as' => 'return withdrawal request']);
@@ -427,6 +428,7 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('walletstatement', ['uses' => 'AdminController@getWalletStatement', 'as' => 'getwalletStatement']);
 	Route::get('walletstatementreport', ['uses' => 'AdminController@getWalletStatementReport', 'as' => 'wallet report']);
 	Route::get('user-wallet-report', ['uses' => 'AdminController@getUserWalletStatementReport', 'as' => 'user wallet report']);
+	Route::get('user-wallet-purchase-report', ['uses' => 'AdminController@getUserWalletPurchaseStatementReport', 'as' => 'user wallet purchase report']);
 
 	Route::get('payreport', ['uses' => 'AdminController@payreport', 'as' => 'payreport']);
 	Route::get('epayreport', ['uses' => 'AdminController@epayreport', 'as' => 'epayreport']);

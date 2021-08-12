@@ -132,6 +132,10 @@
                         data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
                         <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/morningstar_ehxgue.png" alt="" class="w-100" width="100" height="100">
                     </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628701963/paysprint_asset/featuredon/1280px-The_Globe_and_Mail__2019-10-31_.svg_ph46rz.png" alt="" class="w-100" style="width: 300px !important;">
+                    </div>
                     
                     
                     

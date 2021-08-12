@@ -147,7 +147,9 @@ class UserController extends Controller
 
             $getcurrentUser = User::where('ref_code', $newRefcode)->first();
 
-            Log::info($getcurrentUser);
+            // Log::info($getcurrentUser);
+
+            
 
             $url = 'https://api.globaldatacompany.com/verifications/v1/verify';
 
@@ -251,7 +253,9 @@ class UserController extends Controller
             
 
 
-                    Log::info("New user registration via mobile app by: ".$request->firstname.' '.$request->lastname." from ".$request->state.", ".$request->country." \n\n STATUS: ".$resInfo);
+                    // Log::info("New user registration via mobile app by: ".$request->firstname.' '.$request->lastname." from ".$request->state.", ".$request->country." \n\n STATUS: ".$resInfo);
+
+                    $this->slack("New user registration via mobile app by: ".$request->firstname.' '.$request->lastname." from ".$request->state.", ".$request->country." \n\n STATUS: ".$resInfo, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                     // $message = "success";
                     // $title = "Great";
@@ -742,7 +746,9 @@ class UserController extends Controller
                         $message = "Saved";
                         $status = 200;
 
-                        Log::notice("Hello ".strtoupper($thisuser->name).", You have successfully set up your security question and answer.");
+                        // Log::notice("Hello ".strtoupper($thisuser->name).", You have successfully set up your security question and answer.");
+
+                        $this->slack("Hello ".strtoupper($thisuser->name).", You have successfully set up your security question and answer.", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                         $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully set up your security question and answer.");
 
@@ -799,7 +805,9 @@ class UserController extends Controller
 
             return $this->returnJSON($resData, $status);
         } catch (\Throwable $th) {
-            Log::critical("BVN Verification Error: ".$th->getMessage());
+            // Log::critical("BVN Verification Error: ".$th->getMessage());
+
+            $this->slack("BVN Verification Error: ".$th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
 
         
@@ -858,7 +866,10 @@ class UserController extends Controller
                                 $status = 200;
 
 
-                                Log::notice($info);
+                                // Log::notice($info);
+
+
+                                $this->slack($info, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                 $this->createNotification($thisuser->ref_code, $info);
 
@@ -929,7 +940,9 @@ class UserController extends Controller
                             $status = 200;
 
 
-                            Log::notice($info);
+                            // Log::notice($info);
+
+                            $this->slack($info, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                             $this->createNotification($thisuser->ref_code, $info);
                             
@@ -1023,7 +1036,9 @@ class UserController extends Controller
                         $message = "Saved";
                         $status = 200;
 
-                        Log::info("Hello ".strtoupper($thisuser->name).", You have successfully turned ".$req->auto_deposit." your Auto Deposit Status.");
+                        // Log::info("Hello ".strtoupper($thisuser->name).", You have successfully turned ".$req->auto_deposit." your Auto Deposit Status.");
+
+                        $this->slack("Hello ".strtoupper($thisuser->name).", You have successfully turned ".$req->auto_deposit." your Auto Deposit Status.", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
                         $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully turned ".$req->auto_deposit." your Auto Deposit Status.");

@@ -61,7 +61,9 @@ class Controller extends BaseController
 
             
         } catch (\Throwable $th) {
-            Log::info($th->getMessage());
+            // Log::info($th->getMessage());
+            
+            $this->slack($th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
 
 
@@ -201,7 +203,9 @@ class Controller extends BaseController
             
         }
         catch (\Throwable $th) {
-            Log::error('Error: '.$th->getMessage());
+            // Log::error('Error: '.$th->getMessage());
+
+            $this->slack('Error: '.$th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
     }
 
@@ -243,7 +247,9 @@ class Controller extends BaseController
                 ['from' => $twilio_number, 'body' => $message] );
 
         } catch (\Throwable $th) {
-            Log::error('Error: '.$th->getMessage());
+            // Log::error('Error: '.$th->getMessage());
+
+            $this->slack('Error: '.$th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
 
             $response = 'Money sent successfully. However, we are unable to send you a notification through a text message because we detected there is no phone number or you have an invalid phone number on your PaySprint Account. Kindly update your phone number to receive notification via text on your next transaction.';
             $respaction = 'success';
@@ -266,7 +272,9 @@ class Controller extends BaseController
 
         } catch (\Throwable $th) {
 
-            Log::error('Error: '.$th->getMessage());
+            // Log::error('Error: '.$th->getMessage());
+
+            $this->slack('Error: '.$th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
 
     }

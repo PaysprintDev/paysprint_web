@@ -105,7 +105,10 @@ class CardController extends Controller
                         $status = 400;
                         $message = "This card is expired!";
 
-                        Log::info($thisuser->name." tried to add an expired card with Month: ".$req->month." and year ".$req->year);
+                        // Log::info($thisuser->name." tried to add an expired card with Month: ".$req->month." and year ".$req->year);
+
+
+                        $this->slack($thisuser->name." tried to add an expired card with Month: ".$req->month." and year ".$req->year, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                     }
                     else{
                         // Do Insert
@@ -121,7 +124,9 @@ class CardController extends Controller
 
                     $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully added a new ".$req->card_provider.".");
 
-                        Log::info("New ".$req->card_provider." added by :=> ".$thisuser->name);
+                        // Log::info("New ".$req->card_provider." added by :=> ".$thisuser->name);
+
+                        $this->slack("New ".$req->card_provider." added by :=> ".$thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                     }
 
                     
@@ -186,7 +191,13 @@ class CardController extends Controller
 
                     $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully added a new bank account.");
 
-                    Log::info("New bank added by :=> ".$thisuser->name);
+                    // Log::info("New bank added by :=> ".$thisuser->name);
+
+
+                    $this->slack("New bank added by :=> ".$thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+
+                    
 
                 
             } catch (\Throwable $th) {
@@ -317,7 +328,9 @@ class CardController extends Controller
 
                     $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully updated your new bank account.");
 
-                    Log::info("Edit bank by :=> ".$thisuser->name);
+                    // Log::info("Edit bank by :=> ".$thisuser->name);
+
+                    $this->slack("Edit bank by :=> ".$thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                 
             } catch (\Throwable $th) {
@@ -380,7 +393,11 @@ class CardController extends Controller
 
                     // Log::info("Edit Card Detail :=> ".$cardData);
 
-                    Log::info("Edit ".$req->card_provider." by :=> ".$thisuser->name);
+                    // Log::info("Edit ".$req->card_provider." by :=> ".$thisuser->name);
+
+                    $this->slack("Edit ".$req->card_provider." by :=> ".$thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                    
 
                     $data = $cardData;
                     $status = 200;
@@ -455,7 +472,9 @@ class CardController extends Controller
 
         // Log::info("Delete Card:=> ".$data);
 
-        Log::info("Delete card by :=> ".$thisuser->name);
+        // Log::info("Delete card by :=> ".$thisuser->name);
+
+        $this->slack("Delete card by :=> ".$thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
@@ -496,7 +515,9 @@ class CardController extends Controller
 
         // Log::info("Delete Card:=> ".$data);
 
-        Log::info("Delete bank by :=> ".$thisuser->name);
+        // Log::info("Delete bank by :=> ".$thisuser->name);
+
+        $this->slack("Delete bank by :=> ".$thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
@@ -516,13 +537,15 @@ class CardController extends Controller
         if($cardDetail == "Bank Account"){
         $query = AddBank::where('user_id', $thisuser->id)->get();
 
-        Log::info("Get bank inforamtion for :=> ".$thisuser->name);
+        // Log::info("Get bank information for :=> ".$thisuser->name);
+        $this->slack("Get bank information for :=> ".$thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
         }
         else{
         $query = AddCard::where('user_id', $thisuser->id)->where('card_provider', 'LIKE', '%'.$cardDetail.'%')->get();
 
-        Log::info("Get card inforamtion for :=> ".$thisuser->name);
+        // Log::info("Get card information for :=> ".$thisuser->name);
+        $this->slack("Get card information for :=> ".$thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
         }
 

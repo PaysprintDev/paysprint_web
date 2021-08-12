@@ -1063,7 +1063,9 @@ else{
 
                 $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                Log::info($thisuser->name." wants to add ".$req->currencyCode." ".$req->amount." to their wallet. This is a test environment nothing happens to your money");
+                // Log::info($thisuser->name." wants to add ".$req->currencyCode." ".$req->amount." to their wallet. This is a test environment nothing happens to your money");
+
+                $this->slack($thisuser->name." wants to add ".$req->currencyCode." ".$req->amount." to their wallet. This is a test environment nothing happens to your money", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                 $monerisDeductamount = $req->conversionamount;
                 // $monerisDeductamount = $this->currencyConvert($req->currencyCode, $req->amount);
@@ -1205,7 +1207,9 @@ else{
 
                         // $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country);
 
-                        Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg.". This is a test environment");
+                        // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg.". This is a test environment");
+
+                        $this->slack('Congratulations!, '.$thisuser->name.' '.$sendMsg.". This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
                 }
@@ -1531,7 +1535,9 @@ else{
 
                                 // $this->createNotification($thisuser->ref_code, $sendMsg);
 
-                                Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg.". This is a test environment");
+                                // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg.". This is a test environment");
+
+                                $this->slack('Congratulations!, '.$thisuser->name.' '.$sendMsg.". This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                 $monerisactivity = $thisuser->name.' '.$sendMsg;
                                 $this->keepRecord($reference_code, $responseCode, $monerisactivity, $gateway, $thisuser->country);
@@ -1545,7 +1551,9 @@ else{
 
                                 $gateway = "Fortispay";
 
-                                Log::critical('Oops!! '.$thisuser->name.' '.$message);
+                                // Log::critical('Oops!! '.$thisuser->name.' '.$message);
+
+                                $this->slack('Oops!! '.$thisuser->name.' '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                 $monerisactivity = $thisuser->name.' '.$message;
                                 // $this->keepRecord("", $responseCode, $monerisactivity, $gateway, $thisuser->country);
@@ -1635,7 +1643,9 @@ else{
 
                                 // $this->createNotification($thisuser->ref_code, $sendMsg);
 
-                                Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg.". This is a test environment");
+                                // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg.". This is a test environment");
+
+                                $this->slack('Congratulations!, '.$thisuser->name.' '.$sendMsg.". This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                 $monerisactivity = $thisuser->name.' '.$sendMsg;
                                 // $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
@@ -1647,7 +1657,9 @@ else{
                                 $message = $response->responseData['Message'];
                                 $status = 400;
 
-                                Log::critical('Oops!! '.$thisuser->name.' '.$message.". This is a test environment");
+                                // Log::critical('Oops!! '.$thisuser->name.' '.$message.". This is a test environment");
+
+                                $this->slack('Oops!, '.$thisuser->name.' '.$message.". This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                 $monerisactivity = $thisuser->name.' '.$message;
                                 // $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
@@ -1668,7 +1680,10 @@ else{
                         $message = "We cannot process your transaction. Kindly update your app from the Play Store or App Store. Thanks";
                         $status = 400;
 
-                        Log::critical('Oops!! '.$thisuser->name.' '.$message.". This is a test environment");
+                        // Log::critical('Oops!! '.$thisuser->name.' '.$message.". This is a test environment");
+
+
+                        $this->slack('Oops!, '.$thisuser->name.' '.$message.". This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                     }
 
                     else{
@@ -1754,7 +1769,9 @@ else{
 
                             // $this->createNotification($thisuser->ref_code, $sendMsg);
 
-                            Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg.". This is a test environment");
+                            // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg.". This is a test environment");
+
+                            $this->slack('Congratulations!, '.$thisuser->name.' '.$sendMsg.". This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                             $monerisactivity = $thisuser->name.' '.$sendMsg;
                             // $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
@@ -1766,7 +1783,9 @@ else{
                             $message = $response->responseData['Message'];
                             $status = 400;
 
-                            Log::critical('Oops!! '.$thisuser->name.' '.$message.". This is a test environment");
+                            // Log::critical('Oops!! '.$thisuser->name.' '.$message.". This is a test environment");
+
+                            $this->slack('Oops!, '.$thisuser->name.' '.$message.". This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                             $monerisactivity = $thisuser->name.' '.$message;
                             // $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
@@ -1812,7 +1831,10 @@ else{
 
                 $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                Log::info($thisuser->name." wants to add ".$req->currencyCode." ".$req->amount." to their wallet.");
+                // Log::info($thisuser->name." wants to add ".$req->currencyCode." ".$req->amount." to their wallet.");
+
+
+                $this->slack($thisuser->name." wants to add ".$req->currencyCode." ".$req->amount." to their wallet.", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                 $monerisDeductamount = $req->conversionamount;
                 // $monerisDeductamount = $this->currencyConvert($req->currencyCode, $req->amount);
@@ -1952,7 +1974,9 @@ else{
 
                         $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country);
 
-                        Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
+                        // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
+
+                        $this->slack('Congratulations!, '.$thisuser->name.' '.$sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                         $this->sendEmail($this->email, "Fund remittance");
 
@@ -2282,7 +2306,9 @@ else{
 
                                 $this->createNotification($thisuser->ref_code, $sendMsg);
 
-                                Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
+                                // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
+
+                                $this->slack('Congratulations!, '.$thisuser->name.' '.$sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                 $monerisactivity = $thisuser->name.' '.$sendMsg;
                                 $this->keepRecord($reference_code, $responseCode, $monerisactivity, $gateway, $thisuser->country);
@@ -2296,7 +2322,9 @@ else{
 
                                 $gateway = "Fortispay";
 
-                                Log::critical('Oops!! '.$thisuser->name.' '.$message);
+                                // Log::critical('Oops!! '.$thisuser->name.' '.$message);
+
+                                $this->slack('Oops!, '.$thisuser->name.' '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                 $monerisactivity = $thisuser->name.' '.$message;
                                 $this->keepRecord("", $responseCode, $monerisactivity, $gateway, $thisuser->country);
@@ -2384,7 +2412,9 @@ else{
 
                                 $this->createNotification($thisuser->ref_code, $sendMsg);
 
-                                Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
+                                // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
+
+                                $this->slack('Congratulations!, '.$thisuser->name.' '.$sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                 $monerisactivity = $thisuser->name.' '.$sendMsg;
                                 $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
@@ -2396,7 +2426,9 @@ else{
                                 $message = $response->responseData['Message']." If the error persists, kindly login on the web app at https://paysprint.net to continue your transactions.";
                                 $status = 400;
 
-                                Log::critical('Oops!! '.$thisuser->name.' '.$message);
+                                // Log::critical('Oops!! '.$thisuser->name.' '.$message);
+
+                                $this->slack('Oops!, '.$thisuser->name.' '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                 $monerisactivity = $thisuser->name.' '.$message;
                                 $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
@@ -2417,7 +2449,9 @@ else{
                         $message = "We cannot process your transaction. Kindly update your app from the Play Store or App Store. Thanks";
                         $status = 400;
 
-                        Log::critical('Oops!! '.$thisuser->name.' '.$message);
+                        // Log::critical('Oops!! '.$thisuser->name.' '.$message);
+
+                        $this->slack('Oops!, '.$thisuser->name.' '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                     }
 
                     else{
@@ -2503,7 +2537,9 @@ else{
 
                             $this->createNotification($thisuser->ref_code, $sendMsg);
 
-                            Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
+                            // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
+
+                            $this->slack('Congratulations!, '.$thisuser->name.' '.$sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                             $monerisactivity = $thisuser->name.' '.$sendMsg;
                             $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
@@ -2515,7 +2551,9 @@ else{
                             $message = $response->responseData['Message']." If the error persists, kindly login on the web app at https://paysprint.net to continue your transactions.";
                             $status = 400;
 
-                            Log::critical('Oops!! '.$thisuser->name.' '.$message);
+                            // Log::critical('Oops!! '.$thisuser->name.' '.$message);
+
+                            $this->slack('Oops!, '.$thisuser->name.' '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                             $monerisactivity = $thisuser->name.' '.$message;
                             $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
@@ -2572,7 +2610,9 @@ else{
 
                     $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                    Log::info($thisuser->name." wants to withdraw ".$req->currencyCode." ".$req->amount." from their wallet. This is a test environment");
+                    // Log::info($thisuser->name." wants to withdraw ".$req->currencyCode." ".$req->amount." from their wallet. This is a test environment");
+
+                    $this->slack($thisuser->name." wants to withdraw ".$req->currencyCode." ".$req->amount." from their wallet. This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                     $minBal = $this->minimumWithdrawal($thisuser->country);
 
@@ -2586,7 +2626,9 @@ else{
                         $message = "Insufficient amount to withdraw";
                         $status = 400;
 
-                        Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
+                        // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
+
+                        $this->slack('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                     }
                     elseif($thisuser->approval < 2 && $thisuser->accountLevel <= 2){
                         // Cannot withdraw minimum balance
@@ -2595,7 +2637,10 @@ else{
                         $message = "You cannot send money at the moment because your account is still on review.";
                         $status = 400;
 
-                        Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
+                        // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
+
+
+                        $this->slack('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                     }
                     elseif($thisuser->wallet_balance <= $minBal){
                         // Cannot withdraw minimum balance
@@ -2604,7 +2649,9 @@ else{
                         $message = "Your wallet balance must be more than ".$req->currencyCode.' '.number_format($minBal, 2)." before you can make withdrawal.";
                         $status = 400;
 
-                        Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
+                        // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
+
+                        $this->slack('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                     }
                     else{
 
@@ -2615,7 +2662,9 @@ else{
                             $message = $messageOut;
                             $status = 400;
 
-                            Log::info('Oops!, Though this is a test, but '.$thisuser->name.', '.$message);
+                            // Log::info('Oops!, Though this is a test, but '.$thisuser->name.', '.$message);
+
+                            $this->slack('Oops!, Though this is a test, but '.$thisuser->name.', '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                         }
                         else{
 
@@ -2804,7 +2853,9 @@ else{
 
                                             $bankDetails = AddBank::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();   
 
-                                            Log::info("Card ID: ".$req->card_id." Type: ".$req->card_type); 
+                                            // Log::info("Card ID: ".$req->card_id." Type: ".$req->card_type); 
+
+                                            $this->slack("Card ID: ".$req->card_id." Type: ".$req->card_type, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                             if(isset($bankDetails)){
 
@@ -2868,7 +2919,10 @@ else{
                                             // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
 
-                                            Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg.". This is a test environment");
+                                            // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg.". This is a test environment");
+
+
+                                            $this->slack('Congratulations!, '.$thisuser->name.' '.$sendMsg.". This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                             
 
@@ -2989,7 +3043,9 @@ else{
                                                         // $message = $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet';
                                                         $message = $sendMsg;
 
-                                                        Log::info('Congratulations!, '.$thisuser->name.' '.$message);
+                                                        // Log::info('Congratulations!, '.$thisuser->name.' '.$message);
+
+                                                        $this->slack('Congratulations!, '.$thisuser->name.' '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                                         
 
@@ -3106,7 +3162,10 @@ else{
 
                                             $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", ".$message);
 
-                                            Log::info("Hello ".strtoupper($thisuser->name).", ".$message);
+                                            // Log::info("Hello ".strtoupper($thisuser->name).", ".$message);
+
+
+                                            $this->slack("Hello ".strtoupper($thisuser->name).", ".$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                             // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
                                             $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
@@ -3236,7 +3295,9 @@ else{
                                             $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
 
-                                            Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$sendMsg);
+                                            // Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$sendMsg);
+
+                                            $this->slack("Congratulations! ".strtoupper($thisuser->name)." ".$sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
                                             $resData = ['data' => $data, 'message' => $message, 'status' => $status];
@@ -3346,7 +3407,9 @@ else{
                                                 $status = 200;
                                                 $message = $sendMsg;
 
-                                                Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$message.". This is a test environment");
+                                                // Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$message.". This is a test environment");
+
+                                                $this->slack("Congratulations! ".strtoupper($thisuser->name)." ".$message.". This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
                                         }
@@ -3372,7 +3435,9 @@ else{
                                 $message = "Withdrawal to ".strtoupper($req->card_type)." not yet activated for your country.";
                                 $status = 400;
 
-                                Log::info('Oops!, Though this is a test, but '.$thisuser->name.', '.$message);
+                                // Log::info('Oops!, Though this is a test, but '.$thisuser->name.', '.$message);
+
+                                $this->slack('Oops!, Though this is a test, but '.$thisuser->name.', '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                             }
 
                         }
@@ -3408,7 +3473,9 @@ else{
 
                     $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                    Log::info($thisuser->name." wants to withdraw ".$req->currencyCode." ".$req->amount." from their wallet.");
+                    // Log::info($thisuser->name." wants to withdraw ".$req->currencyCode." ".$req->amount." from their wallet.");
+
+                    $this->slack($thisuser->name." wants to withdraw ".$req->currencyCode." ".$req->amount." from their wallet.", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                     $minBal = $this->minimumWithdrawal($thisuser->country);
 
@@ -3425,7 +3492,9 @@ else{
                         $message = "Insufficient amount to withdraw";
                         $status = 400;
 
-                        Log::info('Oops!, '.$thisuser->name.' has '.$message);
+                        // Log::info('Oops!, '.$thisuser->name.' has '.$message);
+
+                        $this->slack('Oops!, '.$thisuser->name.' has '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                     }
                     elseif($thisuser->approval < 2 && $thisuser->accountLevel <= 2){
                         // Cannot withdraw minimum balance
@@ -3434,7 +3503,9 @@ else{
                         $message = "You cannot send money at the moment because your account is still on review.";
                         $status = 400;
 
-                        Log::info('Oops!, '.$thisuser->name.' has '.$message);
+                        // Log::info('Oops!, '.$thisuser->name.' has '.$message);
+
+                        $this->slack('Oops!, '.$thisuser->name.' has '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                     }
                     elseif($thisuser->wallet_balance <= $minBal){
                         // Cannot withdraw minimum balance
@@ -3443,7 +3514,9 @@ else{
                         $message = "Your wallet balance must be more than ".$req->currencyCode.' '.number_format($minBal, 2)." before you can make withdrawal.";
                         $status = 400;
 
-                        Log::info('Oops!, '.$thisuser->name.' has '.$message);
+                        // Log::info('Oops!, '.$thisuser->name.' has '.$message);
+
+                        $this->slack('Oops!, '.$thisuser->name.' has '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                     }
                     else{
 
@@ -3456,7 +3529,9 @@ else{
                             $message = $messageOut;
                             $status = 400;
 
-                            Log::info('Oops!, '.$thisuser->name.', '.$message);
+                            // Log::info('Oops!, '.$thisuser->name.', '.$message);
+
+                            $this->slack('Oops!, '.$thisuser->name.', '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                         }
                         else{
@@ -3651,7 +3726,9 @@ else{
 
                                             $bankDetails = AddBank::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();   
 
-                                            Log::info("Card ID: ".$req->card_id." Type: ".$req->card_type); 
+                                            // Log::info("Card ID: ".$req->card_id." Type: ".$req->card_type); 
+
+                                            $this->slack("Card ID: ".$req->card_id." Type: ".$req->card_type, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                             if(isset($bankDetails)){
 
@@ -3715,7 +3792,10 @@ else{
                                             $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
 
-                                            Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
+                                            // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
+
+
+                                            $this->slack('Congratulations!, '.$thisuser->name.' '.$sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                             
 
@@ -3836,7 +3916,10 @@ else{
                                                         // $message = $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet';
                                                         $message = $sendMsg;
 
-                                                        Log::info('Congratulations!, '.$thisuser->name.' '.$message);
+                                                        // Log::info('Congratulations!, '.$thisuser->name.' '.$message);
+
+
+                                                        $this->slack('Congratulations!, '.$thisuser->name.' '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                                         
 
@@ -3953,7 +4036,9 @@ else{
 
                                             $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", ".$message);
 
-                                            Log::info("Hello ".strtoupper($thisuser->name).", ".$message);
+                                            // Log::info("Hello ".strtoupper($thisuser->name).", ".$message);
+
+                                            $this->slack("Hello ".strtoupper($thisuser->name).", ".$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                             // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
                                             $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
@@ -4082,7 +4167,9 @@ else{
                                             $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
 
-                                            Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$sendMsg);
+                                            // Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$sendMsg);
+
+                                            $this->slack("Congratulations! ".strtoupper($thisuser->name)." ".$sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
                                             $resData = ['data' => $data, 'message' => $message, 'status' => $status];
@@ -4193,7 +4280,9 @@ else{
                                                 $status = 200;
                                                 $message = $sendMsg;
 
-                                                Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$message);
+                                                // Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$message);
+
+                                                $this->slack("Congratulations! ".strtoupper($thisuser->name)." ".$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
                                         }
@@ -4219,7 +4308,9 @@ else{
                                 $message = "Withdrawal to ".strtoupper($req->card_type)." not yet activated for your country.";
                                 $status = 400;
 
-                                Log::info('Oops!, '.$thisuser->name.', '.$message);
+                                // Log::info('Oops!, '.$thisuser->name.', '.$message);
+
+                                $this->slack('Oops!, '.$thisuser->name.', '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                             }
                         }
 
@@ -4346,7 +4437,9 @@ else{
 
 
 
-        Log::info("Reversal successfull! ".strtoupper($thisuser->name)." ".$sendMsg);
+        // Log::info("Reversal successfull! ".strtoupper($thisuser->name)." ".$sendMsg);
+
+        $this->slack("Reversal successfull! ".strtoupper($thisuser->name)." ".$sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
         $message = "Reversal successfully completed";
@@ -4448,7 +4541,9 @@ else{
                         $message = "Insufficient amount to complete transaction";
                         $status = 400;
 
-                        Log::info('Oops!, '.$thisuser->name.' has '.$message);
+                        // Log::info('Oops!, '.$thisuser->name.' has '.$message);
+
+                        $this->slack('Oops!, '.$thisuser->name.' has '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                     }
                     elseif($thisuser->approval < 1 && $thisuser->accountLevel < 1){
                         // Cannot withdraw minimum balance
@@ -4457,7 +4552,10 @@ else{
                         $message = "You cannot pay for utility at the moment because your account is still on review.";
                         $status = 400;
 
-                        Log::info('Oops!, '.$thisuser->name.' has '.$message);
+                        // Log::info('Oops!, '.$thisuser->name.' has '.$message);
+
+                        $this->slack('Oops!, '.$thisuser->name.' has '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
                     }
                     elseif(($thisuser->wallet_balance - $minBal) <= $minBal){
                         // Cannot withdraw minimum balance
@@ -4466,7 +4564,9 @@ else{
                         $message = "Your wallet balance must be more than ".$thisuser->currencyCode.' '.number_format($minBal, 2)." before you can use the utility bill.";
                         $status = 400;
 
-                        Log::info('Oops!, '.$thisuser->name.' has '.$message);
+                        // Log::info('Oops!, '.$thisuser->name.' has '.$message);
+
+                        $this->slack('Oops!, '.$thisuser->name.' has '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                     }
                     else{
 
@@ -4487,7 +4587,9 @@ else{
                                                 $message = $billPayResponse->responseMessage;
                                                 $status = 400;
 
-                                                Log::info('Oops!, '.$thisuser->name.' has '.$message);
+                                                // Log::info('Oops!, '.$thisuser->name.' has '.$message);
+
+                                                $this->slack('Oops!, '.$thisuser->name.' has '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                                             }
                                             else{
 
@@ -4567,7 +4669,9 @@ else{
 
                                                     $message = $sendMsg;
 
-                                                    Log::info('Congratulations!, '.$thisuser->name.' '.$message);
+                                                    // Log::info('Congratulations!, '.$thisuser->name.' '.$message);
+
+                                                    $this->slack('Congratulations!, '.$thisuser->name.' has '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                                                 }
                                                 else{
 
@@ -4575,7 +4679,9 @@ else{
                                                     $message = "Something went wrong!. Please try again later.";
                                                     $status = 400;
 
-                                                    Log::critical("Check EPS end for this error!.");
+                                                    // Log::critical("Check EPS end for this error!.");
+
+                                                    $this->slack("Check EPS end for this error!.", $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
                                                 }
                                             }
 
@@ -4586,7 +4692,9 @@ else{
                                             $message = $billPayResponse->responseMessage;
                                             $status = 400;
 
-                                            Log::info('Oops!, '.$message);
+                                            // Log::info('Oops!, '.$message);
+
+                                            $this->slack('Oops!, '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                                         }
 
 
@@ -4626,7 +4734,9 @@ else{
                                                         $message = $billPayResponse->responseMessage;
                                                         $status = 400;
 
-                                                        Log::info('Oops!, '.$thisuser->name.' has '.$message);
+                                                        // Log::info('Oops!, '.$thisuser->name.' has '.$message);
+
+                                                        $this->slack('Oops!, '.$thisuser->name.' has '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                                                     }
                                                     else{
 
@@ -4703,7 +4813,9 @@ else{
                                                         $status = 200;
                                                         $message = $sendMsg;
 
-                                                        Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$message);
+                                                        // Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$message);
+
+                                                        $this->slack("Congratulations! ".strtoupper($thisuser->name)." ".$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                                                     }
                                                     else{
 
@@ -4711,7 +4823,10 @@ else{
                                                         $message = "Something went wrong!. Please try again later.";
                                                         $status = 400;
 
-                                                        Log::critical("Check EPS end for this error!.");
+                                                        // Log::critical("Check EPS end for this error!.");
+
+                                                        $this->slack("Check EPS end for this error!.", $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+
                                                     }
 
                                                 }
@@ -4722,7 +4837,9 @@ else{
                                                 $message = $billPayResponse->responseMessage;
                                                 $status = 400;
 
-                                                Log::info('Oops!, '.$message);
+                                                // Log::info('Oops!, '.$message);
+
+                                                $this->slack('Oops!, '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                                             }
 
 
