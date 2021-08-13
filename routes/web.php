@@ -38,6 +38,8 @@ Route::get('migratetolevelone', 'CheckSetupController@migrateUsersToLevelOne');
 Route::get('insertspecialinfoactivity', 'CheckSetupController@insertspecialinfoActivity');
 Route::get('autofeestructure', 'CheckSetupController@setupFeeStructure');
 Route::get('checktelephone', 'CheckSetupController@checkTelephone');
+Route::get('userarchive', 'CheckSetupController@userAccountArchive');
+
 
 Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
 
@@ -225,6 +227,7 @@ Route::get('overrideusers', ['uses' => 'AdminController@allOverrideUsers', 'as' 
 Route::get('closedusers', ['uses' => 'AdminController@allClosedUsers', 'as' => 'closedusers']);
 Route::get('newusers', ['uses' => 'AdminController@allNewusers', 'as' => 'newusers']);
 Route::get('newmerchants', ['uses' => 'AdminController@allNewMerchants', 'as' => 'newmerchants']);
+Route::get('archiveduserslist', ['uses' => 'AdminController@archivedUsersList', 'as' => 'archiveduserslist']);
 
 
 Route::get('Admin/x-wireless', ['uses' => 'AdminController@smsWirelessPlatform', 'as' => 'sms wireless platform']);
@@ -245,6 +248,8 @@ Route::get('closedusersbycountry', ['uses' => 'AdminController@allClosedUsersByC
 
 Route::get('newusersbycountry', ['uses' => 'AdminController@newUsersByCountry', 'as' => 'new users by country']);
 Route::get('newmerchantsbycountry', ['uses' => 'AdminController@newMerchantsByCountry', 'as' => 'new merchants by country']);
+
+Route::get('archivedusersbycountry', ['uses' => 'AdminController@archivedUsersByCountry', 'as' => 'archived users by country']);
 
 
 Route::get('usermoredetail/{id}', ['uses' => 'AdminController@userMoreDetail', 'as' => 'user more detail']);
@@ -492,6 +497,11 @@ Route::prefix('Admin/')->group(function () {
 
 	Route::get('sendmessage', ['uses' => 'AdminController@sendUserMessage', 'as' => 'send message']);
 	Route::post('sendusermessage', ['uses' => 'AdminController@sendNewUserMessage', 'as' => 'send user message']);
+
+
+	// Move Multiple Users
+	Route::post('moveselectedusers', ['uses' => 'AdminController@ajaxmoveSelectedUser', 'as' => 'move selected users']);
+
 	
 });
 
@@ -623,6 +633,8 @@ Route::post('paychargeback', ['uses' => 'MonerisController@paymentChargeBack', '
 
 
 Route::post('moveUser', ['uses' => 'AdminController@ajaxmoveUser', 'as' => 'AjaxmoveUser']);
+
+
 Route::post('checkverification', ['uses' => 'AdminController@ajaxCheckVerification', 'as' => 'Ajaxcheckverification']);
 Route::post('paybankwithdrawal', ['uses' => 'AdminController@ajaxpayBankWithdrawal', 'as' => 'Ajaxpaybankwithdrawal']);
 Route::post('paycardwithdrawal', ['uses' => 'AdminController@ajaxpayCardWithdrawal', 'as' => 'Ajaxpaycardwithdrawal']);

@@ -2675,6 +2675,70 @@ class AdminController extends Controller
     }
 
 
+    public function archivedUsersList(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+
+                $query = [
+                    'user_id' => session('user_id'),
+                    'name' => session('firstname').' '.session('lastname'),
+                    'activity' => 'Access to all archived users page today: '.date('d-M-Y h:i:a'),
+                ];
+
+                $this->createSupportActivity($query);
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allMyArchivedUserList($req->get('country'), $req->get('user'));
+
+
+            return view('admin.allarchivedlist')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
     public function allPlatformUsersByCountry(Request $req){
 
         if($req->session()->has('username') == true){
@@ -3245,6 +3309,71 @@ class AdminController extends Controller
 
 
             return view('admin.newmerchantsbycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
+
+    public function archivedUsersByCountry(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+
+                $query = [
+                    'user_id' => session('user_id'),
+                    'name' => session('firstname').' '.session('lastname'),
+                    'activity' => 'Access to all archived users page by country today: '.date('d-M-Y h:i:a'),
+                ];
+
+                $this->createSupportActivity($query);
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->archivedaccountUsersByCountry($req->get('user'));
+
+
+            return view('admin.archvedusersbycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
         }
         else{
             return redirect()->route('AdminLogin');
@@ -10130,7 +10259,8 @@ class AdminController extends Controller
                                 $this->to = $req->email;
                                 $this->subject = "Welcome to PaySprint";
 
-                                $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You can also withdraw funds from your wallet FREE of Costs. <br> Thank you for your interest in PaySprint. <br><br> Customer Success Team <br> info@paysprint.net";
+                                $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, Pay received Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at www.paysprint.net <br> b. Go to profile page and upload a copy of Goverment Issued Photo ID, a copy of Utility bill and business documents. <br> All other features would be enabled for you as soon as the Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.net";
+
 
                                 $this->message = '<p>'.$message.'</p>';
 
@@ -11160,7 +11290,7 @@ class AdminController extends Controller
 
             $subject = 'Account information approved';
             
-            $message = "We have completed the review of the Identification provided on your PaySprint Account. Your PaySprint account has been enabled and you will be able to Send Money, Pay Invoice and Request for withdrawal of funds from your PaySprint Wallet from  the Mobile and Web platforms. Thank you for your interest in PaySprint. compliance@paysprint.net";
+            $message = "Your PaySprint account has been fully-enabled. You now have access to all the features on PaySprint both on the Mobile and Web platforms. Thank you for your interest in PaySprint. Compliance@paysprint.net";
 
             $query = [
                     'user_id' => session('user_id'),
@@ -11350,11 +11480,24 @@ class AdminController extends Controller
         $data = $user->where('id', $req->id)->first();
 
 
-            $user->where('id', $req->id)->update(['approval' => 1, 'accountLevel' => 2, 'disableAccount' => 'off']);
 
-            $subject = 'Your account is currently under review';
+        if($data->country == "Nigeria"){
+
+                $user->where('id', $req->id)->update(['approval' => 1, 'accountLevel' => 2, 'disableAccount' => 'off']);
+
+
+                $subject = 'Your account is currently under review';
+
+                $message = "Thanks for opening a Paysprint account. Kindly complete the BVN verification at www.paysprint.net by following these steps: \na. Login to your accounts\nb. Go to Profile and select BVN Verification.\nc. Complete and submit.\nAll other features would be enabled for you immediately.\nThanks for choosing PaySprint.\nCompliance Team @ PaySprint";
+            }
+            else{
+
+                $user->where('id', $req->id)->update(['approval' => 1, 'accountLevel' => 2, 'bvn_verification' => 1, 'disableAccount' => 'off']);
+
+                $subject = 'Your PaySprint Account has been activated.';
             
-            $message = "Thanks for opening a Paysprint account. Your  account is still under review; however, its already activated for your use. The account activation enables you to: \na. Add money/funds to your wallet on PaySprint\nb. Receive money/funds from other PS users\nc. Create and Send Invoice (if you are a merchant)\nd. Pay Invoice from your wallet\ne. Pay Utility Bills at discounted price from your wallet\nHowever, you will not be able to Send money or Withdrawal funds from your wallet until the review process is completed. In order to fast-track the review process, kindly upload the following documents if you are yet to do so: \na. Government Issued Photo ID like Driver Licence etc.\nb. A copy of the utility bill or bank statement to confirm your residential address\nc. Complete the BVN verification under your profile on the web app (if applicable).\nThanks for choosing PaySprint\nCompliance Team @ PaySprint";
+                $message = "Your PaySprint Account has been activated. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, \nPay received Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded.\nKindly follow these steps to upload the required information:\na. login to PaySprint Account on Mobile App or Web app at www.paysprint.net\nb. Go to profile page and upload a copy of Goverment Issued Photo ID, a copy of Utility bill and business documents.\nAll other features would be enabled for you as soon as the Compliance Team verifies your information.\nThanks for choosing PaySprint\nCompliance Team @ PaySprint";
+            }
 
             $resData = ['res' => 'Account under review', 'message' => 'success', 'title' => 'Great'];
 
@@ -11387,7 +11530,6 @@ class AdminController extends Controller
                 $this->sendMessage($message, $recipients);
             }
 
-            // $this->sendEmail($this->to, "Refund Request");
 
             $query = [
                     'user_id' => session('user_id'),
@@ -11396,6 +11538,79 @@ class AdminController extends Controller
                 ];
 
                 $this->createSupportActivity($query);
+
+
+            return $this->returnJSON($resData, 200);
+
+    }
+
+
+    public function ajaxmoveSelectedUser(Request $req, User $user){
+
+
+
+        $data = $user->where('id', $req->id)->first();
+
+
+
+            if($data->country == "Nigeria"){
+
+                $user->where('id', $req->id)->update(['approval' => 1, 'accountLevel' => 2, 'disableAccount' => 'off']);
+
+
+                $subject = 'Your account is currently under review';
+
+                $message = "Thanks for opening a Paysprint account. Kindly complete the BVN verification at www.paysprint.net by following these steps: \na. Login to your accounts\nb. Go to Profile and select BVN Verification.\nc. Complete and submit.\nAll other features would be enabled for you immediately.\nThanks for choosing PaySprint.\nCompliance Team @ PaySprint";
+            }
+            else{
+
+                $user->where('id', $req->id)->update(['approval' => 1, 'accountLevel' => 2, 'bvn_verification' => 1, 'disableAccount' => 'off']);
+
+                $subject = 'Your PaySprint Account has been activated.';
+            
+                $message = "Your PaySprint Account has been activated. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, \nPay received Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded.\nKindly follow these steps to upload the required information:\na. login to PaySprint Account on Mobile App or Web app at www.paysprint.net\nb. Go to profile page and upload a copy of Goverment Issued Photo ID, a copy of Utility bill and business documents.\nAll other features would be enabled for you as soon as the Compliance Team verifies your information.\nThanks for choosing PaySprint\nCompliance Team @ PaySprint";
+            }
+
+            
+
+            $resData = ['res' => 'Account under review', 'message' => 'success', 'title' => 'Great'];
+
+            // Send Mail to Receiver
+            $this->name = $data->name;
+            $this->to = $data->email;
+            
+            $this->subject = $subject;
+            $this->message = $message;
+
+            $usersPhone = User::where('email', $data->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+            if(isset($usersPhone)){
+
+                $recipients = $data->telephone;
+            }
+            else{
+                $recipients = "+".$data->code.$data->telephone;
+            }
+
+            $this->createNotification($data->ref_code, $message);
+
+            if($data->country == "Nigeria"){
+                
+                $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+
+                $this->sendSms($message, $correctPhone);
+            }
+            else{
+                $this->sendMessage($message, $recipients);
+            }
+
+
+            $query = [
+                    'user_id' => session('user_id'),
+                    'name' => session('firstname').' '.session('lastname'),
+                    'activity' => 'Moved '.strtoupper($data->name).' account to level 2 today: '.date('d-M-Y h:i:a'),
+                ];
+
 
 
             return $this->returnJSON($resData, 200);
@@ -11605,8 +11820,17 @@ class AdminController extends Controller
         $user = $user->where('id', $req->id)->first();
 
         $subject = 'Level 1 Account Approval';
+
+        if($user->country == "Nigeria"){
+
+                $message = "Thanks for opening a Paysprint account. Kindly complete the BVN verification at www.paysprint.net by following these steps: \na. Login to your accounts\nb. Go to Profile and select BVN Verification.\nc. Complete and submit.\nAll other features would be enabled for you immediately.\nThanks for choosing PaySprint.\nCompliance Team @ PaySprint";
+            }
+            else{
             
-        $message = "We have completed the review of your PaySprint Account. Your PaySprint account has been enabled and you will be able to access the services both on the Mobile and Web platforms. However, you will not be able to Send Money, Pay Invoice or Request for Withdrawal of Funds until you have uploaded your means of Identification like a Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Thank you for your patience. If you have any concern, please send a message to : compliance@paysprint.net";
+                $message = "Your PaySprint Account has been activated. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, \nPay received Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded.\nKindly follow these steps to upload the required information:\na. login to PaySprint Account on Mobile App or Web app at www.paysprint.net\nb. Go to profile page and upload a copy of Goverment Issued Photo ID, a copy of Utility bill and business documents.\nAll other features would be enabled for you as soon as the Compliance Team verifies your information.\nThanks for choosing PaySprint\nCompliance Team @ PaySprint";
+            }
+            
+        
 
         // Send Mail to Receiver
         $this->name = $user->name;
@@ -12342,7 +12566,7 @@ class AdminController extends Controller
 
     public function allUsersOverride(){
 
-        $data = User::where('accountLevel', 2)->where('approval', 0)->orderBy('created_at', 'DESC')->get();
+        $data = User::where('accountLevel', 2)->where('approval', 0)->where('archive', '!=', 1)->orderBy('created_at', 'DESC')->get();
 
         return $data;
     }
@@ -12362,6 +12586,21 @@ class AdminController extends Controller
         }
         else{
             $data = User::where('accountType', 'Individual')->where('country', $country)->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->orderBy('created_at', 'DESC')->get();
+        }
+
+        
+
+        return $data;
+    }
+
+
+    public function allMyArchivedUserList($country, $usertype){
+
+        if ($usertype == "consumers") {
+            $data = User::where('accountType', 'Individual')->where('country', $country)->where('archive', 1)->orderBy('created_at', 'DESC')->get();
+        }
+        else{
+            $data = User::where('accountType', 'Merchant')->where('country', $country)->where('archive', 1)->orderBy('created_at', 'DESC')->get();
         }
 
         
@@ -12418,7 +12657,7 @@ class AdminController extends Controller
 
 
     public function overrideUsersByCountry(){
-        $data = User::where('accountLevel', 2)->where('approval', 0)->where('bvn_verification', 0)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        $data = User::where('accountLevel', 2)->where('approval', 0)->where('bvn_verification', 0)->where('archive', '!=', 1)->orderBy('created_at', 'DESC')->groupBy('country')->get();
 
         return $data;
     }
@@ -12460,6 +12699,20 @@ class AdminController extends Controller
         }
         else{
             $data = User::where('accountType', 'Merchant')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+        }
+
+
+        return $data;
+    }
+
+
+    public function archivedaccountUsersByCountry($usertype){
+
+        if($usertype == "consumers"){
+            $data = User::where('accountType', 'Individual')->where('archive', 1)->groupBy('country')->get();
+        }
+        else{
+            $data = User::where('accountType', 'Merchant')->where('archive', 1)->groupBy('country')->get();
         }
 
 

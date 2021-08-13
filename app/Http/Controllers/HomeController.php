@@ -3357,6 +3357,9 @@ class HomeController extends Controller
 
                     $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You can also withdraw funds from your wallet FREE of Costs. <br> Thank you for your interest in PaySprint. <br><br> Customer Success Team <br> info@paysprint.net";
 
+                    $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at www.paysprint.net <br> b. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents <br> All other features would be enabled for you as soon as Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.net";
+
+
                     $this->message = '<p>'.$message.'</p>';
 
 

@@ -299,7 +299,7 @@
           <!-- small box -->
           <div class="small-box bg-blue">
             <div class="inner">
-              <h3>@if($override = \App\User::where('accountLevel', 2)->where('approval', 0)->count()) {{ $override }}  @else 0 @endif</h3>
+              <h3>@if($override = \App\User::where('accountLevel', 2)->where('approval', 0)->where('archive', '!=', 1)->count()) {{ $override }}  @else 0 @endif</h3>
 
               <p>Override Level 1</p>
 
@@ -392,6 +392,39 @@
           </div>
         </div>
 
+                  <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-red">
+            <div class="inner">
+              <h3>@if($archivedUsers = \App\User::where('accountType', 'Individual')->where('archive', 1)->count()) {{ $archivedUsers }}  @else 0 @endif</h3>
+
+              <p>Archived Consumers</p>
+
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('archived users by country', 'user=consumers') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+
+
+          <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-black">
+            <div class="inner">
+              <h3>@if($archivedMerchant = \App\User::where('accountType', 'Merchant')->where('archive', 1)->count()) {{ $archivedMerchant }}  @else 0 @endif</h3>
+
+              <p>Archived Merchants</p>
+
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('archived users by country', 'user=merchants') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+
         
         <!-- ./col -->
 
@@ -470,7 +503,7 @@
           <!-- small box -->
           <div class="small-box bg-blue">
             <div class="inner">
-              <h3>@if($override = \App\User::where('accountLevel', 2)->where('approval', 0)->count()) {{ $override }}  @else 0 @endif</h3>
+              <h3>@if($override = \App\User::where('accountLevel', 2)->where('approval', 0)->where('archive', '!=', 1)->count()) {{ $override }}  @else 0 @endif</h3>
 
               <p>Override Level 1</p>
 
@@ -487,6 +520,22 @@
 
 
         @elseif (session('role') == "Access to Level 1 only")
+
+
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-green">
+            <div class="inner">
+              <h3>{{ count($withdraws['bank']) }}</h3>
+
+              <p>Bank Withd. Request</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-stats-bars"></i>
+            </div>
+            <a href="{{ route('bank request withdrawal') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
 
         <div class="col-lg-3 col-xs-6">
           <!-- small box -->
@@ -510,7 +559,7 @@
           <!-- small box -->
           <div class="small-box bg-blue">
             <div class="inner">
-              <h3>@if($override = \App\User::where('accountLevel', 2)->where('approval', 0)->count()) {{ $override }}  @else 0 @endif</h3>
+              <h3>@if($override = \App\User::where('accountLevel', 2)->where('approval', 0)->where('archive', '!=', 1)->count()) {{ $override }}  @else 0 @endif</h3>
 
               <p>Override Level 1</p>
 
@@ -570,6 +619,8 @@
             <a href="{{ route('new merchants by country', 'user=new') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
+
+
           <div class="col-lg-3 col-xs-6">
           <!-- small box -->
           <div class="small-box bg-blue">

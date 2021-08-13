@@ -23,6 +23,7 @@ use App\SpecialInformation as SpecialInformation;
 use App\Traits\ExpressPayment;
 use App\Traits\AccountNotify;
 use App\Traits\Xwireless;
+use App\Traits\PaymentGateway;
 
 class CheckSetupController extends Controller
 {
@@ -32,7 +33,7 @@ class CheckSetupController extends Controller
     public $subject;
     public $message;
 
-    use ExpressPayment, AccountNotify, Xwireless;
+    use ExpressPayment, AccountNotify, Xwireless, PaymentGateway;
     // Check user quick wallet setup
 
     public function updateQuickSetup(){
@@ -136,6 +137,52 @@ class CheckSetupController extends Controller
 
         return $data;
 
+    }
+
+
+
+    // Move account to archive
+
+    public function userAccountArchive(){
+        $getUsers = User::all();
+        $sum = 0;
+
+        foreach ($getUsers as $allusers) {
+            
+            $getNIN = $this->accountChecker($allusers->id, 'nin_front');
+            $getDriverLicence = $this->accountChecker($allusers->id, 'drivers_license_front');
+            $getPassport = $this->accountChecker($allusers->id, 'international_passport_front');
+            $BVN = $this->accountChecker($allusers->id, 'bvn_verification');
+
+
+            
+            $sum = $getNIN + $getDriverLicence + $getPassport + $BVN;
+
+            if($sum == 4){
+                User::where('id', $allusers->id)->update(['archive' => 1]);
+            }   
+
+        }
+    }
+
+    
+    public function accountChecker($id, $fieldName){
+
+        if($fieldName != 'bvn_verification'){
+            $result = User::where('id', $id)->where($fieldName, NULL)->first();
+        }
+        else{
+            $result = User::where('id', $id)->where($fieldName, 0)->first();
+        }
+        
+
+        if(isset($result)){
+            $data = 1;
+        }
+        else{
+            $data = 0;
+        }
+        return $data;
     }
 
 
@@ -662,14 +709,18 @@ class CheckSetupController extends Controller
 
     public function updateExbcAccount(){
         // Create Statement And Credit EXBC account holder
-        $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
+        // $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
+        $exbcMerchant = User::where('email', 'adenugaadebambo41@gmail.com')->first();
 
         if(isset($exbcMerchant)){
 
-            $transaction_id = "wallet-".date('dmY').time();
 
-            $activity = "Added ".$exbcMerchant->currencyCode.''.number_format(20, 2)." to your Wallet to load EXBC Prepaid Card";
-            $credit = 20;
+            // $transaction_id = "wallet-".date('dmY').time();
+            $transaction_id = "687562435";
+
+            // $activity = "Added ".$exbcMerchant->currencyCode.''.number_format(20, 2)." to your Wallet to load EXBC Prepaid Card";
+            $activity = "Added ".$exbcMerchant->currencyCode.''.number_format(100, 2)." to Wallet including a fee charge of ".$exbcMerchant->currencyCode.''.number_format(1.65, 2)." was deducted from your Debit Card";
+            $credit = 100;
             $debit = 0;
             $reference_code = $transaction_id;
             $balance = 0;
@@ -679,9 +730,9 @@ class CheckSetupController extends Controller
             $regards = $exbcMerchant->ref_code;
             $statement_route = "wallet";
 
-            $merchantwalletBal = $exbcMerchant->wallet_balance + 20;
+            $merchantwalletBal = $exbcMerchant->wallet_balance + 100;
 
-                User::where('email', 'prepaidcard@exbc.ca')->update([
+                User::where('email', 'adenugaadebambo41@gmail.com')->update([
                     'wallet_balance' => $merchantwalletBal
                 ]);
 
@@ -690,14 +741,49 @@ class CheckSetupController extends Controller
             // Senders statement
             $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
 
-            $sendMerchantMsg = "Hi ".$exbcMerchant->name.", ".$exbcMerchant->currencyCode." 20.00 was added to your wallet to load EXBC Prepaid Card. Your new wallet balance is ".$exbcMerchant->currencyCode.' '.number_format($merchantwalletBal, 2).". Thanks.";
+            $this->getfeeTransaction($reference_code, $exbcMerchant->ref_code, 101.65, 1.65, 100);
+
+            // $sendMerchantMsg = "Hi ".$exbcMerchant->name.", ".$exbcMerchant->currencyCode." 20.00 was added to your wallet to load EXBC Prepaid Card. Your new wallet balance is ".$exbcMerchant->currencyCode.' '.number_format($merchantwalletBal, 2).". Thanks.";
+
+            $sendMerchantMsg = 'You have added '.$exbcMerchant->currencyCode.' '.number_format(100, 2).' (Gross Amount of '.$exbcMerchant->currencyCode.' '.number_format(101.65, 2).' less transaction fee '.$exbcMerchant->currencyCode.' '.number_format(1.65, 2).') to your wallet with PaySprint. You now have '.$exbcMerchant->currencyCode.' '.number_format($merchantwalletBal, 2).' balance in your account';
 
             $this->createNotification($exbcMerchant->ref_code, $sendMerchantMsg);
+
+            $getGateway = AllCountries::where('name', $exbcMerchant->country)->first();
+
+            $gateway = ucfirst($getGateway->gateway);
+
+
+            $message = 'You have successfully added '.$exbcMerchant->currencyCode.' '.number_format(100, 2).' to your wallet';
+
+            $this->keepRecord($reference_code, $message, "Success", $gateway, $exbcMerchant->country);
+
+            $userPhone = User::where('email', $exbcMerchant->email)->where('telephone', 'LIKE', '%+%')->first();
+                                                    
+            if(isset($userPhone)){
+
+                $sendPhone = $exbcMerchant->telephone;
+            }
+            else{
+                $sendPhone = "+".$exbcMerchant->code.$exbcMerchant->telephone;
+            }
+
+            if($exbcMerchant->country == "Nigeria"){
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                $this->sendSms($sendMerchantMsg, $correctPhone);
+            }
+            else{
+                $this->sendMessage($sendMerchantMsg, $sendPhone);
+
+            }
+
 
             // Log::info($sendMerchantMsg);
 
             $this->slack($sendMerchantMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
+            echo $sendMerchantMsg;
 
         }
         else{

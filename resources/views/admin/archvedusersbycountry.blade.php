@@ -4,6 +4,7 @@
 
 
 <?php use \App\Http\Controllers\User; ?>
+<?php use \App\Http\Controllers\UserClosed; ?>
 <?php use \App\Http\Controllers\OrganizationPay; ?>
 <?php use \App\Http\Controllers\ClientInfo; ?>
 
@@ -12,11 +13,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         All Override Users By Country
+         All Archived {{ strtoupper(Request::get('user')) }} By Country
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">All Override Users By Country</li>
+        <li class="active">All {{ strtoupper(Request::get('user')) }} By Country</li>
       </ol>
     </section>
 
@@ -63,15 +64,23 @@
                             
                             <td>{{ $data->country }}</td>
 
-                            @if($allusersdata = \App\User::where('country', $data->country)->where('accountLevel', 2)->where('approval', 0)->where('archive', '!=', 1)->count())
+                            @if (Request::get('user') == "consumers")
+
+                                @if($allusersdata = \App\User::where('accountType', 'Individual')->where('archive', 1)->where('country', $data->country)->count())
+                                    <td>{{ $allusersdata }}</td>
+                                @endif
+                                
+                            @else
+                                @if($allusersdata = \App\User::where('accountType', 'Merchant')->where('archive', 1)->where('country', $data->country)->count())
                                 <td>{{ $allusersdata }}</td>
+                                @endif
                             @endif
 
                             
 
                             <td>
 
-                              <a href="{{ route('overrideusers', 'country='.$data->country) }}" type="button" class="btn btn-primary">View details</a>
+                              <a href="{{ route('archiveduserslist', 'country='.$data->country.'&user='.Request::get('user')) }}" type="button" class="btn btn-primary">View details</a>
 
                               
                             </td>

@@ -3787,6 +3787,99 @@ function checkDetail(val){
 }
 
 
+function getFormData(form){
+  $('#btnSelector').text('Please wait...');
+    var unindexed_array = form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function(n, i){
+       indexed_array[n['name']] = n['value'];
+    });
+    return indexed_array;
+}
+
+function moveSelected(){
+  var formData = new FormData();
+  var checkedData = document.querySelector('.checkerInfo');
+      swal({
+      title: "Are you sure?",
+      text: "This users will be moved to the next level",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+
+          var selectedItem = $("input[name^=checkState]:checked"); 
+
+          var responseMessage = "";
+          
+          if(selectedItem.length > 0){
+
+
+            for (let i = 0; i < selectedItem.length; i++) {
+              const element = selectedItem[i].defaultValue;
+
+              if(element != undefined){
+
+                    formData.append("id", element);
+
+                    var route = "{{ route('move selected users') }}";
+
+                    Pace.restart();
+                    Pace.track(function(){
+                        setHeaders();
+                        jQuery.ajax({
+                        url: route,
+                        method: 'post',
+                        data: formData,
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'JSON',
+                        beforeSend: function(){
+                            $('#btnSelector').text('Please wait...');
+                        },
+                        success: function(result){
+
+                            $('#btnSelector').text('Move all selected');
+
+                            if(result.message == "success"){
+                                    swal("Success", result.message, "success");
+                                    // setTimeout(function(){ location.reload(); }, 2000);
+                                }
+                                else{
+                                    swal("Oops", result.message, "error");
+
+                                }
+
+                        },
+                        error: function(err) {
+                            $('#btnSelector').text('Withdraw Money');
+                            swal("Oops", err.responseJSON.message, "error");
+
+
+                        } 
+
+                    });
+                    });
+              }
+              
+            }
+
+            setTimeout(function(){ location.reload(); }, 15000);
+          }
+
+
+      } 
+      else {
+        swal('','Cancelled', 'info');
+      }
+    });
+}
+
+
  function cannotSend(){
      swal('International Transfer Coming Soon!', 'We detected this is an international transaction. We\'ll notify you when it is available', 'info');
  }

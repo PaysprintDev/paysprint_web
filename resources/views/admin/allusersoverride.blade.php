@@ -72,12 +72,19 @@
                   <th>Platform</th>
                   <th>Date Joined</th>
                   <th>Status</th>
+                  <th>
+                    <button class="btn btn-danger btn-block" onclick="moveSelected()" id="btnSelector">Move all selected</button>
+                  </th>
                   <th>Action</th>
                 </tr>
                 </thead>
-                <tbody>
 
-                  @if($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', 2)->where('approval', 0)->orderBy('nin_front', 'DESC')->get())
+                <form action="#" method="post" id="submitSelect" enctype="multipart/form-data">
+                    @csrf
+                <tbody>
+                  
+
+                  @if($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', 2)->where('approval', 0)->where('archive', '!=', 1)->orderBy('nin_front', 'DESC')->get())
 
 
                     @if (count($allusersdata) > 0)
@@ -165,6 +172,12 @@
                             <td style="color: red; font-weight: bold;" align="center">Not Approved</td>
                                 
                             @endif
+
+                            <td style="color: red; font-weight: bold;" align="center">
+
+                                <input type="checkbox" name="checkState" class="checkerInfo" value="{{ $datainfo->id }}">
+
+                            </td>
                             
                             <td align="center">
 
@@ -213,7 +226,7 @@
 
                     @else
                     <tr>
-                        <td colspan="10" align="center">No record available</td>
+                        <td colspan="11" align="center">No record available</td>
                     </tr>
                     @endif
 
@@ -298,6 +311,9 @@
 
 
                 </tbody>
+
+                  </form>
+
               </table>
             </div>
             <!-- /.box-body -->

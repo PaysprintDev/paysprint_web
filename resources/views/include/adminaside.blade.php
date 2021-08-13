@@ -92,8 +92,9 @@
           </ul>
         </li>
 
-        @if(session('role') == "Super" || session('role') == "Access to Level 1 and 2 only")
+        @if(session('role') == "Super" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Access to Level 1 only")
 
+        @if(session('role') == "Super" || session('role') == "Access to Level 1 and 2 only")
 
         <li class="treeview">
           <a href="#">
@@ -135,6 +136,11 @@
           </a>
           
         </li>
+
+        @endif
+
+        @if(session('role') == "Super" || session('role') == "Access to Level 1 only")
+
         <li>
           <a href="{{ route('business report') }}">
             <i class="fa fa-book"></i>
@@ -151,7 +157,10 @@
           
         </li>
 
+        @endif
 
+
+        @if(session('role') == "Super" || session('role') == "Access to Level 1 and 2 only")
         <li>
           <a href="{{ route('all countries') }}">
             <i class="fa fa-book"></i>
@@ -415,6 +424,8 @@
             <span>Money Transfer Trans...</span>
           </a>
         </li> --}}
+
+        @endif
 
 
 
