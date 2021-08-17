@@ -3370,6 +3370,10 @@ class AdminController extends Controller
             // Get all xpaytransactions where state = 1;
 
             $getxPay = $this->getxpayTrans();
+
+            
+            
+
             $allusers = $this->archivedaccountUsersByCountry($req->get('user'));
 
 
@@ -12416,7 +12420,12 @@ class AdminController extends Controller
 
     public function userActivity(){
 
-        $data = Notifications::orderBy('created_at', 'DESC')->take(2000)->get();
+        if(session('role') == "Customer Marketing"){
+            $data = Notifications::where('country', 'Canada')->orWhere('country', 'United States')->orderBy('created_at', 'DESC')->take(2000)->get();
+        }
+        else{
+            $data = Notifications::orderBy('created_at', 'DESC')->take(2000)->get();
+        }
 
         return $data;
     }
@@ -12680,12 +12689,24 @@ class AdminController extends Controller
 
     public function newaccountUsersByCountry($usertype){
 
-        if($usertype == "new"){
-            $data = User::where('accountType', 'Individual')->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+        if (session('role') == 'Customer Marketing'){
+            if($usertype == "new"){
+                $data = User::where('accountType', 'Individual')->where('country', 'Canada')->orWhere('country', 'United States')->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+            }
+            else{
+                $data = User::where('accountType', 'Individual')->where('country', 'Canada')->orWhere('country', 'United States')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+            }
         }
         else{
-            $data = User::where('accountType', 'Individual')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+            if($usertype == "new"){
+                $data = User::where('accountType', 'Individual')->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+            }
+            else{
+                $data = User::where('accountType', 'Individual')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+            }
         }
+
+        
 
 
         return $data;
@@ -12694,12 +12715,25 @@ class AdminController extends Controller
 
     public function newaccountMerchantsByCountry($usertype){
 
-        if($usertype == "new"){
-            $data = User::where('accountType', 'Merchant')->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+        if (session('role') == 'Customer Marketing'){
+
+            if($usertype == "new"){
+                $data = User::where('accountType', 'Merchant')->where('country', 'Canada')->orWhere('country', 'United States')->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+            }
+            else{
+                $data = User::where('accountType', 'Merchant')->where('country', 'Canada')->orWhere('country', 'United States')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+            }
         }
         else{
-            $data = User::where('accountType', 'Merchant')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+            if($usertype == "new"){
+                $data = User::where('accountType', 'Merchant')->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+            }
+            else{
+                $data = User::where('accountType', 'Merchant')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+            }
         }
+
+        
 
 
         return $data;
@@ -12708,12 +12742,26 @@ class AdminController extends Controller
 
     public function archivedaccountUsersByCountry($usertype){
 
-        if($usertype == "consumers"){
-            $data = User::where('accountType', 'Individual')->where('archive', 1)->groupBy('country')->get();
+        if (session('role') == 'Customer Marketing'){
+
+            if($usertype == "consumers"){
+                $data = User::where('accountType', 'Individual')->where('archive', 1)->where('country', 'Canada')->orWhere('country', 'United States')->groupBy('country')->get();
+            }
+            else{
+                $data = User::where('accountType', 'Merchant')->where('archive', 1)->where('country', 'Canada')->orWhere('country', 'United States')->groupBy('country')->get();
+            }
+
         }
         else{
-            $data = User::where('accountType', 'Merchant')->where('archive', 1)->groupBy('country')->get();
+            if($usertype == "consumers"){
+                $data = User::where('accountType', 'Individual')->where('archive', 1)->groupBy('country')->get();
+            }
+            else{
+                $data = User::where('accountType', 'Merchant')->where('archive', 1)->groupBy('country')->get();
+            }
         }
+
+        
 
 
         return $data;

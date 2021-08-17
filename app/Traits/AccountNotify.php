@@ -72,7 +72,7 @@ trait AccountNotify{
 
                         // $this->sendMessage($sms, $recPhone);
 
-                        $this->myEmailSender($thisuser->email, "New Login");
+                        // $this->myEmailSender($thisuser->email, "New Login");
 
                 }
                 

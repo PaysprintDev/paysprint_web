@@ -18,6 +18,9 @@ use App\PSCharge as PSCharge;
 
 use App\ListOfBanks as ListOfBanks;
 
+use App\TransactionCost as TransactionCost;
+
+
 use App\Mail\sendEmail;
 
 use Twilio\Rest\Client;
@@ -212,7 +215,7 @@ trait ExpressPayment{
         else{
 
             $responseCode = 00;
-            $responseMessage = "Unable to continue with your transaction amount.";
+            $responseMessage = "Your account is low for this transaction. Please add money";
             $status = 400;
 
             $data = [
@@ -231,10 +234,17 @@ trait ExpressPayment{
     }
 
 
+
+
     public function checkAccount($data, $bearerToken){
         $thisuser = User::where('api_token', $bearerToken)->first();
 
-        $walletBalance = $thisuser->wallet_balance;
+
+        $minBal = $this->minimumWithBal($thisuser->country);
+
+        $wallBal = $thisuser->wallet_balance - $minBal;
+
+        $walletBalance = $wallBal;
 
         $transaction = [];
 
@@ -350,6 +360,31 @@ trait ExpressPayment{
 
         curl_close($curl);
         return json_decode($response);
+    }
+
+
+    public function minimumWithBal($country){
+
+        try{
+            // Get Minimum Withdrawal
+            $minimumBalance = TransactionCost::where('method', 'Minimum Balance')->where('country', $country)->first();
+
+            if(isset($minimumBalance) == true){
+                $data = $minimumBalance->fixed;
+            }
+            else{
+                $data = 0;
+            }
+            
+
+            return $data;
+            
+        }
+        catch (\Throwable $th) {
+            // Log::error('Error: '.$th->getMessage());
+
+            $this->slack('Error: '.$th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+        }
     }
 
 }

@@ -71,6 +71,8 @@
                   <th>Account Type</th>
                   <th>Identification</th>
                   <th>Platform</th>
+                  <th>Status</th>
+                  <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -155,6 +157,56 @@
                             </td>
 
                             <td>{{ $datainfo->platform }}</td>
+
+                            @if ($datainfo->approval == 2 && $datainfo->accountLevel > 0)
+
+                            <td style="color: green; font-weight: bold;" align="center">Approved</td>
+
+                            @elseif ($datainfo->approval == 1 && $datainfo->accountLevel > 0)
+
+                            <td style="color: darkorange; font-weight: bold;" align="center">Awaiting Approval</td>
+                                
+                            @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)
+                            
+                            <td style="color: navy; font-weight: bold;" align="center">Override Level 1</td>
+
+                            @else
+                            <td style="color: red; font-weight: bold;" align="center">Not Approved</td>
+                                
+                            @endif
+
+                            <td align="center">
+
+                              <a href="{{ route('user more detail', $datainfo->id) }}"><i class="far fa-eye text-primary" style="font-size: 20px;" title="More details"></i></strong></a> 
+
+                                @if($datainfo->approval == 1 && $datainfo->accountLevel > 0) 
+
+                                <a href="javascript:void(0)" onclick="disapproveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Disapprove Account"></i> <img class="spindis{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>
+                                
+                                @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)
+
+                                <a href="javascript:void(0)" onclick="disapproveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Disapprove Account"></i> <img class="spindis{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> <br>
+
+
+                                <a href="javascript:void(0)" onclick="moveaccount('{{ $datainfo->id }}')" class="text-success"><i class="fas fa-exchange-alt text-success" style="font-size: 20px;" title="Move to Level 2"></i> <img class="spinmove{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>
+
+                                @else 
+                                
+                                
+                                <a href="javascript:void(0)" onclick="approveaccount('{{ $datainfo->id }}')" class="text-primary"><i class="fas fa-check-square text-success" style="font-size: 20px;" title="Approve Account"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
+                                
+                                
+                                @endif
+
+
+
+                                <a href="{{ route('send message', 'id='.$datainfo->id) }}" class="text-info"><i class="far fa-envelope text-success" style="font-size: 20px;" title="Send Mail"></i></a> <br>
+
+
+                                <a href="javascript:void(0)" onclick="closeAccount('{{ $datainfo->id }}')" class="text-danger"><i class="far fa-trash-alt text-danger" style="font-size: 20px;" title="Close Account"></i> <img class="spinclose{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
+
+                              
+                            </td>
 
 
 

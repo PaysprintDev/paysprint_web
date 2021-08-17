@@ -392,7 +392,7 @@
           </div>
         </div>
 
-                  <div class="col-lg-3 col-xs-6">
+        <div class="col-lg-3 col-xs-6">
           <!-- small box -->
           <div class="small-box bg-red">
             <div class="inner">
@@ -634,6 +634,40 @@
               <i class="ion ion-person-add"></i>
             </div>
             <a href="{{ route('new merchants by country', 'user=existing') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+
+
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-red">
+            <div class="inner">
+              <h3>@if($archivedUsers = \App\User::where('accountType', 'Individual')->where('archive', 1)->count()) {{ $archivedUsers }}  @else 0 @endif</h3>
+
+              <p>Archived Consumers</p>
+
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('archived users by country', 'user=consumers') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+
+
+          <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-black">
+            <div class="inner">
+              <h3>@if($archivedMerchant = \App\User::where('accountType', 'Merchant')->where('archive', 1)->count()) {{ $archivedMerchant }}  @else 0 @endif</h3>
+
+              <p>Archived Merchants</p>
+
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('archived users by country', 'user=merchants') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
 

@@ -76,6 +76,7 @@
                 </tr>
                 </thead>
                 <tbody>
+                  
 
                   @if($allusersdata = \App\User::where('country', Request::get('country'))->get())
 

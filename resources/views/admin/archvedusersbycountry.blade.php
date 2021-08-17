@@ -64,7 +64,10 @@
                             
                             <td>{{ $data->country }}</td>
 
+
                             @if (Request::get('user') == "consumers")
+
+                                
 
                                 @if($allusersdata = \App\User::where('accountType', 'Individual')->where('archive', 1)->where('country', $data->country)->count())
                                     <td>{{ $allusersdata }}</td>
