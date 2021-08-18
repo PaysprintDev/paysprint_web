@@ -2623,7 +2623,7 @@ else{
                         // Insufficient amount for withdrawal
 
                         $data = [];
-                        $message = "Insufficient amount to withdraw";
+                        $message = "Your minimum wallet balance is ".$req->currencyCode.' '.number_format($minBal, 2).". Please add money to continue transaction";
                         $status = 400;
 
                         // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
@@ -2642,11 +2642,11 @@ else{
 
                         $this->slack('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                     }
-                    elseif($thisuser->wallet_balance <= $minBal){
+                    elseif(($thisuser->wallet_balance - $minBal) <= $minBal){
                         // Cannot withdraw minimum balance
 
                         $data = [];
-                        $message = "Your wallet balance must be more than ".$req->currencyCode.' '.number_format($minBal, 2)." before you can make withdrawal.";
+                        $message = "Your minimum wallet balance is ".$req->currencyCode.' '.number_format($minBal, 2).". Please add money to continue transaction";
                         $status = 400;
 
                         // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
@@ -3489,7 +3489,7 @@ else{
                         // Insufficient amount for withdrawal
 
                         $data = [];
-                        $message = "Insufficient amount to withdraw";
+                        $message = "Your minimum wallet balance is ".$req->currencyCode.' '.number_format($minBal, 2).". Please add money to continue transaction";
                         $status = 400;
 
                         // Log::info('Oops!, '.$thisuser->name.' has '.$message);
@@ -3507,11 +3507,11 @@ else{
 
                         $this->slack('Oops!, '.$thisuser->name.' has '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                     }
-                    elseif($thisuser->wallet_balance <= $minBal){
+                    elseif(($thisuser->wallet_balance - $minBal) <= $minBal){
                         // Cannot withdraw minimum balance
 
                         $data = [];
-                        $message = "Your wallet balance must be more than ".$req->currencyCode.' '.number_format($minBal, 2)." before you can make withdrawal.";
+                        $message = "Your minimum wallet balance is ".$req->currencyCode.' '.number_format($minBal, 2).". Please add money to continue transaction";
                         $status = 400;
 
                         // Log::info('Oops!, '.$thisuser->name.' has '.$message);
@@ -4561,7 +4561,7 @@ else{
                         // Cannot withdraw minimum balance
 
                         $data = [];
-                        $message = "Your wallet balance must be more than ".$thisuser->currencyCode.' '.number_format($minBal, 2)." before you can use the utility bill.";
+                        $message = "Your minimum wallet balance is ".$thisuser->currencyCode.' '.number_format($minBal, 2).". Please add money to continue transaction";
                         $status = 400;
 
                         // Log::info('Oops!, '.$thisuser->name.' has '.$message);

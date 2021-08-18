@@ -624,17 +624,24 @@ class MoneyTransferController extends Controller
 
         if(isset($sender)){
 
+            $minBal = $this->minimumWithdrawal($sender->country);
+
         // Get Receivers Details
         $receiver = User::where('ref_code', $req->accountNumber)->first();
 
 
         if(isset($receiver)){
 
-            if($req->amount > $sender->wallet_balance){
+            if($req->amount > ($sender->wallet_balance - $minBal)){
 
                 $status = 404;
 
-                $resData = ['data' => [], 'message' => 'Insufficient wallet balance', 'status' => $status];
+                $resData = ['data' => [], 'message' => "Your minimum wallet balance is ".$sender->currencyCode.' '.number_format($minBal, 2).". Please add money to continue transaction", 'status' => $status];
+            }
+            elseif(($sender->wallet_balance - $minBal) <= $minBal){
+                $status = 404;
+
+                $resData = ['data' => [], 'message' => "Your minimum wallet balance is ".$sender->currencyCode.' '.number_format($minBal, 2).". Please add money to continue transaction", 'status' => $status];
             }
             else{
                 
@@ -846,17 +853,24 @@ class MoneyTransferController extends Controller
 
         if(isset($sender)){
 
+            $minBal = $this->minimumWithdrawal($sender->country);
+
         // Get Receivers Details
         $receiver = User::where('ref_code', $req->accountNumber)->first();
 
 
         if(isset($receiver)){
 
-            if($req->amount > $sender->wallet_balance){
+            if($req->amount > ($sender->wallet_balance - $minBal)){
 
                 $status = 404;
 
-                $resData = ['data' => [], 'message' => 'Insufficient wallet balance', 'status' => $status];
+                $resData = ['data' => [], 'message' => "Your minimum wallet balance is ".$sender->currencyCode.' '.number_format($minBal, 2).". Please add money to continue transaction", 'status' => $status];
+            }
+            elseif(($sender->wallet_balance - $minBal) <= $minBal){
+                $status = 404;
+
+                $resData = ['data' => [], 'message' => "Your minimum wallet balance is ".$sender->currencyCode.' '.number_format($minBal, 2).". Please add money to continue transaction", 'status' => $status];
             }
             else{
                 

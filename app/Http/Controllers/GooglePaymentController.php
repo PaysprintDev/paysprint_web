@@ -556,6 +556,9 @@ class GooglePaymentController extends Controller
                 if(isset($thisuser)){
 
 
+                    $minBal = $this->minimumWithdrawal($thisuser->country);
+
+
                     // Check Anon user existence
                     $checkExist = User::where('email', $req->email)->first();
 
@@ -584,6 +587,18 @@ class GooglePaymentController extends Controller
 
                         if($thisuser->approval < 2 && $thisuser->accountLevel <= 2){
                             $response = 'You cannot send money at the moment because your account is still on review.';
+                            $data = [];
+                            $message = $response;
+                            $status = 403;
+                            
+
+                            $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                            return $this->returnJSON($resData, $status);
+                        }
+                        elseif(($thisuser->wallet_balance - $minBal) <= $minBal){
+
+                            $response = "Your minimum wallet balance is ".$thisuser->currencyCode.' '.number_format($minBal, 2).". Please add money to continue transaction";
                             $data = [];
                             $message = $response;
                             $status = 403;
@@ -652,8 +667,8 @@ class GooglePaymentController extends Controller
                             }
 
 
-                            if($req->amount > $thisuser->wallet_balance){
-                                $response = 'Insufficient wallet balance';
+                            if($req->amount > ($thisuser->wallet_balance - $minBal)){
+                                $response = "Your minimum wallet balance is ".$thisuser->currencyCode.' '.number_format($minBal, 2).". Please add money to continue transaction";
                                 $data = [];
                                 $message = $response;
                                 $status = 400;
@@ -855,6 +870,7 @@ class GooglePaymentController extends Controller
 
                 if(isset($thisuser)){
 
+                    $minBal = $this->minimumWithdrawal($thisuser->country);
 
                     // Check Anon user existence
                     $checkExist = User::where('email', $req->email)->first();
@@ -877,6 +893,18 @@ class GooglePaymentController extends Controller
                         $status = 403;
 
                         $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'link' => '#'];
+                        return $this->returnJSON($resData, $status);
+                    }
+                    elseif(($thisuser->wallet_balance - $minBal) <= $minBal){
+
+                        $response = "Your minimum wallet balance is ".$thisuser->currencyCode.' '.number_format($minBal, 2).". Please add money to continue transaction";
+                        $data = [];
+                        $message = $response;
+                        $status = 403;
+                        
+
+                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
                         return $this->returnJSON($resData, $status);
                     }
                     else{
@@ -951,8 +979,8 @@ class GooglePaymentController extends Controller
                             }
 
 
-                            if($req->amount > $thisuser->wallet_balance){
-                                $response = 'Insufficient wallet balance';
+                            if($req->amount > ($thisuser->wallet_balance - $minBal)){
+                                $response = "Your minimum wallet balance is ".$thisuser->currencyCode.' '.number_format($minBal, 2).". Please add money to continue transaction";
                                 $data = [];
                                 $message = $response;
                                 $status = 400;
