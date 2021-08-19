@@ -31,6 +31,27 @@ trait PaymentGateway{
 
     }
 
+    public function actOnRefundMoney($reference_code, $reason){
+
+        try {
+            $getStatement = Statement::where('reference_code', $reference_code)->first();
+            
+            Statement::where('reference_code', $reference_code)->update(["refund_state" => "1", "comment" => $reason]);
+
+            $respMessage = "Successful";
+
+
+        } catch (\Throwable $th) {
+
+            $respMessage = $th->getMessage();
+
+            
+        }
+
+        return $respMessage;
+        
+    }
+
     public function processRefundMoney($reference_code, $reason){
 
         try {
@@ -48,7 +69,7 @@ trait PaymentGateway{
 
             // Delete Bank WithDrawal
             BankWithdrawal::where('transaction_id', $reference_code)->delete();
-            Statement::where('reference_code', $reference_code)->update(["refund_state" => "1"]);
+            Statement::where('reference_code', $reference_code)->update(["refund_state" => "1", "actedOn" => "1"]);
             // Update Statement
             $query = [
                 "user_id" => $getUser->email,
@@ -67,6 +88,8 @@ trait PaymentGateway{
                 "country" => $getUser->country,
                 "statement_route" => "wallet",
                 "refund_state" => "1",
+                "actedOn" => "1",
+                'report_status' => 'Money received',
                 "flag_state" => 0
             ];
 

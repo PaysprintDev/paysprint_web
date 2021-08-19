@@ -50,6 +50,7 @@
 
             @if (session('role') == "Customer Marketing")
                 <li title="Platform"><a href="{{ route('platform activity') }}"><i class="fa fa-circle-o text-red"></i> Platform</a></li>
+                <li title="Activity Report"><a href="{{ route('activity report', 'country=Canada') }}"><i class="fa fa-circle-o text-red"></i> Activity Report</a></li>
             @endif
 
             @if (session('role') == "Super")
@@ -106,6 +107,7 @@
           </a>
           <ul class="treeview-menu">
             <li title="Platform"><a href="{{ route('platform activity') }}"><i class="fa fa-circle-o text-red"></i> Platform</a></li>
+            <li title="Activity Report"><a href="{{ route('activity report', 'country=Canada') }}"><i class="fa fa-circle-o text-red"></i> Activity Report</a></li>
             <li title="Support"><a href="{{ route('support activity') }}"><i class="fa fa-circle-o text-red"></i> Support</a></li>
 
 
@@ -340,7 +342,9 @@
             <li title="Deleted Cards"><a href="{{ route('all deleted cards') }}"><i class="fa fa-circle-o text-red"></i> Deleted Cards</a></li>
           </ul>
         </li>
+        @endif
 
+        @if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only")
 
         <li class="treeview">
           <a href="#">
@@ -359,8 +363,15 @@
 
             <li title="Wallet Purchase"><a href="{{ route('users wallet purchase') }}"><i class="fa fa-circle-o text-red"></i> Wallet Purchase</a></li>
 
+            <li title="Purchase Statement"><a href="{{ route('user purchase statement', 'country=Nigeria&start='.date('Y-m-01').'&end='.date('Y-m-d')) }}"><i class="fa fa-circle-o text-red"></i> Purchase Statement</a></li>
+
           </ul>
         </li>
+
+        @endif
+
+
+        @if(session('role') == "Super" || session('role') == "Access to Level 1 and 2 only")
 
         <li class="treeview">
           <a href="#">

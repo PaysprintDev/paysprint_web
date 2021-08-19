@@ -174,6 +174,7 @@ class AdminController extends Controller
 
             $withdraws = [
                 'bank' => $this->requestFromBankWithdrawal(),
+                'purchase' => $this->purchaseRefundSentback(),
                 'credit' => $this->requestFromCardWithdrawal(),
                 'prepaid' => $this->pendingRequestFromPrepaidWithdrawal(),
                 'specialInfo' => $this->getthisInfo(session('country')),
@@ -3648,6 +3649,74 @@ class AdminController extends Controller
     }
 
 
+
+    public function userWalletPurchaseStatement(Request $req){
+
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'walletBalance' => $this->userWalletBalance(),
+                'walletcategoryBalance' => $this->userWalletBalancebyCategory(),
+                'allusers' => $this->userWalletBalance(),
+                'result' => $this->getUserWalletPurchaseStatementRecordByCountryDate($req->get('country'), $req->get('start'), $req->get('end')),
+            );
+
+
+
+
+            
+            return view('admin.wallet.userpurchasestatement')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
     public function userWalletPurchase(Request $req){
 
         if($req->session()->has('username') == true){
@@ -3947,6 +4016,67 @@ class AdminController extends Controller
 
             
             return view('admin.pages.activity')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
+    public function activityReport(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'activity' => $this->userActivityByCountry($req->get('country'))
+            );
+
+
+            
+            return view('admin.pages.activityreport')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
         }
         else{
             return redirect()->route('AdminLogin');
@@ -4842,6 +4972,67 @@ class AdminController extends Controller
 
 
             return view('admin.wallet.bankrequestwithdrawalbycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
+    public function purchaseRefundReturn(Request $req){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'processList' => $this->purchaseRefundSentback(),
+            );
+
+
+
+            return view('admin.wallet.processrefundreturn')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
         }
         else{
             return redirect()->route('AdminLogin');
@@ -6958,6 +7149,15 @@ class AdminController extends Controller
     public function requestFromBankWithdrawal(){
 
         $data = BankWithdrawal::where('status', 'PENDING')->orderBy('created_at', 'DESC')->groupBy('country')->get();
+
+        return $data;
+        
+    }
+
+
+    public function purchaseRefundSentback(){
+
+        $data = Statement::where('reference_code', 'LIKE', '%822%')->where('report_status', 'Withdraw from wallet')->where('refund_state', 1)->where('actedOn', 0)->orderBy('created_at', 'DESC')->get();
 
         return $data;
         
@@ -10597,6 +10797,14 @@ class AdminController extends Controller
 
     }
 
+    public function getUserWalletPurchaseStatementRecordByCountryDate($country, $from, $nextDay){
+
+        $data = Statement::where('reference_code', 'LIKE', '%822%')->where('report_status', 'Withdraw from wallet')->where('country', $country)->whereBetween('trans_date', [$from, $nextDay])->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+
+    }
+
 
 
     public function getStatementRecordByDate($service, $from, $nextDay){
@@ -12196,6 +12404,27 @@ class AdminController extends Controller
     }
 
 
+    public function sendStaffRefundNotification(Request $req, $reference_code){
+        $data = $this->actOnRefundMoney($reference_code, $req->message);
+
+        if($data == "Successful"){
+
+            $resData = $data;
+            $resp = "success";
+
+
+        }
+        else{
+
+            $resData = $data;
+            $resp = "error";
+        }
+
+        return redirect()->route('Admin')->with($resp, $resData);
+
+    }
+
+
     public function returnRefundMoney(Request $req, $reference_code){
 
         $data = $this->processRefundMoney($reference_code, $req->message);
@@ -12425,6 +12654,19 @@ class AdminController extends Controller
         }
         else{
             $data = Notifications::orderBy('created_at', 'DESC')->take(2000)->get();
+        }
+
+        return $data;
+    }
+
+
+    public function userActivityByCountry($country){
+
+        if(session('role') == "Customer Marketing"){
+            $data = Notifications::where('country', 'Canada')->orWhere('country', 'United States')->orderBy('created_at', 'DESC')->get();
+        }
+        else{
+            $data = Notifications::orderBy('created_at', 'DESC')->get();
         }
 
         return $data;

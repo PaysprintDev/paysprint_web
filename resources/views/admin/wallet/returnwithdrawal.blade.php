@@ -26,8 +26,10 @@
         
         <div class="box-body">
 
-          
-            {{-- Provide Form --}}
+
+          @if ($data['returnRequest']->refund_state == 0)
+
+          {{-- Provide Form --}}
             <form role="form" action="{{ route('return refund money', $data['returnRequest']->reference_code) }}" method="POST">
                 @csrf
                 <div class="box-body">
@@ -62,9 +64,55 @@
                 <!-- /.box-body -->
   
                 <div class="box-footer">
+                  <button type="submit" class="btn btn-primary btn-block">Activate Refund</button>
+                </div>
+              </form>
+              
+          @else
+
+          {{-- Provide Form --}}
+            <form role="form" action="{{ route('act on return refund money', $data['returnRequest']->reference_code) }}" method="POST">
+                @csrf
+                <div class="box-body">
+                    
+                    <div class="form-group has-success">
+                        <label class="control-label" for="send_to"> Customer Email</label>
+                        <input name="send_to" id="send_to" class="form-control" value="{{ $data['returnRequest']->user_id }}" readonly>
+                    </div>
+
+
+                    @if($thisuser = \App\User::where('email', $data['returnRequest']->user_id)->first()) 
+
+                        <div class="form-group has-success">
+                            <label class="control-label" for="receiver_name"> Customer Name</label>
+                            <input name="receiver_name" id="receiver_name" class="form-control" value="{{ $thisuser->name }}" readonly>
+                        </div>
+
+
+
+                        <div class="form-group has-success">
+                            <label class="control-label" for="message"> Comment made on refund</label>
+                            
+                            <textarea name="message" cols="30" rows="10" class="form-control" readonly>{!! $data['returnRequest']->comment !!}</textarea>
+
+                        </div>
+
+                    @endif
+
+
+
+                </div>
+                <!-- /.box-body -->
+  
+                <div class="box-footer">
                   <button type="submit" class="btn btn-primary btn-block">Refund Money</button>
                 </div>
               </form>
+              
+          @endif
+
+          
+            
 
 
         </div>
