@@ -7157,7 +7157,7 @@ class AdminController extends Controller
 
     public function purchaseRefundSentback(){
 
-        $data = Statement::where('reference_code', 'LIKE', '%822%')->where('report_status', 'Withdraw from wallet')->where('refund_state', 1)->where('actedOn', 0)->orderBy('created_at', 'DESC')->get();
+        $data = Statement::where('refund_state', 1)->where('actedOn', 0)->orderBy('created_at', 'DESC')->get();
 
         return $data;
         
