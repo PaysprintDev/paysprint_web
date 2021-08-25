@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\MonerisActivity as MonerisActivity;
 use App\Statement as Statement;
+use App\User as User;
 
 
 trait FlagPayment{
@@ -26,6 +27,10 @@ trait FlagPayment{
 
         MonerisActivity::where('transaction_id', $transaction_id)->update(['flag_state' => $flag]);
         Statement::where('reference_code', $transaction_id)->update(['flag_state' => $flag]);
+
+        $getUser = Statement::where('reference_code', $transaction_id)->first();
+
+        User::where('email', $getUser->user_id)->update(['flagged' => 1]);
 
     }
 

@@ -816,7 +816,7 @@ class CheckSetupController extends Controller
     }
 
 
-    //TODO: DO Fee Setup
+    
     public function setupFeeStructure(){
         // $countries = AllCountries::where('approval', 1)->where('gateway', 'PayPal')->where('name', '!=', 'United States')->get();
         $countries = AllCountries::where('gateway', 'Stripe')->get();
@@ -977,9 +977,9 @@ class CheckSetupController extends Controller
 
 
     // Update EPS Vendor
-    public function updateEPSVendor(){
-        $data = $this->getVendors();
-    }
+    // public function updateEPSVendor(){
+    //     $data = $this->getVendors();
+    // }
 
 
     // Transaction history for the month

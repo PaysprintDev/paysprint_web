@@ -159,6 +159,8 @@ input[type="radio"] {
 
                                         <input type="hidden" name="currencyCode" class="form-control" id="curCurrency" value="{{ $data['currencyCode'][0]->currencies[0]->code }}" readonly>
                                         <input type="hidden" name="name" class="form-control" id="nameInput" value="{{ Auth::user()->name }}" readonly>
+                                        <input type="hidden" name="phone" class="form-control" id="phoneInput" value="{{ Auth::user()->telephone }}" readonly>
+                                        <input type="hidden" name="api_token" class="form-control" id="apiTokenInput" value="{{ Auth::user()->api_token }}" readonly>
                                          <input type="hidden" name="email" class="form-control" id="emailInput" value="{{ Auth::user()->email }}" readonly>
 
                                         <input type="hidden" name="paymentToken" class="form-control" id="paymentToken" value="" readonly>
@@ -226,6 +228,9 @@ input[type="radio"] {
                                 
                                     @if ($data['paymentgateway']->gateway == "PayStack")
                                     
+                                    {{-- <div class="card-footer"> <a type="button" id="epsButton" href="" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </a></div> --}}
+
+
                                         <div class="card-footer"> <button type="button" onclick="payWithPaystack('{{ Auth::user()->email }}')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </button></div>
 
                                     @elseif($data['paymentgateway']->gateway == "Stripe")
@@ -441,6 +446,26 @@ function runCommission(){
                     currencyConvert(totalCharge);
 
                 }
+
+
+                var netVal = $('#amounttosend').val();
+                var feeVal = $('#commissiondeduct').val();
+                var conversionVal = $('#conversionamount').val();
+
+                var amountVal = (+netVal + +feeVal).toFixed(2);
+
+                var currencyCode = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
+
+                var email = $('#emailInput').val();
+                var name = $('#nameInput').val();
+                var phone = $('#phoneInput').val();
+                var api_token = $('#apiTokenInput').val();
+                var transactionId = 'ps_'+Math.floor((Math.random() * 1000000000) + 1);
+                var stringUrl = "amount="+btoa(amountVal)+"&email="+btoa(email)+"&name="+btoa(name)+"&transactionId="+btoa(transactionId)+"&phone="+btoa(phone)+"&api_token="+btoa(api_token)+"&commissiondeduct="+btoa(feeVal)+"&amounttosend="+btoa(netVal)+"&currencyCode="+btoa(currencyCode)+"&conversionamount="+btoa(conversionVal);
+
+
+                // ADD URL
+                $('#epsButton').attr('href', "/mywallet/processmoney?"+stringUrl);
 
 
             }

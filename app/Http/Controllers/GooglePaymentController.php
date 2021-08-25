@@ -596,7 +596,7 @@ class GooglePaymentController extends Controller
 
                             return $this->returnJSON($resData, $status);
                         }
-                        elseif(($thisuser->wallet_balance - $minBal) <= $minBal){
+                        elseif(($thisuser->wallet_balance - $minBal) <= $req->amount){
 
                             $response = "Your minimum wallet balance is ".$thisuser->currencyCode.' '.number_format($minBal, 2).". Please add money to continue transaction";
                             $data = [];
@@ -895,7 +895,7 @@ class GooglePaymentController extends Controller
                         $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'link' => '#'];
                         return $this->returnJSON($resData, $status);
                     }
-                    elseif(($thisuser->wallet_balance - $minBal) <= $minBal){
+                    elseif(($thisuser->wallet_balance - $minBal) <= $req->amount){
 
                         $response = "Your minimum wallet balance is ".$thisuser->currencyCode.' '.number_format($minBal, 2).". Please add money to continue transaction";
                         $data = [];

@@ -73,7 +73,14 @@ input[type="radio"] {
                         <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
                             <!-- Credit card form tabs -->
                             <ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
-                                <li class="nav-item"> <a data-toggle="pill" href="{{ route('my account') }}" class="nav-link active "> <i class="fas fa-home"></i> Go Back </a> </li>
+
+                                @if (Auth::user()->accountType == "Individual")
+                                    <li class="nav-item"> <a data-toggle="pill" href="{{ route('my account') }}" class="nav-link active "> <i class="fas fa-home"></i> Go Back </a> </li>
+                                @else
+                                    <li class="nav-item"> <a data-toggle="pill" href="{{ route('Admin') }}" class="nav-link active "> <i class="fas fa-home"></i> Go Back </a> </li>
+                                @endif
+
+                                
                             </ul>
                         </div> <!-- End -->
                         <!-- Credit card form content -->
@@ -96,11 +103,11 @@ input[type="radio"] {
 
                                                     @if($logoAsset = \App\EPSVendor::where('billerCode', $vendor->billerCode)->first())
 
-                                                        <img src="{{ $logoAsset->logo }}" class="card-img-top" alt="{{ $vendor->productfields[0]->productId }}" style="width: 100%; height: 200px;">
+                                                        <img src="{{ $logoAsset->logo }}" class="card-img-top" alt="{{ $vendor->productfields[0]->productId }}" style="width: 100%; height: 200px;object-fit: contain;">
 
                                                         @else
 
-                                                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" class="card-img-top" alt="{{ $vendor->productfields[0]->productId }}" style="width: 100%; height: 200px;">
+                                                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" class="card-img-top" alt="{{ $vendor->productfields[0]->productId }}" style="width: 100%; height: 200px;object-fit: contain;">
 
                                                     @endif
 

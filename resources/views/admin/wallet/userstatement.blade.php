@@ -39,6 +39,7 @@
                   <div class="col-md-12">
                     <select data-show-subtext="true" data-live-search="true" name="user_id" class="form-control selectpicker" id="statement_service">
                         @if (count($data['allusers']) > 0)
+                        <option value="all" selected>Check All Wallet History</option>
                             @foreach ($data['allusers'] as $users)
                                 <option value="{{ $users->email }}" data-subtext="- Account Number: {{ $users->ref_code }}">{{ $users->name }}</option>
                             @endforeach

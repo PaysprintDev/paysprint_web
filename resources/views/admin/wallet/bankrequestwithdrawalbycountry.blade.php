@@ -73,7 +73,11 @@
                                 $currencyCode = $user->currencyCode;
                             @endphp
 
-                            <td>{{ $user->name }}</td>
+                              @if ($user->accountType == "Merchant")
+                                  <td>{{ $user->businessname }}</td>
+                              @else
+                                  <td>{{ $user->name }}</td>
+                              @endif
 
                             @endif
 
@@ -109,7 +113,7 @@
                             </td>
 
                             <td>
-                              <a class="btn btn-warning" href="{{ route('return withdrawal request', $data->transaction_id) }}">Return Withd. Request</a>
+                              <a class="btn btn-warning" href="{{ route('return bank withdrawal request', $data->transaction_id) }}">Return Withd. Request</a>
                             </td>
 
                         </tr>

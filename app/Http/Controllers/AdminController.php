@@ -4568,7 +4568,8 @@ class AdminController extends Controller
             $allusers = $this->allUsers();
 
             $data = array(
-                'activity' => $this->specialInformationData()
+                'activity' => $this->specialInformationData(),
+                'allthecountries' => $this->getAllCountries()
             );
 
 
@@ -4629,7 +4630,8 @@ class AdminController extends Controller
             $allusers = $this->allUsers();
 
             $data = array(
-                'user' => $this->getthisuserinfo($id)
+                'user' => $this->getthisuserinfo($id),
+                'allthecountries' => $this->getAllCountries()
             );
 
 
@@ -5093,6 +5095,67 @@ class AdminController extends Controller
 
 
             return view('admin.wallet.returnwithdrawal')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        }
+        else{
+            return redirect()->route('AdminLogin');
+        }
+
+    }
+
+
+
+    public function returnBankWithdrawal(Request $req, $id){
+
+        if($req->session()->has('username') == true){
+            // dd(Session::all());
+
+            if(session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing"){
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+            ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+            else{
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'returnRequest' => $this->returnFromBankWithdrawal($id),
+            );
+
+
+            return view('admin.wallet.returnbankwithdrawal')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
         }
         else{
             return redirect()->route('AdminLogin');
@@ -10269,7 +10332,7 @@ class AdminController extends Controller
             // COnfirm Password
             if(Hash::check($req->password, $superCheck[0]['password'])){
                 // Set session
-                $req->session()->put(['user_id' => $superCheck[0]['user_id'], 'firstname' => $superCheck[0]['firstname'], 'lastname' => $superCheck[0]['lastname'], 'username' => $superCheck[0]['username'], 'role' => $superCheck[0]['role'], 'email' => $superCheck[0]['email'], 'myID' => $superCheck[0]['id'], 'loginCount' => 1]);
+                $req->session()->put(['user_id' => $superCheck[0]['user_id'], 'firstname' => $superCheck[0]['firstname'], 'lastname' => $superCheck[0]['lastname'], 'username' => $superCheck[0]['username'], 'role' => $superCheck[0]['role'], 'email' => $superCheck[0]['email'], 'country' => $superCheck[0]['country'], 'myID' => $superCheck[0]['id'], 'loginCount' => 1]);
 
                 $query = [
                     'user_id' => $superCheck[0]['user_id'],
@@ -10332,11 +10395,17 @@ class AdminController extends Controller
         else{
 
                 // Check User Account if Email
-                $userExist = user::where('email', $req->email)->first();
+                $userExist = User::where('email', $req->email)->first();
+
+                $userClosedExist = UserClosed::where('email', $req->email)->first();
 
                 if(isset($userExist)){
                     // User already exist
                     $resData = ['res' => 'The email address already exist as an Individual account holder', 'message' => 'error'];
+                }
+                elseif(isset($userClosedExist)){
+                   // User already exist
+                    $resData = ['res' => 'Your account has already been created but currently not active on PaySprint. Contact the Admin for more information', 'message' => 'error']; 
                 }
                 else{
 
@@ -10782,7 +10851,14 @@ class AdminController extends Controller
 
     public function getUserWalletStatementRecordByDate($user_id, $from, $nextDay){
 
-        $data = Statement::where('user_id', $user_id)->whereBetween('trans_date', [$from, $nextDay])->orderBy('created_at', 'DESC')->get();
+        if($user_id == "all"){
+            $data = Statement::whereBetween('trans_date', [$from, $nextDay])->orderBy('created_at', 'DESC')->get();
+        }
+        else{
+            $data = Statement::where('user_id', $user_id)->whereBetween('trans_date', [$from, $nextDay])->orderBy('created_at', 'DESC')->get();
+        }
+
+        
 
         return $data;
 
@@ -12932,12 +13008,26 @@ class AdminController extends Controller
     public function newaccountUsersByCountry($usertype){
 
         if (session('role') == 'Customer Marketing'){
-            if($usertype == "new"){
+
+            if(session('country') == 'Canada'){
+                if($usertype == "new"){
                 $data = User::where('accountType', 'Individual')->where('country', 'Canada')->orWhere('country', 'United States')->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+                }
+                else{
+                    $data = User::where('accountType', 'Individual')->where('country', 'Canada')->orWhere('country', 'United States')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+                }
             }
             else{
-                $data = User::where('accountType', 'Individual')->where('country', 'Canada')->orWhere('country', 'United States')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+
+                if($usertype == "new"){
+                $data = User::where('accountType', 'Individual')->where('country', session('country'))->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+                }
+                else{
+                    $data = User::where('accountType', 'Individual')->where('country', session('country'))->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+                }
             }
+
+            
         }
         else{
             if($usertype == "new"){
@@ -12959,12 +13049,24 @@ class AdminController extends Controller
 
         if (session('role') == 'Customer Marketing'){
 
-            if($usertype == "new"){
-                $data = User::where('accountType', 'Merchant')->where('country', 'Canada')->orWhere('country', 'United States')->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+            if(session('country') == 'Canada'){
+                if($usertype == "new"){
+                    $data = User::where('accountType', 'Merchant')->where('country', 'Canada')->orWhere('country', 'United States')->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+                }
+                else{
+                    $data = User::where('accountType', 'Merchant')->where('country', 'Canada')->orWhere('country', 'United States')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+                }
             }
             else{
-                $data = User::where('accountType', 'Merchant')->where('country', 'Canada')->orWhere('country', 'United States')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+                if($usertype == "new"){
+                    $data = User::where('accountType', 'Merchant')->where('country', session('country'))->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+                }
+                else{
+                    $data = User::where('accountType', 'Merchant')->where('country', session('country'))->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+                }
             }
+
+            
         }
         else{
             if($usertype == "new"){
@@ -12986,12 +13088,24 @@ class AdminController extends Controller
 
         if (session('role') == 'Customer Marketing'){
 
-            if($usertype == "consumers"){
-                $data = User::where('accountType', 'Individual')->where('archive', 1)->where('country', 'Canada')->orWhere('country', 'United States')->groupBy('country')->get();
+            if(session('country') == "Canada"){
+                if($usertype == "consumers"){
+                    $data = User::where('accountType', 'Individual')->where('archive', 1)->where('country', 'Canada')->orWhere('country', 'United States')->groupBy('country')->get();
+                }
+                else{
+                    $data = User::where('accountType', 'Merchant')->where('archive', 1)->where('country', 'Canada')->orWhere('country', 'United States')->groupBy('country')->get();
+                }
             }
             else{
-                $data = User::where('accountType', 'Merchant')->where('archive', 1)->where('country', 'Canada')->orWhere('country', 'United States')->groupBy('country')->get();
+                if($usertype == "consumers"){
+                    $data = User::where('accountType', 'Individual')->where('archive', 1)->where('country', session('country'))->groupBy('country')->get();
+                }
+                else{
+                    $data = User::where('accountType', 'Merchant')->where('archive', 1)->where('country', session('country'))->groupBy('country')->get();
+                }
             }
+
+            
 
         }
         else{

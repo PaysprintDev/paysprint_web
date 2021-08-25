@@ -62,6 +62,23 @@
                     </div>
 
 
+                    <div class="form-group has-success">
+                        <label class="control-label" for="inputSuccess"> Country</label>
+                        <select class="form-control" name="country" id="inputSuccess">
+                            <option value="">Select Country</option>
+                            @if (count($data['allthecountries']) > 0)
+                                @foreach ($data['allthecountries'] as $countries)
+                                  <option value="{{ $countries->name }}" {{ ($data['user']->country == $countries->name) ? "selected" : "" }}>{{ $countries->name }}</option>
+                                @endforeach
+                            @else
+                                <option value="">No available country</option>
+                            @endif
+                            
+                        </select>
+
+                    </div>
+
+
                 </div>
                 <!-- /.box-body -->
   

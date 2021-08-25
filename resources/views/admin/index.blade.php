@@ -536,6 +536,21 @@
 
         @elseif (session('role') == "Access to Level 1 only")
 
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-purple">
+            <div class="inner">
+              <h3>{{ count($allusers) }}</h3>
+
+              <p>All Users</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('all users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+
 
         <div class="col-lg-3 col-xs-6">
           <!-- small box -->
@@ -867,19 +882,9 @@
               <a style="font-size: 14px; font-weight: bold;" type="button" href="{{ route('invoice') }}" class="btn btn-danger btn-block mt-5 mb-3">Pay Invoice <i class="fas fa-credit-card"></i></a>
             </div>
 
-            @if ($getUserDetail->country == "Nigeria")
-                <div class="col-md-4 mt-5 mb-3 payutilityMoney">
-                  <a style="font-size: 14px; font-weight: bold; background: black; color: white;" type="button" href="{{ route('utility bills') }}" class="btn btn-info btn-block mt-5 mb-3">Pay Utility Bill <i class="fas fa-credit-card"></i></a>
-                </div>
-
-                @else
-
-                <div class="col-md-4 mt-5 mb-3 payutilityMoney">
-                  <a style="font-size: 14px; font-weight: bold; background: black; color: white;" type="button" href="javascript:void(0)" class="btn btn-info btn-block mt-5 mb-3" onclick="comingSoon()">Pay Utility Bill <i class="fas fa-credit-card"></i></a>
-                </div>
-
-            @endif
-
+              <div class="col-md-4 mt-5 mb-3 payutilityMoney">
+                <a style="font-size: 14px; font-weight: bold; background: black; color: white;" type="button" href="{{ route('utility bills') }}" class="btn btn-info btn-block mt-5 mb-3">Pay Utility Bill <i class="fas fa-credit-card"></i></a>
+              </div>
 
 
 

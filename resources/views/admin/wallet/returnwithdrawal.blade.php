@@ -9,12 +9,12 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Refund Withdrawal Request
-        <small>Refund Withdrawal Request to User</small>
+        Refund Purchase Request
+        <small>Refund Purchase Request to User</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Refund Withdrawal Request</li>
+        <li class="active">Refund Purchase Request</li>
       </ol>
     </section>
 
@@ -52,7 +52,7 @@
                         <div class="form-group has-success">
                             <label class="control-label" for="message"> Reason for Refund</label>
                             
-                            <textarea name="message" id="message" cols="30" rows="10" class="form-control">Your request to {{ $data['returnRequest']->activity }} will be returned due because;</textarea>
+                            <textarea name="message" id="message" cols="30" rows="10" class="form-control">Your request to {{ $data['returnRequest']->activity }} will be returned because;</textarea>
 
                         </div>
 
@@ -93,7 +93,7 @@
                         <div class="form-group has-success">
                             <label class="control-label" for="message"> Comment made on refund</label>
                             
-                            <textarea name="message" cols="30" rows="10" class="form-control" readonly>{!! $data['returnRequest']->comment !!}</textarea>
+                            <textarea name="message" cols="30" rows="10" class="form-control">{!! $data['returnRequest']->comment !!}</textarea>
 
                         </div>
 

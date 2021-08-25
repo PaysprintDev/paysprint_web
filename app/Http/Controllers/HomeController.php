@@ -27,6 +27,8 @@ use Maatwebsite\Excel\Facades\Excel;
 
 use App\User as User;
 
+use App\UserClosed as UserClosed;
+
 use App\AnonUsers as AnonUsers;
 
 use App\CreateEvent as CreateEvent;
@@ -926,6 +928,7 @@ class HomeController extends Controller
     public function addMoney(Request $req)
     {
 
+
         if($req->session()->has('email') == false){
             if(Auth::check() == true){
                 $this->page = 'Add Money To Wallet';
@@ -957,6 +960,67 @@ class HomeController extends Controller
         
 
         return view('main.addmoneytowallet')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function processMoney(Request $req)
+    {
+
+        if($req->session()->has('email') == false){
+            if(Auth::check() == true){
+                $this->page = 'Add Money To Wallet';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            }
+            else{
+                $this->page = 'Add Money To Wallet';
+                $this->name = '';
+            }
+
+        }
+        else{
+            $this->page = 'Add Money To Wallet';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+        $usernames = explode(" ", base64_decode($req->name));
+        $encAmount = base64_decode($req->amount);
+        $amount = round($encAmount, 2);
+        $email = base64_decode($req->email);
+        $name = base64_decode($req->name);
+        $api_token = base64_decode($req->api_token);
+        $transactionId = base64_decode($req->transactionId);
+
+        $commissiondeduct = base64_decode($req->commissiondeduct);
+        $conversionamount = base64_decode($req->conversionamount);
+        $amounttosend = base64_decode($req->amounttosend);
+        $currencyCode = base64_decode($req->currencyCode);
+
+        $phoneNumber = '234'.ltrim(base64_decode($req->phone), '0');
+
+        $data = array(
+            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'getCard' => $this->getUserCard(),
+            'getBank' => $this->getUserBank(),
+            'continent' => $this->timezone[0],
+            'paymentgateway' => $this->getPaymentGateway(Auth::user()->country),
+            'hash' => $this->generateHash($amount, $email, $usernames[0], $usernames[1], $transactionId, $phoneNumber, $api_token, $commissiondeduct, $amounttosend, $currencyCode, $conversionamount),
+            'amount' => $amount,
+            'email' => $email,
+            'name' => $name,
+            'transactionId' => $transactionId,
+            'phone' => $phoneNumber,
+            'api_token' => $api_token,
+            'firstname' => $usernames[0],
+            'lastname' => $usernames[1],
+            'api_token' => $api_token
+        );
+        
+
+
+
+        return view('main.processmoneytowallet')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -1237,18 +1301,21 @@ class HomeController extends Controller
             
             Auth::login($user);
         }
+
+        if(Auth::check() == true){
+            $data = array(
+                'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+                'getNotifications' => $this->getUserNotifications(Auth::user()->ref_code),
+                'getutilityproduct' => $this->getUtilityProduct($id),
+                'getCard' => $this->getUserCard(),
+                'getBank' => $this->getUserBank(),
+                'continent' => $this->timezone[0]
+            );
+        }
+        else{
+            return redirect()->route('login');
+        }
         
-
-
-        $data = array(
-            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
-            'getNotifications' => $this->getUserNotifications(Auth::user()->ref_code),
-            'getutilityproduct' => $this->getUtilityProduct($id),
-            'getCard' => $this->getUserCard(),
-            'getBank' => $this->getUserBank(),
-            'continent' => $this->timezone[0]
-        );
-
 
         return view('main.buyutility')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
@@ -3190,10 +3257,15 @@ class HomeController extends Controller
 
         // Check table if user already exist
         $checkUser = User::where('email', $req->email)->get();
+        $checkClosedUser = UserClosed::where('email', $req->email)->get();
 
         if(count($checkUser) > 0){
             $resData = ['res' => 'User with email: '.$req->email.' already exist', 'message' => 'error'];
-        }else{
+        }
+        elseif(count($checkClosedUser) > 0){
+            $resData = ['res' => 'Your account has already been created but currently not active on PaySprint. Contact the Admin for more information', 'message' => 'error'];
+        }
+        else{
             $name = $req->fname.' '.$req->lname;
 
             $ref_code = mt_rand(0000000, 9999999);

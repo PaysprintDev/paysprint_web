@@ -320,7 +320,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li title="To Wallet"><a href="{{ route('refund money request') }}"><i class="fa fa-circle-o text-red"></i> To Wallet</a></li>
+            <li title="Text-to-Transfer Refund"><a href="{{ route('refund money request') }}"><i class="fa fa-circle-o text-red"></i> Text-to-Transfer</a></li>
+            <li title="Wallet Purchase Refund"><a href="{{ route('purchase refund request') }}"><i class="fa fa-circle-o text-red"></i> Wallet Purchase</a></li>
             {{--  <li title="To Bank Account"><a href="#"><i class="fa fa-circle-o text-red"></i> To Bank Account</a></li>  --}}
 
           </ul>
@@ -637,19 +638,18 @@
                             </ul>
                     </div>
 
-                    @if ($getUserDetail->country == "Nigeria")
 
                         <div class="card utilityBills" style="width: 100%;">
                                 <div class="card-header" style="background-color: #ff8a04; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
-                                    Airtime/Bills Payment
+                                    Pay Utility Bills
                                 </div>
                                 <ul class="list-group list-group-flush">
 
                                 
-                                    <li class="list-group-item" title="Airtime/Bills Payment">
+                                    <li class="list-group-item" title="Pay Utility Bills">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <a href="{{ route('utility bills') }}" style="color: navy; font-weight: 700;">Airtime/Bills Payment</a>
+                                                <a href="{{ route('utility bills') }}" style="color: navy; font-weight: 700;">Utility Payment <small>(Nigeria)</small></a>
                                             </div>
                                         </div>
 
@@ -658,7 +658,6 @@
                                 </ul>
                         </div>
 
-                    @endif
 
 
                 <div class="card propertyManagement" style="width: 100%;">

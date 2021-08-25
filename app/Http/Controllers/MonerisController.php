@@ -630,7 +630,7 @@ else{
 
 
 
-                                        $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                        $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $req->bearerToken())->first();
 
 
                                     $data = $userInfo;
@@ -959,7 +959,7 @@ else{
                                         
 
 
-                                        $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                        $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $req->bearerToken())->first();
 
 
                                     $data = $userInfo;
@@ -1044,6 +1044,8 @@ else{
 
     // Add Money to Wallet
     public function addMoneyToWallet(Request $req){
+
+
         // Write for Test 
 
         if(isset($req->mode) && $req->mode == "test"){
@@ -2642,7 +2644,7 @@ else{
 
                         $this->slack('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                     }
-                    elseif(($thisuser->wallet_balance - $minBal) <= $minBal){
+                    elseif(($thisuser->wallet_balance - $minBal) <= $req->amount){
                         // Cannot withdraw minimum balance
 
                         $data = [];
@@ -3507,7 +3509,7 @@ else{
 
                         $this->slack('Oops!, '.$thisuser->name.' has '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                     }
-                    elseif(($thisuser->wallet_balance - $minBal) <= $minBal){
+                    elseif(($thisuser->wallet_balance - $minBal) <= $req->amount){
                         // Cannot withdraw minimum balance
 
                         $data = [];
@@ -4512,7 +4514,6 @@ else{
     public function payUtilityBills(Request $req){
 
         // Payment for UTILITY
-        
 
         $validator = Validator::make($req->all(), [
                      'transaction_pin' => 'required|string',
@@ -4557,7 +4558,7 @@ else{
                         $this->slack('Oops!, '.$thisuser->name.' has '.$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                     }
-                    elseif(($thisuser->wallet_balance - $minBal) <= $minBal){
+                    elseif(($thisuser->wallet_balance - $minBal) <= $req->totalcharge){
                         // Cannot withdraw minimum balance
 
                         $data = [];
@@ -4664,7 +4665,7 @@ else{
 
                                                     $this->sendEmail($this->email, "Fund remittance");
 
-                                                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $req->bearerToken())->first();
                                                     $status = 200;
 
                                                     $message = $sendMsg;
@@ -4807,7 +4808,7 @@ else{
                                                         $this->sendEmail($this->email, "Fund remittance");
 
 
-                                                        $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                                        $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $req->bearerToken())->first();
 
                                                         $data = $userInfo;
                                                         $status = 200;
@@ -5524,6 +5525,11 @@ public function receivemoneyProcess(Request $req){
 
             return $this->returnJSON($resData, $status);
 
+    }
+
+
+    public function expressCallback(Request $req){
+        dd($req->all());
     }
 
 

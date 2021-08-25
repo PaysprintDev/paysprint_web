@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Mail;
 
 use App\User as User;
 
+use App\SaveMoney as SaveMoney;
+
 use App\EPSVendor as EPSVendor;
 
 use App\PSCharge as PSCharge;
@@ -64,7 +66,7 @@ trait ExpressPayment{
                 ];
                 
 
-                EPSVendor::updateOrCreate(['billerCode' => $dataItem->billerCode], $query);
+                // EPSVendor::updateOrCreate(['billerCode' => $dataItem->billerCode], $query);
 
             }
 
@@ -104,24 +106,51 @@ trait ExpressPayment{
             $data['commission'] = $commission;
             $data['charge'] = $charge;
 
+            if(isset($ourcharge)){
+                if($commission != 0){
+                    $newPercent = $commission * ($ourcharge->percent / 100);
+                    $data['discountPercent'] = $newPercent;
+                    $data['walletDiscount'] = $amount * $newPercent;
 
-            if($commission != 0){
-                $newPercent = $commission * ($ourcharge->percent / 100);
-                $data['discountPercent'] = $newPercent;
-                $data['walletDiscount'] = $amount * $newPercent;
-
-                $data['walletCharge'] = $amount - $data['walletDiscount'];
+                    $data['walletCharge'] = $amount - $data['walletDiscount'];
 
 
+                }
+                else{
+                    $newPercent = $charge * ($ourcharge->percent / 100);
+                    $data['discountPercent'] = $newPercent;
+                    $data['walletDiscount'] = $newPercent;
+                    $data['walletCharge'] = $amount + $data['walletDiscount'];
+
+
+                }
             }
             else{
-                $newPercent = $charge * ($ourcharge->percent / 100);
-                $data['discountPercent'] = $newPercent;
-                $data['walletDiscount'] = $newPercent;
-                $data['walletCharge'] = $amount - $data['walletDiscount'];
 
+                $ourcharge = PSCharge::where('country', "Nigeria")->first();
+
+                if($commission != 0){
+                    $newPercent = $commission * ($ourcharge->percent / 100);
+                    $data['discountPercent'] = $newPercent;
+                    $data['walletDiscount'] = $amount * $newPercent;
+
+                    $data['walletCharge'] = $amount - $data['walletDiscount'];
+
+
+                }
+                else{
+                    $newPercent = $charge * ($ourcharge->percent / 100);
+                    $data['discountPercent'] = $newPercent;
+                    $data['walletDiscount'] = $newPercent;
+                    $data['walletCharge'] = $amount + $data['walletDiscount'];
+
+
+                }
 
             }
+
+
+            
 
 
 
@@ -167,6 +196,9 @@ trait ExpressPayment{
 
     // Process Transaction
     public function processTransaction($postRequest, $bearerToken){
+
+        // TODO:: Verify and Check international purchase abiltity
+
 
         $checks = $this->checkAccount($postRequest, $bearerToken);
 
@@ -215,7 +247,7 @@ trait ExpressPayment{
         else{
 
             $responseCode = 00;
-            $responseMessage = "Your account is low for this transaction. Please add money";
+            $responseMessage = "Your wallet balance is low for this transaction. Please add money";
             $status = 400;
 
             $data = [
@@ -237,6 +269,7 @@ trait ExpressPayment{
 
 
     public function checkAccount($data, $bearerToken){
+
         $thisuser = User::where('api_token', $bearerToken)->first();
 
 
@@ -249,12 +282,27 @@ trait ExpressPayment{
         $transaction = [];
 
 
-        $inputamount = $data['commissiondeduct'] + $data['amounttosend'];
+
+        if($thisuser->country == "Nigeria"){
+            $inputamount = $data['commissiondeduct'] + $data['amounttosend'];
+        }
+        else{
+            $myamount = $data['commissiondeduct'] + $data['amounttosend'];
+
+            // Convert currency to Dollar
+           $inputamount = $this->payBillCurrencyConvert("NGN", $thisuser->currencyCode, $myamount);
+
+        }
+
+
+        
 
 
         for ($i=0; $i < count($data['fieldName']); $i++) { 
 
-            if($walletBalance >= $inputamount){
+            if($thisuser->country == "Nigeria"){
+
+                if($walletBalance >= $inputamount){
 
                     if($data['fieldName'] != null){
 
@@ -294,6 +342,56 @@ trait ExpressPayment{
                 $response = false;
             }
 
+            }
+            else{
+
+        
+
+                    if($walletBalance >= $myamount){
+
+                        if($data['fieldName'] != null){
+
+                        if($data['fieldName'][$i] == "Amount" || $data['fieldName'][$i] == "amount"){
+
+
+                            if(round($inputamount, 2) >= $data['fieldValue'][$i]){
+                                $response = true;
+                            }
+                            else{
+                                $response = false;
+                            }
+
+                        }
+
+                        // For DSTV and GOTV
+
+                        if($data['billerCode'] == "DSTV2" || $data['billerCode'] == "GOTV2" || $data['billerCode'] == "startimes"){
+
+                            if($data['fieldName'][$i] == "Select Package (Amount)" || $data['fieldName'][$i] == "Select Package" || $data['fieldName'][$i] == "Product"){
+                                
+                                if(round($inputamount, 2) >= $data['fieldValue'][$i]){
+                                    $response = true;
+                                }
+                                else{
+                                    $response = false;
+                                }
+                            }
+
+                        }
+
+                    }
+                    else{
+                        $response = false;
+                    }
+                }
+                else{
+                    $response = false;
+                }
+
+            }
+
+            
+
                 
             
 
@@ -302,6 +400,80 @@ trait ExpressPayment{
 
 
         return $response;
+
+
+    }
+
+
+    // Generate Hash for Payment
+
+    public function generateHash($amount, $email, $firstname, $lastname, $transactionId, $phone, $api_token, $commissiondeduct, $amounttosend, $currencyCode, $conversionamount){
+
+        try {
+            SaveMoney::updateOrCreate(['merchantId' => $api_token],[
+            'amount' => $amount, 
+            'amounttosend' => $amounttosend,
+            'currencyCode' => $currencyCode, 
+            'conversionamount' => $conversionamount, 
+            'commissiondeduct' => $commissiondeduct, 
+            'merchantId' => $api_token, 
+            'transactionId' => $transactionId
+        ]);
+
+        $pb_key = env('EXPRESS_WEB_PAY_PUBLIC_KEY'); 
+
+        $seckey = env('EXPRESS_WEB_PAY_SECRET_KEY'); 
+
+        $country = "NG"; 
+
+        $currency = "NGN"; 
+
+        $callback_url = route('express callback'); 
+
+        $logo_url = "https://res.cloudinary.com/pilstech/image/upload/v1617797525/paysprint_asset/paysprint_with_name_black_and_yellow_png_do13ha.png"; 
+
+        $options = array( 
+          "amount" => $amount, 
+          "email" => $email, 
+          "firstName" => $firstname, 
+          "transactionId" => $transactionId, 
+          "lastName" => $lastname, 
+          "country" => $country, 
+          "currency" => $currency, 
+          "phoneNumber" => $phone,
+          "callbackUrl" =>$callback_url
+      );
+
+
+
+        // The keys in step 1 above are sorted by their ASCII value
+
+        ksort($options);
+
+
+        $hashedPayload = '';
+
+        foreach($options as $key => $value){
+
+            $hashedPayload .= $value;
+        }
+
+
+        $completeHash = $pb_key.$hashedPayload;
+
+
+
+
+
+        $hash = hash('sha256', $completeHash);
+
+
+
+        return $hash;
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+
 
 
     }
@@ -360,6 +532,70 @@ trait ExpressPayment{
 
         curl_close($curl);
         return json_decode($response);
+    }
+
+
+
+        public function payBillCurrencyConvert($billerCurrency, $myCurrency, $amount){
+
+        // EPS currency
+        $currency = 'USD'.$billerCurrency;
+
+        $amount = $amount;
+
+        // Foreign currency
+        $localCurrency = 'USD'.$myCurrency;
+
+        $access_key = '6173fa628b16d8ce1e0db5cfa25092ac';
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'http://api.currencylayer.com/live?access_key='.$access_key,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Cookie: __cfduid=d430682460804be329186d07b6e90ef2f1616160177'
+        ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        $result = json_decode($response);
+
+
+
+
+        if($result->success == true){
+
+            // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
+            $convertLocal = $amount / $result->quotes->$localCurrency;
+
+            // Converting your USD value to other currency ie CAD * Y 
+            $convRate = $result->quotes->$currency * $convertLocal;
+        
+
+            $message = 'success';
+
+        }
+        else{
+            $convRate = "Sorry we can not process your transaction this time, try again later!.";
+            $message = 'failed';
+        }
+
+        
+
+        $amountConvert = $convRate;
+
+        return $amountConvert;
+
     }
 
 

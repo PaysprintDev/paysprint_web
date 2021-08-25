@@ -30,7 +30,7 @@ Route::get('reportstatus', 'CheckSetupController@reportStatus');
 Route::get('updatefee', 'CheckSetupController@updateMonthlyFee');
 Route::get('refundbycountryupdate', 'CheckSetupController@refundbyCountry');
 Route::get('passwordreminder', 'CheckSetupController@passwordReminder');
-Route::get('epsvendorupdate', 'CheckSetupController@updateEPSVendor');
+// Route::get('epsvendorupdate', 'CheckSetupController@updateEPSVendor');
 Route::get('notification-table', 'CheckSetupController@notificationTable');
 Route::get('monthlytransaction', 'CheckSetupController@monthlyTransactionHistory');
 Route::get('exbccardrequest', 'CheckSetupController@checkExbcCardRequest');
@@ -109,6 +109,11 @@ Route::get('payment/receivemoney/{id}', ['uses' => 'HomeController@receiveMoney'
 Route::post('create-payment-intent', ['uses' => 'MonerisController@paymentIntent', 'as' => 'stripe payment intent']);
 
 
+// Express Payment Callback
+Route::prefix('expresspay')->group(function () {
+	Route::get('/resp', ['uses' => 'MonerisController@expressCallback', 'as' => 'express callback']);
+});
+
 
 // Wallet Page
 
@@ -120,6 +125,7 @@ Route::prefix('mywallet')->group(function () {
 	Route::get('editcard/{id}', ['uses' => 'HomeController@editCard', 'as' => 'Edit card']);
 	Route::get('editbank/{id}', ['uses' => 'HomeController@editBank', 'as' => 'Edit bank']);
 	Route::get('addmoney', ['uses' => 'HomeController@addMoney', 'as' => 'Add Money']);
+	Route::get('processmoney', ['uses' => 'HomeController@processMoney', 'as' => 'Process Money']);
 	Route::get('withdrawmoney', ['uses' => 'HomeController@withdrawMoney', 'as' => 'Withdraw Money']);
 	Route::get('addbank', ['uses' => 'HomeController@addBankDetail', 'as' => 'Add bank detail']);
 	Route::get('requestrefund', ['uses' => 'HomeController@requestForRefund', 'as' => 'request for refund']);
@@ -267,6 +273,7 @@ Route::prefix('Admin/wallet')->group(function () {
 	Route::get('purchaserequestreturn', ['uses' => 'AdminController@purchaseRefundReturn', 'as' => 'purchase refund request']);
 	Route::get('bankrequestwithdrawalbycountry', ['uses' => 'AdminController@bankRequestWithdrawalByCountry', 'as' => 'bank withdrawal by country']);
 	Route::get('returnwithdrawal/{id}', ['uses' => 'AdminController@returnWithdrawal', 'as' => 'return withdrawal request']);
+	Route::get('returnbankwithdrawal/{id}', ['uses' => 'AdminController@returnBankWithdrawal', 'as' => 'return bank withdrawal request']);
 	Route::get('cardrequestwithdrawal', ['uses' => 'AdminController@cardRequestWithdrawal', 'as' => 'card request withdrawal']);
 
 

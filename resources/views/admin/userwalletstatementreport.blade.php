@@ -39,6 +39,7 @@
                   <div class="col-md-12">
                     <select data-show-subtext="true" data-live-search="true" name="user_id" class="form-control selectpicker" id="statement_service">
                         @if (count($thisdata['allusers']) > 0)
+                          <option value="all" selected>Check All Wallet History</option>
                             @foreach ($thisdata['allusers'] as $users)
                             
                                 <option value="{{ $users->email }}" data-subtext="- Account Number: {{ $users->ref_code }}" {{ (Request::get('user_id') == $users->email) ? "selected" : "" }} >{{ $users->name }}</option>
@@ -79,7 +80,11 @@
                             
                                 
                             
-                        <td colspan="3" align="center"><strong style="font-size: 24px;">Wallet Statement for @if($usersInformation = \App\User::where('email', Request::get('user_id'))->first()) {{ $usersInformation->name }} @endif| From: {{ date('d-m-Y', strtotime(Request::get('statement_start'))) }} - To: {{ date('d-m-Y', strtotime(Request::get('statement_end'))) }} </strong></td>
+                        <td colspan="3" align="center"><strong style="font-size: 24px;">Wallet Statement for @if (Request::get('user_id') == "all")
+                            All Users
+                        @else
+                            @if($usersInformation = \App\User::where('email', Request::get('user_id'))->first()) {{ $usersInformation->name }} @endif
+                        @endif | From: {{ date('d-m-Y', strtotime(Request::get('statement_start'))) }} - To: {{ date('d-m-Y', strtotime(Request::get('statement_end'))) }} </strong></td>
                     </tr>
                     </tbody>
                 </table>
@@ -91,6 +96,8 @@
                 <thead>
                 <tr>
                   <th>#</th>
+                  <th>Date</th>
+                  <th>Name</th>
                   <th>Description</th>
                   <th>Amount</th>
                 </tr>
@@ -100,6 +107,28 @@
                     @foreach ($thisdata['result'] as $walletstatements)
                             <tr>
                                 <td><i class="fas fa-circle {{ ($walletstatements->credit != 0) ? "text-success" : "text-danger" }}"></i></td>
+                                <td>
+                                  {{ date('d/m/Y', strtotime($walletstatements->created_at)) }}
+                                </td>
+
+
+                                <td>
+
+                                  @if($userInfo = \App\User::where('email', $walletstatements->user_id)->first())
+
+                                    @if ($userInfo->accountType == "Merchant")
+                                        {{ $userInfo->businessname }}
+                                    @else
+                                        {{ $userInfo->name }}
+                                    @endif
+                                  @else
+                                    -
+
+                                  @endif
+
+                                </td>
+
+
                                 <td>
 
                                         <div class="row">
