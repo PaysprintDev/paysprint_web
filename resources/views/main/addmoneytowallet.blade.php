@@ -451,6 +451,7 @@ function runCommission(){
                 var netVal = $('#amounttosend').val();
                 var feeVal = $('#commissiondeduct').val();
                 var conversionVal = $('#conversionamount').val();
+                var commissionVal = $('#commission').prop("checked");
 
                 var amountVal = (+netVal + +feeVal).toFixed(2);
 
@@ -461,7 +462,7 @@ function runCommission(){
                 var phone = $('#phoneInput').val();
                 var api_token = $('#apiTokenInput').val();
                 var transactionId = 'ps_'+Math.floor((Math.random() * 1000000000) + 1);
-                var stringUrl = "amount="+btoa(amountVal)+"&email="+btoa(email)+"&name="+btoa(name)+"&transactionId="+btoa(transactionId)+"&phone="+btoa(phone)+"&api_token="+btoa(api_token)+"&commissiondeduct="+btoa(feeVal)+"&amounttosend="+btoa(netVal)+"&currencyCode="+btoa(currencyCode)+"&conversionamount="+btoa(conversionVal);
+                var stringUrl = "amount="+btoa(amountVal)+"&email="+btoa(email)+"&name="+btoa(name)+"&transactionId="+btoa(transactionId)+"&phone="+btoa(phone)+"&api_token="+btoa(api_token)+"&commissiondeduct="+btoa(feeVal)+"&amounttosend="+btoa(netVal)+"&currencyCode="+btoa(currencyCode)+"&conversionamount="+btoa(conversionVal)+"&commission="+btoa(commissionVal);
 
 
                 // ADD URL

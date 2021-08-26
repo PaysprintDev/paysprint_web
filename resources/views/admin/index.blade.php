@@ -883,7 +883,14 @@
             </div>
 
               <div class="col-md-4 mt-5 mb-3 payutilityMoney">
+
+                @if (session('country') == "Nigeria")
                 <a style="font-size: 14px; font-weight: bold; background: black; color: white;" type="button" href="{{ route('utility bills') }}" class="btn btn-info btn-block mt-5 mb-3">Pay Utility Bill <i class="fas fa-credit-card"></i></a>
+                @else
+                <a style="font-size: 14px; font-weight: bold; background: black; color: white;" type="button" href="{{ route('select utility bills country') }}" class="btn btn-info btn-block mt-5 mb-3">Pay Utility Bill <i class="fas fa-credit-card"></i></a>
+                @endif
+
+                
               </div>
 
 

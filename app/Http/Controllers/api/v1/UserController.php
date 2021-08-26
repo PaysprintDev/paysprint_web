@@ -36,7 +36,8 @@ class UserController extends Controller
 
     // User Registration
 
-    public function userRegistration(Request $request, User $user){
+    public function userRegistration(Request $request, User $user)
+    {
 
         $validator = Validator::make($request->all(), [
             'ref_code' => 'unique:users|unique:users_closed',
@@ -54,7 +55,7 @@ class UserController extends Controller
             'yearOfBirth' => 'required',
         ]);
 
-        if($validator->passes()){
+        if ($validator->passes()) {
 
             $ref_code = mt_rand(0000000, 9999999);
 
@@ -64,17 +65,15 @@ class UserController extends Controller
             // Get all ref_codes
             $ref = User::all();
 
-            if(count($ref) > 0){
-                foreach($ref as $key => $value){
-                    if($value->ref_code == $ref_code){
+            if (count($ref) > 0) {
+                foreach ($ref as $key => $value) {
+                    if ($value->ref_code == $ref_code) {
                         $newRefcode = mt_rand(0000000, 9999999);
-                    }
-                    else{
+                    } else {
                         $newRefcode = $ref_code;
                     }
                 }
-            }
-            else{
+            } else {
                 $newRefcode = $ref_code;
             }
 
@@ -82,46 +81,40 @@ class UserController extends Controller
             // Check Anon Users
             $newcustomer = AnonUsers::where('email', $request->email)->first();
 
-            if(isset($mycode[0]->callingCodes[0])){
+            if (isset($mycode[0]->callingCodes[0])) {
 
-                if($request->country == "United States"){
+                if ($request->country == "United States") {
                     $phoneCode = "1";
-                }
-                else{
+                } else {
                     $phoneCode = $mycode[0]->callingCodes[0];
                 }
-                
-            }
-            else{
+            } else {
                 $phoneCode = "1";
             }
 
-            if(isset($newcustomer)){
+            if (isset($newcustomer)) {
 
-                    $user = User::create(['code' => $newcustomer->code, 'ref_code' => $newcustomer->ref_code, 'name' => $newcustomer->name, 'email' => $newcustomer->email, 'password' => Hash::make($request->password), 'address' => $newcustomer->address, 'city' => $request->city, 'state' => $request->state, 'country' => $newcustomer->country, 'accountType' => 'Individual', 'api_token' => uniqid().md5($request->email), 'telephone' => $newcustomer->telephone, 'wallet_balance' => $newcustomer->wallet_balance, 'approval' => 0, 'currencyCode' => $mycode[0]->currencies[0]->code, 'currencySymbol' => $mycode[0]->currencies[0]->symbol, 'dayOfBirth' => $request->dayOfBirth, 'monthOfBirth' => $request->monthOfBirth, 'yearOfBirth' => $request->yearOfBirth, 'cardRequest' => 0, 'platform' => 'mobile', 'accountLevel' => 2, 'zip' => $request->zipcode]);
+                $user = User::create(['code' => $newcustomer->code, 'ref_code' => $newcustomer->ref_code, 'name' => $newcustomer->name, 'email' => $newcustomer->email, 'password' => Hash::make($request->password), 'address' => $newcustomer->address, 'city' => $request->city, 'state' => $request->state, 'country' => $newcustomer->country, 'accountType' => 'Individual', 'api_token' => uniqid() . md5($request->email), 'telephone' => $newcustomer->telephone, 'wallet_balance' => $newcustomer->wallet_balance, 'approval' => 0, 'currencyCode' => $mycode[0]->currencies[0]->code, 'currencySymbol' => $mycode[0]->currencies[0]->symbol, 'dayOfBirth' => $request->dayOfBirth, 'monthOfBirth' => $request->monthOfBirth, 'yearOfBirth' => $request->yearOfBirth, 'cardRequest' => 0, 'platform' => 'mobile', 'accountLevel' => 2, 'zip' => $request->zipcode]);
 
-                    $getMoney = Statement::where('user_id', $newcustomer->email)->get();
+                $getMoney = Statement::where('user_id', $newcustomer->email)->get();
 
-                    if(count($getMoney) > 0){
-                        foreach($getMoney as $key => $value){
-                            Statement::where('reference_code', $value->reference_code)->update(['status' => 'Delivered']);
-                        }
+                if (count($getMoney) > 0) {
+                    foreach ($getMoney as $key => $value) {
+                        Statement::where('reference_code', $value->reference_code)->update(['status' => 'Delivered']);
                     }
-                    else{
-                        // Do nothing
-                    }
+                } else {
+                    // Do nothing
+                }
 
-                    AnonUsers::where('ref_code', $newcustomer->ref_code)->delete();
+                AnonUsers::where('ref_code', $newcustomer->ref_code)->delete();
+            } else {
 
-            }
-            else{
 
-                
 
 
                 $user = User::create([
                     'ref_code' => $newRefcode,
-                    'name' => $request->firstname.' '.$request->lastname,
+                    'name' => $request->firstname . ' ' . $request->lastname,
                     'code' => $phoneCode,
                     'email' => $request->email,
                     'address' => $request->address,
@@ -133,14 +126,14 @@ class UserController extends Controller
                     'accountType' => 'Individual',
                     'currencyCode' => $mycode[0]->currencies[0]->code,
                     'currencySymbol' => $mycode[0]->currencies[0]->symbol,
-                    'api_token' => uniqid().md5($request->email),
+                    'api_token' => uniqid() . md5($request->email),
                     'password' => Hash::make($request->password),
-                    'approval' => 0, 
-                    'dayOfBirth' => $request->dayOfBirth, 
-                    'monthOfBirth' => $request->monthOfBirth, 
-                    'yearOfBirth' => $request->yearOfBirth, 
-                    'cardRequest' => 0, 
-                    'platform' => 'mobile', 
+                    'approval' => 0,
+                    'dayOfBirth' => $request->dayOfBirth,
+                    'monthOfBirth' => $request->monthOfBirth,
+                    'yearOfBirth' => $request->yearOfBirth,
+                    'cardRequest' => 0,
+                    'platform' => 'mobile',
                     'accountLevel' => 2
                 ]);
             }
@@ -149,7 +142,7 @@ class UserController extends Controller
 
             // Log::info($getcurrentUser);
 
-            
+
 
             $url = 'https://api.globaldatacompany.com/verifications/v1/verify';
 
@@ -158,87 +151,79 @@ class UserController extends Controller
 
             $countryApproval = AllCountries::where('name', $request->country)->where('approval', 1)->first();
 
-            if(isset($countryApproval)){
+            if (isset($countryApproval)) {
                 $info = $this->identificationAPI($url, $request->firstname, $request->lastname, $request->dayOfBirth, $request->monthOfBirth, $request->yearOfBirth, $minimuAge, $request->address, $request->city, $request->country, $request->zipcode, $request->telephone, $request->email, $mycode[0]->alpha2Code);
 
 
-                    if(isset($info->TransactionID) == true){
+                if (isset($info->TransactionID) == true) {
 
-                        $result = $this->transStatus($info->TransactionID);
-                        
-                        
-
-                        // $res = $this->getTransRec($result->TransactionRecordId);
-                            
-                            
-                            
-
-                        if($info->Record->RecordStatus == "nomatch"){
-                        
-                            // $message = "error";
-                            // $title = "Oops!";
-                            // $link = "contact";
-                            $message = "success";
-                            $title = "Great";
-                            $link = "/";
-                            $data = $user;
-                            $statusCode = 200;
-                            
-                            $resInfo = strtoupper($info->Record->RecordStatus).", Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.net \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.net";
-
-                            User::where('id', $getcurrentUser->id)->update(['accountLevel' => 2, 'countryapproval' => 1]);
+                    $result = $this->transStatus($info->TransactionID);
 
 
-                            $this->createNotification($newRefcode, "Hello ".$request->firstname.", Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.net \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.net");
 
-                            
-                        }
-                        else{
-                            $message = "success";
-                            $title = "Great";
-                            $link = "/";
-                            $resInfo = strtoupper($info->Record->RecordStatus).", Congratulations!!!. Your account has been approved. Please complete the Quick Set up to enjoy PaySprint.";
-                            $data = $user;
-                            $statusCode = 200;
+                    // $res = $this->getTransRec($result->TransactionRecordId);
 
-                            // Udpate User Info
-                            User::where('id', $getcurrentUser->id)->update(['accountLevel' => 3, 'approval' => 2, 'countryapproval' => 1]);
 
-                            $this->createNotification($newRefcode, "Hello ".$request->firstname.", PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!. Welcome on board.");
-                        }
 
-                    }
-                    else{
+
+                    if ($info->Record->RecordStatus == "nomatch") {
+
+                        // $message = "error";
+                        // $title = "Oops!";
+                        // $link = "contact";
                         $message = "success";
                         $title = "Great";
                         $link = "/";
-                        $resInfo = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.net \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.net";
                         $data = $user;
                         $statusCode = 200;
 
+                        $resInfo = strtoupper($info->Record->RecordStatus) . ", Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.net \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.net";
+
                         User::where('id', $getcurrentUser->id)->update(['accountLevel' => 2, 'countryapproval' => 1]);
 
-                        $this->createNotification($newRefcode, "Hello ".$request->firstname.", Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.net \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.net");
 
-                        // $resp = $info->Message;
+                        $this->createNotification($newRefcode, "Hello " . $request->firstname . ", Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.net \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.net");
+                    } else {
+                        $message = "success";
+                        $title = "Great";
+                        $link = "/";
+                        $resInfo = strtoupper($info->Record->RecordStatus) . ", Congratulations!!!. Your account has been approved. Please complete the Quick Set up to enjoy PaySprint.";
+                        $data = $user;
+                        $statusCode = 200;
+
+                        // Udpate User Info
+                        User::where('id', $getcurrentUser->id)->update(['accountLevel' => 3, 'approval' => 2, 'countryapproval' => 1]);
+
+                        $this->createNotification($newRefcode, "Hello " . $request->firstname . ", PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!. Welcome on board.");
                     }
+                } else {
+                    $message = "success";
+                    $title = "Great";
+                    $link = "/";
+                    $resInfo = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.net \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.net";
+                    $data = $user;
+                    $statusCode = 200;
+
+                    User::where('id', $getcurrentUser->id)->update(['accountLevel' => 2, 'countryapproval' => 1]);
+
+                    $this->createNotification($newRefcode, "Hello " . $request->firstname . ", Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.net \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.net");
+
+                    // $resp = $info->Message;
+                }
 
 
-                    $this->name = $request->firstname.' '.$request->lastname;
-                    // $this->email = "bambo@vimfile.com";
-                    $this->email = $request->email;
-                    $this->subject = "Welcome to PaySprint";
+                $this->name = $request->firstname . ' ' . $request->lastname;
+                // $this->email = "bambo@vimfile.com";
+                $this->email = $request->email;
+                $this->subject = "Welcome to PaySprint";
 
-                    $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at www.paysprint.net <br> b. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents <br> All other features would be enabled for you as soon as Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.net";
+                $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at www.paysprint.net <br> b. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents <br> All other features would be enabled for you as soon as Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.net";
 
-                    $this->message = '<p>'.$message.'</p>';
-
-
-                    $this->sendEmail($this->email, "Fund remittance");
+                $this->message = '<p>' . $message . '</p>';
 
 
-            }
-            else{
+                $this->sendEmail($this->email, "Fund remittance");
+            } else {
 
                 $message = "error";
                 $title = "Oops!";
@@ -250,74 +235,70 @@ class UserController extends Controller
                 User::where('id', $getcurrentUser->id)->update(['accountLevel' => 0, 'countryapproval' => 0]);
             }
 
-            
 
 
-                    // Log::info("New user registration via mobile app by: ".$request->firstname.' '.$request->lastname." from ".$request->state.", ".$request->country." \n\n STATUS: ".$resInfo);
 
-                    $this->slack("New user registration via mobile app by: ".$request->firstname.' '.$request->lastname." from ".$request->state.", ".$request->country." \n\n STATUS: ".$resInfo, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+            // Log::info("New user registration via mobile app by: ".$request->firstname.' '.$request->lastname." from ".$request->state.", ".$request->country." \n\n STATUS: ".$resInfo);
 
-                    // $message = "success";
-                    // $title = "Great";
-                    // $link = "/";
-                    // $resInfo = "Hello ".$request->firstname."!, Welcome to PaySprint!";
-                    // $data = $user;
-                    // $statusCode = 200;
-            
-                    $status = $statusCode;
+            $this->slack("New user registration via mobile app by: " . $request->firstname . ' ' . $request->lastname . " from " . $request->state . ", " . $request->country . " \n\n STATUS: " . $resInfo, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
-                    $resData = ['data' => $data, 'message' => $resInfo, 'status' => $status];
+            // $message = "success";
+            // $title = "Great";
+            // $link = "/";
+            // $resInfo = "Hello ".$request->firstname."!, Welcome to PaySprint!";
+            // $data = $user;
+            // $statusCode = 200;
 
-            
+            $status = $statusCode;
 
-        }
-        else{
+            $resData = ['data' => $data, 'message' => $resInfo, 'status' => $status];
+        } else {
 
-            $error = implode(",",$validator->messages()->all());
-            
+            $error = implode(",", $validator->messages()->all());
+
             $resData = ['data' => [], 'message' => $error, 'status' => 400];
             $status = 400;
         }
 
-        
-        
+
+
         return $this->returnJSON($resData, $status);
     }
 
 
-    public function userLogin(Request $request, User $user){
+    public function userLogin(Request $request, User $user)
+    {
 
         try {
-            
+
             // Validate Login
 
-        $validator = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+            $validator = $request->validate([
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
 
-        if(!Auth::attempt($validator)){
-            $status = 400;
-            $data = [];
-            $message = 'Invalid email or password';
-        }
-        else{
-            $token = Auth::user()->createToken('authToken')->accessToken;
-
-
-            $getUser = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'accountLevel', 'flagged', 'bvn_number', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('email', $request->email)->first();
-
-            if(Hash::check($request->password, $getUser->password)){
+            if (!Auth::attempt($validator)) {
+                $status = 400;
+                $data = [];
+                $message = 'Invalid email or password';
+            } else {
+                $token = Auth::user()->createToken('authToken')->accessToken;
 
 
-                $countryApproval = AllCountries::where('name', $getUser->country)->where('approval', 1)->first();
+                $getUser = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'accountLevel', 'flagged', 'bvn_number', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('email', $request->email)->first();
 
-                    if(isset($countryApproval)){
+                if (Hash::check($request->password, $getUser->password)) {
 
-                        if($getUser->flagged == 1){
+
+                    $countryApproval = AllCountries::where('name', $getUser->country)->where('approval', 1)->first();
+
+                    if (isset($countryApproval)) {
+
+                        if ($getUser->flagged == 1) {
                             $data = [];
                             $status = 400;
-                            $message = 'Hello '.$getUser->name.', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.net/contact';
+                            $message = 'Hello ' . $getUser->name . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.net/contact';
 
                             $this->createNotification($getUser->refCode, $message);
                         }
@@ -328,27 +309,26 @@ class UserController extends Controller
 
                         //     $this->createNotification($getUser->refCode, $message);
                         // }
-                        else{
+                        else {
 
                             $countryInfo = $this->getCountryCode($getUser->country);
 
                             $currencyCode = $countryInfo[0]->currencies[0]->code;
                             $currencySymbol = $countryInfo[0]->currencies[0]->symbol;
 
-                            
+
 
 
                             // Update User API Token
-                            
+
 
                             $userData = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'accountLevel', 'cardRequest', 'flagged', 'loginCount', 'pass_checker', 'pass_date', 'lastLogin', 'bvn_number', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('email', $request->email)->first();
 
                             $loginCount = $userData->loginCount + 1;
 
-                            if($userData->pass_checker > 0 && $userData->pass_date <= date('Y-m-d')){
+                            if ($userData->pass_checker > 0 && $userData->pass_date <= date('Y-m-d')) {
                                 $pass_date = $userData->pass_date;
-                            }
-                            else{
+                            } else {
                                 $pass_date = date('Y-m-d');
                             }
 
@@ -360,44 +340,34 @@ class UserController extends Controller
                             $status = 200;
                             $message = 'Login successful';
 
-                            $this->createNotification($userInfo->refCode, "Hello ".$getUser->name.", Your login was successful. Welcome back");
+                            $this->createNotification($userInfo->refCode, "Hello " . $getUser->name . ", Your login was successful. Welcome back");
 
                             $usercity = $this->myLocation()->city;
                             $usercountry = $this->myLocation()->country;
                             $userip = $this->myLocation()->query;
 
                             $this->checkLoginInfo($userInfo->refCode, $usercity, $usercountry, $userip);
-
                         }
 
                         User::where('email', $request->email)->update(['countryapproval' => 1]);
-                    }
-                    else{
+                    } else {
 
                         $data = [];
                         $status = 400;
-                        $message = 'Hello '.$getUser->name.', PaySprint is currently not available in your country. You can contact our Customer Service Executives for further enquiries. Thanks';
+                        $message = 'Hello ' . $getUser->name . ', PaySprint is currently not available in your country. You can contact our Customer Service Executives for further enquiries. Thanks';
 
                         User::where('email', $request->email)->update(['countryapproval' => 0]);
-                        
+
                         $this->createNotification($getUser->refCode, "PaySprint is currently not available in your country. You can contact our Customer Service Executives for further enquiries. Thanks");
-
                     }
+                } else {
+                    $data = [];
+                    $status = 400;
+                    $message = 'Incorrect password';
 
-
-
+                    $this->createNotification($getUser->refCode, "You tried to login with an incorrect password");
+                }
             }
-            else{
-                $data = [];
-                $status = 400;
-                $message = 'Incorrect password';
-
-                $this->createNotification($getUser->refCode, "You tried to login with an incorrect password");
-            }
-
-
-        }
-
         } catch (\Throwable $th) {
             $data = [];
             $status = 400;
@@ -411,50 +381,51 @@ class UserController extends Controller
     }
 
 
-    public function updateProfile(Request $request, User $user){
+    public function updateProfile(Request $request, User $user)
+    {
 
         $user = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'dayOfBirth', 'monthOfBirth', 'yearOfBirth', 'cardRequest', 'bvn_number', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $request->bearerToken())->first();
-        
+
 
         User::where('id', $user->id)->update($request->all());
 
-        if($request->hasFile('nin_front')){
+        if ($request->hasFile('nin_front')) {
             $this->uploadDocument($user->id, $request->file('nin_front'), 'document/nin_front', 'nin_front');
 
-            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the front page of your national identity card.");
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded the front page of your national identity card.");
         }
-        if($request->hasFile('nin_back')){
+        if ($request->hasFile('nin_back')) {
             $this->uploadDocument($user->id, $request->file('nin_back'), 'document/nin_back', 'nin_back');
-            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the back page of your national identity card.");
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded the back page of your national identity card.");
         }
-        if($request->hasFile('drivers_license_front')){
+        if ($request->hasFile('drivers_license_front')) {
             $this->uploadDocument($user->id, $request->file('drivers_license_front'), 'document/drivers_license_front', 'drivers_license_front');
-            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the front page of your drivers license.");
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded the front page of your drivers license.");
         }
-        if($request->hasFile('drivers_license_back')){
+        if ($request->hasFile('drivers_license_back')) {
             $this->uploadDocument($user->id, $request->file('drivers_license_back'), 'document/drivers_license_back', 'drivers_license_back');
-            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the back page of your drivers license.");
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded the back page of your drivers license.");
         }
-        if($request->hasFile('international_passport_front')){
+        if ($request->hasFile('international_passport_front')) {
             $this->uploadDocument($user->id, $request->file('international_passport_front'), 'document/international_passport_front', 'international_passport_front');
-            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded your international passport.");
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded your international passport.");
         }
-        if($request->hasFile('international_passport_back')){
+        if ($request->hasFile('international_passport_back')) {
             $this->uploadDocument($user->id, $request->file('international_passport_back'), 'document/international_passport_back', 'international_passport_back');
-            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded your international passport.");
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded your international passport.");
         }
-        if($request->hasFile('incorporation_doc_front')){
+        if ($request->hasFile('incorporation_doc_front')) {
             $this->uploadDocument($user->id, $request->file('incorporation_doc_front'), 'document/incorporation_doc_front', 'incorporation_doc_front');
             $this->createNotification($user->refCode, "Incorporation document successfully uploaded");
-            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded your document.");
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded your document.");
         }
         // if($request->hasFile('incorporation_doc_back')){
         //     $this->uploadDocument($user->id, $request->file('incorporation_doc_back'), 'document/incorporation_doc_back', 'incorporation_doc_back');
         //     $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the back page of your incorporation document.");
         // }
-        if($request->hasFile('avatar')){
+        if ($request->hasFile('avatar')) {
             $this->uploadDocument($user->id, $request->file('avatar'), 'profilepic/avatar', 'avatar');
-            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully updated your profile picture.");
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully updated your profile picture.");
         }
 
 
@@ -469,47 +440,48 @@ class UserController extends Controller
 
 
 
-    public function updateMerchantProfile(Request $request, Admin $admin, ClientInfo $clientinfo){
+    public function updateMerchantProfile(Request $request, Admin $admin, ClientInfo $clientinfo)
+    {
 
         $user = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'dayOfBirth', 'monthOfBirth', 'yearOfBirth', 'cardRequest', 'bvn_number', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $request->bearerToken())->first();
-        
+
 
         User::where('id', $user->id)->update($request->all());
 
-        $adminName = explode(" ", $request->name); 
+        $adminName = explode(" ", $request->name);
 
         $admin->where('email', $user->email)->update(['firstname' => $adminName[0], 'lastname' => $adminName[1]]);
 
         $clientinfo->where('email', $user->email)->update(['firstname' => $adminName[0], 'lastname' => $adminName[1], 'telephone' => $request->telephone, 'country' => $request->country, 'state' => $request->state, 'city' => $request->city, 'zip_code' => $request->zip]);
 
-        if($request->hasFile('nin_front')){
+        if ($request->hasFile('nin_front')) {
             $this->uploadDocument($user->id, $request->file('nin_front'), 'document/nin_front', 'nin_front');
 
-            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the front page of your national identity card.");
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded the front page of your national identity card.");
         }
-        if($request->hasFile('nin_back')){
+        if ($request->hasFile('nin_back')) {
             $this->uploadDocument($user->id, $request->file('nin_back'), 'document/nin_back', 'nin_back');
-            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the back page of your national identity card.");
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded the back page of your national identity card.");
         }
-        if($request->hasFile('drivers_license_front')){
+        if ($request->hasFile('drivers_license_front')) {
             $this->uploadDocument($user->id, $request->file('drivers_license_front'), 'document/drivers_license_front', 'drivers_license_front');
-            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the front page of your drivers license.");
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded the front page of your drivers license.");
         }
-        if($request->hasFile('drivers_license_back')){
+        if ($request->hasFile('drivers_license_back')) {
             $this->uploadDocument($user->id, $request->file('drivers_license_back'), 'document/drivers_license_back', 'drivers_license_back');
-            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the back page of your drivers license.");
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded the back page of your drivers license.");
         }
-        if($request->hasFile('international_passport_front')){
+        if ($request->hasFile('international_passport_front')) {
             $this->uploadDocument($user->id, $request->file('international_passport_front'), 'document/international_passport_front', 'international_passport_front');
-            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded your international passport.");
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded your international passport.");
         }
-        if($request->hasFile('international_passport_back')){
+        if ($request->hasFile('international_passport_back')) {
             $this->uploadDocument($user->id, $request->file('international_passport_back'), 'document/international_passport_back', 'international_passport_back');
-            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded your international passport.");
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded your international passport.");
         }
-        if($request->hasFile('avatar')){
+        if ($request->hasFile('avatar')) {
             $this->uploadDocument($user->id, $request->file('avatar'), 'profilepic/avatar', 'avatar');
-            $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully updated your profile picture.");
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully updated your profile picture.");
         }
 
 
@@ -523,20 +495,21 @@ class UserController extends Controller
     }
 
 
-    public function updateMerchantBusinessProfile(Request $request, Admin $admin, ClientInfo $clientinfo){
+    public function updateMerchantBusinessProfile(Request $request, Admin $admin, ClientInfo $clientinfo)
+    {
 
         $user = User::where('api_token', $request->bearerToken())->first();
 
         $clientinfo->where('email', $user->email)->update(['business_name' => $request->businessName, 'address' => $request->businessAddress, 'corporate_type' => $request->corporate_type, 'industry' => $request->industry, 'website' => $request->businessWebsite, 'type_of_service' => $request->type_of_service, 'description' => $request->businessDescription]);
 
-        if($request->hasFile('incorporation_doc_front')){
+        if ($request->hasFile('incorporation_doc_front')) {
             $this->uploadDocument($user->id, $request->file('incorporation_doc_front'), 'document/incorporation_doc_front', 'incorporation_doc_front');
             $this->createNotification($user->ref_code, "Incorporation document successfully uploaded");
-            $this->createNotification($user->ref_code, "Hello ".$user->name.", You have successfully uploaded the front page of your incorporation document.");
+            $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded the front page of your incorporation document.");
         }
-        if($request->hasFile('incorporation_doc_back')){
+        if ($request->hasFile('incorporation_doc_back')) {
             $this->uploadDocument($user->id, $request->file('incorporation_doc_back'), 'document/incorporation_doc_back', 'incorporation_doc_back');
-            $this->createNotification($user->ref_code, "Hello ".$user->name.", You have successfully uploaded the back page of your incorporation document.");
+            $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded the back page of your incorporation document.");
         }
 
 
@@ -551,7 +524,8 @@ class UserController extends Controller
 
 
 
-    public function merchantsByServiceTypes(Request $req){
+    public function merchantsByServiceTypes(Request $req)
+    {
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
@@ -567,20 +541,19 @@ class UserController extends Controller
     }
 
 
-    public function listMerchantsByServiceTypes(Request $req){
+    public function listMerchantsByServiceTypes(Request $req)
+    {
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
         $query = ClientInfo::select('id', 'user_id as userId', 'business_name as businessName', 'address', 'corporate_type as corporateType', 'industry', 'type_of_service as typeOfService', 'website', 'firstname', 'lastname', 'telephone', 'country', 'state', 'city', 'zip_code as zipCode', 'description')->where('industry', $req->get('industry'))->where('country', $thisuser->country)->orderBy('created_at', 'DESC')->orderBy('business_name', 'ASC')->get();
 
-        if(count($query) > 0){ 
+        if (count($query) > 0) {
 
             $data = $query;
             $status = 200;
             $message = 'success';
-
-        }
-        else{
+        } else {
             $data = [];
             $status = 400;
             $message = 'No record';
@@ -592,21 +565,19 @@ class UserController extends Controller
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
-
     }
 
-    public function getMerchantData(Request $req, $id){
+    public function getMerchantData(Request $req, $id)
+    {
 
         $query = ClientInfo::select('id', 'user_id as userId', 'business_name as businessName', 'address', 'corporate_type as corporateType', 'industry', 'type_of_service as typeOfService', 'website', 'firstname', 'lastname', 'telephone', 'country', 'state', 'city', 'zip_code as zipCode', 'description')->where('id', $id)->first();
 
-        if(isset($query)){ 
+        if (isset($query)) {
 
             $data = $query;
             $status = 200;
             $message = 'success';
-
-        }
-        else{
+        } else {
             $data = [];
             $status = 400;
             $message = 'No record';
@@ -621,185 +592,170 @@ class UserController extends Controller
 
 
 
-    public function updatePassword(Request $req){
+    public function updatePassword(Request $req)
+    {
 
 
         $validator = Validator::make($req->all(), [
-                     'oldpassword' => 'required|string',
-                     'newpassword' => 'required|string',
-                     'confirmpassword' => 'required|string',
-                ]);
+            'oldpassword' => 'required|string',
+            'newpassword' => 'required|string',
+            'confirmpassword' => 'required|string',
+        ]);
 
-                if($validator->passes()){
+        if ($validator->passes()) {
 
-                    if($req->newpassword != $req->confirmpassword){
-                        $data = [];
-                        $message = "Confirm password does not match";
-                        $status = 400;
-                    }
-                    else{
-                        $thisuser = User::where('api_token', $req->bearerToken())->first();
+            if ($req->newpassword != $req->confirmpassword) {
+                $data = [];
+                $message = "Confirm password does not match";
+                $status = 400;
+            } else {
+                $thisuser = User::where('api_token', $req->bearerToken())->first();
 
 
-                        if(Hash::check($req->oldpassword, $thisuser->password)){
-                            // Update
-                            $resp = User::where('api_token', $req->bearerToken())->update(['password' => Hash::make($req->newpassword)]);
+                if (Hash::check($req->oldpassword, $thisuser->password)) {
+                    // Update
+                    $resp = User::where('api_token', $req->bearerToken())->update(['password' => Hash::make($req->newpassword)]);
 
-                            Admin::where('email', $thisuser->email)->update(['password' => Hash::make($req->newpassword)]);
+                    Admin::where('email', $thisuser->email)->update(['password' => Hash::make($req->newpassword)]);
 
-                            $data = $resp;
-                            $message = "Saved";
-                            $status = 200;
+                    $data = $resp;
+                    $message = "Saved";
+                    $status = 200;
 
-                            $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully updated your password.");
-                        }
-                        else{
-                            $data = [];
-                            $message = "Your old password is incorrect";
-                            $status = 400;
-                        }
-                    }
-
-                    
-
-                }
-                else{
-
-                    $error = implode(",",$validator->messages()->all());
-
+                    $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully updated your password.");
+                } else {
                     $data = [];
+                    $message = "Your old password is incorrect";
                     $status = 400;
-                    $message = $error;
                 }
+            }
+        } else {
 
-                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+            $error = implode(",", $validator->messages()->all());
 
-                return $this->returnJSON($resData, $status);
+            $data = [];
+            $status = 400;
+            $message = $error;
+        }
 
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
     }
 
 
-    public function createTransactionPin(Request $req){
-        
+    public function createTransactionPin(Request $req)
+    {
+
 
         $validator = Validator::make($req->all(), [
-                     'newpin' => 'required|string',
-                     'confirmpin' => 'required|string',
-                ]);
+            'newpin' => 'required|string',
+            'confirmpin' => 'required|string',
+        ]);
 
-                if($validator->passes()){
+        if ($validator->passes()) {
 
-                    if($req->newpin != $req->confirmpin){
-                        $data = [];
-                        $message = "The confirm pin does not match";
-                        $status = 400;
-                    }
-                    else{
-                        $thisuser = User::where('api_token', $req->bearerToken())->first();
+            if ($req->newpin != $req->confirmpin) {
+                $data = [];
+                $message = "The confirm pin does not match";
+                $status = 400;
+            } else {
+                $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                        // Update
-                        $resp = User::where('api_token', $req->bearerToken())->update(['transaction_pin' => Hash::make($req->newpin)]);
+                // Update
+                $resp = User::where('api_token', $req->bearerToken())->update(['transaction_pin' => Hash::make($req->newpin)]);
 
-                        $data = $resp;
-                        $message = "Saved";
-                        $status = 200;
+                $data = $resp;
+                $message = "Saved";
+                $status = 200;
 
-                        $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully created your transaction pin. Keep it SAFE!.");
-                    
-                    }
+                $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully created your transaction pin. Keep it SAFE!.");
+            }
+        } else {
 
-                    
+            $error = implode(",", $validator->messages()->all());
 
-                }
-                else{
+            $data = [];
+            $status = 400;
+            $message = $error;
+        }
 
-                    $error = implode(",",$validator->messages()->all());
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
-                    $data = [];
-                    $status = 400;
-                    $message = $error;
-                }
-
-                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
-
-                return $this->returnJSON($resData, $status);
-
+        return $this->returnJSON($resData, $status);
     }
 
 
-    public function updateSecurity(Request $req){
-        
+    public function updateSecurity(Request $req)
+    {
+
 
         $validator = Validator::make($req->all(), [
-                     'securityQuestion' => 'required|string',
-                     'securityAnswer' => 'required|string',
-                ]);
+            'securityQuestion' => 'required|string',
+            'securityAnswer' => 'required|string',
+        ]);
 
-                if($validator->passes()){
+        if ($validator->passes()) {
 
-                        $thisuser = User::where('api_token', $req->bearerToken())->first();
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                        // Update
-                        $resp = User::where('api_token', $req->bearerToken())->update(['securityQuestion' => $req->securityQuestion, 'securityAnswer' => strtolower($req->securityAnswer)]);
+            // Update
+            $resp = User::where('api_token', $req->bearerToken())->update(['securityQuestion' => $req->securityQuestion, 'securityAnswer' => strtolower($req->securityAnswer)]);
 
-                        $data = $resp;
-                        $message = "Saved";
-                        $status = 200;
+            $data = $resp;
+            $message = "Saved";
+            $status = 200;
 
-                        // Log::notice("Hello ".strtoupper($thisuser->name).", You have successfully set up your security question and answer.");
+            // Log::notice("Hello ".strtoupper($thisuser->name).", You have successfully set up your security question and answer.");
 
-                        $this->slack("Hello ".strtoupper($thisuser->name).", You have successfully set up your security question and answer.", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+            $this->slack("Hello " . strtoupper($thisuser->name) . ", You have successfully set up your security question and answer.", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
-                        $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully set up your security question and answer.");
+            $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully set up your security question and answer.");
+        } else {
 
-                }
-                else{
+            $error = implode(",", $validator->messages()->all());
 
-                    $error = implode(",",$validator->messages()->all());
+            $data = [];
+            $status = 400;
+            $message = $error;
+        }
 
-                    $data = [];
-                    $status = 400;
-                    $message = $error;
-                }
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
-                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
-
-                return $this->returnJSON($resData, $status);
-
+        return $this->returnJSON($resData, $status);
     }
 
 
-    public function bvnVerification(Request $req){
+    public function bvnVerification(Request $req)
+    {
         $response = $this->verifyBVN($req->bvn, $req->account_number, $req->bank_code, $req->account_name);
 
         Log::info(json_encode($response));
 
         try {
-            if($response->status == true && $response->data->is_blacklisted == false){
+            if ($response->status == true && $response->data->is_blacklisted == false) {
 
-            $bank = ListOfBanks::where('code', $req->bank_code)->first();
+                $bank = ListOfBanks::where('code', $req->bank_code)->first();
 
-            $thisuser = User::where('api_token', $req->bearerToken())->first();
+                $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-            if($thisuser->approval == 2 && $thisuser->accountLevel == 3){
-                User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 3, 'approval' => 2,  'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
+                if ($thisuser->approval == 2 && $thisuser->accountLevel == 3) {
+                    User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 3, 'approval' => 2,  'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
+                } else {
+                    User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 2, 'approval' => 1,  'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
+                }
+
+
+
+
+                $data = $response->data;
+                $message = $response->message;
+                $status = 200;
+            } else {
+                $data = [];
+                $message = "Bank Verification Number does not match your account";
+                $status = 400;
             }
-            else{
-                User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 2, 'approval' => 1,  'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
-            }
-            
-            
-
-
-            $data = $response->data;
-            $message = $response->message;
-            $status = 200;
-        }
-        else{
-            $data = [];
-            $message = "Bank Verification Number does not match your account";
-            $status = 400;
-        }
 
             $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
@@ -807,22 +763,20 @@ class UserController extends Controller
         } catch (\Throwable $th) {
             // Log::critical("BVN Verification Error: ".$th->getMessage());
 
-            $this->slack("BVN Verification Error: ".$th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+            $this->slack("BVN Verification Error: " . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
-
-        
     }
 
 
-    public function accountNumberVerification(Request $req){
+    public function accountNumberVerification(Request $req)
+    {
         $response = $this->verifyAccountNumber($req->account_number, $req->bank_code);
 
-        if($response->status == true){
+        if ($response->status == true) {
             $data = $response->data;
             $message = $response->message;
             $status = 200;
-        }
-        else{
+        } else {
 
             $data = [];
             $message = $response->message;
@@ -837,450 +791,424 @@ class UserController extends Controller
 
 
 
-    public function linkAccount(Request $req){
-        
+    public function linkAccount(Request $req)
+    {
+
 
         $validator = Validator::make($req->all(), [
-                     'account_number' => 'required|string',
-                     'transaction_pin' => 'required|string',
-                ]);
+            'account_number' => 'required|string',
+            'transaction_pin' => 'required|string',
+        ]);
 
-                if($validator->passes()){
+        if ($validator->passes()) {
 
-                        $thisuser = User::where('api_token', $req->bearerToken())->first();
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                        // Update
-                        $getAccount = User::where('ref_code', $req->account_number)->first();
+            // Update
+            $getAccount = User::where('ref_code', $req->account_number)->first();
 
-                        if(isset($getAccount)){
+            if (isset($getAccount)) {
 
-                            if(Hash::check($req->transaction_pin, $getAccount->transaction_pin)){
+                if (Hash::check($req->transaction_pin, $getAccount->transaction_pin)) {
 
-                                // Link Account
-                                $resp = LinkAccount::updateOrInsert(['ref_code' => $thisuser->ref_code, 'link_ref_code' => $getAccount->ref_code], ['ref_code' => $thisuser->ref_code, 'link_ref_code' => $req->account_number, 'user_id' => $thisuser->id]);
+                    // Link Account
+                    $resp = LinkAccount::updateOrInsert(['ref_code' => $thisuser->ref_code, 'link_ref_code' => $getAccount->ref_code], ['ref_code' => $thisuser->ref_code, 'link_ref_code' => $req->account_number, 'user_id' => $thisuser->id]);
 
-                                $info = "Hello ".strtoupper($thisuser->name).", You have linked your account ".$req->account_number." (".$getAccount->currencyCode.") with your primary account ".$thisuser->ref_code." (".$thisuser->currencyCode.")";
+                    $info = "Hello " . strtoupper($thisuser->name) . ", You have linked your account " . $req->account_number . " (" . $getAccount->currencyCode . ") with your primary account " . $thisuser->ref_code . " (" . $thisuser->currencyCode . ")";
 
-                                $data = $resp;
-                                $message = "Successfull";
-                                $status = 200;
-
-
-                                // Log::notice($info);
+                    $data = true;
+                    $message = "Successfull";
+                    $status = 200;
 
 
-                                $this->slack($info, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                    // Log::notice($info);
 
-                                $this->createNotification($thisuser->ref_code, $info);
 
-                            }
-                            else{
+                    $this->slack($info, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
-                                $error = "Invalid transaction pin";
+                    $this->createNotification($thisuser->ref_code, $info);
+                } else {
 
-                                $data = [];
-                                $status = 400;
-                                $message = $error;
-
-                            }
-
-                        }
-                        else{
-                            $error = "Account number not found";
-
-                            $data = [];
-                            $status = 400;
-                            $message = $error;
-                        }
-
-                        
-
-                        
-
-                }
-                else{
-
-                    $error = implode(",",$validator->messages()->all());
+                    $error = "Invalid transaction pin";
 
                     $data = [];
                     $status = 400;
                     $message = $error;
                 }
+            } else {
+                $error = "Account number not found";
 
-                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                $data = [];
+                $status = 400;
+                $message = $error;
+            }
+        } else {
 
-                return $this->returnJSON($resData, $status);
+            $error = implode(",", $validator->messages()->all());
 
+            $data = [];
+            $status = 400;
+            $message = $error;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
     }
 
 
 
-    public function otherAccount(Request $req){
-        
+    public function otherAccount(Request $req)
+    {
+
 
         $validator = Validator::make($req->all(), [
-                     'account_number' => 'required|string',
-                ]);
+            'account_number' => 'required|string',
+        ]);
 
-                if($validator->passes()){
+        if ($validator->passes()) {
 
-                        $thisuser = User::where('api_token', $req->bearerToken())->first();
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                        // Update
-                        $getAccount = User::where('ref_code', $req->account_number)->first();
+            // Update
+            $getAccount = User::where('ref_code', $req->account_number)->first();
 
-                        if(isset($getAccount)){
+            if (isset($getAccount)) {
 
-                            $link = route('sign out', $getAccount->id);
+                $link = route('sign out', $getAccount->id);
 
-                            $info = "Hello ".strtoupper($thisuser->name).", You have switched account to ".$req->account_number." (".$getAccount->currencyCode.") from your primary account ".$thisuser->ref_code." (".$thisuser->currencyCode.")";
+                $info = "Hello " . strtoupper($thisuser->name) . ", You have switched account to " . $req->account_number . " (" . $getAccount->currencyCode . ") from your primary account " . $thisuser->ref_code . " (" . $thisuser->currencyCode . ")";
 
-                            $data = $link;
-                            $message = "Successfull";
-                            $status = 200;
+                $data = $link;
+                $message = "Successfull";
+                $status = 200;
 
 
-                            // Log::notice($info);
+                // Log::notice($info);
 
-                            $this->slack($info, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                $this->slack($info, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
-                            $this->createNotification($thisuser->ref_code, $info);
-                            
-                        }
-                        else{
-                            $error = "Account number not found";
+                $this->createNotification($thisuser->ref_code, $info);
+            } else {
+                $error = "Account number not found";
 
-                            $data = [];
-                            $status = 400;
-                            $message = $error;
-                        }
+                $data = [];
+                $status = 400;
+                $message = $error;
+            }
+        } else {
 
-                        
+            $error = implode(",", $validator->messages()->all());
 
-                        
+            $data = [];
+            $status = 400;
+            $message = $error;
+        }
 
-                }
-                else{
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
-                    $error = implode(",",$validator->messages()->all());
-
-                    $data = [];
-                    $status = 400;
-                    $message = $error;
-                }
-
-                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
-
-                return $this->returnJSON($resData, $status);
-
+        return $this->returnJSON($resData, $status);
     }
 
-    public function updateAutoDeposit(Request $req){
-        
+
+    public function secondaryAccounts(Request $req)
+    {
+        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+        if (isset($thisuser)) {
+
+            $data = LinkAccount::where('user_id', $thisuser->id)->get();
+            $message = "Success";
+            $status = 200;
+        } else {
+
+            $error = "Unable to access this user";
+
+            $data = [];
+            $status = 400;
+            $message = $error;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+    public function updateAutoDeposit(Request $req)
+    {
+
 
         $validator = Validator::make($req->all(), [
-                     'auto_deposit' => 'required|string',
-                ]);
+            'auto_deposit' => 'required|string',
+        ]);
 
-                if($validator->passes()){
+        if ($validator->passes()) {
 
-                        $thisuser = User::where('api_token', $req->bearerToken())->first();
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                        // Update
-                        $resp = User::where('api_token', $req->bearerToken())->update(['auto_deposit' => $req->auto_deposit]);
+            // Update
+            $resp = User::where('api_token', $req->bearerToken())->update(['auto_deposit' => $req->auto_deposit]);
 
-                        // send Mail and SMS
+            // send Mail and SMS
 
-                        $recMsg = "Hi ".$thisuser->name.", You have successfully turned ".$req->auto_deposit." your Auto Deposit Status.  PaySprint Team";
+            $recMsg = "Hi " . $thisuser->name . ", You have successfully turned " . $req->auto_deposit . " your Auto Deposit Status.  PaySprint Team";
 
-                        $merchantPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-                                                    
-                        if(isset($merchantPhone)){
+            $merchantPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
-                            $recPhone = $thisuser->telephone;
-                        }
-                        else{
-                            $recPhone = "+".$thisuser->code.$thisuser->telephone;
-                        }
+            if (isset($merchantPhone)) {
 
+                $recPhone = $thisuser->telephone;
+            } else {
+                $recPhone = "+" . $thisuser->code . $thisuser->telephone;
+            }
 
 
-                        $this->name = $thisuser->name;
-                        // $this->email = "bambo@vimfile.com";
-                        $this->email = $thisuser->email;
-                        $this->subject = "You have successfully turned ".$req->auto_deposit." your Auto Deposit Status.";
 
-                        if($req->auto_deposit == "ON"){
-                            $message = "The Auto Deposit feature on PaySprint is turned ON. You can now enjoy a stress-free transaction deposit on your PaySprint Account. <br><br> Thanks, PaySprint Team";
-                        }
-                        else{
-                            $message = "The Auto Deposit feature on PaySprint is turned OFF. You will need to manually accept all transfers made to your PaySprint wallet. If you want to enjoy a stress-free transaction deposit, you may have visit your profile on PaySprint Account to turn ON the feature. <br><br> Thanks, PaySprint Team";
-                        }
+            $this->name = $thisuser->name;
+            // $this->email = "bambo@vimfile.com";
+            $this->email = $thisuser->email;
+            $this->subject = "You have successfully turned " . $req->auto_deposit . " your Auto Deposit Status.";
 
-                        $this->message = '<p>'.$message.'</p>';
+            if ($req->auto_deposit == "ON") {
+                $message = "The Auto Deposit feature on PaySprint is turned ON. You can now enjoy a stress-free transaction deposit on your PaySprint Account. <br><br> Thanks, PaySprint Team";
+            } else {
+                $message = "The Auto Deposit feature on PaySprint is turned OFF. You will need to manually accept all transfers made to your PaySprint wallet. If you want to enjoy a stress-free transaction deposit, you may have visit your profile on PaySprint Account to turn ON the feature. <br><br> Thanks, PaySprint Team";
+            }
 
-
-                        $this->sendEmail($this->email, "Fund remittance");
-
-                        if($thisuser->country == "Nigeria"){
-
-                            $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
-                            $this->sendSms($recMsg, $correctPhone);
-                        }
-                        else{
-                            $this->sendMessage($recMsg, $recPhone);
-
-                        }
-
-                        $data = $resp;
-                        $message = "Saved";
-                        $status = 200;
-
-                        // Log::info("Hello ".strtoupper($thisuser->name).", You have successfully turned ".$req->auto_deposit." your Auto Deposit Status.");
-
-                        $this->slack("Hello ".strtoupper($thisuser->name).", You have successfully turned ".$req->auto_deposit." your Auto Deposit Status.", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+            $this->message = '<p>' . $message . '</p>';
 
 
-                        $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully turned ".$req->auto_deposit." your Auto Deposit Status.");
+            $this->sendEmail($this->email, "Fund remittance");
 
-                }
-                else{
+            if ($thisuser->country == "Nigeria") {
 
-                    $error = implode(",",$validator->messages()->all());
+                $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                $this->sendSms($recMsg, $correctPhone);
+            } else {
+                $this->sendMessage($recMsg, $recPhone);
+            }
 
-                    $data = [];
-                    $status = 400;
-                    $message = $error;
-                }
+            $data = $resp;
+            $message = "Saved";
+            $status = 200;
 
-                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+            // Log::info("Hello ".strtoupper($thisuser->name).", You have successfully turned ".$req->auto_deposit." your Auto Deposit Status.");
 
-                return $this->returnJSON($resData, $status);
+            $this->slack("Hello " . strtoupper($thisuser->name) . ", You have successfully turned " . $req->auto_deposit . " your Auto Deposit Status.", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
+
+            $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully turned " . $req->auto_deposit . " your Auto Deposit Status.");
+        } else {
+
+            $error = implode(",", $validator->messages()->all());
+
+            $data = [];
+            $status = 400;
+            $message = $error;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
     }
 
 
 
-    public function resetPassword(Request $req){
-        
+    public function resetPassword(Request $req)
+    {
+
 
         $validator = Validator::make($req->all(), [
-                     'securityQuestion' => 'required|string',
-                     'securityAnswer' => 'required|string',
-                     'newpassword' => 'required|string',
-                     'confirmpassword' => 'required|string',
-                ]);
+            'securityQuestion' => 'required|string',
+            'securityAnswer' => 'required|string',
+            'newpassword' => 'required|string',
+            'confirmpassword' => 'required|string',
+        ]);
 
-                if($validator->passes()){
+        if ($validator->passes()) {
 
-                        $thisuser = User::where('api_token', $req->bearerToken())->first();
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                        // Check if Security Answer is correct
-                        if(strtolower($req->securityAnswer) != $thisuser->securityAnswer){
-                            // You have provided a wrong answer to your security question
+            // Check if Security Answer is correct
+            if (strtolower($req->securityAnswer) != $thisuser->securityAnswer) {
+                // You have provided a wrong answer to your security question
 
-                            $error = "You have provided a wrong answer to your security question";
+                $error = "You have provided a wrong answer to your security question";
 
-                            $data = [];
-                            $status = 400;
-                            $message = $error;
-                        }
-                        else{
+                $data = [];
+                $status = 400;
+                $message = $error;
+            } else {
 
-                            // Check Password Match
+                // Check Password Match
 
-                            if($req->newpassword != $req->confirmpassword){
-                                $data = [];
-                                $message = "Confirm password does not match";
-                                $status = 400;
-                            }
-                            else{
-
-                                    $resp = User::where('api_token', $req->bearerToken())->update(['password' => Hash::make($req->newpassword)]);
-
-                                    Admin::where('email', $thisuser->email)->update(['password' => Hash::make($req->newpassword)]);
-
-                                    $data = $resp;
-                                    $message = "Saved";
-                                    $status = 200;
-
-                                    $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully reset your password.");
-
-                            }
-
-
-                        }
-
-                        
-
-                }
-                else{
-
-                    $error = implode(",",$validator->messages()->all());
-
+                if ($req->newpassword != $req->confirmpassword) {
                     $data = [];
+                    $message = "Confirm password does not match";
                     $status = 400;
-                    $message = $error;
+                } else {
+
+                    $resp = User::where('api_token', $req->bearerToken())->update(['password' => Hash::make($req->newpassword)]);
+
+                    Admin::where('email', $thisuser->email)->update(['password' => Hash::make($req->newpassword)]);
+
+                    $data = $resp;
+                    $message = "Saved";
+                    $status = 200;
+
+                    $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully reset your password.");
                 }
+            }
+        } else {
 
-                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+            $error = implode(",", $validator->messages()->all());
 
-                return $this->returnJSON($resData, $status);
+            $data = [];
+            $status = 400;
+            $message = $error;
+        }
 
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
     }
 
 
-    public function resetTransactionPin(Request $req){
-        
+    public function resetTransactionPin(Request $req)
+    {
+
 
         $validator = Validator::make($req->all(), [
-                     'securityQuestion' => 'required|string',
-                     'securityAnswer' => 'required|string',
-                     'newpin' => 'required|string',
-                     'confirmpin' => 'required|string',
-                ]);
+            'securityQuestion' => 'required|string',
+            'securityAnswer' => 'required|string',
+            'newpin' => 'required|string',
+            'confirmpin' => 'required|string',
+        ]);
 
-                if($validator->passes()){
+        if ($validator->passes()) {
 
-                        $thisuser = User::where('api_token', $req->bearerToken())->first();
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                        // Check if Security Answer is correct
-                        if(strtolower($req->securityAnswer) != $thisuser->securityAnswer){
-                            // You have provided a wrong answer to your security question
+            // Check if Security Answer is correct
+            if (strtolower($req->securityAnswer) != $thisuser->securityAnswer) {
+                // You have provided a wrong answer to your security question
 
-                            $error = "You have provided a wrong answer to your security question";
+                $error = "You have provided a wrong answer to your security question";
 
-                            $data = [];
-                            $status = 400;
-                            $message = $error;
-                        }
-                        else{
+                $data = [];
+                $status = 400;
+                $message = $error;
+            } else {
 
-                            if($req->newpin != $req->confirmpin){
-                                $data = [];
-                                $message = "The confirm pin does not match";
-                                $status = 400;
-                            }
-                            else{
-
-                                // Update
-                                $resp = User::where('api_token', $req->bearerToken())->update(['transaction_pin' => Hash::make($req->newpin)]);
-
-                                $data = $resp;
-                                $message = "Saved";
-                                $status = 200;
-
-                                $this->createNotification($thisuser->ref_code, "Transaction pin updated");
-
-                                $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully changed your transaction pin. Keep it SAFE!.");
-
-
-                            
-                            }
-
-
-                        }
-
-                        
-
-                }
-                else{
-
-                    $error = implode(",",$validator->messages()->all());
-
+                if ($req->newpin != $req->confirmpin) {
                     $data = [];
+                    $message = "The confirm pin does not match";
                     $status = 400;
-                    $message = $error;
+                } else {
+
+                    // Update
+                    $resp = User::where('api_token', $req->bearerToken())->update(['transaction_pin' => Hash::make($req->newpin)]);
+
+                    $data = $resp;
+                    $message = "Saved";
+                    $status = 200;
+
+                    $this->createNotification($thisuser->ref_code, "Transaction pin updated");
+
+                    $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully changed your transaction pin. Keep it SAFE!.");
                 }
+            }
+        } else {
 
-                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+            $error = implode(",", $validator->messages()->all());
 
-                return $this->returnJSON($resData, $status);
+            $data = [];
+            $status = 400;
+            $message = $error;
+        }
 
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
     }
 
 
-    public function updateTransactionPin(Request $req){
-        
+    public function updateTransactionPin(Request $req)
+    {
+
 
         $validator = Validator::make($req->all(), [
-                     'oldpin' => 'required|string',
-                     'newpin' => 'required|string',
-                     'confirmpin' => 'required|string',
-                ]);
+            'oldpin' => 'required|string',
+            'newpin' => 'required|string',
+            'confirmpin' => 'required|string',
+        ]);
 
-                if($validator->passes()){
+        if ($validator->passes()) {
 
-                    if($req->newpin != $req->confirmpin){
-                        $data = [];
-                        $message = "The confirm pin does not match";
-                        $status = 400;
-                    }
-                    else{
-                        $thisuser = User::where('api_token', $req->bearerToken())->first();
+            if ($req->newpin != $req->confirmpin) {
+                $data = [];
+                $message = "The confirm pin does not match";
+                $status = 400;
+            } else {
+                $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                    if(Hash::check($req->oldpin, $thisuser->transaction_pin)){
-                        // Update
-                        $resp = User::where('api_token', $req->bearerToken())->update(['transaction_pin' => Hash::make($req->newpin)]);
+                if (Hash::check($req->oldpin, $thisuser->transaction_pin)) {
+                    // Update
+                    $resp = User::where('api_token', $req->bearerToken())->update(['transaction_pin' => Hash::make($req->newpin)]);
 
-                        $data = $resp;
-                        $message = "Saved";
-                        $status = 200;
+                    $data = $resp;
+                    $message = "Saved";
+                    $status = 200;
 
-                        $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully updated your transaction pin. Keep it SAFE!.");
-                    }
-                    else{
-                        $data = [];
-                        $message = "Your old transaction pin is incorrect";
-                        $status = 400;
-                    }
-                    }
-
-                    
-
-                }
-                else{
-
-                    $error = implode(",",$validator->messages()->all());
-
+                    $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully updated your transaction pin. Keep it SAFE!.");
+                } else {
                     $data = [];
+                    $message = "Your old transaction pin is incorrect";
                     $status = 400;
-                    $message = $error;
                 }
+            }
+        } else {
 
-                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+            $error = implode(",", $validator->messages()->all());
 
-                return $this->returnJSON($resData, $status);
+            $data = [];
+            $status = 400;
+            $message = $error;
+        }
 
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
     }
 
 
 
-    public function uploadDocument($id, $file, $pathWay, $rowName){
+    public function uploadDocument($id, $file, $pathWay, $rowName)
+    {
 
 
         //Get filename with extension
         $filenameWithExt = $file->getClientOriginalName();
         // Get just filename
-        $filename = pathinfo($filenameWithExt , PATHINFO_FILENAME);
+        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
         // Get just extension
         $extension = $file->getClientOriginalExtension();
         // Filename to store
-        $fileNameToStore = rand().'_'.time().'.'.$extension;
-
-        
-        $path = $file->move(public_path('../../'.$pathWay.'/'), $fileNameToStore);
+        $fileNameToStore = rand() . '_' . time() . '.' . $extension;
 
 
-        $docPath = "http://".$_SERVER['HTTP_HOST']."/".$pathWay."/".$fileNameToStore;
+        $path = $file->move(public_path('../../' . $pathWay . '/'), $fileNameToStore);
 
 
-        User::where('id', $id)->update([''.$rowName.'' => $docPath]);
+        $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/" . $pathWay . "/" . $fileNameToStore;
 
+
+        User::where('id', $id)->update(['' . $rowName . '' => $docPath]);
     }
 
 
-    public function logout(Request $request, $id) {
+    public function logout(Request $request, $id)
+    {
         $user = User::where('id', $id)->first();
 
         User::where('id', $id)->update(['api_token' => encrypt($user->email)]);
@@ -1291,42 +1219,35 @@ class UserController extends Controller
     }
 
 
-    
-    public function sendEmail($objDemoa, $purpose){
+
+    public function sendEmail($objDemoa, $purpose)
+    {
         $objDemo = new \stdClass();
         $objDemo->purpose = $purpose;
-          if($purpose == "Payment Received"){
-  
-              $objDemo->name = $this->name;
-              $objDemo->email = $this->email;
-              $objDemo->amount = $this->amount;
-              $objDemo->paypurpose = $this->paypurpose;
-              $objDemo->coy_name = $this->coy_name;
-              $objDemo->subject = $this->subject;
-  
-          }
-          elseif($purpose == "Payment Successful"){
-  
-              $objDemo->name = $this->name;
-              $objDemo->email = $this->email;
-              $objDemo->amount = $this->amount;
-              $objDemo->paypurpose = $this->paypurpose;
-              $objDemo->coy_name = $this->coy_name;
-              $objDemo->subject = $this->subject2;
-  
-          }
-  
-          elseif($purpose == 'Fund remittance'){
-              $objDemo->name = $this->name;
-              $objDemo->email = $this->email;
-              $objDemo->subject = $this->subject;
-              $objDemo->message = $this->message;
-          }
-  
+        if ($purpose == "Payment Received") {
+
+            $objDemo->name = $this->name;
+            $objDemo->email = $this->email;
+            $objDemo->amount = $this->amount;
+            $objDemo->paypurpose = $this->paypurpose;
+            $objDemo->coy_name = $this->coy_name;
+            $objDemo->subject = $this->subject;
+        } elseif ($purpose == "Payment Successful") {
+
+            $objDemo->name = $this->name;
+            $objDemo->email = $this->email;
+            $objDemo->amount = $this->amount;
+            $objDemo->paypurpose = $this->paypurpose;
+            $objDemo->coy_name = $this->coy_name;
+            $objDemo->subject = $this->subject2;
+        } elseif ($purpose == 'Fund remittance') {
+            $objDemo->name = $this->name;
+            $objDemo->email = $this->email;
+            $objDemo->subject = $this->subject;
+            $objDemo->message = $this->message;
+        }
+
         Mail::to($objDemoa)
-              ->send(new sendEmail($objDemo));
-     }
-
-
-
+            ->send(new sendEmail($objDemo));
+    }
 }

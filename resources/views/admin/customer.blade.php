@@ -160,10 +160,22 @@
                       <div>
                         <button type="button" class="btn btn-danger" onclick="invoiceVisit('{{ $getCustomer[0]->id }}', 'delete')">Delete <img src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" class="spinnerdelete disp-0" style="width: 30px; height: 30px;"></button>
 
-                        <button class="btn btn-default edit" type="button" onclick="invoiceVisit('{{ $getCustomer[0]->id }}', 'edit')">Edit <img src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" class="spinneredit disp-0" style="width: 30px; height: 30px;"></button>
+                        <button class="btn btn-primary edit" type="button" onclick="invoiceVisit('{{ $getCustomer[0]->id }}', 'edit')">Edit <img src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" class="spinneredit disp-0" style="width: 30px; height: 30px;"></button>
 
 
                         <button class="btn btn-success print" type="button" onclick="print()">Print <img src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" class="spinneredit disp-0" style="width: 30px; height: 30px;"></button>
+
+                        @if ($getCustomer[0]->payment_status != 1)
+                            
+                        <button class="btn btn-warning" type="button" onclick="markasPaid({{ $getCustomer[0]->id }})">Mark as Paid <img src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" class="spinneredit disp-0" style="width: 30px; height: 30px;"></button>
+
+                        @else
+
+                        <button class="btn btn-default" type="button">Paid <img src="https://img.icons8.com/fluency/20/000000/verified-account.png"/></button>
+                            
+                        @endif
+                        
+                        
 
                         <button class="btn btn-default updt disp-0" type="submit">Update and Resend <img src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" class="spinnerupdate disp-0" style="width: 30px; height: 30px;"></button>
                       </div>

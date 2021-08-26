@@ -62,7 +62,7 @@ input[type="radio"] {
         <!-- For demo purpose -->
         <div class="row mb-4">
             <div class="col-lg-12 mx-auto text-center">
-                <h1 class="display-4">Aitime and Utility Bills</h1>
+                <h1 class="display-4">Airtime and Utility Bills</h1>
             </div>
         </div> <!-- End -->
         <div class="row">

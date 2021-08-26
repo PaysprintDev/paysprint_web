@@ -36,162 +36,150 @@ class CheckSetupController extends Controller
     use ExpressPayment, AccountNotify, Xwireless, PaymentGateway;
     // Check user quick wallet setup
 
-    public function updateQuickSetup(){
+    public function updateQuickSetup()
+    {
         // Get User
         $user = User::where('disableAccount', 'off')->inRandomOrder()->get();
 
         try {
-            
-            foreach($user as $key => $value){
+
+            foreach ($user as $key => $value) {
 
                 $info = $this->accountInfo($value->id);
 
-                if($value->approval == 0){
+                if ($value->approval == 0) {
                     $approval = "<li>Upload a copy of Government Issued Photo ID</li>";
-                }
-                else{
+                } else {
                     $approval = "";
                 }
 
-                
-                if($value->transaction_pin == null){
+
+                if ($value->transaction_pin == null) {
                     $transaction = "<li>Set Up Transaction Pin-You will need the PIN to Send Money, Pay Invoice/Bill or Withdraw Money from Your PaySprint Account</li>";
-                }
-                else{
+                } else {
                     $transaction = "";
                 }
-                if($value->securityQuestion == null){
+                if ($value->securityQuestion == null) {
                     $security = "<li>Set up Security Question and Answer-You will need this to reset your PIN code or Login Password</li>";
-                }
-                else{
+                } else {
                     $security = "";
                 }
-                if($value->country == "Nigeria" && $value->bvn_verification == null){
+                if ($value->country == "Nigeria" && $value->bvn_verification == null) {
                     $bankVerify = "<li>Verify your account with your bank verification number</li>";
-                }
-                else{
+                } else {
                     $bankVerify = "";
                 }
-                if($info == 0){
+                if ($info == 0) {
                     $card = "<li>Add Credit Card/Prepaid Card/Bank Account-You need this to add money to your PaySprint Wallet.</li>";
-                }
-                else{
+                } else {
                     $card = "";
                 }
 
                 // Send Mail
 
-                if($value->approval == 0 || $value->transaction_pin == null || $value->securityQuestion == null || $info == 0){
+                if ($value->approval == 0 || $value->transaction_pin == null || $value->securityQuestion == null || $info == 0) {
 
                     $this->name = $value->name;
                     $this->email = $value->email;
                     $this->subject = "You have some incomplete information on your PaySprint account";
 
-                    $this->message = '<p>We noticed you are yet to properly complete the set-up your PaySprint Account. You need to provide the outstanding information and complete the quick set up in order to enjoy the full benefits of a PaySprint Account.</p><p><ul>'.$approval.''.$transaction.''.$security.''.$bankVerify.''.$card.'</ul></p><p>Kindly complete these important steps in your profile. <a href='.route('profile').' class="text-primary" style="text-decoration: underline">Click here to login to your account</a></p>';
+                    $this->message = '<p>We noticed you are yet to properly complete the set-up your PaySprint Account. You need to provide the outstanding information and complete the quick set up in order to enjoy the full benefits of a PaySprint Account.</p><p><ul>' . $approval . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card . '</ul></p><p>Kindly complete these important steps in your profile. <a href=' . route('profile') . ' class="text-primary" style="text-decoration: underline">Click here to login to your account</a></p>';
 
 
                     $this->sendEmail($this->email, "Incomplete Setup");
 
                     // Log::info('Quick wallet set up cron sent to '.$this->name);
 
-                    $this->slack('Quick wallet set up cron sent to '.$this->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                    $this->slack('Quick wallet set up cron sent to ' . $this->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
-                    echo "Sent to ".$this->name."<hr>";
+                    echo "Sent to " . $this->name . "<hr>";
                 }
-
-                
-
             }
-
         } catch (\Throwable $th) {
             // Log::critical('Cannot send quick setup mail '.$th->getMessage());
 
-            $this->slack('Cannot send quick setup mail '.$th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+            $this->slack('Cannot send quick setup mail ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
-
-
     }
 
-    public function accountInfo($id){
+    public function accountInfo($id)
+    {
 
         $getCard = AddCard::where('user_id', $id)->first();
 
-        if(isset($getCard) == false){
+        if (isset($getCard) == false) {
             // Check Bank
             $getBank = AddBank::where('user_id', $id)->first();
 
-            if(isset($getBank) == false){
+            if (isset($getBank) == false) {
                 $data = 0;
-            }
-            else{
+            } else {
                 // Do nothing
                 $data = 1;
             }
-        }
-        else{
+        } else {
             // Do nothing
             $data = 1;
         }
 
 
         return $data;
-
     }
 
 
 
     // Move account to archive
 
-    public function userAccountArchive(){
+    public function userAccountArchive()
+    {
         $getUsers = User::all();
         $sum = 0;
 
         foreach ($getUsers as $allusers) {
-            
+
             $getNIN = $this->accountChecker($allusers->id, 'nin_front');
             $getDriverLicence = $this->accountChecker($allusers->id, 'drivers_license_front');
             $getPassport = $this->accountChecker($allusers->id, 'international_passport_front');
             $BVN = $this->accountChecker($allusers->id, 'bvn_verification');
 
 
-            
+
             $sum = $getNIN + $getDriverLicence + $getPassport + $BVN;
 
-            if($sum == 4){
+            if ($sum == 4) {
                 User::where('id', $allusers->id)->update(['archive' => 1]);
-            }   
-
+            }
         }
     }
 
-    
-    public function accountChecker($id, $fieldName){
 
-        if($fieldName != 'bvn_verification'){
+    public function accountChecker($id, $fieldName)
+    {
+
+        if ($fieldName != 'bvn_verification') {
             $result = User::where('id', $id)->where($fieldName, NULL)->first();
-        }
-        else{
+        } else {
             $result = User::where('id', $id)->where($fieldName, 0)->first();
         }
-        
 
-        if(isset($result)){
+
+        if (isset($result)) {
             $data = 1;
-        }
-        else{
+        } else {
             $data = 0;
         }
         return $data;
     }
 
 
-    public function autoDepositOff(){
+    public function autoDepositOff()
+    {
         $user = User::where('auto_deposit', 'off')->where('disableAccount', 'off')->inRandomOrder()->get();
 
-        if(count($user) > 0){
+        if (count($user) > 0) {
             // Send mail
-            foreach($user as $key => $value){
+            foreach ($user as $key => $value) {
                 $this->name = $value->name;
                 $this->email = $value->email;
                 $this->subject = "Your Auto Deposit status is OFF on PaySprint.";
@@ -202,25 +190,25 @@ class CheckSetupController extends Controller
 
                 // Log::info('Auto Deposit Status cron sent to '.$this->name);
 
-                $this->slack('Auto Deposit Status cron sent to '.$this->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                $this->slack('Auto Deposit Status cron sent to ' . $this->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
-                echo "Sent to ".$this->name."<hr>";
+                echo "Sent to " . $this->name . "<hr>";
             }
-        }
-        else{
+        } else {
             // Do nothing
         }
     }
 
 
-    public function checkAccountAcvtivity(){
+    public function checkAccountAcvtivity()
+    {
         $user = User::where('lastLogin', '!=', null)->where('disableAccount', 'off')->inRandomOrder()->get();
 
-        if(count($user) > 0){
+        if (count($user) > 0) {
 
             $date2 = date('Y-m-d');
 
-            foreach($user as $key => $value){
+            foreach ($user as $key => $value) {
                 $lastLogin = date('Y-m-d', strtotime($value->lastLogin));
 
                 $date1 = $lastLogin;
@@ -237,92 +225,85 @@ class CheckSetupController extends Controller
                 $diff = (($year2 - $year1) * 12) + ($month2 - $month1);
 
 
-                if($diff == 1){
+                if ($diff == 1) {
 
                     $this->name = $value->name;
                     $this->email = $value->email;
                     $this->subject = "We missed you on PaySprint!";
 
-                    $this->message = '<p>You have been away for a while on PaySprint. Your last activity was recorded on <b>'.date($value->lastLogin).'</b>. <br><br> We hope to see you soon. <br><br> Thanks, PaySprint Team</p>';
+                    $this->message = '<p>You have been away for a while on PaySprint. Your last activity was recorded on <b>' . date($value->lastLogin) . '</b>. <br><br> We hope to see you soon. <br><br> Thanks, PaySprint Team</p>';
 
 
                     // Log::info('We missed you on PaySprint: '.$this->name.'. Been away for '.$diff.' Last login was '.date($value->lastLogin));
 
-                    $this->slack('We missed you on PaySprint: '.$this->name.'. Been away for '.$diff.' Last login was '.date($value->lastLogin), $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                    $this->slack('We missed you on PaySprint: ' . $this->name . '. Been away for ' . $diff . ' Last login was ' . date($value->lastLogin), $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                     $this->sendEmail($this->email, "Incomplete Setup");
-                }
-                elseif($diff == 2){
+                } elseif ($diff == 2) {
                     $this->name = $value->name;
                     $this->email = $value->email;
                     $this->subject = "We missed you on PaySprint!";
 
-                    $this->message = '<p>We noticed you have been away for about '.$diff.' months. Your last activity was recorded on <b>'.$value->lastLogin.'</b>. <br><br> Your PaySprint Account would be disabled if there are no activity in the next days. The qualifying activities include, Add and send money, Pay invoice or withdraw money from your PaySprint Account. <br><br> We hope to see you soon. <br><br> Thanks, PaySprint Team</p>';
+                    $this->message = '<p>We noticed you have been away for about ' . $diff . ' months. Your last activity was recorded on <b>' . $value->lastLogin . '</b>. <br><br> Your PaySprint Account would be disabled if there are no activity in the next days. The qualifying activities include, Add and send money, Pay invoice or withdraw money from your PaySprint Account. <br><br> We hope to see you soon. <br><br> Thanks, PaySprint Team</p>';
 
 
                     // Log::info('We missed you on PaySprint: '.$this->name.'. Been away for '.$diff.' Last login was '.$value->lastLogin);
 
-                    $this->slack('We missed you on PaySprint: '.$this->name.'. Been away for '.$diff.' Last login was '.$value->lastLogin, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                    $this->slack('We missed you on PaySprint: ' . $this->name . '. Been away for ' . $diff . ' Last login was ' . $value->lastLogin, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                     $this->sendEmail($this->email, "Incomplete Setup");
-                }
-                elseif($diff == 3){
+                } elseif ($diff == 3) {
 
                     User::where('email', $value->email)->update(['disableAccount' => 'on']);
 
                     $this->name = $value->name;
                     $this->email = $value->email;
-                    $this->subject = "Your account has been inactive on PaySprint for ".$diff." months!";
+                    $this->subject = "Your account has been inactive on PaySprint for " . $diff . " months!";
 
-                    $this->message = '<p>Your last activity was recorded on <b>'.$value->lastLogin.'</b>. <br><br> Your account is now suspended due to inactive use. Kindly contact the admin using contact us form, providing Account number and your name for your account to be activated. <br><br> Thanks, PaySprint Team</p>';
+                    $this->message = '<p>Your last activity was recorded on <b>' . $value->lastLogin . '</b>. <br><br> Your account is now suspended due to inactive use. Kindly contact the admin using contact us form, providing Account number and your name for your account to be activated. <br><br> Thanks, PaySprint Team</p>';
 
                     // Log::info('We missed you on PaySprint: '.$this->name.'. Been away for '.$diff.' Last login was '.$value->lastLogin.' and account is disabled');
 
-                    $this->slack('We missed you on PaySprint: '.$this->name.'. Been away for '.$diff.' Last login was '.$value->lastLogin.' and account is disabled', $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                    $this->slack('We missed you on PaySprint: ' . $this->name . '. Been away for ' . $diff . ' Last login was ' . $value->lastLogin . ' and account is disabled', $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                     $this->sendEmail($this->email, "Incomplete Setup");
-                }
-                else{
+                } else {
                     // Do nothing
                 }
-
-
             }
 
             echo "Mail Sent";
-
-        }
-        else{
+        } else {
             // Do nothing
         }
     }
 
 
-    public function statementCountry(){
+    public function statementCountry()
+    {
         $query = User::where('disableAccount', 'off')->orderBy('created_at', 'DESC')->get();
 
-        if(count($query) > 0){
-            foreach($query as $value => $key){
+        if (count($query) > 0) {
+            foreach ($query as $value => $key) {
                 $country = $key->country;
                 $email = $key->email;
 
                 // Update Statememt country
                 Statement::where('user_id', $email)->update(['country' => $country]);
             }
-
-        }
-        else{
+        } else {
             // Do nothing
         }
     }
 
 
     // Update charge fee
-    public function chargeFee(){
+    public function chargeFee()
+    {
         $query = FeeTransaction::orderBy('created_at', 'DESC')->get();
 
-        if(count($query) > 0){
-            foreach($query as $value => $key){
+        if (count($query) > 0) {
+            foreach ($query as $value => $key) {
                 $transaction_id = $key->transaction_id;
                 $fee = $key->fee;
 
@@ -331,92 +312,86 @@ class CheckSetupController extends Controller
 
                 // Log::info("Update charge fee: ".$fee);
             }
-
-        }
-        else{
+        } else {
             // Do nothing
         }
-
     }
 
 
-    public function updateMonthlyFee(Request $req){
+    public function updateMonthlyFee(Request $req)
+    {
 
         $getUser = User::where('created_at', '<=', '2021-04-30')->where('disableAccount', 'off')->inRandomOrder()->get();
 
-        foreach($getUser as $key => $value){
-
-                
-                $getTranscost = TransactionCost::where('structure', 'Wallet Maintenance fee')->where('country', $value->country)->first();
-
-                if(isset($getTranscost)){
+        foreach ($getUser as $key => $value) {
 
 
+            $getTranscost = TransactionCost::where('structure', 'Wallet Maintenance fee')->where('country', $value->country)->first();
 
-                    $walletBalance = $value->wallet_balance - $getTranscost->fixed;
-
-                    // Send Mail
-                    $transaction_id = "wallet-".date('dmY').time();
-
-                    $activity = "Monthly maintenance fee of CAD5.00 for April/2021 was deducted from Wallet";
-                    $credit = 0;
-                    $debit = number_format($getTranscost->fixed, 2);
-                    $reference_code = $transaction_id;
-                    $balance = 0;
-                    $trans_date = date('Y-m-d');
-                    $status = "Delivered";
-                    $action = "Wallet debit";
-                    $regards = $value->ref_code;
-                    $statement_route = "wallet";
+            if (isset($getTranscost)) {
 
 
-                    $sendMsg = 'Hello '.strtoupper($value->name).', '.$activity.'. You now have '.$value->currencyCode.' '.number_format($walletBalance, 2).' balance in your account';
-                    $sendPhone = "+".$value->code.$value->telephone;
+
+                $walletBalance = $value->wallet_balance - $getTranscost->fixed;
+
+                // Send Mail
+                $transaction_id = "wallet-" . date('dmY') . time();
+
+                $activity = "Monthly maintenance fee of CAD5.00 for April/2021 was deducted from Wallet";
+                $credit = 0;
+                $debit = number_format($getTranscost->fixed, 2);
+                $reference_code = $transaction_id;
+                $balance = 0;
+                $trans_date = date('Y-m-d');
+                $status = "Delivered";
+                $action = "Wallet debit";
+                $regards = $value->ref_code;
+                $statement_route = "wallet";
 
 
-                    // Senders statement
-                    $this->maintinsStatement($value->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
-
-                    $this->createNotification($value->ref_code, "Hello ".strtoupper($value->name).", ".$sendMsg);
-
-                    $this->name = $value->name;
-                    $this->email = $value->email;
-                    $this->subject = $activity;
-
-                    $this->message = '<p>'.$activity.'</p><p>You now have <strong>'.$value->currencyCode.' '.number_format($walletBalance, 2).'</strong> balance in your account</p>';
+                $sendMsg = 'Hello ' . strtoupper($value->name) . ', ' . $activity . '. You now have ' . $value->currencyCode . ' ' . number_format($walletBalance, 2) . ' balance in your account';
+                $sendPhone = "+" . $value->code . $value->telephone;
 
 
-                    // Log::info($sendMsg);
+                // Senders statement
+                $this->maintinsStatement($value->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
 
-                    $this->slack($sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                $this->createNotification($value->ref_code, "Hello " . strtoupper($value->name) . ", " . $sendMsg);
 
-                    // $this->sendMessage($sendMsg, $sendPhone);
+                $this->name = $value->name;
+                $this->email = $value->email;
+                $this->subject = $activity;
 
-                    // $this->sendEmail($this->email, "Fund remittance");
-
-                    // $this->monthlyChargeInsert($value->ref_code, $value->country, $getTranscost->fixed, $value->currencyCode);
+                $this->message = '<p>' . $activity . '</p><p>You now have <strong>' . $value->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> balance in your account</p>';
 
 
-                    echo "Sent to ".$this->name."<hr>";
+                // Log::info($sendMsg);
 
-                }
-                else{
-                    // Log::info($value->name." was not charged because they are in ".$value->country." and the fee charge is not yet available");
-                }
-            
+                $this->slack($sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
-            
+                // $this->sendMessage($sendMsg, $sendPhone);
+
+                // $this->sendEmail($this->email, "Fund remittance");
+
+                // $this->monthlyChargeInsert($value->ref_code, $value->country, $getTranscost->fixed, $value->currencyCode);
+
+
+                echo "Sent to " . $this->name . "<hr>";
+            } else {
+                // Log::info($value->name." was not charged because they are in ".$value->country." and the fee charge is not yet available");
+            }
         }
-
     }
 
-    public function maintinsStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route){
+    public function maintinsStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route)
+    {
         Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route]);
     }
 
 
     // Update Statement Report Satus
-    public function reportStatus(){
+    public function reportStatus()
+    {
 
         Statement::where('activity', 'LIKE', '%Payment on%')->where('debit', '>', 0)->update(['report_status' => 'Money sent']);
         Statement::where('activity', 'LIKE', '%Payment for%')->where('debit', '>', 0)->update(['report_status' => 'Money sent']);
@@ -441,12 +416,13 @@ class CheckSetupController extends Controller
         Statement::where('activity', 'LIKE', '%Received%')->where('credit', '>', 0)->update(['report_status' => 'Money received']);
         Statement::where('activity', 'LIKE', '%Refund of %')->where('credit', '>', 0)->update(['report_status' => 'Money received']);
 
-        
+
         // Log::info("Report Schedule Status Completed on ".date('d/M/Y h:i:a'));
     }
 
 
-    public function insertCountry(){
+    public function insertCountry()
+    {
         $country = '[{"name": "Afghanistan", "code": "AF", "gateway": ""},
         {"name": "Åland Islands", "code": "AX", "gateway": ""},
         {"name": "Albania", "code": "AL", "gateway": ""},
@@ -695,31 +671,27 @@ class CheckSetupController extends Controller
 
         // dd($json);
 
-        foreach($json as $countries){
+        foreach ($json as $countries) {
 
 
             AllCountries::updateOrCreate(['name' => $countries['name']], ['name' => $countries['name'], 'code' => $countries['code'], 'gateway' => $countries['gateway']]);
-
         }
-
-
-        
-
     }
 
-    public function updateExbcAccount(){
+    public function updateExbcAccount()
+    {
         // Create Statement And Credit EXBC account holder
         // $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
         $exbcMerchant = User::where('email', 'adenugaadebambo41@gmail.com')->first();
 
-        if(isset($exbcMerchant)){
+        if (isset($exbcMerchant)) {
 
 
             // $transaction_id = "wallet-".date('dmY').time();
             $transaction_id = "687562435";
 
             // $activity = "Added ".$exbcMerchant->currencyCode.''.number_format(20, 2)." to your Wallet to load EXBC Prepaid Card";
-            $activity = "Added ".$exbcMerchant->currencyCode.''.number_format(100, 2)." to Wallet including a fee charge of ".$exbcMerchant->currencyCode.''.number_format(1.65, 2)." was deducted from your Debit Card";
+            $activity = "Added " . $exbcMerchant->currencyCode . '' . number_format(100, 2) . " to Wallet including a fee charge of " . $exbcMerchant->currencyCode . '' . number_format(1.65, 2) . " was deducted from your Debit Card";
             $credit = 100;
             $debit = 0;
             $reference_code = $transaction_id;
@@ -732,11 +704,11 @@ class CheckSetupController extends Controller
 
             $merchantwalletBal = $exbcMerchant->wallet_balance + 100;
 
-                User::where('email', 'adenugaadebambo41@gmail.com')->update([
-                    'wallet_balance' => $merchantwalletBal
-                ]);
+            User::where('email', 'adenugaadebambo41@gmail.com')->update([
+                'wallet_balance' => $merchantwalletBal
+            ]);
 
-                
+
 
             // Senders statement
             $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
@@ -745,7 +717,7 @@ class CheckSetupController extends Controller
 
             // $sendMerchantMsg = "Hi ".$exbcMerchant->name.", ".$exbcMerchant->currencyCode." 20.00 was added to your wallet to load EXBC Prepaid Card. Your new wallet balance is ".$exbcMerchant->currencyCode.' '.number_format($merchantwalletBal, 2).". Thanks.";
 
-            $sendMerchantMsg = 'You have added '.$exbcMerchant->currencyCode.' '.number_format(100, 2).' (Gross Amount of '.$exbcMerchant->currencyCode.' '.number_format(101.65, 2).' less transaction fee '.$exbcMerchant->currencyCode.' '.number_format(1.65, 2).') to your wallet with PaySprint. You now have '.$exbcMerchant->currencyCode.' '.number_format($merchantwalletBal, 2).' balance in your account';
+            $sendMerchantMsg = 'You have added ' . $exbcMerchant->currencyCode . ' ' . number_format(100, 2) . ' (Gross Amount of ' . $exbcMerchant->currencyCode . ' ' . number_format(101.65, 2) . ' less transaction fee ' . $exbcMerchant->currencyCode . ' ' . number_format(1.65, 2) . ') to your wallet with PaySprint. You now have ' . $exbcMerchant->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
 
             $this->createNotification($exbcMerchant->ref_code, $sendMerchantMsg);
 
@@ -754,28 +726,25 @@ class CheckSetupController extends Controller
             $gateway = ucfirst($getGateway->gateway);
 
 
-            $message = 'You have successfully added '.$exbcMerchant->currencyCode.' '.number_format(100, 2).' to your wallet';
+            $message = 'You have successfully added ' . $exbcMerchant->currencyCode . ' ' . number_format(100, 2) . ' to your wallet';
 
             $this->keepRecord($reference_code, $message, "Success", $gateway, $exbcMerchant->country);
 
             $userPhone = User::where('email', $exbcMerchant->email)->where('telephone', 'LIKE', '%+%')->first();
-                                                    
-            if(isset($userPhone)){
+
+            if (isset($userPhone)) {
 
                 $sendPhone = $exbcMerchant->telephone;
-            }
-            else{
-                $sendPhone = "+".$exbcMerchant->code.$exbcMerchant->telephone;
+            } else {
+                $sendPhone = "+" . $exbcMerchant->code . $exbcMerchant->telephone;
             }
 
-            if($exbcMerchant->country == "Nigeria"){
+            if ($exbcMerchant->country == "Nigeria") {
 
                 $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
                 $this->sendSms($sendMerchantMsg, $correctPhone);
-            }
-            else{
+            } else {
                 $this->sendMessage($sendMerchantMsg, $sendPhone);
-
             }
 
 
@@ -784,27 +753,25 @@ class CheckSetupController extends Controller
             $this->slack($sendMerchantMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
             echo $sendMerchantMsg;
-
-        }
-        else{
+        } else {
             // Do nothing
         }
     }
 
 
-    public function refundbyCountry(){
+    public function refundbyCountry()
+    {
         $user = User::all();
 
 
         try {
-            if(count($user) > 0){
+            if (count($user) > 0) {
 
-                foreach($user as $key => $value){
+                foreach ($user as $key => $value) {
                     // Update user info
                     RequestRefund::where('user_id', $value->id)->update(['country' => $value->country]);
                 }
-            }
-            else{
+            } else {
                 // 
             }
         } catch (\Throwable $th) {
@@ -812,18 +779,18 @@ class CheckSetupController extends Controller
 
             $this->slack($th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
-
     }
 
 
-    
-    public function setupFeeStructure(){
+
+    public function setupFeeStructure()
+    {
         // $countries = AllCountries::where('approval', 1)->where('gateway', 'PayPal')->where('name', '!=', 'United States')->get();
         $countries = AllCountries::where('gateway', 'Stripe')->get();
 
         if (count($countries) > 0) {
 
-            $query;
+            $query = [];
             $countries;
 
             foreach ($countries as $key => $value) {
@@ -831,12 +798,12 @@ class CheckSetupController extends Controller
 
                 $countryName = $value->name;
 
-                $availCountries []=$countryName;
+                $availCountries[] = $countryName;
                 // Get TRansaction
                 $getSpecific = TransactionCost::where('country', "United States")->get();
 
-                for ($i=0; $i < count($getSpecific); $i++) { 
-                    $query []= [
+                for ($i = 0; $i < count($getSpecific); $i++) {
+                    $query[] = [
                         '_token' => $getSpecific[$i]->_token,
                         'variable' => $getSpecific[$i]->variable,
                         'fixed' => $getSpecific[$i]->fixed,
@@ -845,36 +812,26 @@ class CheckSetupController extends Controller
                         'country' => $countryName
                     ];
                 }
-
-
             }
 
 
 
-                foreach($query as $queries){
+            foreach ($query as $queries) {
 
-                    TransactionCost::insert($queries);
+                TransactionCost::insert($queries);
 
-                    echo "Done";
-                    echo "<hr>";
-                    
-
-                }
-
-            
-
-
-            
+                echo "Done";
+                echo "<hr>";
+            }
         }
-        
-
     }
 
 
-    public function checkTelephone(){
+    public function checkTelephone()
+    {
         $user = User::all();
 
-        foreach($user as $users){
+        foreach ($user as $users) {
             $phone = $users->telephone;
 
             $correctPhone = preg_replace("/[^0-9]/", "", $phone);
@@ -887,7 +844,8 @@ class CheckSetupController extends Controller
 
 
     // EXBC PREPAID CARD CHECK
-    public function checkExbcCardRequest(){
+    public function checkExbcCardRequest()
+    {
 
         // RUN CRON GET
 
@@ -905,17 +863,17 @@ class CheckSetupController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => $url,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'GET',
-        CURLOPT_HTTPHEADER => array(
-            'Authorization: Bearer base64:HgMO6FDHGziGl01OuLH9mh7CeP095shB6uuDUUClhks='
-        ),
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: Bearer base64:HgMO6FDHGziGl01OuLH9mh7CeP095shB6uuDUUClhks='
+            ),
         ));
 
         $response = curl_exec($curl);
@@ -925,26 +883,26 @@ class CheckSetupController extends Controller
         $result = json_decode($response);
 
 
-        if(count($result->data)){
+        if (count($result->data)) {
             foreach ($result->data as $key => $value) {
                 $userDetail = User::where('ref_code', '!=', $value->ref_code)->update(['cardRequest' => 0]);
             }
         }
-        
     }
 
 
-    public function passwordReminder(){
+    public function passwordReminder()
+    {
         $getUsers = User::where('pass_date', '!=', null)->where('disableAccount', '!=', 'on')->where('countryapproval', 1)->get();
 
         $today = date('Y-m-d');
-        foreach($getUsers as $users){
+        foreach ($getUsers as $users) {
             $passDate = date('Y-m-d', strtotime($users->pass_date));
-            $nextTwoWeeks = date('Y-m-d', strtotime($passDate. ' + 14 days'));
+            $nextTwoWeeks = date('Y-m-d', strtotime($passDate . ' + 14 days'));
             $passChecker = $users->pass_checker + 1;
 
-            if($users->pass_date != null){
-                if($today > $passDate){
+            if ($users->pass_date != null) {
+                if ($today > $passDate) {
                     // Update Passdate
                     User::where('id', $users->id)->update(['pass_date' => $nextTwoWeeks, 'pass_checker' => $passChecker]);
                     // Send Mail
@@ -954,24 +912,18 @@ class CheckSetupController extends Controller
                     $this->email = 'adenugaadebambo41@gmail.com';
                     $this->subject = "Kindly reset your password on PaySprint";
 
-                    $this->message = '<p>We wish to notify you to change or reset your password on PaySprint for security resasons.</p><p><a href='.route('password.request').' class="text-primary" style="text-decoration: underline">Click here to reset your password</a></p>';
+                    $this->message = '<p>We wish to notify you to change or reset your password on PaySprint for security resasons.</p><p><a href=' . route('password.request') . ' class="text-primary" style="text-decoration: underline">Click here to reset your password</a></p>';
 
                     $this->sendEmail($this->email, "Incomplete Setup");
 
                     // Log::info('Reset Password Mail Sent to '.$this->name);
 
-                    $this->slack('Reset Password Mail Sent to '.$this->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                    
+                    $this->slack('Reset Password Mail Sent to ' . $this->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                } else {
                 }
-                else{
-
-                }
-            }
-            else{
+            } else {
                 // DO nothing
             }
-
-
         }
     }
 
@@ -1022,101 +974,90 @@ class CheckSetupController extends Controller
     //         }
 
     //         $table .= "<table>".$body."</table>";
-            
-            
+
+
     //         echo $table;
     //         echo "<hr>";
-            
+
 
     //     }
 
 
-        
+
 
     // }
 
 
-    public function monthlyTransactionHistory(){
+    public function monthlyTransactionHistory()
+    {
 
-    	// Get Statement Information
-    	$getusers = User::inRandomOrder()->orderBy('created_at', 'DESC')->get();
+        // Get Statement Information
+        $getusers = User::inRandomOrder()->orderBy('created_at', 'DESC')->get();
 
 
-    	if(count($getusers) > 0){
-    		$from = date('Y-m-01');
-    		$nextDay = date('Y-m-d');
+        if (count($getusers) > 0) {
+            $from = date('Y-m-01');
+            $nextDay = date('Y-m-d');
 
-    		foreach ($getusers as $key => $value) {
+            foreach ($getusers as $key => $value) {
 
                 $email = $value->email;
-                
-    			
 
 
-    			$myStatement = Statement::where('user_id', $email)->whereBetween('trans_date', [$from, $nextDay])->orderBy('created_at', 'DESC')->get();
 
-    			if(count($myStatement) > 0){
-    				// Send Mail
+
+                $myStatement = Statement::where('user_id', $email)->whereBetween('trans_date', [$from, $nextDay])->orderBy('created_at', 'DESC')->get();
+
+                if (count($myStatement) > 0) {
+                    // Send Mail
 
                     $walletBalance = $value->wallet_balance;
                     $currencyCode = $value->currencyCode;
 
-	    			$name = $value->name;
-	    			$subject = "Your monthly statement on PaySprint";
+                    $name = $value->name;
+                    $subject = "Your monthly statement on PaySprint";
 
-	    			$tabledetails = "";
-		    		$table = "";
+                    $tabledetails = "";
+                    $table = "";
 
-	    			foreach ($myStatement as $key => $valueAdded) {
+                    foreach ($myStatement as $key => $valueAdded) {
 
 
-	    				if($valueAdded->credit != 0){
-	    					$color = "green";
-	    					$amount = "+".$currencyCode.number_format($valueAdded->credit, 2);
-	    				}
-	    				elseif($valueAdded->debit != 0){
-	    					$color = "red";
-	    					$amount = "-".$currencyCode.number_format($valueAdded->debit, 2);
-	    				}
+                        if ($valueAdded->credit != 0) {
+                            $color = "green";
+                            $amount = "+" . $currencyCode . number_format($valueAdded->credit, 2);
+                        } elseif ($valueAdded->debit != 0) {
+                            $color = "red";
+                            $amount = "-" . $currencyCode . number_format($valueAdded->debit, 2);
+                        }
 
-		    			$tabledetails = "<tr>
-		    			<td>".date('d/F/Y', strtotime($valueAdded->trans_date))."</td>
-		    			<td>".$valueAdded->activity."</td>
-		    			<td style='color:".$color."; font-weight: bold;' align='center'>".$amount."</td>
-		    			<td>".$valueAdded->status."</td>
+                        $tabledetails = "<tr>
+		    			<td>" . date('d/F/Y', strtotime($valueAdded->trans_date)) . "</td>
+		    			<td>" . $valueAdded->activity . "</td>
+		    			<td style='color:" . $color . "; font-weight: bold;' align='center'>" . $amount . "</td>
+		    			<td>" . $valueAdded->status . "</td>
 		    			</tr>";
 
-		    			$table .= $tabledetails;
-	    			}
+                        $table .= $tabledetails;
+                    }
 
 
-	    			$message = "<p>Below is the statement of your transactions on PaySprint for this month.</p> <br> <table width='700' border='1' cellpadding='1' cellspacing='0'><thead><tr><th>Trans. Date</th><th>Desc.</th><th>Amount</th><th>Status</th></tr></thead><tbody>".$table."</tbody></table> <br><br> Thanks <br><br> Client Services Team <br> PaySprint <br><br>";
-
-
-
-	    			$this->mailprocess($email, $name, $subject, $message);
-
-
-    			}
+                    $message = "<p>Below is the statement of your transactions on PaySprint for this month.</p> <br> <table width='700' border='1' cellpadding='1' cellspacing='0'><thead><tr><th>Trans. Date</th><th>Desc.</th><th>Amount</th><th>Status</th></tr></thead><tbody>" . $table . "</tbody></table> <br><br> Thanks <br><br> Client Services Team <br> PaySprint <br><br>";
 
 
 
-    		}
+                    $this->mailprocess($email, $name, $subject, $message);
+                }
+            }
+        } else {
+
+            // Do nothing
+        }
+    }
 
 
-    	}
-    	else{
-
-    		// Do nothing
-    	}
-
-    	
-
-    	
-    } 
-    
-    
-    public function migrateUsersToLevelOne(){
+    public function migrateUsersToLevelOne()
+    {
 
         $user = User::where('accountLevel', 0)->get();
 
@@ -1126,42 +1067,41 @@ class CheckSetupController extends Controller
             $checkCountry = AllCountries::where('name', $users->country)->where('approval', 1)->first();
 
 
-            if(isset($checkCountry) == true){
+            if (isset($checkCountry) == true) {
                 // Update User
                 User::where('id', $users->id)->update(['accountLevel' => 2, 'countryApproval' => 1]);
             }
-
         }
 
         echo "Done migration";
-        
     }
 
 
     // Copy special information details
-    public function insertspecialinfoActivity(){
+    public function insertspecialinfoActivity()
+    {
 
         $country = AllCountries::all();
 
         $getInfo = SpecialInformation::where('country', "United States")->first();
 
-        foreach($country as $countries){
-            SpecialInformation::updateOrCreate(['country' => $countries->name],[
+        foreach ($country as $countries) {
+            SpecialInformation::updateOrCreate(['country' => $countries->name], [
                 'country' => $countries->name,
                 'information' => $getInfo->information
             ]);
         }
 
         echo "Done Insertion";
-
     }
 
 
 
-    public function mailprocess($email, $name, $subject, $message){
+    public function mailprocess($email, $name, $subject, $message)
+    {
 
-    	$this->email = $email;
-    	// $this->email = "bambo@vimfile.com";
+        $this->email = $email;
+        // $this->email = "bambo@vimfile.com";
         $this->name = $name;
         $this->subject = $subject;
 
@@ -1172,38 +1112,38 @@ class CheckSetupController extends Controller
 
         // Log::info('Monthly Transaction Statement: '.$this->name."\n Message: ".$message);
 
-        $this->slack('Monthly Transaction Statement: '.$this->name."\n Message: ".$message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-
-
-
+        $this->slack('Monthly Transaction Statement: ' . $this->name . "\n Message: " . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
     }
 
 
 
     // Update Notification Table
-    public function notificationTable(){
+    public function notificationTable()
+    {
         $data = $this->updateNotificationTable();
     }
 
 
-    public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $auto_deposit){
+    public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $auto_deposit)
+    {
         Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route, 'auto_deposit' => $auto_deposit]);
     }
 
 
-    public function sendEmail($objDemoa, $purpose){
+    public function sendEmail($objDemoa, $purpose)
+    {
         $objDemo = new \stdClass();
         $objDemo->purpose = $purpose;
-        
-        if($purpose == 'Incomplete Setup'){
-              $objDemo->name = $this->name;
-              $objDemo->email = $this->email;
-              $objDemo->subject = $this->subject;
-              $objDemo->message = $this->message;
-          }
-          
-  
+
+        if ($purpose == 'Incomplete Setup') {
+            $objDemo->name = $this->name;
+            $objDemo->email = $this->email;
+            $objDemo->subject = $this->subject;
+            $objDemo->message = $this->message;
+        }
+
+
         Mail::to($objDemoa)
-              ->send(new sendEmail($objDemo));
+            ->send(new sendEmail($objDemo));
     }
 }

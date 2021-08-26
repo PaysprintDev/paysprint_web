@@ -466,7 +466,14 @@
                                     <li class="list-group-item" title="Pay Utility Bills">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <a href="{{ route('utility bills') }}">Utility Payment <small>(Nigeria)</small></a>
+
+                                                @if (Auth::user()->country == "Nigeria")
+                                                    <a href="{{ route('utility bills') }}">Utility Payment</small></a>
+                                                @else
+                                                    <a href="{{ route('select utility bills country') }}">Utility Payment</small></a>
+                                                @endif
+
+                                                
                                             </div>
                                         </div>
 

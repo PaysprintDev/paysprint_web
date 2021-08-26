@@ -649,7 +649,15 @@
                                     <li class="list-group-item" title="Pay Utility Bills">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <a href="{{ route('utility bills') }}" style="color: navy; font-weight: 700;">Utility Payment <small>(Nigeria)</small></a>
+
+                                              @if (session('country') == "Nigeria")
+                                                    <a href="{{ route('utility bills') }}" style="color: navy; font-weight: 700;">Utility Payment</a>
+                                                @else
+                                                    <a href="{{ route('select utility bills country') }}" style="color: navy; font-weight: 700;">Utility Payment</small></a>
+                                                @endif
+
+
+                                                
                                             </div>
                                         </div>
 

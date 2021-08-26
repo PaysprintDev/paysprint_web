@@ -1429,6 +1429,27 @@ if(val == "deletefee" || val == "deletecardissuer" || val == "deletespecialinfo"
 }
 }
 
+function markasPaid(id){
+
+  swal({
+      title: "Are you sure?",
+      text: "Be sure this is properly reviewed",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+
+        location.href = '/Admin/invoicecomment/'+id;
+      } 
+      else {
+
+      }
+    });
+
+}
+
 
 function flagMoney(val, id){
     swal({

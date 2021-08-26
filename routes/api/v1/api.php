@@ -1,7 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,7 +18,7 @@ use Illuminate\Http\Request;
 
 
 Route::prefix('/v1')->group(function () {
-    
+
 
     Route::group(['middleware' => ['appkey']], function () {
 
@@ -40,8 +39,6 @@ Route::prefix('/v1')->group(function () {
 
 
         Route::post('currencyconversion',  ['uses' => 'CurrencyConverterApiController@mycurrencyConvert']);
-
-
     });
 
 
@@ -53,6 +50,8 @@ Route::prefix('/v1')->group(function () {
         Route::post('linkaccount',  ['uses' => 'api\v1\UserController@linkAccount'])->name('link account');
 
         Route::post('otheraccount',  ['uses' => 'api\v1\UserController@otherAccount'])->name('other account');
+
+        Route::get('getlinkedaccount',  ['uses' => 'api\v1\UserController@secondaryAccounts'])->name('secondary account');
 
         Route::post('merchantprofile',  ['uses' => 'api\v1\UserController@updateMerchantProfile'])->name('merchant profile');
 
@@ -69,7 +68,7 @@ Route::prefix('/v1')->group(function () {
 
 
         Route::post('createservicetype',  ['uses' => 'api\v1\ServiceController@createServiceType'])->name('create service type');
-        
+
         Route::post('setuptax',  ['uses' => 'api\v1\TaxController@setupTax'])->name('set up taxes');
 
         Route::post('edittax',  ['uses' => 'api\v1\TaxController@editTax'])->name('edit taxes');
@@ -84,7 +83,7 @@ Route::prefix('/v1')->group(function () {
         Route::post('updatetransactionpin',  ['uses' => 'api\v1\UserController@updateTransactionPin'])->name('update transaction pin');
 
         Route::post('updatepassword',  ['uses' => 'api\v1\UserController@updatePassword'])->name('update password');
-        
+
 
         Route::post('security',  ['uses' => 'api\v1\UserController@updateSecurity'])->name('update security');
 
@@ -161,21 +160,21 @@ Route::prefix('/v1')->group(function () {
         Route::get('getprepaidcardissuers',  ['uses' => 'api\v1\CardController@getPrepaidCardIssuers'])->name('get prepaid card issuers');
 
         Route::post('addbeneficiary',  ['uses' => 'api\v1\CardController@addUpBeneficiary'])->name('add beneficiary');
-        
+
         Route::get('getbeneficiary',  ['uses' => 'api\v1\CardController@getBeneficiary'])->name('get beneficiary');
 
         Route::post('addnewcard',  ['uses' => 'api\v1\CardController@addNewCard'])->name('add new card');
-        
+
         Route::post('editcard',  ['uses' => 'api\v1\CardController@editCard'])->name('edit card');
 
         Route::post('editbank',  ['uses' => 'api\v1\CardController@editBank'])->name('edit bank');
-        
+
         Route::post('deletecard',  ['uses' => 'api\v1\CardController@deleteCard'])->name('delete card');
 
         Route::post('deletebank',  ['uses' => 'api\v1\CardController@deleteBank'])->name('delete bank');
-        
+
         Route::post('addmoneytowallet',  ['uses' => 'MonerisController@addMoneyToWallet'])->name('add money to wallet');
-        
+
         Route::post('moneywithdrawal',  ['uses' => 'MonerisController@moneyWithdrawal'])->name('withdraw from wallet');
 
         Route::post('payutilitybills',  ['uses' => 'MonerisController@payUtilityBills'])->name('pay utility bills');
@@ -185,17 +184,17 @@ Route::prefix('/v1')->group(function () {
         Route::post('getutilitydiscount',  ['uses' => 'MonerisController@getCommissionConversion'])->name('utility discount');
 
         Route::post('getaccountinfo',  ['uses' => 'MonerisController@paymentLookUp'])->name('get account information');
-        
+
         Route::get('getmycarddetail',  ['uses' => 'api\v1\CardController@getMyCardDetail'])->name('get card details');
 
         Route::get('getbillerslogo',  ['uses' => 'api\v1\ServiceController@getBillersLogo'])->name('get billers logo');
-        
+
         Route::post('addnewbank',  ['uses' => 'api\v1\CardController@addNewBank'])->name('add new bank');
 
 
         // pay Invoice
         Route::post('payinvoice',  ['uses' => 'MonerisController@payInvoice'])->name('pay invoice from wallet');
-        
+
         // Create Single Invoice
         Route::post('singleinvoice',  ['uses' => 'api\v1\InvoiceController@singleInvoice'])->name('create single invoice');
         Route::post('bulkinvoice',  ['uses' => 'api\v1\InvoiceController@bulkInvoice'])->name('create bulk invoice');
@@ -203,8 +202,6 @@ Route::prefix('/v1')->group(function () {
 
         // Send Money to User not on PS
         Route::post('sendmoneytoanonymous',  ['uses' => 'GooglePaymentController@sendMoneyToAnonymous'])->name('send money to user not on ps');
-
-
     });
 
 
@@ -213,8 +210,5 @@ Route::prefix('/v1')->group(function () {
         // Receive Money To PaySprint
         Route::post('customers',  ['uses' => 'api\v1\MerchantApiController@receiveMoneyFromPaysprintCustomer']);
         Route::post('visitors',  ['uses' => 'api\v1\MerchantApiController@receiveMoneyFromVisitors']);
-
-
     });
-
 });
