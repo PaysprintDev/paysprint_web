@@ -150,8 +150,12 @@ Route::get('signout/{id}',  ['uses' => 'api\v1\UserController@logout'])->name('s
 
 // General Rental Management PAGE
 Route::get('rentalmanagement-start', ['uses' => 'HomeController@rentalManagementStart', 'as' => 'rentalmanagement start']);
+Route::get('rentalmanagement-admin-start', ['uses' => 'HomeController@rentalManagementAdminStart', 'as' => 'rentalmanagement admin start']);
 
 Route::get('rentalmanagement', ['uses' => 'HomeController@rentalManagement', 'as' => 'rentalmanagement']);
+
+Route::get('myrentalmanagementfacility/admin/{email}', ['uses' => 'HomeController@myRentalManagementFacility', 'as' => 'myRentalManagementFacility']);
+
 
 // Admin Rental Management Page
 Route::get('rentalmanagement/admin', ['uses' => 'HomeController@rentalManagementAdmin', 'as' => 'rentalManagementAdmin']);

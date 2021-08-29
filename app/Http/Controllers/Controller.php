@@ -20,20 +20,21 @@ use App\Classes\Mobile_Detect;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-    
 
 
-    public function getUserIpAddr(){
-        if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+
+    public function getUserIpAddr()
+    {
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
             //ip from share internet
             $ip = $_SERVER['HTTP_CLIENT_IP'];
-        }elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             //ip pass from proxy
             $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        }else{
+        } else {
             $ip = $_SERVER['REMOTE_ADDR'];
         }
-        
+
         return $ip;
     }
 
@@ -41,33 +42,30 @@ class Controller extends BaseController
 
     // Get My current country
 
-    public function myLocation(){
+    public function myLocation()
+    {
         // $ip_server = $_SERVER['SERVER_ADDR'];
 
 
         $userIP = $this->getUserIpAddr();
         // $userIP = "129.205.113.93";
-        
+
         try {
 
-            if(env('APP_ENV') === "local"){
+            if (env('APP_ENV') === "local") {
                 // Test Data
                 $ip_response = '{"status":"success", "country":"Nigeria", "countryCode":"NG", "region":"LA", "regionName":"Lagos", "city":"Ikeja", "zip":"", "lat":6.4474, "lon":3.3903, "timezone":"Africa/Lagos", "isp":"Globacom Limited", "org":"Glomobile Gprs", "as":"AS37148 Globacom Limited", "query":"129.205.113.93"}';
+            } else {
+                $ip_response = $this->curl_get_file_contents('http://ip-api.com/json/' . $userIP);
             }
-            else{
-                    $ip_response = $this->curl_get_file_contents('http://ip-api.com/json/'.$userIP);
-
-            }
-
-            
         } catch (\Throwable $th) {
             // Log::info($th->getMessage());
-            
+
             $this->slack($th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
 
 
-        $ip_array=json_decode($ip_response);
+        $ip_array = json_decode($ip_response);
 
         // dd($ip_array);
 
@@ -75,22 +73,24 @@ class Controller extends BaseController
     }
 
 
-    public function curl_get_file_contents($URL){
+    public function curl_get_file_contents($URL)
+    {
         $c = curl_init();
         curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($c, CURLOPT_URL, $URL);
         $contents = curl_exec($c);
         curl_close($c);
-    
+
         if ($contents) return $contents;
         else return FALSE;
     }
 
 
 
-    public function currencyConvert($curCurrency, $curAmount){
+    public function currencyConvert($curCurrency, $curAmount)
+    {
 
-        $currency = 'USD'.$curCurrency;
+        $currency = 'USD' . $curCurrency;
         $amount = $curAmount;
 
         $access_key = '6173fa628b16d8ce1e0db5cfa25092ac';
@@ -98,17 +98,17 @@ class Controller extends BaseController
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://api.currencylayer.com/live?access_key='.$access_key,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'GET',
-        CURLOPT_HTTPHEADER => array(
-            'Cookie: __cfduid=d430682460804be329186d07b6e90ef2f1616160177'
-        ),
+            CURLOPT_URL => 'http://api.currencylayer.com/live?access_key=' . $access_key,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'Cookie: __cfduid=d430682460804be329186d07b6e90ef2f1616160177'
+            ),
         ));
 
         $response = curl_exec($curl);
@@ -117,44 +117,41 @@ class Controller extends BaseController
 
         $result = json_decode($response);
 
-        if($result->success == true){
+        if ($result->success == true) {
             // This amount is in dollars
             $convRate = $amount / $result->quotes->$currency;
-            
-
-        }
-        else{
+        } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }
 
-        
+
 
         return $convRate;
-
     }
 
 
-    public function getConversionRate($localcountry, $foreign){
+    public function getConversionRate($localcountry, $foreign)
+    {
 
-        $currencyA = "USD".$foreign;
-        $currencyB = "USD".$localcountry;
+        $currencyA = "USD" . $foreign;
+        $currencyB = "USD" . $localcountry;
 
         $access_key = '6173fa628b16d8ce1e0db5cfa25092ac';
 
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://api.currencylayer.com/live?access_key='.$access_key,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'GET',
-        CURLOPT_HTTPHEADER => array(
-            'Cookie: __cfduid=d430682460804be329186d07b6e90ef2f1616160177'
-        ),
+            CURLOPT_URL => 'http://api.currencylayer.com/live?access_key=' . $access_key,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'Cookie: __cfduid=d430682460804be329186d07b6e90ef2f1616160177'
+            ),
         ));
 
         $response = curl_exec($curl);
@@ -163,14 +160,13 @@ class Controller extends BaseController
 
         $result = json_decode($response);
 
-        if($result->success == true){
+        if ($result->success == true) {
             // This amount is in dollars
             $convRateA = $result->quotes->$currencyA;
             $convRateB = $result->quotes->$currencyB;
 
             $convRate = $convRateA / $convRateB;
-        }
-        else{
+        } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }
 
@@ -178,54 +174,77 @@ class Controller extends BaseController
         return $convRate;
     }
 
-    public function detectMobile(){
+    public function detectMobile()
+    {
 
         $detect = new Mobile_Detect;
 
         return $detect;
     }
 
-    public function minimumWithdrawal($country){
+    public function minimumWithdrawal($country)
+    {
 
-        try{
+        try {
             // Get Minimum Withdrawal
             $minimumBalance = TransactionCost::where('method', 'Minimum Balance')->where('country', $country)->first();
 
-            if(isset($minimumBalance) == true){
+            if (isset($minimumBalance) == true) {
                 $data = $minimumBalance->fixed;
-            }
-            else{
+            } else {
                 $data = 0;
             }
-            
+
 
             return $data;
-            
-        }
-        catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             // Log::error('Error: '.$th->getMessage());
 
-            $this->slack('Error: '.$th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+            $this->slack('Error: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
     }
 
 
-    public function getCountryCode($country){
+    public function maintenanceBalanceWithdrawal($country)
+    {
+
+        try {
+            // Get Minimum Withdrawal
+            $minimumBalance = TransactionCost::where('method', 'Wallet Maintenance fee')->where('country', $country)->first();
+
+            if (isset($minimumBalance) == true) {
+                $data = $minimumBalance->fixed;
+            } else {
+                $data = 0;
+            }
+
+
+            return $data;
+        } catch (\Throwable $th) {
+            // Log::error('Error: '.$th->getMessage());
+
+            $this->slack('Error: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+        }
+    }
+
+
+    public function getCountryCode($country)
+    {
 
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://restcountries.eu/rest/v2/name/'.$country,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'GET',
-        CURLOPT_HTTPHEADER => array(
-            'Cookie: __cfduid=d423c6237ed02a0f8118fec1c27419ab81613795899'
-        ),
+            CURLOPT_URL => 'https://restcountries.eu/rest/v2/name/' . $country,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'Cookie: __cfduid=d423c6237ed02a0f8118fec1c27419ab81613795899'
+            ),
         ));
 
         $response = curl_exec($curl);
@@ -233,71 +252,69 @@ class Controller extends BaseController
         curl_close($curl);
 
         return json_decode($response);
-
     }
 
-    public function sendMessage($message, $recipients){
+    public function sendMessage($message, $recipients)
+    {
 
         try {
             $account_sid = env("TWILIO_SID");
-        $auth_token = env("TWILIO_AUTH_TOKEN");
-        $twilio_number = env("TWILIO_NUMBER");
-        $client = new Client($account_sid, $auth_token);
-        $client->messages->create($recipients, 
-                ['from' => $twilio_number, 'body' => $message] );
-
+            $auth_token = env("TWILIO_AUTH_TOKEN");
+            $twilio_number = env("TWILIO_NUMBER");
+            $client = new Client($account_sid, $auth_token);
+            $client->messages->create(
+                $recipients,
+                ['from' => $twilio_number, 'body' => $message]
+            );
         } catch (\Throwable $th) {
             // Log::error('Error: '.$th->getMessage());
 
-            $this->slack('Error: '.$th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+            $this->slack('Error: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
 
             $response = 'Money sent successfully. However, we are unable to send you a notification through a text message because we detected there is no phone number or you have an invalid phone number on your PaySprint Account. Kindly update your phone number to receive notification via text on your next transaction.';
             $respaction = 'success';
 
             return redirect()->route('payorganization')->with($respaction, $response);
         }
-        
-        
-
     }
 
 
-    public function createNotification($ref_code, $activity, $platform = null){
+    public function createNotification($ref_code, $activity, $platform = null)
+    {
 
         $platform = ($this->detectMobile()->isMobile() ? ($this->detectMobile()->isTablet() ? 'tablet' : 'mobile') : 'web');
 
         try {
 
             Notifications::insert(['ref_code' => $ref_code, 'activity' => $activity, 'notify' => 0, 'platform' => $platform]);
-
         } catch (\Throwable $th) {
 
             // Log::error('Error: '.$th->getMessage());
 
-            $this->slack('Error: '.$th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+            $this->slack('Error: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
-
     }
 
 
-    public function getfeeTransaction($transaction_id, $ref_code, $amount, $fee, $amounttosend){
+    public function getfeeTransaction($transaction_id, $ref_code, $amount, $fee, $amounttosend)
+    {
 
         FeeTransaction::insert(['transaction_id' => $transaction_id, 'ref_code' => $ref_code, 'amount' => $amount, 'fee' => $fee, 'amount_to_send' => $amounttosend]);
-
     }
 
 
     // (string) $message - message to be passed to Slack
     // (string) $room - room in which to write the message, too
     // (string) $icon - You can set up custom emoji icons to use with each message
-    public function slack($message, $room = "success-logs", $icon = ":longbox:", $webhook) {
+    public function slack($message, $room = "success-logs", $icon = ":longbox:", $webhook)
+    {
         $room = ($room) ? $room : "success-logs";
         $data = "payload=" . json_encode(array(
-                "channel"       =>  "#{$room}",
-                "text"          =>  $message,
-                "icon_emoji"    =>  $icon
-            ));
-	
+            "channel"       =>  "#{$room}",
+            "text"          =>  $message,
+            "icon_emoji"    =>  $icon
+        ));
+
         // You can get your webhook endpoint from your Slack settings
         $ch = curl_init($webhook);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -310,23 +327,24 @@ class Controller extends BaseController
     }
 
 
-    public function curlPost($url, $data, $token){
+    public function curlPost($url, $data, $token)
+    {
 
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => $url,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => $data,
-        CURLOPT_HTTPHEADER => array(
-            'Authorization: Bearer '.$token
-        ),
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $data,
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: Bearer ' . $token
+            ),
         ));
 
         $response = curl_exec($curl);
@@ -337,12 +355,11 @@ class Controller extends BaseController
     }
 
 
-    
 
 
-    public function returnJSON($data, $status){
+
+    public function returnJSON($data, $status)
+    {
         return response()->json($data, $status);
     }
-
-
 }

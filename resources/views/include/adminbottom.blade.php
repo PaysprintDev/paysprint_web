@@ -1451,6 +1451,27 @@ function markasPaid(id){
 }
 
 
+function whatyouOffer(email){
+    swal({
+      title: "Are you a Property Owner?",
+      text: "Click on OK if you are a property owner",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        // Show the property I own
+
+        location.href = "/myrentalmanagementfacility/admin/"+btoa(email);
+      } 
+      else {
+
+      }
+    });
+}
+
+
 function flagMoney(val, id){
     swal({
     title: "Are you sure?",

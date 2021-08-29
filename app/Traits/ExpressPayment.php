@@ -178,7 +178,7 @@ trait ExpressPayment
     public function processTransaction($postRequest, $bearerToken)
     {
 
-        // TODO:: Verify and Check international purchase abiltity
+        dd($postRequest);
 
 
         $checks = $this->checkAccount($postRequest, $bearerToken);

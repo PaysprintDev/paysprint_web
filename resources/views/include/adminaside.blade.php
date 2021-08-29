@@ -679,7 +679,10 @@
                                 <li class="list-group-item" title="Rental Property Management">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <a href="{{ route('rentalManagementAdmin') }}" style="color: navy; font-weight: 700;">Rental Property Management</a>
+
+                                          <a href="javascript:void()" onclick="whatyouOffer('{{ session('email') }}')" style="color: navy; font-weight: 700;">Rental Property Management</a>
+
+                                            {{--  <a href="{{ route('rentalManagementAdmin') }}" style="color: navy; font-weight: 700;">Rental Property Management</a>  --}}
                                         </div>
                                     </div>
 
