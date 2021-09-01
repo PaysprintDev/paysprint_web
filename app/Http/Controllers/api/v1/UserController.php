@@ -27,12 +27,14 @@ use App\Traits\Trulioo;
 use App\Traits\AccountNotify;
 use App\Traits\PaystackPayment;
 use App\Traits\Xwireless;
+use App\Traits\PaymentGateway;
+use App\Traits\MailChimpNewsLetter;
 
 
 class UserController extends Controller
 {
 
-    use Trulioo, AccountNotify, PaystackPayment, Xwireless;
+    use Trulioo, AccountNotify, PaystackPayment, Xwireless, PaymentGateway, MailChimpNewsLetter;
 
     // User Registration
 
@@ -60,6 +62,9 @@ class UserController extends Controller
             $ref_code = mt_rand(0000000, 9999999);
 
             $mycode = $this->getCountryCode($request->country);
+
+            $withdrawLimit = $this->countryWithdrawalLimit($request->country);
+
 
 
             // Get all ref_codes
@@ -94,7 +99,7 @@ class UserController extends Controller
 
             if (isset($newcustomer)) {
 
-                $user = User::create(['code' => $newcustomer->code, 'ref_code' => $newcustomer->ref_code, 'name' => $newcustomer->name, 'email' => $newcustomer->email, 'password' => Hash::make($request->password), 'address' => $newcustomer->address, 'city' => $request->city, 'state' => $request->state, 'country' => $newcustomer->country, 'accountType' => 'Individual', 'api_token' => uniqid() . md5($request->email), 'telephone' => $newcustomer->telephone, 'wallet_balance' => $newcustomer->wallet_balance, 'approval' => 0, 'currencyCode' => $mycode[0]->currencies[0]->code, 'currencySymbol' => $mycode[0]->currencies[0]->symbol, 'dayOfBirth' => $request->dayOfBirth, 'monthOfBirth' => $request->monthOfBirth, 'yearOfBirth' => $request->yearOfBirth, 'cardRequest' => 0, 'platform' => 'mobile', 'accountLevel' => 2, 'zip' => $request->zipcode]);
+                $user = User::create(['code' => $newcustomer->code, 'ref_code' => $newcustomer->ref_code, 'name' => $newcustomer->name, 'email' => $newcustomer->email, 'password' => Hash::make($request->password), 'address' => $newcustomer->address, 'city' => $request->city, 'state' => $request->state, 'country' => $newcustomer->country, 'accountType' => 'Individual', 'api_token' => uniqid() . md5($request->email), 'telephone' => $newcustomer->telephone, 'wallet_balance' => $newcustomer->wallet_balance, 'approval' => 0, 'currencyCode' => $mycode[0]->currencies[0]->code, 'currencySymbol' => $mycode[0]->currencies[0]->symbol, 'dayOfBirth' => $request->dayOfBirth, 'monthOfBirth' => $request->monthOfBirth, 'yearOfBirth' => $request->yearOfBirth, 'cardRequest' => 0, 'platform' => 'mobile', 'accountLevel' => 2, 'zip' => $request->zipcode, 'withdrawal_per_transaction' => $withdrawLimit['withdrawal_per_transaction']]);
 
                 $getMoney = Statement::where('user_id', $newcustomer->email)->get();
 
@@ -134,7 +139,8 @@ class UserController extends Controller
                     'yearOfBirth' => $request->yearOfBirth,
                     'cardRequest' => 0,
                     'platform' => 'mobile',
-                    'accountLevel' => 2
+                    'accountLevel' => 2,
+                    'withdrawal_per_transaction' => $withdrawLimit['withdrawal_per_transaction']
                 ]);
             }
 
@@ -236,7 +242,7 @@ class UserController extends Controller
             }
 
 
-
+            $this->mailListCategorize($request->firstname . ' ' . $request->lastname, $request->email, $request->address, $request->telephone, "New Consumers", $request->country, 'subscription');
 
             // Log::info("New user registration via mobile app by: ".$request->firstname.' '.$request->lastname." from ".$request->state.", ".$request->country." \n\n STATUS: ".$resInfo);
 
@@ -259,6 +265,7 @@ class UserController extends Controller
             $resData = ['data' => [], 'message' => $error, 'status' => 400];
             $status = 400;
         }
+
 
 
 
@@ -292,6 +299,9 @@ class UserController extends Controller
 
 
                     $countryApproval = AllCountries::where('name', $getUser->country)->where('approval', 1)->first();
+
+
+                    $withdrawLimit = $this->countryWithdrawalLimit($getUser->country);
 
                     if (isset($countryApproval)) {
 
@@ -332,7 +342,7 @@ class UserController extends Controller
                                 $pass_date = date('Y-m-d');
                             }
 
-                            User::where('email', $request->email)->update(['api_token' => $token, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'lastLogin' => date('d-m-Y h:i A'), 'pass_date' => $pass_date, 'loginCount' => $loginCount]);
+                            User::where('email', $request->email)->update(['api_token' => $token, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'lastLogin' => date('d-m-Y h:i A'), 'pass_date' => $pass_date, 'loginCount' => $loginCount, 'withdrawal_per_transaction' => $withdrawLimit['withdrawal_per_transaction']]);
 
                             $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'accountLevel', 'cardRequest', 'flagged', 'loginCount', 'pass_checker', 'pass_date', 'lastLogin', 'bvn_number', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('email', $request->email)->first();
 

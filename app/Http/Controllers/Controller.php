@@ -13,6 +13,7 @@ use Twilio\Rest\Client;
 use App\Notifications as Notifications;
 use App\FeeTransaction as FeeTransaction;
 use App\TransactionCost as TransactionCost;
+use App\ConversionCountry as ConversionCountry;
 
 use App\Classes\Mobile_Detect;
 
@@ -127,6 +128,80 @@ class Controller extends BaseController
 
 
         return $convRate;
+    }
+
+
+    public function platformcurrencyConvert()
+    {
+
+
+        $access_key = '6173fa628b16d8ce1e0db5cfa25092ac';
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'http://api.currencylayer.com/live?access_key=' . $access_key,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'Cookie: __cfduid=d430682460804be329186d07b6e90ef2f1616160177'
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        $result = json_decode($response);
+
+        ConversionCountry::where('country', NULL)->delete();
+
+
+
+        $data = [
+            'quotes' => $result->quotes
+        ];
+
+        return $data;
+    }
+
+
+    public function getCurrenciesLive()
+    {
+
+
+        $access_key = '6173fa628b16d8ce1e0db5cfa25092ac';
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'http://api.currencylayer.com/list?access_key=' . $access_key,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'Cookie: __cfduid=d430682460804be329186d07b6e90ef2f1616160177'
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        $result = json_decode($response);
+
+        foreach ($result->currencies as $country) {
+            ConversionCountry::insert(['country' => $country]);
+        }
     }
 
 

@@ -92,6 +92,21 @@
                 <br>
                 <br>
 
+                <form action="{{ route('export statement to excel') }}" id="exporttoExcel" method="post">
+                    @csrf
+                    <input type="hidden" name="type" id="doc_type" value="excel">
+                    <input type="hidden" name="start_date" id="start_date_excel" value="{{ Request::get('statement_start') }}">
+                    <input type="hidden" name="end_date" id="end_date_excel" value="{{ Request::get('statement_end') }}">
+                    <input type="hidden" name="user_id" id="user_id" value="{{ Request::get('user_id') }}">
+
+                    <button type="submit" class="btn btn-success">Export to Excel</button>
+                </form>
+
+                
+
+                <br>
+                <br>
+
               <table id="example3" class="table table-bordered table-striped">
                 <thead>
                 <tr>

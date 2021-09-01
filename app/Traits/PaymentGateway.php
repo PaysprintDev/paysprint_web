@@ -13,12 +13,16 @@ use App\BankWithdrawal as BankWithdrawal;
 
 use App\Statement as Statement;
 
+use App\PricingSetup as PricingSetup;
+
 use App\User as User;
 
 
-trait PaymentGateway{
+trait PaymentGateway
+{
 
-    public function keepRecord($transaction_id, $message, $activity, $gateway, $country){
+    public function keepRecord($transaction_id, $message, $activity, $gateway, $country)
+    {
         $data = MonerisActivity::insert([
 
             'transaction_id' => $transaction_id,
@@ -27,32 +31,27 @@ trait PaymentGateway{
             'gateway' => $gateway,
             'country' => $country,
         ]);
-
-
     }
 
-    public function actOnRefundMoney($reference_code, $reason){
+    public function actOnRefundMoney($reference_code, $reason)
+    {
 
         try {
             $getStatement = Statement::where('reference_code', $reference_code)->first();
-            
+
             Statement::where('reference_code', $reference_code)->update(["refund_state" => "1", "comment" => $reason]);
 
             $respMessage = "Successful";
-
-
         } catch (\Throwable $th) {
 
             $respMessage = $th->getMessage();
-
-            
         }
 
         return $respMessage;
-        
     }
 
-    public function processRefundMoney($reference_code, $reason){
+    public function processRefundMoney($reference_code, $reason)
+    {
 
         try {
             $getStatement = Statement::where('reference_code', $reference_code)->first();
@@ -74,7 +73,7 @@ trait PaymentGateway{
             $query = [
                 "user_id" => $getUser->email,
                 "reference_code" => $reference_code,
-                "activity" => "Refund ".$getUser->currencyCode.''.$debit." to Wallet from PaySprint | Note: ".$reason,
+                "activity" => "Refund " . $getUser->currencyCode . '' . $debit . " to Wallet from PaySprint | Note: " . $reason,
                 "credit" => $debit,
                 "debit" => "0",
                 "balance" => "0",
@@ -95,23 +94,47 @@ trait PaymentGateway{
 
             Statement::insert($query);
 
-            
+
 
             $respMessage = "Successful";
-
-
         } catch (\Throwable $th) {
 
             $respMessage = $th->getMessage();
-
-            
         }
 
         return $respMessage;
-
     }
-    
 
-    
 
+    public function getWithdrawalLimit($country, $id)
+    {
+        $getPrice = PricingSetup::where('country', $country)->first();
+
+        $getUser = User::where('id', $id)->first();
+
+        if ($getUser->accountType == "Individual") {
+            $result = [
+                'withdrawal_per_transaction' => $getPrice->withdrawal_per_transaction,
+                'withdrawal_per_day' => $getPrice->withdrawal_per_day,
+                'withdrawal_per_week' => $getPrice->withdrawal_per_week,
+                'withdrawal_per_month' => $getPrice->withdrawal_per_month
+            ];
+        } else {
+            $result = [
+                'withdrawal_per_transaction' => $getPrice->merchant_withdrawal_per_transaction,
+                'withdrawal_per_day' => $getPrice->merchant_withdrawal_per_day,
+                'withdrawal_per_week' => $getPrice->merchant_withdrawal_per_week,
+                'withdrawal_per_month' => $getPrice->merchant_withdrawal_per_month
+            ];
+        }
+
+        return $result;
+    }
+
+    public function countryWithdrawalLimit($country)
+    {
+        $getPrice = PricingSetup::where('country', $country)->first();
+
+        return $getPrice;
+    }
 }

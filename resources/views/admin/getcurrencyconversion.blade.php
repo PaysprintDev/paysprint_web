@@ -1,22 +1,19 @@
 @extends('layouts.dashboard')
 
-
-<?php use \App\Http\Controllers\TransactionCost; ?>
-
-
 @section('dashContent')
+
+<?php use \App\Http\Controllers\ConversionCountry; ?>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Fee Structure By Country
-        <small>Cost of Pulling and Pushing</small>
+        Currency Conversion Rate
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Fee Structure By Country</li>
+        <li class="active">Currency Conversion Rate</li>
       </ol>
     </section>
 
@@ -27,48 +24,54 @@
       <div class="box">
         
         <div class="box-body">
-
+          
               <div class="table-responsive">
 
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
                   <th>S/N</th>
-                  <th>Country</th>
-                  <th>Date Added</th>
-                  <th>Last Updated</th>
-                  <th>Action</th>
+                  <th>Currency</th>
+                  <th>Rate/USD</th>
+                  
                 </tr>
                 </thead>
-
                 <tbody>
 
-                    @if (count($transCost) > 0)
-
-                    
+                    @if (isset($data['currencyrate']))
                     @php
                         $i = 1;
+                        $mycountry = [];
                     @endphp
-                        @foreach ($transCost as $data)
+                        @foreach ($data['currencyrate']['quotes'] as $amount)
 
-                                <tr>
+
+                            {{--  @foreach ($data['currencyrate']['currency'] as $currency)
+
+                                
+                                @php
+                                    $mycountry []= "<tr><td>".$currency."</td></tr>";
+                                @endphp
+                                
+                            @endforeach  --}}
+
+
+                            <tr>
                                 <td>{{ $i++ }}</td>
-                                <td>{{ $data->country }}</td>
-                                <td>{{ date('d/M/Y', strtotime($data->created_at)) }}</td>
-
-                                @if($countryData = \App\TransactionCost::where('country', $data->country)->orderBy('created_at', 'DESC')->first())
-                                  <td>{{ date('d/M/Y', strtotime($countryData->updated_at)) }}</td>
-                                @endif
-                                
-                                <td><a href="{{ route('structure by country', $data->country) }}" style="color: navy; font-weight: bold;">View detail</a></td>
-                                
+                                <td>&nbsp;</td>
+                                <td>{{ $amount }}</td>
                             </tr>
-                            
-                            
+
                         @endforeach
+
+                            {{--  @for ($j = 1; $j <= count($mycountry); $j++)
+                                @if (isset($mycountry[$j]))
+                                    {!! $mycountry[$j] !!}
+                                @endif
+                            @endfor  --}}
                     @else
                         <tr>
-                            <td colspan="6" align="center">No record</td>
+                            <td colspan="3" align="center">No record</td>
                         </tr>
                     @endif
                   

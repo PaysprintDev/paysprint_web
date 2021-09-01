@@ -42,6 +42,13 @@ Route::get('insertspecialinfoactivity', 'CheckSetupController@insertspecialinfoA
 Route::get('autofeestructure', 'CheckSetupController@setupFeeStructure');
 Route::get('checktelephone', 'CheckSetupController@checkTelephone');
 Route::get('userarchive', 'CheckSetupController@userAccountArchive');
+Route::get('existingaccounts', 'CheckSetupController@existingAccounts');
+
+
+// Transaction Limit
+Route::get('dailylimit', 'CheckSetupController@dailyLimit');
+Route::get('weeklylimit', 'CheckSetupController@weeklyLimit');
+Route::get('monthlylimit', 'CheckSetupController@monthlyLimit');
 
 
 Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
@@ -243,6 +250,11 @@ Route::get('archiveduserslist', ['uses' => 'AdminController@archivedUsersList', 
 
 
 Route::get('Admin/x-wireless', ['uses' => 'AdminController@smsWirelessPlatform', 'as' => 'sms wireless platform']);
+
+// Get currency conversion rate
+Route::get('Admin/getcurrencyrate', ['uses' => 'AdminController@getCurrencyRate', 'as' => 'getcurrencyrate']);
+
+Route::get('Admin/emailcampaign', ['uses' => 'AdminController@runEmailCampaign', 'as' => 'run mail campaign']);
 
 
 
@@ -511,6 +523,7 @@ Route::prefix('Admin/')->group(function () {
 
 	Route::get('sendmessage', ['uses' => 'AdminController@sendUserMessage', 'as' => 'send message']);
 	Route::post('sendusermessage', ['uses' => 'AdminController@sendNewUserMessage', 'as' => 'send user message']);
+	Route::post('runmailcampaign', ['uses' => 'AdminController@runMailChimpCampaign', 'as' => 'run mail campaign to users']);
 
 
 	// Move Multiple Users
@@ -569,6 +582,7 @@ Route::post('completedworkorder', ['uses' => 'ConsultantController@completedwork
 Route::post('create_facility', ['uses' => 'BuildingController@createFacility', 'as' => 'create_facility']);
 
 Route::post('exporttoExcel', ['uses' => 'HomeController@exportToExcel', 'as' => 'export to excel']);
+Route::post('exportstatementtoExcel', ['uses' => 'AdminController@exportStatementToExcel', 'as' => 'export statement to excel']);
 Route::post('exporttoPdf', ['uses' => 'HomeController@exportToPdf', 'as' => 'export to pdf']);
 
 

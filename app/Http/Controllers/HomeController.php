@@ -89,6 +89,10 @@ use App\Traits\SpecialInfo;
 
 use App\Traits\Xwireless;
 
+use App\Traits\PaymentGateway;
+
+use App\Traits\MailChimpNewsLetter;
+
 
 
 class HomeController extends Controller
@@ -107,7 +111,7 @@ class HomeController extends Controller
     public $country;
     public $timezone;
 
-    use RpmApp, Trulioo, AccountNotify, PaystackPayment, ExpressPayment, SpecialInfo, Xwireless;
+    use RpmApp, Trulioo, AccountNotify, PaystackPayment, ExpressPayment, SpecialInfo, Xwireless, PaymentGateway, MailChimpNewsLetter;
     /**
      * Create a new controller instance.
      *
@@ -3181,6 +3185,26 @@ class HomeController extends Controller
         $checkUser = User::where('email', $req->email)->get();
         $checkClosedUser = UserClosed::where('email', $req->email)->get();
 
+        $withdrawLimit = $this->countryWithdrawalLimit($req->country);
+
+        if (isset($withdrawLimit)) {
+            $transactionLimit = $withdrawLimit->withdrawal_per_transaction;
+        } else {
+            $transactionLimit = 0;
+        }
+
+        // Check Referal
+        $getRef = User::where('ref_code', $req->referred_by)->first();
+
+        if (isset($getRef)) {
+
+            $referral_points = $getRef->referral_points + 1;
+
+            User::where('id', $getRef->id)->update([
+                'referral_points' => $referral_points
+            ]);
+        }
+
         if (count($checkUser) > 0) {
             $resData = ['res' => 'User with email: ' . $req->email . ' already exist', 'message' => 'error'];
         } elseif (count($checkClosedUser) > 0) {
@@ -3228,10 +3252,10 @@ class HomeController extends Controller
                 // Insert User record
                 if ($req->accountType == "Individual") {
                     // Insert Information for Individual user
-                    $insInd = User::insert(['ref_code' => $req->ref_code, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2]);
+                    $insInd = User::insert(['ref_code' => $req->ref_code, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by]);
                 } elseif ($req->accountType == "Business") {
                     // Insert Information for Business user
-                    $insBus = User::insert(['ref_code' => $req->ref_code, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'platform' => 'web', 'accountLevel' => 2]);
+                    $insBus = User::insert(['ref_code' => $req->ref_code, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by]);
                 }
 
                 $getMoney = Statement::where('user_id', $req->email)->get();
@@ -3251,12 +3275,12 @@ class HomeController extends Controller
                 // Insert User record
                 if ($req->accountType == "Individual") {
                     // Insert Information for Individual user
-                    $insInd = User::insert(['ref_code' => $newRefcode, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2]);
+                    $insInd = User::insert(['ref_code' => $newRefcode, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by]);
 
                     // $req->session()->put(['name' => $name, 'email' => $req->email, 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType]);
                 } elseif ($req->accountType == "Business") {
                     // Insert Information for Business user
-                    $insBus = User::insert(['ref_code' => $newRefcode, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'platform' => 'web', 'accountLevel' => 2]);
+                    $insBus = User::insert(['ref_code' => $newRefcode, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by]);
 
                     // $req->session()->put(['businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype]);
 
@@ -3349,8 +3373,7 @@ class HomeController extends Controller
 
 
 
-
-
+                $this->mailListCategorize($this->name, $this->email, Auth::user()->address, Auth::user()->telephone, 'New Consumers', Auth::user()->country, 'subscription');
 
                 // Log::info("New user registration via web by: ".$name." from ".$req->state.", ".$req->country." \n\n STATUS: ".$resInfo);
 
@@ -3382,6 +3405,14 @@ class HomeController extends Controller
             if (Hash::check($req->password, $userExists[0]['password'])) {
 
                 $countryApproval = AllCountries::where('name', $userExists[0]['country'])->where('approval', 1)->first();
+
+                $withdrawLimit = $this->countryWithdrawalLimit($userExists[0]['country']);
+
+                if (isset($withdrawLimit)) {
+                    $transactionLimit = $withdrawLimit->withdrawal_per_transaction;
+                } else {
+                    $transactionLimit = 0;
+                }
 
 
                 if (isset($countryApproval)) {
@@ -3423,7 +3454,7 @@ class HomeController extends Controller
                             }
 
                             // Update API Token
-                            User::where('email', $req->email)->update(['api_token' => uniqid() . md5($req->email) . time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'lastLogin' => date('d-m-Y h:i A'), 'loginCount' => $loginCount, 'pass_date' => $pass_date]);
+                            User::where('email', $req->email)->update(['api_token' => uniqid() . md5($req->email) . time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'lastLogin' => date('d-m-Y h:i A'), 'loginCount' => $loginCount, 'pass_date' => $pass_date, 'withdrawal_per_transaction' => $transactionLimit]);
 
                             $city = $this->myLocation()->city;
                             $country = $this->myLocation()->country;

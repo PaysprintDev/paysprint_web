@@ -139,6 +139,22 @@
           
         </li>
 
+        <li>
+          <a href="{{ route('getcurrencyrate') }}">
+            <i class="fa fa-book"></i>
+            <span>Currency Rate</span>
+          </a>
+          
+        </li>
+
+        <li>
+          <a href="{{ route('run mail campaign') }}">
+            <i class="fa fa-book"></i>
+            <span>Email Campaign</span>
+          </a>
+          
+        </li>
+
         @endif
 
         @if(session('role') == "Super" || session('role') == "Access to Level 1 only")

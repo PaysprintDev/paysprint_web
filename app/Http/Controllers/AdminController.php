@@ -10,8 +10,11 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
 use Rap2hpoutre\FastExcel\FastExcel;
+use App\Exports\WalletStatementExport;
 //Session
 use Session;
+
+use Maatwebsite\Excel\Facades\Excel;
 
 use App\Mail\sendEmail;
 
@@ -81,6 +84,8 @@ use App\UserClosed as UserClosed;
 
 use App\PricingSetup as PricingSetup;
 
+use App\MailCampaign as MailCampaign;
+
 
 use App\Traits\Trulioo;
 
@@ -95,6 +100,8 @@ use App\Traits\PaymentGateway;
 use App\Traits\FlagPayment;
 
 use App\Traits\Xwireless;
+
+use App\Traits\MailChimpNewsLetter;
 
 class AdminController extends Controller
 {
@@ -123,7 +130,7 @@ class AdminController extends Controller
     public $infomessage;
     public $customer_id;
 
-    use Trulioo, AccountNotify, SpecialInfo, PaystackPayment, FlagPayment, PaymentGateway, Xwireless;
+    use Trulioo, AccountNotify, SpecialInfo, PaystackPayment, FlagPayment, PaymentGateway, Xwireless, MailChimpNewsLetter;
 
 
 
@@ -244,6 +251,100 @@ class AdminController extends Controller
         } else {
             return redirect()->route('AdminLogin');
         }
+    }
+
+
+    public function getCurrencyRate(Request $req)
+    {
+
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = OrganizationPay::orderBy('created_at', 'DESC')->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = OrganizationPay::where('coy_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $this->recurBills(session('user_id'));
+            }
+
+
+
+            $transCost = $this->transactionCost();
+
+
+            $data = [
+                'currencyrate' => $this->platformcurrencyConvert(),
+            ];
+
+            // dd($data);
+
+
+            return view('admin.getcurrencyconversion')->with(['pages' => 'My Dashboard', 'transCost' => $transCost, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
+
+    public function runEmailCampaign(Request $req)
+    {
+
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = OrganizationPay::orderBy('created_at', 'DESC')->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = OrganizationPay::where('coy_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $this->recurBills(session('user_id'));
+            }
+
+
+
+            $transCost = $this->transactionCost();
+
+            $data = [
+                'mailcampaign' => $this->mycreatedMailCampaign(),
+            ];
+
+
+            return view('admin.runmailcampaign')->with(['pages' => 'My Dashboard', 'transCost' => $transCost, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
+    public function mycreatedMailCampaign()
+    {
+        $data = MailCampaign::orderBy('created_at', 'DESC')->get();
+
+        return $data;
     }
 
     public function getmyPersonalDetail($ref_code)
@@ -9999,6 +10100,15 @@ class AdminController extends Controller
                 // Check if API Key EXIST
                 $checkApikey = ClientInfo::where('email', $adminCheck[0]['email'])->first();
 
+                $withdrawLimit = $this->countryWithdrawalLimit($checkApikey->country);
+
+                if (isset($withdrawLimit)) {
+                    $transactionLimit = $withdrawLimit['withdrawal_per_transaction'];
+                } else {
+                    $transactionLimit = 0;
+                }
+
+
                 if ($checkApikey->api_secrete_key == null) {
                     // Update
                     ClientInfo::where('email', $checkApikey->email)->update(['api_secrete_key' => md5(uniqid($adminCheck[0]['username'], true)) . date('dmY') . time()]);
@@ -10012,7 +10122,7 @@ class AdminController extends Controller
 
                 $api_token = uniqid() . md5($adminCheck[0]['email']) . time();
 
-                User::where('email', $adminCheck[0]['email'])->update(['code' => $mycode[0]->callingCodes[0], 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'api_token' => $api_token]);
+                User::where('email', $adminCheck[0]['email'])->update(['code' => $mycode[0]->callingCodes[0], 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'api_token' => $api_token, 'withdrawal_per_transaction' => $transactionLimit]);
 
                 $getMerchant = User::where('email', $adminCheck[0]['email'])->first();
 
@@ -10052,7 +10162,7 @@ class AdminController extends Controller
                             $pass_date = date('Y-m-d');
                         }
 
-                        User::where('email', $getMerchant->email)->update(['lastLogin' => date('d-m-Y h:i A'), 'loginCount' => $loginCount, 'countryapproval' => 1, 'pass_date' => $pass_date]);
+                        User::where('email', $getMerchant->email)->update(['lastLogin' => date('d-m-Y h:i A'), 'loginCount' => $loginCount, 'countryapproval' => 1, 'pass_date' => $pass_date, 'withdrawal_per_transaction' => $transactionLimit]);
 
                         $req->session()->put(['user_id' => $adminCheck[0]['user_id'], 'firstname' => $adminCheck[0]['firstname'], 'lastname' => $adminCheck[0]['lastname'], 'username' => $adminCheck[0]['username'], 'role' => 'Merchant', 'email' => $adminCheck[0]['email'], 'api_token' => $api_token, 'myID' => $getMerchant->id, 'country' => $getMerchant->country, 'businessname' => $getMerchant->businessname, 'loginCount' => $loginCount]);
 
@@ -10143,6 +10253,26 @@ class AdminController extends Controller
             // Check User Account if Email
             $userExist = User::where('email', $req->email)->first();
 
+            $withdrawLimit = $this->countryWithdrawalLimit($req->country);
+
+            if (isset($withdrawLimit)) {
+                $transactionLimit = $withdrawLimit['withdrawal_per_transaction'];
+            } else {
+                $transactionLimit = 0;
+            }
+
+            // Check Referal
+            $getRef = User::where('ref_code', $req->referred_by)->first();
+
+            if (isset($getRef)) {
+
+                $referral_points = $getRef->referral_points + 1;
+
+                User::where('id', $getRef->id)->update([
+                    'referral_points' => $referral_points
+                ]);
+            }
+
             $userClosedExist = UserClosed::where('email', $req->email)->first();
 
             if (isset($userExist)) {
@@ -10184,7 +10314,7 @@ class AdminController extends Controller
                     $api_token = uniqid() . md5($req->email) . time();
 
 
-                    $data = ['code' => $mycode[0]->callingCodes[0], 'ref_code' => $req->ref_code, 'businessname' => $req->business_name, 'name' => $getanonuser->name, 'email' => $getanonuser->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'telephone' => $getanonuser->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $getanonuser->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'wallet_balance' => $getanonuser->wallet_balance, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2];
+                    $data = ['code' => $mycode[0]->callingCodes[0], 'ref_code' => $req->ref_code, 'businessname' => $req->business_name, 'name' => $getanonuser->name, 'email' => $getanonuser->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'telephone' => $getanonuser->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $getanonuser->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'wallet_balance' => $getanonuser->wallet_balance, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by];
 
 
                     User::updateOrCreate(['email' => $getanonuser->email], $data);
@@ -10286,7 +10416,7 @@ class AdminController extends Controller
                         }
 
 
-
+                        $this->mailListCategorize($req->firstname . ' ' . $req->lastname, $req->email, $req->address, $req->telephone, "New Merchants", $req->country, 'subscription');
 
                         Log::info("New merchant registration via web by: " . $req->firstname . ' ' . $req->lastname . " from " . $req->state . ", " . $req->country . " STATUS: " . $resInfo);
 
@@ -10362,7 +10492,7 @@ class AdminController extends Controller
                     }
 
 
-                    $data = ['code' => $phoneCode, 'ref_code' => $newRefcode, 'businessname' => $req->business_name, 'name' => $req->firstname . ' ' . $req->lastname, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'telephone' => $req->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2];
+                    $data = ['code' => $phoneCode, 'ref_code' => $newRefcode, 'businessname' => $req->business_name, 'name' => $req->firstname . ' ' . $req->lastname, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'telephone' => $req->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by];
 
 
                     User::updateOrCreate(['email' => $req->email], $data);
@@ -10434,7 +10564,7 @@ class AdminController extends Controller
                         }
 
 
-
+                        $this->mailListCategorize($req->firstname . ' ' . $req->lastname, $req->email, $req->address, $req->telephone, "New Merchants", $req->country, 'subscription');
 
                         Log::info("New merchant registration via web by: " . $req->firstname . ' ' . $req->lastname . " from " . $req->state . ", " . $req->country . " STATUS: " . $resInfo);
 
@@ -10538,9 +10668,6 @@ class AdminController extends Controller
 
         return $this->returnJSON($resData, 200);
     }
-
-
-
 
 
     public function getWalletStatementRecordByDate($service, $from, $nextDay)
@@ -11484,6 +11611,29 @@ class AdminController extends Controller
     }
 
 
+    // Export to Excel
+    public function exportStatementToExcel(Request $req)
+    {
+
+        $query = [
+            'user_id' => $req->user_id,
+            'from' => $req->start_date,
+            'nextDay' => $req->end_date,
+        ];
+
+
+        $transExport = new WalletStatementExport($query);
+
+        if ($req->type == "excel") {
+
+            return Excel::download($transExport, mt_rand() . date('dmYhis') . '.xlsx');
+        } else {
+
+            return Excel::download($transExport, mt_rand() . date('dmYhis') . '.pdf');
+        }
+    }
+
+
     public function ajaxmoveSelectedUser(Request $req, User $user)
     {
 
@@ -12180,6 +12330,34 @@ class AdminController extends Controller
             $resp = "success";
         } else {
             $resData = "We cannot locate this receiver information!";
+            $resp = "error";
+        }
+
+
+        return redirect()->back()->with($resp, $resData);
+    }
+
+
+    public function runMailChimpCampaign(Request $req)
+    {
+
+        $data = $this->sendCampaign($req->subject, $req->message, $req->category);
+
+        if ($data == "Campaign sent successfully.") {
+
+            // Send Message
+
+            MailCampaign::insert([
+                'subject' => $req->subject,
+                'category' => $req->category,
+                'message' => $req->message,
+            ]);
+
+
+            $resData = $data;
+            $resp = "success";
+        } else {
+            $resData = $data;
             $resp = "error";
         }
 

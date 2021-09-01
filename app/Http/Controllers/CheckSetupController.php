@@ -24,6 +24,7 @@ use App\Traits\ExpressPayment;
 use App\Traits\AccountNotify;
 use App\Traits\Xwireless;
 use App\Traits\PaymentGateway;
+use App\Traits\MailChimpNewsLetter;
 
 class CheckSetupController extends Controller
 {
@@ -33,7 +34,7 @@ class CheckSetupController extends Controller
     public $subject;
     public $message;
 
-    use ExpressPayment, AccountNotify, Xwireless, PaymentGateway;
+    use ExpressPayment, AccountNotify, Xwireless, PaymentGateway, MailChimpNewsLetter;
     // Check user quick wallet setup
 
     public function updateQuickSetup()
@@ -42,6 +43,8 @@ class CheckSetupController extends Controller
         $user = User::where('disableAccount', 'off')->inRandomOrder()->get();
 
         try {
+
+
 
             foreach ($user as $key => $value) {
 
@@ -86,11 +89,14 @@ class CheckSetupController extends Controller
                     $this->message = '<p>We noticed you are yet to properly complete the set-up your PaySprint Account. You need to provide the outstanding information and complete the quick set up in order to enjoy the full benefits of a PaySprint Account.</p><p><ul>' . $approval . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card . '</ul></p><p>Kindly complete these important steps in your profile. <a href=' . route('profile') . ' class="text-primary" style="text-decoration: underline">Click here to login to your account</a></p>';
 
 
-                    $this->sendEmail($this->email, "Incomplete Setup");
+                    $this->mailListCategorize($this->name, $this->email, $value->address, $value->telephone, 'Quick Setup', $value->country, 'subscription');
+
+                    // $this->sendEmail($this->email, "Incomplete Setup");
+                    // $this->sendCampaign($this->subject, $this->message, $this->email, $this->name);
 
                     // Log::info('Quick wallet set up cron sent to '.$this->name);
 
-                    $this->slack('Quick wallet set up cron sent to ' . $this->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                    // $this->slack('Quick wallet set up cron sent to ' . $this->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
                     echo "Sent to " . $this->name . "<hr>";
@@ -149,6 +155,16 @@ class CheckSetupController extends Controller
 
             if ($sum == 4) {
                 User::where('id', $allusers->id)->update(['archive' => 1]);
+
+                $value = User::where('id', $allusers->id)->first();
+
+                if ($value->accountType == "Individual") {
+                    $category = "Archived Consumers";
+                } else {
+                    $category = "Archived Merchants";
+                }
+
+                $this->mailListCategorize($value->name, $value->email, $value->address, $value->telephone, $category, $value->country, 'subscription');
             }
         }
     }
@@ -908,8 +924,8 @@ class CheckSetupController extends Controller
                     // Send Mail
 
                     $this->name = $users->name;
-                    // $this->email = $users->email;
-                    $this->email = 'adenugaadebambo41@gmail.com';
+                    $this->email = $users->email;
+                    // $this->email = 'adenugaadebambo41@gmail.com';
                     $this->subject = "Kindly reset your password on PaySprint";
 
                     $this->message = '<p>We wish to notify you to change or reset your password on PaySprint for security resasons.</p><p><a href=' . route('password.request') . ' class="text-primary" style="text-decoration: underline">Click here to reset your password</a></p>';
@@ -1096,6 +1112,22 @@ class CheckSetupController extends Controller
     }
 
 
+    public function existingAccounts()
+    {
+        $getUsers = User::where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->get();
+
+        foreach ($getUsers as $users) {
+            if ($users->accountType == "Individual") {
+                $category = "Existing Consumers";
+            } else {
+                $category = "Existing Merchants";
+            }
+
+            $this->mailListCategorize($users->name, $users->email, $users->address, $users->telephone, $category, $users->country, 'subscription');
+        }
+    }
+
+
 
     public function mailprocess($email, $name, $subject, $message)
     {
@@ -1113,6 +1145,41 @@ class CheckSetupController extends Controller
         // Log::info('Monthly Transaction Statement: '.$this->name."\n Message: ".$message);
 
         $this->slack('Monthly Transaction Statement: ' . $this->name . "\n Message: " . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+    }
+
+
+    // Update Transaction Limit
+    public function dailyLimit()
+    {
+        $getUsers = User::all();
+
+        foreach ($getUsers as $getUser) {
+            User::where('id', $getUser->id)->update(['withdrawal_per_day' => 0]);
+        }
+
+        $this->slack('Daily Transaction Limit Executed: ' . date('d/m/Y'), $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+    }
+
+    public function weeklyLimit()
+    {
+        $getUsers = User::all();
+
+        foreach ($getUsers as $getUser) {
+            User::where('id', $getUser->id)->update(['withdrawal_per_week' => 0]);
+        }
+
+        $this->slack('Weekly Transaction Limit Executed: ' . date('D'), $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+    }
+
+    public function monthlyLimit()
+    {
+        $getUsers = User::all();
+
+        foreach ($getUsers as $getUser) {
+            User::where('id', $getUser->id)->update(['withdrawal_per_month' => 0]);
+        }
+
+        $this->slack('Monthly Transaction Limit Executed: ' . date('F/Y'), $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
     }
 
 

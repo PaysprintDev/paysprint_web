@@ -178,7 +178,7 @@ trait ExpressPayment
     public function processTransaction($postRequest, $bearerToken)
     {
 
-        dd($postRequest);
+        Log::info(json_encode($postRequest));
 
 
         $checks = $this->checkAccount($postRequest, $bearerToken);

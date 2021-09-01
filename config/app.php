@@ -165,6 +165,8 @@ return [
         Spatie\Permission\PermissionServiceProvider::class,
         Biscolab\ReCaptcha\ReCaptchaServiceProvider::class,
 
+        Spatie\Newsletter\NewsletterServiceProvider::class,
+
     ],
 
     /*
@@ -216,6 +218,7 @@ return [
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         'ReCaptcha' => Biscolab\ReCaptcha\Facades\ReCaptcha::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Newsletter' => Spatie\Newsletter\NewsletterFacade::class,
 
     ],
 

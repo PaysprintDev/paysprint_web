@@ -379,6 +379,8 @@ body::-webkit-scrollbar-thumb:hover {
                                     
                                 </div>
                             </div>
+                            <label for="referred_by">Referred By <small class="reqField">(Optional)</small> </label>
+                                        <input type="text" name="referred_by" id="referred_by" class="form-control input_box" placeholder="E.g 69212">
                             <div class="row">
 
                                 <div class="col-sm-6">
@@ -629,6 +631,7 @@ var monthOfBirth;
 var yearOfBirth;
 var street_number;
 var street_name;
+var referred_by;
     if(accountType == "Individual"){
         ref_code = $('#ref_code').val();
         fname = $('#fname').val();
@@ -646,6 +649,7 @@ var street_name;
         street_name = $('#route').val();
         password = $('#password').val();
         zipcode = $('#postal_code').val();
+        referred_by = $('#referred_by').val();
         cpassword = $('#password-confirm').val();
 
 
@@ -716,7 +720,7 @@ var street_name;
             country: country, state: state, city: city,
             address: address, password: password, zipcode: zipcode,
             street_number: street_number, street_name: street_name,
-            accountType: accountType, ref_code: ref_code, dayOfBirth: dayOfBirth, monthOfBirth: monthOfBirth, yearOfBirth: yearOfBirth
+            accountType: accountType, ref_code: ref_code, dayOfBirth: dayOfBirth, monthOfBirth: monthOfBirth, yearOfBirth: yearOfBirth, referred_by: referred_by
         };
     }
     else if(accountType == "Business"){

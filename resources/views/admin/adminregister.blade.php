@@ -552,6 +552,12 @@
         </div>
       </div>
 
+      <div class="form-group has-feedback">
+        <label for="referred_by">Referred By <small class="reqField">(Optional)</small></label>
+        <input type="text" name="referred_by" id="referred_by" class="form-control" placeholder="E.g 69212">
+        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+      </div>
+
 
 
       <div class="row">
@@ -824,6 +830,7 @@ function signUp(){
     password: $('#password').val(),
     business_zip_code: $('#business_zip_code').val(),
     zip_code: $('#postal_code').val(),
+    referred_by: $('#referred_by').val(),
   };
 
         Pace.restart();

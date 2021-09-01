@@ -54,6 +54,7 @@
                   <th>Activity</th>
                   <th>Country</th>
                   <th>Platform</th>
+                  <th>Login Count</th>
                   <th>Date & Time</th>
                 </tr>
                 </thead>
@@ -71,6 +72,7 @@
                                     $name = $user->name;
                                     $email = $user->email;
                                     $accountType = $user->accountType;
+                                    $loginCount = $user->loginCount;
                                 @endphp
 
                             @else
@@ -82,6 +84,7 @@
                                         $name = $annonUser->name;
                                         $email = $annonUser->email;
                                         $accountType = $annonUser->accountType;
+                                        $loginCount = 0;
                                     @endphp
 
                                   @else
@@ -91,6 +94,7 @@
                                         $name = "-";
                                         $email = "-";
                                         $accountType = "-";
+                                        $loginCount = 0;
                                     @endphp
 
                                 @endif
@@ -110,6 +114,7 @@
                             <td>{{ $data->activity }}</td>
                             <td>{{ strtoupper($data->country) }}</td>
                             <td>{{ strtoupper($data->platform) }}</td>
+                            <td>{{ $loginCount }}</td>
                             <td>{{ date('d/M/Y h:i a', strtotime($data->created_at)) }}</td>
                         </tr>
                         @endforeach
@@ -118,7 +123,7 @@
                          
                     @else
                     <tr>
-                        <td colspan="7" align="center">No record available</td>
+                        <td colspan="8" align="center">No record available</td>
                     </tr>
                     @endif
                 </tbody>
