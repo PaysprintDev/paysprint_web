@@ -39,6 +39,8 @@ Route::prefix('/v1')->group(function () {
 
 
         Route::post('currencyconversion',  ['uses' => 'CurrencyConverterApiController@mycurrencyConvert']);
+
+        Route::get('classifiedbusinessdirectory',  ['uses' => 'api\v1\UserController@classifiedBusinessDirectory']);
     });
 
 
@@ -56,6 +58,9 @@ Route::prefix('/v1')->group(function () {
         Route::post('merchantprofile',  ['uses' => 'api\v1\UserController@updateMerchantProfile'])->name('merchant profile');
 
         Route::post('merchantbusinessprofile',  ['uses' => 'api\v1\UserController@updateMerchantBusinessProfile'])->name('merchant business profile');
+
+
+        Route::post('promotebusiness',  ['uses' => 'api\v1\UserController@promoteYourBusiness'])->name('promote business');
 
 
         Route::get('merchantsbyservicetypes',  ['uses' => 'api\v1\UserController@merchantsByServiceTypes'])->name('merchants by service types');

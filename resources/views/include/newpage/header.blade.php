@@ -56,6 +56,10 @@
                         <a class="nav-link" href="{{ route('AdminRegister') }}" role="button" aria-expanded="false">SIGN UP FOR FREE</a>
                     </li>
 
+                    {{-- <li class="nav-item">
+                        <a class="nav-link" href="{{ route('haiti donation') }}" style="color: red !important;">DONATE TO HAITI <img src="https://img.icons8.com/color/24/000000/the-republic-of-haiti.png"/></a>
+                    </li> --}}
+
 
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('home') }}" style="color: #000000 !important; text-decoration: underline; background-color: #e8aa07; border-radius: 10px; font-size: 17px; padding: 5px;">{{ "Are you a USER? ".strtoupper(" CLICK HERE") }}</a>
@@ -362,10 +366,16 @@
                         <a class="nav-link" href="{{ route('register') }}" role="button" aria-expanded="false">SIGN UP FOR FREE</a>
                     </li>
 
+                    {{-- <li class="nav-item">
+                        <a class="nav-link" href="{{ route('haiti donation') }}" style="color: red !important;">DONATE TO HAITI <img src="https://img.icons8.com/color/24/000000/the-republic-of-haiti.png"/></a>
+                    </li> --}}
+
 
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('merchant home') }}"  style="color: #000000 !important; text-decoration: underline; background-color: #e8aa07; border-radius: 10px; font-size: 17px; padding: 5px;">{{ "Are you a Merchant? ".strtoupper(" CLICK HERE") }}</a>
                     </li>
+
+                    
 
 
                 @endguest

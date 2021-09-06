@@ -72,6 +72,7 @@
                   <th>Identification</th>
                   <th>Platform</th>
                   <th>Status</th>
+                  <th>Reg. Date</th>
                   <th>Action</th>
                 </tr>
                 </thead>
@@ -175,6 +176,8 @@
                                 
                             @endif
 
+                            <td>{{ date('d/M/Y', strtotime($datainfo->created_at)) }}</td>
+
                             <td align="center">
 
                               <a href="{{ route('user more detail', $datainfo->id) }}"><i class="far fa-eye text-primary" style="font-size: 20px;" title="More details"></i></strong></a> 
@@ -217,7 +220,7 @@
 
                     @else
                     <tr>
-                        <td colspan="9" align="center">No record available</td>
+                        <td colspan="10" align="center">No record available</td>
                     </tr>
                     @endif
 

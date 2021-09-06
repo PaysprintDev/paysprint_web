@@ -2484,20 +2484,20 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                 $withdrawLimit = $this->getWithdrawalLimit($thisuser->country, $thisuser->id);
 
-                if ($thisuser->withdrawal_per_transaction >= $withdrawLimit['withdrawal_per_transaction']) {
+                if ($req->amount >= $withdrawLimit['withdrawal_per_transaction']) {
 
                     $data = [];
                     $message = "Withdrawal limit for per transaction is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_transaction'], 2) . ". Please withdraw a lesser amount";
                     $status = 400;
-                } elseif ($thisuser->withdrawal_per_day >= $withdrawLimit['withdrawal_per_day']) {
+                } elseif ($req->amount >= $withdrawLimit['withdrawal_per_day']) {
                     $data = [];
                     $message = "Withdrawal limit per day is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try again the next day";
                     $status = 400;
-                } elseif ($thisuser->withdrawal_per_week >= $withdrawLimit['withdrawal_per_week']) {
+                } elseif ($req->amount >= $withdrawLimit['withdrawal_per_week']) {
                     $data = [];
                     $message = "You have reached your limit for the week. Withdrawal limit per week is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next week";
                     $status = 400;
-                } elseif ($thisuser->withdrawal_per_month >= $withdrawLimit['withdrawal_per_month']) {
+                } elseif ($req->amount >= $withdrawLimit['withdrawal_per_month']) {
                     $data = [];
                     $message = "You have reached your limit for the month. Withdrawal limit per month is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_month'], 2) . ". Please try again the next month";
                     $status = 400;
@@ -3293,20 +3293,20 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                 $withdrawLimit = $this->getWithdrawalLimit($thisuser->country, $thisuser->id);
 
-                if ($thisuser->withdrawal_per_transaction >= $withdrawLimit['withdrawal_per_transaction']) {
+                if ($req->amount >= $withdrawLimit['withdrawal_per_transaction']) {
 
                     $data = [];
                     $message = "Withdrawal limit for per transaction is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_transaction'], 2) . ". Please withdraw a lesser amount";
                     $status = 400;
-                } elseif ($thisuser->withdrawal_per_day >= $withdrawLimit['withdrawal_per_day']) {
+                } elseif ($req->amount >= $withdrawLimit['withdrawal_per_day']) {
                     $data = [];
                     $message = "Withdrawal limit per day is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try again the next day";
                     $status = 400;
-                } elseif ($thisuser->withdrawal_per_week >= $withdrawLimit['withdrawal_per_week']) {
+                } elseif ($req->amount >= $withdrawLimit['withdrawal_per_week']) {
                     $data = [];
                     $message = "You have reached your limit for the week. Withdrawal limit per week is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next week";
                     $status = 400;
-                } elseif ($thisuser->withdrawal_per_month >= $withdrawLimit['withdrawal_per_month']) {
+                } elseif ($req->amount >= $withdrawLimit['withdrawal_per_month']) {
                     $data = [];
                     $message = "You have reached your limit for the month. Withdrawal limit per month is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_month'], 2) . ". Please try again the next month";
                     $status = 400;
@@ -4352,6 +4352,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         // Load Utility Bill.
                         $billPayResponse = $this->processTransaction($req->all(), $req->bearerToken());
 
+                        Log::info(json_encode($billPayResponse));
 
                         if ($billPayResponse->responseCode == 00) {
 

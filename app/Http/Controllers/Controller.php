@@ -159,12 +159,35 @@ class Controller extends BaseController
 
         $result = json_decode($response);
 
-        ConversionCountry::where('country', NULL)->delete();
+        $query = [];
+        $countryQuery = [];
 
+        foreach ($result->quotes as $value) {
+            $query[] = $value;
+        }
+
+        $countryRec = ConversionCountry::orderBy('id', 'ASC')->get();
+
+
+        foreach ($countryRec as $country) {
+            $countryQuery[] = $country->country;
+        }
+
+        $dataInfo = [
+            'country' => $countryQuery,
+            'query' => $query,
+        ];
+
+        for ($i = 0; $i < count($countryQuery); $i++) {
+            ConversionCountry::where('country', $dataInfo['country'][$i])->update(['rate' => $dataInfo['query'][$i]]);
+        }
+
+
+        $newRate = ConversionCountry::orderBy('id', 'ASC')->get();
 
 
         $data = [
-            'quotes' => $result->quotes
+            'quotes' => $newRate
         ];
 
         return $data;

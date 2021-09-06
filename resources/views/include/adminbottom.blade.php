@@ -3433,6 +3433,53 @@ else if(val == "merchantbusiness"){
 
 }
 
+else if(val == "promotebusiness"){
+
+ formData = new FormData(formElemBusinessProfile);
+
+    route = "{{ URL('/api/v1/promotebusiness') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#promoteMyBusiness').text('Processing Information...');
+        },
+        success: function(result){
+
+            $('#promoteMyBusiness').text('Promote Business');
+
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $('#updatemyBusinessProfile').text('Update Business');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
 
 else if('createnew'){
       formData = new FormData(formElem);

@@ -33,7 +33,15 @@
 
               <h3 class="profile-username text-center">{{ $data['getuserDetail']->name }}</h3>
 
-              <p class="text-muted text-center">{{ $data['getuserDetail']->accountType }} Account</p>
+              <p class="text-muted text-center">{{ $data['getuserDetail']->accountType }} Account </p>
+
+              <p class="text-muted text-center text-success" style="font-weight: 800">
+                @if ($data['getbusinessDetail']->promote_business == 1)
+                  Promoted <img src="https://img.icons8.com/external-flatart-icons-flat-flatarticons/20/000000/external-digital-marketing-digital-marketing-flatart-icons-flat-flatarticons.png"/>
+              @endif
+              </p>
+
+              
 
 
               <div class="row">
@@ -150,7 +158,8 @@
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
               {{-- <li class="active"><a href="#timeline" data-toggle="tab">Timeline</a></li> --}}
-              <li class="active"><a href="#business" data-toggle="tab">Business Information</a></li>
+              <li class="active"><a href="#business" data-toggle="tab">Business Information
+                                </a></li>
               <li><a href="#settings" data-toggle="tab">Personal Information</a></li>
               <li><a href="#myconnection" data-toggle="tab">Transaction Pin</a></li>
               @if ($data['getbusinessDetail']->country == "Nigeria")
@@ -408,7 +417,21 @@
                   
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                      <button type="button" class="btn btn-primary btn-block" onclick="handShake('merchantbusiness')" id="updatemyBusinessProfile">Update Business</button>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <button type="button" class="btn btn-primary btn-block" onclick="handShake('merchantbusiness')" id="updatemyBusinessProfile">Update Business</button>
+                        </div>
+                        <div class="col-md-6">
+
+
+                          @if ($data['getbusinessDetail']->promote_business == 0)
+                              <button type="button" class="btn btn-danger btn-block" onclick="handShake('promotebusiness')" id="promoteMyBusiness">Promote Business</button>
+                          @endif
+
+                          
+                        </div>
+                      </div>
+                       
                     </div>
                   </div>
                 </form>

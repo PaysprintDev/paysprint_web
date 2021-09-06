@@ -119,7 +119,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart']]);
+        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation']]);
 
         $location = $this->myLocation();
 
@@ -187,7 +187,7 @@ class HomeController extends Controller
         return view('main.newpage.shade-pro.merchantindex')->with(['pages' => $this->page]);
     }
 
-    public function index(Request $req)
+    public function index()
     {
 
 
@@ -229,7 +229,7 @@ class HomeController extends Controller
     }
 
 
-    public function authIndex(Request $req)
+    public function authIndex()
     {
 
 
@@ -265,6 +265,45 @@ class HomeController extends Controller
 
 
         return view('home')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function haitiDonation()
+    {
+
+
+        // dd($req->session());
+        if (Auth::check() == true) {
+            $this->page = 'Donate to Haiti';
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+            $data = array(
+                'sendReceive' => $this->sendAndReceive(Auth::user()->email),
+                'payInvoice' => $this->payInvoice(Auth::user()->email),
+                'walletTrans' => $this->sendAndReceive(Auth::user()->email),
+                'urgentnotification' => $this->urgentNotification(Auth::user()->email),
+                'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+                'getCard' => $this->getUserCard(),
+                'getBank' => $this->getUserBank(),
+                'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                'getmerchantsByCategory' => $this->getMerchantsByCategory(),
+                'specialInfo' => $this->getthisInfo(Auth::user()->country),
+                'continent' => $this->timezone[0]
+            );
+        } else {
+            $this->page = 'Donate to Haiti';
+            $this->name = '';
+            $this->email = '';
+            $data = [
+                'continent' => $this->timezone[0]
+            ];
+        }
+
+
+
+
+
+        return view('main.haitidonate')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -3373,7 +3412,7 @@ class HomeController extends Controller
 
 
 
-                $this->mailListCategorize($this->name, $this->email, Auth::user()->address, Auth::user()->telephone, 'New Consumers', Auth::user()->country, 'subscription');
+                $this->mailListCategorize($this->name, $this->email, Auth::user()->address, Auth::user()->telephone, 'New Consumers', Auth::user()->country, 'Subscription');
 
                 // Log::info("New user registration via web by: ".$name." from ".$req->state.", ".$req->country." \n\n STATUS: ".$resInfo);
 

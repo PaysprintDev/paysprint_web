@@ -22,6 +22,8 @@ use App\AllCountries as AllCountries;
 use App\LinkAccount as LinkAccount;
 use App\ListOfBanks as ListOfBanks;
 use App\Mail\sendEmail;
+use App\TransactionCost as TransactionCost;
+use App\MonthlyFee as MonthlyFee;
 
 use App\Traits\Trulioo;
 use App\Traits\AccountNotify;
@@ -242,7 +244,7 @@ class UserController extends Controller
             }
 
 
-            $this->mailListCategorize($request->firstname . ' ' . $request->lastname, $request->email, $request->address, $request->telephone, "New Consumers", $request->country, 'subscription');
+            $this->mailListCategorize($request->firstname . ' ' . $request->lastname, $request->email, $request->address, $request->telephone, "New Consumers", $request->country, 'Subscription');
 
             // Log::info("New user registration via mobile app by: ".$request->firstname.' '.$request->lastname." from ".$request->state.", ".$request->country." \n\n STATUS: ".$resInfo);
 
@@ -532,6 +534,147 @@ class UserController extends Controller
         return $this->returnJSON($resData, $status);
     }
 
+
+    public function promoteYourBusiness(Request $request, ClientInfo $clientinfo)
+    {
+
+        try {
+            $user = User::where('api_token', $request->bearerToken())->first();
+
+            // Get Monthly charge for this country
+
+            $getTranscost = TransactionCost::where('structure', 'Wallet Maintenance fee')->where('country', $user->country)->first();
+
+            if (isset($getTranscost)) {
+
+                $minBal = $this->minimumWithdrawal($user->country);
+
+                if (($user->wallet_balance - $minBal) > $getTranscost->fixed) {
+
+                    $walletBalance = $user->wallet_balance - $getTranscost->fixed;
+
+                    User::where('id', $user->id)->update(['wallet_balance' => $walletBalance]);
+
+                    // Send Mail
+                    $transaction_id = "wallet-" . date('dmY') . time();
+
+                    $activity = "Withdrawal of " . $user->currencyCode . '' . number_format($getTranscost->fixed, 2) . " from Wallet to Promote Business";
+                    $credit = 0;
+                    $debit = $getTranscost->fixed;
+                    $reference_code = $transaction_id;
+                    $balance = 0;
+                    $trans_date = date('Y-m-d');
+                    $status = "Delivered";
+                    $action = "Wallet debit";
+                    $regards = $user->ref_code;
+                    $statement_route = "wallet";
+
+
+                    $sendMsg = 'Hello ' . strtoupper($user->name) . ', ' . $activity . '. You now have ' . $user->currencyCode . ' ' . number_format($walletBalance, 2) . ' balance in your account';
+                    $sendPhone = "+" . $user->code . $user->telephone;
+
+
+                    // Senders statement
+                    $this->insStatement($user->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
+
+                    $this->createNotification($user->ref_code, "Hello " . strtoupper($user->name) . ", " . $sendMsg);
+
+                    $this->name = $user->name;
+                    $this->email = $user->email;
+                    $this->subject = $activity;
+
+                    $this->message = '<p>' . $activity . '</p><p>You now have <strong>' . $user->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> balance in your account</p>';
+
+
+                    $clientinfo->where('email', $user->email)->update(['business_name' => $request->businessName, 'address' => $request->businessAddress, 'corporate_type' => $request->corporate_type, 'industry' => $request->industry, 'website' => $request->businessWebsite, 'type_of_service' => $request->type_of_service, 'description' => $request->businessDescription, 'promote_business' => 1]);
+
+                    if ($request->hasFile('incorporation_doc_front')) {
+                        $this->uploadDocument($user->id, $request->file('incorporation_doc_front'), 'document/incorporation_doc_front', 'incorporation_doc_front');
+                        $this->createNotification($user->ref_code, "Incorporation document successfully uploaded");
+                        $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded the front page of your incorporation document.");
+                    }
+                    if ($request->hasFile('incorporation_doc_back')) {
+                        $this->uploadDocument($user->id, $request->file('incorporation_doc_back'), 'document/incorporation_doc_back', 'incorporation_doc_back');
+                        $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded the back page of your incorporation document.");
+                    }
+
+
+
+
+                    if ($user->country == "Nigeria") {
+
+                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                        $this->sendSms($sendMsg, $correctPhone);
+                    } else {
+                        $this->sendMessage($sendMsg, $sendPhone);
+                    }
+
+
+                    $data = $clientinfo->where('email', $user->email)->first();
+
+                    $status = 200;
+
+                    $resData = ['data' => $data, 'message' => 'Business Promoted. You can see your business get listed on www.getverifiedpro.com', 'status' => $status];
+                } else {
+
+                    $data = [];
+
+                    $message = "Your minimum wallet balance is " . $user->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
+
+                    $status = 400;
+
+
+                    $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                }
+            } else {
+
+                $data = [];
+
+                $status = 400;
+
+                $resData = ['data' => $data, 'message' => "Unable to promote business for your country. Contact Admin", 'status' => $status];
+            }
+        } catch (\Throwable $th) {
+            $data = [];
+
+            $status = 400;
+
+            $resData = ['data' => $data, 'message' => $th->getMessage(), 'status' => $status];
+        }
+
+        return $this->returnJSON($resData, $status);
+    }
+
+    public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route)
+    {
+        Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route]);
+    }
+
+
+    public function classifiedBusinessDirectory()
+    {
+        try {
+            $data = ClientInfo::where('promote_business', 1)->orderBy('created_at', 'DESC')->get();
+
+            if (count($data) > 0) {
+
+                $status = 200;
+
+                $resData = ['data' => $data, 'message' => 'Success', 'status' => $status];
+            } else {
+                $status = 200;
+
+                $resData = ['data' => [], 'message' => 'No record', 'status' => $status];
+            }
+        } catch (\Throwable $th) {
+
+            $status = 400;
+
+            $resData = ['data' => [], 'message' => $th->getMessage(), 'status' => $status];
+        }
+
+        return $this->returnJSON($resData, $status);
+    }
 
 
     public function merchantsByServiceTypes(Request $req)

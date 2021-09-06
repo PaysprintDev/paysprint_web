@@ -33,6 +33,8 @@
                   <th>S/N</th>
                   <th>Currency</th>
                   <th>Rate/USD</th>
+                  <th>Date</th>
+                  <th>Time</th>
                   
                 </tr>
                 </thead>
@@ -41,37 +43,24 @@
                     @if (isset($data['currencyrate']))
                     @php
                         $i = 1;
-                        $mycountry = [];
                     @endphp
-                        @foreach ($data['currencyrate']['quotes'] as $amount)
 
-
-                            {{--  @foreach ($data['currencyrate']['currency'] as $currency)
-
-                                
-                                @php
-                                    $mycountry []= "<tr><td>".$currency."</td></tr>";
-                                @endphp
-                                
-                            @endforeach  --}}
+                        @foreach ($data['currencyrate']['quotes'] as $result)
 
 
                             <tr>
                                 <td>{{ $i++ }}</td>
-                                <td>&nbsp;</td>
-                                <td>{{ $amount }}</td>
+                                <td>{{ $result->country }}</td>
+                                <td>{{ $result->rate }}</td>
+                                <td>{{ date('d/m/Y', strtotime($result->updated_at)) }}</td>
+                                <td>{{ date('h:i a', strtotime($result->updated_at)) }}</td>
                             </tr>
 
                         @endforeach
-
-                            {{--  @for ($j = 1; $j <= count($mycountry); $j++)
-                                @if (isset($mycountry[$j]))
-                                    {!! $mycountry[$j] !!}
-                                @endif
-                            @endfor  --}}
+                           
                     @else
                         <tr>
-                            <td colspan="3" align="center">No record</td>
+                            <td colspan="5" align="center">No record</td>
                         </tr>
                     @endif
                   

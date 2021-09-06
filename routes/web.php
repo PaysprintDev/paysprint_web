@@ -43,6 +43,8 @@ Route::get('autofeestructure', 'CheckSetupController@setupFeeStructure');
 Route::get('checktelephone', 'CheckSetupController@checkTelephone');
 Route::get('userarchive', 'CheckSetupController@userAccountArchive');
 Route::get('existingaccounts', 'CheckSetupController@existingAccounts');
+Route::get('updatewallet', 'CheckSetupController@updateExbcAccount');
+// Route::get('returnfee', 'MaintenanceFeeCharge@returnFeeCharge');
 
 
 // Transaction Limit
@@ -77,6 +79,8 @@ Route::get('/', ['uses' => 'HomeController@homePage', 'as' => 'home']);
 Route::get('/merchant-home', ['uses' => 'HomeController@merchantIndex', 'as' => 'merchant home']);
 
 Route::get('/home', ['uses' => 'HomeController@authIndex', 'as' => 'user home']);
+
+Route::get('/donate-to-haiti', ['uses' => 'HomeController@haitiDonation', 'as' => 'haiti donation']);
 
 Route::get('about', ['uses' => 'HomeController@about', 'as' => 'about']);
 
@@ -287,6 +291,9 @@ Route::prefix('Admin/wallet')->group(function () {
 	Route::get('/user-purchase-statement', ['uses' => 'AdminController@userWalletPurchaseStatement', 'as' => 'user purchase statement']);
 	Route::get('/user-wallet-purchase', ['uses' => 'AdminController@userWalletPurchase', 'as' => 'users wallet purchase']);
 	Route::get('bankrequestwithdrawal', ['uses' => 'AdminController@bankRequestWithdrawal', 'as' => 'bank request withdrawal']);
+
+	Route::get('merchantbankdetails', ['uses' => 'AdminController@merchantBanksDetails', 'as' => 'merchant banking details']);
+
 	Route::get('purchaserequestreturn', ['uses' => 'AdminController@purchaseRefundReturn', 'as' => 'purchase refund request']);
 	Route::get('bankrequestwithdrawalbycountry', ['uses' => 'AdminController@bankRequestWithdrawalByCountry', 'as' => 'bank withdrawal by country']);
 	Route::get('returnwithdrawal/{id}', ['uses' => 'AdminController@returnWithdrawal', 'as' => 'return withdrawal request']);

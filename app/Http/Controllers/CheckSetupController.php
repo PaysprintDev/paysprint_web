@@ -89,7 +89,7 @@ class CheckSetupController extends Controller
                     $this->message = '<p>We noticed you are yet to properly complete the set-up your PaySprint Account. You need to provide the outstanding information and complete the quick set up in order to enjoy the full benefits of a PaySprint Account.</p><p><ul>' . $approval . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card . '</ul></p><p>Kindly complete these important steps in your profile. <a href=' . route('profile') . ' class="text-primary" style="text-decoration: underline">Click here to login to your account</a></p>';
 
 
-                    $this->mailListCategorize($this->name, $this->email, $value->address, $value->telephone, 'Quick Setup', $value->country, 'subscription');
+                    $this->mailListCategorize($this->name, $this->email, $value->address, $value->telephone, 'Quick Setup', $value->country, 'Subscription');
 
                     // $this->sendEmail($this->email, "Incomplete Setup");
                     // $this->sendCampaign($this->subject, $this->message, $this->email, $this->name);
@@ -164,7 +164,7 @@ class CheckSetupController extends Controller
                     $category = "Archived Merchants";
                 }
 
-                $this->mailListCategorize($value->name, $value->email, $value->address, $value->telephone, $category, $value->country, 'subscription');
+                $this->mailListCategorize($value->name, $value->email, $value->address, $value->telephone, $category, $value->country, 'Subscription');
             }
         }
     }
@@ -704,11 +704,11 @@ class CheckSetupController extends Controller
 
 
             // $transaction_id = "wallet-".date('dmY').time();
-            $transaction_id = "687562435";
+            $transaction_id = "ostu94qyby";
 
             // $activity = "Added ".$exbcMerchant->currencyCode.''.number_format(20, 2)." to your Wallet to load EXBC Prepaid Card";
-            $activity = "Added " . $exbcMerchant->currencyCode . '' . number_format(100, 2) . " to Wallet including a fee charge of " . $exbcMerchant->currencyCode . '' . number_format(1.65, 2) . " was deducted from your Debit Card";
-            $credit = 100;
+            $activity = "Added " . $exbcMerchant->currencyCode . '' . number_format(1967, 2) . " to Wallet including a fee charge of " . $exbcMerchant->currencyCode . '' . number_format(33, 2) . " was deducted from your Debit Card";
+            $credit = 1967;
             $debit = 0;
             $reference_code = $transaction_id;
             $balance = 0;
@@ -718,7 +718,7 @@ class CheckSetupController extends Controller
             $regards = $exbcMerchant->ref_code;
             $statement_route = "wallet";
 
-            $merchantwalletBal = $exbcMerchant->wallet_balance + 100;
+            $merchantwalletBal = $exbcMerchant->wallet_balance + 1967;
 
             User::where('email', 'adenugaadebambo41@gmail.com')->update([
                 'wallet_balance' => $merchantwalletBal
@@ -729,11 +729,11 @@ class CheckSetupController extends Controller
             // Senders statement
             $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
 
-            $this->getfeeTransaction($reference_code, $exbcMerchant->ref_code, 101.65, 1.65, 100);
+            $this->getfeeTransaction($reference_code, $exbcMerchant->ref_code, 2000, 33, 1967);
 
             // $sendMerchantMsg = "Hi ".$exbcMerchant->name.", ".$exbcMerchant->currencyCode." 20.00 was added to your wallet to load EXBC Prepaid Card. Your new wallet balance is ".$exbcMerchant->currencyCode.' '.number_format($merchantwalletBal, 2).". Thanks.";
 
-            $sendMerchantMsg = 'You have added ' . $exbcMerchant->currencyCode . ' ' . number_format(100, 2) . ' (Gross Amount of ' . $exbcMerchant->currencyCode . ' ' . number_format(101.65, 2) . ' less transaction fee ' . $exbcMerchant->currencyCode . ' ' . number_format(1.65, 2) . ') to your wallet with PaySprint. You now have ' . $exbcMerchant->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
+            $sendMerchantMsg = 'You have added ' . $exbcMerchant->currencyCode . ' ' . number_format(1967, 2) . ' (Gross Amount of ' . $exbcMerchant->currencyCode . ' ' . number_format(2000, 2) . ' less transaction fee ' . $exbcMerchant->currencyCode . ' ' . number_format(33, 2) . ') to your wallet with PaySprint. You now have ' . $exbcMerchant->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
 
             $this->createNotification($exbcMerchant->ref_code, $sendMerchantMsg);
 
@@ -742,7 +742,7 @@ class CheckSetupController extends Controller
             $gateway = ucfirst($getGateway->gateway);
 
 
-            $message = 'You have successfully added ' . $exbcMerchant->currencyCode . ' ' . number_format(100, 2) . ' to your wallet';
+            $message = 'You have successfully added ' . $exbcMerchant->currencyCode . ' ' . number_format(1967, 2) . ' to your wallet';
 
             $this->keepRecord($reference_code, $message, "Success", $gateway, $exbcMerchant->country);
 
@@ -1123,7 +1123,7 @@ class CheckSetupController extends Controller
                 $category = "Existing Merchants";
             }
 
-            $this->mailListCategorize($users->name, $users->email, $users->address, $users->telephone, $category, $users->country, 'subscription');
+            $this->mailListCategorize($users->name, $users->email, $users->address, $users->telephone, $category, $users->country, 'Subscription');
         }
     }
 
