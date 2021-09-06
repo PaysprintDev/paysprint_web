@@ -67,6 +67,12 @@ class UserController extends Controller
 
             $withdrawLimit = $this->countryWithdrawalLimit($request->country);
 
+            if (isset($withdrawLimit)) {
+                $transactionLimit = $withdrawLimit['withdrawal_per_transaction'];
+            } else {
+                $transactionLimit = 0;
+            }
+
 
 
             // Get all ref_codes
@@ -101,7 +107,7 @@ class UserController extends Controller
 
             if (isset($newcustomer)) {
 
-                $user = User::create(['code' => $newcustomer->code, 'ref_code' => $newcustomer->ref_code, 'name' => $newcustomer->name, 'email' => $newcustomer->email, 'password' => Hash::make($request->password), 'address' => $newcustomer->address, 'city' => $request->city, 'state' => $request->state, 'country' => $newcustomer->country, 'accountType' => 'Individual', 'api_token' => uniqid() . md5($request->email), 'telephone' => $newcustomer->telephone, 'wallet_balance' => $newcustomer->wallet_balance, 'approval' => 0, 'currencyCode' => $mycode[0]->currencies[0]->code, 'currencySymbol' => $mycode[0]->currencies[0]->symbol, 'dayOfBirth' => $request->dayOfBirth, 'monthOfBirth' => $request->monthOfBirth, 'yearOfBirth' => $request->yearOfBirth, 'cardRequest' => 0, 'platform' => 'mobile', 'accountLevel' => 2, 'zip' => $request->zipcode, 'withdrawal_per_transaction' => $withdrawLimit['withdrawal_per_transaction']]);
+                $user = User::create(['code' => $newcustomer->code, 'ref_code' => $newcustomer->ref_code, 'name' => $newcustomer->name, 'email' => $newcustomer->email, 'password' => Hash::make($request->password), 'address' => $newcustomer->address, 'city' => $request->city, 'state' => $request->state, 'country' => $newcustomer->country, 'accountType' => 'Individual', 'api_token' => uniqid() . md5($request->email), 'telephone' => $newcustomer->telephone, 'wallet_balance' => $newcustomer->wallet_balance, 'approval' => 0, 'currencyCode' => $mycode[0]->currencies[0]->code, 'currencySymbol' => $mycode[0]->currencies[0]->symbol, 'dayOfBirth' => $request->dayOfBirth, 'monthOfBirth' => $request->monthOfBirth, 'yearOfBirth' => $request->yearOfBirth, 'cardRequest' => 0, 'platform' => 'mobile', 'accountLevel' => 2, 'zip' => $request->zipcode, 'withdrawal_per_transaction' => $transactionLimit]);
 
                 $getMoney = Statement::where('user_id', $newcustomer->email)->get();
 
@@ -142,7 +148,7 @@ class UserController extends Controller
                     'cardRequest' => 0,
                     'platform' => 'mobile',
                     'accountLevel' => 2,
-                    'withdrawal_per_transaction' => $withdrawLimit['withdrawal_per_transaction']
+                    'withdrawal_per_transaction' => $transactionLimit
                 ]);
             }
 
@@ -274,7 +280,6 @@ class UserController extends Controller
         return $this->returnJSON($resData, $status);
     }
 
-
     public function userLogin(Request $request, User $user)
     {
 
@@ -304,6 +309,12 @@ class UserController extends Controller
 
 
                     $withdrawLimit = $this->countryWithdrawalLimit($getUser->country);
+
+                    if (isset($withdrawLimit)) {
+                        $transactionLimit = $withdrawLimit['withdrawal_per_transaction'];
+                    } else {
+                        $transactionLimit = 0;
+                    }
 
                     if (isset($countryApproval)) {
 
@@ -344,7 +355,7 @@ class UserController extends Controller
                                 $pass_date = date('Y-m-d');
                             }
 
-                            User::where('email', $request->email)->update(['api_token' => $token, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'lastLogin' => date('d-m-Y h:i A'), 'pass_date' => $pass_date, 'loginCount' => $loginCount, 'withdrawal_per_transaction' => $withdrawLimit['withdrawal_per_transaction']]);
+                            User::where('email', $request->email)->update(['api_token' => $token, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'lastLogin' => date('d-m-Y h:i A'), 'pass_date' => $pass_date, 'loginCount' => $loginCount, 'withdrawal_per_transaction' => $transactionLimit]);
 
                             $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'accountLevel', 'cardRequest', 'flagged', 'loginCount', 'pass_checker', 'pass_date', 'lastLogin', 'bvn_number', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('email', $request->email)->first();
 
@@ -449,8 +460,6 @@ class UserController extends Controller
 
         return $this->returnJSON($resData, $status);
     }
-
-
 
     public function updateMerchantProfile(Request $request, Admin $admin, ClientInfo $clientinfo)
     {
@@ -676,7 +685,6 @@ class UserController extends Controller
         return $this->returnJSON($resData, $status);
     }
 
-
     public function merchantsByServiceTypes(Request $req)
     {
 
@@ -741,8 +749,6 @@ class UserController extends Controller
 
         return $this->returnJSON($resData, $status);
     }
-
-
 
 
     public function updatePassword(Request $req)
