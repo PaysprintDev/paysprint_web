@@ -16,6 +16,7 @@
 }
 </style>
 
+
   @if (isset($data['pauline']))
           <!-- Hero Area -->
     <div class="position-relative bg-default-2 bg-pattern pattern-2 pt-27 pt-lg-32 pb-15 pb-lg-27">
@@ -36,7 +37,7 @@
 
               
 
-              <div class="hero-btn">
+              <div class="hero-btn" id="donate">
 
                     <a href="{{ url('payment/sendmoney/'.$data['pauline']->ref_code.'?country=Canada') }}" class="btn btn-warning with-icon gr-hover-y">Donate Today<i
                         class="icon icon-tail-right font-weight-bold"></i></a>
@@ -79,28 +80,28 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-lg-5">
-            <div class="about-image img-big pt-lg-13" data-aos="fade-right" data-aos-duration="800" data-aos-once="true">
-              <img class="w-100 rounded-10" src="https://res.cloudinary.com/pilstech/image/upload/v1630676719/paysprint_asset/7_lrcvkp.jpg" alt="">
+          <div class="col-lg-4">
+            <div class="card" style="width: 100%;">
+              <img class="card-img-top" src="https://res.cloudinary.com/pilstech/image/upload/v1630676719/paysprint_asset/7_lrcvkp.jpg" alt="Card image cap">
             </div>
           </div>
-          <div class="col-lg-7">
+          <div class="col-lg-4">
+            <div class="card" style="width: 100%;">
+              <img class="card-img-top" src="https://res.cloudinary.com/pilstech/image/upload/v1630676718/paysprint_asset/6_v8honr.jpg" alt="Card image cap">
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="card" style="width: 100%;">
+              <img class="card-img-top" src="https://res.cloudinary.com/pilstech/image/upload/v1630676718/paysprint_asset/4_lii9du.jpg" alt="Card image cap">
+            </div>
+          </div>
+
+
+          <div class="col-lg-12">
             <div class="row justify-content-between align-items-center pl-lg-13">
-              <div class="col-md-6">
-                <div class="about-image img-mid mt-9 mt-lg-0" data-aos="fade-up" data-aos-duration="900" data-aos-once="true">
-                  <img class="w-100 rounded-10" src="https://res.cloudinary.com/pilstech/image/upload/v1630676718/paysprint_asset/6_v8honr.jpg" alt="" style="width: 100%;">
-                  <div class="abs-pattern gr-abs-tr-custom" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="300" data-aos-once="true">
-                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1630676718/paysprint_asset/6_v8honr.jpg" alt="" style="width: 100%;">
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-5">
-                <div class="about-image img-sm mt-9 mt-lg-0" data-aos="fade-left" data-aos-duration="1000" data-aos-once="true">
-                  <img class="rounded-10" src="https://res.cloudinary.com/pilstech/image/upload/v1630676718/paysprint_asset/4_lii9du.jpg" alt="" width="100%">
-                </div>
-              </div>
-              <div class="col-xl-10">
-                <div class="about-content mt-3 mt-lg-23">
+              
+              <div class="col-xl-12">
+                <div class="about-content mt-3 mt-lg-10">
                   <p class="gr-text-9">However, the long term need continues. Any additional funds will be used to purchase items that was not received by donors, hire a truck and a driver to transport barrels from Port Au Prince to the affected areas upon arrival and also continued support of food and daily essential items to the victims.</p>
                 </div>
                 <div class="about-content mt-2">
@@ -161,7 +162,13 @@
       </div>
     </div>
   @endif
+
+  @isset($data['pauline'])
+        <div class='sharethis-sticky-share-buttons' data-url='{{ url('payment/sendmoney/'.$data['pauline']->ref_code.'?country=Canada') }}'></div>
     
+
+<script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=5f6b67da4174d700123667de&product=sticky-share-buttons" async="async"></script>
+  @endisset
 
 
 

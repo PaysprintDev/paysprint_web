@@ -6,7 +6,7 @@
     @include('include.newpage.footer')
 
     {{--  This Tawk plugin is meant for Africa  --}}
-
+@if ($pages != "Donate to Haiti")
 @isset($data['continent'])
     @if ($data['continent'] == "Africa")
         <!--Start of Tawk.to Script-->
@@ -41,6 +41,7 @@
 
     @endif
 @endisset
+@endif
 
 {{--  End Tawk Plugin for Africa  --}}
 

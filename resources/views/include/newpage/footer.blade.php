@@ -1,3 +1,5 @@
+@if ($pages != "Donate to Haiti")
+
 <!-- Footer section -->
 <div class="footer-section bg-default-6">
     <div class="container">
@@ -92,3 +94,5 @@
         </div>
     </div>
 </div>
+
+@endif

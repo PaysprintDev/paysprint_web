@@ -312,6 +312,80 @@
     <!-- navbar- -->
 
        
+   @elseif ($pages == "Donate to Haiti")
+
+    <div class="d-flex">
+      <span class="border-3 border-blue d-flex w-100"></span>
+      <span class="border-3 border-red d-flex w-100"></span>
+      <span class="border-3 border-green d-flex w-100"></span>
+    </div>
+    <!-- Header Area -->
+    
+    
+    <header class="site-header site-header--menu-left pt-5 pb-5 site-header--absolute">
+      <div class="container-fluid pr-lg-9 pl-lg-9">
+        <nav class="navbar site-navbar offcanvas-active navbar-expand-lg  px-0 fixed-top" style="background-color: #fbfbfb;">
+          <!-- Brand Logo-->
+          <div class="brand-logo">
+              
+            <a @guest href="{{ route('home') }}" @endguest  @auth href="{{ route('user home') }}" @endauth><img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png" class="light-version-logo " style="width: 300px; height: inherit;"> 
+            </a> 
+            <span class="mx-20 text-danger" style="font-weight: 900; font-size: 20px;">Support Haiti</span> 
+            
+        
+        
+        </div>
+          <div class="collapse navbar-collapse" id="mobile-menu">
+            <div class="navbar-nav-wrapper">
+              <ul class="navbar-nav main-menu">
+
+                <li class="nav-item">
+                  <a class="nav-link" @guest href="{{ route('home') }}" @endguest  @auth href="{{ route('user home') }}" @endauth role="button" aria-expanded="false">HOME</a>
+                </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('my account') }}" role="button" aria-expanded="false">MONEY TRANSFER</a>
+                    </li>
+
+                    @isset($data['pauline'])
+                        <li class="nav-item">
+                          <a class="nav-link" href="{{ url('payment/sendmoney/'.$data['pauline']->ref_code.'?country=Canada') }}"  style="color: #000000 !important; text-decoration: none; background-color: #e8aa07; border-radius: 10px; font-size: 17px; padding: 5px;">{{ "DONATE TODAY " }}</a>
+                      </li>
+                    @endisset
+                    
+
+                    
+
+
+
+
+                
+              </ul>
+            </div>
+            <button class="d-block d-lg-none offcanvas-btn-close" type="button" data-toggle="collapse" data-target="#mobile-menu" aria-controls="mobile-menu" aria-expanded="true" aria-label="Toggle navigation">
+              <i class="gr-cross-icon"></i>
+            </button>
+          </div>
+
+          
+
+          
+          <!-- Mobile Menu Hamburger-->
+          <button class="navbar-toggler btn-close-off-canvas  hamburger-icon border-0" type="button" data-toggle="collapse" data-target="#mobile-menu" aria-controls="mobile-menu" aria-expanded="false" aria-label="Toggle navigation">
+            <!-- <i class="icon icon-simple-remove icon-close"></i> -->
+            <span class="hamburger hamburger--squeeze js-hamburger">
+          <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+            </span>
+            </span>
+          </button>
+          <!--/.Mobile Menu Hamburger Ends-->
+        </nav>
+      </div>
+    </header>
+
+    <!-- navbar- -->
+
    @else
 
 
