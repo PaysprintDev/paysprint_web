@@ -24,6 +24,7 @@
 
               <h4 class="welcome" style="color: green; font-weight: bold;">Account Number: {{ $userInfo->ref_code }}</h4>
 
+              <a href="{{ route('merchant profile') }}" type="btutton" class="btn btn-danger">Promote your business</a>
 
               @if ($userInfo->approval == 0 || $userInfo->accountLevel == 0)
             <div class="row">
@@ -202,7 +203,7 @@
             {{-- <a href="#" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a> --}}
           </div>
 
-          <div class="small-box bg-primary">
+          {{--  <div class="small-box bg-primary">
             <div class="inner">
             <h3>&nbsp;</h3>
 
@@ -212,7 +213,7 @@
               <i class="ion ion-archive"></i>
             </div>
               <a href="{{ route('merchant profile') }}" class="small-box-footer">Continue <i class="fa fa-arrow-circle-right"></i></a> 
-          </div>
+          </div>  --}}
 
 
             <div class="col-md-12 paymentMethods">

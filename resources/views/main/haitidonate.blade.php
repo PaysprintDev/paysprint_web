@@ -15,8 +15,9 @@
     justify-content: center;
 }
 </style>
-    
-    <!-- Hero Area -->
+
+  @if (isset($data['pauline']))
+          <!-- Hero Area -->
     <div class="position-relative bg-default-2 bg-pattern pattern-2 pt-27 pt-lg-32 pb-15 pb-lg-27">
       <div class="container">
         <div class="row justify-content-center align-items-center">
@@ -37,7 +38,7 @@
 
               <div class="hero-btn">
 
-                    <a href="#" class="btn btn-warning with-icon gr-hover-y">Donate Today<i
+                    <a href="{{ url('payment/sendmoney/'.$data['pauline']->ref_code.'?country=Canada') }}" class="btn btn-warning with-icon gr-hover-y">Donate Today<i
                         class="icon icon-tail-right font-weight-bold"></i></a>
 
               </div>
@@ -132,13 +133,37 @@
             </div>
             <div class="col-lg-4 offset-lg-2 col-md-10">
               <div class="cta-btn text-lg-right">
-                <a href="#" class="btn gr-hover-y btn-primary rounded-8">Donate Today</a>
+                <a href="{{ url('payment/sendmoney/'.$data['pauline']->ref_code.'?country=Canada') }}" class="btn gr-hover-y btn-primary rounded-8">Donate Today</a>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+  @else
+      <!-- CTA section -->
+    <div class="position-relative bg-default-2 bg-pattern pattern-2 pt-27 pt-lg-32 pb-15 pb-lg-27 cta-section bg-default-2">
+      <div class="container">
+        <div class="cta-wrapper pt-13 pb-14 py-lg-19 border-top ">
+          <div class="row align-items-center justify-content-center">
+            <div class="col-lg-6 col-md-10">
+              <div class="cta-text section-title">
+                <h2 class="title gr-text-5 mb-7">THE DONATION LINK IS NOT AVAILABLE FOR YOUR COUNTRY</h2>
+              </div>
+            </div>
+            <div class="col-lg-4 offset-lg-2 col-md-10">
+              <div class="cta-btn text-lg-right">
+                <a href="{{ route('home') }}" class="btn gr-hover-y btn-primary rounded-8">Goto Homepage</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  @endif
+    
+
+
 
 
 

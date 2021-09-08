@@ -274,6 +274,8 @@ class HomeController extends Controller
 
         // dd($req->session());
         if (Auth::check() == true) {
+            $pauline = User::where('email', 'jamrock29@hotmail.com')->where('country', Auth::user()->country)->first();
+
             $this->page = 'Donate to Haiti';
             $this->name = Auth::user()->name;
             $this->email = Auth::user()->email;
@@ -288,14 +290,17 @@ class HomeController extends Controller
                 'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                 'getmerchantsByCategory' => $this->getMerchantsByCategory(),
                 'specialInfo' => $this->getthisInfo(Auth::user()->country),
-                'continent' => $this->timezone[0]
+                'continent' => $this->timezone[0],
+                'pauline' => $pauline
             );
         } else {
+            $pauline = User::where('email', 'jamrock29@hotmail.com')->where('country', 'Canada')->first();
             $this->page = 'Donate to Haiti';
             $this->name = '';
             $this->email = '';
             $data = [
-                'continent' => $this->timezone[0]
+                'continent' => $this->timezone[0],
+                'pauline' => $pauline
             ];
         }
 
@@ -1580,6 +1585,26 @@ class HomeController extends Controller
         }
 
         return view('main.myrentalmanagementfacility')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+    public function deleteProperty(Request $request)
+    {
+        try {
+            $data = Building::where('id', $request->facilityid)->delete();
+
+            if (isset($data)) {
+                $resData = "Successfully deleted!";
+                $resp = "success";
+            } else {
+                $resData = "Cannot delete property";
+                $resp = "error";
+            }
+        } catch (\Throwable $th) {
+            $resData = $th->getMessage();
+            $resp = "error";
+        }
+
+        return redirect()->back()->with($resp, $resData);
     }
 
 
@@ -4050,6 +4075,9 @@ class HomeController extends Controller
 
         return $this->returnJSON($resData, 200);
     }
+
+
+
 
 
     public function ajaxgetCommission(Request $req)

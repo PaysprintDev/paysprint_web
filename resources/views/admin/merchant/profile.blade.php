@@ -37,7 +37,7 @@
 
               <p class="text-muted text-center text-success" style="font-weight: 800">
                 @if ($data['getbusinessDetail']->promote_business == 1)
-                  Promoted <img src="https://img.icons8.com/external-flatart-icons-flat-flatarticons/20/000000/external-digital-marketing-digital-marketing-flatart-icons-flat-flatarticons.png"/>
+                  <a href="http://getverifiedpro.com" target="_blank">Promoted on <img src="https://res.cloudinary.com/pilstech/image/upload/v1630685713/proslogo_li2ixf.png"/></a>
               @endif
               </p>
 
@@ -193,6 +193,15 @@
                       <input type="text" class="form-control" name="businessAddress" value="{{ $data['getbusinessDetail']->address }}" placeholder="Street Number & Name">
                     </div>
                   </div>
+
+                  <div class="form-group">
+                    <label for="inputName" class="col-sm-2 control-label">Nature of Business</label>
+
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" name="nature_of_business" value="{{ $data['getbusinessDetail']->nature_of_business }}" placeholder="E.g Auditing, Accounting & Advisory">
+                    </div>
+                  </div>
+
                   <div class="form-group">
                     <label for="inputName" class="col-sm-2 control-label">Corporation</label>
 
@@ -426,6 +435,15 @@
 
                           @if ($data['getbusinessDetail']->promote_business == 0)
                               <button type="button" class="btn btn-danger btn-block" onclick="handShake('promotebusiness')" id="promoteMyBusiness">Promote Business</button>
+
+                          @elseif($data['getbusinessDetail']->push_notification == 0)
+
+                          <button type="button" class="btn btn-success btn-block" onclick="handShake('broadcastbusiness')" id="broadcastMyBusiness">Broadcast Business</button>
+
+                          @else
+
+                          <button type="button" class="btn btn-success btn-block" disabled>Broadcast Business</button>
+
                           @endif
 
                           

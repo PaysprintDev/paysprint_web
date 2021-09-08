@@ -3461,7 +3461,7 @@ else if(val == "promotebusiness"){
 
                 if(result.status == 200){
                     swal("Success", result.message, "success");
-                    setTimeout(function(){ location.reload(); }, 2000);
+                    setTimeout(function(){ location.reload(); }, 7000);
                 }
                 else{
                     swal("Oops", result.message, "error");
@@ -3470,7 +3470,54 @@ else if(val == "promotebusiness"){
 
         },
         error: function(err) {
-            $('#updatemyBusinessProfile').text('Update Business');
+            $('#promotemyBusinessProfile').text('Promote Business');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+else if(val == "broadcastbusiness"){
+
+ formData = new FormData(formElemBusinessProfile);
+
+    route = "{{ URL('/api/v1/broadcastbusiness') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#broadcastMyBusiness').text('Processing Information...');
+        },
+        success: function(result){
+
+            $('#broadcastMyBusiness').text('Broadcast Business');
+
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 7000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $('#broadcastmyBusinessProfile').text('Broadcast Business');
             swal("Oops", err.responseJSON.message, "error");
 
         } 
@@ -3589,6 +3636,74 @@ $("#bank_code").change(function(){
     }
 
 });
+
+
+function promotionAction(val, id){
+
+var route = "{{ URL('Ajax/promotionaction') }}";
+
+  var action;
+  var thisdata;
+  var button = $("#"+val+""+id);
+  
+  if(val == "Remove"){
+    action = "This business will be removed from promotions";
+  }
+  else{
+    action = "You have confirmed this business is successfully broadcasted";
+  }
+
+    swal({
+      title: "Are you sure?",
+      text: action,
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        thisdata = {id: id, val: val};
+          setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: thisdata,
+            dataType: 'JSON',
+            beforeSend: function(){
+              button.text("Please wait...");
+            },
+            success: function(result){
+              button.text(val);
+
+                if (result.message == "success") {
+                  // Route to another page
+                  swal(result.title, result.res, result.message);
+                  setTimeout(function(){ location.reload(); }, 5000);
+                }
+
+                else{
+                  swal(result.title, result.res, result.message);
+                }
+
+
+            },
+            error: function(err) {
+
+                button.text(val);
+                swal("Oops", err.responseJSON.message, "error");
+
+
+            } 
+
+          });
+
+      } 
+      else {
+        swal('','Cancelled', 'info');
+      }
+    });
+
+}
 
 
 

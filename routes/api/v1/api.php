@@ -62,6 +62,8 @@ Route::prefix('/v1')->group(function () {
 
         Route::post('promotebusiness',  ['uses' => 'api\v1\UserController@promoteYourBusiness'])->name('promote business');
 
+        Route::post('broadcastbusiness',  ['uses' => 'api\v1\UserController@broadcastYourBusiness'])->name('broadcast business');
+
 
         Route::get('merchantsbyservicetypes',  ['uses' => 'api\v1\UserController@merchantsByServiceTypes'])->name('merchants by service types');
 
@@ -177,6 +179,7 @@ Route::prefix('/v1')->group(function () {
         Route::post('deletecard',  ['uses' => 'api\v1\CardController@deleteCard'])->name('delete card');
 
         Route::post('deletebank',  ['uses' => 'api\v1\CardController@deleteBank'])->name('delete bank');
+
 
         Route::post('addmoneytowallet',  ['uses' => 'MonerisController@addMoneyToWallet'])->name('add money to wallet');
 

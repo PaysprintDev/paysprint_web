@@ -82,13 +82,17 @@ input[type="radio"] {
                             <div id="credit-card" class="tab-pane fade show active pt-3">
 
                                 <div class="table table-responsive">
-                                    <table class="table table-striped" id="myTableAll">
+                                    <caption>
+                                        <a href="{{ route('facility') }}" class="btn btn-success mb-3">Create Property</a>
+                                    </caption>
+                                    <table class="table table-striped table-bordered" id="myTableAll">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
                                                 <th>Building Location</th>
                                                 <th>Building Type</th>
                                                 <th>Action</th>
+                                                <th>&nbsp;</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -116,6 +120,10 @@ input[type="radio"] {
                                                     <td>
                                                          <a href="{{ route('rentalManagementAdmin') }}" type="button" class="btn btn-primary btn-block">Manage Property</a>
                                                     </td>
+                                                    <td>
+                                                        <form action="{{ route('delete property') }}" method="post" class="disp-0" id="deleteproperty{{ $data->id }}">@csrf <input type="hidden" value="{{ $data->id }}" name="facilityid"></form>
+                                                         <a href="javascript:void(0)" type="button" class="btn btn-danger btn-block" onclick="handShake('deleteproperty', {{ $data->id }})">Delete Property</a>
+                                                    </td>
                                                     
                                                 </tr>
                             
@@ -124,12 +132,12 @@ input[type="radio"] {
                                             @else
 
                                             <tr>
-                                                <td align="center" colspan="4">
+                                                <td align="center" colspan="5">
                                                     No record
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td align="center" colspan="4">
+                                                <td align="center" colspan="5">
                                                     <a href="{{ route('facility') }}" class="btn btn-danger btn-block">Create Property Location You Manage</a>
                                                 </td>
                                             </tr>
@@ -138,6 +146,7 @@ input[type="radio"] {
 
                                             
                                         </tbody>
+                                        
                                     </table>
                                 </div>
                                     
@@ -162,6 +171,51 @@ input[type="radio"] {
 
     <script src="{{ asset('pace/pace.min.js') }}"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+    <script>
+        function handShake(val, id){
+
+
+var route;
+
+if(val == "deleteproperty"){
+
+    // Ask Are you sure
+
+    swal({
+  title: "Are you sure you want to delete property?",
+  text: "This property will be deleted and can not be recovered!",
+  icon: "warning",
+  buttons: true,
+  dangerMode: true,
+})
+.then((willDelete) => {
+  if (willDelete) {
+    
+        $("#"+val+''+id).submit();
+
+  } else {
+    swal('', 'Canceled', 'info');
+  }
+});
+
+}
+
+}
+
+
+function setHeaders(){
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': "{{csrf_token()}}",
+            'Authorization': "Bearer "+"{{ Auth::user()->api_token }}"
+        }
+        });
+
+}
+    </script>
 
 
   </body>

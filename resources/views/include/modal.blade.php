@@ -19,10 +19,11 @@
         </div>  --}}
         <div class="modal-footer">
 
+
           <div class="row">
             <center>
               <div class="col-md-6">
-                <a href="{{ url('payorganization?type=local') }}" title="Local">
+                <a href="{{ url('payorganization?type='.base64_encode('local')) }}" title="Local">
                 <img src="https://img.icons8.com/cotton/64/000000/location-update.png"/>
                 </a>
               </div>

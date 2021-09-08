@@ -167,6 +167,8 @@ Route::get('rentalmanagement', ['uses' => 'HomeController@rentalManagement', 'as
 
 Route::get('myrentalmanagementfacility/admin/{email}', ['uses' => 'HomeController@myRentalManagementFacility', 'as' => 'myRentalManagementFacility']);
 
+Route::post('deleteproperty',  ['uses' => 'HomeController@deleteProperty'])->name('delete property');
+
 
 // Admin Rental Management Page
 Route::get('rentalmanagement/admin', ['uses' => 'HomeController@rentalManagementAdmin', 'as' => 'rentalManagementAdmin']);
@@ -257,6 +259,9 @@ Route::get('Admin/x-wireless', ['uses' => 'AdminController@smsWirelessPlatform',
 
 // Get currency conversion rate
 Route::get('Admin/getcurrencyrate', ['uses' => 'AdminController@getCurrencyRate', 'as' => 'getcurrencyrate']);
+
+// Promote Business
+Route::get('Admin/businesspromotion', ['uses' => 'AdminController@businessPromotion', 'as' => 'business promotion']);
 
 Route::get('Admin/emailcampaign', ['uses' => 'AdminController@runEmailCampaign', 'as' => 'run mail campaign']);
 
@@ -692,6 +697,8 @@ Route::group(['prefix' => 'Ajax'], function () {
 
 
 	Route::post('notifyupdate', ['uses' => 'HomeController@ajaxnotifyupdate', 'as' => 'Ajaxnotifyupdate']);
+
+	Route::post('promotionaction', ['uses' => 'AdminController@ajaxpromotionaction', 'as' => 'Ajaxpromotionaction']);
 
 
 	// Get Commision and payment

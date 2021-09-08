@@ -156,6 +156,14 @@
           
         </li>
 
+        <li>
+          <a href="{{ route('business promotion') }}">
+            <i class="fa fa-book"></i>
+            <span>Promote Business</span>
+          </a>
+          
+        </li>
+
         @endif
 
         @if(session('role') == "Super" || session('role') == "Access to Level 1 only")

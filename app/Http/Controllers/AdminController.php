@@ -295,6 +295,47 @@ class AdminController extends Controller
             return redirect()->route('AdminLogin');
         }
     }
+    public function businessPromotion(Request $req)
+    {
+
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = OrganizationPay::orderBy('created_at', 'DESC')->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = OrganizationPay::where('coy_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $this->recurBills(session('user_id'));
+            }
+
+
+
+            $transCost = $this->transactionCost();
+
+
+            $data = [
+                'businesspromote' => $this->getPromotedBusiness(),
+            ];
+
+
+
+            return view('admin.businesspromotion')->with(['pages' => 'My Dashboard', 'transCost' => $transCost, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
 
 
 
@@ -10734,6 +10775,53 @@ class AdminController extends Controller
     }
 
 
+    public function ajaxpromotionaction(Request $req, ClientInfo $clientinfo)
+    {
+
+        $data = $clientinfo->where('id', $req->id)->first();
+
+        if (isset($data)) {
+
+            if ($req->val == "Remove") {
+                $clientinfo->where('id', $req->id)->update(['promote_business' => 0, 'push_notification' => 0]);
+
+                // Return Money back to User
+
+                $businessPromote = $this->processPromoteBusinessRefund($data->email);
+
+                if ($businessPromote == "Successful") {
+
+                    $this->name = $data->firstname . " " . $data->lastname;
+                    $this->to = $data->email;
+                    $this->subject = "Withdrawal Refund";
+                    $this->message = "We are sorry to inform you that your promotion request has been removed. Kindly contact the Admin if you need to review this action. Thanks";
+
+                    $this->sendEmail($this->to, "Refund Request");
+
+                    $respData = $businessPromote;
+                    $resp = "success";
+                    $title = "Good!";
+                } else {
+
+                    $respData = $businessPromote;
+                    $resp = "error";
+                    $title = "Oops!";
+                }
+
+                $resData = ['res' => $respData, 'message' => $resp, 'title' => $title];
+            } else {
+                $clientinfo->where('id', $req->id)->update(['push_notification' => 0]);
+                $resData = ['res' => 'Success', 'message' => 'success', 'title' => 'Good!'];
+            }
+        } else {
+            $resData = ['res' => 'Merchant record not found', 'message' => 'error', 'title' => 'Oops!'];
+        }
+
+
+        return $this->returnJSON($resData, 200);
+    }
+
+
     public function getWalletStatementRecordByDate($service, $from, $nextDay)
     {
 
@@ -12456,11 +12544,6 @@ class AdminController extends Controller
         return redirect()->back()->with($resp, $resData);
     }
 
-
-
-
-
-
     public function ajaxSingleInvoiceUserCheck(Request $req)
     {
 
@@ -12483,11 +12566,6 @@ class AdminController extends Controller
 
         return $this->returnJSON($resData, 200);
     }
-
-
-
-
-
 
     public function ajaxadminLogout(Request $req)
     {
@@ -12922,6 +13000,15 @@ class AdminController extends Controller
     }
 
 
+    // Get Promoted Businesses
+    public function getPromotedBusiness()
+    {
+        $data = ClientInfo::where('promote_business', 1)->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
+
+
     public function newaccountMerchantsByCountry($usertype)
     {
 
@@ -13018,6 +13105,8 @@ class AdminController extends Controller
         // dd($data);
         return json_encode($data);
     }
+
+
 
 
     // Platform API
