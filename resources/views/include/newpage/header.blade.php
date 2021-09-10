@@ -330,7 +330,7 @@
               
             <a @guest href="{{ route('home') }}" @endguest  @auth href="{{ route('user home') }}" @endauth><img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png" class="light-version-logo " style="width: 300px; height: inherit;"> 
             </a> 
-            <span class="mx-20 text-danger" style="font-weight: 900; font-size: 20px;">Support Haiti</span> 
+            <span class="mx-20 text-danger" style="font-weight: 900; font-size: 18px;">Supporting HAITI <img src="https://img.icons8.com/emoji/30/000000/haiti-emoji.png"/></span> 
             
         
         

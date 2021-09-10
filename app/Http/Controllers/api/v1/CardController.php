@@ -24,20 +24,19 @@ class CardController extends Controller
 
     use Xwireless;
 
-    public function getCard(Request $req){
+    public function getCard(Request $req)
+    {
         // Get My Cards
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
         $data = AddCard::where('user_id', $thisuser->id)->orderBy('created_at', 'DESC')->get();
 
-        if(count($data) > 0){
+        if (count($data) > 0) {
 
             $data = $data;
             $status = 200;
             $message = 'Success';
-
-        }
-        else{
+        } else {
             $data = [];
             $status = 200;
             $message = "No Card Found";
@@ -50,20 +49,20 @@ class CardController extends Controller
     }
 
 
-    public function getPrepaidCardIssuers(Request $req){
+    public function getPrepaidCardIssuers(Request $req)
+    {
         // Get My Cards
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
         $data = CardIssuer::orderBy('created_at', 'DESC')->get();
 
 
-        if(count($data) > 0){
+        if (count($data) > 0) {
 
             $data = $data;
             $status = 200;
             $message = 'Success';
-        }
-        else{
+        } else {
             $data = [];
             $status = 200;
             $message = "No Card Issuer Found";
@@ -76,31 +75,32 @@ class CardController extends Controller
         return $this->returnJSON($resData, $status);
     }
 
-    public function addNewCard(Request $req){
+    public function addNewCard(Request $req)
+    {
 
 
         // Run Validation
 
         $validator = Validator::make($req->all(), [
-                     'card_name' => 'required|string',
-                     'card_provider' => 'required|string',
-                     'card_number' => 'required|string|unique:add_card',
-                     'month' => 'required|string',
-                     'year' => 'required|string',
-                     'cvv' => 'required|string',
-                ]);
+            'card_name' => 'required|string',
+            'card_provider' => 'required|string',
+            'card_number' => 'required|string|unique:add_card',
+            'month' => 'required|string',
+            'year' => 'required|string',
+            'cvv' => 'required|string',
+        ]);
 
-        if($validator->passes()){
+        if ($validator->passes()) {
 
             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
             $userCardType = $this->check_cc($req->card_number, false);
 
             try {
-                if($userCardType != false){
+                if ($userCardType != false) {
 
                     // Check card year
-                    if($req->year <= date('y') && $req->month < date('m')){
+                    if ($req->year <= date('y') && $req->month < date('m')) {
                         $data = [];
                         $status = 400;
                         $message = "This card is expired!";
@@ -108,30 +108,26 @@ class CardController extends Controller
                         // Log::info($thisuser->name." tried to add an expired card with Month: ".$req->month." and year ".$req->year);
 
 
-                        $this->slack($thisuser->name." tried to add an expired card with Month: ".$req->month." and year ".$req->year, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                    }
-                    else{
+                        $this->slack($thisuser->name . " tried to add an expired card with Month: " . $req->month . " and year " . $req->year, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                    } else {
                         // Do Insert
-                    $insertRecord = AddCard::insert(['user_id' => $thisuser->id, 'card_name' => $req->card_name, 'card_number' => $req->card_number, 'month' => $req->month, 'year' => $req->year, 'cvv' => Hash::make($req->cvv), 'card_type' => $userCardType, 'card_provider' => $req->card_provider]);
+                        $insertRecord = AddCard::insert(['user_id' => $thisuser->id, 'card_name' => $req->card_name, 'card_number' => $req->card_number, 'month' => $req->month, 'year' => $req->year, 'cvv' => Hash::make($req->cvv), 'card_type' => $userCardType, 'card_provider' => $req->card_provider]);
 
-                    if($req->card_provider != "Credit Card" && $req->card_provider != "Debit Card"){
-                       User::where('api_token', $req->bearerToken())->update(['cardRequest' => 1]); 
-                    }
+                        if ($req->card_provider != "Credit Card" && $req->card_provider != "Debit Card") {
+                            User::where('api_token', $req->bearerToken())->update(['cardRequest' => 1]);
+                        }
 
-                    $data = $insertRecord;
-                    $status = 200;
-                    $message = 'You have successfully added your '.$req->card_provider;
+                        $data = $insertRecord;
+                        $status = 200;
+                        $message = 'You have successfully added your ' . $req->card_provider;
 
-                    $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully added a new ".$req->card_provider.".");
+                        $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully added a new " . $req->card_provider . ".");
 
                         // Log::info("New ".$req->card_provider." added by :=> ".$thisuser->name);
 
-                        $this->slack("New ".$req->card_provider." added by :=> ".$thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                        $this->slack("New " . $req->card_provider . " added by :=> " . $thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                     }
-
-                    
-                }
-                else{
+                } else {
                     $data = [];
                     $status = 400;
                     $message = "Invalid Card Number";
@@ -139,19 +135,15 @@ class CardController extends Controller
             } catch (\Throwable $th) {
                 $data = [];
                 $status = 400;
-                $message = "Error: ".$th;
+                $message = "Error: " . $th;
             }
+        } else {
 
-            
-
-        }else{
-
-            $error = implode(",",$validator->messages()->all());
+            $error = implode(",", $validator->messages()->all());
 
             $data = [];
             $status = 400;
             $message = $error;
-
         }
 
 
@@ -160,61 +152,53 @@ class CardController extends Controller
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
-
     }
 
 
 
-    public function addNewBank(Request $req){
+    public function addNewBank(Request $req)
+    {
         // Run Validation
 
         $validator = Validator::make($req->all(), [
-                     'bankName' => 'required|string',
-                     'accountNumber' => 'required|string',
-                     'accountName' => 'required|string',
-                    //  'transitNumber' => 'required|string',
-                    //  'branchCode' => 'required|string',
-                ]);
+            'bankName' => 'required|string',
+            'accountNumber' => 'required|string',
+            'accountName' => 'required|string',
+            //  'transitNumber' => 'required|string',
+            //  'branchCode' => 'required|string',
+        ]);
 
-        if($validator->passes()){
+        if ($validator->passes()) {
 
             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
 
             try {
-                    // Do Insert
-                    $insertRecord = AddBank::insert(['user_id' => $thisuser->id, 'bankName' => $req->bankName, 'accountNumber' => $req->accountNumber, 'accountName' => $req->accountName, 'transitNumber' => $req->transitNumber, 'branchCode' => $req->branchCode]);
+                // Do Insert
+                $insertRecord = AddBank::insert(['user_id' => $thisuser->id, 'bankName' => $req->bankName, 'accountNumber' => $req->accountNumber, 'accountName' => $req->accountName, 'transitNumber' => $req->transitNumber, 'branchCode' => $req->branchCode, 'country' => $thisuser->country]);
 
-                    $data = $insertRecord;
-                    $status = 200;
-                    $message = 'You have successfully added a bank account';
+                $data = $insertRecord;
+                $status = 200;
+                $message = 'You have successfully added a bank account';
 
-                    $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully added a new bank account.");
+                $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully added a new bank account.");
 
-                    // Log::info("New bank added by :=> ".$thisuser->name);
-
-
-                    $this->slack("New bank added by :=> ".$thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                // Log::info("New bank added by :=> ".$thisuser->name);
 
 
-                    
-
-                
+                $this->slack("New bank added by :=> " . $thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
             } catch (\Throwable $th) {
                 $data = [];
                 $status = 400;
-                $message = "Error: ".$th;
+                $message = "Error: " . $th;
             }
-            
+        } else {
 
-        }else{
-
-            $error = implode(",",$validator->messages()->all());
+            $error = implode(",", $validator->messages()->all());
 
             $data = [];
             $status = 400;
             $message = $error;
-
         }
 
 
@@ -223,12 +207,12 @@ class CardController extends Controller
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
-
     }
 
 
 
-    public function addUpBeneficiary(Request $req){
+    public function addUpBeneficiary(Request $req)
+    {
         // Run Validation
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
@@ -239,19 +223,17 @@ class CardController extends Controller
 
 
 
-        if(isset($benefactor)){
+        if (isset($benefactor)) {
 
             $addBeneficiary = AddBeneficiary::updateOrCreate(['user_id' => $thisuser->ref_code, 'benefactor_account_number' => $req->benefactor_account_number], ['user_id' => $thisuser->ref_code, 'benefactor_account_number' => $req->benefactor_account_number, 'benefactor_account_name' => $benefactor->name]);
 
 
             $data = $addBeneficiary;
             $status = 200;
-            $message = $benefactor->name.' added as a beneficiary';
+            $message = $benefactor->name . ' added as a beneficiary';
 
-            $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully added ".$benefactor->name." as a beneficiary.");
-
-        }
-        else{
+            $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully added " . $benefactor->name . " as a beneficiary.");
+        } else {
             $data = [];
             $status = 400;
             $message = "Incorrect beneficiary account number";
@@ -263,11 +245,11 @@ class CardController extends Controller
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
-
     }
 
 
-    public function getBeneficiary(Request $req){
+    public function getBeneficiary(Request $req)
+    {
         // Run Validation
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
@@ -276,12 +258,11 @@ class CardController extends Controller
         $myBeneficiaries = AddBeneficiary::where('user_id', $thisuser->ref_code)->orderBy('benefactor_account_name', 'ASC')->get();
 
 
-        if(count($myBeneficiaries) > 0){
+        if (count($myBeneficiaries) > 0) {
             $data = $myBeneficiaries;
             $status = 200;
             $message = 'success';
-        }
-        else{
+        } else {
             $data = $myBeneficiaries;
             $status = 200;
             $message = 'No record';
@@ -293,61 +274,56 @@ class CardController extends Controller
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
-
     }
 
 
 
 
-        public function editBank(Request $req){
+    public function editBank(Request $req)
+    {
 
 
         // Run Validation
 
         $validator = Validator::make($req->all(), [
-                     'bankName' => 'required|string',
-                     'accountNumber' => 'required|string',
-                     'accountName' => 'required|string',
-                    //  'transitNumber' => 'required|string',
-                    //  'branchCode' => 'required|string',
-                ]);
+            'bankName' => 'required|string',
+            'accountNumber' => 'required|string',
+            'accountName' => 'required|string',
+            //  'transitNumber' => 'required|string',
+            //  'branchCode' => 'required|string',
+        ]);
 
 
-        if($validator->passes()){
+        if ($validator->passes()) {
 
             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
 
             try {
-                    // Do Insert
-                    $updateRecord = AddBank::where('id', $req->id)->update(['user_id' => $thisuser->id, 'bankName' => $req->bankName, 'accountNumber' => $req->accountNumber, 'accountName' => $req->accountName, 'transitNumber' => $req->transitNumber, 'branchCode' => $req->branchCode]);
+                // Do Insert
+                $updateRecord = AddBank::where('id', $req->id)->update(['user_id' => $thisuser->id, 'bankName' => $req->bankName, 'accountNumber' => $req->accountNumber, 'accountName' => $req->accountName, 'transitNumber' => $req->transitNumber, 'branchCode' => $req->branchCode, 'country' => $thisuser->country]);
 
-                    $data = $updateRecord;
-                    $status = 200;
-                    $message = 'You have successfully updated your bank account';
+                $data = $updateRecord;
+                $status = 200;
+                $message = 'You have successfully updated your bank account';
 
-                    $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully updated your new bank account.");
+                $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully updated your new bank account.");
 
-                    // Log::info("Edit bank by :=> ".$thisuser->name);
+                // Log::info("Edit bank by :=> ".$thisuser->name);
 
-                    $this->slack("Edit bank by :=> ".$thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-
-                
+                $this->slack("Edit bank by :=> " . $thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
             } catch (\Throwable $th) {
                 $data = [];
                 $status = 400;
-                $message = "Error: ".$th;
+                $message = "Error: " . $th;
             }
-            
+        } else {
 
-        }else{
-
-            $error = implode(",",$validator->messages()->all());
+            $error = implode(",", $validator->messages()->all());
 
             $data = [];
             $status = 400;
             $message = $error;
-
         }
 
 
@@ -355,36 +331,36 @@ class CardController extends Controller
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
-
     }
 
 
-    public function editCard(Request $req){
+    public function editCard(Request $req)
+    {
 
 
         // Run Validation
 
         $validator = Validator::make($req->all(), [
-                     'card_name' => 'required|string',
-                     'card_provider' => 'required|string',
-                     'card_number' => 'required|string',
-                     'month' => 'required|string',
-                     'year' => 'required|string',
-                     'cvv' => 'required|string',
-                ]);
+            'card_name' => 'required|string',
+            'card_provider' => 'required|string',
+            'card_number' => 'required|string',
+            'month' => 'required|string',
+            'year' => 'required|string',
+            'cvv' => 'required|string',
+        ]);
 
 
-                    // Log::info($req->all());
+        // Log::info($req->all());
 
 
-        if($validator->passes()){
+        if ($validator->passes()) {
 
             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
             $userCardType = $this->check_cc($req->card_number, false);
 
             try {
-                if($userCardType != false){
+                if ($userCardType != false) {
                     // Do Insert
                     $updateRecord = AddCard::where('id', $req->id)->update(['user_id' => $thisuser->id, 'card_name' => $req->card_name, 'card_number' => $req->card_number, 'month' => $req->month, 'year' => $req->year, 'cvv' => Hash::make($req->cvv), 'card_type' => $userCardType, 'card_provider' => $req->card_provider]);
 
@@ -395,17 +371,16 @@ class CardController extends Controller
 
                     // Log::info("Edit ".$req->card_provider." by :=> ".$thisuser->name);
 
-                    $this->slack("Edit ".$req->card_provider." by :=> ".$thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                    $this->slack("Edit " . $req->card_provider . " by :=> " . $thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
-                    
+
 
                     $data = $cardData;
                     $status = 200;
-                    $message = 'You have successfully updated your '.$req->card_provider;
+                    $message = 'You have successfully updated your ' . $req->card_provider;
 
-                    $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully updated your ".$req->card_provider." detail.");
-                }
-                else{
+                    $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully updated your " . $req->card_provider . " detail.");
+                } else {
                     $data = [];
                     $status = 400;
                     $message = "Invalid Card Number";
@@ -413,19 +388,15 @@ class CardController extends Controller
             } catch (\Throwable $th) {
                 $data = [];
                 $status = 400;
-                $message = "Error: ".$th;
+                $message = "Error: " . $th;
             }
+        } else {
 
-            
-
-        }else{
-
-            $error = implode(",",$validator->messages()->all());
+            $error = implode(",", $validator->messages()->all());
 
             $data = [];
             $status = 400;
             $message = $error;
-
         }
 
 
@@ -434,7 +405,6 @@ class CardController extends Controller
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
-
     }
 
 
@@ -442,11 +412,12 @@ class CardController extends Controller
 
 
 
-    public function deleteCard(Request $req){
+    public function deleteCard(Request $req)
+    {
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-       $getCard = AddCard::where('id', $req->id)->first();
+        $getCard = AddCard::where('id', $req->id)->first();
 
 
         DeletedCards::insert([
@@ -461,38 +432,38 @@ class CardController extends Controller
             "gateway" => $getCard->gateway
         ]);
 
-       $query = AddCard::where('id', $req->id)->delete();
+        $query = AddCard::where('id', $req->id)->delete();
 
         $data = $query;
         $status = 200;
         $message = 'Deleted successfully';
 
 
-        $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully deleted a card.");
+        $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully deleted a card.");
 
         // Log::info("Delete Card:=> ".$data);
 
         // Log::info("Delete card by :=> ".$thisuser->name);
 
-        $this->slack("Delete card by :=> ".$thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+        $this->slack("Delete card by :=> " . $thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
-
     }
 
 
-    public function deleteBank(Request $req){
+    public function deleteBank(Request $req)
+    {
 
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-        
-       $getBank = AddBank::where('id', $req->id)->first();
+
+        $getBank = AddBank::where('id', $req->id)->first();
 
 
-       DeletedBanks::insert([
+        DeletedBanks::insert([
             "user_id" => $getBank->user_id,
             "bankName" => $getBank->bankName,
             "transitNumber" => $getBank->transitNumber,
@@ -502,7 +473,7 @@ class CardController extends Controller
         ]);
 
 
-       $query = AddBank::where('id', $req->id)->delete();
+        $query = AddBank::where('id', $req->id)->delete();
 
 
 
@@ -511,22 +482,22 @@ class CardController extends Controller
         $message = 'Deleted successfully';
 
 
-        $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", You have successfully deleted a bank account.");
+        $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully deleted a bank account.");
 
         // Log::info("Delete Card:=> ".$data);
 
         // Log::info("Delete bank by :=> ".$thisuser->name);
 
-        $this->slack("Delete bank by :=> ".$thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+        $this->slack("Delete bank by :=> " . $thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
-
     }
 
 
-    public function getMyCardDetail(Request $req){
+    public function getMyCardDetail(Request $req)
+    {
 
         // dd($req->get('card_provider'));
 
@@ -534,43 +505,39 @@ class CardController extends Controller
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-        if($cardDetail == "Bank Account"){
-        $query = AddBank::where('user_id', $thisuser->id)->get();
+        if ($cardDetail == "Bank Account") {
+            $query = AddBank::where('user_id', $thisuser->id)->get();
 
-        // Log::info("Get bank information for :=> ".$thisuser->name);
-        $this->slack("Get bank information for :=> ".$thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+            // Log::info("Get bank information for :=> ".$thisuser->name);
+            $this->slack("Get bank information for :=> " . $thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+        } else {
+            $query = AddCard::where('user_id', $thisuser->id)->where('card_provider', 'LIKE', '%' . $cardDetail . '%')->get();
 
-        }
-        else{
-        $query = AddCard::where('user_id', $thisuser->id)->where('card_provider', 'LIKE', '%'.$cardDetail.'%')->get();
-
-        // Log::info("Get card information for :=> ".$thisuser->name);
-        $this->slack("Get card information for :=> ".$thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-
+            // Log::info("Get card information for :=> ".$thisuser->name);
+            $this->slack("Get card information for :=> " . $thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
         }
 
 
 
-        if(count($query) > 0){
+        if (count($query) > 0) {
             $data = $query;
             $message = "success";
             $status = 200;
-        }
-        else{
+        } else {
             $data = [];
-            $message = $cardDetail." not available";
+            $message = $cardDetail . " not available";
             $status = 400;
         }
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'action' => $cardDetail];
 
         return $this->returnJSON($resData, $status);
-
     }
 
 
 
-    public function check_cc($cc, $extra_check = false){
+    public function check_cc($cc, $extra_check = false)
+    {
         $cards = array(
             "visa" => "(4\d{12}(?:\d{3})?)",
             "amex" => "(3[47]\d{13})",
@@ -582,12 +549,11 @@ class CardController extends Controller
         );
         $names = array("Visa", "American Express", "JCB", "Maestro", "Solo", "Mastercard", "Switch");
         $matches = array();
-        $pattern = "#^(?:".implode("|", $cards).")$#";
+        $pattern = "#^(?:" . implode("|", $cards) . ")$#";
         $result = preg_match($pattern, str_replace(" ", "", $cc), $matches);
         // if($extra_check && $result > 0){
         //     // $result = (validatecard($cc))?1:0;
         // }
-        return ($result>0)?$names[sizeof($matches)-2]:false;
+        return ($result > 0) ? $names[sizeof($matches) - 2] : false;
     }
-
 }

@@ -58,6 +58,28 @@
     <div class="content-section bg-default-4 pt-lg-10 pt-10 pb-10 pb-lg-15">
       <div class="container">
         <div class="row">
+
+
+          <div class="col-xl-12">
+                <div class="about-content mt-3 mt-lg-10">
+              <hr>
+
+                  <p class="gr-text-9 text-primary">
+                   <i class="fa fa-quote-left" aria-hidden="true"></i>
+                    <em>
+                      PaySprint is pleased to partner with Pauline is her efforts to providing reliefs to the victims of the earthquake in the country of Haiti. 
+                  Please note that "donations" made on the platform are freewill givings and all the funds go to the victims of Haiti through the Co-ordinator of Support Haiti in Canada, Pauline Martin.
+                  Kindly note that no tax receipt would be issued as the cause is not a registered charity! 
+                    </em>
+                   <i class="fa fa-quote-right" aria-hidden="true"></i>
+                  </p>
+              <hr>
+
+                  
+                </div>
+                
+              </div>
+
           <div class="col-xl-12 col-lg-12 col-md-12">
             <div class="section-title mb-13">
               <h5 style="font-weight: normal;">Hi, my name is Pauline from Toronto, Canada; On August 14th Haiti was hit by a powerful 7.2 magnitude earthquake which devastated the island causing substantial damage. The death toll has been climbing and is now over 2,000 and continuing to rise day by day with over 12,000 injured by the quake so far and many are still missing. It has been reported that an estimated 30,000 families have been left homeless.</h5>
@@ -103,17 +125,15 @@
               <div class="col-xl-12">
                 <div class="about-content mt-3 mt-lg-10">
                   <p class="gr-text-9">However, the long term need continues. Any additional funds will be used to purchase items that was not received by donors, hire a truck and a driver to transport barrels from Port Au Prince to the affected areas upon arrival and also continued support of food and daily essential items to the victims.</p>
-                </div>
-                <div class="about-content mt-2">
                   <p class="gr-text-9">We will appreciate your help of any amount for this worthy cause.</p>
-                </div>
-                <div class="about-content mt-2">
                   <p class="gr-text-9">On behalf of everyone involved and the victims in Haiti, Thank You</p>
                 </div>
                 <div class="about-content mt-2">
                   <p class="gr-text-9">Pauline Martin</p>
                 </div>
+                
               </div>
+              
             </div>
           </div>
         </div>
@@ -141,6 +161,9 @@
         </div>
       </div>
     </div>
+
+    
+
   @else
       <!-- CTA section -->
     <div class="position-relative bg-default-2 bg-pattern pattern-2 pt-27 pt-lg-32 pb-15 pb-lg-27 cta-section bg-default-2">

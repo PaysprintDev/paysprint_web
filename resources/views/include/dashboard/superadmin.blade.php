@@ -383,7 +383,8 @@
             <div class="icon">
               <i class="ion ion-person-add"></i>
             </div>
-            <a href="{{ route('merchant banking details', 'users=Merchant') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="{{ route('merchant bank details by country', 'users=Merchant') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
+            {{--  <a href="{{ route('merchant banking details', 'users=Merchant') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>  --}}
           </div>
         </div>
           <div class="col-lg-3 col-xs-6">
@@ -398,7 +399,8 @@
             <div class="icon">
               <i class="ion ion-person-add"></i>
             </div>
-            <a href="{{ route('merchant banking details', 'users=Individual') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="{{ route('merchant bank details by country', 'users=Individual') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
+            {{--  <a href="{{ route('merchant banking details', 'users=Individual') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>  --}}
           </div>
         </div>
 

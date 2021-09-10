@@ -797,7 +797,21 @@ class CheckSetupController extends Controller
         }
     }
 
+    // Updated Added Bank Country
+    public function addedBanksCountry()
+    {
+        $getBanks = AddBank::all();
 
+        foreach ($getBanks as $value) {
+            $users = User::where('id', $value->user_id)->first();
+
+            if (isset($users)) {
+                AddBank::where('user_id', $users->id)->update(['country' => $users->country]);
+
+                echo "Done for: " . $users->name . "<hr>";
+            }
+        }
+    }
 
     public function setupFeeStructure()
     {

@@ -48,48 +48,39 @@
                   </div>
                 <tr>
                   <th>S/N</th>
-                  <th>Business Name</th>
-                  <th>Name</th>
-                  <th>Bank Name</th>
-                  <th>Transit No.</th>
-                  <th>Branch Code</th>
-                  <th>Account Name</th>
-                  <th>Account Number</th>
-                  <th>Date Created</th>
+                  <th>Country</th>
+                  <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
                     @if (count($data['bankdetails']) > 0)
                     <?php $i = 1;?>
                         @foreach ($data['bankdetails'] as $data)
-
-
-                        @if($user = \App\User::where('id', $data->user_id)->first())
-
-
-                            @if ($user->accountType == Request::get('users'))
                                 
                                 <tr>
                                     <td>{{ $i++ }}</td>
 
-                                    <td>{{ $user->businessname }}</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $data->bankName }}</td>
-                                    <td>{{ $data->transitNumber }}</td>
-                                    <td>{{ $data->branchCode }}</td>
-                                    <td>{{ $data->accountName }}</td>
-                                    <td>{{ $data->accountNumber }}</td>
-                                    <td>{{ date('d/m/Y', strtotime($data->created_at)) }}</td>
+                                    <td>{{ $data->country }}</td>
 
+                                    @if (Request::get('users') == "Merchant")
+                                        <td>
+                                            <a href="{{ route('merchant banking details', 'users=Merchant&country='.$data->country) }}" class="btn btn-primary" type="button">Merchant details</a>
+                                        </td>
+                                    @else
+                                        <td>
+                                            <a href="{{ route('merchant banking details', 'users=Individual&country='.$data->country) }}" class="btn btn-primary" type="button">Consumer details</a>
+                                        </td>
+                                    @endif
+
+                                    
+                                    
                                 </tr>
-                            @endif
 
-                        @endif
                         @endforeach
 
                     @else
                     <tr>
-                        <td colspan="9" align="center">No record available</td>
+                        <td colspan="3" align="center">No record available</td>
                     </tr>
                     @endif
                 </tbody>

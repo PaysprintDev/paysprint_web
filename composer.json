@@ -8,6 +8,7 @@
         "php": "^7.4.1",
         "biscolab/laravel-recaptcha": "5.0.1",
         "braintree/braintree_php": "5.5.0",
+        "currency-cloud/client": "^3.1",
         "dompdf/dompdf": "^1.0",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^7.0",

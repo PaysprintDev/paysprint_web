@@ -45,6 +45,7 @@ Route::get('userarchive', 'CheckSetupController@userAccountArchive');
 Route::get('existingaccounts', 'CheckSetupController@existingAccounts');
 Route::get('updatewallet', 'CheckSetupController@updateExbcAccount');
 // Route::get('returnfee', 'MaintenanceFeeCharge@returnFeeCharge');
+Route::get('updatebankdetails', 'CheckSetupController@addedBanksCountry');
 
 
 // Transaction Limit
@@ -298,6 +299,8 @@ Route::prefix('Admin/wallet')->group(function () {
 	Route::get('bankrequestwithdrawal', ['uses' => 'AdminController@bankRequestWithdrawal', 'as' => 'bank request withdrawal']);
 
 	Route::get('merchantbankdetails', ['uses' => 'AdminController@merchantBanksDetails', 'as' => 'merchant banking details']);
+
+	Route::get('merchantbankdetailsbycountry', ['uses' => 'AdminController@merchantBankDetailsByCountry', 'as' => 'merchant bank details by country']);
 
 	Route::get('purchaserequestreturn', ['uses' => 'AdminController@purchaseRefundReturn', 'as' => 'purchase refund request']);
 	Route::get('bankrequestwithdrawalbycountry', ['uses' => 'AdminController@bankRequestWithdrawalByCountry', 'as' => 'bank withdrawal by country']);
