@@ -20,7 +20,6 @@ use App\User as User;
 use Newsletter;
 use Mailchimp;
 
-
 trait MailChimpNewsLetter
 {
     public function mailListCategorize($name, $email, $address, $phone, $tags, $country, $list)
@@ -47,8 +46,8 @@ trait MailChimpNewsLetter
                 'list_id' => $listId,
                 'subject' => $subject,
                 'category' => $category,
-                'from_email' => 'olusegun@expresscapays.ca',
-                'from_name' => 'Olusegun Adebiyi',
+                'from_email' => 'info@exbc.ca',
+                'from_name' => 'EXBC Team',
 
             ], [
                 'html' => $html,

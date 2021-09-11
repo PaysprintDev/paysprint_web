@@ -181,64 +181,78 @@ trait ExpressPayment
         Log::info(json_encode($postRequest));
 
 
-        $checks = $this->checkAccount($postRequest, $bearerToken);
+        $responseCode = 00;
+        $responseMessage = "Utility payment cannot be processed at this time. Please try again later";
+        $status = 400;
 
-        // Log::info($postRequest);
+        $data = [
+            'responseCode' => $responseCode,
+            'responseMessage' => $responseMessage,
+            'status' => $status
+        ];
 
+        $result = json_encode($data);
 
-        if ($checks == true) {
-            $this->Base_Url = env('EXPRESS_PAY_ENDPOINT_URL') . '/process-transaction';
-            $transaction = [];
-
-            for ($i = 0; $i < count($postRequest['fieldName']); $i++) {
-
-
-
-                if ($postRequest['fieldName'] != null) {
-
-                    $transaction[] = [
-                        'fieldName' => $postRequest['fieldName'][$i],
-                        'fieldValue' => $postRequest['fieldValue'][$i],
-                        'fieldControlType' => $postRequest['fieldControlType'][$i],
-                    ];
-                } else {
-                    $transaction[] = [
-                        'fieldName' => $postRequest['fieldName'],
-                        'fieldValue' => $postRequest['fieldValue'],
-                        'fieldControlType' => $postRequest['fieldControlType'],
-                    ];
-                }
-            }
+        return json_decode($result);
 
 
 
-            $this->curlPost = json_encode([
-                'billerCode' => $postRequest['billerCode'],
-                'productId' => $postRequest['productId'],
-                'transDetails' => $transaction,
-            ]);
+        // $checks = $this->checkAccount($postRequest, $bearerToken);
+
+
+        // if ($checks == true) {
+        //     $this->Base_Url = env('EXPRESS_PAY_ENDPOINT_URL') . '/process-transaction';
+        //     $transaction = [];
+
+        //     for ($i = 0; $i < count($postRequest['fieldName']); $i++) {
 
 
 
-            $data = $this->doPost();
+        //         if ($postRequest['fieldName'] != null) {
 
-            return $data;
-        } else {
+        //             $transaction[] = [
+        //                 'fieldName' => $postRequest['fieldName'][$i],
+        //                 'fieldValue' => $postRequest['fieldValue'][$i],
+        //                 'fieldControlType' => $postRequest['fieldControlType'][$i],
+        //             ];
+        //         } else {
+        //             $transaction[] = [
+        //                 'fieldName' => $postRequest['fieldName'],
+        //                 'fieldValue' => $postRequest['fieldValue'],
+        //                 'fieldControlType' => $postRequest['fieldControlType'],
+        //             ];
+        //         }
+        //     }
 
-            $responseCode = 00;
-            $responseMessage = "Your wallet balance is low for this transaction. Please add money";
-            $status = 400;
 
-            $data = [
-                'responseCode' => $responseCode,
-                'responseMessage' => $responseMessage,
-                'status' => $status
-            ];
 
-            $result = json_encode($data);
+        //     $this->curlPost = json_encode([
+        //         'billerCode' => $postRequest['billerCode'],
+        //         'productId' => $postRequest['productId'],
+        //         'transDetails' => $transaction,
+        //     ]);
 
-            return json_decode($result);
-        }
+
+
+        //     $data = $this->doPost();
+
+        //     return $data;
+        // } else {
+
+        //     $responseCode = 00;
+        //     $responseMessage = "Your wallet balance is low for this transaction. Please add money";
+        //     $status = 400;
+
+        //     $data = [
+        //         'responseCode' => $responseCode,
+        //         'responseMessage' => $responseMessage,
+        //         'status' => $status
+        //     ];
+
+        //     $result = json_encode($data);
+
+        //     return json_decode($result);
+        // }
     }
 
 

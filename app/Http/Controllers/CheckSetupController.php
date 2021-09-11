@@ -165,6 +165,8 @@ class CheckSetupController extends Controller
                 }
 
                 $this->mailListCategorize($value->name, $value->email, $value->address, $value->telephone, $category, $value->country, 'Subscription');
+            } else {
+                User::where('id', $allusers->id)->update(['archive' => 0]);
             }
         }
     }
@@ -810,6 +812,30 @@ class CheckSetupController extends Controller
 
                 echo "Done for: " . $users->name . "<hr>";
             }
+        }
+    }
+
+
+    // Work on Archives USers
+    public function publishArchiveUsers()
+    {
+        try {
+            $users = User::where('archive', 1)->inRandomOrder()->get();
+
+            foreach ($users as $user) {
+                if ($user->accountType == "Individual") {
+                    $category = "Archived Consumers";
+                } else {
+                    $category = "Archived Merchants";
+                }
+                // Move to Mailchimp
+                $action = $this->mailListCategorize($user->name, $user->email, $user->address, $user->telephone, $category, $user->country, 'Subscription');
+
+
+                echo "Done for :" . $user->name . " | " . $user->accountType;
+            }
+        } catch (\Throwable $th) {
+            print_r($th->getMessage());
         }
     }
 

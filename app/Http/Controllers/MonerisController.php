@@ -357,585 +357,595 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     public function payInvoice(Request $req)
     {
 
-        if (isset($req->mode) && $req->mode == "test") {
-
-            // dd($req->all());
-
-            $validator = Validator::make($req->all(), [
-                'invoice_no' => 'required|string',
-                'amount' => 'required|string',
-                'merchant_id' => 'required|string',
-                'service' => 'required|string',
-                'payment_method' => 'required|string',
-                'currencyCode' => 'required|string',
-                'amountinvoiced' => 'required|string',
-                'payInstallment' => 'required|string',
-            ]);
-
-            if ($validator->passes()) {
-
-                try {
-                    $transactionID = "invoice-" . date('dmY') . time();
-
-                    $thisuser = User::where('api_token', $req->bearerToken())->first();
-
-                    $thismerchant = User::where('ref_code', $req->merchant_id)->first();
-
-                    if ($thisuser->approval < 1 && $thisuser->accountLevel < 1) {
-
-                        $response = 'You cannot pay invoice at the moment because your account is still on review.';
-
-                        $data = [];
-                        $status = 400;
-                        $message = $response;
-                    } elseif ($thisuser->country != $thismerchant->country) {
-                        $response = 'International money transfer is not available at the moment';
-
-                        $data = [];
-                        $status = 400;
-                        $message = $response;
-                    } else {
-                        // Get My Wallet Balance
-                        $walletBalance = $thisuser->wallet_balance - $req->amount;
-
-                        // User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBalance]);
-
-                        // Update Merchant Wallet 
-
-
-
-                        // Update Merchant Wallet Balance
-                        $merchantwalletBalance = $thismerchant->wallet_balance + $req->amount;
-
-                        // User::where('ref_code', $req->merchant_id)->update(['wallet_balance' => $merchantwalletBalance]);
-
-                        // Get Invoice Service
-
-                        // $invData = ImportExcel::where('invoice_no', $req->invoice_no)->first();
-
-                        $purpose = $req->service;
-
-
-                        $insPay = 1;
-
-
-                        if ($insPay == 1) {
-                            // Update Import Excel Record
-                            $getInv = ImportExcel::where('invoice_no', $req->invoice_no)->get();
-
-                            if (count($getInv) > 0) {
-
-                                // Check if instalmental or not
-
-                                if ($getInv[0]->installpay == "No" && $req->payInstallment == "Yes") {
-
-                                    $response = 'Installmental payment is not allowed for this invoice';
-
-                                    $data = [];
-                                    $status = 400;
-                                    $message = $response;
-                                } else {
-
-                                    if ($req->payInstallment == "Yes") {
-
-                                        if ($getInv[0]->remaining_balance > 0 || $getInv[0]->remaining_balance != null) {
-                                            // Get Amount
-                                            $prevAmount = $getInv[0]->remaining_balance;
-                                        } else {
-                                            $prevAmount = $getInv[0]->amount;
-                                        }
-
-                                        $paidAmount = $req->amount;
-
-                                        $newAmount = $prevAmount - $paidAmount;
-
-                                        $instcount = $getInv[0]->installcount + 1;
-
-                                        if ($getInv[0]->installlimit > $instcount) {
-                                            $installcounter = $getInv[0]->installlimit;
-                                        } else {
-                                            $installcounter = $instcount;
-                                        }
-                                    } else {
-
-                                        if ($getInv[0]->remaining_balance > 0 || $getInv[0]->remaining_balance != null) {
-                                            // Get Amount
-                                            $prevAmount = $getInv[0]->remaining_balance;
-                                        } else {
-                                            $prevAmount = $getInv[0]->amount;
-                                        }
-
-                                        $paidAmount = $req->amount;
-
-                                        $newAmount = $prevAmount - $paidAmount;
-
-                                        $instcount = $getInv[0]->installcount;
-
-                                        if ($getInv[0]->installlimit > $instcount) {
-                                            $installcounter = $getInv[0]->installlimit;
-                                        } else {
-                                            $installcounter = $instcount;
-                                        }
-                                    }
-
-
-                                    // if payment status is 2, there sre still some pending payments to make, if 1, payments are cleared off
-
-                                    if ($newAmount > 0) {
-                                        $payment_status = 2;
-                                    } elseif ($newAmount == 0) {
-                                        $payment_status = 1;
-                                    } else {
-                                        $payment_status = 0;
-                                    }
-
-
-                                    // ImportExcel::where('invoice_no', $req->invoice_no)->update(['installcount' => $installcounter, 'payment_status' => $payment_status, 'remaining_balance' => $newAmount]);
-
-                                    // Update Price Record
-                                    $updtPrice = 1;
-
-                                    if ($updtPrice == 1) {
-
-                                        $client = ClientInfo::where('user_id', $req->merchant_id)->get();
-
-                                        // Insert PAYCAWithdraw
-                                        // PaycaWithdraw::insert(['withdraw_id' => $transactionID, 'client_id' => $req->merchant_id, 'client_name' => $req->name, 'card_method' => $req->payment_method, 'client_email' => $req->email, 'amount_to_withdraw' => $req->amount, 'remittance' => 0]);
-
-
-                                        $activity = "Payment for " . $purpose . " from " . $req->payment_method;
-                                        $credit = 0;
-                                        $debit = $req->amount;
-                                        $balance = $newAmount;
-                                        $status = "Delivered";
-                                        $action = "Wallet debit";
-                                        $regards = $req->merchant_id;
-                                        $reference_code = $transactionID;
-                                        $trans_date = date('Y-m-d');
-                                        $statement_route = "wallet";
-
-
-                                        // My Statement
-                                        // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country); 
-
-                                        $this->name = $thisuser->name;
-                                        $this->email = $thisuser->email;
-                                        // $this->email = "bambo@vimfile.com";
-                                        $this->subject = "Your Invoice # [" . $req->invoice_no . "] of " . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' from ' . $thismerchant->businessname . ' ' . number_format($req->amount, 2) . " is Paid";
-
-                                        $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is <strong>' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '</strong>. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
-
-                                        $this->sendEmail($this->email, "Fund remittance");
-
-                                        $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
-
-                                        $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                        if (isset($userPhone)) {
-
-                                            $sendPhone = $thisuser->telephone;
-                                        } else {
-                                            $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                                        }
-
-                                        if ($thisuser->country == "Nigeria") {
-
-                                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                                            $this->sendSms($sendMsg, $correctPhone);
-                                        } else {
-                                            $this->sendMessage($sendMsg, $sendPhone);
-                                        }
-
-
-
-
-                                        /*---------------------------------------------------------------------------------------------------------------------*/
-
-                                        // Merchant Statement
-
-                                        $activity = "Added " . $req->currencyCode . '' . number_format($req->amount, 2) . " to Wallet";
-                                        $credit = $req->amount;
-                                        $debit = 0;
-                                        $reference_code = $transactionID;
-                                        $balance = 0;
-                                        $trans_date = date('Y-m-d');
-                                        $status = "Delivered";
-                                        $action = "Wallet credit";
-                                        $regards = $thismerchant->ref_code;
-                                        $statement_route = "wallet";
-
-                                        // Senders statement
-                                        // $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thismerchant->country);
-
-
-                                        $this->name = $thismerchant->name;
-                                        $this->email = $thismerchant->email;
-                                        // $this->email = "bambo@vimfile.com";
-                                        $this->subject = $thisuser->name . " has paid Invoice: [" . $req->invoice_no . "]";
-
-                                        $this->message = '<p>You have received <strong>' . $req->currencyCode . '' . number_format($req->amount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>, invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '.</p> <p>You now have <strong>' . $req->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
-
-                                        $this->sendEmail($this->email, "Fund remittance");
-
-                                        $recMesg = 'You have received ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . ', invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
-
-                                        $userPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                        if (isset($userPhone)) {
-
-                                            $recPhone = $thismerchant->telephone;
-                                        } else {
-                                            $recPhone = "+" . $thismerchant->code . $thismerchant->telephone;
-                                        }
-
-                                        if ($thismerchant->country == "Nigeria") {
-
-                                            $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
-                                            $this->sendSms($recMesg, $correctPhone);
-                                        } else {
-                                            $this->sendMessage($recMesg, $recPhone);
-                                        }
-
-
-
-                                        $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $req->bearerToken())->first();
-
-
-                                        $data = $userInfo;
-                                        $status = 200;
-                                        $message = 'You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2);
-
-                                        // $this->createNotification($thisuser->ref_code, $sendMsg);
-                                        // $this->createNotification($thismerchant->ref_code, $recMesg);
-                                    } else {
-
-                                        $response = 'Something went wrong';
-
-                                        $data = [];
-                                        $status = 400;
-                                        $message = $response;
-                                    }
-                                }
-                            } else {
-
-                                $response = 'Invoice not found';
-                                $data = [];
-                                $status = 400;
-                                $message = $response;
-                            }
-                        } else {
-                            $response = 'Information not documented, contact Admin';
-
-                            $data = [];
-                            $status = 400;
-                            $message = $response;
-                        }
-                    }
-                } catch (\Throwable $th) {
-                    $data = [];
-                    $status = 400;
-                    $message = "Error: " . $th;
-                }
-            } else {
-
-                $error = implode(",", $validator->messages()->all());
-
-                $data = [];
-                $status = 400;
-                $message = $error;
-            }
+        if ($req->amount < 0) {
+            $response = 'Please enter a positive amount to send';
+
+            $data = [];
+            $status = 400;
+            $message = $response;
         } else {
+            if (isset($req->mode) && $req->mode == "test") {
 
-            // dd($req->all());
+                // dd($req->all());
 
-            $validator = Validator::make($req->all(), [
-                'invoice_no' => 'required|string',
-                'amount' => 'required|string',
-                'merchant_id' => 'required|string',
-                'service' => 'required|string',
-                'payment_method' => 'required|string',
-                'currencyCode' => 'required|string',
-                'amountinvoiced' => 'required|string',
-                'payInstallment' => 'required|string',
-            ]);
+                $validator = Validator::make($req->all(), [
+                    'invoice_no' => 'required|string',
+                    'amount' => 'required|string',
+                    'merchant_id' => 'required|string',
+                    'service' => 'required|string',
+                    'payment_method' => 'required|string',
+                    'currencyCode' => 'required|string',
+                    'amountinvoiced' => 'required|string',
+                    'payInstallment' => 'required|string',
+                ]);
 
-            if ($validator->passes()) {
+                if ($validator->passes()) {
 
-                try {
-                    $transactionID = "invoice-" . date('dmY') . time();
+                    try {
+                        $transactionID = "invoice-" . date('dmY') . time();
 
-                    $thisuser = User::where('api_token', $req->bearerToken())->first();
+                        $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                    $thismerchant = User::where('ref_code', $req->merchant_id)->first();
+                        $thismerchant = User::where('ref_code', $req->merchant_id)->first();
 
-                    if ($thisuser->approval < 1 && $thisuser->accountLevel < 1) {
+                        if ($thisuser->approval < 1 && $thisuser->accountLevel < 1) {
 
-                        $response = 'You cannot pay invoice at the moment because your account is still on review.';
-
-                        $data = [];
-                        $status = 400;
-                        $message = $response;
-                    } elseif ($thisuser->country != $thismerchant->country) {
-                        $response = 'International money transfer is not available at the moment';
-
-                        $data = [];
-                        $status = 400;
-                        $message = $response;
-                    } else {
-                        // Get My Wallet Balance
-                        $walletBalance = $thisuser->wallet_balance - $req->amount;
-
-                        User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBalance]);
-
-                        // Update Merchant Wallet 
-
-
-                        // Update Merchant Wallet Balance
-                        $merchantwalletBalance = $thismerchant->wallet_balance + $req->amount;
-
-                        User::where('ref_code', $req->merchant_id)->update(['wallet_balance' => $merchantwalletBalance]);
-
-                        // Get Invoice Service
-
-                        // $invData = ImportExcel::where('invoice_no', $req->invoice_no)->first();
-
-                        $purpose = $req->service;
-
-
-                        $insPay = InvoicePayment::updateOrCreate(['invoice_no' => $req->invoice_no], ['transactionid' => $transactionID, 'name' => $thisuser->name, 'email' => $thisuser->email, 'amount' => $req->amount, 'invoice_no' => $req->invoice_no, 'service' => $purpose, 'client_id' => $req->merchant_id, 'payment_method' => $req->payment_method]);
-
-
-                        if ($insPay) {
-                            // Update Import Excel Record
-                            $getInv = ImportExcel::where('invoice_no', $req->invoice_no)->get();
-
-                            if (count($getInv) > 0) {
-
-                                // Check if instalmental or not
-
-                                if ($getInv[0]->installpay == "No" && $req->payInstallment == "Yes") {
-
-                                    $response = 'Installmental payment is not allowed for this invoice';
-
-                                    $data = [];
-                                    $status = 400;
-                                    $message = $response;
-                                } else {
-
-                                    if ($req->payInstallment == "Yes") {
-
-                                        if ($getInv[0]->remaining_balance > 0 || $getInv[0]->remaining_balance != null) {
-                                            // Get Amount
-                                            $prevAmount = $getInv[0]->remaining_balance;
-                                        } else {
-                                            $prevAmount = $getInv[0]->amount;
-                                        }
-
-                                        $paidAmount = $req->amount;
-
-                                        $newAmount = $prevAmount - $paidAmount;
-
-                                        $instcount = $getInv[0]->installcount + 1;
-
-                                        if ($getInv[0]->installlimit > $instcount) {
-                                            $installcounter = $getInv[0]->installlimit;
-                                        } else {
-                                            $installcounter = $instcount;
-                                        }
-                                    } else {
-
-                                        if ($getInv[0]->remaining_balance > 0 || $getInv[0]->remaining_balance != null) {
-                                            // Get Amount
-                                            $prevAmount = $getInv[0]->remaining_balance;
-                                        } else {
-                                            $prevAmount = $getInv[0]->amount;
-                                        }
-
-                                        $paidAmount = $req->amount;
-
-                                        $newAmount = $prevAmount - $paidAmount;
-
-                                        $instcount = $getInv[0]->installcount;
-
-                                        if ($getInv[0]->installlimit > $instcount) {
-                                            $installcounter = $getInv[0]->installlimit;
-                                        } else {
-                                            $installcounter = $instcount;
-                                        }
-                                    }
-
-
-                                    // if payment status is 2, there sre still some pending payments to make, if 1, payments are cleared off
-
-                                    if ($newAmount > 0) {
-                                        $payment_status = 2;
-                                    } elseif ($newAmount == 0) {
-                                        $payment_status = 1;
-                                    } else {
-                                        $payment_status = 0;
-                                    }
-
-
-                                    ImportExcel::where('invoice_no', $req->invoice_no)->update(['installcount' => $installcounter, 'payment_status' => $payment_status, 'remaining_balance' => $newAmount]);
-
-                                    // Update Price Record
-                                    $updtPrice = InvoicePayment::where('transactionid', $transactionID)->update(['remaining_balance' => $newAmount, 'opening_balance' => $prevAmount, 'payment_method' => $req->payment_method]);
-
-                                    if (isset($updtPrice)) {
-
-                                        $client = ClientInfo::where('user_id', $req->merchant_id)->get();
-
-                                        // Insert PAYCAWithdraw
-                                        PaycaWithdraw::insert(['withdraw_id' => $transactionID, 'client_id' => $req->merchant_id, 'client_name' => $req->name, 'card_method' => $req->payment_method, 'client_email' => $req->email, 'amount_to_withdraw' => $req->amount, 'remittance' => 0]);
-
-
-                                        $activity = "Payment for " . $purpose . " from " . $req->payment_method;
-                                        $credit = 0;
-                                        $debit = $req->amount;
-                                        $balance = $newAmount;
-                                        $status = "Delivered";
-                                        $action = "Wallet debit";
-                                        $regards = $req->merchant_id;
-                                        $reference_code = $transactionID;
-                                        $trans_date = date('Y-m-d');
-                                        $statement_route = "wallet";
-
-
-                                        // My Statement
-                                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country);
-
-                                        $this->name = $thisuser->name;
-                                        $this->email = $thisuser->email;
-                                        // $this->email = "bambo@vimfile.com";
-                                        $this->subject = "Your Invoice # [" . $req->invoice_no . "] of " . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' from ' . $thismerchant->businessname . ' ' . number_format($req->amount, 2) . " is Paid";
-
-                                        $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is <strong>' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '</strong>. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
-
-                                        $this->sendEmail($this->email, "Fund remittance");
-
-                                        $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
-
-                                        $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                        if (isset($userPhone)) {
-
-                                            $sendPhone = $thisuser->telephone;
-                                        } else {
-                                            $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                                        }
-
-                                        if ($thisuser->country == "Nigeria") {
-
-                                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                                            $this->sendSms($sendMsg, $correctPhone);
-                                        } else {
-                                            $this->sendMessage($sendMsg, $sendPhone);
-                                        }
-
-
-
-                                        /*---------------------------------------------------------------------------------------------------------------------*/
-
-                                        // Merchant Statement
-
-                                        $activity = "Added " . $req->currencyCode . '' . number_format($req->amount, 2) . " to Wallet";
-                                        $credit = $req->amount;
-                                        $debit = 0;
-                                        $reference_code = $transactionID;
-                                        $balance = 0;
-                                        $trans_date = date('Y-m-d');
-                                        $status = "Delivered";
-                                        $action = "Wallet credit";
-                                        $regards = $thismerchant->ref_code;
-                                        $statement_route = "wallet";
-
-                                        // Senders statement
-                                        $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thismerchant->country);
-
-
-                                        $this->name = $thismerchant->name;
-                                        $this->email = $thismerchant->email;
-                                        // $this->email = "bambo@vimfile.com";
-                                        $this->subject = $thisuser->name . " has paid Invoice: [" . $req->invoice_no . "]";
-
-                                        $this->message = '<p>You have received <strong>' . $req->currencyCode . '' . number_format($req->amount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>, invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '.</p> <p>You now have <strong>' . $req->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
-
-                                        $this->sendEmail($this->email, "Fund remittance");
-
-                                        $recMesg = 'You have received ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . ', invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
-
-                                        $userPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                        if (isset($userPhone)) {
-
-                                            $recPhone = $thismerchant->telephone;
-                                        } else {
-                                            $recPhone = "+" . $thismerchant->code . $thismerchant->telephone;
-                                        }
-
-                                        if ($thismerchant->country == "Nigeria") {
-
-                                            $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
-                                            $this->sendSms($recMesg, $correctPhone);
-                                        } else {
-                                            $this->sendMessage($recMesg, $recPhone);
-                                        }
-
-
-
-
-                                        $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $req->bearerToken())->first();
-
-
-                                        $data = $userInfo;
-                                        $status = 200;
-                                        $message = 'You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2);
-
-                                        $this->createNotification($thisuser->ref_code, $sendMsg);
-                                        $this->createNotification($thismerchant->ref_code, $recMesg);
-                                    } else {
-
-                                        $response = 'Something went wrong';
-
-                                        $data = [];
-                                        $status = 400;
-                                        $message = $response;
-                                    }
-                                }
-                            } else {
-
-                                $response = 'Invoice not found';
-                                $data = [];
-                                $status = 400;
-                                $message = $response;
-                            }
-                        } else {
-                            $response = 'Information not documented, contact Admin';
+                            $response = 'You cannot pay invoice at the moment because your account is still on review.';
 
                             $data = [];
                             $status = 400;
                             $message = $response;
+                        } elseif ($thisuser->country != $thismerchant->country) {
+                            $response = 'International money transfer is not available at the moment';
+
+                            $data = [];
+                            $status = 400;
+                            $message = $response;
+                        } else {
+                            // Get My Wallet Balance
+                            $walletBalance = $thisuser->wallet_balance - $req->amount;
+
+                            // User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBalance]);
+
+                            // Update Merchant Wallet 
+
+
+
+                            // Update Merchant Wallet Balance
+                            $merchantwalletBalance = $thismerchant->wallet_balance + $req->amount;
+
+                            // User::where('ref_code', $req->merchant_id)->update(['wallet_balance' => $merchantwalletBalance]);
+
+                            // Get Invoice Service
+
+                            // $invData = ImportExcel::where('invoice_no', $req->invoice_no)->first();
+
+                            $purpose = $req->service;
+
+
+                            $insPay = 1;
+
+
+                            if ($insPay == 1) {
+                                // Update Import Excel Record
+                                $getInv = ImportExcel::where('invoice_no', $req->invoice_no)->get();
+
+                                if (count($getInv) > 0) {
+
+                                    // Check if instalmental or not
+
+                                    if ($getInv[0]->installpay == "No" && $req->payInstallment == "Yes") {
+
+                                        $response = 'Installmental payment is not allowed for this invoice';
+
+                                        $data = [];
+                                        $status = 400;
+                                        $message = $response;
+                                    } else {
+
+                                        if ($req->payInstallment == "Yes") {
+
+                                            if ($getInv[0]->remaining_balance > 0 || $getInv[0]->remaining_balance != null) {
+                                                // Get Amount
+                                                $prevAmount = $getInv[0]->remaining_balance;
+                                            } else {
+                                                $prevAmount = $getInv[0]->amount;
+                                            }
+
+                                            $paidAmount = $req->amount;
+
+                                            $newAmount = $prevAmount - $paidAmount;
+
+                                            $instcount = $getInv[0]->installcount + 1;
+
+                                            if ($getInv[0]->installlimit > $instcount) {
+                                                $installcounter = $getInv[0]->installlimit;
+                                            } else {
+                                                $installcounter = $instcount;
+                                            }
+                                        } else {
+
+                                            if ($getInv[0]->remaining_balance > 0 || $getInv[0]->remaining_balance != null) {
+                                                // Get Amount
+                                                $prevAmount = $getInv[0]->remaining_balance;
+                                            } else {
+                                                $prevAmount = $getInv[0]->amount;
+                                            }
+
+                                            $paidAmount = $req->amount;
+
+                                            $newAmount = $prevAmount - $paidAmount;
+
+                                            $instcount = $getInv[0]->installcount;
+
+                                            if ($getInv[0]->installlimit > $instcount) {
+                                                $installcounter = $getInv[0]->installlimit;
+                                            } else {
+                                                $installcounter = $instcount;
+                                            }
+                                        }
+
+
+                                        // if payment status is 2, there sre still some pending payments to make, if 1, payments are cleared off
+
+                                        if ($newAmount > 0) {
+                                            $payment_status = 2;
+                                        } elseif ($newAmount == 0) {
+                                            $payment_status = 1;
+                                        } else {
+                                            $payment_status = 0;
+                                        }
+
+
+                                        // ImportExcel::where('invoice_no', $req->invoice_no)->update(['installcount' => $installcounter, 'payment_status' => $payment_status, 'remaining_balance' => $newAmount]);
+
+                                        // Update Price Record
+                                        $updtPrice = 1;
+
+                                        if ($updtPrice == 1) {
+
+                                            $client = ClientInfo::where('user_id', $req->merchant_id)->get();
+
+                                            // Insert PAYCAWithdraw
+                                            // PaycaWithdraw::insert(['withdraw_id' => $transactionID, 'client_id' => $req->merchant_id, 'client_name' => $req->name, 'card_method' => $req->payment_method, 'client_email' => $req->email, 'amount_to_withdraw' => $req->amount, 'remittance' => 0]);
+
+
+                                            $activity = "Payment for " . $purpose . " from " . $req->payment_method;
+                                            $credit = 0;
+                                            $debit = $req->amount;
+                                            $balance = $newAmount;
+                                            $status = "Delivered";
+                                            $action = "Wallet debit";
+                                            $regards = $req->merchant_id;
+                                            $reference_code = $transactionID;
+                                            $trans_date = date('Y-m-d');
+                                            $statement_route = "wallet";
+
+
+                                            // My Statement
+                                            // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country); 
+
+                                            $this->name = $thisuser->name;
+                                            $this->email = $thisuser->email;
+                                            // $this->email = "bambo@vimfile.com";
+                                            $this->subject = "Your Invoice # [" . $req->invoice_no . "] of " . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' from ' . $thismerchant->businessname . ' ' . number_format($req->amount, 2) . " is Paid";
+
+                                            $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is <strong>' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '</strong>. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
+
+                                            $this->sendEmail($this->email, "Fund remittance");
+
+                                            $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
+
+                                            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                            if (isset($userPhone)) {
+
+                                                $sendPhone = $thisuser->telephone;
+                                            } else {
+                                                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                                            }
+
+                                            if ($thisuser->country == "Nigeria") {
+
+                                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                $this->sendSms($sendMsg, $correctPhone);
+                                            } else {
+                                                $this->sendMessage($sendMsg, $sendPhone);
+                                            }
+
+
+
+
+                                            /*---------------------------------------------------------------------------------------------------------------------*/
+
+                                            // Merchant Statement
+
+                                            $activity = "Added " . $req->currencyCode . '' . number_format($req->amount, 2) . " to Wallet";
+                                            $credit = $req->amount;
+                                            $debit = 0;
+                                            $reference_code = $transactionID;
+                                            $balance = 0;
+                                            $trans_date = date('Y-m-d');
+                                            $status = "Delivered";
+                                            $action = "Wallet credit";
+                                            $regards = $thismerchant->ref_code;
+                                            $statement_route = "wallet";
+
+                                            // Senders statement
+                                            // $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thismerchant->country);
+
+
+                                            $this->name = $thismerchant->name;
+                                            $this->email = $thismerchant->email;
+                                            // $this->email = "bambo@vimfile.com";
+                                            $this->subject = $thisuser->name . " has paid Invoice: [" . $req->invoice_no . "]";
+
+                                            $this->message = '<p>You have received <strong>' . $req->currencyCode . '' . number_format($req->amount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>, invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '.</p> <p>You now have <strong>' . $req->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
+
+                                            $this->sendEmail($this->email, "Fund remittance");
+
+                                            $recMesg = 'You have received ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . ', invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
+
+                                            $userPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                            if (isset($userPhone)) {
+
+                                                $recPhone = $thismerchant->telephone;
+                                            } else {
+                                                $recPhone = "+" . $thismerchant->code . $thismerchant->telephone;
+                                            }
+
+                                            if ($thismerchant->country == "Nigeria") {
+
+                                                $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                                                $this->sendSms($recMesg, $correctPhone);
+                                            } else {
+                                                $this->sendMessage($recMesg, $recPhone);
+                                            }
+
+
+
+                                            $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $req->bearerToken())->first();
+
+
+                                            $data = $userInfo;
+                                            $status = 200;
+                                            $message = 'You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2);
+
+                                            // $this->createNotification($thisuser->ref_code, $sendMsg);
+                                            // $this->createNotification($thismerchant->ref_code, $recMesg);
+                                        } else {
+
+                                            $response = 'Something went wrong';
+
+                                            $data = [];
+                                            $status = 400;
+                                            $message = $response;
+                                        }
+                                    }
+                                } else {
+
+                                    $response = 'Invoice not found';
+                                    $data = [];
+                                    $status = 400;
+                                    $message = $response;
+                                }
+                            } else {
+                                $response = 'Information not documented, contact Admin';
+
+                                $data = [];
+                                $status = 400;
+                                $message = $response;
+                            }
                         }
+                    } catch (\Throwable $th) {
+                        $data = [];
+                        $status = 400;
+                        $message = "Error: " . $th;
                     }
-                } catch (\Throwable $th) {
+                } else {
+
+                    $error = implode(",", $validator->messages()->all());
+
                     $data = [];
                     $status = 400;
-                    $message = "Error: " . $th;
+                    $message = $error;
                 }
             } else {
 
-                $error = implode(",", $validator->messages()->all());
+                // dd($req->all());
 
-                $data = [];
-                $status = 400;
-                $message = $error;
+                $validator = Validator::make($req->all(), [
+                    'invoice_no' => 'required|string',
+                    'amount' => 'required|string',
+                    'merchant_id' => 'required|string',
+                    'service' => 'required|string',
+                    'payment_method' => 'required|string',
+                    'currencyCode' => 'required|string',
+                    'amountinvoiced' => 'required|string',
+                    'payInstallment' => 'required|string',
+                ]);
+
+                if ($validator->passes()) {
+
+                    try {
+                        $transactionID = "invoice-" . date('dmY') . time();
+
+                        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+                        $thismerchant = User::where('ref_code', $req->merchant_id)->first();
+
+                        if ($thisuser->approval < 1 && $thisuser->accountLevel < 1) {
+
+                            $response = 'You cannot pay invoice at the moment because your account is still on review.';
+
+                            $data = [];
+                            $status = 400;
+                            $message = $response;
+                        } elseif ($thisuser->country != $thismerchant->country) {
+                            $response = 'International money transfer is not available at the moment';
+
+                            $data = [];
+                            $status = 400;
+                            $message = $response;
+                        } else {
+                            // Get My Wallet Balance
+                            $walletBalance = $thisuser->wallet_balance - $req->amount;
+
+                            User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBalance]);
+
+                            // Update Merchant Wallet 
+
+
+                            // Update Merchant Wallet Balance
+                            $merchantwalletBalance = $thismerchant->wallet_balance + $req->amount;
+
+                            User::where('ref_code', $req->merchant_id)->update(['wallet_balance' => $merchantwalletBalance]);
+
+                            // Get Invoice Service
+
+                            // $invData = ImportExcel::where('invoice_no', $req->invoice_no)->first();
+
+                            $purpose = $req->service;
+
+
+                            $insPay = InvoicePayment::updateOrCreate(['invoice_no' => $req->invoice_no], ['transactionid' => $transactionID, 'name' => $thisuser->name, 'email' => $thisuser->email, 'amount' => $req->amount, 'invoice_no' => $req->invoice_no, 'service' => $purpose, 'client_id' => $req->merchant_id, 'payment_method' => $req->payment_method]);
+
+
+                            if ($insPay) {
+                                // Update Import Excel Record
+                                $getInv = ImportExcel::where('invoice_no', $req->invoice_no)->get();
+
+                                if (count($getInv) > 0) {
+
+                                    // Check if instalmental or not
+
+                                    if ($getInv[0]->installpay == "No" && $req->payInstallment == "Yes") {
+
+                                        $response = 'Installmental payment is not allowed for this invoice';
+
+                                        $data = [];
+                                        $status = 400;
+                                        $message = $response;
+                                    } else {
+
+                                        if ($req->payInstallment == "Yes") {
+
+                                            if ($getInv[0]->remaining_balance > 0 || $getInv[0]->remaining_balance != null) {
+                                                // Get Amount
+                                                $prevAmount = $getInv[0]->remaining_balance;
+                                            } else {
+                                                $prevAmount = $getInv[0]->amount;
+                                            }
+
+                                            $paidAmount = $req->amount;
+
+                                            $newAmount = $prevAmount - $paidAmount;
+
+                                            $instcount = $getInv[0]->installcount + 1;
+
+                                            if ($getInv[0]->installlimit > $instcount) {
+                                                $installcounter = $getInv[0]->installlimit;
+                                            } else {
+                                                $installcounter = $instcount;
+                                            }
+                                        } else {
+
+                                            if ($getInv[0]->remaining_balance > 0 || $getInv[0]->remaining_balance != null) {
+                                                // Get Amount
+                                                $prevAmount = $getInv[0]->remaining_balance;
+                                            } else {
+                                                $prevAmount = $getInv[0]->amount;
+                                            }
+
+                                            $paidAmount = $req->amount;
+
+                                            $newAmount = $prevAmount - $paidAmount;
+
+                                            $instcount = $getInv[0]->installcount;
+
+                                            if ($getInv[0]->installlimit > $instcount) {
+                                                $installcounter = $getInv[0]->installlimit;
+                                            } else {
+                                                $installcounter = $instcount;
+                                            }
+                                        }
+
+
+                                        // if payment status is 2, there sre still some pending payments to make, if 1, payments are cleared off
+
+                                        if ($newAmount > 0) {
+                                            $payment_status = 2;
+                                        } elseif ($newAmount == 0) {
+                                            $payment_status = 1;
+                                        } else {
+                                            $payment_status = 0;
+                                        }
+
+
+                                        ImportExcel::where('invoice_no', $req->invoice_no)->update(['installcount' => $installcounter, 'payment_status' => $payment_status, 'remaining_balance' => $newAmount]);
+
+                                        // Update Price Record
+                                        $updtPrice = InvoicePayment::where('transactionid', $transactionID)->update(['remaining_balance' => $newAmount, 'opening_balance' => $prevAmount, 'payment_method' => $req->payment_method]);
+
+                                        if (isset($updtPrice)) {
+
+                                            $client = ClientInfo::where('user_id', $req->merchant_id)->get();
+
+                                            // Insert PAYCAWithdraw
+                                            PaycaWithdraw::insert(['withdraw_id' => $transactionID, 'client_id' => $req->merchant_id, 'client_name' => $req->name, 'card_method' => $req->payment_method, 'client_email' => $req->email, 'amount_to_withdraw' => $req->amount, 'remittance' => 0]);
+
+
+                                            $activity = "Payment for " . $purpose . " from " . $req->payment_method;
+                                            $credit = 0;
+                                            $debit = $req->amount;
+                                            $balance = $newAmount;
+                                            $status = "Delivered";
+                                            $action = "Wallet debit";
+                                            $regards = $req->merchant_id;
+                                            $reference_code = $transactionID;
+                                            $trans_date = date('Y-m-d');
+                                            $statement_route = "wallet";
+
+
+                                            // My Statement
+                                            $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country);
+
+                                            $this->name = $thisuser->name;
+                                            $this->email = $thisuser->email;
+                                            // $this->email = "bambo@vimfile.com";
+                                            $this->subject = "Your Invoice # [" . $req->invoice_no . "] of " . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' from ' . $thismerchant->businessname . ' ' . number_format($req->amount, 2) . " is Paid";
+
+                                            $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is <strong>' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '</strong>. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
+
+                                            $this->sendEmail($this->email, "Fund remittance");
+
+                                            $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
+
+                                            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                            if (isset($userPhone)) {
+
+                                                $sendPhone = $thisuser->telephone;
+                                            } else {
+                                                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                                            }
+
+                                            if ($thisuser->country == "Nigeria") {
+
+                                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                $this->sendSms($sendMsg, $correctPhone);
+                                            } else {
+                                                $this->sendMessage($sendMsg, $sendPhone);
+                                            }
+
+
+
+                                            /*---------------------------------------------------------------------------------------------------------------------*/
+
+                                            // Merchant Statement
+
+                                            $activity = "Added " . $req->currencyCode . '' . number_format($req->amount, 2) . " to Wallet";
+                                            $credit = $req->amount;
+                                            $debit = 0;
+                                            $reference_code = $transactionID;
+                                            $balance = 0;
+                                            $trans_date = date('Y-m-d');
+                                            $status = "Delivered";
+                                            $action = "Wallet credit";
+                                            $regards = $thismerchant->ref_code;
+                                            $statement_route = "wallet";
+
+                                            // Senders statement
+                                            $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thismerchant->country);
+
+
+                                            $this->name = $thismerchant->name;
+                                            $this->email = $thismerchant->email;
+                                            // $this->email = "bambo@vimfile.com";
+                                            $this->subject = $thisuser->name . " has paid Invoice: [" . $req->invoice_no . "]";
+
+                                            $this->message = '<p>You have received <strong>' . $req->currencyCode . '' . number_format($req->amount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>, invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '.</p> <p>You now have <strong>' . $req->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
+
+                                            $this->sendEmail($this->email, "Fund remittance");
+
+                                            $recMesg = 'You have received ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . ', invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
+
+                                            $userPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                            if (isset($userPhone)) {
+
+                                                $recPhone = $thismerchant->telephone;
+                                            } else {
+                                                $recPhone = "+" . $thismerchant->code . $thismerchant->telephone;
+                                            }
+
+                                            if ($thismerchant->country == "Nigeria") {
+
+                                                $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                                                $this->sendSms($recMesg, $correctPhone);
+                                            } else {
+                                                $this->sendMessage($recMesg, $recPhone);
+                                            }
+
+
+
+
+                                            $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $req->bearerToken())->first();
+
+
+                                            $data = $userInfo;
+                                            $status = 200;
+                                            $message = 'You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2);
+
+                                            $this->createNotification($thisuser->ref_code, $sendMsg);
+                                            $this->createNotification($thismerchant->ref_code, $recMesg);
+                                        } else {
+
+                                            $response = 'Something went wrong';
+
+                                            $data = [];
+                                            $status = 400;
+                                            $message = $response;
+                                        }
+                                    }
+                                } else {
+
+                                    $response = 'Invoice not found';
+                                    $data = [];
+                                    $status = 400;
+                                    $message = $response;
+                                }
+                            } else {
+                                $response = 'Information not documented, contact Admin';
+
+                                $data = [];
+                                $status = 400;
+                                $message = $response;
+                            }
+                        }
+                    } catch (\Throwable $th) {
+                        $data = [];
+                        $status = 400;
+                        $message = "Error: " . $th;
+                    }
+                } else {
+
+                    $error = implode(",", $validator->messages()->all());
+
+                    $data = [];
+                    $status = 400;
+                    $message = $error;
+                }
             }
+
+
+
+
+            $resData = ['data' => $data, 'message' => $message, 'status' => $status];
         }
 
 
-
-
-        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
     }
@@ -2463,1307 +2473,135 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     public function moneyWithdrawal(Request $req)
     {
 
+        if ($req->amount < 0) {
+            $data = [];
+            $message = "Please enter a positive amount to withdraw";
+            $status = 400;
+        } else {
+            if (isset($req->mode) && $req->mode == "test") {
 
-        if (isset($req->mode) && $req->mode == "test") {
 
+                $validator = Validator::make($req->all(), [
+                    //  'card_id' => 'required|string',
+                    'amount' => 'required|string',
+                    'transaction_pin' => 'required|string',
+                    'currencyCode' => 'required|string',
+                    'conversionamount' => 'required|string',
+                    'card_type' => 'required|string',
+                    'amounttosend' => 'required|string',
+                    'commissiondeduct' => 'required|string',
+                ]);
 
-            $validator = Validator::make($req->all(), [
-                //  'card_id' => 'required|string',
-                'amount' => 'required|string',
-                'transaction_pin' => 'required|string',
-                'currencyCode' => 'required|string',
-                'conversionamount' => 'required|string',
-                'card_type' => 'required|string',
-                'amounttosend' => 'required|string',
-                'commissiondeduct' => 'required|string',
-            ]);
+                if ($validator->passes()) {
 
-            if ($validator->passes()) {
+                    $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                $thisuser = User::where('api_token', $req->bearerToken())->first();
+                    $withdrawLimit = $this->getWithdrawalLimit($thisuser->country, $thisuser->id);
 
-                $withdrawLimit = $this->getWithdrawalLimit($thisuser->country, $thisuser->id);
-
-                if ($req->amount >= $withdrawLimit['withdrawal_per_transaction']) {
-
-                    $data = [];
-                    $message = "Withdrawal limit for per transaction is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_transaction'], 2) . ". Please withdraw a lesser amount";
-                    $status = 400;
-                } elseif ($req->amount >= $withdrawLimit['withdrawal_per_day']) {
-                    $data = [];
-                    $message = "Withdrawal limit per day is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try again the next day";
-                    $status = 400;
-                } elseif ($req->amount >= $withdrawLimit['withdrawal_per_week']) {
-                    $data = [];
-                    $message = "You have reached your limit for the week. Withdrawal limit per week is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next week";
-                    $status = 400;
-                } elseif ($req->amount >= $withdrawLimit['withdrawal_per_month']) {
-                    $data = [];
-                    $message = "You have reached your limit for the month. Withdrawal limit per month is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_month'], 2) . ". Please try again the next month";
-                    $status = 400;
-                } else {
-
-                    // Log::info($thisuser->name." wants to withdraw ".$req->currencyCode." ".$req->amount." from their wallet. This is a test environment");
-
-                    $this->slack($thisuser->name . " wants to withdraw " . $req->currencyCode . " " . $req->amount . " from their wallet. This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-
-                    $minBal = $this->minimumWithdrawal($thisuser->country);
-
-                    $specialInfo = SpecialInformation::where('country', $thisuser->country)->first();
-
-                    // Check amount in wallet
-                    if ($req->amount > ($thisuser->wallet_balance - $minBal)) {
-                        // Insufficient amount for withdrawal
+                    if ($req->amount >= $withdrawLimit['withdrawal_per_transaction']) {
 
                         $data = [];
-                        $message = "Your minimum wallet balance is " . $req->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
+                        $message = "Withdrawal limit for per transaction is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_transaction'], 2) . ". Please withdraw a lesser amount";
                         $status = 400;
-
-                        // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
-
-                        $this->slack('Oops!, Though this is a test, but ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                    } elseif ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
-                        // Cannot withdraw minimum balance
-
+                    } elseif ($req->amount >= $withdrawLimit['withdrawal_per_day']) {
                         $data = [];
-                        $message = "You cannot send money at the moment because your account is still on review.";
+                        $message = "Withdrawal limit per day is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try again the next day";
                         $status = 400;
-
-                        // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
-
-
-                        $this->slack('Oops!, Though this is a test, but ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                    } elseif (($thisuser->wallet_balance - $minBal) <= $req->amount) {
-                        // Cannot withdraw minimum balance
-
+                    } elseif ($req->amount >= $withdrawLimit['withdrawal_per_week']) {
                         $data = [];
-                        $message = "Your minimum wallet balance is " . $req->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
+                        $message = "You have reached your limit for the week. Withdrawal limit per week is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next week";
                         $status = 400;
-
-                        // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
-
-                        $this->slack('Oops!, Though this is a test, but ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                    } elseif ($req->amount >= $withdrawLimit['withdrawal_per_month']) {
+                        $data = [];
+                        $message = "You have reached your limit for the month. Withdrawal limit per month is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_month'], 2) . ". Please try again the next month";
+                        $status = 400;
                     } else {
 
-                        if (isset($specialInfo)) {
-                            $messageOut = $specialInfo->information;
+                        // Log::info($thisuser->name." wants to withdraw ".$req->currencyCode." ".$req->amount." from their wallet. This is a test environment");
+
+                        $this->slack($thisuser->name . " wants to withdraw " . $req->currencyCode . " " . $req->amount . " from their wallet. This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                        $minBal = $this->minimumWithdrawal($thisuser->country);
+
+                        $specialInfo = SpecialInformation::where('country', $thisuser->country)->first();
+
+                        // Check amount in wallet
+                        if ($req->amount > ($thisuser->wallet_balance - $minBal)) {
+                            // Insufficient amount for withdrawal
 
                             $data = [];
-                            $message = $messageOut;
+                            $message = "Your minimum wallet balance is " . $req->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
                             $status = 400;
 
-                            // Log::info('Oops!, Though this is a test, but '.$thisuser->name.', '.$message);
+                            // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
 
-                            $this->slack('Oops!, Though this is a test, but ' . $thisuser->name . ', ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                            $this->slack('Oops!, Though this is a test, but ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                        } elseif ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
+                            // Cannot withdraw minimum balance
+
+                            $data = [];
+                            $message = "You cannot send money at the moment because your account is still on review.";
+                            $status = 400;
+
+                            // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
+
+
+                            $this->slack('Oops!, Though this is a test, but ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                        } elseif (($thisuser->wallet_balance - $minBal) <= $req->amount) {
+                            // Cannot withdraw minimum balance
+
+                            $data = [];
+                            $message = "Your minimum wallet balance is " . $req->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
+                            $status = 400;
+
+                            // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
+
+                            $this->slack('Oops!, Though this is a test, but ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                         } else {
 
-                            if ($req->card_type == "Prepaid Card") {
-                                $cardType = "EXBC Prepaid Card";
-                            } else {
-                                $cardType = $req->card_type;
-                            }
-
-
-
-
-                            $checkTransaction = TransactionCost::where('method', $cardType)->where('country', $thisuser->country)->first();
-
-
-
-                            if (isset($checkTransaction) ==  true) {
-
-                                // Do convert amount to dollars
-
-                                // This 1.35 is commission charge, kindly calculate again
-
-                                // $monerisDeductamount = $req->conversionamount - 1.35;
-                                $monerisDeductamount = $req->conversionamount;
-
-                                // Get Transaction record for last money added to wallet
-                                $getTrans = Statement::where('reference_code', 'LIKE', '%ord-%')->where('reference_code', 'LIKE', '%wallet-%')->where('user_id', $thisuser->email)->latest()->first();
-
-
-                                // Check Transaction PIn
-                                if ($thisuser->transaction_pin != null) {
-                                    // Validate Transaction PIN
-                                    if (Hash::check($req->transaction_pin, $thisuser->transaction_pin)) {
-
-
-
-                                        /*
-                                            1. Check card detail
-                                            2. If EXBC Prepaid Card, take to EXBC Endpoint to withdraw
-                                            3. Return Response and Debit wallet
-                                        */
-
-                                        // Get Card Details
-                                        $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
-
-                                        if (isset($cardDetails) == true && $cardDetails->card_provider == "EXBC Prepaid Card" || isset($cardDetails) == true && $cardDetails->card_provider == "Prepaid Card") {
-
-
-                                            $transaction_id = "wallet-" . date('dmY') . time();
-                                            $reference_code = "PS_" . $thisuser->ref_code;
-
-                                            if (env('APP_ENV') == "local") {
-                                                $url = "http://localhost:4000/api/v1/paysprint/loadcard";
-                                            } else {
-                                                $url = "https://exbc.ca/api/v1/paysprint/loadcard";
-                                            }
-
-                                            $mydata = array(
-                                                'transaction_id' => $transaction_id,
-                                                'reference_code' => $reference_code,
-                                                'email' => $thisuser->email,
-                                                // 'amount' => $req->amounttosend, 
-                                                'amount' => $req->amount,
-                                                'card_number' => $cardDetails->card_number,
-                                                'name' => $thisuser->name,
-                                            );
-
-                                            $token = "base64:HgMO6FDHGziGl01OuLH9mh7CeP095shB6uuDUUClhks=";
-
-
-                                            $response = $this->curlPost($url, $mydata, $token);
-
-
-                                            if ($response->status == 200) {
-                                                $resData = $this->debitWalletForCard($thisuser->ref_code, $req->amount, $cardDetails->card_provider, $transaction_id, "test");
-
-                                                $status = $resData['status'];
-                                                // $data = $resData['data'];
-                                                $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-                                                $message = $response->message;
-                                            } else {
-                                                $status = $response->status;
-                                                // $data = $response->data;
-                                                $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();;
-                                                $message = $response->message;
-                                                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
-                                            }
-
-                                            $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to EXBC Prepaid Card";
-                                            $credit = 0;
-                                            $debit = $req->amount;
-                                            $reference_code = $transaction_id;
-                                            $balance = 0;
-                                            $trans_date = date('Y-m-d');
-                                            $transstatus = "Delivered";
-                                            $action = "Wallet debit";
-                                            $regards = $thisuser->ref_code;
-                                            $statement_route = "wallet";
-
-                                            $walletBal = $thisuser->wallet_balance - $req->amount;
-                                            $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
-
-                                            // User::where('api_token', $req->bearerToken())->update([
-                                            //     'wallet_balance' => $walletBal,
-                                            //     'number_of_withdrawals' => $no_of_withdraw
-                                            // ]);
-
-                                            // Senders statement
-                                            // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country);
-
-                                            // $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", ".$message);
-
-                                            // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
-
-
-                                            // Create Statement And Credit EXBC account holder
-                                            $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
-
-                                            if (isset($exbcMerchant)) {
-
-                                                // $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to your Wallet to load EXBC Prepaid Card";
-                                                // $credit = $req->amounttosend;
-                                                $activity = "Added " . $req->currencyCode . '' . number_format($req->amount, 2) . " to your Wallet to load EXBC Prepaid Card";
-                                                $credit = $req->amount;
-                                                $debit = 0;
-                                                $reference_code = $transaction_id;
-                                                $balance = 0;
-                                                $trans_date = date('Y-m-d');
-                                                $transstatus = "Delivered";
-                                                $action = "Wallet credit";
-                                                $regards = $exbcMerchant->ref_code;
-                                                $statement_route = "wallet";
-
-                                                // $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amounttosend;
-                                                $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amount;
-
-                                                // User::where('email', 'prepaidcard@exbc.ca')->update([
-                                                //     'wallet_balance' => $merchantwalletBal
-                                                // ]);
-
-                                                // Senders statement
-                                                // $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
-
-                                                // $this->createNotification($exbcMerchant->ref_code, "Hello ".strtoupper($exbcMerchant->name).", ".$this->name." has ".$message);
-
-                                                $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
-
-                                                $userPhone = User::where('email', $exbcMerchant->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                                if (isset($userPhone)) {
-
-                                                    $sendPhone = $exbcMerchant->telephone;
-                                                } else {
-                                                    $sendPhone = "+" . $exbcMerchant->code . $exbcMerchant->telephone;
-                                                }
-
-                                                if ($exbcMerchant->country == "Nigeria") {
-
-                                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                                                    $this->sendSms($sendMsg, $correctPhone);
-                                                } else {
-                                                    $this->sendMessage($sendMsg, $sendPhone);
-                                                }
-                                            } else {
-                                                // DO nothing
-                                            }
-
-                                            $resData = ['data' => $data, 'message' => $message, 'status' => $status];
-                                        } elseif ($req->card_type == "Bank Account") {
-
-                                            $bankDetails = AddBank::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
-
-                                            // Log::info("Card ID: ".$req->card_id." Type: ".$req->card_type); 
-
-                                            $this->slack("Card ID: " . $req->card_id . " Type: " . $req->card_type, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-
-                                            if (isset($bankDetails)) {
-
-                                                $transaction_id = "wallet-" . date('dmY') . time();
-                                                // Save Payment for Admin
-                                                // $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amounttosend, 'country' => $thisuser->country]);
-
-
-                                                // $mydata = BankWithdrawal::where('transaction_id', $transaction_id)->first();
-
-
-                                                $status = 200;
-                                                $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-                                                $message = "Your wallet withdrawal to Bank Account " . $bankDetails->accountNumber . " - " . $bankDetails->bankName . " has been received. The Direct deposit into your Bank account would be done within the next 5 business days. Thanks";
-
-
-
-
-                                                $walletBal = $thisuser->wallet_balance - $req->amount;
-                                                $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
-
-                                                // User::where('api_token', $req->bearerToken())->update([
-                                                //     'wallet_balance' => $walletBal,
-                                                //     'number_of_withdrawals' => $no_of_withdraw
-                                                // ]);
-
-
-                                                $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Bank Account " . $bankDetails->bankName . " - " . $bankDetails->accountNumber;
-                                                $credit = 0;
-                                                $debit = $req->amount;
-                                                $reference_code = $transaction_id;
-                                                $balance = 0;
-                                                $trans_date = date('Y-m-d');
-                                                $thistatus = "Delivered";
-                                                $action = "Wallet debit";
-                                                $regards = $thisuser->ref_code;
-                                                $statement_route = "wallet";
-
-                                                // Senders statement
-                                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country);
-
-
-                                                $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
-
-
-
-
-
-                                                $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                                if (isset($userPhone)) {
-
-                                                    $sendPhone = $thisuser->telephone;
-                                                } else {
-                                                    $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                                                }
-
-                                                // $this->createNotification($thisuser->ref_code, $sendMsg);
-
-                                                // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
-
-
-                                                // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg.". This is a test environment");
-
-
-                                                $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg . ". This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                                            } else {
-                                                $data = [];
-                                                $message = "No bank record found for your account";
-                                                $status = 400;
-                                            }
-
-
-
-
-                                            $resData = ['data' => $data, 'message' => $message, 'status' => $status];
-                                        } else {
-
-                                            if (isset($getTrans) == true) {
-                                                $transaction_id = $getTrans->reference_code;
-                                            } else {
-                                                $transaction_id = "wallet-" . date('dmY') . time();
-                                            }
-
-                                            $customer_id = $thisuser->ref_code;
-
-                                            // Get Card Detail
-                                            $card_number = $cardDetails->card_number;
-                                            $month = $cardDetails->month;
-                                            $year = $cardDetails->year;
-
-
-                                            $this->creditCardWithdrawalRequest($thisuser->ref_code, $transaction_id, $customer_id, $card_number, $month, $year, $req->amount, $thisuser->country);
-
-
-
-                                            // Proceed to Withdrawal
-
-                                            // $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "ind_refund", "PaySprint Withdraw from Wallet to ".$thisuser->name, $req->mode);
-
-                                            // if($response->responseData['Message'] == "APPROVED           *                    ="){
-
-                                            $walletBal = $thisuser->wallet_balance - $req->amount;
-                                            $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
-
-                                            User::where('api_token', $req->bearerToken())->update([
-                                                'wallet_balance' => $walletBal,
-                                                'number_of_withdrawals' => $no_of_withdraw
-                                            ]);
-
-                                            // Update Statement
-
-                                            $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
-
-                                            $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Credit/Debit card";
-                                            $credit = 0;
-                                            $debit = $req->amount;
-                                            // $reference_code = $response->responseData['ReceiptId'];
-                                            $reference_code = $transaction_id;
-                                            $balance = 0;
-                                            $trans_date = date('Y-m-d');
-                                            $status = "Delivered";
-                                            $action = "Wallet debit";
-                                            $regards = $thisuser->ref_code;
-                                            $statement_route = "wallet";
-
-                                            // Senders statement
-                                            $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
-
-                                            // Notification
-                                            $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
-
-                                            $cardNo = str_repeat("*", strlen($cardDetails->card_number) - 4) . substr($cardDetails->card_number, -4);
-
-
-                                            $this->name = $thisuser->name;
-                                            $this->email = $thisuser->email;
-                                            $this->subject = $req->currencyCode . ' ' . number_format($req->amount, 2) . " has been Withdrawn from your Wallet with PaySprint";
-
-                                            $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
-
-
-
-                                            $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
-
-                                            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                            if (isset($userPhone)) {
-
-                                                $sendPhone = $thisuser->telephone;
-                                            } else {
-                                                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                                            }
-
-
-                                            $this->createNotification($thisuser->ref_code, $sendMsg);
-
-                                            // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
-                                            $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
-
-                                            if ($thisuser->country == "Nigeria") {
-
-                                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                                                $this->sendSms($sendMsg, $correctPhone);
-                                            } else {
-                                                $this->sendMessage($sendMsg, $sendPhone);
-                                            }
-
-                                            $this->sendEmail($this->email, "Fund remittance");
-
-                                            $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-                                            $status = 200;
-                                            // $message = $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet';
-                                            $message = $sendMsg;
-
-                                            // Log::info('Congratulations!, '.$thisuser->name.' '.$message);
-
-                                            $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-
-
-
-                                            // }
-                                            // else{
-                                            //     $data = [];
-                                            //         $message = $response->responseData['Message'];
-                                            //         $status = 400;
-                                            // }
-                                        }
-                                    } else {
-                                        $data = [];
-                                        $message = "Invalid transaction pin";
-                                        $status = 400;
-                                    }
-                                } else {
-                                    // Set new transaction pin and validate
-
-                                    if (Hash::check($req->password, $thisuser->password)) {
-
-                                        if ($req->transaction_pin != $req->confirm_transaction_pin) {
-
-                                            $data = [];
-                                            $message = "Transaction pin does not match";
-                                            $status = 400;
-                                        } else {
-
-                                            // Update Transaction pin
-                                            User::where('api_token', $req->bearerToken())->update(['transaction_pin' => Hash::make($req->transaction_pin)]);
-
-
-                                            /*
-                                            1. Check card detail
-                                            2. If EXBC Prepaid Card, take to EXBC Endpoint to withdraw
-                                            3. Return Response and Debit wallet
-                                        */
-
-                                            // Get Card Details
-                                            $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
-
-                                            if (isset($cardDetails) == true && $cardDetails->card_provider == "EXBC Prepaid Card" || isset($cardDetails) == true && $cardDetails->card_provider == "Prepaid Card") {
-
-                                                $transaction_id = "wallet-" . date('dmY') . time();
-                                                $reference_code = "PS_" . $thisuser->ref_code;
-
-                                                if (env('APP_ENV') == "local") {
-                                                    $url = "http://localhost:4000/api/v1/paysprint/loadcard";
-                                                } else {
-                                                    $url = "https://exbc.ca/api/v1/paysprint/loadcard";
-                                                }
-
-                                                $mydata = array(
-                                                    'transaction_id' => $transaction_id,
-                                                    'reference_code' => $reference_code,
-                                                    'email' => $thisuser->email,
-                                                    // 'amount' => $req->amounttosend, 
-                                                    'amount' => $req->amount,
-                                                    'card_number' => $cardDetails->card_number,
-                                                    'name' => $thisuser->name,
-                                                );
-
-                                                $token = "base64:HgMO6FDHGziGl01OuLH9mh7CeP095shB6uuDUUClhks=";
-
-
-                                                $response = $this->curlPost($url, $mydata, $token);
-
-
-                                                if ($response->status == 200) {
-                                                    $resData = $this->debitWalletForCard($thisuser->ref_code, $req->amount, $cardDetails->card_provider, $transaction_id, "live");
-
-                                                    $status = $resData['status'];
-                                                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-                                                    $message = $response->message;
-                                                } else {
-                                                    $status = $response->status;
-                                                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-                                                    $message = $response->message;
-                                                    $resData = ['data' => $data, 'message' => $message, 'status' => $status];
-                                                }
-
-                                                $activity = "Withdraw " . $req->currencyCode . ' ' . $req->amount . " from Wallet to EXBC Prepaid Card";
-                                                $credit = 0;
-                                                $debit = $req->amount;
-                                                $reference_code = $transaction_id;
-                                                $balance = 0;
-                                                $trans_date = date('Y-m-d');
-                                                $transstatus = "Delivered";
-                                                $action = "Wallet debit";
-                                                $regards = $thisuser->ref_code;
-                                                $statement_route = "wallet";
-
-                                                $walletBal = $thisuser->wallet_balance - $req->amount;
-                                                $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
-
-                                                User::where('api_token', $req->bearerToken())->update([
-                                                    'wallet_balance' => $walletBal,
-                                                    'number_of_withdrawals' => $no_of_withdraw
-                                                ]);
-
-                                                // Senders statement
-                                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country);
-
-                                                $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message);
-
-                                                // Log::info("Hello ".strtoupper($thisuser->name).", ".$message);
-
-
-                                                $this->slack("Hello " . strtoupper($thisuser->name) . ", " . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-
-                                                // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
-                                                $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
-
-
-                                                // Create Statement And Credit EXBC account holder
-                                                $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
-
-                                                if (isset($exbcMerchant)) {
-
-                                                    // $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to your Wallet to load EXBC Prepaid Card";
-                                                    // $credit = $req->amounttosend;
-                                                    $activity = "Added " . $req->currencyCode . '' . number_format($req->amount, 2) . " to your Wallet to load EXBC Prepaid Card";
-                                                    $credit = $req->amount;
-                                                    $debit = 0;
-                                                    $reference_code = $transaction_id;
-                                                    $balance = 0;
-                                                    $trans_date = date('Y-m-d');
-                                                    $transstatus = "Delivered";
-                                                    $action = "Wallet credit";
-                                                    $regards = $exbcMerchant->ref_code;
-                                                    $statement_route = "wallet";
-
-                                                    // $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amounttosend;
-                                                    $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amount;
-
-                                                    User::where('email', 'prepaidcard@exbc.ca')->update([
-                                                        'wallet_balance' => $merchantwalletBal
-                                                    ]);
-
-                                                    // Senders statement
-                                                    $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
-
-                                                    $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message);
-
-                                                    $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
-
-                                                    $userPhone = User::where('email', $exbcMerchant->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                                    if (isset($userPhone)) {
-
-                                                        $sendPhone = $exbcMerchant->telephone;
-                                                    } else {
-                                                        $sendPhone = "+" . $exbcMerchant->code . $exbcMerchant->telephone;
-                                                    }
-
-                                                    if ($exbcMerchant->country == "Nigeria") {
-
-                                                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                                                        $this->sendSms($sendMsg, $correctPhone);
-                                                    } else {
-                                                        $this->sendMessage($sendMsg, $sendPhone);
-                                                    }
-                                                } else {
-                                                    // Do nothing
-                                                }
-
-
-                                                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
-                                            } elseif ($req->card_type == "Bank Account") {
-
-                                                $bankDetails = AddBank::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
-                                                $transaction_id = "wallet-" . date('dmY') . time();
-                                                // Save Payment for Admin
-                                                // $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amounttosend, 'country' => $thisuser->country]);
-                                                $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amount, 'country' => $thisuser->country]);
-
-
-                                                $mydata = BankWithdrawal::where('transaction_id', $transaction_id)->first();
-
-
-                                                $status = 200;
-                                                $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-                                                $message = "Your wallet withdrawal to Bank Account " . $bankDetails->accountNumber . " - " . $bankDetails->bankName . " has been received. The Direct deposit into your Bank account would be done within the next 5 business days. Thanks";
-
-
-
-
-                                                $walletBal = $thisuser->wallet_balance - $req->amount;
-                                                $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
-
-                                                User::where('api_token', $req->bearerToken())->update([
-                                                    'wallet_balance' => $walletBal,
-                                                    'number_of_withdrawals' => $no_of_withdraw
-                                                ]);
-
-
-                                                $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Bank Account " . $bankDetails->bankName . " - " . $bankDetails->accountNumber;
-                                                $credit = 0;
-                                                $debit = $req->amount;
-                                                $reference_code = $transaction_id;
-                                                $balance = 0;
-                                                $trans_date = date('Y-m-d');
-                                                $thistatus = "Delivered";
-                                                $action = "Wallet debit";
-                                                $regards = $thisuser->ref_code;
-                                                $statement_route = "wallet";
-
-                                                // Senders statement
-                                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country);
-
-
-                                                $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
-
-
-
-
-                                                $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                                if (isset($userPhone)) {
-
-                                                    $sendPhone = $thisuser->telephone;
-                                                } else {
-                                                    $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                                                }
-
-                                                $this->createNotification($thisuser->ref_code, $sendMsg);
-
-                                                // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
-                                                $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
-
-
-                                                // Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$sendMsg);
-
-                                                $this->slack("Congratulations! " . strtoupper($thisuser->name) . " " . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-
-
-                                                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
-                                            } else {
-
-                                                if (isset($getTrans) == true) {
-                                                    $transaction_id = $getTrans->reference_code;
-                                                } else {
-                                                    $transaction_id = "wallet-" . date('dmY') . time();
-                                                }
-
-                                                $customer_id = $thisuser->ref_code;
-
-                                                // Get Card Detail
-                                                $card_number = $cardDetails->card_number;
-                                                $month = $cardDetails->month;
-                                                $year = $cardDetails->year;
-
-
-                                                // $this->creditCardWithdrawalRequest($thisuser->ref_code, $transaction_id, $customer_id, $card_number, $month, $year, $req->amount, $thisuser->country);
-
-
-                                                // Proceed to Withdrawal
-
-                                                // $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "ind_refund", "PaySprint Withdraw from Wallet to ".$thisuser->name, $req->mode);
-
-
-                                                // if($response->responseData['Message'] == "APPROVED           *                    ="){
-
-                                                $walletBal = $thisuser->wallet_balance - $req->amount;
-                                                $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
-
-                                                // User::where('api_token', $req->bearerToken())->update([
-                                                //     'wallet_balance' => $walletBal,
-                                                //     'number_of_withdrawals' => $no_of_withdraw
-                                                // ]);
-
-                                                // Update Statement
-
-                                                $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
-
-                                                $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Credit/Debit card";
-                                                $credit = 0;
-                                                $debit = $req->amount;
-                                                // $reference_code = $response->responseData['ReceiptId'];
-                                                $reference_code = $transaction_id;
-                                                $balance = 0;
-                                                $trans_date = date('Y-m-d');
-                                                $status = "Delivered";
-                                                $action = "Wallet debit";
-                                                $regards = $thisuser->ref_code;
-                                                $statement_route = "wallet";
-
-                                                // Senders statement
-                                                // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
-
-                                                // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
-
-
-                                                // Notification
-
-                                                $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
-
-                                                $cardNo = str_repeat("*", strlen($cardDetails->card_number) - 4) . substr($cardDetails->card_number, -4);
-
-                                                $this->name = $thisuser->name;
-                                                $this->email = $thisuser->email;
-                                                $this->subject = $req->currencyCode . ' ' . number_format($req->amount, 2) . " has been Withdrawn from your Wallet with PaySprint";
-
-                                                $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
-
-                                                $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
-
-                                                $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                                if (isset($userPhone)) {
-
-                                                    $sendPhone = $thisuser->telephone;
-                                                } else {
-                                                    $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                                                }
-
-
-                                                // $this->createNotification($thisuser->ref_code, $sendMsg);
-
-                                                if ($thisuser->country == "Nigeria") {
-
-                                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                                                    $this->sendSms($sendMsg, $correctPhone);
-                                                } else {
-                                                    $this->sendMessage($sendMsg, $sendPhone);
-                                                }
-
-                                                $this->sendEmail($this->email, "Fund remittance");
-
-
-                                                $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-
-                                                $data = $userInfo;
-                                                $status = 200;
-                                                $message = $sendMsg;
-
-                                                // Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$message.". This is a test environment");
-
-                                                $this->slack("Congratulations! " . strtoupper($thisuser->name) . " " . $message . ". This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                                            }
-                                        }
-                                    } else {
-                                        $data = [];
-                                        $message = "Invalid login password";
-                                        $status = 400;
-                                    }
-                                }
-                            } else {
+                            if (isset($specialInfo)) {
+                                $messageOut = $specialInfo->information;
 
                                 $data = [];
-                                $message = "Withdrawal to " . strtoupper($req->card_type) . " not yet activated for your country.";
+                                $message = $messageOut;
                                 $status = 400;
 
                                 // Log::info('Oops!, Though this is a test, but '.$thisuser->name.', '.$message);
 
                                 $this->slack('Oops!, Though this is a test, but ' . $thisuser->name . ', ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                            }
-                        }
-                    }
-                }
-            } else {
-
-                $error = implode(",", $validator->messages()->all());
-
-                $data = [];
-                $status = 400;
-                $message = $error;
-            }
-        } else {
-            $validator = Validator::make($req->all(), [
-                //  'card_id' => 'required|string',
-                'amount' => 'required|string',
-                'transaction_pin' => 'required|string',
-                'currencyCode' => 'required|string',
-                'conversionamount' => 'required|string',
-                'card_type' => 'required|string',
-                'amounttosend' => 'required|string',
-                'commissiondeduct' => 'required|string',
-            ]);
-
-            if ($validator->passes()) {
-
-                $thisuser = User::where('api_token', $req->bearerToken())->first();
-
-
-                $withdrawLimit = $this->getWithdrawalLimit($thisuser->country, $thisuser->id);
-
-                if ($req->amount >= $withdrawLimit['withdrawal_per_transaction']) {
-
-                    $data = [];
-                    $message = "Withdrawal limit for per transaction is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_transaction'], 2) . ". Please withdraw a lesser amount";
-                    $status = 400;
-                } elseif ($req->amount >= $withdrawLimit['withdrawal_per_day']) {
-                    $data = [];
-                    $message = "Withdrawal limit per day is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try again the next day";
-                    $status = 400;
-                } elseif ($req->amount >= $withdrawLimit['withdrawal_per_week']) {
-                    $data = [];
-                    $message = "You have reached your limit for the week. Withdrawal limit per week is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next week";
-                    $status = 400;
-                } elseif ($req->amount >= $withdrawLimit['withdrawal_per_month']) {
-                    $data = [];
-                    $message = "You have reached your limit for the month. Withdrawal limit per month is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_month'], 2) . ". Please try again the next month";
-                    $status = 400;
-                } else {
-                    // Log::info($thisuser->name." wants to withdraw ".$req->currencyCode." ".$req->amount." from their wallet.");
-
-                    $this->slack($thisuser->name . " wants to withdraw " . $req->currencyCode . " " . $req->amount . " from their wallet.", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-
-                    $minBal = $this->minimumWithdrawal($thisuser->country);
-
-                    $specialInfo = SpecialInformation::where('country', $thisuser->country)->first();
-
-
-
-
-                    // Check amount in wallet
-                    if ($req->amount > ($thisuser->wallet_balance - $minBal)) {
-                        // Insufficient amount for withdrawal
-
-                        $data = [];
-                        $message = "Your minimum wallet balance is " . $req->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
-                        $status = 400;
-
-                        // Log::info('Oops!, '.$thisuser->name.' has '.$message);
-
-                        $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                    } elseif ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
-                        // Cannot withdraw minimum balance
-
-                        $data = [];
-                        $message = "You cannot send money at the moment because your account is still on review.";
-                        $status = 400;
-
-                        // Log::info('Oops!, '.$thisuser->name.' has '.$message);
-
-                        $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                    } elseif (($thisuser->wallet_balance - $minBal) <= $req->amount) {
-                        // Cannot withdraw minimum balance
-
-                        $data = [];
-                        $message = "Your minimum wallet balance is " . $req->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
-                        $status = 400;
-
-                        // Log::info('Oops!, '.$thisuser->name.' has '.$message);
-
-                        $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                    } else {
-
-
-                        if (isset($specialInfo)) {
-
-                            $messageOut = $specialInfo->information;
-
-                            $data = [];
-                            $message = $messageOut;
-                            $status = 400;
-
-                            // Log::info('Oops!, '.$thisuser->name.', '.$message);
-
-                            $this->slack('Oops!, ' . $thisuser->name . ', ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                        } else {
-
-
-
-                            if ($req->card_type == "Prepaid Card") {
-                                $cardType = "EXBC Prepaid Card";
                             } else {
-                                $cardType = $req->card_type;
-                            }
 
-
-
-
-                            $checkTransaction = TransactionCost::where('method', $cardType)->where('country', $thisuser->country)->first();
-
-
-
-                            if (isset($checkTransaction) ==  true) {
-
-                                // Do convert amount to dollars
-
-                                // This 1.35 is commission charge, kindly calculate again
-
-                                // $monerisDeductamount = $req->conversionamount - 1.35;
-                                $monerisDeductamount = $req->conversionamount;
-
-                                // Get Transaction record for last money added to wallet
-                                $getTrans = Statement::where('reference_code', 'LIKE', '%ord-%')->where('reference_code', 'LIKE', '%wallet-%')->where('user_id', $thisuser->email)->latest()->first();
-
-
-                                // Check Transaction PIn
-                                if ($thisuser->transaction_pin != null) {
-                                    // Validate Transaction PIN
-                                    if (Hash::check($req->transaction_pin, $thisuser->transaction_pin)) {
-
-
-
-                                        /*
-                                            1. Check card detail
-                                            2. If EXBC Prepaid Card, take to EXBC Endpoint to withdraw
-                                            3. Return Response and Debit wallet
-                                        */
-
-                                        // Get Card Details
-                                        $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
-
-                                        if (isset($cardDetails) == true && $cardDetails->card_provider == "EXBC Prepaid Card" || isset($cardDetails) == true && $cardDetails->card_provider == "Prepaid Card") {
-
-
-                                            $transaction_id = "wallet-" . date('dmY') . time();
-                                            $reference_code = "PS_" . $thisuser->ref_code;
-
-                                            if (env('APP_ENV') == "local") {
-                                                $url = "http://localhost:4000/api/v1/paysprint/loadcard";
-                                            } else {
-                                                $url = "https://exbc.ca/api/v1/paysprint/loadcard";
-                                            }
-
-                                            $mydata = array(
-                                                'transaction_id' => $transaction_id,
-                                                'reference_code' => $reference_code,
-                                                'email' => $thisuser->email,
-                                                // 'amount' => $req->amounttosend, 
-                                                'amount' => $req->amount,
-                                                'card_number' => $cardDetails->card_number,
-                                                'name' => $thisuser->name,
-                                            );
-
-                                            $token = "base64:HgMO6FDHGziGl01OuLH9mh7CeP095shB6uuDUUClhks=";
-
-
-                                            $response = $this->curlPost($url, $mydata, $token);
-
-
-                                            if ($response->status == 200) {
-                                                $resData = $this->debitWalletForCard($thisuser->ref_code, $req->amount, $cardDetails->card_provider, $transaction_id, "live");
-
-                                                $status = $resData['status'];
-                                                // $data = $resData['data'];
-                                                $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-                                                $message = $response->message;
-                                            } else {
-                                                $status = $response->status;
-                                                // $data = $response->data;
-                                                $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();;
-                                                $message = $response->message;
-                                                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
-                                            }
-
-                                            $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to EXBC Prepaid Card";
-                                            $credit = 0;
-                                            $debit = $req->amount;
-                                            $reference_code = $transaction_id;
-                                            $balance = 0;
-                                            $trans_date = date('Y-m-d');
-                                            $transstatus = "Delivered";
-                                            $action = "Wallet debit";
-                                            $regards = $thisuser->ref_code;
-                                            $statement_route = "wallet";
-
-                                            $walletBal = $thisuser->wallet_balance - $req->amount;
-                                            $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
-                                            $withdrawal_per_day = $thisuser->withdrawal_per_day + $req->amount;
-                                            $withdrawal_per_week = $thisuser->withdrawal_per_week + $withdrawal_per_day;
-                                            $withdrawal_per_month = $thisuser->withdrawal_per_month + $withdrawal_per_week;
-
-                                            User::where('api_token', $req->bearerToken())->update([
-                                                'wallet_balance' => $walletBal,
-                                                'number_of_withdrawals' => $no_of_withdraw,
-                                                'withdrawal_per_day' => $withdrawal_per_day,
-                                                'withdrawal_per_week' => $withdrawal_per_week,
-                                                'withdrawal_per_month' => $withdrawal_per_month,
-                                            ]);
-
-                                            // Senders statement
-                                            $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country);
-
-                                            $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message);
-
-                                            // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
-                                            $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
-
-
-                                            // Create Statement And Credit EXBC account holder
-                                            $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
-
-                                            if (isset($exbcMerchant)) {
-
-                                                // $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to your Wallet to load EXBC Prepaid Card";
-                                                // $credit = $req->amounttosend;
-                                                $activity = "Added " . $req->currencyCode . '' . number_format($req->amount, 2) . " to your Wallet to load EXBC Prepaid Card";
-                                                $credit = $req->amount;
-                                                $debit = 0;
-                                                $reference_code = $transaction_id;
-                                                $balance = 0;
-                                                $trans_date = date('Y-m-d');
-                                                $transstatus = "Delivered";
-                                                $action = "Wallet credit";
-                                                $regards = $exbcMerchant->ref_code;
-                                                $statement_route = "wallet";
-
-                                                // $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amounttosend;
-                                                $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amount;
-
-                                                User::where('email', 'prepaidcard@exbc.ca')->update([
-                                                    'wallet_balance' => $merchantwalletBal
-                                                ]);
-
-                                                // Senders statement
-                                                $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
-
-                                                $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message);
-
-                                                $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
-
-                                                $userPhone = User::where('email', $exbcMerchant->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                                if (isset($userPhone)) {
-
-                                                    $sendPhone = $exbcMerchant->telephone;
-                                                } else {
-                                                    $sendPhone = "+" . $exbcMerchant->code . $exbcMerchant->telephone;
-                                                }
-
-                                                if ($exbcMerchant->country == "Nigeria") {
-
-                                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                                                    $this->sendSms($sendMsg, $correctPhone);
-                                                } else {
-                                                    $this->sendMessage($sendMsg, $sendPhone);
-                                                }
-                                            } else {
-                                                // DO nothing
-                                            }
-
-                                            $resData = ['data' => $data, 'message' => $message, 'status' => $status];
-                                        } elseif ($req->card_type == "Bank Account") {
-
-                                            $bankDetails = AddBank::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
-
-                                            // Log::info("Card ID: ".$req->card_id." Type: ".$req->card_type); 
-
-                                            $this->slack("Card ID: " . $req->card_id . " Type: " . $req->card_type, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-
-                                            if (isset($bankDetails)) {
-
-                                                $transaction_id = "wallet-" . date('dmY') . time();
-                                                // Save Payment for Admin
-                                                // $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amounttosend, 'country' => $thisuser->country]);
-                                                $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amount, 'country' => $thisuser->country]);
-
-
-                                                $mydata = BankWithdrawal::where('transaction_id', $transaction_id)->first();
-
-
-                                                $status = 200;
-                                                $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-                                                $message = "Your wallet withdrawal to Bank Account " . $bankDetails->accountNumber . " - " . $bankDetails->bankName . " has been received. The Direct deposit into your Bank account would be done within the next 5 business days. Thanks";
-
-
-
-
-                                                $walletBal = $thisuser->wallet_balance - $req->amount;
-                                                $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
-
-                                                User::where('api_token', $req->bearerToken())->update([
-                                                    'wallet_balance' => $walletBal,
-                                                    'number_of_withdrawals' => $no_of_withdraw
-                                                ]);
-
-
-                                                $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Bank Account " . $bankDetails->bankName . " - " . $bankDetails->accountNumber;
-                                                $credit = 0;
-                                                $debit = $req->amount;
-                                                $reference_code = $transaction_id;
-                                                $balance = 0;
-                                                $trans_date = date('Y-m-d');
-                                                $thistatus = "Delivered";
-                                                $action = "Wallet debit";
-                                                $regards = $thisuser->ref_code;
-                                                $statement_route = "wallet";
-
-                                                // Senders statement
-                                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country);
-
-
-                                                $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
-
-
-
-                                                $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                                if (isset($userPhone)) {
-
-                                                    $sendPhone = $thisuser->telephone;
-                                                } else {
-                                                    $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                                                }
-
-                                                $this->createNotification($thisuser->ref_code, $sendMsg);
-
-                                                // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
-                                                $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
-
-
-                                                // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
-
-
-                                                $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                                            } else {
-                                                $data = [];
-                                                $message = "No bank record found for your account";
-                                                $status = 400;
-                                            }
-
-
-
-
-                                            $resData = ['data' => $data, 'message' => $message, 'status' => $status];
-                                        } else {
-
-                                            if (isset($getTrans) == true) {
-                                                $transaction_id = $getTrans->reference_code;
-                                            } else {
-                                                $transaction_id = "wallet-" . date('dmY') . time();
-                                            }
-
-                                            $customer_id = $thisuser->ref_code;
-
-                                            // Get Card Detail
-                                            $card_number = $cardDetails->card_number;
-                                            $month = $cardDetails->month;
-                                            $year = $cardDetails->year;
-
-
-                                            $this->creditCardWithdrawalRequest($thisuser->ref_code, $transaction_id, $customer_id, $card_number, $month, $year, $req->amount, $thisuser->country);
-
-
-
-                                            // Proceed to Withdrawal
-
-                                            // $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "ind_refund", "PaySprint Withdraw from Wallet to ".$thisuser->name, $req->mode);
-
-                                            // if($response->responseData['Message'] == "APPROVED           *                    ="){
-
-                                            $walletBal = $thisuser->wallet_balance - $req->amount;
-                                            $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
-                                            $withdrawal_per_day = $thisuser->withdrawal_per_day + $req->amount;
-                                            $withdrawal_per_week = $thisuser->withdrawal_per_week + $withdrawal_per_day;
-                                            $withdrawal_per_month = $thisuser->withdrawal_per_month + $withdrawal_per_week;
-
-                                            User::where('api_token', $req->bearerToken())->update([
-                                                'wallet_balance' => $walletBal,
-                                                'number_of_withdrawals' => $no_of_withdraw,
-                                                'withdrawal_per_day' => $withdrawal_per_day,
-                                                'withdrawal_per_week' => $withdrawal_per_week,
-                                                'withdrawal_per_month' => $withdrawal_per_month,
-                                            ]);
-
-                                            // Update Statement
-
-                                            $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
-
-                                            $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Credit/Debit card";
-                                            $credit = 0;
-                                            $debit = $req->amount;
-                                            // $reference_code = $response->responseData['ReceiptId'];
-                                            $reference_code = $transaction_id;
-                                            $balance = 0;
-                                            $trans_date = date('Y-m-d');
-                                            $status = "Delivered";
-                                            $action = "Wallet debit";
-                                            $regards = $thisuser->ref_code;
-                                            $statement_route = "wallet";
-
-                                            // Senders statement
-                                            $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
-
-                                            // Notification
-                                            $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
-
-                                            $cardNo = str_repeat("*", strlen($cardDetails->card_number) - 4) . substr($cardDetails->card_number, -4);
-
-
-                                            $this->name = $thisuser->name;
-                                            $this->email = $thisuser->email;
-                                            $this->subject = $req->currencyCode . ' ' . number_format($req->amount, 2) . " has been Withdrawn from your Wallet with PaySprint";
-
-                                            $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
-
-
-
-                                            $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
-
-                                            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                            if (isset($userPhone)) {
-
-                                                $sendPhone = $thisuser->telephone;
-                                            } else {
-                                                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                                            }
-
-
-                                            $this->createNotification($thisuser->ref_code, $sendMsg);
-
-                                            // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
-                                            $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
-
-                                            if ($thisuser->country == "Nigeria") {
-
-                                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                                                $this->sendSms($sendMsg, $correctPhone);
-                                            } else {
-                                                $this->sendMessage($sendMsg, $sendPhone);
-                                            }
-
-                                            $this->sendEmail($this->email, "Fund remittance");
-
-                                            $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-                                            $status = 200;
-                                            // $message = $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet';
-                                            $message = $sendMsg;
-
-                                            // Log::info('Congratulations!, '.$thisuser->name.' '.$message);
-
-
-                                            $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-
-
-
-                                            // }
-                                            // else{
-                                            //     $data = [];
-                                            //         $message = $response->responseData['Message'];
-                                            //         $status = 400;
-                                            // }
-                                        }
-                                    } else {
-                                        $data = [];
-                                        $message = "Invalid transaction pin";
-                                        $status = 400;
-                                    }
+                                if ($req->card_type == "Prepaid Card") {
+                                    $cardType = "EXBC Prepaid Card";
                                 } else {
-                                    // Set new transaction pin and validate
+                                    $cardType = $req->card_type;
+                                }
 
-                                    if (Hash::check($req->password, $thisuser->password)) {
 
-                                        if ($req->transaction_pin != $req->confirm_transaction_pin) {
 
-                                            $data = [];
-                                            $message = "Transaction pin does not match";
-                                            $status = 400;
-                                        } else {
 
-                                            // Update Transaction pin
-                                            User::where('api_token', $req->bearerToken())->update(['transaction_pin' => Hash::make($req->transaction_pin)]);
+                                $checkTransaction = TransactionCost::where('method', $cardType)->where('country', $thisuser->country)->first();
+
+
+
+                                if (isset($checkTransaction) ==  true) {
+
+                                    // Do convert amount to dollars
+
+                                    // This 1.35 is commission charge, kindly calculate again
+
+                                    // $monerisDeductamount = $req->conversionamount - 1.35;
+                                    $monerisDeductamount = $req->conversionamount;
+
+                                    // Get Transaction record for last money added to wallet
+                                    $getTrans = Statement::where('reference_code', 'LIKE', '%ord-%')->where('reference_code', 'LIKE', '%wallet-%')->where('user_id', $thisuser->email)->latest()->first();
+
+
+                                    // Check Transaction PIn
+                                    if ($thisuser->transaction_pin != null) {
+                                        // Validate Transaction PIN
+                                        if (Hash::check($req->transaction_pin, $thisuser->transaction_pin)) {
+
 
 
                                             /*
@@ -3776,6 +2614,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                             $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
 
                                             if (isset($cardDetails) == true && $cardDetails->card_provider == "EXBC Prepaid Card" || isset($cardDetails) == true && $cardDetails->card_provider == "Prepaid Card") {
+
 
                                                 $transaction_id = "wallet-" . date('dmY') . time();
                                                 $reference_code = "PS_" . $thisuser->ref_code;
@@ -3803,19 +2642,21 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                                                 if ($response->status == 200) {
-                                                    $resData = $this->debitWalletForCard($thisuser->ref_code, $req->amount, $cardDetails->card_provider, $transaction_id, "live");
+                                                    $resData = $this->debitWalletForCard($thisuser->ref_code, $req->amount, $cardDetails->card_provider, $transaction_id, "test");
 
                                                     $status = $resData['status'];
+                                                    // $data = $resData['data'];
                                                     $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
                                                     $message = $response->message;
                                                 } else {
                                                     $status = $response->status;
-                                                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                                    // $data = $response->data;
+                                                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();;
                                                     $message = $response->message;
                                                     $resData = ['data' => $data, 'message' => $message, 'status' => $status];
                                                 }
 
-                                                $activity = "Withdraw " . $req->currencyCode . ' ' . $req->amount . " from Wallet to EXBC Prepaid Card";
+                                                $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to EXBC Prepaid Card";
                                                 $credit = 0;
                                                 $debit = $req->amount;
                                                 $reference_code = $transaction_id;
@@ -3828,29 +2669,18 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                                 $walletBal = $thisuser->wallet_balance - $req->amount;
                                                 $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
-                                                $withdrawal_per_day = $thisuser->withdrawal_per_day + $req->amount;
-                                                $withdrawal_per_week = $thisuser->withdrawal_per_week + $withdrawal_per_day;
-                                                $withdrawal_per_month = $thisuser->withdrawal_per_month + $withdrawal_per_week;
 
-                                                User::where('api_token', $req->bearerToken())->update([
-                                                    'wallet_balance' => $walletBal,
-                                                    'number_of_withdrawals' => $no_of_withdraw,
-                                                    'withdrawal_per_day' => $withdrawal_per_day,
-                                                    'withdrawal_per_week' => $withdrawal_per_week,
-                                                    'withdrawal_per_month' => $withdrawal_per_month,
-                                                ]);
+                                                // User::where('api_token', $req->bearerToken())->update([
+                                                //     'wallet_balance' => $walletBal,
+                                                //     'number_of_withdrawals' => $no_of_withdraw
+                                                // ]);
 
                                                 // Senders statement
-                                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country);
+                                                // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country);
 
-                                                $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message);
-
-                                                // Log::info("Hello ".strtoupper($thisuser->name).", ".$message);
-
-                                                $this->slack("Hello " . strtoupper($thisuser->name) . ", " . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                                                // $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", ".$message);
 
                                                 // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
-                                                $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
 
                                                 // Create Statement And Credit EXBC account holder
@@ -3874,14 +2704,14 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     // $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amounttosend;
                                                     $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amount;
 
-                                                    User::where('email', 'prepaidcard@exbc.ca')->update([
-                                                        'wallet_balance' => $merchantwalletBal
-                                                    ]);
+                                                    // User::where('email', 'prepaidcard@exbc.ca')->update([
+                                                    //     'wallet_balance' => $merchantwalletBal
+                                                    // ]);
 
                                                     // Senders statement
-                                                    $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
+                                                    // $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
 
-                                                    $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message);
+                                                    // $this->createNotification($exbcMerchant->ref_code, "Hello ".strtoupper($exbcMerchant->name).", ".$this->name." has ".$message);
 
                                                     $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
 
@@ -3902,82 +2732,90 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                         $this->sendMessage($sendMsg, $sendPhone);
                                                     }
                                                 } else {
-                                                    // Do nothing
+                                                    // DO nothing
                                                 }
-
 
                                                 $resData = ['data' => $data, 'message' => $message, 'status' => $status];
                                             } elseif ($req->card_type == "Bank Account") {
 
                                                 $bankDetails = AddBank::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
-                                                $transaction_id = "wallet-" . date('dmY') . time();
-                                                // Save Payment for Admin
-                                                // $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amounttosend, 'country' => $thisuser->country]);
-                                                $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amount, 'country' => $thisuser->country]);
+
+                                                // Log::info("Card ID: ".$req->card_id." Type: ".$req->card_type); 
+
+                                                $this->slack("Card ID: " . $req->card_id . " Type: " . $req->card_type, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                                                if (isset($bankDetails)) {
+
+                                                    $transaction_id = "wallet-" . date('dmY') . time();
+                                                    // Save Payment for Admin
+                                                    // $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amounttosend, 'country' => $thisuser->country]);
 
 
-                                                $mydata = BankWithdrawal::where('transaction_id', $transaction_id)->first();
+                                                    // $mydata = BankWithdrawal::where('transaction_id', $transaction_id)->first();
 
 
-                                                $status = 200;
-                                                $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-                                                $message = "Your wallet withdrawal to Bank Account " . $bankDetails->accountNumber . " - " . $bankDetails->bankName . " has been received. The Direct deposit into your Bank account would be done within the next 5 business days. Thanks";
-
-
-
-
-                                                $walletBal = $thisuser->wallet_balance - $req->amount;
-                                                $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
-                                                $withdrawal_per_day = $thisuser->withdrawal_per_day + $req->amount;
-                                                $withdrawal_per_week = $thisuser->withdrawal_per_week + $withdrawal_per_day;
-                                                $withdrawal_per_month = $thisuser->withdrawal_per_month + $withdrawal_per_week;
-
-                                                User::where('api_token', $req->bearerToken())->update([
-                                                    'wallet_balance' => $walletBal,
-                                                    'number_of_withdrawals' => $no_of_withdraw,
-                                                    'withdrawal_per_day' => $withdrawal_per_day,
-                                                    'withdrawal_per_week' => $withdrawal_per_week,
-                                                    'withdrawal_per_month' => $withdrawal_per_month,
-                                                ]);
-
-
-                                                $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Bank Account " . $bankDetails->bankName . " - " . $bankDetails->accountNumber;
-                                                $credit = 0;
-                                                $debit = $req->amount;
-                                                $reference_code = $transaction_id;
-                                                $balance = 0;
-                                                $trans_date = date('Y-m-d');
-                                                $thistatus = "Delivered";
-                                                $action = "Wallet debit";
-                                                $regards = $thisuser->ref_code;
-                                                $statement_route = "wallet";
-
-                                                // Senders statement
-                                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country);
-
-
-                                                $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                                    $status = 200;
+                                                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                                    $message = "Your wallet withdrawal to Bank Account " . $bankDetails->accountNumber . " - " . $bankDetails->bankName . " has been received. The Direct deposit into your Bank account would be done within the next 5 business days. Thanks";
 
 
 
-                                                $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
-                                                if (isset($userPhone)) {
+                                                    $walletBal = $thisuser->wallet_balance - $req->amount;
+                                                    $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
 
-                                                    $sendPhone = $thisuser->telephone;
+                                                    // User::where('api_token', $req->bearerToken())->update([
+                                                    //     'wallet_balance' => $walletBal,
+                                                    //     'number_of_withdrawals' => $no_of_withdraw
+                                                    // ]);
+
+
+                                                    $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Bank Account " . $bankDetails->bankName . " - " . $bankDetails->accountNumber;
+                                                    $credit = 0;
+                                                    $debit = $req->amount;
+                                                    $reference_code = $transaction_id;
+                                                    $balance = 0;
+                                                    $trans_date = date('Y-m-d');
+                                                    $thistatus = "Delivered";
+                                                    $action = "Wallet debit";
+                                                    $regards = $thisuser->ref_code;
+                                                    $statement_route = "wallet";
+
+                                                    // Senders statement
+                                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country);
+
+
+                                                    $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+
+
+
+
+
+                                                    $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                    if (isset($userPhone)) {
+
+                                                        $sendPhone = $thisuser->telephone;
+                                                    } else {
+                                                        $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                                                    }
+
+                                                    // $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                                                    // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+
+
+                                                    // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg.". This is a test environment");
+
+
+                                                    $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg . ". This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                                                 } else {
-                                                    $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                                                    $data = [];
+                                                    $message = "No bank record found for your account";
+                                                    $status = 400;
                                                 }
 
-                                                $this->createNotification($thisuser->ref_code, $sendMsg);
 
-                                                // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
-                                                $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
-
-
-                                                // Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$sendMsg);
-
-                                                $this->slack("Congratulations! " . strtoupper($thisuser->name) . " " . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
                                                 $resData = ['data' => $data, 'message' => $message, 'status' => $status];
@@ -4000,10 +2838,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                 $this->creditCardWithdrawalRequest($thisuser->ref_code, $transaction_id, $customer_id, $card_number, $month, $year, $req->amount, $thisuser->country);
 
 
+
                                                 // Proceed to Withdrawal
 
                                                 // $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "ind_refund", "PaySprint Withdraw from Wallet to ".$thisuser->name, $req->mode);
-
 
                                                 // if($response->responseData['Message'] == "APPROVED           *                    ="){
 
@@ -4034,21 +2872,19 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                 // Senders statement
                                                 $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
 
-                                                // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
-                                                $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
-
-
                                                 // Notification
-
                                                 $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
 
                                                 $cardNo = str_repeat("*", strlen($cardDetails->card_number) - 4) . substr($cardDetails->card_number, -4);
+
 
                                                 $this->name = $thisuser->name;
                                                 $this->email = $thisuser->email;
                                                 $this->subject = $req->currencyCode . ' ' . number_format($req->amount, 2) . " has been Withdrawn from your Wallet with PaySprint";
 
                                                 $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
+
+
 
                                                 $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
 
@@ -4064,6 +2900,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                                 $this->createNotification($thisuser->ref_code, $sendMsg);
 
+                                                // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                                $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
+
                                                 if ($thisuser->country == "Nigeria") {
 
                                                     $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
@@ -4074,51 +2913,1225 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                                 $this->sendEmail($this->email, "Fund remittance");
 
-
-                                                $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-
-                                                $data = $userInfo;
+                                                $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
                                                 $status = 200;
+                                                // $message = $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet';
                                                 $message = $sendMsg;
 
-                                                // Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$message);
+                                                // Log::info('Congratulations!, '.$thisuser->name.' '.$message);
 
-                                                $this->slack("Congratulations! " . strtoupper($thisuser->name) . " " . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                                                $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+
+
+                                                // }
+                                                // else{
+                                                //     $data = [];
+                                                //         $message = $response->responseData['Message'];
+                                                //         $status = 400;
+                                                // }
                                             }
+                                        } else {
+                                            $data = [];
+                                            $message = "Invalid transaction pin";
+                                            $status = 400;
                                         }
                                     } else {
-                                        $data = [];
-                                        $message = "Invalid login password";
-                                        $status = 400;
+                                        // Set new transaction pin and validate
+
+                                        if (Hash::check($req->password, $thisuser->password)) {
+
+                                            if ($req->transaction_pin != $req->confirm_transaction_pin) {
+
+                                                $data = [];
+                                                $message = "Transaction pin does not match";
+                                                $status = 400;
+                                            } else {
+
+                                                // Update Transaction pin
+                                                User::where('api_token', $req->bearerToken())->update(['transaction_pin' => Hash::make($req->transaction_pin)]);
+
+
+                                                /*
+                                            1. Check card detail
+                                            2. If EXBC Prepaid Card, take to EXBC Endpoint to withdraw
+                                            3. Return Response and Debit wallet
+                                        */
+
+                                                // Get Card Details
+                                                $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
+
+                                                if (isset($cardDetails) == true && $cardDetails->card_provider == "EXBC Prepaid Card" || isset($cardDetails) == true && $cardDetails->card_provider == "Prepaid Card") {
+
+                                                    $transaction_id = "wallet-" . date('dmY') . time();
+                                                    $reference_code = "PS_" . $thisuser->ref_code;
+
+                                                    if (env('APP_ENV') == "local") {
+                                                        $url = "http://localhost:4000/api/v1/paysprint/loadcard";
+                                                    } else {
+                                                        $url = "https://exbc.ca/api/v1/paysprint/loadcard";
+                                                    }
+
+                                                    $mydata = array(
+                                                        'transaction_id' => $transaction_id,
+                                                        'reference_code' => $reference_code,
+                                                        'email' => $thisuser->email,
+                                                        // 'amount' => $req->amounttosend, 
+                                                        'amount' => $req->amount,
+                                                        'card_number' => $cardDetails->card_number,
+                                                        'name' => $thisuser->name,
+                                                    );
+
+                                                    $token = "base64:HgMO6FDHGziGl01OuLH9mh7CeP095shB6uuDUUClhks=";
+
+
+                                                    $response = $this->curlPost($url, $mydata, $token);
+
+
+                                                    if ($response->status == 200) {
+                                                        $resData = $this->debitWalletForCard($thisuser->ref_code, $req->amount, $cardDetails->card_provider, $transaction_id, "live");
+
+                                                        $status = $resData['status'];
+                                                        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                                        $message = $response->message;
+                                                    } else {
+                                                        $status = $response->status;
+                                                        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                                        $message = $response->message;
+                                                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                                                    }
+
+                                                    $activity = "Withdraw " . $req->currencyCode . ' ' . $req->amount . " from Wallet to EXBC Prepaid Card";
+                                                    $credit = 0;
+                                                    $debit = $req->amount;
+                                                    $reference_code = $transaction_id;
+                                                    $balance = 0;
+                                                    $trans_date = date('Y-m-d');
+                                                    $transstatus = "Delivered";
+                                                    $action = "Wallet debit";
+                                                    $regards = $thisuser->ref_code;
+                                                    $statement_route = "wallet";
+
+                                                    $walletBal = $thisuser->wallet_balance - $req->amount;
+                                                    $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
+
+                                                    User::where('api_token', $req->bearerToken())->update([
+                                                        'wallet_balance' => $walletBal,
+                                                        'number_of_withdrawals' => $no_of_withdraw
+                                                    ]);
+
+                                                    // Senders statement
+                                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country);
+
+                                                    $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message);
+
+                                                    // Log::info("Hello ".strtoupper($thisuser->name).", ".$message);
+
+
+                                                    $this->slack("Hello " . strtoupper($thisuser->name) . ", " . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                                                    // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                                    $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
+
+
+                                                    // Create Statement And Credit EXBC account holder
+                                                    $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
+
+                                                    if (isset($exbcMerchant)) {
+
+                                                        // $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to your Wallet to load EXBC Prepaid Card";
+                                                        // $credit = $req->amounttosend;
+                                                        $activity = "Added " . $req->currencyCode . '' . number_format($req->amount, 2) . " to your Wallet to load EXBC Prepaid Card";
+                                                        $credit = $req->amount;
+                                                        $debit = 0;
+                                                        $reference_code = $transaction_id;
+                                                        $balance = 0;
+                                                        $trans_date = date('Y-m-d');
+                                                        $transstatus = "Delivered";
+                                                        $action = "Wallet credit";
+                                                        $regards = $exbcMerchant->ref_code;
+                                                        $statement_route = "wallet";
+
+                                                        // $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amounttosend;
+                                                        $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amount;
+
+                                                        User::where('email', 'prepaidcard@exbc.ca')->update([
+                                                            'wallet_balance' => $merchantwalletBal
+                                                        ]);
+
+                                                        // Senders statement
+                                                        $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
+
+                                                        $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message);
+
+                                                        $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
+
+                                                        $userPhone = User::where('email', $exbcMerchant->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                        if (isset($userPhone)) {
+
+                                                            $sendPhone = $exbcMerchant->telephone;
+                                                        } else {
+                                                            $sendPhone = "+" . $exbcMerchant->code . $exbcMerchant->telephone;
+                                                        }
+
+                                                        if ($exbcMerchant->country == "Nigeria") {
+
+                                                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                            $this->sendSms($sendMsg, $correctPhone);
+                                                        } else {
+                                                            $this->sendMessage($sendMsg, $sendPhone);
+                                                        }
+                                                    } else {
+                                                        // Do nothing
+                                                    }
+
+
+                                                    $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                                                } elseif ($req->card_type == "Bank Account") {
+
+                                                    $bankDetails = AddBank::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
+                                                    $transaction_id = "wallet-" . date('dmY') . time();
+                                                    // Save Payment for Admin
+                                                    // $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amounttosend, 'country' => $thisuser->country]);
+                                                    $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amount, 'country' => $thisuser->country]);
+
+
+                                                    $mydata = BankWithdrawal::where('transaction_id', $transaction_id)->first();
+
+
+                                                    $status = 200;
+                                                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                                    $message = "Your wallet withdrawal to Bank Account " . $bankDetails->accountNumber . " - " . $bankDetails->bankName . " has been received. The Direct deposit into your Bank account would be done within the next 5 business days. Thanks";
+
+
+
+
+                                                    $walletBal = $thisuser->wallet_balance - $req->amount;
+                                                    $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
+
+                                                    User::where('api_token', $req->bearerToken())->update([
+                                                        'wallet_balance' => $walletBal,
+                                                        'number_of_withdrawals' => $no_of_withdraw
+                                                    ]);
+
+
+                                                    $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Bank Account " . $bankDetails->bankName . " - " . $bankDetails->accountNumber;
+                                                    $credit = 0;
+                                                    $debit = $req->amount;
+                                                    $reference_code = $transaction_id;
+                                                    $balance = 0;
+                                                    $trans_date = date('Y-m-d');
+                                                    $thistatus = "Delivered";
+                                                    $action = "Wallet debit";
+                                                    $regards = $thisuser->ref_code;
+                                                    $statement_route = "wallet";
+
+                                                    // Senders statement
+                                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country);
+
+
+                                                    $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+
+
+
+
+                                                    $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                    if (isset($userPhone)) {
+
+                                                        $sendPhone = $thisuser->telephone;
+                                                    } else {
+                                                        $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                                                    }
+
+                                                    $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                                                    // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                                    $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
+
+
+                                                    // Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$sendMsg);
+
+                                                    $this->slack("Congratulations! " . strtoupper($thisuser->name) . " " . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+
+                                                    $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                                                } else {
+
+                                                    if (isset($getTrans) == true) {
+                                                        $transaction_id = $getTrans->reference_code;
+                                                    } else {
+                                                        $transaction_id = "wallet-" . date('dmY') . time();
+                                                    }
+
+                                                    $customer_id = $thisuser->ref_code;
+
+                                                    // Get Card Detail
+                                                    $card_number = $cardDetails->card_number;
+                                                    $month = $cardDetails->month;
+                                                    $year = $cardDetails->year;
+
+
+                                                    // $this->creditCardWithdrawalRequest($thisuser->ref_code, $transaction_id, $customer_id, $card_number, $month, $year, $req->amount, $thisuser->country);
+
+
+                                                    // Proceed to Withdrawal
+
+                                                    // $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "ind_refund", "PaySprint Withdraw from Wallet to ".$thisuser->name, $req->mode);
+
+
+                                                    // if($response->responseData['Message'] == "APPROVED           *                    ="){
+
+                                                    $walletBal = $thisuser->wallet_balance - $req->amount;
+                                                    $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
+
+                                                    // User::where('api_token', $req->bearerToken())->update([
+                                                    //     'wallet_balance' => $walletBal,
+                                                    //     'number_of_withdrawals' => $no_of_withdraw
+                                                    // ]);
+
+                                                    // Update Statement
+
+                                                    $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
+
+                                                    $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Credit/Debit card";
+                                                    $credit = 0;
+                                                    $debit = $req->amount;
+                                                    // $reference_code = $response->responseData['ReceiptId'];
+                                                    $reference_code = $transaction_id;
+                                                    $balance = 0;
+                                                    $trans_date = date('Y-m-d');
+                                                    $status = "Delivered";
+                                                    $action = "Wallet debit";
+                                                    $regards = $thisuser->ref_code;
+                                                    $statement_route = "wallet";
+
+                                                    // Senders statement
+                                                    // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+
+                                                    // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+
+
+                                                    // Notification
+
+                                                    $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
+
+                                                    $cardNo = str_repeat("*", strlen($cardDetails->card_number) - 4) . substr($cardDetails->card_number, -4);
+
+                                                    $this->name = $thisuser->name;
+                                                    $this->email = $thisuser->email;
+                                                    $this->subject = $req->currencyCode . ' ' . number_format($req->amount, 2) . " has been Withdrawn from your Wallet with PaySprint";
+
+                                                    $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
+
+                                                    $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
+
+                                                    $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                    if (isset($userPhone)) {
+
+                                                        $sendPhone = $thisuser->telephone;
+                                                    } else {
+                                                        $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                                                    }
+
+
+                                                    // $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                                                    if ($thisuser->country == "Nigeria") {
+
+                                                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                        $this->sendSms($sendMsg, $correctPhone);
+                                                    } else {
+                                                        $this->sendMessage($sendMsg, $sendPhone);
+                                                    }
+
+                                                    $this->sendEmail($this->email, "Fund remittance");
+
+
+                                                    $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+
+                                                    $data = $userInfo;
+                                                    $status = 200;
+                                                    $message = $sendMsg;
+
+                                                    // Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$message.". This is a test environment");
+
+                                                    $this->slack("Congratulations! " . strtoupper($thisuser->name) . " " . $message . ". This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                                                }
+                                            }
+                                        } else {
+                                            $data = [];
+                                            $message = "Invalid login password";
+                                            $status = 400;
+                                        }
                                     }
+                                } else {
+
+                                    $data = [];
+                                    $message = "Withdrawal to " . strtoupper($req->card_type) . " not yet activated for your country.";
+                                    $status = 400;
+
+                                    // Log::info('Oops!, Though this is a test, but '.$thisuser->name.', '.$message);
+
+                                    $this->slack('Oops!, Though this is a test, but ' . $thisuser->name . ', ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                                 }
-                            } else {
+                            }
+                        }
+                    }
+                } else {
+
+                    $error = implode(",", $validator->messages()->all());
+
+                    $data = [];
+                    $status = 400;
+                    $message = $error;
+                }
+            } else {
+                $validator = Validator::make($req->all(), [
+                    //  'card_id' => 'required|string',
+                    'amount' => 'required|string',
+                    'transaction_pin' => 'required|string',
+                    'currencyCode' => 'required|string',
+                    'conversionamount' => 'required|string',
+                    'card_type' => 'required|string',
+                    'amounttosend' => 'required|string',
+                    'commissiondeduct' => 'required|string',
+                ]);
+
+                if ($validator->passes()) {
+
+                    $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+
+                    $withdrawLimit = $this->getWithdrawalLimit($thisuser->country, $thisuser->id);
+
+                    if ($req->amount >= $withdrawLimit['withdrawal_per_transaction']) {
+
+                        $data = [];
+                        $message = "Withdrawal limit for per transaction is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_transaction'], 2) . ". Please withdraw a lesser amount";
+                        $status = 400;
+                    } elseif ($req->amount >= $withdrawLimit['withdrawal_per_day']) {
+                        $data = [];
+                        $message = "Withdrawal limit per day is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try again the next day";
+                        $status = 400;
+                    } elseif ($req->amount >= $withdrawLimit['withdrawal_per_week']) {
+                        $data = [];
+                        $message = "You have reached your limit for the week. Withdrawal limit per week is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next week";
+                        $status = 400;
+                    } elseif ($req->amount >= $withdrawLimit['withdrawal_per_month']) {
+                        $data = [];
+                        $message = "You have reached your limit for the month. Withdrawal limit per month is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_month'], 2) . ". Please try again the next month";
+                        $status = 400;
+                    } else {
+                        // Log::info($thisuser->name." wants to withdraw ".$req->currencyCode." ".$req->amount." from their wallet.");
+
+                        $this->slack($thisuser->name . " wants to withdraw " . $req->currencyCode . " " . $req->amount . " from their wallet.", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                        $minBal = $this->minimumWithdrawal($thisuser->country);
+
+                        $specialInfo = SpecialInformation::where('country', $thisuser->country)->first();
+
+
+
+
+                        // Check amount in wallet
+                        if ($req->amount > ($thisuser->wallet_balance - $minBal)) {
+                            // Insufficient amount for withdrawal
+
+                            $data = [];
+                            $message = "Your minimum wallet balance is " . $req->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
+                            $status = 400;
+
+                            // Log::info('Oops!, '.$thisuser->name.' has '.$message);
+
+                            $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                        } elseif ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
+                            // Cannot withdraw minimum balance
+
+                            $data = [];
+                            $message = "You cannot send money at the moment because your account is still on review.";
+                            $status = 400;
+
+                            // Log::info('Oops!, '.$thisuser->name.' has '.$message);
+
+                            $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                        } elseif (($thisuser->wallet_balance - $minBal) <= $req->amount) {
+                            // Cannot withdraw minimum balance
+
+                            $data = [];
+                            $message = "Your minimum wallet balance is " . $req->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
+                            $status = 400;
+
+                            // Log::info('Oops!, '.$thisuser->name.' has '.$message);
+
+                            $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                        } else {
+
+
+                            if (isset($specialInfo)) {
+
+                                $messageOut = $specialInfo->information;
 
                                 $data = [];
-                                $message = "Withdrawal to " . strtoupper($req->card_type) . " not yet activated for your country.";
+                                $message = $messageOut;
                                 $status = 400;
 
                                 // Log::info('Oops!, '.$thisuser->name.', '.$message);
 
                                 $this->slack('Oops!, ' . $thisuser->name . ', ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                            } else {
+
+
+
+                                if ($req->card_type == "Prepaid Card") {
+                                    $cardType = "EXBC Prepaid Card";
+                                } else {
+                                    $cardType = $req->card_type;
+                                }
+
+
+
+
+                                $checkTransaction = TransactionCost::where('method', $cardType)->where('country', $thisuser->country)->first();
+
+
+
+                                if (isset($checkTransaction) ==  true) {
+
+                                    // Do convert amount to dollars
+
+                                    // This 1.35 is commission charge, kindly calculate again
+
+                                    // $monerisDeductamount = $req->conversionamount - 1.35;
+                                    $monerisDeductamount = $req->conversionamount;
+
+                                    // Get Transaction record for last money added to wallet
+                                    $getTrans = Statement::where('reference_code', 'LIKE', '%ord-%')->where('reference_code', 'LIKE', '%wallet-%')->where('user_id', $thisuser->email)->latest()->first();
+
+
+                                    // Check Transaction PIn
+                                    if ($thisuser->transaction_pin != null) {
+                                        // Validate Transaction PIN
+                                        if (Hash::check($req->transaction_pin, $thisuser->transaction_pin)) {
+
+
+
+                                            /*
+                                            1. Check card detail
+                                            2. If EXBC Prepaid Card, take to EXBC Endpoint to withdraw
+                                            3. Return Response and Debit wallet
+                                        */
+
+                                            // Get Card Details
+                                            $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
+
+                                            if (isset($cardDetails) == true && $cardDetails->card_provider == "EXBC Prepaid Card" || isset($cardDetails) == true && $cardDetails->card_provider == "Prepaid Card") {
+
+
+                                                $transaction_id = "wallet-" . date('dmY') . time();
+                                                $reference_code = "PS_" . $thisuser->ref_code;
+
+                                                if (env('APP_ENV') == "local") {
+                                                    $url = "http://localhost:4000/api/v1/paysprint/loadcard";
+                                                } else {
+                                                    $url = "https://exbc.ca/api/v1/paysprint/loadcard";
+                                                }
+
+                                                $mydata = array(
+                                                    'transaction_id' => $transaction_id,
+                                                    'reference_code' => $reference_code,
+                                                    'email' => $thisuser->email,
+                                                    // 'amount' => $req->amounttosend, 
+                                                    'amount' => $req->amount,
+                                                    'card_number' => $cardDetails->card_number,
+                                                    'name' => $thisuser->name,
+                                                );
+
+                                                $token = "base64:HgMO6FDHGziGl01OuLH9mh7CeP095shB6uuDUUClhks=";
+
+
+                                                $response = $this->curlPost($url, $mydata, $token);
+
+
+                                                if ($response->status == 200) {
+                                                    $resData = $this->debitWalletForCard($thisuser->ref_code, $req->amount, $cardDetails->card_provider, $transaction_id, "live");
+
+                                                    $status = $resData['status'];
+                                                    // $data = $resData['data'];
+                                                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                                    $message = $response->message;
+                                                } else {
+                                                    $status = $response->status;
+                                                    // $data = $response->data;
+                                                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();;
+                                                    $message = $response->message;
+                                                    $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                                                }
+
+                                                $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to EXBC Prepaid Card";
+                                                $credit = 0;
+                                                $debit = $req->amount;
+                                                $reference_code = $transaction_id;
+                                                $balance = 0;
+                                                $trans_date = date('Y-m-d');
+                                                $transstatus = "Delivered";
+                                                $action = "Wallet debit";
+                                                $regards = $thisuser->ref_code;
+                                                $statement_route = "wallet";
+
+                                                $walletBal = $thisuser->wallet_balance - $req->amount;
+                                                $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
+                                                $withdrawal_per_day = $thisuser->withdrawal_per_day + $req->amount;
+                                                $withdrawal_per_week = $thisuser->withdrawal_per_week + $withdrawal_per_day;
+                                                $withdrawal_per_month = $thisuser->withdrawal_per_month + $withdrawal_per_week;
+
+                                                User::where('api_token', $req->bearerToken())->update([
+                                                    'wallet_balance' => $walletBal,
+                                                    'number_of_withdrawals' => $no_of_withdraw,
+                                                    'withdrawal_per_day' => $withdrawal_per_day,
+                                                    'withdrawal_per_week' => $withdrawal_per_week,
+                                                    'withdrawal_per_month' => $withdrawal_per_month,
+                                                ]);
+
+                                                // Senders statement
+                                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country);
+
+                                                $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message);
+
+                                                // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                                $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
+
+
+                                                // Create Statement And Credit EXBC account holder
+                                                $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
+
+                                                if (isset($exbcMerchant)) {
+
+                                                    // $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to your Wallet to load EXBC Prepaid Card";
+                                                    // $credit = $req->amounttosend;
+                                                    $activity = "Added " . $req->currencyCode . '' . number_format($req->amount, 2) . " to your Wallet to load EXBC Prepaid Card";
+                                                    $credit = $req->amount;
+                                                    $debit = 0;
+                                                    $reference_code = $transaction_id;
+                                                    $balance = 0;
+                                                    $trans_date = date('Y-m-d');
+                                                    $transstatus = "Delivered";
+                                                    $action = "Wallet credit";
+                                                    $regards = $exbcMerchant->ref_code;
+                                                    $statement_route = "wallet";
+
+                                                    // $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amounttosend;
+                                                    $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amount;
+
+                                                    User::where('email', 'prepaidcard@exbc.ca')->update([
+                                                        'wallet_balance' => $merchantwalletBal
+                                                    ]);
+
+                                                    // Senders statement
+                                                    $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
+
+                                                    $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message);
+
+                                                    $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
+
+                                                    $userPhone = User::where('email', $exbcMerchant->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                    if (isset($userPhone)) {
+
+                                                        $sendPhone = $exbcMerchant->telephone;
+                                                    } else {
+                                                        $sendPhone = "+" . $exbcMerchant->code . $exbcMerchant->telephone;
+                                                    }
+
+                                                    if ($exbcMerchant->country == "Nigeria") {
+
+                                                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                        $this->sendSms($sendMsg, $correctPhone);
+                                                    } else {
+                                                        $this->sendMessage($sendMsg, $sendPhone);
+                                                    }
+                                                } else {
+                                                    // DO nothing
+                                                }
+
+                                                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                                            } elseif ($req->card_type == "Bank Account") {
+
+                                                $bankDetails = AddBank::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
+
+                                                // Log::info("Card ID: ".$req->card_id." Type: ".$req->card_type); 
+
+                                                $this->slack("Card ID: " . $req->card_id . " Type: " . $req->card_type, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                                                if (isset($bankDetails)) {
+
+                                                    $transaction_id = "wallet-" . date('dmY') . time();
+                                                    // Save Payment for Admin
+                                                    // $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amounttosend, 'country' => $thisuser->country]);
+                                                    $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amount, 'country' => $thisuser->country]);
+
+
+                                                    $mydata = BankWithdrawal::where('transaction_id', $transaction_id)->first();
+
+
+                                                    $status = 200;
+                                                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                                    $message = "Your wallet withdrawal to Bank Account " . $bankDetails->accountNumber . " - " . $bankDetails->bankName . " has been received. The Direct deposit into your Bank account would be done within the next 5 business days. Thanks";
+
+
+
+
+                                                    $walletBal = $thisuser->wallet_balance - $req->amount;
+                                                    $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
+
+                                                    User::where('api_token', $req->bearerToken())->update([
+                                                        'wallet_balance' => $walletBal,
+                                                        'number_of_withdrawals' => $no_of_withdraw
+                                                    ]);
+
+
+                                                    $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Bank Account " . $bankDetails->bankName . " - " . $bankDetails->accountNumber;
+                                                    $credit = 0;
+                                                    $debit = $req->amount;
+                                                    $reference_code = $transaction_id;
+                                                    $balance = 0;
+                                                    $trans_date = date('Y-m-d');
+                                                    $thistatus = "Delivered";
+                                                    $action = "Wallet debit";
+                                                    $regards = $thisuser->ref_code;
+                                                    $statement_route = "wallet";
+
+                                                    // Senders statement
+                                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country);
+
+
+                                                    $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+
+
+
+                                                    $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                    if (isset($userPhone)) {
+
+                                                        $sendPhone = $thisuser->telephone;
+                                                    } else {
+                                                        $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                                                    }
+
+                                                    $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                                                    // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                                    $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
+
+
+                                                    // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
+
+
+                                                    $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                                                } else {
+                                                    $data = [];
+                                                    $message = "No bank record found for your account";
+                                                    $status = 400;
+                                                }
+
+
+
+
+                                                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                                            } else {
+
+                                                if (isset($getTrans) == true) {
+                                                    $transaction_id = $getTrans->reference_code;
+                                                } else {
+                                                    $transaction_id = "wallet-" . date('dmY') . time();
+                                                }
+
+                                                $customer_id = $thisuser->ref_code;
+
+                                                // Get Card Detail
+                                                $card_number = $cardDetails->card_number;
+                                                $month = $cardDetails->month;
+                                                $year = $cardDetails->year;
+
+
+                                                $this->creditCardWithdrawalRequest($thisuser->ref_code, $transaction_id, $customer_id, $card_number, $month, $year, $req->amount, $thisuser->country);
+
+
+
+                                                // Proceed to Withdrawal
+
+                                                // $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "ind_refund", "PaySprint Withdraw from Wallet to ".$thisuser->name, $req->mode);
+
+                                                // if($response->responseData['Message'] == "APPROVED           *                    ="){
+
+                                                $walletBal = $thisuser->wallet_balance - $req->amount;
+                                                $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
+                                                $withdrawal_per_day = $thisuser->withdrawal_per_day + $req->amount;
+                                                $withdrawal_per_week = $thisuser->withdrawal_per_week + $withdrawal_per_day;
+                                                $withdrawal_per_month = $thisuser->withdrawal_per_month + $withdrawal_per_week;
+
+                                                User::where('api_token', $req->bearerToken())->update([
+                                                    'wallet_balance' => $walletBal,
+                                                    'number_of_withdrawals' => $no_of_withdraw,
+                                                    'withdrawal_per_day' => $withdrawal_per_day,
+                                                    'withdrawal_per_week' => $withdrawal_per_week,
+                                                    'withdrawal_per_month' => $withdrawal_per_month,
+                                                ]);
+
+                                                // Update Statement
+
+                                                $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
+
+                                                $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Credit/Debit card";
+                                                $credit = 0;
+                                                $debit = $req->amount;
+                                                // $reference_code = $response->responseData['ReceiptId'];
+                                                $reference_code = $transaction_id;
+                                                $balance = 0;
+                                                $trans_date = date('Y-m-d');
+                                                $status = "Delivered";
+                                                $action = "Wallet debit";
+                                                $regards = $thisuser->ref_code;
+                                                $statement_route = "wallet";
+
+                                                // Senders statement
+                                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+
+                                                // Notification
+                                                $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
+
+                                                $cardNo = str_repeat("*", strlen($cardDetails->card_number) - 4) . substr($cardDetails->card_number, -4);
+
+
+                                                $this->name = $thisuser->name;
+                                                $this->email = $thisuser->email;
+                                                $this->subject = $req->currencyCode . ' ' . number_format($req->amount, 2) . " has been Withdrawn from your Wallet with PaySprint";
+
+                                                $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
+
+
+
+                                                $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
+
+                                                $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                if (isset($userPhone)) {
+
+                                                    $sendPhone = $thisuser->telephone;
+                                                } else {
+                                                    $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                                                }
+
+
+                                                $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                                                // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                                $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
+
+                                                if ($thisuser->country == "Nigeria") {
+
+                                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                    $this->sendSms($sendMsg, $correctPhone);
+                                                } else {
+                                                    $this->sendMessage($sendMsg, $sendPhone);
+                                                }
+
+                                                $this->sendEmail($this->email, "Fund remittance");
+
+                                                $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                                $status = 200;
+                                                // $message = $req->currencyCode.' '.number_format($req->amount, 2).' is debited from your Wallet';
+                                                $message = $sendMsg;
+
+                                                // Log::info('Congratulations!, '.$thisuser->name.' '.$message);
+
+
+                                                $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+
+
+                                                // }
+                                                // else{
+                                                //     $data = [];
+                                                //         $message = $response->responseData['Message'];
+                                                //         $status = 400;
+                                                // }
+                                            }
+                                        } else {
+                                            $data = [];
+                                            $message = "Invalid transaction pin";
+                                            $status = 400;
+                                        }
+                                    } else {
+                                        // Set new transaction pin and validate
+
+                                        if (Hash::check($req->password, $thisuser->password)) {
+
+                                            if ($req->transaction_pin != $req->confirm_transaction_pin) {
+
+                                                $data = [];
+                                                $message = "Transaction pin does not match";
+                                                $status = 400;
+                                            } else {
+
+                                                // Update Transaction pin
+                                                User::where('api_token', $req->bearerToken())->update(['transaction_pin' => Hash::make($req->transaction_pin)]);
+
+
+                                                /*
+                                            1. Check card detail
+                                            2. If EXBC Prepaid Card, take to EXBC Endpoint to withdraw
+                                            3. Return Response and Debit wallet
+                                        */
+
+                                                // Get Card Details
+                                                $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
+
+                                                if (isset($cardDetails) == true && $cardDetails->card_provider == "EXBC Prepaid Card" || isset($cardDetails) == true && $cardDetails->card_provider == "Prepaid Card") {
+
+                                                    $transaction_id = "wallet-" . date('dmY') . time();
+                                                    $reference_code = "PS_" . $thisuser->ref_code;
+
+                                                    if (env('APP_ENV') == "local") {
+                                                        $url = "http://localhost:4000/api/v1/paysprint/loadcard";
+                                                    } else {
+                                                        $url = "https://exbc.ca/api/v1/paysprint/loadcard";
+                                                    }
+
+                                                    $mydata = array(
+                                                        'transaction_id' => $transaction_id,
+                                                        'reference_code' => $reference_code,
+                                                        'email' => $thisuser->email,
+                                                        // 'amount' => $req->amounttosend, 
+                                                        'amount' => $req->amount,
+                                                        'card_number' => $cardDetails->card_number,
+                                                        'name' => $thisuser->name,
+                                                    );
+
+                                                    $token = "base64:HgMO6FDHGziGl01OuLH9mh7CeP095shB6uuDUUClhks=";
+
+
+                                                    $response = $this->curlPost($url, $mydata, $token);
+
+
+                                                    if ($response->status == 200) {
+                                                        $resData = $this->debitWalletForCard($thisuser->ref_code, $req->amount, $cardDetails->card_provider, $transaction_id, "live");
+
+                                                        $status = $resData['status'];
+                                                        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                                        $message = $response->message;
+                                                    } else {
+                                                        $status = $response->status;
+                                                        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                                        $message = $response->message;
+                                                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                                                    }
+
+                                                    $activity = "Withdraw " . $req->currencyCode . ' ' . $req->amount . " from Wallet to EXBC Prepaid Card";
+                                                    $credit = 0;
+                                                    $debit = $req->amount;
+                                                    $reference_code = $transaction_id;
+                                                    $balance = 0;
+                                                    $trans_date = date('Y-m-d');
+                                                    $transstatus = "Delivered";
+                                                    $action = "Wallet debit";
+                                                    $regards = $thisuser->ref_code;
+                                                    $statement_route = "wallet";
+
+                                                    $walletBal = $thisuser->wallet_balance - $req->amount;
+                                                    $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
+                                                    $withdrawal_per_day = $thisuser->withdrawal_per_day + $req->amount;
+                                                    $withdrawal_per_week = $thisuser->withdrawal_per_week + $withdrawal_per_day;
+                                                    $withdrawal_per_month = $thisuser->withdrawal_per_month + $withdrawal_per_week;
+
+                                                    User::where('api_token', $req->bearerToken())->update([
+                                                        'wallet_balance' => $walletBal,
+                                                        'number_of_withdrawals' => $no_of_withdraw,
+                                                        'withdrawal_per_day' => $withdrawal_per_day,
+                                                        'withdrawal_per_week' => $withdrawal_per_week,
+                                                        'withdrawal_per_month' => $withdrawal_per_month,
+                                                    ]);
+
+                                                    // Senders statement
+                                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country);
+
+                                                    $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message);
+
+                                                    // Log::info("Hello ".strtoupper($thisuser->name).", ".$message);
+
+                                                    $this->slack("Hello " . strtoupper($thisuser->name) . ", " . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                                                    // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                                    $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
+
+
+                                                    // Create Statement And Credit EXBC account holder
+                                                    $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
+
+                                                    if (isset($exbcMerchant)) {
+
+                                                        // $activity = "Added ".$req->currencyCode.''.number_format($req->amounttosend, 2)." to your Wallet to load EXBC Prepaid Card";
+                                                        // $credit = $req->amounttosend;
+                                                        $activity = "Added " . $req->currencyCode . '' . number_format($req->amount, 2) . " to your Wallet to load EXBC Prepaid Card";
+                                                        $credit = $req->amount;
+                                                        $debit = 0;
+                                                        $reference_code = $transaction_id;
+                                                        $balance = 0;
+                                                        $trans_date = date('Y-m-d');
+                                                        $transstatus = "Delivered";
+                                                        $action = "Wallet credit";
+                                                        $regards = $exbcMerchant->ref_code;
+                                                        $statement_route = "wallet";
+
+                                                        // $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amounttosend;
+                                                        $merchantwalletBal = $exbcMerchant->wallet_balance + $req->amount;
+
+                                                        User::where('email', 'prepaidcard@exbc.ca')->update([
+                                                            'wallet_balance' => $merchantwalletBal
+                                                        ]);
+
+                                                        // Senders statement
+                                                        $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
+
+                                                        $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message);
+
+                                                        $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
+
+                                                        $userPhone = User::where('email', $exbcMerchant->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                        if (isset($userPhone)) {
+
+                                                            $sendPhone = $exbcMerchant->telephone;
+                                                        } else {
+                                                            $sendPhone = "+" . $exbcMerchant->code . $exbcMerchant->telephone;
+                                                        }
+
+                                                        if ($exbcMerchant->country == "Nigeria") {
+
+                                                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                            $this->sendSms($sendMsg, $correctPhone);
+                                                        } else {
+                                                            $this->sendMessage($sendMsg, $sendPhone);
+                                                        }
+                                                    } else {
+                                                        // Do nothing
+                                                    }
+
+
+                                                    $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                                                } elseif ($req->card_type == "Bank Account") {
+
+                                                    $bankDetails = AddBank::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
+                                                    $transaction_id = "wallet-" . date('dmY') . time();
+                                                    // Save Payment for Admin
+                                                    // $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amounttosend, 'country' => $thisuser->country]);
+                                                    $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amount, 'country' => $thisuser->country]);
+
+
+                                                    $mydata = BankWithdrawal::where('transaction_id', $transaction_id)->first();
+
+
+                                                    $status = 200;
+                                                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                                    $message = "Your wallet withdrawal to Bank Account " . $bankDetails->accountNumber . " - " . $bankDetails->bankName . " has been received. The Direct deposit into your Bank account would be done within the next 5 business days. Thanks";
+
+
+
+
+                                                    $walletBal = $thisuser->wallet_balance - $req->amount;
+                                                    $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
+                                                    $withdrawal_per_day = $thisuser->withdrawal_per_day + $req->amount;
+                                                    $withdrawal_per_week = $thisuser->withdrawal_per_week + $withdrawal_per_day;
+                                                    $withdrawal_per_month = $thisuser->withdrawal_per_month + $withdrawal_per_week;
+
+                                                    User::where('api_token', $req->bearerToken())->update([
+                                                        'wallet_balance' => $walletBal,
+                                                        'number_of_withdrawals' => $no_of_withdraw,
+                                                        'withdrawal_per_day' => $withdrawal_per_day,
+                                                        'withdrawal_per_week' => $withdrawal_per_week,
+                                                        'withdrawal_per_month' => $withdrawal_per_month,
+                                                    ]);
+
+
+                                                    $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Bank Account " . $bankDetails->bankName . " - " . $bankDetails->accountNumber;
+                                                    $credit = 0;
+                                                    $debit = $req->amount;
+                                                    $reference_code = $transaction_id;
+                                                    $balance = 0;
+                                                    $trans_date = date('Y-m-d');
+                                                    $thistatus = "Delivered";
+                                                    $action = "Wallet debit";
+                                                    $regards = $thisuser->ref_code;
+                                                    $statement_route = "wallet";
+
+                                                    // Senders statement
+                                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country);
+
+
+                                                    $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+
+
+
+                                                    $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                    if (isset($userPhone)) {
+
+                                                        $sendPhone = $thisuser->telephone;
+                                                    } else {
+                                                        $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                                                    }
+
+                                                    $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                                                    // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                                    $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
+
+
+                                                    // Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$sendMsg);
+
+                                                    $this->slack("Congratulations! " . strtoupper($thisuser->name) . " " . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+
+                                                    $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                                                } else {
+
+                                                    if (isset($getTrans) == true) {
+                                                        $transaction_id = $getTrans->reference_code;
+                                                    } else {
+                                                        $transaction_id = "wallet-" . date('dmY') . time();
+                                                    }
+
+                                                    $customer_id = $thisuser->ref_code;
+
+                                                    // Get Card Detail
+                                                    $card_number = $cardDetails->card_number;
+                                                    $month = $cardDetails->month;
+                                                    $year = $cardDetails->year;
+
+
+                                                    $this->creditCardWithdrawalRequest($thisuser->ref_code, $transaction_id, $customer_id, $card_number, $month, $year, $req->amount, $thisuser->country);
+
+
+                                                    // Proceed to Withdrawal
+
+                                                    // $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "ind_refund", "PaySprint Withdraw from Wallet to ".$thisuser->name, $req->mode);
+
+
+                                                    // if($response->responseData['Message'] == "APPROVED           *                    ="){
+
+                                                    $walletBal = $thisuser->wallet_balance - $req->amount;
+                                                    $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
+
+                                                    User::where('api_token', $req->bearerToken())->update([
+                                                        'wallet_balance' => $walletBal,
+                                                        'number_of_withdrawals' => $no_of_withdraw
+                                                    ]);
+
+                                                    // Update Statement
+
+                                                    $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
+
+                                                    $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Credit/Debit card";
+                                                    $credit = 0;
+                                                    $debit = $req->amount;
+                                                    // $reference_code = $response->responseData['ReceiptId'];
+                                                    $reference_code = $transaction_id;
+                                                    $balance = 0;
+                                                    $trans_date = date('Y-m-d');
+                                                    $status = "Delivered";
+                                                    $action = "Wallet debit";
+                                                    $regards = $thisuser->ref_code;
+                                                    $statement_route = "wallet";
+
+                                                    // Senders statement
+                                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+
+                                                    // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                                    $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
+
+
+                                                    // Notification
+
+                                                    $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
+
+                                                    $cardNo = str_repeat("*", strlen($cardDetails->card_number) - 4) . substr($cardDetails->card_number, -4);
+
+                                                    $this->name = $thisuser->name;
+                                                    $this->email = $thisuser->email;
+                                                    $this->subject = $req->currencyCode . ' ' . number_format($req->amount, 2) . " has been Withdrawn from your Wallet with PaySprint";
+
+                                                    $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
+
+                                                    $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
+
+                                                    $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                    if (isset($userPhone)) {
+
+                                                        $sendPhone = $thisuser->telephone;
+                                                    } else {
+                                                        $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                                                    }
+
+
+                                                    $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                                                    if ($thisuser->country == "Nigeria") {
+
+                                                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                        $this->sendSms($sendMsg, $correctPhone);
+                                                    } else {
+                                                        $this->sendMessage($sendMsg, $sendPhone);
+                                                    }
+
+                                                    $this->sendEmail($this->email, "Fund remittance");
+
+
+                                                    $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+
+                                                    $data = $userInfo;
+                                                    $status = 200;
+                                                    $message = $sendMsg;
+
+                                                    // Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$message);
+
+                                                    $this->slack("Congratulations! " . strtoupper($thisuser->name) . " " . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                                                }
+                                            }
+                                        } else {
+                                            $data = [];
+                                            $message = "Invalid login password";
+                                            $status = 400;
+                                        }
+                                    }
+                                } else {
+
+                                    $data = [];
+                                    $message = "Withdrawal to " . strtoupper($req->card_type) . " not yet activated for your country.";
+                                    $status = 400;
+
+                                    // Log::info('Oops!, '.$thisuser->name.', '.$message);
+
+                                    $this->slack('Oops!, ' . $thisuser->name . ', ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                                }
                             }
                         }
                     }
+                } else {
+
+                    $error = implode(",", $validator->messages()->all());
+
+                    $data = [];
+                    $status = 400;
+                    $message = $error;
                 }
-            } else {
-
-                $error = implode(",", $validator->messages()->all());
-
-                $data = [];
-                $status = 400;
-                $message = $error;
             }
         }
 
 
-
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
-
 
         return $this->returnJSON($resData, $status);
     }
@@ -4290,205 +4303,76 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     public function payUtilityBills(Request $req)
     {
 
-        // Payment for UTILITY
+        if ($req->totalcharge < 0) {
+            $data = [];
+            $message = "Please enter a positive amount";
+            $status = 400;
+        } else {
+            // Payment for UTILITY
 
-        $validator = Validator::make($req->all(), [
-            'transaction_pin' => 'required|string',
-            'amounttosend' => 'required|string',
-            'commissiondeduct' => 'required|string',
-        ]);
-
-
-
-        if ($validator->passes()) {
-
-
-            $thisuser = User::where('api_token', $req->bearerToken())->first();
-
-            $minBal = $this->minimumWithdrawal($thisuser->country);
-
-            $vendorNames = EPSVendor::where('billerCode', $req->billerCode)->first();
-
-            $billerName = $vendorNames->billerName;
-
-            // Check amount in wallet
-            if ($req->totalcharge > $thisuser->wallet_balance) {
-                // Insufficient amount for withdrawal
-
-                $data = [];
-                $message = "Insufficient amount to complete transaction";
-                $status = 400;
-
-                // Log::info('Oops!, '.$thisuser->name.' has '.$message);
-
-                $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-            } elseif ($thisuser->approval < 1 && $thisuser->accountLevel < 1) {
-                // Cannot withdraw minimum balance
-
-                $data = [];
-                $message = "You cannot pay for utility at the moment because your account is still on review.";
-                $status = 400;
-
-                // Log::info('Oops!, '.$thisuser->name.' has '.$message);
-
-                $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-            } elseif (($thisuser->wallet_balance - $minBal) <= $req->totalcharge) {
-                // Cannot withdraw minimum balance
-
-                $data = [];
-                $message = "Your minimum wallet balance is " . $thisuser->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
-                $status = 400;
-
-                // Log::info('Oops!, '.$thisuser->name.' has '.$message);
-
-                $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-            } else {
-
-                // Check Transaction PIn
-                if ($thisuser->transaction_pin != null) {
-                    // Validate Transaction PIN
-                    if (Hash::check($req->transaction_pin, $thisuser->transaction_pin)) {
-
-                        // Load Utility Bill.
-                        $billPayResponse = $this->processTransaction($req->all(), $req->bearerToken());
-
-                        Log::info(json_encode($billPayResponse));
-
-                        if ($billPayResponse->responseCode == 00) {
-
-                            if (isset($billPayResponse->status) && $billPayResponse->status == 400) {
-
-                                $data = [];
-                                $message = $billPayResponse->responseMessage;
-                                $status = 400;
-
-                                // Log::info('Oops!, '.$thisuser->name.' has '.$message);
-
-                                $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                            } else {
-
-                                if (isset($billPayResponse)) {
-
-                                    $transaction_id = $billPayResponse->transRef;
-
-
-                                    // Proceed to Withdrawal
-
-                                    $walletBal = $thisuser->wallet_balance - $req->amounttosend;
-
-
-                                    User::where('api_token', $req->bearerToken())->update([
-                                        'wallet_balance' => $walletBal
-                                    ]);
-
-                                    // Update Statement
-
-                                    $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
-
-                                    $activity = $billPayResponse->responseMessage . " | Withdraw " . $thisuser->currencyCode . '' . number_format($req->amounttosend, 2) . " from Wallet for " . strtoupper($billerName);
-                                    $credit = 0;
-                                    $debit = $req->amounttosend;
-                                    // $reference_code = $response->responseData['ReceiptId'];
-                                    $reference_code = $transaction_id;
-                                    $balance = 0;
-                                    $trans_date = date('Y-m-d');
-                                    $status = "Delivered";
-                                    $action = "Wallet debit";
-                                    $regards = $thisuser->ref_code;
-                                    $statement_route = "wallet";
-
-                                    // Senders statement
-                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
-
-
-                                    $this->name = $thisuser->name;
-                                    $this->email = $thisuser->email;
-                                    $this->subject = $thisuser->currencyCode . ' ' . number_format($req->amounttosend, 2) . " has been Withdrawn from your Wallet with PaySprint";
-
-                                    $this->message = '<p>' . $billPayResponse->responseMessage . '</p><br><p>Recharge of ' . strtoupper($billerName) . ' for a sum of ' . $thisuser->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' from your PaySprint wallet is successful. </p><p>You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
+            $validator = Validator::make($req->all(), [
+                'transaction_pin' => 'required|string',
+                'amounttosend' => 'required|string',
+                'commissiondeduct' => 'required|string',
+            ]);
 
 
 
-                                    $sendMsg = $billPayResponse->responseMessage . ' .Recharge of ' . strtoupper($billerName) . ' for a sum of ' . $thisuser->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' from your PaySprint wallet is successful. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
-
-                                    $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                    if (isset($userPhone)) {
-
-                                        $sendPhone = $thisuser->telephone;
-                                    } else {
-                                        $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                                    }
+            if ($validator->passes()) {
 
 
-                                    $this->createNotification($thisuser->ref_code, $sendMsg);
+                $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                                    $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amounttosend, $req->commissiondeduct, $req->amounttosend);
+                $minBal = $this->minimumWithdrawal($thisuser->country);
 
-                                    if ($thisuser->country == "Nigeria") {
+                $vendorNames = EPSVendor::where('billerCode', $req->billerCode)->first();
 
-                                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                                        $this->sendSms($sendMsg, $correctPhone);
-                                    } else {
-                                        $this->sendMessage($sendMsg, $sendPhone);
-                                    }
+                $billerName = $vendorNames->billerName;
 
-                                    $this->sendEmail($this->email, "Fund remittance");
+                // Check amount in wallet
+                if ($req->totalcharge > $thisuser->wallet_balance) {
+                    // Insufficient amount for withdrawal
 
-                                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $req->bearerToken())->first();
-                                    $status = 200;
+                    $data = [];
+                    $message = "Insufficient amount to complete transaction";
+                    $status = 400;
 
-                                    $message = $sendMsg;
+                    // Log::info('Oops!, '.$thisuser->name.' has '.$message);
 
-                                    // Log::info('Congratulations!, '.$thisuser->name.' '.$message);
+                    $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                } elseif ($thisuser->approval < 1 && $thisuser->accountLevel < 1) {
+                    // Cannot withdraw minimum balance
 
-                                    $this->slack('Congratulations!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                                } else {
+                    $data = [];
+                    $message = "You cannot pay for utility at the moment because your account is still on review.";
+                    $status = 400;
 
-                                    $data = [];
-                                    $message = "Something went wrong!. Please try again later.";
-                                    $status = 400;
+                    // Log::info('Oops!, '.$thisuser->name.' has '.$message);
 
-                                    // Log::critical("Check EPS end for this error!.");
+                    $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                } elseif (($thisuser->wallet_balance - $minBal) <= $req->totalcharge) {
+                    // Cannot withdraw minimum balance
 
-                                    $this->slack("Check EPS end for this error!.", $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
-                                }
-                            }
-                        } else {
+                    $data = [];
+                    $message = "Your minimum wallet balance is " . $thisuser->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
+                    $status = 400;
 
-                            $data = [];
-                            $message = $billPayResponse->responseMessage;
-                            $status = 400;
+                    // Log::info('Oops!, '.$thisuser->name.' has '.$message);
 
-                            // Log::info('Oops!, '.$message);
-
-                            $this->slack('Oops!, ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                        }
-                    } else {
-                        $data = [];
-                        $message = "Invalid transaction pin";
-                        $status = 400;
-                    }
+                    $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                 } else {
-                    // Set new transaction pin and validate
 
-                    if (Hash::check($req->password, $thisuser->password)) {
-
-                        if ($req->transaction_pin != $req->confirm_transaction_pin) {
-
-                            $data = [];
-                            $message = "Transaction pin does not match";
-                            $status = 400;
-                        } else {
-
-                            // Update Transaction pin
-                            User::where('api_token', $req->bearerToken())->update(['transaction_pin' => Hash::make($req->transaction_pin)]);
+                    // Check Transaction PIn
+                    if ($thisuser->transaction_pin != null) {
+                        // Validate Transaction PIN
+                        if (Hash::check($req->transaction_pin, $thisuser->transaction_pin)) {
 
                             // Load Utility Bill.
                             $billPayResponse = $this->processTransaction($req->all(), $req->bearerToken());
 
-                            if ($billPayResponse->responseCode == 00) {
+                            Log::info(json_encode($billPayResponse));
 
+                            if ($billPayResponse->responseCode == 00 || $billPayResponse->responseCode == 0) {
 
                                 if (isset($billPayResponse->status) && $billPayResponse->status == 400) {
 
@@ -4506,7 +4390,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                         $transaction_id = $billPayResponse->transRef;
 
 
+                                        // Proceed to Withdrawal
+
                                         $walletBal = $thisuser->wallet_balance - $req->amounttosend;
+
 
                                         User::where('api_token', $req->bearerToken())->update([
                                             'wallet_balance' => $walletBal
@@ -4531,14 +4418,14 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                         // Senders statement
                                         $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
 
-                                        $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
-
 
                                         $this->name = $thisuser->name;
                                         $this->email = $thisuser->email;
-                                        $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " has been Withdrawn from your Wallet with PaySprint";
+                                        $this->subject = $thisuser->currencyCode . ' ' . number_format($req->amounttosend, 2) . " has been Withdrawn from your Wallet with PaySprint";
 
                                         $this->message = '<p>' . $billPayResponse->responseMessage . '</p><br><p>Recharge of ' . strtoupper($billerName) . ' for a sum of ' . $thisuser->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' from your PaySprint wallet is successful. </p><p>You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
+
+
 
                                         $sendMsg = $billPayResponse->responseMessage . ' .Recharge of ' . strtoupper($billerName) . ' for a sum of ' . $thisuser->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' from your PaySprint wallet is successful. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
 
@@ -4554,6 +4441,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                         $this->createNotification($thisuser->ref_code, $sendMsg);
 
+                                        $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amounttosend, $req->commissiondeduct, $req->amounttosend);
+
                                         if ($thisuser->country == "Nigeria") {
 
                                             $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
@@ -4564,16 +4453,14 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                         $this->sendEmail($this->email, "Fund remittance");
 
-
-                                        $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $req->bearerToken())->first();
-
-                                        $data = $userInfo;
+                                        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $req->bearerToken())->first();
                                         $status = 200;
+
                                         $message = $sendMsg;
 
-                                        // Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$message);
+                                        // Log::info('Congratulations!, '.$thisuser->name.' '.$message);
 
-                                        $this->slack("Congratulations! " . strtoupper($thisuser->name) . " " . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                                        $this->slack('Congratulations!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                                     } else {
 
                                         $data = [];
@@ -4586,6 +4473,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     }
                                 }
                             } else {
+
                                 $data = [];
                                 $message = $billPayResponse->responseMessage;
                                 $status = 400;
@@ -4594,25 +4482,153 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                 $this->slack('Oops!, ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                             }
+                        } else {
+                            $data = [];
+                            $message = "Invalid transaction pin";
+                            $status = 400;
                         }
                     } else {
-                        $data = [];
-                        $message = "Invalid login password";
-                        $status = 400;
+                        // Set new transaction pin and validate
+
+                        if (Hash::check($req->password, $thisuser->password)) {
+
+                            if ($req->transaction_pin != $req->confirm_transaction_pin) {
+
+                                $data = [];
+                                $message = "Transaction pin does not match";
+                                $status = 400;
+                            } else {
+
+                                // Update Transaction pin
+                                User::where('api_token', $req->bearerToken())->update(['transaction_pin' => Hash::make($req->transaction_pin)]);
+
+                                // Load Utility Bill.
+                                $billPayResponse = $this->processTransaction($req->all(), $req->bearerToken());
+
+                                if ($billPayResponse->responseCode == 00 || $billPayResponse->responseCode == 0) {
+
+
+                                    if (isset($billPayResponse->status) && $billPayResponse->status == 400) {
+
+                                        $data = [];
+                                        $message = $billPayResponse->responseMessage;
+                                        $status = 400;
+
+                                        // Log::info('Oops!, '.$thisuser->name.' has '.$message);
+
+                                        $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                                    } else {
+
+                                        if (isset($billPayResponse)) {
+
+                                            $transaction_id = $billPayResponse->transRef;
+
+
+                                            $walletBal = $thisuser->wallet_balance - $req->amounttosend;
+
+                                            User::where('api_token', $req->bearerToken())->update([
+                                                'wallet_balance' => $walletBal
+                                            ]);
+
+                                            // Update Statement
+
+                                            $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
+
+                                            $activity = $billPayResponse->responseMessage . " | Withdraw " . $thisuser->currencyCode . '' . number_format($req->amounttosend, 2) . " from Wallet for " . strtoupper($billerName);
+                                            $credit = 0;
+                                            $debit = $req->amounttosend;
+                                            // $reference_code = $response->responseData['ReceiptId'];
+                                            $reference_code = $transaction_id;
+                                            $balance = 0;
+                                            $trans_date = date('Y-m-d');
+                                            $status = "Delivered";
+                                            $action = "Wallet debit";
+                                            $regards = $thisuser->ref_code;
+                                            $statement_route = "wallet";
+
+                                            // Senders statement
+                                            $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+
+                                            $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+
+
+                                            $this->name = $thisuser->name;
+                                            $this->email = $thisuser->email;
+                                            $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " has been Withdrawn from your Wallet with PaySprint";
+
+                                            $this->message = '<p>' . $billPayResponse->responseMessage . '</p><br><p>Recharge of ' . strtoupper($billerName) . ' for a sum of ' . $thisuser->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' from your PaySprint wallet is successful. </p><p>You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
+
+                                            $sendMsg = $billPayResponse->responseMessage . ' .Recharge of ' . strtoupper($billerName) . ' for a sum of ' . $thisuser->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' from your PaySprint wallet is successful. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
+
+                                            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                            if (isset($userPhone)) {
+
+                                                $sendPhone = $thisuser->telephone;
+                                            } else {
+                                                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                                            }
+
+
+                                            $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                                            if ($thisuser->country == "Nigeria") {
+
+                                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                $this->sendSms($sendMsg, $correctPhone);
+                                            } else {
+                                                $this->sendMessage($sendMsg, $sendPhone);
+                                            }
+
+                                            $this->sendEmail($this->email, "Fund remittance");
+
+
+                                            $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $req->bearerToken())->first();
+
+                                            $data = $userInfo;
+                                            $status = 200;
+                                            $message = $sendMsg;
+
+                                            // Log::info("Congratulations! ".strtoupper($thisuser->name)." ".$message);
+
+                                            $this->slack("Congratulations! " . strtoupper($thisuser->name) . " " . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                                        } else {
+
+                                            $data = [];
+                                            $message = "Something went wrong!. Please try again later.";
+                                            $status = 400;
+
+                                            // Log::critical("Check EPS end for this error!.");
+
+                                            $this->slack("Check EPS end for this error!.", $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+                                        }
+                                    }
+                                } else {
+                                    $data = [];
+                                    $message = $billPayResponse->responseMessage;
+                                    $status = 400;
+
+                                    // Log::info('Oops!, '.$message);
+
+                                    $this->slack('Oops!, ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                                }
+                            }
+                        } else {
+                            $data = [];
+                            $message = "Invalid login password";
+                            $status = 400;
+                        }
                     }
                 }
+            } else {
+
+                $error = implode(",", $validator->messages()->all());
+
+                $data = [];
+                $status = 400;
+                $message = $error;
             }
-        } else {
-
-            $error = implode(",", $validator->messages()->all());
-
-            $data = [];
-            $status = 400;
-            $message = $error;
         }
-
-
-
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 

@@ -280,9 +280,9 @@
           <!-- small box -->
           <div class="small-box bg-purple">
             <div class="inner">
-              <h3>@if($newUsers = \App\User::where('accountType', 'Individual')->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->count()) {{ $newUsers }}  @else 0 @endif</h3>
+              <h3>@if($newUsers = \App\User::where('accountType', 'Individual')->where('archive', 0)->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->count()) {{ $newUsers }}  @else 0 @endif</h3>
 
-              <p>New Users</p>
+              <p>New Consumers</p>
 
             </div>
             <div class="icon">
@@ -295,9 +295,9 @@
           <!-- small box -->
           <div class="small-box bg-purple">
             <div class="inner">
-              <h3>@if($existingUsers = \App\User::where('accountType', 'Individual')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->count()) {{ $existingUsers }}  @else 0 @endif</h3>
+              <h3>@if($existingUsers = \App\User::where('accountType', 'Individual')->where('archive', 0)->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->count()) {{ $existingUsers }}  @else 0 @endif</h3>
 
-              <p>Existing Users</p>
+              <p>Existing Consumers</p>
 
             </div>
             <div class="icon">
@@ -310,7 +310,7 @@
           <!-- small box -->
           <div class="small-box bg-blue">
             <div class="inner">
-              <h3>@if($newMerchant = \App\User::where('accountType', 'Merchant')->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->count()) {{ $newMerchant }}  @else 0 @endif</h3>
+              <h3>@if($newMerchant = \App\User::where('accountType', 'Merchant')->where('archive', 0)->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->count()) {{ $newMerchant }}  @else 0 @endif</h3>
 
               <p>New Merchants</p>
 
@@ -325,7 +325,7 @@
           <!-- small box -->
           <div class="small-box bg-blue">
             <div class="inner">
-              <h3>@if($existingMerchant = \App\User::where('accountType', 'Merchant')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->count()) {{ $existingMerchant }}  @else 0 @endif</h3>
+              <h3>@if($existingMerchant = \App\User::where('accountType', 'Merchant')->where('archive', 0)->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->count()) {{ $existingMerchant }}  @else 0 @endif</h3>
 
               <p>Existing Merchants</p>
 
