@@ -16,7 +16,7 @@ use App\Statement as Statement;
 use App\PricingSetup as PricingSetup;
 
 use App\User as User;
-
+use Illuminate\Support\Facades\Log;
 
 trait PaymentGateway
 {
@@ -161,27 +161,31 @@ trait PaymentGateway
 
     public function getWithdrawalLimit($country, $id)
     {
-        $getPrice = PricingSetup::where('country', $country)->first();
+        try {
+            $getPrice = PricingSetup::where('country', $country)->first();
 
-        $getUser = User::where('id', $id)->first();
+            $getUser = User::where('id', $id)->first();
 
-        if ($getUser->accountType == "Individual") {
-            $result = [
-                'withdrawal_per_transaction' => $getPrice->withdrawal_per_transaction,
-                'withdrawal_per_day' => $getPrice->withdrawal_per_day,
-                'withdrawal_per_week' => $getPrice->withdrawal_per_week,
-                'withdrawal_per_month' => $getPrice->withdrawal_per_month
-            ];
-        } else {
-            $result = [
-                'withdrawal_per_transaction' => $getPrice->merchant_withdrawal_per_transaction,
-                'withdrawal_per_day' => $getPrice->merchant_withdrawal_per_day,
-                'withdrawal_per_week' => $getPrice->merchant_withdrawal_per_week,
-                'withdrawal_per_month' => $getPrice->merchant_withdrawal_per_month
-            ];
+            if ($getUser->accountType == "Individual") {
+                $result = [
+                    'withdrawal_per_transaction' => $getPrice->withdrawal_per_transaction,
+                    'withdrawal_per_day' => $getPrice->withdrawal_per_day,
+                    'withdrawal_per_week' => $getPrice->withdrawal_per_week,
+                    'withdrawal_per_month' => $getPrice->withdrawal_per_month
+                ];
+            } else {
+                $result = [
+                    'withdrawal_per_transaction' => $getPrice->merchant_withdrawal_per_transaction,
+                    'withdrawal_per_day' => $getPrice->merchant_withdrawal_per_day,
+                    'withdrawal_per_week' => $getPrice->merchant_withdrawal_per_week,
+                    'withdrawal_per_month' => $getPrice->merchant_withdrawal_per_month
+                ];
+            }
+
+            return $result;
+        } catch (\Throwable $th) {
+            Log::alert("Get Withdrawal Limit Error, Line 188 Traits/PaymentGateway.php" . $th->getMessage());
         }
-
-        return $result;
     }
 
     public function countryWithdrawalLimit($country)
