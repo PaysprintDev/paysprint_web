@@ -2467,9 +2467,6 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
         return $this->returnJSON($resData, $status);
     }
 
-
-
-
     public function moneyWithdrawal(Request $req)
     {
 
@@ -3492,7 +3489,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     'number_of_withdrawals' => $no_of_withdraw,
                                                     'withdrawal_per_day' => $withdrawal_per_day,
                                                     'withdrawal_per_week' => $withdrawal_per_week,
-                                                    'withdrawal_per_month' => $withdrawal_per_month,
+                                                    'withdrawal_per_month' => $withdrawal_per_month
                                                 ]);
 
                                                 // Senders statement
@@ -4905,7 +4902,6 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     public function orgPaymentInvoice(Request $req)
     {
 
-
         /**************************** Request Variables *******************************/
 
         /************************* Transactional Variables ****************************/
@@ -4986,8 +4982,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
         $mpgRequest->setTestMode(false); //false or comment out this line for production transactions
         /***************************** HTTPS Post Object *****************************/
         /* Status Check Example
-$mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgRequest);
-*/
+        $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgRequest);
+        */
         $mpgHttpPost = new mpgHttpsPost($store_id, $api_token, $mpgRequest);
         /******************************* Response ************************************/
         $mpgResponse = $mpgHttpPost->getMpgResponse();

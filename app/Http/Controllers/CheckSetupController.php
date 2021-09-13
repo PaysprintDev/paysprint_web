@@ -829,13 +829,34 @@ class CheckSetupController extends Controller
                     $category = "Archived Merchants";
                 }
                 // Move to Mailchimp
-                $action = $this->mailListCategorize($user->name, $user->email, $user->address, $user->telephone, $category, $user->country, 'Subscription');
+                $this->mailListCategorize($user->name, $user->email, $user->address, $user->telephone, $category, $user->country, 'Subscription');
 
 
                 echo "Done for :" . $user->name . " | " . $user->accountType;
             }
         } catch (\Throwable $th) {
             print_r($th->getMessage());
+        }
+    }
+
+
+    // Work on Existing Customers and CLients
+    public function publishExistingUsers()
+    {
+        $users = User::where('accountType', '!=', NULL)->where('archive', 0)->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->get();
+
+
+        foreach ($users as $value) {
+            if ($value->accountType == "Individual") {
+                $category = "Exisiting Consumers";
+            } else {
+                $category = "Exisiting Merchants";
+            }
+
+            // Move to Mailchimp
+            $this->mailListCategorize($value->name, $value->email, $value->address, $value->telephone, $category, $value->country, 'Subscription');
+
+            echo "Done for :" . $value->name . " | " . $value->accountType . "<hr>";
         }
     }
 
@@ -1228,6 +1249,11 @@ class CheckSetupController extends Controller
     public function notificationTable()
     {
         $data = $this->updateNotificationTable();
+    }
+
+    public function notificationPeriod()
+    {
+        $data = $this->updateNotificationPeriod();
     }
 
 

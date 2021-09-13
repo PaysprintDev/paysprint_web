@@ -17,6 +17,8 @@ use App\ConversionCountry as ConversionCountry;
 
 use App\Classes\Mobile_Detect;
 
+use App\User as User;
+
 
 class Controller extends BaseController
 {
@@ -384,7 +386,9 @@ class Controller extends BaseController
 
         try {
 
-            Notifications::insert(['ref_code' => $ref_code, 'activity' => $activity, 'notify' => 0, 'platform' => $platform]);
+            $thisuser = User::where('ref_code', $ref_code)->first();
+
+            Notifications::insert(['ref_code' => $ref_code, 'activity' => $activity, 'notify' => 0, 'platform' => $platform, 'country' => $thisuser->country, 'period' => date('Y-m-d')]);
         } catch (\Throwable $th) {
 
             // Log::error('Error: '.$th->getMessage());

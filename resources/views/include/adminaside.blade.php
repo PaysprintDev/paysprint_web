@@ -109,6 +109,7 @@
             <li title="Platform"><a href="{{ route('platform activity') }}"><i class="fa fa-circle-o text-red"></i> Platform</a></li>
             <li title="Activity Report"><a href="{{ route('activity report', 'country=Canada') }}"><i class="fa fa-circle-o text-red"></i> Activity Report</a></li>
             <li title="Support"><a href="{{ route('support activity') }}"><i class="fa fa-circle-o text-red"></i> Support</a></li>
+            <li title="Activity Statistics"><a href="{{ route('activity per day', 'start='.date('Y-m-01').'&end='.date('Y-m-d', strtotime('+1 day'))) }}"><i class="fa fa-circle-o text-red"></i> Activity Statistics</a></li>
 
 
             <li class="treeview">

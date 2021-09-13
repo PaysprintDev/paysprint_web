@@ -35,6 +35,7 @@ Route::get('refundbycountryupdate', 'CheckSetupController@refundbyCountry');
 Route::get('passwordreminder', 'CheckSetupController@passwordReminder');
 // Route::get('epsvendorupdate', 'CheckSetupController@updateEPSVendor');
 Route::get('notification-table', 'CheckSetupController@notificationTable');
+Route::get('notification-period', 'CheckSetupController@notificationPeriod');
 Route::get('monthlytransaction', 'CheckSetupController@monthlyTransactionHistory');
 Route::get('exbccardrequest', 'CheckSetupController@checkExbcCardRequest');
 Route::get('migratetolevelone', 'CheckSetupController@migrateUsersToLevelOne');
@@ -516,6 +517,7 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('gatewayactivity', ['uses' => 'AdminController@gatewayActivity', 'as' => 'gateway activity']);
 	Route::get('checktransaction/{id}', ['uses' => 'AdminController@checkTransaction', 'as' => 'check transaction']);
 	Route::get('supportactivity', ['uses' => 'AdminController@supportPlatformActivity', 'as' => 'support activity']);
+	Route::get('activityperday', ['uses' => 'AdminController@platformActivityPerDay', 'as' => 'activity per day']);
 
 	Route::get('generatespecialinfoactivity', ['uses' => 'AdminController@generateSpecialInfoActivity', 'as' => 'generate special information activity']);
 
