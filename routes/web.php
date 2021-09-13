@@ -47,6 +47,7 @@ Route::get('updatewallet', 'CheckSetupController@updateExbcAccount');
 // Route::get('returnfee', 'MaintenanceFeeCharge@returnFeeCharge');
 Route::get('updatebankdetails', 'CheckSetupController@addedBanksCountry');
 Route::get('publisharchive', 'CheckSetupController@publishArchiveUsers');
+Route::get('publishexisting', 'CheckSetupController@publishExistingUsers');
 
 
 // Transaction Limit
