@@ -286,8 +286,31 @@ class Controller extends BaseController
     {
 
         try {
-            // Get Minimum Withdrawal
+            // Get Minimum Wallet Balance
             $minimumBalance = TransactionCost::where('method', 'Minimum Balance')->where('country', $country)->first();
+
+            if (isset($minimumBalance) == true) {
+                $data = $minimumBalance->fixed;
+            } else {
+                $data = 0;
+            }
+
+
+            return $data;
+        } catch (\Throwable $th) {
+            // Log::error('Error: '.$th->getMessage());
+
+            $this->slack('Error: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+        }
+    }
+
+
+    public function minimumAmountToWithdrawal($country)
+    {
+
+        try {
+            // Get Minimum Withdrawal
+            $minimumBalance = TransactionCost::where('method', 'Minimum Withdrawal')->where('country', $country)->first();
 
             if (isset($minimumBalance) == true) {
                 $data = $minimumBalance->fixed;

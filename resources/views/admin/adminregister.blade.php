@@ -127,7 +127,7 @@
         
 
       <div class="form-group has-feedback">
-        <label for="business_name"><span class="reqField">*</span> Business Name</label>
+        <label for="business_name"><span class="reqField">*</span> Legal Entity Name</label>
         <input type="hidden" name="ref_code" id="ref_code" @if($ref_code != "") value="{{ $ref_code }}" readonly @else placeholder="Ref code" @endif>
         <input type="hidden" name="user_id" id="user_id" class="form-control" value="{{ 'PaySprint_'.mt_rand(1000, 9999) }}">
         <input type="text" name="business_name" id="business_name" class="form-control" placeholder="Business Name*">

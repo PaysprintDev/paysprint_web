@@ -2520,6 +2520,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                         $minBal = $this->minimumWithdrawal($thisuser->country);
 
+                        $minWithdrawalBal = $this->minimumAmountToWithdrawal($thisuser->country);
+
                         $specialInfo = SpecialInformation::where('country', $thisuser->country)->first();
 
                         // Check amount in wallet
@@ -2531,6 +2533,17 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $status = 400;
 
                             // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
+
+                            $this->slack('Oops!, Though this is a test, but ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                        } elseif ($minWithdrawalBal > $req->amount) {
+                            // Cannot withdraw minimum balance
+
+                            $data = [];
+                            $message = "Minimum amount to withdraw is " . $req->currencyCode . ' ' . number_format($minWithdrawalBal, 2);
+                            $status = 400;
+
+                            // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
+
 
                             $this->slack('Oops!, Though this is a test, but ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                         } elseif ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
@@ -2556,7 +2569,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $this->slack('Oops!, Though this is a test, but ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                         } else {
 
-                            if (isset($specialInfo)) {
+                            if (isset($specialInfo) && $thisuser->accountType == "Individual") {
                                 $messageOut = $specialInfo->information;
 
                                 $data = [];
@@ -3304,6 +3317,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                     $withdrawLimit = $this->getWithdrawalLimit($thisuser->country, $thisuser->id);
 
+
                     if ($req->amount >= $withdrawLimit['withdrawal_per_transaction']) {
 
                         $data = [];
@@ -3328,6 +3342,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                         $minBal = $this->minimumWithdrawal($thisuser->country);
 
+                        $minWithdrawalBal = $this->minimumAmountToWithdrawal($thisuser->country);
+
                         $specialInfo = SpecialInformation::where('country', $thisuser->country)->first();
 
 
@@ -3344,6 +3360,17 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             // Log::info('Oops!, '.$thisuser->name.' has '.$message);
 
                             $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                        } elseif ($minWithdrawalBal > $req->amount) {
+                            // Cannot withdraw minimum balance
+
+                            $data = [];
+                            $message = "Minimum amount to withdraw is " . $req->currencyCode . ' ' . number_format($minWithdrawalBal, 2);
+                            $status = 400;
+
+                            // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
+
+
+                            $this->slack('Oops!, Though this is a test, but ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                         } elseif ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
                             // Cannot withdraw minimum balance
 
@@ -3367,7 +3394,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         } else {
 
 
-                            if (isset($specialInfo)) {
+                            if (isset($specialInfo) && $thisuser->accountType == "Individual") {
 
                                 $messageOut = $specialInfo->information;
 
@@ -4367,7 +4394,6 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             // Load Utility Bill.
                             $billPayResponse = $this->processTransaction($req->all(), $req->bearerToken());
 
-                            Log::info(json_encode($billPayResponse));
 
                             if ($billPayResponse->responseCode == 00 || $billPayResponse->responseCode == 0) {
 

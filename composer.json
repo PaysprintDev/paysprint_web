@@ -10,6 +10,7 @@
         "braintree/braintree_php": "5.5.0",
         "currency-cloud/client": "^3.1",
         "dompdf/dompdf": "^1.0",
+        "erdemkeren/laravel-otp": "^3.0",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^7.0",
         "laravel/helpers": "^1.4",

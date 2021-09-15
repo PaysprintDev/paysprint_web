@@ -59,6 +59,8 @@ Route::prefix('/v1')->group(function () {
 
         Route::post('merchantbusinessprofile',  ['uses' => 'api\v1\UserController@updateMerchantBusinessProfile'])->name('merchant business profile');
 
+        Route::post('ownerandcontrollersprofile',  ['uses' => 'api\v1\UserController@updateOwnerAndControllersProfile'])->name('owner and controllers profile');
+
 
         Route::post('promotebusiness',  ['uses' => 'api\v1\UserController@promoteYourBusiness'])->name('promote business');
 

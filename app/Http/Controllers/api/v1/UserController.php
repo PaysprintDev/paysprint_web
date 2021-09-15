@@ -517,12 +517,12 @@ class UserController extends Controller
     }
 
 
-    public function updateMerchantBusinessProfile(Request $request, Admin $admin, ClientInfo $clientinfo)
+    public function updateMerchantBusinessProfile(Request $request, ClientInfo $clientinfo)
     {
 
         $user = User::where('api_token', $request->bearerToken())->first();
 
-        $clientinfo->where('email', $user->email)->update(['business_name' => $request->businessName, 'address' => $request->businessAddress, 'corporate_type' => $request->corporate_type, 'industry' => $request->industry, 'website' => $request->businessWebsite, 'type_of_service' => $request->type_of_service, 'description' => $request->businessDescription, 'nature_of_business' => $request->nature_of_business]);
+        $clientinfo->where('email', $user->email)->update(['business_name' => $request->businessName, 'address' => $request->businessAddress, 'corporate_type' => $request->corporate_type, 'industry' => $request->industry, 'website' => $request->businessWebsite, 'type_of_service' => $request->type_of_service, 'description' => $request->businessDescription, 'nature_of_business' => $request->nature_of_business, 'companyRegistrationNumber' => $request->companyRegistrationNumber, 'tradingName' => $request->tradingName, 'dateOfIncorporation' => $request->dateOfIncorporation, 'einNumber' => $request->einNumber]);
 
         if ($request->hasFile('incorporation_doc_front')) {
             $this->uploadDocument($user->id, $request->file('incorporation_doc_front'), 'document/incorporation_doc_front', 'incorporation_doc_front');
@@ -533,6 +533,38 @@ class UserController extends Controller
             $this->uploadDocument($user->id, $request->file('incorporation_doc_back'), 'document/incorporation_doc_back', 'incorporation_doc_back');
             $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded the back page of your incorporation document.");
         }
+        if ($request->hasFile('directors_document')) {
+            $this->uploadDocument($user->id, $request->file('directors_document'), 'document/directors_document', 'directors_document');
+            $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Register of Directors");
+        }
+        if ($request->hasFile('shareholders_document')) {
+            $this->uploadDocument($user->id, $request->file('shareholders_document'), 'document/shareholders_document', 'shareholders_document');
+            $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Register of Shareholders");
+        }
+        if ($request->hasFile('proof_of_identity_1')) {
+            $this->uploadDocument($user->id, $request->file('proof_of_identity_1'), 'document/proof_of_identity_1', 'proof_of_identity_1');
+            $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Proof of Identity - 1 Director");
+        }
+        if ($request->hasFile('proof_of_identity_2')) {
+            $this->uploadDocument($user->id, $request->file('proof_of_identity_2'), 'document/proof_of_identity_2', 'proof_of_identity_2');
+            $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Proof of Identity - 1 UBO");
+        }
+        if ($request->hasFile('aml_policy')) {
+            $this->uploadDocument($user->id, $request->file('aml_policy'), 'document/aml_policy', 'aml_policy');
+            $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your AML Policy and Procedures");
+        }
+        if ($request->hasFile('compliance_audit_report')) {
+            $this->uploadDocument($user->id, $request->file('compliance_audit_report'), 'document/compliance_audit_report', 'compliance_audit_report');
+            $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Latest Compliance External Audit Report");
+        }
+        if ($request->hasFile('organizational_chart')) {
+            $this->uploadDocument($user->id, $request->file('organizational_chart'), 'document/organizational_chart', 'organizational_chart');
+            $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Organizational Chart");
+        }
+        if ($request->hasFile('financial_license')) {
+            $this->uploadDocument($user->id, $request->file('financial_license'), 'document/financial_license', 'financial_license');
+            $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Proof of Financial License");
+        }
 
 
         $data = $clientinfo->where('email', $user->email)->first();
@@ -540,6 +572,23 @@ class UserController extends Controller
         $status = 200;
 
         $resData = ['data' => $data, 'message' => 'Profile updated', 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+    public function updateOwnerAndControllersProfile(Request $request, ClientInfo $clientinfo)
+    {
+
+        $user = User::where('api_token', $request->bearerToken())->first();
+
+        $clientinfo->where('email', $user->email)->update(['shareholder' => $request->shareholder, 'directordetails' => $request->directordetails]);
+
+        $data = $clientinfo->where('email', $user->email)->first();
+
+        $status = 200;
+
+        $resData = ['data' => $data, 'message' => 'Owner and Controllers Information Updated', 'status' => $status];
 
         return $this->returnJSON($resData, $status);
     }
@@ -596,7 +645,7 @@ class UserController extends Controller
                     $this->message = '<p>' . $activity . '</p><p>You now have <strong>' . $user->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> balance in your account</p>';
 
 
-                    $clientinfo->where('email', $user->email)->update(['business_name' => $request->businessName, 'address' => $request->businessAddress, 'corporate_type' => $request->corporate_type, 'industry' => $request->industry, 'website' => $request->businessWebsite, 'type_of_service' => $request->type_of_service, 'description' => $request->businessDescription, 'promote_business' => 1, 'push_notification' => 1, 'nature_of_business' => $request->nature_of_business]);
+                    $clientinfo->where('email', $user->email)->update(['business_name' => $request->businessName, 'address' => $request->businessAddress, 'corporate_type' => $request->corporate_type, 'industry' => $request->industry, 'website' => $request->businessWebsite, 'type_of_service' => $request->type_of_service, 'description' => $request->businessDescription, 'promote_business' => 1, 'push_notification' => 1, 'nature_of_business' => $request->nature_of_business, 'companyRegistrationNumber' => $request->companyRegistrationNumber, 'tradingName' => $request->tradingName, 'dateOfIncorporation' => $request->dateOfIncorporation, 'einNumber' => $request->einNumber]);
 
                     if ($request->hasFile('incorporation_doc_front')) {
                         $this->uploadDocument($user->id, $request->file('incorporation_doc_front'), 'document/incorporation_doc_front', 'incorporation_doc_front');
@@ -606,6 +655,38 @@ class UserController extends Controller
                     if ($request->hasFile('incorporation_doc_back')) {
                         $this->uploadDocument($user->id, $request->file('incorporation_doc_back'), 'document/incorporation_doc_back', 'incorporation_doc_back');
                         $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded the back page of your incorporation document.");
+                    }
+                    if ($request->hasFile('directors_document')) {
+                        $this->uploadDocument($user->id, $request->file('directors_document'), 'document/directors_document', 'directors_document');
+                        $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Register of Directors");
+                    }
+                    if ($request->hasFile('shareholders_document')) {
+                        $this->uploadDocument($user->id, $request->file('shareholders_document'), 'document/shareholders_document', 'shareholders_document');
+                        $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Register of Shareholders");
+                    }
+                    if ($request->hasFile('proof_of_identity_1')) {
+                        $this->uploadDocument($user->id, $request->file('proof_of_identity_1'), 'document/proof_of_identity_1', 'proof_of_identity_1');
+                        $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Proof of Identity - 1 Director");
+                    }
+                    if ($request->hasFile('proof_of_identity_2')) {
+                        $this->uploadDocument($user->id, $request->file('proof_of_identity_2'), 'document/proof_of_identity_2', 'proof_of_identity_2');
+                        $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Proof of Identity - 1 UBO");
+                    }
+                    if ($request->hasFile('aml_policy')) {
+                        $this->uploadDocument($user->id, $request->file('aml_policy'), 'document/aml_policy', 'aml_policy');
+                        $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your AML Policy and Procedures");
+                    }
+                    if ($request->hasFile('compliance_audit_report')) {
+                        $this->uploadDocument($user->id, $request->file('compliance_audit_report'), 'document/compliance_audit_report', 'compliance_audit_report');
+                        $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Latest Compliance External Audit Report");
+                    }
+                    if ($request->hasFile('organizational_chart')) {
+                        $this->uploadDocument($user->id, $request->file('organizational_chart'), 'document/organizational_chart', 'organizational_chart');
+                        $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Organizational Chart");
+                    }
+                    if ($request->hasFile('financial_license')) {
+                        $this->uploadDocument($user->id, $request->file('financial_license'), 'document/financial_license', 'financial_license');
+                        $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Proof of Financial License");
                     }
 
 
@@ -706,7 +787,7 @@ class UserController extends Controller
                     $this->message = '<p>' . $activity . '</p><p>You now have <strong>' . $user->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> balance in your account</p>';
 
 
-                    $clientinfo->where('email', $user->email)->update(['business_name' => $request->businessName, 'address' => $request->businessAddress, 'corporate_type' => $request->corporate_type, 'industry' => $request->industry, 'website' => $request->businessWebsite, 'type_of_service' => $request->type_of_service, 'description' => $request->businessDescription, 'promote_business' => 1, 'push_notification' => 1, 'nature_of_business' => $request->nature_of_business]);
+                    $clientinfo->where('email', $user->email)->update(['business_name' => $request->businessName, 'address' => $request->businessAddress, 'corporate_type' => $request->corporate_type, 'industry' => $request->industry, 'website' => $request->businessWebsite, 'type_of_service' => $request->type_of_service, 'description' => $request->businessDescription, 'promote_business' => 1, 'push_notification' => 1, 'nature_of_business' => $request->nature_of_business, 'companyRegistrationNumber' => $request->companyRegistrationNumber, 'tradingName' => $request->tradingName, 'dateOfIncorporation' => $request->dateOfIncorporation, 'einNumber' => $request->einNumber]);
 
                     if ($request->hasFile('incorporation_doc_front')) {
                         $this->uploadDocument($user->id, $request->file('incorporation_doc_front'), 'document/incorporation_doc_front', 'incorporation_doc_front');
@@ -716,6 +797,38 @@ class UserController extends Controller
                     if ($request->hasFile('incorporation_doc_back')) {
                         $this->uploadDocument($user->id, $request->file('incorporation_doc_back'), 'document/incorporation_doc_back', 'incorporation_doc_back');
                         $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded the back page of your incorporation document.");
+                    }
+                    if ($request->hasFile('directors_document')) {
+                        $this->uploadDocument($user->id, $request->file('directors_document'), 'document/directors_document', 'directors_document');
+                        $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Register of Directors");
+                    }
+                    if ($request->hasFile('shareholders_document')) {
+                        $this->uploadDocument($user->id, $request->file('shareholders_document'), 'document/shareholders_document', 'shareholders_document');
+                        $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Register of Shareholders");
+                    }
+                    if ($request->hasFile('proof_of_identity_1')) {
+                        $this->uploadDocument($user->id, $request->file('proof_of_identity_1'), 'document/proof_of_identity_1', 'proof_of_identity_1');
+                        $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Proof of Identity - 1 Director");
+                    }
+                    if ($request->hasFile('proof_of_identity_2')) {
+                        $this->uploadDocument($user->id, $request->file('proof_of_identity_2'), 'document/proof_of_identity_2', 'proof_of_identity_2');
+                        $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Proof of Identity - 1 UBO");
+                    }
+                    if ($request->hasFile('aml_policy')) {
+                        $this->uploadDocument($user->id, $request->file('aml_policy'), 'document/aml_policy', 'aml_policy');
+                        $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your AML Policy and Procedures");
+                    }
+                    if ($request->hasFile('compliance_audit_report')) {
+                        $this->uploadDocument($user->id, $request->file('compliance_audit_report'), 'document/compliance_audit_report', 'compliance_audit_report');
+                        $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Latest Compliance External Audit Report");
+                    }
+                    if ($request->hasFile('organizational_chart')) {
+                        $this->uploadDocument($user->id, $request->file('organizational_chart'), 'document/organizational_chart', 'organizational_chart');
+                        $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Organizational Chart");
+                    }
+                    if ($request->hasFile('financial_license')) {
+                        $this->uploadDocument($user->id, $request->file('financial_license'), 'document/financial_license', 'financial_license');
+                        $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Proof of Financial License");
                     }
 
 
@@ -1457,6 +1570,7 @@ class UserController extends Controller
 
     public function uploadDocument($id, $file, $pathWay, $rowName)
     {
+
 
 
         //Get filename with extension

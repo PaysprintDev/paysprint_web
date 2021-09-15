@@ -1849,7 +1849,7 @@ function closeAccount(id){
                 if (result.message == "success") {
 
                   swal(result.title, result.res, result.message);
-                  setTimeout(function(){ location.reload(); }, 2000);
+                  // setTimeout(function(){ location.reload(); }, 2000);
 
                 }
 
@@ -3424,6 +3424,52 @@ else if(val == "merchantbusiness"){
         },
         error: function(err) {
             $('#updatemyBusinessProfile').text('Update Business');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+else if(val == "ownerandcontrollers"){
+
+ formData = new FormData(formElemShareholder);
+
+    route = "{{ URL('/api/v1/ownerandcontrollersprofile') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#updatemyOwnership').text('Updating Business...');
+        },
+        success: function(result){
+
+            $('#updatemyOwnership').text('Update Information');
+
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $('#updatemyOwnership').text('Update Information');
             swal("Oops", err.responseJSON.message, "error");
 
         } 

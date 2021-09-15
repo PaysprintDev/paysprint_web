@@ -166,21 +166,41 @@ trait PaymentGateway
 
             $getUser = User::where('id', $id)->first();
 
-            if ($getUser->accountType == "Individual") {
-                $result = [
-                    'withdrawal_per_transaction' => $getPrice->withdrawal_per_transaction,
-                    'withdrawal_per_day' => $getPrice->withdrawal_per_day,
-                    'withdrawal_per_week' => $getPrice->withdrawal_per_week,
-                    'withdrawal_per_month' => $getPrice->withdrawal_per_month
-                ];
+            if (isset($getPrice)) {
+                if ($getUser->accountType == "Individual") {
+                    $result = [
+                        'withdrawal_per_transaction' => $getPrice->withdrawal_per_transaction,
+                        'withdrawal_per_day' => $getPrice->withdrawal_per_day,
+                        'withdrawal_per_week' => $getPrice->withdrawal_per_week,
+                        'withdrawal_per_month' => $getPrice->withdrawal_per_month
+                    ];
+                } else {
+                    $result = [
+                        'withdrawal_per_transaction' => $getPrice->merchant_withdrawal_per_transaction,
+                        'withdrawal_per_day' => $getPrice->merchant_withdrawal_per_day,
+                        'withdrawal_per_week' => $getPrice->merchant_withdrawal_per_week,
+                        'withdrawal_per_month' => $getPrice->merchant_withdrawal_per_month
+                    ];
+                }
             } else {
-                $result = [
-                    'withdrawal_per_transaction' => $getPrice->merchant_withdrawal_per_transaction,
-                    'withdrawal_per_day' => $getPrice->merchant_withdrawal_per_day,
-                    'withdrawal_per_week' => $getPrice->merchant_withdrawal_per_week,
-                    'withdrawal_per_month' => $getPrice->merchant_withdrawal_per_month
-                ];
+                if ($getUser->accountType == "Individual") {
+                    $result = [
+                        'withdrawal_per_transaction' => 0,
+                        'withdrawal_per_day' => 0,
+                        'withdrawal_per_week' => 0,
+                        'withdrawal_per_month' => 0
+                    ];
+                } else {
+                    $result = [
+                        'withdrawal_per_transaction' => 0,
+                        'withdrawal_per_day' => 0,
+                        'withdrawal_per_week' => 0,
+                        'withdrawal_per_month' => 0
+                    ];
+                }
             }
+
+
 
             return $result;
         } catch (\Throwable $th) {

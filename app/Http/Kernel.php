@@ -62,5 +62,6 @@ class Kernel extends HttpKernel
         'appkey' => \App\Http\Middleware\AppKey::class,
         'apitoken' => \App\Http\Middleware\ApiToken::class,
         'merchantkey' => \App\Http\Middleware\MerchantKey::class,
+        'otp' => \Erdemkeren\Otp\Http\Middleware\Otp::class,
     ];
 }

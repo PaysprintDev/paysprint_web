@@ -57,6 +57,10 @@ Route::get('weeklylimit', 'CheckSetupController@weeklyLimit');
 Route::get('monthlylimit', 'CheckSetupController@monthlyLimit');
 
 
+// SET OTP REQUEST
+Route::post('otpstore', ['uses' => 'OtpController@store', 'as' => 'otp.store']);
+
+
 Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
 
 Route::get('/run-queue', function () {

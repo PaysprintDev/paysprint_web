@@ -149,6 +149,7 @@ return [
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Erdemkeren\Otp\OtpServiceProvider::class,
 
         /*
          * Package Service Providers...

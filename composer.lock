@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ff3aa4bf8a5cdd9893ef0d50ea710db2",
+    "content-hash": "08bee3841d445e0f2f531a6fa566c7f0",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -903,6 +903,79 @@
                 }
             ],
             "time": "2020-12-29T14:50:06+00:00"
+        },
+        {
+            "name": "erdemkeren/laravel-otp",
+            "version": "v3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/erdemkeren/laravel-otp.git",
+                "reference": "6a606d2ddcc449f32b25bc42d74d7378aff134be"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/erdemkeren/laravel-otp/zipball/6a606d2ddcc449f32b25bc42d74d7378aff134be",
+                "reference": "6a606d2ddcc449f32b25bc42d74d7378aff134be",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^7.0",
+                "illuminate/http": "^7.0",
+                "illuminate/notifications": "^7.0",
+                "illuminate/routing": "^7.0",
+                "illuminate/support": "^7.0",
+                "nesbot/carbon": "^2.35",
+                "php": "^7.2.5"
+            },
+            "require-dev": {
+                "illuminate/config": "^7.0",
+                "mockery/mockery": "~1.3.1",
+                "phpunit/phpunit": "7.*"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Erdemkeren\\Otp\\OtpServiceProvider"
+                    ],
+                    "aliases": {
+                        "Otp": "Erdemkeren\\Otp\\OtpFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Erdemkeren\\Otp\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Hilmi Erdem KEREN",
+                    "email": "erdemkeren@gmail.com"
+                },
+                {
+                    "name": "Berkay Güre",
+                    "email": "bgure@hotmail.com.tr"
+                }
+            ],
+            "description": "Secure your laravel routes with otps. (one time passwords)",
+            "homepage": "https://github.com/erdemkeren/laravel-otp",
+            "keywords": [
+                "laravel",
+                "middleware",
+                "one time passwords",
+                "one time pin",
+                "otp"
+            ],
+            "support": {
+                "issues": "https://github.com/erdemkeren/laravel-otp/issues",
+                "source": "https://github.com/erdemkeren/laravel-otp/tree/master"
+            },
+            "time": "2020-05-31T12:56:24+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",

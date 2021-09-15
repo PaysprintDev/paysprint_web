@@ -237,6 +237,7 @@
               <a style="font-size: 14px; font-weight: bold;" type="button" href="{{ route('merchant add money') }}" class="btn btn-info btn-block">Add Money <i class="fas fa-plus"></i></a>
             </div>
 
+
             <div class="col-md-4 mb-3 sendMoney">
               <a style="font-size: 14px; font-weight: bold;" type="button" href="{{ route('merchant send money', 'type='.base64_encode("local")) }}" class="btn btn-warning btn-block">Send Money <i class="fas fa-paper-plane"></i></a>
             </div>
@@ -244,11 +245,13 @@
             <div class="col-md-4 mb-3 withdrawMoney">
               @if ($getUserDetail->approval == 2 && $getUserDetail->accountLevel == 3)
 
-                @if (isset($withdraws['specialInfo']))
+                {{--  @if (isset($withdraws['specialInfo']))
                     <a style="font-size: 14px; font-weight: bold;" type="button" href="javascript:void(0)" class="btn btn-success btn-block" onclick="restriction('specialinfo', '{{ $getUserDetail->name }}')">Withdraw Money <i class="fa fa-credit-card"></i></a>
                 @else
                     <a style="font-size: 14px; font-weight: bold;" type="button" href="{{ route('merchant withdrawal') }}" class="btn btn-success btn-block">Withdraw Money <i class="fas fa-credit-card"></i></a>
-                @endif
+                @endif  --}}
+
+                <a style="font-size: 14px; font-weight: bold;" type="button" href="{{ route('merchant withdrawal') }}" class="btn btn-success btn-block">Withdraw Money <i class="fas fa-credit-card"></i></a>
 
                   
               @else
@@ -343,7 +346,7 @@
       <!-- /.row -->
       <!-- Main row -->
       <div class="row">
-        @if (isset($withdraws['specialInfo']))
+        {{--  @if (isset($withdraws['specialInfo']))
 
           <section class="col-lg-12 specialText disp-0">
             <div class="alert alert-danger specialText disp-0" role="alert">
@@ -352,7 +355,7 @@
             </div>
           </section>
 
-        @endif
+        @endif  --}}
 
 
                 <!-- Left col -->
