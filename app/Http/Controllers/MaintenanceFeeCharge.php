@@ -28,13 +28,19 @@ class MaintenanceFeeCharge extends Controller
 
         foreach ($getUser as $key => $value) {
 
-            $minBal = $this->maintenanceBalanceWithdrawal($value->country);
+            if ($value->accountType == "Individual") {
+                $subType = "Consumer Monthly Subscription";
+            } else {
+                $subType = "Merchant Monthly Subscription";
+            }
+
+            $minBal = $this->maintenanceBalanceWithdrawal($subType, $value->country);
 
 
             // Get wallet balnace for users
             if ($value->wallet_balance >= $minBal) {
 
-                $getTranscost = TransactionCost::where('structure', 'Wallet Maintenance fee')->where('country', $value->country)->first();
+                $getTranscost = TransactionCost::where('structure', $subType)->where('country', $value->country)->first();
 
                 if (isset($getTranscost)) {
 
@@ -45,7 +51,7 @@ class MaintenanceFeeCharge extends Controller
                     // Send Mail
                     $transaction_id = "wallet-" . date('dmY') . time();
 
-                    $activity = "Monthly maintenance fee of " . $value->currencyCode . '' . number_format($getTranscost->fixed, 2) . " for " . date('F/Y') . " was deducted from Wallet";
+                    $activity = "Monthly Subscription of " . $value->currencyCode . '' . number_format($getTranscost->fixed, 2) . " for " . date('F/Y') . " was deducted from Wallet";
                     $credit = 0;
                     $debit = $getTranscost->fixed;
                     $reference_code = $transaction_id;

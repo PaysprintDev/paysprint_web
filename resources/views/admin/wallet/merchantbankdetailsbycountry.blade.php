@@ -53,28 +53,34 @@
                 </tr>
                 </thead>
                 <tbody>
+                  
                     @if (count($data['bankdetails']) > 0)
                     <?php $i = 1;?>
                         @foreach ($data['bankdetails'] as $data)
-                                
-                                <tr>
-                                    <td>{{ $i++ }}</td>
 
-                                    <td>{{ $data->country }}</td>
+                        @if ($data->country != null)
+                            <tr>
+                                  <td>{{ $i++ }}</td>
 
-                                    @if (Request::get('users') == "Merchant")
-                                        <td>
-                                            <a href="{{ route('merchant banking details', 'users=Merchant&country='.$data->country) }}" class="btn btn-primary" type="button">Merchant details</a>
-                                        </td>
-                                    @else
-                                        <td>
-                                            <a href="{{ route('merchant banking details', 'users=Individual&country='.$data->country) }}" class="btn btn-primary" type="button">Consumer details</a>
-                                        </td>
-                                    @endif
+                                  <td>{{ $data->country }}</td>
 
-                                    
-                                    
-                                </tr>
+                                  
+
+                                  @if (Request::get('users') == "Merchant")
+                                      <td>
+                                          <a href="{{ route('merchant banking details', 'users=Merchant&country='.$data->country) }}" class="btn btn-primary" type="button">Merchant details</a>
+                                      </td>
+                                  @else
+                                      <td>
+                                          <a href="{{ route('merchant banking details', 'users=Individual&country='.$data->country) }}" class="btn btn-primary" type="button">Consumer details</a>
+                                      </td>
+                                  @endif
+
+                                  
+                                  
+                              </tr>
+                        @endif
+
 
                         @endforeach
 

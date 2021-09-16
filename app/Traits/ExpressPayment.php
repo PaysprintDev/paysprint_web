@@ -562,7 +562,7 @@ trait ExpressPayment
     {
 
         try {
-            // Get Minimum Withdrawal
+            // Get Minimum Wallet Balance
             $minimumBalance = TransactionCost::where('method', 'Minimum Balance')->where('country', $country)->first();
 
             if (isset($minimumBalance) == true) {

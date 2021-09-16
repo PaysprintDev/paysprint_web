@@ -67,6 +67,7 @@
                   <th>Name</th>
                   <th>Username</th>
                   <th>Email</th>
+                  <th>Address</th>
                   <th>Account Type</th>
                   <th>Identification</th>
                   <th>Platform</th>
@@ -95,6 +96,7 @@
                               <td>-</td>
                             @endif
                             <td>{{ $datainfo->email }}</td>
+                            <td>{{ $datainfo->address }}</td>
                             <td>{{ $datainfo->accountType }}</td>
                             <td>
 

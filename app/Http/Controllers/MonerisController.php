@@ -2520,7 +2520,13 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                         $minBal = $this->minimumWithdrawal($thisuser->country);
 
-                        $minWithdrawalBal = $this->minimumAmountToWithdrawal($thisuser->country);
+                        if ($thisuser->accountType == "Individual") {
+                            $subminType = "Consumer Minimum Withdrawal";
+                        } else {
+                            $subminType = "Merchant Minimum Withdrawal";
+                        }
+
+                        $minWithdrawalBal = $this->minimumAmountToWithdrawal($subminType, $thisuser->country);
 
                         $specialInfo = SpecialInformation::where('country', $thisuser->country)->first();
 
@@ -3321,7 +3327,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     if ($req->amount >= $withdrawLimit['withdrawal_per_transaction']) {
 
                         $data = [];
-                        $message = "Withdrawal limit for per transaction is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_transaction'], 2) . ". Please withdraw a lesser amount";
+                        $message = "Withdrawal limit per transaction is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_transaction'], 2) . ". Please withdraw a lesser amount";
                         $status = 400;
                     } elseif ($req->amount >= $withdrawLimit['withdrawal_per_day']) {
                         $data = [];
@@ -3342,7 +3348,13 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                         $minBal = $this->minimumWithdrawal($thisuser->country);
 
-                        $minWithdrawalBal = $this->minimumAmountToWithdrawal($thisuser->country);
+                        if ($thisuser->accountType == "Individual") {
+                            $subminType = "Consumer Minimum Withdrawal";
+                        } else {
+                            $subminType = "Merchant Minimum Withdrawal";
+                        }
+
+                        $minWithdrawalBal = $this->minimumAmountToWithdrawal($subminType, $thisuser->country);
 
                         $specialInfo = SpecialInformation::where('country', $thisuser->country)->first();
 
@@ -4196,7 +4208,13 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
             $thisuser = User::where('email', $data->user_id)->first();
 
-            $checkTransaction = TransactionCost::where('method', 'Wallet')->where('structure', 'Wallet Maintenance fee')->where('country', $data->country)->first();
+            if ($thisuser->accountType == "Individual") {
+                $subType = "Consumer Monthly Subscription";
+            } else {
+                $subType = "Merchant Monthly Subscription";
+            }
+
+            $checkTransaction = TransactionCost::where('method', 'Wallet')->where('structure', $subType)->where('country', $data->country)->first();
 
             $transDeduct = $data->credit + $checkTransaction->fixed;
 
@@ -4208,7 +4226,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
             ]);
 
 
-            $activity = "Charge back of " . $thisuser->currencyCode . '' . number_format($transDeduct, 2) . " (Charge back amount of " . $thisuser->currencyCode . '' . number_format($data->credit, 2) . " and Wallet maintenance fee of " . $thisuser->currencyCode . '' . number_format($checkTransaction->fixed, 2) . " inclusive.) from PaySprint to your Bank Account has been processed.";
+            $activity = "Charge back of " . $thisuser->currencyCode . '' . number_format($transDeduct, 2) . " (Charge back amount of " . $thisuser->currencyCode . '' . number_format($data->credit, 2) . " and " . $subType . " of " . $thisuser->currencyCode . '' . number_format($checkTransaction->fixed, 2) . " inclusive.) from PaySprint to your Bank Account has been processed.";
 
             $credit = 0;
             $debit = $data->credit;

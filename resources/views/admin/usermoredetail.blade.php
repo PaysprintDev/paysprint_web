@@ -41,6 +41,22 @@
                   @if(isset($getthisuser))
 
                       <tr>
+                        <td class="mainText" colspan="2" align="left">
+                          @if($getthisuser->avatar != null) 
+
+                          <a href="{{ $getthisuser->avatar }}">
+                            <img src="{{ $getthisuser->avatar }}" alt="{{ $getthisuser->avatar }}" srcset="" style="width: 150px; height: 150px; border-radius: 100%; object-fit: contain;">
+                          </a>
+
+                          @else
+                            <a href="#">
+                              <img src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_2_w4hzub.jpg" alt="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_2_w4hzub.jpg" srcset="" style="width: 150px; height: 150px; border-radius: 100%; object-fit: contain;">
+                            </a>
+                          @endif
+                          
+                        </td>
+                      </tr>
+                      <tr>
                         <td>Name</td>
                         <td class="mainText">{{ $getthisuser->name }}</td>
                       </tr>
@@ -107,15 +123,15 @@
 
                       @if ($getthisuser->accountType == "Merchant")
 
-                      @if($merchantDetail = \App\Admin::where('email', $getthisuser->email)->first())
-                        <tr>
-                            <td>Username</td>
-                            <td class="mainText" style="font-weight: 900; color: navy;">{{ strtoupper($merchantDetail->username) }}</td>
-                        </tr>
+                        @if($merchantDetail = \App\Admin::where('email', $getthisuser->email)->first())
+                          <tr>
+                              <td>Username</td>
+                              <td class="mainText" style="font-weight: 900; color: navy;">{{ strtoupper($merchantDetail->username) }}</td>
+                          </tr>
 
-                      @endif
+                        @endif
                         <tr>
-                            <td>Business Name</td>
+                            <td>Legal Entity Name</td>
                             <td class="mainText">{{ $getthisuser->businessname }}</td>
                         </tr>
                         <tr>
@@ -123,11 +139,91 @@
                             <td class="mainText">{{ $getthisuser->corporationType }}</td>
                         </tr>
                         <tr>
-                            <td>Incorporation Doc.</td>
+                            <td>Articles of Incorporation</td>
                             <td class="mainText">
 
                                 <small style="font-weight: bold;">
                                     @if($getthisuser->incorporation_doc_front != null) <a href="{{ $getthisuser->incorporation_doc_front }}" target="_blank">Front view</a> @endif - @if($getthisuser->incorporation_doc_back != null) <a href="{{ $getthisuser->incorporation_doc_back }}" target="_blank">Back view</a> @endif
+                                </small>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Register of Directors</td>
+                            <td class="mainText">
+
+                                <small style="font-weight: bold;">
+                                    @if($getthisuser->directors_document != null) <a href="{{ $getthisuser->directors_document }}" target="_blank">View</a> @endif
+                                </small>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Register of Shareholders</td>
+                            <td class="mainText">
+
+                                <small style="font-weight: bold;">
+                                    @if($getthisuser->shareholders_document != null) <a href="{{ $getthisuser->shareholders_document }}" target="_blank">View</a> @endif
+                                </small>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Proof of Identity - 1 Director</td>
+                            <td class="mainText">
+
+                                <small style="font-weight: bold;">
+                                    @if($getthisuser->proof_of_identity_1 != null) <a href="{{ $getthisuser->proof_of_identity_1 }}" target="_blank">View</a> @endif
+                                </small>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Proof of Identity - 1 UBO</td>
+                            <td class="mainText">
+
+                                <small style="font-weight: bold;">
+                                    @if($getthisuser->proof_of_identity_2 != null) <a href="{{ $getthisuser->proof_of_identity_2 }}" target="_blank">View</a> @endif
+                                </small>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>AML Policy and Procedures</td>
+                            <td class="mainText">
+
+                                <small style="font-weight: bold;">
+                                    @if($getthisuser->aml_policy != null) <a href="{{ $getthisuser->aml_policy }}" target="_blank">View</a> @endif
+                                </small>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Latest Compliance External Audit Report</td>
+                            <td class="mainText">
+
+                                <small style="font-weight: bold;">
+                                    @if($getthisuser->compliance_audit_report != null) <a href="{{ $getthisuser->compliance_audit_report }}" target="_blank">View</a> @endif
+                                </small>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Organizational Chart (including details of Compliance roles and functions)</td>
+                            <td class="mainText">
+
+                                <small style="font-weight: bold;">
+                                    @if($getthisuser->organizational_chart != null) <a href="{{ $getthisuser->organizational_chart }}" target="_blank">View</a> @endif
+                                </small>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Proof of Financial License</td>
+                            <td class="mainText">
+
+                                <small style="font-weight: bold;">
+                                    @if($getthisuser->financial_license != null) <a href="{{ $getthisuser->financial_license }}" target="_blank">View</a> @endif
                                 </small>
 
                             </td>
@@ -172,6 +268,26 @@
 
                             </td>
                         </tr>
+                      <tr>
+                            <td>Transaction Limit</td>
+                            <td class="mainText" style="font-weight: 900; color: navy;">
+
+                                {{ $getthisuser->currencyCode.' '.number_format($getthisuser->withdrawal_per_transaction, 2) }}
+
+                            </td>
+                        </tr>
+
+
+                      <tr>
+                            <td class="mainText" colspan="2">
+
+                                <button class="btn btn-primary" onclick="increaseLimit({{ $getthisuser->id }}, {{ $getthisuser->withdrawal_per_transaction }})">Increase Transaction Limit</button>
+
+                            </td>
+                        </tr>
+
+
+
                       
 
                       <tr class="disp-0">
@@ -192,6 +308,52 @@
                       </tr>
                       <br><br>
 
+
+                                    {{--  Put Modal  --}}
+
+              <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary disp-0" data-toggle="modal" data-target="#increaseLimitModal" id="limit{{ $getthisuser->id }}"> 
+              Launch demo modal
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="increaseLimitModal" tabindex="-1" role="dialog" aria-labelledby="increaseLimitModalTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Increase {{ $getthisuser->name }} transaction limit</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+
+                  <form action="{{ route('increase trans limit') }}" method="post">
+                    @csrf
+
+                    <div class="modal-body">
+                      <div class="form-group">
+                        <label for="Set Transaction Limit">Set Transaction Limit</label><br>
+                        <input type="number" class="form-control" name="withdrawal_per_transaction" id="withdrawal_per_transaction" placeholder="New Limit">
+                        <input type="hidden" name="id" value="{{ $getthisuser->id }}">
+                      </div>
+
+                      <p id="currLimit"></p>
+
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit and Save</button>
+                  </div>
+
+                  </form>
+                  
+                </div>
+              </div>
+            </div>
+
+
+              {{--  End Modal  --}}
+
                                 
 
                   @else
@@ -204,6 +366,9 @@
                   
                 </tbody>
               </table>
+
+
+
 
 
             </div>

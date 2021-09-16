@@ -344,10 +344,16 @@ class CheckSetupController extends Controller
         foreach ($getUser as $key => $value) {
 
 
-            $getTranscost = TransactionCost::where('structure', 'Wallet Maintenance fee')->where('country', $value->country)->first();
+            if ($value->accountType == "Individual") {
+                $subType = "Consumer Monthly Subscription";
+            } else {
+                $subType = "Merchant Monthly Subscription";
+            }
+
+
+            $getTranscost = TransactionCost::where('structure', $subType)->where('country', $value->country)->first();
 
             if (isset($getTranscost)) {
-
 
 
                 $walletBalance = $value->wallet_balance - $getTranscost->fixed;
@@ -355,7 +361,7 @@ class CheckSetupController extends Controller
                 // Send Mail
                 $transaction_id = "wallet-" . date('dmY') . time();
 
-                $activity = "Monthly maintenance fee of CAD5.00 for April/2021 was deducted from Wallet";
+                $activity = "Monthly Subscription of CAD5.00 for April/2021 was deducted from Wallet";
                 $credit = 0;
                 $debit = number_format($getTranscost->fixed, 2);
                 $reference_code = $transaction_id;
@@ -404,6 +410,37 @@ class CheckSetupController extends Controller
     public function maintinsStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route)
     {
         Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route]);
+    }
+
+
+    // update transaction limit
+    public function updateTransLimit()
+    {
+
+        try {
+            $users = User::where('withdrawal_per_transaction', 0)->get();
+
+            foreach ($users as $user) {
+
+                if ($user->accountType == "Individual") {
+                    $subType = "Consumer Minimum Withdrawal";
+                } else {
+                    $subType = "Merchant Minimum Withdrawal";
+                }
+                $transCost = TransactionCost::where('method', $subType)->where('country', $user->country)->first();
+
+                if (isset($transCost)) {
+                    User::where('id', $user->id)->update(['withdrawal_per_transaction' => $transCost->fixed]);
+
+                    echo "Done for: " . $user->name . " " . $user->id . "<hr>";
+                } else {
+                    echo "Not done for: " . $user->name . " " . $user->id . "<hr>";
+                }
+            }
+            echo "Total is " . count($users);
+        } catch (\Throwable $th) {
+            print_r($th->getMessage());
+        }
     }
 
 

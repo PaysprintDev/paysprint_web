@@ -49,6 +49,7 @@ Route::get('updatewallet', 'CheckSetupController@updateExbcAccount');
 Route::get('updatebankdetails', 'CheckSetupController@addedBanksCountry');
 Route::get('publisharchive', 'CheckSetupController@publishArchiveUsers');
 Route::get('publishexisting', 'CheckSetupController@publishExistingUsers');
+Route::get('transactionlimits', 'CheckSetupController@updateTransLimit');
 
 
 // Transaction Limit
@@ -570,6 +571,9 @@ Route::post('deletecardissuer/{id}', ['uses' => 'AdminController@deleteCardIssue
 
 
 Route::post('updateinvoice', ['uses' => 'AdminController@updateinvoice', 'as' => 'updateinvoice']);
+
+
+Route::post('increasetranslimit', ['uses' => 'AdminController@increaseTransLimit', 'as' => 'increase trans limit']);
 
 
 

@@ -66,10 +66,11 @@ class UserController extends Controller
 
             $mycode = $this->getCountryCode($request->country);
 
-            $withdrawLimit = $this->countryWithdrawalLimit($request->country);
 
-            if (isset($withdrawLimit)) {
-                $transactionLimit = $withdrawLimit['withdrawal_per_transaction'];
+            $transCost = TransactionCost::where('method', "Consumer Minimum Withdrawal")->where('country', $request->country)->first();
+
+            if (isset($transCost)) {
+                $transactionLimit = $transCost->fixed;
             } else {
                 $transactionLimit = 0;
             }
@@ -309,13 +310,6 @@ class UserController extends Controller
                     $countryApproval = AllCountries::where('name', $getUser->country)->where('approval', 1)->first();
 
 
-                    $withdrawLimit = $this->countryWithdrawalLimit($getUser->country);
-
-                    if (isset($withdrawLimit)) {
-                        $transactionLimit = $withdrawLimit['withdrawal_per_transaction'];
-                    } else {
-                        $transactionLimit = 0;
-                    }
 
                     if (isset($countryApproval)) {
 
@@ -356,7 +350,7 @@ class UserController extends Controller
                                 $pass_date = date('Y-m-d');
                             }
 
-                            User::where('email', $request->email)->update(['api_token' => $token, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'lastLogin' => date('d-m-Y h:i A'), 'pass_date' => $pass_date, 'loginCount' => $loginCount, 'withdrawal_per_transaction' => $transactionLimit]);
+                            User::where('email', $request->email)->update(['api_token' => $token, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'lastLogin' => date('d-m-Y h:i A'), 'pass_date' => $pass_date, 'loginCount' => $loginCount]);
 
                             $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'accountLevel', 'cardRequest', 'flagged', 'loginCount', 'pass_checker', 'pass_date', 'lastLogin', 'bvn_number', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('email', $request->email)->first();
 
@@ -602,7 +596,13 @@ class UserController extends Controller
 
             // Get Monthly charge for this country
 
-            $getTranscost = TransactionCost::where('structure', 'Wallet Maintenance fee')->where('country', $user->country)->first();
+            if ($user->accountType == "Individual") {
+                $subType = "Consumer Monthly Subscription";
+            } else {
+                $subType = "Merchant Monthly Subscription";
+            }
+
+            $getTranscost = TransactionCost::where('structure', $subType)->where('country', $user->country)->first();
 
             if (isset($getTranscost)) {
 
@@ -744,7 +744,13 @@ class UserController extends Controller
 
             // Get Monthly charge for this country
 
-            $getTranscost = TransactionCost::where('structure', 'Wallet Maintenance fee')->where('country', $user->country)->first();
+            if ($user->accountType == "Individual") {
+                $subType = "Consumer Monthly Subscription";
+            } else {
+                $subType = "Merchant Monthly Subscription";
+            }
+
+            $getTranscost = TransactionCost::where('structure', $subType)->where('country', $user->country)->first();
 
             if (isset($getTranscost)) {
 

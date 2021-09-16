@@ -7794,6 +7794,21 @@ class AdminController extends Controller
         return view('admin.customer')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => $status, 'message' => $message]);
     }
 
+    public function increaseTransLimit(Request $req)
+    {
+        $user = User::where('id', $req->id)->update(['withdrawal_per_transaction' => $req->withdrawal_per_transaction]);
+
+        if (isset($user)) {
+            $resData = "Successfully Increased";
+            $resp = "success";
+        } else {
+            $resData = "Something went wrong!. Try Again";
+            $resp = "error";
+        }
+
+        return redirect()->back()->with($resp, $resData);
+    }
+
 
     public function createPricingSetup(Request $req)
     {
@@ -7847,8 +7862,6 @@ class AdminController extends Controller
 
         return redirect()->back()->with($resp, $resData);
     }
-
-
 
 
     public function deleteFee(Request $req, $id)
@@ -10328,13 +10341,7 @@ class AdminController extends Controller
                 // Check if API Key EXIST
                 $checkApikey = ClientInfo::where('email', $adminCheck[0]['email'])->first();
 
-                $withdrawLimit = $this->countryWithdrawalLimit($checkApikey->country);
 
-                if (isset($withdrawLimit)) {
-                    $transactionLimit = $withdrawLimit['withdrawal_per_transaction'];
-                } else {
-                    $transactionLimit = 0;
-                }
 
 
                 if ($checkApikey->api_secrete_key == null) {
@@ -10350,7 +10357,7 @@ class AdminController extends Controller
 
                 $api_token = uniqid() . md5($adminCheck[0]['email']) . time();
 
-                User::where('email', $adminCheck[0]['email'])->update(['code' => $mycode[0]->callingCodes[0], 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'api_token' => $api_token, 'withdrawal_per_transaction' => $transactionLimit]);
+                User::where('email', $adminCheck[0]['email'])->update(['code' => $mycode[0]->callingCodes[0], 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'api_token' => $api_token]);
 
                 $getMerchant = User::where('email', $adminCheck[0]['email'])->first();
 
@@ -10390,7 +10397,7 @@ class AdminController extends Controller
                             $pass_date = date('Y-m-d');
                         }
 
-                        User::where('email', $getMerchant->email)->update(['lastLogin' => date('d-m-Y h:i A'), 'loginCount' => $loginCount, 'countryapproval' => 1, 'pass_date' => $pass_date, 'withdrawal_per_transaction' => $transactionLimit]);
+                        User::where('email', $getMerchant->email)->update(['lastLogin' => date('d-m-Y h:i A'), 'loginCount' => $loginCount, 'countryapproval' => 1, 'pass_date' => $pass_date]);
 
                         $req->session()->put(['user_id' => $adminCheck[0]['user_id'], 'firstname' => $adminCheck[0]['firstname'], 'lastname' => $adminCheck[0]['lastname'], 'username' => $adminCheck[0]['username'], 'role' => 'Merchant', 'email' => $adminCheck[0]['email'], 'api_token' => $api_token, 'myID' => $getMerchant->id, 'country' => $getMerchant->country, 'businessname' => $getMerchant->businessname, 'loginCount' => $loginCount]);
 
@@ -10481,10 +10488,10 @@ class AdminController extends Controller
             // Check User Account if Email
             $userExist = User::where('email', $req->email)->first();
 
-            $withdrawLimit = $this->countryWithdrawalLimit($req->country);
+            $transCost = TransactionCost::where('method', "Merchant Minimum Withdrawal")->where('country', $req->country)->first();
 
-            if (isset($withdrawLimit)) {
-                $transactionLimit = $withdrawLimit['withdrawal_per_transaction'];
+            if (isset($transCost)) {
+                $transactionLimit = $transCost->fixed;
             } else {
                 $transactionLimit = 0;
             }
@@ -12016,14 +12023,14 @@ class AdminController extends Controller
 
             $this->createNotification($thisuser->ref_code, $message);
 
-            if ($thisuser->country == "Nigeria") {
+            // if ($thisuser->country == "Nigeria") {
 
-                $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+            //     $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
 
-                $this->sendSms($message, $correctPhone);
-            } else {
-                $this->sendMessage($message, $recipients);
-            }
+            //     $this->sendSms($message, $correctPhone);
+            // } else {
+            //     $this->sendMessage($message, $recipients);
+            // }
 
             $this->sendEmail($this->to, "Refund Request");
 
@@ -12060,12 +12067,13 @@ class AdminController extends Controller
 
             $user->insert($dataInfo);
 
-            $userclosed->where('id', $req->id)->delete();
+            $thisuser = $userclosed->where('id', $req->id)->first();
 
-            $thisuser = $user->where('id', $req->id)->first();
+
 
             $subject = 'Account successfully Open on PaySprint';
             $message = "We are glad to notify you that your paySprint Account is back to action. Your PaySprint account has been enabled and you will be able to Send Money, Pay Invoice and Request for withdrawal of funds from your PaySprint Wallet from  the Mobile and Web platforms. Thank you for your interest in PaySprint. compliance@paysprint.net";
+
 
             // Send Mail to Receiver
             $this->name = $thisuser->name;
@@ -12084,16 +12092,20 @@ class AdminController extends Controller
             }
 
             $this->createNotification($thisuser->ref_code, $message);
-            if ($thisuser->country == "Nigeria") {
+            // if ($thisuser->country == "Nigeria") {
 
-                $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+            //     $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
 
-                $this->sendSms($message, $correctPhone);
-            } else {
-                $this->sendMessage($message, $recipients);
-            }
+            //     $this->sendSms($message, $correctPhone);
+            // } else {
+            //     $this->sendMessage($message, $recipients);
+            // }
+
 
             $this->sendEmail($this->to, "Refund Request");
+
+            $userclosed->where('id', $req->id)->delete();
+
 
             $resData = ['res' => 'Account is open', 'message' => 'success', 'title' => 'Great'];
         } else {
@@ -12109,65 +12121,6 @@ class AdminController extends Controller
 
     public function ajaxCheckVerification(Request $req, User $user)
     {
-
-        // $data = $user->where('id', $req->id)->first();
-
-        // $url = 'https://api.globaldatacompany.com/verifications/v1/verify';
-
-        // $name = explode(" ", $data->name);
-
-        // $firstname = $name[0];
-        // $lastname = $name[1];
-        // $dayofbirth = $data->dayOfBirth;
-        // $monthofbirth = $data->monthOfBirth;
-        // $yearofbirth = $data->yearOfBirth;
-        // $minimuAge = date('Y') - $data->yearOfBirth;
-        // $streetname = $data->address;
-        // $city = $data->city;
-        // $country = $data->country;
-        // $zipcode = $data->zip;
-        // $telephone = $data->telephone;
-        // $email = $data->email;
-
-
-        // $countryCode = $this->getCountryCode($country);
-
-        // // dd($countryCode);
-
-
-        // $countryCode = $countryCode[0]->alpha2Code;
-
-
-
-        // $info = $this->identificationAPI($url, $firstname, $lastname, $dayofbirth, $monthofbirth, $yearofbirth, $minimuAge, $streetname, $city, $country, $zipcode, $telephone, $email, $countryCode);
-
-        // if(isset($info->TransactionID) == true){
-        //     $result = $this->transStatus($info->TransactionID);
-
-        //     $res = $this->getTransRec($result->TransactionRecordId);
-
-
-        //     if($res->Record->RecordStatus == "nomatch"){
-
-        //         $message = "error";
-        //         $title = "Oops!";
-
-        //     }
-        //     else{
-        //         $message = "success";
-        //         $title = "Great";
-        //     }
-
-        //     $resp = $res->Record->RecordStatus;
-
-        // }
-        // else{
-        //     $message = "error";
-        //     $title = "Oops!";
-
-        //     $resp = $info->Message;
-        // }
-
 
         $data = $user->where('id', $req->id)->update(['accountLevel' => 2]);
         $successmessage = "success";

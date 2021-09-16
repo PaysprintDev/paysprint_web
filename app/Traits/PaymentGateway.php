@@ -15,6 +15,8 @@ use App\Statement as Statement;
 
 use App\PricingSetup as PricingSetup;
 
+use App\TransactionCost as TransactionCost;
+
 use App\User as User;
 use Illuminate\Support\Facades\Log;
 
@@ -164,19 +166,23 @@ trait PaymentGateway
         try {
             $getPrice = PricingSetup::where('country', $country)->first();
 
+
             $getUser = User::where('id', $id)->first();
 
             if (isset($getPrice)) {
                 if ($getUser->accountType == "Individual") {
+                    $transCost = TransactionCost::where('method', "Consumer Minimum Withdrawal")->where('country', $country)->first();
+
                     $result = [
-                        'withdrawal_per_transaction' => $getPrice->withdrawal_per_transaction,
+                        'withdrawal_per_transaction' => $transCost->fixed,
                         'withdrawal_per_day' => $getPrice->withdrawal_per_day,
                         'withdrawal_per_week' => $getPrice->withdrawal_per_week,
                         'withdrawal_per_month' => $getPrice->withdrawal_per_month
                     ];
                 } else {
+                    $transCost = TransactionCost::where('method', "Merchant Minimum Withdrawal")->where('country', $country)->first();
                     $result = [
-                        'withdrawal_per_transaction' => $getPrice->merchant_withdrawal_per_transaction,
+                        'withdrawal_per_transaction' => $transCost->fixed,
                         'withdrawal_per_day' => $getPrice->merchant_withdrawal_per_day,
                         'withdrawal_per_week' => $getPrice->merchant_withdrawal_per_week,
                         'withdrawal_per_month' => $getPrice->merchant_withdrawal_per_month
@@ -184,6 +190,8 @@ trait PaymentGateway
                 }
             } else {
                 if ($getUser->accountType == "Individual") {
+                    $transCost = TransactionCost::where('method', "Consumer Minimum Withdrawal")->where('country', $country)->first();
+
                     $result = [
                         'withdrawal_per_transaction' => 0,
                         'withdrawal_per_day' => 0,
@@ -191,6 +199,7 @@ trait PaymentGateway
                         'withdrawal_per_month' => 0
                     ];
                 } else {
+                    $transCost = TransactionCost::where('method', "Merchant Minimum Withdrawal")->where('country', $country)->first();
                     $result = [
                         'withdrawal_per_transaction' => 0,
                         'withdrawal_per_day' => 0,

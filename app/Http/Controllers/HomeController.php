@@ -3250,10 +3250,10 @@ class HomeController extends Controller
         $checkUser = User::where('email', $req->email)->get();
         $checkClosedUser = UserClosed::where('email', $req->email)->get();
 
-        $withdrawLimit = $this->countryWithdrawalLimit($req->country);
+        $transCost = TransactionCost::where('method', "Consumer Minimum Withdrawal")->where('country', $req->country)->first();
 
-        if (isset($withdrawLimit)) {
-            $transactionLimit = $withdrawLimit->withdrawal_per_transaction;
+        if (isset($transCost)) {
+            $transactionLimit = $transCost->fixed;
         } else {
             $transactionLimit = 0;
         }
@@ -3471,13 +3471,7 @@ class HomeController extends Controller
 
                 $countryApproval = AllCountries::where('name', $userExists[0]['country'])->where('approval', 1)->first();
 
-                $withdrawLimit = $this->countryWithdrawalLimit($userExists[0]['country']);
 
-                if (isset($withdrawLimit)) {
-                    $transactionLimit = $withdrawLimit->withdrawal_per_transaction;
-                } else {
-                    $transactionLimit = 0;
-                }
 
 
                 if (isset($countryApproval)) {
@@ -3519,7 +3513,7 @@ class HomeController extends Controller
                             }
 
                             // Update API Token
-                            User::where('email', $req->email)->update(['api_token' => uniqid() . md5($req->email) . time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'lastLogin' => date('d-m-Y h:i A'), 'loginCount' => $loginCount, 'pass_date' => $pass_date, 'withdrawal_per_transaction' => $transactionLimit]);
+                            User::where('email', $req->email)->update(['api_token' => uniqid() . md5($req->email) . time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'lastLogin' => date('d-m-Y h:i A'), 'loginCount' => $loginCount, 'pass_date' => $pass_date]);
 
                             $city = $this->myLocation()->city;
                             $country = $this->myLocation()->country;
@@ -4083,8 +4077,6 @@ class HomeController extends Controller
 
     public function ajaxgetCommission(Request $req)
     {
-
-        // TODO: Money corrected from Elijah Ogbe #7759.67 instead of #8000 Date: 04/08/21
 
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();

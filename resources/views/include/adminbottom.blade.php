@@ -1867,6 +1867,13 @@ function closeAccount(id){
 
 }
 
+
+function increaseLimit(id, currentLimit){
+  $("#currLimit").html("<span style='color: navy; font-weight:bold;'>Current Transaction Limit: "+currentLimit+"</span>");
+  $("#limit"+id).click();
+}
+
+
 function openAccount(id){
 
   var thisdata;
@@ -1898,7 +1905,7 @@ function openAccount(id){
                 if (result.message == "success") {
 
                   swal(result.title, result.res, result.message);
-                  setTimeout(function(){ location.reload(); }, 2000);
+                  // setTimeout(function(){ location.reload(); }, 2000);
 
                 }
 

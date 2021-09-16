@@ -304,13 +304,12 @@ class Controller extends BaseController
         }
     }
 
-
-    public function minimumAmountToWithdrawal($country)
+    public function minimumAmountToWithdrawal($subType, $country)
     {
 
         try {
             // Get Minimum Withdrawal
-            $minimumBalance = TransactionCost::where('method', 'Minimum Withdrawal')->where('country', $country)->first();
+            $minimumBalance = TransactionCost::where('method', $subType)->where('country', $country)->first();
 
             if (isset($minimumBalance) == true) {
                 $data = $minimumBalance->fixed;
@@ -327,13 +326,15 @@ class Controller extends BaseController
         }
     }
 
-
-    public function maintenanceBalanceWithdrawal($country)
+    public function maintenanceBalanceWithdrawal($subType, $country)
     {
 
+        // Consumer Monthly Subscription
+        // Merchant Monthly Subscription
+
         try {
-            // Get Minimum Withdrawal
-            $minimumBalance = TransactionCost::where('method', 'Wallet Maintenance fee')->where('country', $country)->first();
+            // Get Monthly Maintenance Fee
+            $minimumBalance = TransactionCost::where('method', $subType)->where('country', $country)->first();
 
             if (isset($minimumBalance) == true) {
                 $data = $minimumBalance->fixed;
