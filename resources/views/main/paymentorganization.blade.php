@@ -314,6 +314,17 @@ input[type="radio"] {
                             </div>
 
 
+                            <div class="form-group"> <label for="transaction_pin">
+                                    <h6>Transaction Pin</h6>
+                                </label>
+                                <div class="input-group"> <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fas fa-lock"></i> </span> </div> <input type="password" name="transaction_pin" id="transaction_pin" class="form-control" maxlength="4" required>
+                                    
+                                </div>
+                            </div>
+
+                            
+
+
                             @if (Request::get('country') != $data['paymentorg']->country)
                             <div class="form-group disp-0">
                                 {{--  <span class="text-success">Please note that International transfer are sent in USD conversion</span>  --}}
@@ -390,6 +401,11 @@ input[type="radio"] {
                                                 </label> <input type="number" required class="form-control" name="cvv" placeholder="435"> </div>
                                         </div>
                                     </div>
+
+                                    
+
+
+
                                     <div class="card-footer"> 
                                         
                                         
@@ -517,6 +533,7 @@ function orgmonerisPay(){
     var expirydate = $('#orgpayyear').val();
     var payment_method = $('#make_payment_method').val();
     var creditcard_no = $('#orgpaycreditcard').val();
+    var transaction_pin = $('#transaction_pin').val();
     
 
     if(service == ""){
@@ -525,6 +542,10 @@ function orgmonerisPay(){
     }
     else if(amount == ""){
         swal('Oops!', 'Please enter amount', 'info');
+        return false;
+    }
+    else if(transaction_pin == ""){
+        swal('Oops!', 'Please provide transaction pin', 'info');
         return false;
     }
     // else if(month == ""){
@@ -924,6 +945,7 @@ function currencyConvert(amount){
     var service = $('#orgpayservice').val();
     var purpose = $('#orgpaypurpose').val();
     var amount = $('#orgpayamount').val();
+    var transaction_pin = $('#transaction_pin').val();
 
 
     if(service == ""){
@@ -932,6 +954,10 @@ function currencyConvert(amount){
     }
     else if(amount == ""){
         swal('Oops!', 'Please enter amount', 'info');
+        return false;
+    }
+    else if(transaction_pin == ""){
+        swal('Oops!', 'Please provide transaction pin', 'info');
         return false;
     }
     

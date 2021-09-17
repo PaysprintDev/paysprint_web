@@ -50,6 +50,7 @@ Route::get('updatebankdetails', 'CheckSetupController@addedBanksCountry');
 Route::get('publisharchive', 'CheckSetupController@publishArchiveUsers');
 Route::get('publishexisting', 'CheckSetupController@publishExistingUsers');
 Route::get('transactionlimits', 'CheckSetupController@updateTransLimit');
+Route::get('numberofwithdrawals', 'CheckSetupController@updateNumberofWithdrawal');
 
 
 // Transaction Limit

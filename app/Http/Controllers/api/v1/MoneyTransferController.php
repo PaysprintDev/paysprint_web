@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Support\Facades\Log;
 
+use Illuminate\Support\Facades\Hash;
+
 use App\User as User;
 
 use App\Mail\sendEmail;
@@ -797,207 +799,221 @@ class MoneyTransferController extends Controller
                         $resData = ['data' => [], 'message' => $message, 'status' => $status];
                     } else {
 
-                        if (isset($sender)) {
 
-                            $minBal = $this->minimumWithdrawal($sender->country);
+                        // Check Transaction PIN
+                        if ($sender->transaction_pin != null) {
+                            if (Hash::check($req->transaction_pin, $sender->transaction_pin)) {
+                                if (isset($sender)) {
 
-                            // Get Receivers Details
-                            $receiver = User::where('ref_code', $req->accountNumber)->first();
+                                    $minBal = $this->minimumWithdrawal($sender->country);
 
-
-                            if (isset($receiver)) {
-
-                                if ($req->amount > ($sender->wallet_balance - $minBal)) {
-
-                                    $status = 404;
-
-                                    $resData = ['data' => [], 'message' => "Your minimum wallet balance is " . $sender->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction", 'status' => $status];
-                                } elseif (($sender->wallet_balance - $minBal) <= $req->amount) {
-                                    $status = 404;
-
-                                    $resData = ['data' => [], 'message' => "Your minimum wallet balance is " . $sender->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction", 'status' => $status];
-                                } else {
+                                    // Get Receivers Details
+                                    $receiver = User::where('ref_code', $req->accountNumber)->first();
 
 
-                                    if ($sender->approval < 2 && $sender->accountLevel <= 2) {
+                                    if (isset($receiver)) {
 
-                                        $status = 404;
+                                        if ($req->amount > ($sender->wallet_balance - $minBal)) {
 
-                                        $resData = ['data' => [], 'message' => 'You cannot send money at the moment because your account is still on review.', 'status' => $status];
-                                    } elseif ($receiver->country != $sender->country) {
-                                        $status = 404;
+                                            $status = 404;
 
-                                        $resData = ['data' => [], 'message' => 'International money transfer is not available at the moment', 'status' => $status];
+                                            $resData = ['data' => [], 'message' => "Your minimum wallet balance is " . $sender->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction", 'status' => $status];
+                                        } elseif (($sender->wallet_balance - $minBal) <= $req->amount) {
+                                            $status = 404;
 
-                                        Log::info("International Transfer  between " . $sender->name . " and " . $receiver->name . ". Not available.");
-                                    } else {
-
-                                        $amount = number_format($req->amount, 2);
-
-                                        $approve_commission = "Yes";
-
-
-                                        if ($req->purposeOfPayment != "Others") {
-                                            $service = $req->purposeOfPayment;
+                                            $resData = ['data' => [], 'message' => "Your minimum wallet balance is " . $sender->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction", 'status' => $status];
                                         } else {
-                                            $service = $req->specifyPurpose;
-                                        }
 
 
+                                            if ($sender->approval < 2 && $sender->accountLevel <= 2) {
+
+                                                $status = 404;
+
+                                                $resData = ['data' => [], 'message' => 'You cannot send money at the moment because your account is still on review.', 'status' => $status];
+                                            } elseif ($receiver->country != $sender->country) {
+                                                $status = 404;
+
+                                                $resData = ['data' => [], 'message' => 'International money transfer is not available at the moment', 'status' => $status];
+
+                                                Log::info("International Transfer  between " . $sender->name . " and " . $receiver->name . ". Not available.");
+                                            } else {
+
+                                                $amount = number_format($req->amount, 2);
+
+                                                $approve_commission = "Yes";
 
 
-                                        // Getting the sender
-                                        $userID = $sender->email;
-                                        $payerID = $sender->ref_code;
-
-                                        $paymentToken = "wallet-" . date('dmY') . time();
-
-                                        $wallet_balance = $sender->wallet_balance - $req->amount;
-                                        $withdrawal_per_day = $sender->withdrawal_per_day + $req->amount;
-                                        $withdrawal_per_week = $sender->withdrawal_per_week + $withdrawal_per_day;
-                                        $withdrawal_per_month = $sender->withdrawal_per_month + $withdrawal_per_week;
-
-                                        $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $req->accountNumber, 'user_id' => $userID, 'purpose' => $service, 'amount' => $req->amount, 'withdraws' => $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $req->amount, 'commission' => 0, 'approve_commission' => $approve_commission, 'request_receive' => 0]);
-
-
-                                        if ($insertPay == true) {
-
-                                            try {
-
-                                                // Update Wallet
-                                                User::where('api_token', $req->bearerToken())->update([
-                                                    'wallet_balance' => $wallet_balance,
-                                                    'withdrawal_per_day' => $withdrawal_per_day,
-                                                    'withdrawal_per_week' => $withdrawal_per_week,
-                                                    'withdrawal_per_month' => $withdrawal_per_month
-                                                ]);
-
-                                                // Send mail to both parties
-
-                                                // $this->to = "bambo@vimfile.com";
-                                                $this->to = $receiver->email;
-                                                $this->name = $sender->name;
-                                                $this->coy_name = $receiver->name;
-                                                // $this->email = "bambo@vimfile.com";
-                                                $this->email = $sender->email;
-                                                $this->amount = $req->currency . " " . $req->amount;
-                                                $this->paypurpose = $service;
-                                                $this->subject = "Payment Received from " . $sender->name . " for " . $service;
-                                                $this->subject2 = "Your Payment to " . $receiver->name . " was successfull";
-
-                                                // Mail to receiver
-                                                $this->sendEmail($this->to, "Payment Received");
-
-                                                // Mail from Sender
-
-                                                $this->sendEmail($this->email, "Payment Successful");
-
-
-                                                // Insert Statement
-                                                $activity = "Transfer of " . $req->currency . " " . number_format($req->amount, 2) . " to " . $receiver->name . " for " . $service . " on PaySprint Wallet.";
-                                                $credit = 0;
-                                                $debit = number_format($req->amount, 2);
-                                                $reference_code = $paymentToken;
-                                                $balance = 0;
-                                                $trans_date = date('Y-m-d');
-                                                $status = "Delivered";
-                                                $action = "Wallet debit";
-                                                $regards = $receiver->ref_code;
-
-
-                                                $statement_route = "wallet";
-
-
-                                                if ($receiver->auto_deposit == 'on') {
-                                                    $recWallet = $receiver->wallet_balance + $req->amount;
-                                                    $walletstatus = "Delivered";
-
-                                                    $recMsg = "Hi " . $receiver->name . ", You have received " . $req->currency . ' ' . number_format($req->amount, 2) . " in your PaySprint wallet for " . $service . " from " . $sender->name . ". You now have " . $req->currency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
+                                                if ($req->purposeOfPayment != "Others") {
+                                                    $service = $req->purposeOfPayment;
                                                 } else {
-                                                    $recWallet = $receiver->wallet_balance;
-                                                    $walletstatus = "Pending";
-
-                                                    $recMsg = "Hi " . $receiver->name . ", You have received " . $req->currency . ' ' . number_format($req->amount, 2) . " for " . $service . " from " . $sender->name . ". Your wallet balance is " . $req->currency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
-                                                }
-
-                                                User::where('ref_code', $req->accountNumber)->update(['wallet_balance' => $recWallet]);
-
-
-
-
-                                                $sendMsg = "Hi " . $sender->name . ", You have made a " . $activity . " Your new Wallet balance is " . $req->currency . ' ' . number_format($wallet_balance, 2) . ". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us. PaySprint Team";
-
-                                                $usergetPhone = User::where('email', $sender->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                                if (isset($usergetPhone)) {
-
-                                                    $sendPhone = $sender->telephone;
-                                                } else {
-                                                    $sendPhone = "+" . $sender->code . $sender->telephone;
-                                                }
-
-                                                if ($sender->country == "Nigeria") {
-
-                                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                                                    $this->sendSms($sendMsg, $correctPhone);
-                                                } else {
-                                                    $this->sendMessage($sendMsg, $sendPhone);
+                                                    $service = $req->specifyPurpose;
                                                 }
 
 
-                                                $merchantPhone = User::where('email', $receiver->email)->where('telephone', 'LIKE', '%+%')->first();
 
-                                                if (isset($merchantPhone)) {
 
-                                                    $recPhone = $receiver->telephone;
-                                                } else {
-                                                    $recPhone = "+" . $receiver->code . $receiver->telephone;
+                                                // Getting the sender
+                                                $userID = $sender->email;
+                                                $payerID = $sender->ref_code;
+
+                                                $paymentToken = "wallet-" . date('dmY') . time();
+
+                                                $wallet_balance = $sender->wallet_balance - $req->amount;
+                                                $withdrawal_per_day = $sender->withdrawal_per_day + $req->amount;
+                                                $withdrawal_per_week = $sender->withdrawal_per_week + $withdrawal_per_day;
+                                                $withdrawal_per_month = $sender->withdrawal_per_month + $withdrawal_per_week;
+
+                                                $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $req->accountNumber, 'user_id' => $userID, 'purpose' => $service, 'amount' => $req->amount, 'withdraws' => $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $req->amount, 'commission' => 0, 'approve_commission' => $approve_commission, 'request_receive' => 0]);
+
+
+                                                if ($insertPay == true) {
+
+                                                    try {
+
+                                                        // Update Wallet
+                                                        User::where('api_token', $req->bearerToken())->update([
+                                                            'wallet_balance' => $wallet_balance,
+                                                            'withdrawal_per_day' => $withdrawal_per_day,
+                                                            'withdrawal_per_week' => $withdrawal_per_week,
+                                                            'withdrawal_per_month' => $withdrawal_per_month
+                                                        ]);
+
+                                                        // Send mail to both parties
+
+                                                        // $this->to = "bambo@vimfile.com";
+                                                        $this->to = $receiver->email;
+                                                        $this->name = $sender->name;
+                                                        $this->coy_name = $receiver->name;
+                                                        // $this->email = "bambo@vimfile.com";
+                                                        $this->email = $sender->email;
+                                                        $this->amount = $req->currency . " " . $req->amount;
+                                                        $this->paypurpose = $service;
+                                                        $this->subject = "Payment Received from " . $sender->name . " for " . $service;
+                                                        $this->subject2 = "Your Payment to " . $receiver->name . " was successfull";
+
+                                                        // Mail to receiver
+                                                        $this->sendEmail($this->to, "Payment Received");
+
+                                                        // Mail from Sender
+
+                                                        $this->sendEmail($this->email, "Payment Successful");
+
+
+                                                        // Insert Statement
+                                                        $activity = "Transfer of " . $req->currency . " " . number_format($req->amount, 2) . " to " . $receiver->name . " for " . $service . " on PaySprint Wallet.";
+                                                        $credit = 0;
+                                                        $debit = number_format($req->amount, 2);
+                                                        $reference_code = $paymentToken;
+                                                        $balance = 0;
+                                                        $trans_date = date('Y-m-d');
+                                                        $status = "Delivered";
+                                                        $action = "Wallet debit";
+                                                        $regards = $receiver->ref_code;
+
+
+                                                        $statement_route = "wallet";
+
+
+                                                        if ($receiver->auto_deposit == 'on') {
+                                                            $recWallet = $receiver->wallet_balance + $req->amount;
+                                                            $walletstatus = "Delivered";
+
+                                                            $recMsg = "Hi " . $receiver->name . ", You have received " . $req->currency . ' ' . number_format($req->amount, 2) . " in your PaySprint wallet for " . $service . " from " . $sender->name . ". You now have " . $req->currency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
+                                                        } else {
+                                                            $recWallet = $receiver->wallet_balance;
+                                                            $walletstatus = "Pending";
+
+                                                            $recMsg = "Hi " . $receiver->name . ", You have received " . $req->currency . ' ' . number_format($req->amount, 2) . " for " . $service . " from " . $sender->name . ". Your wallet balance is " . $req->currency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
+                                                        }
+
+                                                        User::where('ref_code', $req->accountNumber)->update(['wallet_balance' => $recWallet]);
+
+
+
+
+                                                        $sendMsg = "Hi " . $sender->name . ", You have made a " . $activity . " Your new Wallet balance is " . $req->currency . ' ' . number_format($wallet_balance, 2) . ". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us. PaySprint Team";
+
+                                                        $usergetPhone = User::where('email', $sender->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                        if (isset($usergetPhone)) {
+
+                                                            $sendPhone = $sender->telephone;
+                                                        } else {
+                                                            $sendPhone = "+" . $sender->code . $sender->telephone;
+                                                        }
+
+                                                        if ($sender->country == "Nigeria") {
+
+                                                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                            $this->sendSms($sendMsg, $correctPhone);
+                                                        } else {
+                                                            $this->sendMessage($sendMsg, $sendPhone);
+                                                        }
+
+
+                                                        $merchantPhone = User::where('email', $receiver->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                        if (isset($merchantPhone)) {
+
+                                                            $recPhone = $receiver->telephone;
+                                                        } else {
+                                                            $recPhone = "+" . $receiver->code . $receiver->telephone;
+                                                        }
+
+                                                        if ($receiver->country == "Nigeria") {
+
+                                                            $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                                                            $this->sendSms($recMsg, $correctPhone);
+                                                        } else {
+                                                            $this->sendMessage($recMsg, $recPhone);
+                                                        }
+
+                                                        // Senders statement
+                                                        $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on');
+
+                                                        // Receiver Statement
+                                                        $this->insStatement($receiver->email, $reference_code, "Received " . $req->currency . ' ' . number_format($req->amount, 2) . " in wallet for " . $service . " from " . $sender->name, number_format($req->amount, 2), 0, $balance, $trans_date, $walletstatus, "Wallet credit", $receiver->ref_code, 1, $statement_route, $receiver->auto_deposit);
+
+                                                        // $data = OrganizationPay::where('transactionid', $paymentToken)->first();
+                                                        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'cardRequest')->where('api_token', $req->bearerToken())->first();
+
+                                                        $status = 200;
+
+                                                        $resData = ['data' => $data, 'message' => 'Money Sent Successfully', 'status' => $status];
+
+
+                                                        Log::info("Sent money from " . $sender->name . " to " . $receiver->name);
+
+                                                        $this->createNotification($receiver->ref_code, $recMsg);
+
+                                                        $this->createNotification($sender->ref_code, $sendMsg);
+                                                    } catch (\Throwable $th) {
+                                                        $status = 400;
+
+                                                        $resData = ['data' => [], 'message' => 'Error: ' . $th, 'status' => $status];
+                                                    }
                                                 }
-
-                                                if ($receiver->country == "Nigeria") {
-
-                                                    $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
-                                                    $this->sendSms($recMsg, $correctPhone);
-                                                } else {
-                                                    $this->sendMessage($recMsg, $recPhone);
-                                                }
-
-                                                // Senders statement
-                                                $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on');
-
-                                                // Receiver Statement
-                                                $this->insStatement($receiver->email, $reference_code, "Received " . $req->currency . ' ' . number_format($req->amount, 2) . " in wallet for " . $service . " from " . $sender->name, number_format($req->amount, 2), 0, $balance, $trans_date, $walletstatus, "Wallet credit", $receiver->ref_code, 1, $statement_route, $receiver->auto_deposit);
-
-                                                // $data = OrganizationPay::where('transactionid', $paymentToken)->first();
-                                                $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'cardRequest')->where('api_token', $req->bearerToken())->first();
-
-                                                $status = 200;
-
-                                                $resData = ['data' => $data, 'message' => 'Money Sent Successfully', 'status' => $status];
-
-
-                                                Log::info("Sent money from " . $sender->name . " to " . $receiver->name);
-
-                                                $this->createNotification($receiver->ref_code, $recMsg);
-
-                                                $this->createNotification($sender->ref_code, $sendMsg);
-                                            } catch (\Throwable $th) {
-                                                $status = 400;
-
-                                                $resData = ['data' => [], 'message' => 'Error: ' . $th, 'status' => $status];
                                             }
                                         }
+                                    } else {
+                                        $status = 404;
+
+                                        $resData = ['data' => [], 'message' => 'Receiver not found', 'status' => $status];
                                     }
+                                } else {
+                                    $status = 400;
+
+                                    $resData = ['data' => [], 'message' => 'Token mismatch', 'status' => $status];
                                 }
                             } else {
                                 $status = 404;
 
-                                $resData = ['data' => [], 'message' => 'Receiver not found', 'status' => $status];
+                                $resData = ['data' => [], 'message' => "Invalid transaction pin", 'status' => $status];
                             }
                         } else {
-                            $status = 400;
+                            $status = 404;
 
-                            $resData = ['data' => [], 'message' => 'Token mismatch', 'status' => $status];
+                            $resData = ['data' => [], 'message' => "Kindly setup transaction pin in your profile settings", 'status' => $status];
                         }
                     }
                 }

@@ -745,6 +745,14 @@ input[type="radio"] {
                                 </div>
                             </div>
 
+                            <div class="form-group"> <label for="transaction_pin">
+                                    <h6>Transaction Pin</h6>
+                                </label>
+                                <div class="input-group"> <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fas fa-lock"></i> </span> </div> <input type="password" name="transaction_pin" id="transaction_pin" class="form-control" maxlength="4" required>
+                                    
+                                </div>
+                            </div>
+
 
                             <div class="form-group disp-0">
                                 <span class="text-success">Please note that International transfer are sent in USD conversion</span>

@@ -443,6 +443,21 @@ class CheckSetupController extends Controller
         }
     }
 
+    // Update withdrawals
+    public function updateNumberofWithdrawal()
+    {
+        try {
+            $users = User::all();
+            foreach ($users as $user) {
+                User::where('id', $user->id)->update(['number_of_withdrawals' => 0]);
+
+                echo "Done for " . $user->name . " | " . $user->id;
+            }
+        } catch (\Throwable $th) {
+            print_r($th->getMessage());
+        }
+    }
+
 
     // Update Statement Report Satus
     public function reportStatus()
