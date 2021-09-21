@@ -315,7 +315,7 @@ Download PaySprint App today on <br> <ul style="
 <a href="https://apps.apple.com/gb/app/paysprint/id1567742130"><img id="1617200960035100001_imgsrc_url_2" alt="App Store" style="width :  150px; " src="https://res.cloudinary.com/pilstech/image/upload/v1623072511/paysprint_asset/appleStore_yy6tld.png"></a>
     </li>
 </ul> <br>
-Visit our website, <a href="{{ route('home') }}">www.paysprint.net</a> to open a Merchant account.
+Visit our website, <a href="{{ route('home') }}">www.paysprint.ca</a> to open a Merchant account.
 </p>
 
 Best <br><br>

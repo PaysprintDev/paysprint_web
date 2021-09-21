@@ -46,7 +46,7 @@
                 <p>Copy merchant api secrete key and send to your developer for integration on the website</p>
 
                 <p>
-                  <strong>BASE URL: </strong> <pre><strong>https://paysprint.net/api/v1</strong></pre>
+                  <strong>BASE URL: </strong> <pre><strong>https://paysprint.ca/api/v1</strong></pre>
                 </p>
                 <p>
                   <strong>API MERCHANT KEY: </strong> <pre><strong>{{ $data['getbusinessDetail']->api_secrete_key }}</strong></pre>

@@ -36,11 +36,11 @@
 
                             @if ($data['continent'] != "Africa")
                                 
-                            <a href="#">info@paysprint.net</a>
+                            <a href="#">info@paysprint.ca</a>
 
                             @else
                             
-                            <a href="#">customerserviceafrica@paysprint.net</a>
+                            <a href="#">customerserviceafrica@paysprint.ca</a>
                                 
                             @endif
 

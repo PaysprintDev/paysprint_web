@@ -169,7 +169,7 @@ PaySprint offers developers the ability to receive money from third-party applic
 
 
                                         <div class="code-block">
-                                            <pre class="prettyprint lang-html" id="filesandfolder">https://paysprint.net/api/v1</pre>
+                                            <pre class="prettyprint lang-html" id="filesandfolder">https://paysprint.ca/api/v1</pre>
                                         </div>
                                     </div><!-- nk-block -->
 
@@ -281,7 +281,7 @@ curl --location --request POST '{baseUrl}/visitors' \
         "telephone": "123456789",
         "state": "Ontario",
         "country": "Canada",
-        "avatar": "http://paysprint.net/profilepic/avatar/2092218901_1617494018.jpg",
+        "avatar": "http://paysprint.ca/profilepic/avatar/2092218901_1617494018.jpg",
         "paymentToken": "wallet-140520211621004091",
         "amount": "2",
         "currency": "CAD"

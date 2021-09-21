@@ -52,6 +52,9 @@ Route::get('publishexisting', 'CheckSetupController@publishExistingUsers');
 Route::get('transactionlimits', 'CheckSetupController@updateTransLimit');
 Route::get('numberofwithdrawals', 'CheckSetupController@updateNumberofWithdrawal');
 
+// Get Path Address
+Route::get('pathaddress', 'CheckSetupController@getPathAddress');
+
 
 // Transaction Limit
 Route::get('dailylimit', 'CheckSetupController@dailyLimit');

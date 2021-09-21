@@ -106,7 +106,7 @@ use App\Traits\MailChimpNewsLetter;
 class AdminController extends Controller
 {
 
-    public $to = "info@paysprint.net";
+    public $to = "info@paysprint.ca";
     public $name;
     public $admin;
     public $email;
@@ -4533,7 +4533,7 @@ class AdminController extends Controller
         $this->email = $req->email;
         $this->info = "Fund remittance";
 
-        $this->message = '<p>Hello ' . $this->name . ', </p><p>You have been assigned a role on PaySprint. Below are your login details;</p><p style="font-weight: bold;">Username: ' . $req->user_id . '</p><p style="font-weight: bold;">Password: ' . $req->firstname . '</p><hr><p>Login Url: <a href="https://paysprint.net/AdminLogin">https://paysprint.net/AdminLogin</a></p>';
+        $this->message = '<p>Hello ' . $this->name . ', </p><p>You have been assigned a role on PaySprint. Below are your login details;</p><p style="font-weight: bold;">Username: ' . $req->user_id . '</p><p style="font-weight: bold;">Password: ' . $req->firstname . '</p><hr><p>Login Url: <a href="https://paysprint.ca/AdminLogin">https://paysprint.ca/AdminLogin</a></p>';
 
         Log::info("Hello  " . $this->name . ', You have been assigned a role on PaySprint. Below are your login details; Username: ' . $req->user_id . " \n Password: " . $req->firstname);
 
@@ -4555,7 +4555,7 @@ class AdminController extends Controller
         $this->email = $req->email;
         $this->info = "Fund remittance";
 
-        $this->message = '<p>Hello ' . $this->name . ', </p><p>You have been assigned a role on PaySprint. Below are your login details;</p><p style="font-weight: bold;">Username: ' . $req->user_id . '</p><p style="font-weight: bold;">Password: ' . $req->firstname . '</p><hr><p>Login Url: <a href="https://paysprint.net/AdminLogin">https://paysprint.net/AdminLogin</a></p>';
+        $this->message = '<p>Hello ' . $this->name . ', </p><p>You have been assigned a role on PaySprint. Below are your login details;</p><p style="font-weight: bold;">Username: ' . $req->user_id . '</p><p style="font-weight: bold;">Password: ' . $req->firstname . '</p><hr><p>Login Url: <a href="https://paysprint.ca/AdminLogin">https://paysprint.ca/AdminLogin</a></p>';
 
 
         Log::info("Hello  " . $this->name . ', You have been assigned a role on PaySprint. Below are your login details; Username: ' . $req->user_id . " \n Password: " . $req->firstname);
@@ -10370,14 +10370,14 @@ class AdminController extends Controller
 
                     if ($getMerchant->flagged == 1) {
 
-                        $resData = ['res' => 'Hello ' . $adminCheck[0]['firstname'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.net/contact', 'message' => 'error'];
+                        $resData = ['res' => 'Hello ' . $adminCheck[0]['firstname'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact', 'message' => 'error'];
 
-                        $this->createNotification($checkApikey->user_id, 'Hello ' . $adminCheck[0]['firstname'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.net/contact');
+                        $this->createNotification($checkApikey->user_id, 'Hello ' . $adminCheck[0]['firstname'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact');
                     } elseif ($getMerchant->disableAccount == 'on') {
 
-                        $resData = ['res' => 'Hello ' . $adminCheck[0]['firstname'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.net/contact', 'message' => 'error'];
+                        $resData = ['res' => 'Hello ' . $adminCheck[0]['firstname'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact', 'message' => 'error'];
 
-                        $this->createNotification($checkApikey->user_id, 'Hello ' . $adminCheck[0]['firstname'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.net/contact');
+                        $this->createNotification($checkApikey->user_id, 'Hello ' . $adminCheck[0]['firstname'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact');
                     }
                     // elseif($getMerchant->accountLevel == 0){
 
@@ -10607,7 +10607,7 @@ class AdminController extends Controller
                                     $title = "Great";
                                     $link = "Admin";
 
-                                    $resInfo = strtoupper($res->Record->RecordStatus) . ", Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.net \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.net";
+                                    $resInfo = strtoupper($res->Record->RecordStatus) . ", Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.ca";
                                     User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'countryapproval' => 1]);
                                 } else {
                                     $message = "success";
@@ -10622,7 +10622,7 @@ class AdminController extends Controller
                                 $message = "success";
                                 $title = "Great";
                                 $link = "Admin";
-                                $resInfo = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.net \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.net";
+                                $resInfo = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.ca";
 
                                 User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'countryapproval' => 1]);
 
@@ -10634,7 +10634,7 @@ class AdminController extends Controller
                             $this->to = $req->email;
                             $this->subject = "Welcome to PaySprint";
 
-                            $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, Pay received Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at www.paysprint.net <br> b. Go to profile page and upload a copy of Goverment Issued Photo ID, a copy of Utility bill and business documents. <br> All other features would be enabled for you as soon as the Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.net";
+                            $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, Pay received Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca <br> b. Go to profile page and upload a copy of Goverment Issued Photo ID, a copy of Utility bill and business documents. <br> All other features would be enabled for you as soon as the Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
 
 
                             $this->message = '<p>' . $message . '</p>';
@@ -11633,7 +11633,7 @@ class AdminController extends Controller
             $user->where('id', $req->id)->update(['approval' => 0, 'accountLevel' => 0, 'disableAccount' => 'on']);
 
             $subject = 'Account information not approved';
-            $message = "This is to inform you that your account information does not match the requirement for review. You will not be able to login or conduct any transaction both on the mobile app and on the web during this period. We shall inform you when your PaySprint account is available for use. We regret any inconvenience this action might cause you. If you have any concern, please send us a message on : compliance@paysprint.net";
+            $message = "This is to inform you that your account information does not match the requirement for review. You will not be able to login or conduct any transaction both on the mobile app and on the web during this period. We shall inform you when your PaySprint account is available for use. We regret any inconvenience this action might cause you. If you have any concern, please send us a message on : compliance@paysprint.ca";
 
             $query = [
                 'user_id' => session('user_id'),
@@ -11650,7 +11650,7 @@ class AdminController extends Controller
 
             $subject = 'Account information approved';
 
-            $message = "Your PaySprint account has been fully-enabled. You now have access to all the features on PaySprint both on the Mobile and Web platforms. Thank you for your interest in PaySprint. Compliance@paysprint.net";
+            $message = "Your PaySprint account has been fully-enabled. You now have access to all the features on PaySprint both on the Mobile and Web platforms. Thank you for your interest in PaySprint. Compliance@paysprint.ca";
 
             $query = [
                 'user_id' => session('user_id'),
@@ -11725,7 +11725,7 @@ class AdminController extends Controller
         $user->where('id', $req->id)->update(['approval' => 0, 'accountLevel' => 0, 'disableAccount' => 'on']);
 
         $subject = 'Account information not approved';
-        $message = "This is to inform you that your account information does not match the requirement for review. You will not be able to conduct any transaction both on the mobile app and on the web during this period. We shall inform you when your PaySprint account is available for use. We regret any inconvenience this action might cause you. If you have any concern, please send us a message on : compliance@paysprint.net";
+        $message = "This is to inform you that your account information does not match the requirement for review. You will not be able to conduct any transaction both on the mobile app and on the web during this period. We shall inform you when your PaySprint account is available for use. We regret any inconvenience this action might cause you. If you have any concern, please send us a message on : compliance@paysprint.ca";
 
 
         // Send Mail to Receiver
@@ -11776,7 +11776,7 @@ class AdminController extends Controller
             $user->where('id', $req->id)->update(['approval' => 1, 'accountLevel' => 2]);
 
             $subject = 'Account information did not pass our level 1 check';
-            $message = "This is to inform you that your account information did not pass the requirement for review. You're advised to complete your account setup in your profile. We regret any inconvenience this action might cause you. If you have any concern, please send us a message on : compliance@paysprint.net";
+            $message = "This is to inform you that your account information did not pass the requirement for review. You're advised to complete your account setup in your profile. We regret any inconvenience this action might cause you. If you have any concern, please send us a message on : compliance@paysprint.ca";
 
             $resData = ['res' => 'Successful', 'message' => 'success', 'title' => 'Great'];
         } else {
@@ -11840,14 +11840,14 @@ class AdminController extends Controller
 
             $subject = 'Your account is currently under review';
 
-            $message = "Thanks for opening a Paysprint account. Kindly complete the BVN verification at www.paysprint.net by following these steps: \na. Login to your accounts\nb. Go to Profile and select BVN Verification.\nc. Complete and submit.\nAll other features would be enabled for you immediately.\nThanks for choosing PaySprint.\nCompliance Team @ PaySprint";
+            $message = "Thanks for opening a Paysprint account. Kindly complete the BVN verification at www.paysprint.ca by following these steps: \na. Login to your accounts\nb. Go to Profile and select BVN Verification.\nc. Complete and submit.\nAll other features would be enabled for you immediately.\nThanks for choosing PaySprint.\nCompliance Team @ PaySprint";
         } else {
 
             $user->where('id', $req->id)->update(['approval' => 1, 'accountLevel' => 2, 'bvn_verification' => 1, 'disableAccount' => 'off']);
 
             $subject = 'Your PaySprint Account has been activated.';
 
-            $message = "Your PaySprint Account has been activated. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, \nPay received Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded.\nKindly follow these steps to upload the required information:\na. login to PaySprint Account on Mobile App or Web app at www.paysprint.net\nb. Go to profile page and upload a copy of Goverment Issued Photo ID, a copy of Utility bill and business documents.\nAll other features would be enabled for you as soon as the Compliance Team verifies your information.\nThanks for choosing PaySprint\nCompliance Team @ PaySprint";
+            $message = "Your PaySprint Account has been activated. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, \nPay received Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded.\nKindly follow these steps to upload the required information:\na. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca\nb. Go to profile page and upload a copy of Goverment Issued Photo ID, a copy of Utility bill and business documents.\nAll other features would be enabled for you as soon as the Compliance Team verifies your information.\nThanks for choosing PaySprint\nCompliance Team @ PaySprint";
         }
 
         $resData = ['res' => 'Account under review', 'message' => 'success', 'title' => 'Great'];
@@ -11932,14 +11932,14 @@ class AdminController extends Controller
 
             $subject = 'Your account is currently under review';
 
-            $message = "Thanks for opening a Paysprint account. Kindly complete the BVN verification at www.paysprint.net by following these steps: \na. Login to your accounts\nb. Go to Profile and select BVN Verification.\nc. Complete and submit.\nAll other features would be enabled for you immediately.\nThanks for choosing PaySprint.\nCompliance Team @ PaySprint";
+            $message = "Thanks for opening a Paysprint account. Kindly complete the BVN verification at www.paysprint.ca by following these steps: \na. Login to your accounts\nb. Go to Profile and select BVN Verification.\nc. Complete and submit.\nAll other features would be enabled for you immediately.\nThanks for choosing PaySprint.\nCompliance Team @ PaySprint";
         } else {
 
             $user->where('id', $req->id)->update(['approval' => 1, 'accountLevel' => 2, 'bvn_verification' => 1, 'disableAccount' => 'off']);
 
             $subject = 'Your PaySprint Account has been activated.';
 
-            $message = "Your PaySprint Account has been activated. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, \nPay received Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded.\nKindly follow these steps to upload the required information:\na. login to PaySprint Account on Mobile App or Web app at www.paysprint.net\nb. Go to profile page and upload a copy of Goverment Issued Photo ID, a copy of Utility bill and business documents.\nAll other features would be enabled for you as soon as the Compliance Team verifies your information.\nThanks for choosing PaySprint\nCompliance Team @ PaySprint";
+            $message = "Your PaySprint Account has been activated. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, \nPay received Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded.\nKindly follow these steps to upload the required information:\na. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca\nb. Go to profile page and upload a copy of Goverment Issued Photo ID, a copy of Utility bill and business documents.\nAll other features would be enabled for you as soon as the Compliance Team verifies your information.\nThanks for choosing PaySprint\nCompliance Team @ PaySprint";
         }
 
 
@@ -12003,7 +12003,7 @@ class AdminController extends Controller
             $thisuser = $userclosed->where('user_id', $req->id)->first();
 
             $subject = 'Account currently closed on PaySprint';
-            $message = "This is to inform you that your account is currenctly closed on PaySprint. You will not be able to login or conduct any transaction both on the mobile app and on the web during this period. We regret any inconvenience this action might caused you. If you have any concern, please send us a message on : compliance@paysprint.net";
+            $message = "This is to inform you that your account is currenctly closed on PaySprint. You will not be able to login or conduct any transaction both on the mobile app and on the web during this period. We regret any inconvenience this action might caused you. If you have any concern, please send us a message on : compliance@paysprint.ca";
 
             // Send Mail to Receiver
             $this->name = $thisuser->name;
@@ -12072,7 +12072,7 @@ class AdminController extends Controller
 
 
             $subject = 'Account successfully Open on PaySprint';
-            $message = "We are glad to notify you that your paySprint Account is back to action. Your PaySprint account has been enabled and you will be able to Send Money, Pay Invoice and Request for withdrawal of funds from your PaySprint Wallet from  the Mobile and Web platforms. Thank you for your interest in PaySprint. compliance@paysprint.net";
+            $message = "We are glad to notify you that your paySprint Account is back to action. Your PaySprint account has been enabled and you will be able to Send Money, Pay Invoice and Request for withdrawal of funds from your PaySprint Wallet from  the Mobile and Web platforms. Thank you for your interest in PaySprint. compliance@paysprint.ca";
 
 
             // Send Mail to Receiver
@@ -12132,10 +12132,10 @@ class AdminController extends Controller
 
         if ($user->country == "Nigeria") {
 
-            $message = "Thanks for opening a Paysprint account. Kindly complete the BVN verification at www.paysprint.net by following these steps: \na. Login to your accounts\nb. Go to Profile and select BVN Verification.\nc. Complete and submit.\nAll other features would be enabled for you immediately.\nThanks for choosing PaySprint.\nCompliance Team @ PaySprint";
+            $message = "Thanks for opening a Paysprint account. Kindly complete the BVN verification at www.paysprint.ca by following these steps: \na. Login to your accounts\nb. Go to Profile and select BVN Verification.\nc. Complete and submit.\nAll other features would be enabled for you immediately.\nThanks for choosing PaySprint.\nCompliance Team @ PaySprint";
         } else {
 
-            $message = "Your PaySprint Account has been activated. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, \nPay received Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded.\nKindly follow these steps to upload the required information:\na. login to PaySprint Account on Mobile App or Web app at www.paysprint.net\nb. Go to profile page and upload a copy of Goverment Issued Photo ID, a copy of Utility bill and business documents.\nAll other features would be enabled for you as soon as the Compliance Team verifies your information.\nThanks for choosing PaySprint\nCompliance Team @ PaySprint";
+            $message = "Your PaySprint Account has been activated. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, \nPay received Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded.\nKindly follow these steps to upload the required information:\na. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca\nb. Go to profile page and upload a copy of Goverment Issued Photo ID, a copy of Utility bill and business documents.\nAll other features would be enabled for you as soon as the Compliance Team verifies your information.\nThanks for choosing PaySprint\nCompliance Team @ PaySprint";
         }
 
 
@@ -12285,11 +12285,11 @@ class AdminController extends Controller
         if ($thisuser->flagged == 0) {
             $user->where('id', $req->id)->update(['flagged' => 1, 'accountLevel' => 2]);
             $subject = "Review of PaySprint Account";
-            $message = "This is to inform you that your account  has been randomly selected for review. You will not be able to login or conduct any transaction both on the mobile app and on the web during the review period, which might last for 48 hours. We shall inform you when your PaySprint account is available for use. We regret any inconvenience this action might cause you. If you have any concern, please send us a message on : compliance@paysprint.net";
+            $message = "This is to inform you that your account  has been randomly selected for review. You will not be able to login or conduct any transaction both on the mobile app and on the web during the review period, which might last for 48 hours. We shall inform you when your PaySprint account is available for use. We regret any inconvenience this action might cause you. If you have any concern, please send us a message on : compliance@paysprint.ca";
         } else {
             $user->where('id', $req->id)->update(['flagged' => 0, 'accountLevel' => 3]);
             $subject = "Review of PaySprint Account";
-            $message = "We have completed the review of your PaySprint Account. Your PaySprint account has been enabled and you will be able to access the services both on the Mobile and Web platforms. Thank you for your patience. If you have any concern, please send us a message on : compliance@paysprint.net";
+            $message = "We have completed the review of your PaySprint Account. Your PaySprint account has been enabled and you will be able to access the services both on the Mobile and Web platforms. Thank you for your patience. If you have any concern, please send us a message on : compliance@paysprint.ca";
         }
 
 

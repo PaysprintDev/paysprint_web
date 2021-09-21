@@ -6,7 +6,11 @@
 <!-- Hero Area -->
 <!-- Hero Area -->
 <div class="bg-default-8 pb-15 pt-24 pt-lg-32 pb-lg-28" id="hero-area-animation" style="background: #f2f2f2; !important">
+
+
     <div class="container" id="animation-area-1">
+    {{-- <p style="background: aquamarine;padding: 10px;border-radius: 10px;font-size: 20px;font-weight: 700;"><marquee behavior="" direction="">You are at the right website, Paypinn.com is same as Paysprint.ca!!!</marquee></p> --}}
+
         <div class="row align-items-center justify-content-center">
             <div class="col-9 col-md-7 col-lg-5 offset-xl-1 align-self-sm-end order-lg-2">
                 <div class="hero-img image-group-p12 position-relative mb-9 mb-sm-15 mb-lg-0" data-aos="fade-left"
@@ -583,6 +587,32 @@ PaySprint is all you need.</p>
         </div>
     </div>
 </div>
+
+
+    <!-- Testimonial section 2 -->
+    <div class="testimonial-section2 position-relative bg-dark dark-mode-texts bg-pattern pattern-4 pt-14 pt-lg-26 pb-14 pb-lg-26 disp-0">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-8 col-lg-7 col-xl-6">
+            <div class="section-title text-center mb-9">
+              <h4 class="pre-title gr-text-12 text-green text-uppercase mb-0">Testimonial</h4>
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-center justify-content-around">
+          <div class="col-lg-7 col-md-9">
+            <div class="single-testimonial text-center">
+              <h3 class="review-text gr-text-5 mb-11">“Simply the best. Better than all the rest. I’d recommend this product to beginners and advanced users.”</h3>
+              <div class="reviewer-img mb-7">
+                <img class="circle-lg mx-auto" src="{{ asset('newpage/image/l5/jpg/l5-testimonial2.jpg') }}" alt="">
+              </div>
+              <h3 class="username gr-text-9 mb-1">Ian Klein</h3>
+              <span class="rank gr-text-11 gr-text-color-opacity">Digital Marketer</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
 

@@ -1117,6 +1117,157 @@ class CheckSetupController extends Controller
     // }
 
 
+    public function getPathAddress()
+    {
+
+        try {
+            $query = User::all();
+
+            foreach ($query as $data) {
+                $avatar = $data->avatar;
+                if ($avatar != null) {
+                    $pattern = "/paysprint.net/";
+                    $replacements = "paysprint.ca";
+
+                    $this->replaceUrl($pattern, $replacements, $avatar, $data->id, "avatar");
+                }
+                $nin_front = $data->nin_front;
+
+                if ($nin_front != null) {
+                    $pattern = "/paysprint.net/";
+                    $replacements = "paysprint.ca";
+
+                    $this->replaceUrl($pattern, $replacements, $nin_front, $data->id, "nin_front");
+                }
+                $drivers_license_front = $data->drivers_license_front;
+                if ($drivers_license_front != null) {
+                    $pattern = "/paysprint.net/";
+                    $replacements = "paysprint.ca";
+
+                    $this->replaceUrl($pattern, $replacements, $drivers_license_front, $data->id, "drivers_license_front");
+                }
+                $drivers_license_back = $data->drivers_license_back;
+                if ($drivers_license_back != null) {
+                    $pattern = "/paysprint.net/";
+                    $replacements = "paysprint.ca";
+
+                    $this->replaceUrl($pattern, $replacements, $drivers_license_back, $data->id, "drivers_license_back");
+                }
+                $international_passport_front = $data->international_passport_front;
+                if ($international_passport_front != null) {
+                    $pattern = "/paysprint.net/";
+                    $replacements = "paysprint.ca";
+
+                    $this->replaceUrl($pattern, $replacements, $international_passport_front, $data->id, "international_passport_front");
+                }
+                $nin_back = $data->nin_back;
+                if ($nin_back != null) {
+                    $pattern = "/paysprint.net/";
+                    $replacements = "paysprint.ca";
+
+                    $this->replaceUrl($pattern, $replacements, $nin_back, $data->id, "nin_back");
+                }
+                $international_passport_back = $data->international_passport_back;
+                if ($international_passport_back != null) {
+                    $pattern = "/paysprint.net/";
+                    $replacements = "paysprint.ca";
+
+                    $this->replaceUrl($pattern, $replacements, $international_passport_back, $data->id, "international_passport_back");
+                }
+                $incorporation_doc_front = $data->incorporation_doc_front;
+                if ($incorporation_doc_front != null) {
+                    $pattern = "/paysprint.net/";
+                    $replacements = "paysprint.ca";
+
+                    $this->replaceUrl($pattern, $replacements, $incorporation_doc_front, $data->id, "incorporation_doc_front");
+                }
+                $incorporation_doc_back = $data->incorporation_doc_back;
+                if ($incorporation_doc_back != null) {
+                    $pattern = "/paysprint.net/";
+                    $replacements = "paysprint.ca";
+
+                    $this->replaceUrl($pattern, $replacements, $incorporation_doc_back, $data->id, "incorporation_doc_back");
+                }
+                $directors_document = $data->directors_document;
+                if ($directors_document != null) {
+                    $pattern = "/paysprint.net/";
+                    $replacements = "paysprint.ca";
+
+                    $this->replaceUrl($pattern, $replacements, $directors_document, $data->id, "directors_document");
+                }
+                $shareholders_document = $data->shareholders_document;
+                if ($shareholders_document != null) {
+                    $pattern = "/paysprint.net/";
+                    $replacements = "paysprint.ca";
+
+                    $this->replaceUrl($pattern, $replacements, $shareholders_document, $data->id, "shareholders_document");
+                }
+                $proof_of_identity_1 = $data->proof_of_identity_1;
+                if ($proof_of_identity_1 != null) {
+                    $pattern = "/paysprint.net/";
+                    $replacements = "paysprint.ca";
+
+                    $this->replaceUrl($pattern, $replacements, $proof_of_identity_1, $data->id, "proof_of_identity_1");
+                }
+                $proof_of_identity_2 = $data->proof_of_identity_2;
+                if ($proof_of_identity_2 != null) {
+                    $pattern = "/paysprint.net/";
+                    $replacements = "paysprint.ca";
+
+                    $this->replaceUrl($pattern, $replacements, $proof_of_identity_2, $data->id, "proof_of_identity_2");
+                }
+                $aml_policy = $data->aml_policy;
+                if ($aml_policy != null) {
+                    $pattern = "/paysprint.net/";
+                    $replacements = "paysprint.ca";
+
+                    $this->replaceUrl($pattern, $replacements, $aml_policy, $data->id, "aml_policy");
+                }
+                $compliance_audit_report = $data->compliance_audit_report;
+                if ($compliance_audit_report != null) {
+                    $pattern = "/paysprint.net/";
+                    $replacements = "paysprint.ca";
+
+                    $this->replaceUrl($pattern, $replacements, $compliance_audit_report, $data->id, "compliance_audit_report");
+                }
+                $organizational_chart = $data->organizational_chart;
+                if ($organizational_chart != null) {
+                    $pattern = "/paysprint.net/";
+                    $replacements = "paysprint.ca";
+
+                    $this->replaceUrl($pattern, $replacements, $organizational_chart, $data->id, "organizational_chart");
+                }
+                $financial_license = $data->financial_license;
+                if ($financial_license != null) {
+                    $pattern = "/paysprint.net/";
+                    $replacements = "paysprint.ca";
+
+                    $this->replaceUrl($pattern, $replacements, $financial_license, $data->id, "financial_license");
+                }
+
+
+
+                echo "Done for: " . $data->name . ". With ID: " . $data->id . "<hr>";
+            }
+        } catch (\Throwable $th) {
+            echo "Error: " . $th->getMessage();
+        }
+    }
+
+
+    public function replaceUrl($patterns, $replacements, $string, $id, $queryString)
+    {
+        if ($patterns != null) {
+            $replace = preg_replace($patterns, $replacements, $string);
+
+            User::where('id', $id)->update([$queryString => $replace]);
+
+
+            return $replace;
+        }
+    }
+
+
     public function monthlyTransactionHistory()
     {
 

@@ -34,7 +34,7 @@ class ConsultantController extends Controller
     public $subject;
     public $message;
     public $file;
-    public $to = "info@paysprint.net";
+    public $to = "info@paysprint.ca";
     public $admin;
     public $transaction_date;
     public $invoice_no;
@@ -54,15 +54,15 @@ class ConsultantController extends Controller
     public $infomessage;
     public $customer_id;
 
-    public function store(Request $req, Consultant $consultant){
+    public function store(Request $req, Consultant $consultant)
+    {
 
         $checkExist = $consultant->where('owner_email', session('email'))->where('consultant_email', $req->consultant_email)->get();
 
-        if(count($checkExist) > 0){
+        if (count($checkExist) > 0) {
             $resData = "You have already created this consultant";
             $resp = "error";
-        }
-        else{
+        } else {
 
             $consultant->owner_name = $req->owner_name;
             $consultant->owner_email = $req->owner_email;
@@ -74,14 +74,14 @@ class ConsultantController extends Controller
 
             $result = $consultant->save();
 
-            if($result == true){
+            if ($result == true) {
 
                 // Send Mail
 
                 $this->name = $req->consultant_name;
                 $this->email = $req->consultant_email;
-                $this->subject = $req->owner_name. " registered you on PaySprint as one of their consultant";
-                $this->message = "Hi ".$this->name.", <br><br> <b>".$req->owner_name."</b> registered you as one of their consultant on PaySprint.<br>. <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://exbc.ca/login'>https://exbc.ca/login</a> to login to EXBC Account. <br> b. Go to Manage Rental Property on Free Business App and Select Service Provider <br><br> Thanks <br> PaySprint Management.";
+                $this->subject = $req->owner_name . " registered you on PaySprint as one of their consultant";
+                $this->message = "Hi " . $this->name . ", <br><br> <b>" . $req->owner_name . "</b> registered you as one of their consultant on PaySprint.<br>. <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://exbc.ca/login'>https://exbc.ca/login</a> to login to EXBC Account. <br> b. Go to Manage Rental Property on Free Business App and Select Service Provider <br><br> Thanks <br> PaySprint Management.";
 
                 $this->file = "noImage.png";
                 $this->sendEmail($this->email, "Maintenace Request");
@@ -89,71 +89,70 @@ class ConsultantController extends Controller
 
                 $resData = "Created Successfully";
                 $resp = "success";
-            }
-            else{
+            } else {
                 $resData = "Something went wrong!";
                 $resp = "error";
             }
-
         }
 
         return redirect()->back()->with($resp, $resData);
     }
 
 
-    public function editconsultant(Request $req, Consultant $consultant){
+    public function editconsultant(Request $req, Consultant $consultant)
+    {
 
         $checkExist = $consultant->where('id', $req->id)->update(['consultant_name' => $req->consultant_name, 'consultant_email' => $req->consultant_email, 'consultant_telephone' => $req->consultant_phone, 'consultant_address' => $req->consultant_address, 'consultant_specialization' => $req->consultant_specialization]);
 
-            if($checkExist == 1){
+        if ($checkExist == 1) {
 
-                // Send Mail
+            // Send Mail
 
-                $this->name = $req->consultant_name;
-                $this->email = $req->consultant_email;
-                $this->subject = $req->owner_name. " registered you on PaySprint as one of their consultant";
-                $this->message = "Hi ".$this->name.", <br><br> <b>".$req->owner_name."</b> registered you as one of their consultant on PaySprint.<br>. <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://exbc.ca/login'>https://exbc.ca/login</a> to login to EXBC Account. <br> b. Go to Manage Rental Property on Free Business App and Select Service Provider <br><br> Thanks <br> PaySprint Management.";
+            $this->name = $req->consultant_name;
+            $this->email = $req->consultant_email;
+            $this->subject = $req->owner_name . " registered you on PaySprint as one of their consultant";
+            $this->message = "Hi " . $this->name . ", <br><br> <b>" . $req->owner_name . "</b> registered you as one of their consultant on PaySprint.<br>. <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://exbc.ca/login'>https://exbc.ca/login</a> to login to EXBC Account. <br> b. Go to Manage Rental Property on Free Business App and Select Service Provider <br><br> Thanks <br> PaySprint Management.";
 
-                $this->file = "noImage.png";
-                $this->sendEmail($this->email, "Maintenace Request");
+            $this->file = "noImage.png";
+            $this->sendEmail($this->email, "Maintenace Request");
 
 
-                $resData = "Updated Successfully";
-                $resp = "success";
-            }
-            else{
-                $resData = "Something went wrong!";
-                $resp = "error";
-            }
+            $resData = "Updated Successfully";
+            $resp = "success";
+        } else {
+            $resData = "Something went wrong!";
+            $resp = "error";
+        }
 
 
         return redirect()->route('viewconsultant')->with($resp, $resData);
     }
 
 
-    public function consultantdelete(Request $req, Consultant $consultant){
+    public function consultantdelete(Request $req, Consultant $consultant)
+    {
 
         $checkExist = $consultant->where('id', $req->id)->delete();
 
-            if($checkExist == 1){
-                $resData = "Deleted Successfully";
-                $resp = "success";
-            }
-            else{
-                $resData = "Something went wrong!";
-                $resp = "error";
-            }
+        if ($checkExist == 1) {
+            $resData = "Deleted Successfully";
+            $resp = "success";
+        } else {
+            $resData = "Something went wrong!";
+            $resp = "error";
+        }
 
 
         return redirect()->back()->with($resp, $resData);
     }
 
 
-    public function assignConsultant(Request $req, Consultant $consultant, MaintenanceRequest $maintenance, RentalMessage $message, Workorder $workorder){
+    public function assignConsultant(Request $req, Consultant $consultant, MaintenanceRequest $maintenance, RentalMessage $message, Workorder $workorder)
+    {
 
         $getmaintenance = $maintenance->where('post_id', $req->post_id)->get();
 
-        if(count($getmaintenance) > 0){
+        if (count($getmaintenance) > 0) {
             // Update Information and send mail to Consultant
             $maintenance->where('post_id', $req->post_id)->update(['status' => $req->maintenance_status_update, 'assigned_staff' => $req->assign_consultant]);
 
@@ -167,7 +166,7 @@ class ConsultantController extends Controller
 
             $result = $message->save();
 
-            if($result == true){
+            if ($result == true) {
 
 
 
@@ -182,15 +181,14 @@ class ConsultantController extends Controller
 
                 $this->name = $getconsultant[0]->consultant_name;
                 $this->email = $getconsultant[0]->consultant_email;
-                $this->subject = $getconsultant[0]->owner_name." assigned a maintenance request to you.";
+                $this->subject = $getconsultant[0]->owner_name . " assigned a maintenance request to you.";
 
-                $this->message = "Hi ".$this->name.", <br><br> Your client, <b>".$getconsultant[0]->owner_name."</b>, assigned a maintenance request to you. <br><br> <table style='font-family: arial, sans-serif; border-collapse: collapse; width: 100%;'><tbody><tr><td>Maintenance Request #</td><td>".$req->post_id."</td></tr><tr><td>Unit</td><td>".$getmaintenance[0]->unit."</td></tr><tr><td>Tenant</td><td>".$getmaintenance[0]->tenant_name."</td></tr><tr><td>Status</td><td>".$req->maintenance_status_update."</td></tr><tr><td>Priority</td><td>".$getmaintenance[0]->priority."</td></tr><tr><td>Is the problem in the unit?</td><td>".$getmaintenance[0]->problem_in_unit."</td></tr><tr><td>Permission granted to enter unit alone?</td><td>".$getmaintenance[0]->problem_in_unit.", ".$getmaintenance[0]->describe_event."</td></tr><tr><td>Subject</td><td>".$getmaintenance[0]->subject."</td></tr><tr><td>Details</td><td>".$getmaintenance[0]->details."</td></tr><tr><td>Additional Info.</td><td>".$getmaintenance[0]->additional_info."</td></tr><tr><td>Deadline Date</td><td>".date('d/F/Y', strtotime($req->maintenance_deadline))."</td></tr></tbody></table> <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://exbc.ca/login'>https://exbc.ca/login</a> to login to EXBC Account. <br> b. Go to Manage Rental Property on Free Business App and Select Service Provider <br><br> Thanks <br> PaySprint Management.";
+                $this->message = "Hi " . $this->name . ", <br><br> Your client, <b>" . $getconsultant[0]->owner_name . "</b>, assigned a maintenance request to you. <br><br> <table style='font-family: arial, sans-serif; border-collapse: collapse; width: 100%;'><tbody><tr><td>Maintenance Request #</td><td>" . $req->post_id . "</td></tr><tr><td>Unit</td><td>" . $getmaintenance[0]->unit . "</td></tr><tr><td>Tenant</td><td>" . $getmaintenance[0]->tenant_name . "</td></tr><tr><td>Status</td><td>" . $req->maintenance_status_update . "</td></tr><tr><td>Priority</td><td>" . $getmaintenance[0]->priority . "</td></tr><tr><td>Is the problem in the unit?</td><td>" . $getmaintenance[0]->problem_in_unit . "</td></tr><tr><td>Permission granted to enter unit alone?</td><td>" . $getmaintenance[0]->problem_in_unit . ", " . $getmaintenance[0]->describe_event . "</td></tr><tr><td>Subject</td><td>" . $getmaintenance[0]->subject . "</td></tr><tr><td>Details</td><td>" . $getmaintenance[0]->details . "</td></tr><tr><td>Additional Info.</td><td>" . $getmaintenance[0]->additional_info . "</td></tr><tr><td>Deadline Date</td><td>" . date('d/F/Y', strtotime($req->maintenance_deadline)) . "</td></tr></tbody></table> <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://exbc.ca/login'>https://exbc.ca/login</a> to login to EXBC Account. <br> b. Go to Manage Rental Property on Free Business App and Select Service Provider <br><br> Thanks <br> PaySprint Management.";
 
 
-                if($getmaintenance[0]->add_file == "noImage.png"){
+                if ($getmaintenance[0]->add_file == "noImage.png") {
                     $filename = "noImage.png";
-                }
-                else{
+                } else {
                     $file = explode(",", $getmaintenance[0]->add_file);
                     $filename = $file[0];
                 }
@@ -202,15 +200,12 @@ class ConsultantController extends Controller
 
                 $resData = "Successfull";
                 $resp = "success";
-            }
-            else{
+            } else {
                 $resData = "Something went wrong!";
                 $resp = "error";
             }
-
-        }
-        else{
-           $resData = "Record not found";
+        } else {
+            $resData = "Record not found";
             $resp = "error";
         }
 
@@ -219,7 +214,8 @@ class ConsultantController extends Controller
         return redirect()->back()->with($resp, $resData);
     }
 
-    public function completedworkorder(Request $req, MaintenanceRequest $maintenance, RentalMessage $rentalmessage, Workorder $workorder){
+    public function completedworkorder(Request $req, MaintenanceRequest $maintenance, RentalMessage $rentalmessage, Workorder $workorder)
+    {
         // Update Information
         $maintenance->where('post_id', $req->post_id)->update(['status' => 'complete']);
         $rentalmessage->where('post_id', $req->post_id)->update(['maintenance_status' => 'complete']);
@@ -236,9 +232,9 @@ class ConsultantController extends Controller
 
         $this->name = $clientinfo[0]->name;
         $this->email = $clientinfo[0]->email;
-        $this->subject = $serviceprovider[0]->consultant_name." completed maintenance request.";
+        $this->subject = $serviceprovider[0]->consultant_name . " completed maintenance request.";
 
-        $this->message = "Hi ".$this->name.", <br><br> Your service provider, <b>".$serviceprovider[0]->consultant_name."</b> has completed maintenance request. <br><br> <table style='font-family: arial, sans-serif; border-collapse: collapse; width: 100%;'><tbody><tr><td>Maintenance Request #</td><td>".$req->post_id."</td></tr><tr><td>Unit</td><td>".$provider[0]->unit_id."</td></tr><tr><td>Tenant Name</td><td>".$provider[0]->ten_name."</td></tr><tr><td>Tenant Phone</td><td>".$provider[0]->phone_number."</td></tr><tr><td>Priority</td><td>".$provider[0]->priority."</td></tr><tr><td>Is the problem in the unit?</td><td>".$provider[0]->problem_in_unit."</td></tr><tr><td>Permission granted to enter unit alone?</td><td>".$provider[0]->problem_in_unit."</td></tr><tr><td>Subject</td><td>".$provider[0]->subject."</td></tr><tr><td>Details</td><td>".$provider[0]->details."</td></tr><tr><td>Additional Info.</td><td>".$provider[0]->additional_info."</td></tr></tbody></table> <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://exbc.ca/login'>https://exbc.ca/login</a> to login to EXBC Account. <br> b. Go to Manage Rental Property on Free Business App and Select Property Manager/Owner <br><br> Thanks <br> PaySprint Management.";
+        $this->message = "Hi " . $this->name . ", <br><br> Your service provider, <b>" . $serviceprovider[0]->consultant_name . "</b> has completed maintenance request. <br><br> <table style='font-family: arial, sans-serif; border-collapse: collapse; width: 100%;'><tbody><tr><td>Maintenance Request #</td><td>" . $req->post_id . "</td></tr><tr><td>Unit</td><td>" . $provider[0]->unit_id . "</td></tr><tr><td>Tenant Name</td><td>" . $provider[0]->ten_name . "</td></tr><tr><td>Tenant Phone</td><td>" . $provider[0]->phone_number . "</td></tr><tr><td>Priority</td><td>" . $provider[0]->priority . "</td></tr><tr><td>Is the problem in the unit?</td><td>" . $provider[0]->problem_in_unit . "</td></tr><tr><td>Permission granted to enter unit alone?</td><td>" . $provider[0]->problem_in_unit . "</td></tr><tr><td>Subject</td><td>" . $provider[0]->subject . "</td></tr><tr><td>Details</td><td>" . $provider[0]->details . "</td></tr><tr><td>Additional Info.</td><td>" . $provider[0]->additional_info . "</td></tr></tbody></table> <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://exbc.ca/login'>https://exbc.ca/login</a> to login to EXBC Account. <br> b. Go to Manage Rental Property on Free Business App and Select Property Manager/Owner <br><br> Thanks <br> PaySprint Management.";
 
 
         $this->file = "noImage.png";
@@ -251,16 +247,15 @@ class ConsultantController extends Controller
 
 
         return redirect()->route('consultantMymaintnenance', ['id' => $provider[0]->assigned_staff])->with($resp, $resData);
-
     }
 
 
-    public function generateInvoice(Request $req, ImportExcel $invoice){
+    public function generateInvoice(Request $req, ImportExcel $invoice)
+    {
 
-        if($req->type_of_service != ""){
+        if ($req->type_of_service != "") {
             $service = $req->type_of_service;
-        }
-        else{
+        } else {
             $service = $req->specify_type_of_service;
         }
 
@@ -268,7 +263,7 @@ class ConsultantController extends Controller
         $invoice->transaction_date = $req->transaction_date;
         $invoice->invoice_no = $req->invoice_number;
         $invoice->payee_ref_no = $req->reference_number;
-        $invoice->name = $req->firstname.' '.$req->lastname;
+        $invoice->name = $req->firstname . ' ' . $req->lastname;
         $invoice->transaction_ref = $req->transaction_ref;
         $invoice->description = $req->description;
         $invoice->amount = $req->amount;
@@ -288,79 +283,77 @@ class ConsultantController extends Controller
 
         $response = $invoice->save();
 
-        if($response == true){
+        if ($response == true) {
 
             // Send Mail
 
             $getClient = Consultant::where('consultant_email', $req->consultant_email)->get();
 
-                    if(count($getClient) > 0){
+            if (count($getClient) > 0) {
 
-                        $getuserData = User::where('email', $req->consultant_email)->get();
+                $getuserData = User::where('email', $req->consultant_email)->get();
 
-                        $clientname = $getClient[0]->consultant_specialization.' - '.$getClient[0]->consultant_name;
-                        $clientaddress = $getClient[0]->consultant_address;
-                        $client_realname = $getClient[0]->consultant_name;
-                        $city = $getuserData[0]->city;
-                        $state = $getuserData[0]->state;
-                        $zipcode = $getuserData[0]->zip_code;
-                    }
-                    else{
-                        $clientname = "PaySprint (EXBC)";
-                        $client_realname = "PaySprint (EXBC)";
-                        $clientaddress = "EXBC, by Express Ca Corp, 10 George St. North, Brampton. ON. L6X1R2. Canada";
-                        $city = "Brampton";
-                        $state = "Ontario";
-                        $zipcode = "L6X1R2";
-                    }
-
+                $clientname = $getClient[0]->consultant_specialization . ' - ' . $getClient[0]->consultant_name;
+                $clientaddress = $getClient[0]->consultant_address;
+                $client_realname = $getClient[0]->consultant_name;
+                $city = $getuserData[0]->city;
+                $state = $getuserData[0]->state;
+                $zipcode = $getuserData[0]->zip_code;
+            } else {
+                $clientname = "PaySprint (EXBC)";
+                $client_realname = "PaySprint (EXBC)";
+                $clientaddress = "EXBC, by Express Ca Corp, 10 George St. North, Brampton. ON. L6X1R2. Canada";
+                $city = "Brampton";
+                $state = "Ontario";
+                $zipcode = "L6X1R2";
+            }
 
 
 
-                    // Insert Statement
-                    $activity = "Invoice on ".$service;
-                    $credit = $req->amount;
-                    $debit = 0;
-                    $balance = 0;
-                    $reference_code = $req->invoice_number;
-                    $status = "Delivered";
-                    $action = "Invoice";
 
-                    $trans_date = date('Y-m-d', strtotime($req->transaction_date));
+            // Insert Statement
+            $activity = "Invoice on " . $service;
+            $credit = $req->amount;
+            $debit = 0;
+            $balance = 0;
+            $reference_code = $req->invoice_number;
+            $status = "Delivered";
+            $action = "Invoice";
 
-                    $regards = session('ref_code');
+            $trans_date = date('Y-m-d', strtotime($req->transaction_date));
 
-                    $this->insStatement($req->email_address, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0);
+            $regards = session('ref_code');
 
-
-                    $this->to = $req->email_address;
-                    // $this->to = "adenugaadebambo41@gmail.com";
-                    $this->name = $req->firstname.' '.$req->lastname;
-                    $this->transaction_date = $req->transaction_date;
-                    $this->invoice_no = $req->invoice_number;
-                    $this->payee_ref_no = $req->reference_number;
-                    $this->transaction_ref = $req->transaction_ref;
-                    $this->description = $req->description;
-                    $this->payment_due_date = $req->payment_due_date;
-                    $this->amount = number_format($req->amount, 2);
-                    $this->address = $clientaddress;
-                    $this->service = $service;
-                    $this->clientname = $clientname;
-                    $this->client_realname = $client_realname;
-                    $this->city = $city;
-                    $this->state = $state;
-                    $this->zipcode = $zipcode;
-                    $this->customer_id = session('ref_code');
-
-                    $this->subject = $this->clientname.' sends you an invoice on PaySprint';
-
-                    $this->sendEmail($this->to, $this->subject);
+            $this->insStatement($req->email_address, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0);
 
 
-                $resData = "Invoice generated successfully";
-                $resp = "success";
-        }
-        else{
+            $this->to = $req->email_address;
+            // $this->to = "adenugaadebambo41@gmail.com";
+            $this->name = $req->firstname . ' ' . $req->lastname;
+            $this->transaction_date = $req->transaction_date;
+            $this->invoice_no = $req->invoice_number;
+            $this->payee_ref_no = $req->reference_number;
+            $this->transaction_ref = $req->transaction_ref;
+            $this->description = $req->description;
+            $this->payment_due_date = $req->payment_due_date;
+            $this->amount = number_format($req->amount, 2);
+            $this->address = $clientaddress;
+            $this->service = $service;
+            $this->clientname = $clientname;
+            $this->client_realname = $client_realname;
+            $this->city = $city;
+            $this->state = $state;
+            $this->zipcode = $zipcode;
+            $this->customer_id = session('ref_code');
+
+            $this->subject = $this->clientname . ' sends you an invoice on PaySprint';
+
+            $this->sendEmail($this->to, $this->subject);
+
+
+            $resData = "Invoice generated successfully";
+            $resp = "success";
+        } else {
             $resData = "Something went wrong, Try Again!";
             $resp = "error";
         }
@@ -368,12 +361,12 @@ class ConsultantController extends Controller
         return redirect()->route('consultantMaintenance', ['id' => $req->reference_number])->with($resp, $resData);
     }
 
-    public function generateQuote(Request $req, RentalQuote $invoice){
+    public function generateQuote(Request $req, RentalQuote $invoice)
+    {
 
-        if($req->type_of_service != ""){
+        if ($req->type_of_service != "") {
             $service = $req->type_of_service;
-        }
-        else{
+        } else {
             $service = $req->specify_type_of_service;
         }
         // Insert Record
@@ -387,52 +380,50 @@ class ConsultantController extends Controller
 
         $response = $invoice->save();
 
-        if($response == true){
+        if ($response == true) {
 
             // Send Mail
 
             $getClient = Consultant::where('consultant_email', $req->consultant_email)->get();
 
-                    if(count($getClient) > 0){
+            if (count($getClient) > 0) {
 
-                        $getuserData = User::where('email', $req->consultant_email)->get();
+                $getuserData = User::where('email', $req->consultant_email)->get();
 
-                        $clientname = $getClient[0]->consultant_specialization.' - '.$getClient[0]->consultant_name;
-                        $clientaddress = $getClient[0]->consultant_address;
-                        $client_realname = $getClient[0]->consultant_name;
-                        $city = $getuserData[0]->city;
-                        $state = $getuserData[0]->state;
-                        $zipcode = $getuserData[0]->zip_code;
-                    }
-                    else{
-                        $clientname = "PaySprint (EXBC)";
-                        $client_realname = "PaySprint (EXBC)";
-                        $clientaddress = "EXBC, by Express Ca Corp, 10 George St. North, Brampton. ON. L6X1R2. Canada";
-                        $city = "Brampton";
-                        $state = "Ontario";
-                        $zipcode = "L6X1R2";
-                    }
-
-
-                    $this->email = $req->email_address;
-                    // $this->to = "adenugaadebambo41@gmail.com";
-                    $this->name = $req->firstname.' '.$req->lastname;
-                    $this->clientname = $clientname;
-                    $this->client_realname = $client_realname;
-
-                    $this->subject = $this->clientname.' sends you a quote on PaySprint';
-
-                    $this->message = "Hi ".$this->name.", <br><br> Your service provider, <b>".$this->client_realname."</b>, sends you a quote to maintenance request. <br><br> <table style='font-family: arial, sans-serif; border-collapse: collapse; width: 100%;'><tbody><tr><td>Reference Number #</td><td>".$req->reference_number."</td></tr><tr><td>Type of Service</td><td>".$service."</td></tr><tr><td>Description</td><td>".$req->description."</td></tr><tr><td>Amount</td><td style='font-weight: bold; font-size: 24px;'>".number_format($req->amount, 2)."</td></tr></tbody></table> <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://exbc.ca/login'>https://exbc.ca/login</a> to login to EXBC Account. <br> b. Go to Manage Rental Property on Free Business App and Select Service Provider <br><br> Thanks <br> PaySprint Management.";
-
-                    $this->file = "noImage.png";
-
-                    $this->sendEmail($this->email, "Maintenace Request");
+                $clientname = $getClient[0]->consultant_specialization . ' - ' . $getClient[0]->consultant_name;
+                $clientaddress = $getClient[0]->consultant_address;
+                $client_realname = $getClient[0]->consultant_name;
+                $city = $getuserData[0]->city;
+                $state = $getuserData[0]->state;
+                $zipcode = $getuserData[0]->zip_code;
+            } else {
+                $clientname = "PaySprint (EXBC)";
+                $client_realname = "PaySprint (EXBC)";
+                $clientaddress = "EXBC, by Express Ca Corp, 10 George St. North, Brampton. ON. L6X1R2. Canada";
+                $city = "Brampton";
+                $state = "Ontario";
+                $zipcode = "L6X1R2";
+            }
 
 
-                $resData = "Quote generated successfully";
-                $resp = "success";
-        }
-        else{
+            $this->email = $req->email_address;
+            // $this->to = "adenugaadebambo41@gmail.com";
+            $this->name = $req->firstname . ' ' . $req->lastname;
+            $this->clientname = $clientname;
+            $this->client_realname = $client_realname;
+
+            $this->subject = $this->clientname . ' sends you a quote on PaySprint';
+
+            $this->message = "Hi " . $this->name . ", <br><br> Your service provider, <b>" . $this->client_realname . "</b>, sends you a quote to maintenance request. <br><br> <table style='font-family: arial, sans-serif; border-collapse: collapse; width: 100%;'><tbody><tr><td>Reference Number #</td><td>" . $req->reference_number . "</td></tr><tr><td>Type of Service</td><td>" . $service . "</td></tr><tr><td>Description</td><td>" . $req->description . "</td></tr><tr><td>Amount</td><td style='font-weight: bold; font-size: 24px;'>" . number_format($req->amount, 2) . "</td></tr></tbody></table> <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://exbc.ca/login'>https://exbc.ca/login</a> to login to EXBC Account. <br> b. Go to Manage Rental Property on Free Business App and Select Service Provider <br><br> Thanks <br> PaySprint Management.";
+
+            $this->file = "noImage.png";
+
+            $this->sendEmail($this->email, "Maintenace Request");
+
+
+            $resData = "Quote generated successfully";
+            $resp = "success";
+        } else {
             $resData = "Something went wrong, Try Again!";
             $resp = "error";
         }
@@ -441,30 +432,30 @@ class ConsultantController extends Controller
     }
 
 
-    public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state){
+    public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state)
+    {
         Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state]);
     }
 
 
     // Ajax Request
 
-    public function ajaxquotedecision(Request $req, RentalQuote $rental){
+    public function ajaxquotedecision(Request $req, RentalQuote $rental)
+    {
 
         $getitem = $rental->where('maintenance_id', $req->maintenance_id)->get();
 
-        if(count($getitem) > 0){
+        if (count($getitem) > 0) {
 
-            if($req->action == "accept"){
+            if ($req->action == "accept") {
 
                 $rental->where('maintenance_id', $req->maintenance_id)->update(['status' => 4]);
 
                 $action = "accepted";
-            }
-            elseif($req->action == "reject"){
+            } elseif ($req->action == "reject") {
                 $rental->where('maintenance_id', $req->maintenance_id)->update(['status' => 3]);
                 $action = "rejected";
-            }
-            elseif($req->action == "acceptjobdone"){
+            } elseif ($req->action == "acceptjobdone") {
                 $rental->where('maintenance_id', $req->maintenance_id)->update(['status' => 1]);
                 $action = "confirmed job done on";
             }
@@ -476,18 +467,16 @@ class ConsultantController extends Controller
             $this->email = $getitem[0]->service_provider;
             $this->name = $getUser[0]->name;
             $this->clientname = $getAdmin[0]->name;
-            $this->subject = $this->clientname.' '.$req->action.' your quote';
+            $this->subject = $this->clientname . ' ' . $req->action . ' your quote';
 
-            $this->message = "Hi ".$this->name.", <br><br> <b>".$this->clientname."</b>, ".$action." your quote. <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://exbc.ca/login'>https://exbc.ca/login</a> to login to EXBC Account. <br> b. Go to Manage Rental Property on Free Business App and Select Service Provider <br><br> Thanks <br> PaySprint Management.";
+            $this->message = "Hi " . $this->name . ", <br><br> <b>" . $this->clientname . "</b>, " . $action . " your quote. <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://exbc.ca/login'>https://exbc.ca/login</a> to login to EXBC Account. <br> b. Go to Manage Rental Property on Free Business App and Select Service Provider <br><br> Thanks <br> PaySprint Management.";
 
             $this->file = "noImage.png";
 
             $this->sendEmail($this->email, "Maintenace Request");
 
             $resData = ['res' => 'Successfull', 'message' => 'success', 'title' => 'Thanks!'];
-
-        }
-        else{
+        } else {
             $resData = ['res' => 'This request is not found or deleted by the sender', 'message' => 'info', 'title' => 'Oops!'];
         }
 
@@ -496,13 +485,14 @@ class ConsultantController extends Controller
     }
 
 
-    public function ajaxquotedecisionmaker(Request $req, RentalQuote $rental){
+    public function ajaxquotedecisionmaker(Request $req, RentalQuote $rental)
+    {
 
         $getitem = $rental->where('maintenance_id', $req->maintenance_id)->get();
 
-        if(count($getitem) > 0){
+        if (count($getitem) > 0) {
 
-            if($req->action == "jobdone"){
+            if ($req->action == "jobdone") {
 
                 $rental->where('maintenance_id', $req->maintenance_id)->update(['status' => 5]);
             }
@@ -514,18 +504,16 @@ class ConsultantController extends Controller
             $this->name = $getUser[0]->name;
             $this->clientname = $getAdmin[0]->name;
             $this->email = $getAdmin[0]->email;
-            $this->subject = "Maintenance Job Done by ".$this->name;
+            $this->subject = "Maintenance Job Done by " . $this->name;
 
-            $this->message = "Hi ".$this->clientname.", <br><br> <b>".$this->name."</b>, has completed the job assigned to them.<br><br> Thanks <br> PaySprint Management.";
+            $this->message = "Hi " . $this->clientname . ", <br><br> <b>" . $this->name . "</b>, has completed the job assigned to them.<br><br> Thanks <br> PaySprint Management.";
 
             $this->file = "noImage.png";
 
             $this->sendEmail($this->email, "Maintenace Request");
 
             $resData = ['res' => 'Successfull', 'message' => 'success', 'title' => 'Thanks!'];
-
-        }
-        else{
+        } else {
             $resData = ['res' => 'This request is not found or deleted by the sender', 'message' => 'info', 'title' => 'Oops!'];
         }
 
@@ -534,11 +522,12 @@ class ConsultantController extends Controller
     }
 
 
-    public function ajaxnegotiatequote(Request $req, RentalQuote $rental){
+    public function ajaxnegotiatequote(Request $req, RentalQuote $rental)
+    {
 
         $getitem = $rental->where('maintenance_id', $req->maintenance_id)->get();
 
-        if(count($getitem) > 0){
+        if (count($getitem) > 0) {
 
             $rental->where('maintenance_id', $req->maintenance_id)->update(['status' => 2, 'negotiation_price' => $req->negotiation_price, 'negotiation_reason' => $req->negotiation_reason]);
 
@@ -549,9 +538,9 @@ class ConsultantController extends Controller
             $this->email = $getitem[0]->service_provider;
             $this->name = $getUser[0]->name;
             $this->clientname = $getAdmin[0]->name;
-            $this->subject = $this->clientname.' negotiates on your quote';
+            $this->subject = $this->clientname . ' negotiates on your quote';
 
-            $this->message = "Hi ".$this->name.", <br><br> <b>".$this->clientname."</b>, negotiates on your quote. <br><br> <hr> <p style='font-weight: bold;'> Negotiation Price: ".number_format($req->negotiation_price, 2)."</p> <br> <p style='font-weight: bold;'>Reason: ".$req->negotiation_reason." </p> <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://exbc.ca/login'>https://exbc.ca/login</a> to login to EXBC Account. <br> b. Go to Manage Rental Property on Free Business App and Select Service Provider <br><br> Thanks <br> PaySprint Management.";
+            $this->message = "Hi " . $this->name . ", <br><br> <b>" . $this->clientname . "</b>, negotiates on your quote. <br><br> <hr> <p style='font-weight: bold;'> Negotiation Price: " . number_format($req->negotiation_price, 2) . "</p> <br> <p style='font-weight: bold;'>Reason: " . $req->negotiation_reason . " </p> <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://exbc.ca/login'>https://exbc.ca/login</a> to login to EXBC Account. <br> b. Go to Manage Rental Property on Free Business App and Select Service Provider <br><br> Thanks <br> PaySprint Management.";
 
             $this->file = "noImage.png";
 
@@ -559,9 +548,7 @@ class ConsultantController extends Controller
 
             $resData = "Successfull";
             $resp = "success";
-
-        }
-        else{
+        } else {
             $resData = "Something went wrong, Try Again!";
             $resp = "error";
         }
@@ -571,11 +558,12 @@ class ConsultantController extends Controller
     }
 
 
-    public function ajaxrespondquote(Request $req, RentalQuote $rental){
+    public function ajaxrespondquote(Request $req, RentalQuote $rental)
+    {
 
         $getitem = $rental->where('maintenance_id', $req->maintenance_id)->get();
 
-        if(count($getitem) > 0){
+        if (count($getitem) > 0) {
 
             $rental->where('maintenance_id', $req->maintenance_id)->update(['status' => 1, 'maintenance_price' => $req->negotiation_price]);
 
@@ -586,9 +574,9 @@ class ConsultantController extends Controller
             $this->email = $getitem[0]->property_owner;
             $this->name = $getAdmin[0]->name;
             $this->clientname = $getUser[0]->name;
-            $this->subject = $this->clientname.' accepts your negotiation price';
+            $this->subject = $this->clientname . ' accepts your negotiation price';
 
-            $this->message = "Hi ".$this->name.", <br><br> <b>".$this->clientname."</b>, accepts your negotiation price. <br><br> <hr> <p style='font-weight: bold;'>Quotable Price: ".number_format($req->maintenance_price, 2)."</p> <br> <p style='font-weight: bold;'>Negotiation Price: ".number_format($req->negotiation_price, 2)."</p> <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://exbc.ca/login'>https://exbc.ca/login</a> to login to EXBC Account. <br> b. Go to Manage Rental Property on Free Business App and Select Property Owner/Manager <br><br> Thanks <br> PaySprint Management.";
+            $this->message = "Hi " . $this->name . ", <br><br> <b>" . $this->clientname . "</b>, accepts your negotiation price. <br><br> <hr> <p style='font-weight: bold;'>Quotable Price: " . number_format($req->maintenance_price, 2) . "</p> <br> <p style='font-weight: bold;'>Negotiation Price: " . number_format($req->negotiation_price, 2) . "</p> <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://exbc.ca/login'>https://exbc.ca/login</a> to login to EXBC Account. <br> b. Go to Manage Rental Property on Free Business App and Select Property Owner/Manager <br><br> Thanks <br> PaySprint Management.";
 
             $this->file = "noImage.png";
 
@@ -596,9 +584,7 @@ class ConsultantController extends Controller
 
             $resData = "Successfull";
             $resp = "success";
-
-        }
-        else{
+        } else {
             $resData = "Something went wrong, Try Again!";
             $resp = "error";
         }
@@ -612,19 +598,19 @@ class ConsultantController extends Controller
 
 
 
-    public function sendEmail($objDemoa, $purpose){
-      $objDemo = new \stdClass();
-      $objDemo->purpose = $purpose;
+    public function sendEmail($objDemoa, $purpose)
+    {
+        $objDemo = new \stdClass();
+        $objDemo->purpose = $purpose;
 
-        if($purpose == "Maintenace Request"){
+        if ($purpose == "Maintenace Request") {
 
             $objDemo->name = $this->name;
             $objDemo->email = $this->email;
             $objDemo->subject = $this->subject;
             $objDemo->file = $this->file;
             $objDemo->message = $this->message;
-        }
-        elseif($purpose == $this->subject){
+        } elseif ($purpose == $this->subject) {
 
             $objDemo->name = $this->name;
             $objDemo->email = $this->to;
@@ -643,11 +629,9 @@ class ConsultantController extends Controller
             $objDemo->state = $this->state;
             $objDemo->zipcode = $this->zipcode;
             $objDemo->customer_id = $this->customer_id;
-
         }
 
-      Mail::to($objDemoa)
+        Mail::to($objDemoa)
             ->send(new sendEmail($objDemo));
-   }
-
+    }
 }

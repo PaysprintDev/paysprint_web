@@ -834,7 +834,7 @@
                                                     <h4>Pay Invoice on PaySprint by following these steps:</h4>
                                                     <hr>
                                                     <p>a. Download Paysprint Mobile App on Google Play Store or App
-                                                      Store or visit <a href="{{ route('home') }}">www.paysprint.net</a>
+                                                      Store or visit <a href="{{ route('home') }}">www.paysprint.ca</a>
                                                       to login/Sign up for FREE</p>
                                                     <p>b. On the menu option, click on Invoice, select the service type
                                                       and type the invoice reference number to view or pay invoice.</p>
@@ -860,7 +860,7 @@
     </li>
                                                       </ul> <br>
                                                       Visit our website, <a
-                                                        href="{{ route('home') }}">www.paysprint.net</a> to open a
+                                                        href="{{ route('home') }}">www.paysprint.ca</a> to open a
                                                       Merchant account.
                                                     </p>
 

@@ -30,7 +30,7 @@
                         <br>
                         <br>
 
-                        We may change this Policy from time to time. If we do, we shall post a revision of this Privacy Policy at https://paysprint.net/privacy-policy and your continued use of the Services provided through mobile app or website shall be subject to such revised terms.
+                        We may change this Policy from time to time. If we do, we shall post a revision of this Privacy Policy at https://paysprint.ca/privacy-policy and your continued use of the Services provided through mobile app or website shall be subject to such revised terms.
 
                     </p>
 
@@ -329,7 +329,7 @@
 
                         <ul>
                             <li>following the instructions in the communications sent to you; or</li>
-                            <li>contacting us by email to privacy@paysprint.net. </li>
+                            <li>contacting us by email to privacy@paysprint.ca. </li>
                         </ul>
 
                         <br>
@@ -374,7 +374,7 @@
                         <strong>10.1. Processors and Sub-processors</strong>
                         <br>
                         <br>
-                        A list of the data processors used by us could be obtaining by emailing us at: privacy@paysprint.net
+                        A list of the data processors used by us could be obtaining by emailing us at: privacy@paysprint.ca
                         <br>
                         <br>
                         For all our processors and sub-processors:  
@@ -525,7 +525,7 @@
 
                         <br>
                         <br>
-                        privacy@paysprint.net
+                        privacy@paysprint.ca
 
                         <br>
                         <br>
@@ -534,7 +534,7 @@
 
                         <ul>
                             <li>logging into your account using your login credentials and password; or</li>
-                            <li>contacting us at support@paysprint.net or via the contact details below.</li>
+                            <li>contacting us at support@paysprint.ca or via the contact details below.</li>
                         </ul>
 
                         <br>
@@ -626,7 +626,7 @@
                         <br>
                         
                         <strong>
-                            Email: privacy@paysprint.net <br>
+                            Email: privacy@paysprint.ca <br>
                             Phone (North America): (437) 925 8344 <br>
                             Phone (Others): 888-469-0999 
                         </strong>
@@ -688,7 +688,7 @@
                         Sub-processor has the meaning given to it in the GDPR.
                         <br>
                         <br>
-                         PaySprint (PS) or PS means PaySprint by Express Ca Corp, which includes the trading name, “PaySprint”, and all subsidiaries and affiliates of Express Ca Corp. For a complete list of Express Ca Corp’s subsidiaries, associates, or affiliated companies, kindly send email to <strong><a href="mailto:info@paysprint.net">info@paysprint.net</a></strong>.
+                         PaySprint (PS) or PS means PaySprint by Express Ca Corp, which includes the trading name, “PaySprint”, and all subsidiaries and affiliates of Express Ca Corp. For a complete list of Express Ca Corp’s subsidiaries, associates, or affiliated companies, kindly send email to <strong><a href="mailto:info@paysprint.ca">info@paysprint.ca</a></strong>.
 
 
                         

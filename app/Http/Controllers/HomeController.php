@@ -100,8 +100,8 @@ use App\Traits\MailChimpNewsLetter;
 class HomeController extends Controller
 {
 
-    public $to = "info@paysprint.net";
-    public $customerserviceto = "customerserviceafrica@paysprint.net";
+    public $to = "info@paysprint.ca";
+    public $customerserviceto = "customerserviceafrica@paysprint.ca";
     public $page;
     public $email;
     public $name;
@@ -3387,7 +3387,7 @@ class HomeController extends Controller
                             $title = "Oops!";
                             $link = "contact";
 
-                            $resInfo = strtoupper($info->Record->RecordStatus) . ", Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.net \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.net";
+                            $resInfo = strtoupper($info->Record->RecordStatus) . ", Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.ca";
 
                             User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'countryapproval' => 1]);
                         } else {
@@ -3405,7 +3405,7 @@ class HomeController extends Controller
                         $message = "error";
                         $title = "Oops!";
                         $link = "contact";
-                        $resInfo = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.net \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.net";
+                        $resInfo = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.ca";
 
                         User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'countryapproval' => 1]);
 
@@ -3417,9 +3417,9 @@ class HomeController extends Controller
                     $this->email = Auth::user()->email;
                     $this->subject = "Welcome to PaySprint";
 
-                    $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You can also withdraw funds from your wallet FREE of Costs. <br> Thank you for your interest in PaySprint. <br><br> Customer Success Team <br> info@paysprint.net";
+                    $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You can also withdraw funds from your wallet FREE of Costs. <br> Thank you for your interest in PaySprint. <br><br> Customer Success Team <br> info@paysprint.ca";
 
-                    $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at www.paysprint.net <br> b. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents <br> All other features would be enabled for you as soon as Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.net";
+                    $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca <br> b. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents <br> All other features would be enabled for you as soon as Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
 
 
                     $this->message = '<p>' . $message . '</p>';
@@ -3478,14 +3478,14 @@ class HomeController extends Controller
                     // Check if Flagged or not
                     if ($userExists[0]['flagged'] == 1) {
 
-                        $resData = ['res' => 'Hello ' . $userExists[0]['name'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.net/contact.', 'message' => 'error'];
+                        $resData = ['res' => 'Hello ' . $userExists[0]['name'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact.', 'message' => 'error'];
 
-                        $this->createNotification($userExists[0]['ref_code'], 'Hello ' . $userExists[0]['name'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.net/contact.');
+                        $this->createNotification($userExists[0]['ref_code'], 'Hello ' . $userExists[0]['name'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact.');
                     } elseif ($userExists[0]['disableAccount'] == 'on') {
 
-                        $resData = ['res' => 'Hello ' . $userExists[0]['name'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.net/contact.', 'message' => 'error'];
+                        $resData = ['res' => 'Hello ' . $userExists[0]['name'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact.', 'message' => 'error'];
 
-                        $this->createNotification($userExists[0]['ref_code'], 'Hello ' . $userExists[0]['name'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.net/contact.');
+                        $this->createNotification($userExists[0]['ref_code'], 'Hello ' . $userExists[0]['name'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact.');
                     }
                     // elseif($userExists[0]['accountLevel'] == 0){
 
