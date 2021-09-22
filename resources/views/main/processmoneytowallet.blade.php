@@ -92,7 +92,7 @@ input[type="radio"] {
                                                 </div>
                                                 <div class="col-md-12">
                                                     <h4>
-                                                        {{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format(Auth::user()->wallet_balance, 2) }}
+                                                        {{ $data['currencyCode']->currencySymbol."".number_format(Auth::user()->wallet_balance, 2) }}
                                                     </h4>
                                                 </div>
                                             </div>
@@ -104,7 +104,7 @@ input[type="radio"] {
 
                                     <input type="hidden" name="api_token" id="api_token" value="{{ $data['api_token'] }}">
 
-                                    <input type="hidden" name="code" id="code" value="{{ $data['currencyCode'][0]->callingCodes[0] }}">
+                                    <input type="hidden" name="code" id="code" value="{{ $data['currencyCode']->callingCode }}">
 
                                     <input type="hidden" name="paymentToken" id="paymentToken" value="">
 
@@ -128,7 +128,7 @@ input[type="radio"] {
                                                     <strong>Total Amount:</strong>
                                                 </div>
                                                 <div class="col-md-8">
-                                                    {{ $data['currencyCode'][0]->currencies[0]->code.' '.number_format($data['amount'], 2) }}
+                                                    {{ $data['currencyCode']->currencyCode.' '.number_format($data['amount'], 2) }}
                                                 </div>
                                             </div>
                                         </div>
@@ -217,7 +217,7 @@ input[type="radio"] {
                             "lastName": lastname,
                             "hash": hash,
                             "callbackUrl":"{{ route('express callback') }}",
-                            "meta": [{"metaName": "Description","metaValue": "Added {{ $data['currencyCode'][0]->currencies[0]->code }}"+amount+" to PaySprint Wallet, Fee Inclusive."}]
+                            "meta": [{"metaName": "Description","metaValue": "Added {{ $data['currencyCode']->currencyCode }}"+amount+" to PaySprint Wallet, Fee Inclusive."}]
                         }
 
                         

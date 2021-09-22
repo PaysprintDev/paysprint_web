@@ -55,6 +55,9 @@ Route::get('numberofwithdrawals', 'CheckSetupController@updateNumberofWithdrawal
 // Get Path Address
 Route::get('pathaddress', 'CheckSetupController@getPathAddress');
 
+// Country Update Currency
+Route::get('countryupdate', 'CheckSetupController@countryUpdate');
+
 
 // Transaction Limit
 Route::get('dailylimit', 'CheckSetupController@dailyLimit');

@@ -6697,7 +6697,7 @@ class AdminController extends Controller
                 'getuserDetail' => $this->getmyPersonalDetail(session('user_id')),
                 'getCard' => $this->getUserCard(session('user_id')),
                 'getUserDetail' => $this->getmyPersonalDetail(session('user_id')),
-                'currencyCode' => $this->getCurrencyCode(session('country')),
+                'currencyCode' => $this->getCountryCode(session('country')),
                 'getCard' => $this->getUserCard(session('myID')),
             );
 
@@ -6760,10 +6760,10 @@ class AdminController extends Controller
                 'getuserDetail' => $this->getmyPersonalDetail(session('user_id')),
                 'getCard' => $this->getUserCard(session('user_id')),
                 'getUserDetail' => $this->getmyPersonalDetail(session('user_id')),
-                'currencyCode' => $this->getCurrencyCode(session('country')),
+                'currencyCode' => $this->getCountryCode(session('country')),
                 'getCard' => $this->getUserCard(session('myID')),
                 'paymentorg' => $this->getthisOrganization($user_id),
-                'othercurrencyCode' => $this->otherCurrencyCode($user_id),
+                'othercurrencyCode' => $this->getCountryCode($user_id),
                 'alpha2Code' => $this->getCountryCode(session('country')),
             );
 
@@ -10352,12 +10352,12 @@ class AdminController extends Controller
                 $mycode = $this->getCountryCode($checkApikey->country);
 
 
-                $currencyCode = $mycode[0]->currencies[0]->code;
-                $currencySymbol = $mycode[0]->currencies[0]->symbol;
+                $currencyCode = $mycode->currencyCode;
+                $currencySymbol = $mycode->currencySymbol;
 
                 $api_token = uniqid() . md5($adminCheck[0]['email']) . time();
 
-                User::where('email', $adminCheck[0]['email'])->update(['code' => $mycode[0]->callingCodes[0], 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'api_token' => $api_token]);
+                User::where('email', $adminCheck[0]['email'])->update(['code' => $mycode->callingCode, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'api_token' => $api_token]);
 
                 $getMerchant = User::where('email', $adminCheck[0]['email'])->first();
 
@@ -10538,8 +10538,8 @@ class AdminController extends Controller
 
                     $mycode = $this->getCountryCode($req->country);
 
-                    $currencyCode = $mycode[0]->currencies[0]->code;
-                    $currencySymbol = $mycode[0]->currencies[0]->symbol;
+                    $currencyCode = $mycode->currencyCode;
+                    $currencySymbol = $mycode->currencySymbol;
 
                     // Get all ref_codes
 
@@ -10549,7 +10549,7 @@ class AdminController extends Controller
                     $api_token = uniqid() . md5($req->email) . time();
 
 
-                    $data = ['code' => $mycode[0]->callingCodes[0], 'ref_code' => $req->ref_code, 'businessname' => $req->business_name, 'name' => $getanonuser->name, 'email' => $getanonuser->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'telephone' => $getanonuser->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $getanonuser->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'wallet_balance' => $getanonuser->wallet_balance, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by];
+                    $data = ['code' => $mycode->callingCode, 'ref_code' => $req->ref_code, 'businessname' => $req->business_name, 'name' => $getanonuser->name, 'email' => $getanonuser->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'telephone' => $getanonuser->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $getanonuser->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'wallet_balance' => $getanonuser->wallet_balance, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by];
 
 
                     User::updateOrCreate(['email' => $getanonuser->email], $data);
@@ -10587,7 +10587,7 @@ class AdminController extends Controller
                         $countryApproval = AllCountries::where('name', $req->country)->where('approval', 1)->first();
 
                         if (isset($countryApproval)) {
-                            $info = $this->identificationAPI($url, $req->firstname, $req->lastname, $req->dayOfBirth, $req->monthOfBirth, $req->yearOfBirth, $minimuAge, $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, $req->city, $req->country, $req->zip_code, $getanonuser->telephone, $getanonuser->email, $mycode[0]->alpha2Code);
+                            $info = $this->identificationAPI($url, $req->firstname, $req->lastname, $req->dayOfBirth, $req->monthOfBirth, $req->yearOfBirth, $minimuAge, $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, $req->city, $req->country, $req->zip_code, $getanonuser->telephone, $getanonuser->email, $mycode->code);
 
 
                             if (isset($info->TransactionID) == true) {
@@ -10705,8 +10705,8 @@ class AdminController extends Controller
 
                     $mycode = $this->getCountryCode($req->country);
 
-                    $currencyCode = $mycode[0]->currencies[0]->code;
-                    $currencySymbol = $mycode[0]->currencies[0]->symbol;
+                    $currencyCode = $mycode->currencyCode;
+                    $currencySymbol = $mycode->currencySymbol;
 
                     // Get all ref_codes
 
@@ -10715,12 +10715,12 @@ class AdminController extends Controller
 
                     $api_token = uniqid() . md5($req->email) . time();
 
-                    if (isset($mycode[0]->callingCodes[0])) {
+                    if (isset($mycode->callingCode)) {
 
                         if ($req->country == "United States") {
                             $phoneCode = "1";
                         } else {
-                            $phoneCode = $mycode[0]->callingCodes[0];
+                            $phoneCode = $mycode->callingCode;
                         }
                     } else {
                         $phoneCode = "1";
@@ -10752,7 +10752,7 @@ class AdminController extends Controller
 
                         if (isset($countryApproval)) {
 
-                            $info = $this->identificationAPI($url, $req->firstname, $req->lastname, $req->dayOfBirth, $req->monthOfBirth, $req->yearOfBirth, $minimuAge, $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, $req->city, $req->country, $req->zip_code, $req->telephone, $req->email, $mycode[0]->alpha2Code);
+                            $info = $this->identificationAPI($url, $req->firstname, $req->lastname, $req->dayOfBirth, $req->monthOfBirth, $req->yearOfBirth, $minimuAge, $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, $req->city, $req->country, $req->zip_code, $req->telephone, $req->email, $mycode->code);
 
 
                             if (isset($info->TransactionID) == true) {
@@ -13175,7 +13175,7 @@ class AdminController extends Controller
     {
         $userData = User::where('ref_code', $user_id)->first();
 
-        $data = $this->getCurrencyCode($userData->country);
+        $data = $this->getCountryCode($userData->country);
 
         return $data;
     }

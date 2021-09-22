@@ -1268,6 +1268,24 @@ class CheckSetupController extends Controller
     }
 
 
+    // Update Allcountries CurrencySymbol, Calling and Currency Codes
+    public function countryUpdate()
+    {
+        $data = User::all();
+
+        foreach ($data as $value) {
+
+            if ($value->code != NULL) {
+                AllCountries::where('name', $value->country)->update([
+                    'callingCode' => $value->code,
+                    'currencyCode' => $value->currencyCode,
+                    'currencySymbol' => $value->currencySymbol
+                ]);
+            }
+        }
+    }
+
+
     public function monthlyTransactionHistory()
     {
 

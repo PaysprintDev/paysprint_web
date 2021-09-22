@@ -27,7 +27,7 @@
                                                         <br>
                                                         <div class="col-md-12">
                                                             <h3>
-                                                                {{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format(Auth::user()->wallet_balance, 2) }}
+                                                                {{ $data['currencyCode']->currencySymbol."".number_format(Auth::user()->wallet_balance, 2) }}
                                                             </h3>
                                                         </div>
                                                     </div>
@@ -150,7 +150,7 @@
 
 
 
-                                                        <td style="font-weight: 700" class="{{ ($sendRecData->credit != 0) ? "text-success" : "text-danger" }}">{{ ($sendRecData->credit != 0) ? "+".$data['currencyCode'][0]->currencies[0]->symbol.number_format($sendRecData->credit, 2) : "-".$data['currencyCode'][0]->currencies[0]->symbol.number_format($sendRecData->debit, 2) }}</td>
+                                                        <td style="font-weight: 700" class="{{ ($sendRecData->credit != 0) ? "text-success" : "text-danger" }}">{{ ($sendRecData->credit != 0) ? "+".$data['currencyCode']->currencySymbol.number_format($sendRecData->credit, 2) : "-".$data['currencyCode']->currencySymbol.number_format($sendRecData->debit, 2) }}</td>
                                                     </tr>
                                                 @endforeach
 
@@ -238,14 +238,14 @@
                                                             @endphp
 
                                                             @if ($payInv->payment_status == 0)
-                                                                {{ "+".$data['currencyCode'][0]->currencies[0]->symbol.number_format($totalAmount, 2) }}
+                                                                {{ "+".$data['currencyCode']->currencySymbol.number_format($totalAmount, 2) }}
                                                             @elseif($payInv->payment_status == 2)
-                                                                {{ "-".$data['currencyCode'][0]->currencies[0]->symbol.number_format($payInv->remaining_balance, 2) }}
+                                                                {{ "-".$data['currencyCode']->currencySymbol.number_format($payInv->remaining_balance, 2) }}
                                                             @else
-                                                                {{ "-".$data['currencyCode'][0]->currencies[0]->symbol.number_format($totalAmount, 2) }}
+                                                                {{ "-".$data['currencyCode']->currencySymbol.number_format($totalAmount, 2) }}
                                                             @endif
                                                             
-                                                            {{--  {{ ($payInv->payment_status == 0) ? "+".$data['currencyCode'][0]->currencies[0]->symbol.number_format($totalAmount, 2) : "-".$data['currencyCode'][0]->currencies[0]->symbol.number_format($totalAmount, 2) }}  --}}
+                                                            {{--  {{ ($payInv->payment_status == 0) ? "+".$data['currencyCode']->currencySymbol.number_format($totalAmount, 2) : "-".$data['currencyCode']->currencySymbol.number_format($totalAmount, 2) }}  --}}
                                                         
                                                         
                                                         </td>
@@ -303,7 +303,7 @@
                                                                 </div>
 
                                                             </td>
-                                                        <td style="font-weight: 700" class="{{ ($sendRecData->credit != 0) ? "text-success" : "text-danger" }}">{{ ($sendRecData->credit != 0) ? "+".$data['currencyCode'][0]->currencies[0]->symbol.number_format($sendRecData->credit, 2) : "-".$data['currencyCode'][0]->currencies[0]->symbol.number_format($sendRecData->debit, 2) }}</td>
+                                                        <td style="font-weight: 700" class="{{ ($sendRecData->credit != 0) ? "text-success" : "text-danger" }}">{{ ($sendRecData->credit != 0) ? "+".$data['currencyCode']->currencySymbol.number_format($sendRecData->credit, 2) : "-".$data['currencyCode']->currencySymbol.number_format($sendRecData->debit, 2) }}</td>
                                                     </tr>
                                                 @endforeach
 

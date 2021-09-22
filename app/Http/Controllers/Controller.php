@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AllCountries;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -352,30 +353,70 @@ class Controller extends BaseController
     }
 
 
+    // TODO:: Update API with country layer and run daemon to update information
+
+
+    public function getCountryCoded($country)
+    {
+
+        try {
+            $curl = curl_init();
+            $access_key = '18c513c999bb1b77b4a8cedb938a0376';
+            // $curlUrl = 'https://restcountries.eu/rest/v2/name/' . $country;
+            $curlUrl = 'http://api.countrylayer.com/v2/name/' . $country;
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $curlUrl . "?access_key=" . $access_key,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => array(
+                    'Cookie: __cfduid=d423c6237ed02a0f8118fec1c27419ab81613795899'
+                ),
+            ));
+
+            $response = curl_exec($curl);
+
+
+            curl_close($curl);
+
+            $data = json_decode($response);
+
+
+            $callingCode = $data[0]->callingCodes[0];
+            // $currencyCode = NULL;
+            // $currencySymbol = NULL;
+            $currencyCode = $data[0]->currencies[0]->code;
+            $currencySymbol = $data[0]->currencies[0]->symbol;
+
+            AllCountries::where('name', $country)->update([
+                'callingCode' => $callingCode,
+                'currencyCode' => $currencyCode,
+                'currencySymbol' => $currencySymbol,
+            ]);
+
+            return $data;
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+    }
+
+
     public function getCountryCode($country)
     {
 
-        $curl = curl_init();
+        try {
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://restcountries.eu/rest/v2/name/' . $country,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => array(
-                'Cookie: __cfduid=d423c6237ed02a0f8118fec1c27419ab81613795899'
-            ),
-        ));
+            $data = AllCountries::where('name', $country)->first();
 
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-
-        return json_decode($response);
+            return $data;
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
     }
 
     public function sendMessage($message, $recipients)

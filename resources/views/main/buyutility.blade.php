@@ -88,7 +88,7 @@ input[type="radio"] {
                                                 </div>
                                                 <div class="col-md-12">
                                                     <h4>
-                                                        {{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format(Auth::user()->wallet_balance, 2) }}
+                                                        {{ $data['currencyCode']->currencySymbol."".number_format(Auth::user()->wallet_balance, 2) }}
                                                     </h4>
                                                 </div>
                                             </div>
@@ -307,13 +307,13 @@ input[type="radio"] {
                                     <div class="form-group converter disp-0"> <label for="netwmount">
                                             <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate </b> <br> <span id="rateToday"></span> </small></h6>
                                             {{-- <p style="font-weight: bold;">
-                                                {{ $data['currencyCode'][0]->currencies[0]->code }} <=> {{ $data['othercurrencyCode'][0]->currencies[0]->code }}
+                                                {{ $data['currencyCode']->currencyCode }} <=> {{ $data['othercurrencyCode']->currencyCode }}
                                             </p> --}}
 
                                             <table class="table table-bordered table-striped" width="100%">
                                                     <tbody>
                                                         <tr style="font-weight: bold;">
-                                                            <td>{{ $data['currencyCode'][0]->currencies[0]->code }}</td>
+                                                            <td>{{ $data['currencyCode']->currencyCode }}</td>
                                                             <td>NGN</td>
                                                         </tr>
                                                         <tr style="font-weight: bold;">
@@ -357,7 +357,7 @@ input[type="radio"] {
                                 {{-- <div class="form-group disp-0"> <label for="netwmount">
                                         <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small></h6>
                                         <p style="font-weight: bold;">
-                                            {{ $data['currencyCode'][0]->currencies[0]->code }} <=> CAD
+                                            {{ $data['currencyCode']->currencyCode }} <=> CAD
                                         </p>
                                     </label>
                                     <div class="input-group"> 
@@ -600,7 +600,7 @@ function runCommission(){
                 $('.commissionInfo').addClass('alert alert-success');
                 $('.commissionInfo').removeClass('alert alert-danger');
 
-                $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a discounted amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.walletCharge.toFixed(2)+" will be deducted from your Wallet. You have a discount of {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.walletDiscount.toFixed(2)+" on your {{ strtoupper(Request::get('billername')) }}. Thanks for choosing PaySprint.</span></li></li></ul>");
+                $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a discounted amount of: {{ $data['currencyCode']->currencySymbol }}"+result.data.walletCharge.toFixed(2)+" will be deducted from your Wallet. You have a discount of {{ $data['currencyCode']->currencySymbol }}"+result.data.walletDiscount.toFixed(2)+" on your {{ strtoupper(Request::get('billername')) }}. Thanks for choosing PaySprint.</span></li></li></ul>");
 
                 $("#amounttosend").val(result.data.walletCharge);
                 $("#commissiondeduct").val(result.data.walletDiscount);
@@ -687,7 +687,7 @@ function currencyConvert(amount){
     $("#conversionamount").val("");
 
     var currency = "NGN";
-    var localcurrency = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
+    var localcurrency = "{{ $data['currencyCode']->currencyCode }}";
     var route = "{{ URL('Ajax/getconversion') }}";
     var thisdata = {currency: currency, amount: amount, val: "send", localcurrency: localcurrency};
 
@@ -918,7 +918,7 @@ $('.priceChecker, #quantity').change(function(){
 
                                         // convert Amount to other currency and pass to price amount
 
-                                        var currency = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
+                                        var currency = "{{ $data['currencyCode']->currencyCode }}";
                                         var localcurrency = "NGN";
                                         var route = "{{ URL('Ajax/getconversion') }}";
                                         var thisdata = {currency: currency, amount: j.Amount, val: "send", localcurrency: localcurrency};

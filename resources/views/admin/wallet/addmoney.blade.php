@@ -672,7 +672,7 @@ function currencyConvert(amount){
             var charge = ParseFloat(totalcharge, 2);
 
           return {
-            countryCode: "{{ $data['alpha2Code'][0]->alpha2Code }}",
+            countryCode: "{{ $data['alpha2Code']->code }}",
             currencyCode: "{{ $data['getuserDetail']->currencyCode }}",
             totalPriceStatus: "FINAL",
             // set to cart total

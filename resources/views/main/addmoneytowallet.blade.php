@@ -155,9 +155,9 @@ input[type="radio"] {
                                     <div class="form-group"> <label for="amount">
                                             <h6>Amount</h6>
                                         </label>
-                                        <div class="input-group"> <div class="input-group-append"> <span class="input-group-text text-muted"> {{ $data['currencyCode'][0]->currencies[0]->symbol }} </span> </div> <input type="number" min="0.00" step="0.01" name="amount" id="amount" class="form-control" required>
+                                        <div class="input-group"> <div class="input-group-append"> <span class="input-group-text text-muted"> {{ $data['currencyCode']->currencySymbol }} </span> </div> <input type="number" min="0.00" step="0.01" name="amount" id="amount" class="form-control" required>
 
-                                        <input type="hidden" name="currencyCode" class="form-control" id="curCurrency" value="{{ $data['currencyCode'][0]->currencies[0]->code }}" readonly>
+                                        <input type="hidden" name="currencyCode" class="form-control" id="curCurrency" value="{{ $data['currencyCode']->currencyCode }}" readonly>
                                         <input type="hidden" name="name" class="form-control" id="nameInput" value="{{ Auth::user()->name }}" readonly>
                                         <input type="hidden" name="phone" class="form-control" id="phoneInput" value="{{ Auth::user()->telephone }}" readonly>
                                         <input type="hidden" name="api_token" class="form-control" id="apiTokenInput" value="{{ Auth::user()->api_token }}" readonly>
@@ -204,7 +204,7 @@ input[type="radio"] {
                                 <div class="form-group disp-0"> <label for="netwmount">
                                         <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small></h6>
                                         <p style="font-weight: bold;">
-                                            {{ $data['currencyCode'][0]->currencies[0]->code }} <=> CAD
+                                            {{ $data['currencyCode']->currencyCode }} <=> CAD
                                         </p>
                                     </label>
                                     <div class="input-group"> 
@@ -373,7 +373,7 @@ function runCommission(){
 
 
     var route = "{{ URL('Ajax/getCommission') }}";
-    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $("#card_type").val(), localcurrency: "{{ $data['currencyCode'][0]->currencies[0]->code }}", foreigncurrency: "USD", structure: "Add Funds/Money", structureMethod: "Debit Card"};
+    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $("#card_type").val(), localcurrency: "{{ $data['currencyCode']->currencyCode }}", foreigncurrency: "USD", structure: "Add Funds/Money", structureMethod: "Debit Card"};
 
 
     Pace.restart();
@@ -416,7 +416,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-success');
                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+chargeAmount+" will be charged from your "+$('#card_type').val()+".</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}"+chargeAmount+" will be charged from your "+$('#card_type').val()+".</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
@@ -434,7 +434,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-danger');
                     $('.commissionInfo').removeClass('alert alert-success');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+(+result.data + +result.collection).toFixed(2)+" will be charged from your "+$('#card_type').val()+".</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}"+(+result.data + +result.collection).toFixed(2)+" will be charged from your "+$('#card_type').val()+".</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
@@ -455,7 +455,7 @@ function runCommission(){
 
                 var amountVal = (+netVal + +feeVal).toFixed(2);
 
-                var currencyCode = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
+                var currencyCode = "{{ $data['currencyCode']->currencyCode }}";
 
                 var email = $('#emailInput').val();
                 var name = $('#nameInput').val();
@@ -485,7 +485,7 @@ function currencyConvert(amount){
     $("#conversionamount").val("");
 
     var currency = "CAD";
-    var localcurrency = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
+    var localcurrency = "{{ $data['currencyCode']->currencyCode }}";
     var route = "{{ URL('Ajax/getconversion') }}";
     var thisdata = {currency: currency, amount: amount, val: "send", localcurrency: localcurrency};
 
@@ -634,7 +634,7 @@ else if(val == 'addcard'){
             {
                 display_name: "Description",
                 variable_name: "description",
-                value: "Added {{ $data['currencyCode'][0]->currencies[0]->code }}"+netamount+" to PaySprint Wallet and a Fee of "+feeamount+" inclusive."
+                value: "Added {{ $data['currencyCode']->currencyCode }}"+netamount+" to PaySprint Wallet and a Fee of "+feeamount+" inclusive."
             }
          ]
       },
@@ -847,8 +847,8 @@ function goBack() {
             var charge = ParseFloat(totalcharge, 2);
 
           return {
-            countryCode: "{{ $data['currencyCode'][0]->alpha2Code }}",
-            currencyCode: "{{ $data['currencyCode'][0]->currencies[0]->code }}",
+            countryCode: "{{ $data['currencyCode']->code }}",
+            currencyCode: "{{ $data['currencyCode']->currencyCode }}",
             totalPriceStatus: "FINAL",
             // set to cart total
             totalPrice: ""+charge+""
@@ -872,7 +872,7 @@ function goBack() {
           // transactionInfo must be set but does not affect cache
           paymentDataRequest.transactionInfo = {
             totalPriceStatus: 'NOT_CURRENTLY_KNOWN',
-            currencyCode: "{{ $data['currencyCode'][0]->currencies[0]->code }}"
+            currencyCode: "{{ $data['currencyCode']->currencyCode }}"
           };
           const paymentsClient = getGooglePaymentsClient();
           paymentsClient.prefetchPaymentData(paymentDataRequest);

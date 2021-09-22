@@ -49,7 +49,7 @@
 
                                     <input type="hidden" name="api_token" id="api_token" value="{{ session('api_token') }}">
 
-                                    <input type="hidden" name="code" id="code" value="{{ $data['currencyCode'][0]->callingCodes[0] }}">
+                                    <input type="hidden" name="code" id="code" value="{{ $data['currencyCode']->callingCode }}">
 
                                     <input type="hidden" name="paymentToken" id="paymentToken" value="">
 
@@ -160,9 +160,9 @@
                                             <div class="form-group"> <label for="currency">
                                                     Currency
                                                 </label>
-                                                <input type="hidden" name="localcurrency" value="{{ $data['currencyCode'][0]->currencies[0]->code }}">
+                                                <input type="hidden" name="localcurrency" value="{{ $data['currencyCode']->currencyCode }}">
                                                     <select name="currency" id="currency" class="form-control" readonly>
-                                                        <option value="{{ $data['othercurrencyCode'][0]->currencies[0]->code }}" selected>{{ $data['othercurrencyCode'][0]->currencies[0]->code }}</option>
+                                                        <option value="{{ $data['othercurrencyCode']->currencyCode }}" selected>{{ $data['othercurrencyCode']->currencyCode }}</option>
                                                     </select>
                                             </div>
                                         </div>
@@ -188,7 +188,7 @@
                                         <div class="form-group"> <label for="netwmount">
                                                Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small>
                                                 <p style="font-weight: bold;">
-                                                    {{ $data['currencyCode'][0]->currencies[0]->code }} <=> {{ $data['othercurrencyCode'][0]->currencies[0]->code }}
+                                                    {{ $data['currencyCode']->currencyCode }} <=> {{ $data['othercurrencyCode']->currencyCode }}
                                                 </p>
                                             </label>
                                                 <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
@@ -200,7 +200,7 @@
                                         <div class="form-group disp-0"> <label for="netwmount">
                                                 Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small>
                                                 <p style="font-weight: bold;">
-                                                    {{ $data['currencyCode'][0]->currencies[0]->code }} <=> {{ $data['othercurrencyCode'][0]->currencies[0]->code }}
+                                                    {{ $data['currencyCode']->currencyCode }} <=> {{ $data['othercurrencyCode']->currencyCode }}
                                                 </p>
                                             </label>
                                                 <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
@@ -492,7 +492,7 @@ function runCommission(){
 
 
     var route = "{{ URL('Ajax/getCommission') }}";
-    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $("#make_payment_method").val(), localcurrency: "{{ $data['currencyCode'][0]->currencies[0]->code }}", foreigncurrency: "{{ $data['othercurrencyCode'][0]->currencies[0]->code }}", structure: "Send Money/Pay Invoice", structureMethod: "Wallet"};
+    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $("#make_payment_method").val(), localcurrency: "{{ $data['currencyCode']->currencyCode }}", foreigncurrency: "{{ $data['othercurrencyCode']->currencyCode }}", structure: "Send Money/Pay Invoice", structureMethod: "Wallet"};
 
 
     Pace.restart();
@@ -532,7 +532,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-success');
                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.toFixed(2)+" will be deducted from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}"+result.data.toFixed(2)+" will be deducted from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
@@ -550,7 +550,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-success');
                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+(+result.data + +result.collection).toFixed(2)+" will be deducted from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}"+(+result.data + +result.collection).toFixed(2)+" will be deducted from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
@@ -575,8 +575,8 @@ function currencyConvert(amount){
 
     $("#conversionamount").val("");
 
-    var currency = "{{ $data['othercurrencyCode'][0]->currencies[0]->code }}";
-    var localcurrency = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
+    var currency = "{{ $data['othercurrencyCode']->currencyCode }}";
+    var localcurrency = "{{ $data['currencyCode']->currencyCode }}";
     var route = "{{ URL('Ajax/getconversion') }}";
     var thisdata = {currency: currency, amount: amount, val: "send", localcurrency: localcurrency};
 
@@ -779,8 +779,8 @@ function currencyConvert(amount){
          */
         function getGoogleTransactionInfo() {
           return {
-            countryCode: "{{ $data['currencyCode'][0]->alpha2Code }}",
-            currencyCode: "{{ $data['currencyCode'][0]->currencies[0]->code }}",
+            countryCode: "{{ $data['alpha2Code']->code }}",
+            currencyCode: "{{ $data['alpha2Code']->currencyCode }}",
             totalPriceStatus: "FINAL",
             // set to cart total
             totalPrice: $("#totalcharge").val()
@@ -797,7 +797,7 @@ function currencyConvert(amount){
           // transactionInfo must be set but does not affect cache
           paymentDataRequest.transactionInfo = {
             totalPriceStatus: 'NOT_CURRENTLY_KNOWN',
-            currencyCode: "{{ $data['currencyCode'][0]->currencies[0]->code }}"
+            currencyCode: "{{ $data['currencyCode']->currencyCode }}"
           };
           const paymentsClient = getGooglePaymentsClient();
           paymentsClient.prefetchPaymentData(paymentDataRequest);

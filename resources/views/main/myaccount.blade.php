@@ -109,7 +109,7 @@ input[type="radio"] {
                                                         </div>
                                                         <div class="col-md-12">
                                                             <h4>
-                                                                {{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format(Auth::user()->wallet_balance, 2) }}
+                                                                {{ $data['currencyCode']->currencySymbol."".number_format(Auth::user()->wallet_balance, 2) }}
                                                             </h4>
                                                         </div>
                                                     </div>
@@ -518,7 +518,7 @@ input[type="radio"] {
                                                                                 </div>
 
                                                                             </td>
-                                                                        <td style="font-weight: 700" class="{{ ($walletstatements->credit != 0) ? "text-success" : "text-danger" }}">{{ ($walletstatements->credit != 0) ? "+".$data['currencyCode'][0]->currencies[0]->symbol.number_format($walletstatements->credit, 2) : "-".$data['currencyCode'][0]->currencies[0]->symbol.number_format($walletstatements->debit, 2) }} <br> <small class="{{ ($walletstatements->status == "Delivered") ? "text-primary" : "text-secondary" }}"><strong>{{ $walletstatements->status }}</strong></small> </td>
+                                                                        <td style="font-weight: 700" class="{{ ($walletstatements->credit != 0) ? "text-success" : "text-danger" }}">{{ ($walletstatements->credit != 0) ? "+".$data['currencyCode']->currencySymbol.number_format($walletstatements->credit, 2) : "-".$data['currencyCode']->currencySymbol.number_format($walletstatements->debit, 2) }} <br> <small class="{{ ($walletstatements->status == "Delivered") ? "text-primary" : "text-secondary" }}"><strong>{{ $walletstatements->status }}</strong></small> </td>
                                                                     </tr>
                                                 
                                                                 @endforeach
@@ -570,7 +570,7 @@ input[type="radio"] {
                                                                                 </div>
 
                                                                             </td>
-                                                                            <td style="font-weight: 700" class="text-success">{{ "+".$data['currencyCode'][0]->currencies[0]->symbol.number_format($walletstatements->credit, 2) }}<br> <small class="{{ ($walletstatements->status == "Delivered") ? "text-primary" : "text-secondary" }}"><strong>{{ $walletstatements->status }}</strong></small></td>
+                                                                            <td style="font-weight: 700" class="text-success">{{ "+".$data['currencyCode']->currencySymbol.number_format($walletstatements->credit, 2) }}<br> <small class="{{ ($walletstatements->status == "Delivered") ? "text-primary" : "text-secondary" }}"><strong>{{ $walletstatements->status }}</strong></small></td>
                                                                         </tr>
 
                                                                     @endif
@@ -621,7 +621,7 @@ input[type="radio"] {
 
                                                                             </td>
                                                                             <td style="font-weight: 700" class="text-danger">
-                                                                                {{ "-".$data['currencyCode'][0]->currencies[0]->symbol.number_format($walletstatements->debit, 2) }}<br> <small class="{{ ($walletstatements->status == "Delivered") ? "text-primary" : "text-secondary" }}"><strong>{{ $walletstatements->status }}</strong></small>
+                                                                                {{ "-".$data['currencyCode']->currencySymbol.number_format($walletstatements->debit, 2) }}<br> <small class="{{ ($walletstatements->status == "Delivered") ? "text-primary" : "text-secondary" }}"><strong>{{ $walletstatements->status }}</strong></small>
                                                                             </td>
                                                                         </tr>
 
@@ -764,7 +764,7 @@ input[type="radio"] {
 
         $("#conversionamount").val("");
 
-        var currency = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
+        var currency = "{{ $data['currencyCode']->currencyCode }}";
         var route = "{{ URL('Ajax/getconversion') }}";
         var thisdata = {currency: currency, amount: $("#amount_to_receive").val(), val: "receive"};
 

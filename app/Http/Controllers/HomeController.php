@@ -154,7 +154,7 @@ class HomeController extends Controller
                 'payInvoice' => $this->payInvoice(Auth::user()->email),
                 'walletTrans' => $this->sendAndReceive(Auth::user()->email),
                 'urgentnotification' => $this->urgentNotification(Auth::user()->email),
-                'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+                'currencyCode' => $this->getCountryCode(Auth::user()->country),
                 'getCard' => $this->getUserCard(),
                 'getBank' => $this->getUserBank(),
                 'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
@@ -203,7 +203,7 @@ class HomeController extends Controller
                 'payInvoice' => $this->payInvoice(Auth::user()->email),
                 'walletTrans' => $this->sendAndReceive(Auth::user()->email),
                 'urgentnotification' => $this->urgentNotification(Auth::user()->email),
-                'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+                'currencyCode' => $this->getCountryCode(Auth::user()->country),
                 'getCard' => $this->getUserCard(),
                 'getBank' => $this->getUserBank(),
                 'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
@@ -244,7 +244,7 @@ class HomeController extends Controller
                 'payInvoice' => $this->payInvoice(Auth::user()->email),
                 'walletTrans' => $this->sendAndReceive(Auth::user()->email),
                 'urgentnotification' => $this->urgentNotification(Auth::user()->email),
-                'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+                'currencyCode' => $this->getCountryCode(Auth::user()->country),
                 'getCard' => $this->getUserCard(),
                 'getBank' => $this->getUserBank(),
                 'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
@@ -285,7 +285,7 @@ class HomeController extends Controller
                 'payInvoice' => $this->payInvoice(Auth::user()->email),
                 'walletTrans' => $this->sendAndReceive(Auth::user()->email),
                 'urgentnotification' => $this->urgentNotification(Auth::user()->email),
-                'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+                'currencyCode' => $this->getCountryCode(Auth::user()->country),
                 'getCard' => $this->getUserCard(),
                 'getBank' => $this->getUserBank(),
                 'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
@@ -366,8 +366,9 @@ class HomeController extends Controller
 
         $currency = $this->getCountryCode($countrys);
 
+
         if (isset($currency)) {
-            $myCurrency = $currency[0]->currencies[0]->symbol;
+            $myCurrency = $currency->currencySymbol;
         } else {
             $myCurrency = "$";
         }
@@ -406,7 +407,7 @@ class HomeController extends Controller
                     'payInvoice' => $this->payInvoice(Auth::user()->email),
                     'walletTrans' => $this->sendAndReceive(Auth::user()->email),
                     'urgentnotification' => $this->urgentNotification(Auth::user()->email),
-                    'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+                    'currencyCode' => $this->getCountryCode(Auth::user()->country),
                     'getCard' => $this->getUserCard(),
                     'getBank' => $this->getUserBank(),
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
@@ -528,7 +529,7 @@ class HomeController extends Controller
 
         $data = array(
             'getinvoice' => $this->getthisInvoice($invoice),
-            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'currencyCode' => $this->getCountryCode(Auth::user()->country),
             'continent' => $this->timezone[0],
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
 
@@ -566,7 +567,7 @@ class HomeController extends Controller
 
         $data = array(
             'paymentorg' => $this->getthisOrganization($user_id),
-            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'currencyCode' => $this->getCountryCode(Auth::user()->country),
             'othercurrencyCode' => $this->otherCurrencyCode($user_id),
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBank(),
@@ -598,7 +599,7 @@ class HomeController extends Controller
         }
 
         $data = array(
-            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'currencyCode' => $this->getCountryCode(Auth::user()->country),
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBank(),
             'continent' => $this->timezone[0]
@@ -726,7 +727,7 @@ class HomeController extends Controller
 
         $data = array(
             'getpay' => $this->getthispayment($id),
-            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'currencyCode' => $this->getCountryCode(Auth::user()->country),
             'continent' => $this->timezone[0]
         );
 
@@ -758,7 +759,7 @@ class HomeController extends Controller
 
 
         $data = array(
-            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'currencyCode' => $this->getCountryCode(Auth::user()->country),
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBankDetail(),
             'walletStatement' => $this->walletStatement(),
@@ -947,7 +948,7 @@ class HomeController extends Controller
 
 
         $data = array(
-            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'currencyCode' => $this->getCountryCode(Auth::user()->country),
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBank(),
             'continent' => $this->timezone[0],
@@ -996,7 +997,7 @@ class HomeController extends Controller
         $phoneNumber = '234' . ltrim(base64_decode($req->phone), '0');
 
         $data = array(
-            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'currencyCode' => $this->getCountryCode(Auth::user()->country),
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBank(),
             'continent' => $this->timezone[0],
@@ -1040,7 +1041,7 @@ class HomeController extends Controller
 
 
         $data = array(
-            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'currencyCode' => $this->getCountryCode(Auth::user()->country),
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBank(),
             'continent' => $this->timezone[0]
@@ -1071,7 +1072,7 @@ class HomeController extends Controller
 
 
         $data = array(
-            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'currencyCode' => $this->getCountryCode(Auth::user()->country),
             'getBankDetail' => $this->getUserBankDetail(),
             'listbank' => $this->getBankList(),
             'continent' => $this->timezone[0]
@@ -1103,7 +1104,7 @@ class HomeController extends Controller
 
 
         $data = array(
-            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'currencyCode' => $this->getCountryCode(Auth::user()->country),
             'getBankDetail' => $this->getUserBankDetail(),
             'continent' => $this->timezone[0]
         );
@@ -1133,7 +1134,7 @@ class HomeController extends Controller
 
 
         $data = array(
-            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'currencyCode' => $this->getCountryCode(Auth::user()->country),
             'getNotifications' => $this->getUserNotifications(Auth::user()->ref_code),
             'updateNotification' => $this->updateNotification(Auth::user()->ref_code),
             'continent' => $this->timezone[0]
@@ -1165,7 +1166,7 @@ class HomeController extends Controller
 
 
         $data = array(
-            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'currencyCode' => $this->getCountryCode(Auth::user()->country),
             'getNotifications' => $this->getUserNotifications(Auth::user()->ref_code),
             'getMerchantHere' => $this->getMerchantHere($service),
             'continent' => $this->timezone[0]
@@ -1196,7 +1197,7 @@ class HomeController extends Controller
 
 
         $data = array(
-            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'currencyCode' => $this->getCountryCode(Auth::user()->country),
             'getNotifications' => $this->getUserNotifications(Auth::user()->ref_code),
             'getMerchantHere' => $this->getMerchantHere($service),
             'allMerchants' => $this->getAllMerchantsByCategory(),
@@ -1273,7 +1274,7 @@ class HomeController extends Controller
 
 
         $data = array(
-            'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+            'currencyCode' => $this->getCountryCode(Auth::user()->country),
             'getNotifications' => $this->getUserNotifications(Auth::user()->ref_code),
             'getvendors' => $this->getVendors(),
             'continent' => $this->timezone[0]
@@ -1311,7 +1312,7 @@ class HomeController extends Controller
 
         if (Auth::check() == true) {
             $data = array(
-                'currencyCode' => $this->getCurrencyCode(Auth::user()->country),
+                'currencyCode' => $this->getCountryCode(Auth::user()->country),
                 'getNotifications' => $this->getUserNotifications(Auth::user()->ref_code),
                 'getutilityproduct' => $this->getUtilityProduct($id),
                 'getCard' => $this->getUserCard(),
@@ -1410,9 +1411,9 @@ class HomeController extends Controller
     {
         $userData = User::where('ref_code', $user_id)->first();
 
-        $data = $this->getCurrencyCode($userData->country);
+        $data = $this->getCountryCode($userData->country);
 
-        $data['conversionrate'] = $this->getConversionRate(Auth::user()->currencyCode, $data[0]->currencies[0]->code);
+        $data['conversionrate'] = $this->getConversionRate(Auth::user()->currencyCode, $data->currencyCode);
 
         return $data;
     }
@@ -3281,8 +3282,8 @@ class HomeController extends Controller
 
             $mycode = $this->getCountryCode($req->country);
 
-            $currencyCode = $mycode[0]->currencies[0]->code;
-            $currencySymbol = $mycode[0]->currencies[0]->symbol;
+            $currencyCode = $mycode->currencyCode;
+            $currencySymbol = $mycode->currencySymbol;
 
             // Get all ref_codes
             $ref = User::all();
@@ -3299,12 +3300,12 @@ class HomeController extends Controller
                 $newRefcode = $ref_code;
             }
 
-            if (isset($mycode[0]->callingCodes[0])) {
+            if (isset($mycode->callingCode)) {
 
                 if ($req->country == "United States") {
                     $phoneCode = "1";
                 } else {
-                    $phoneCode = $mycode[0]->callingCodes[0];
+                    $phoneCode = $mycode->callingCode;
                 }
             } else {
                 $phoneCode = "1";
@@ -3370,7 +3371,7 @@ class HomeController extends Controller
                 $countryApproval = AllCountries::where('name', Auth::user()->country)->where('approval', 1)->first();
 
                 if (isset($countryApproval)) {
-                    $info = $this->identificationAPI($url, $usersname[0], $usersname[1], Auth::user()->dayOfBirth, Auth::user()->monthOfBirth, Auth::user()->yearOfBirth, $minimuAge, Auth::user()->address, Auth::user()->city, Auth::user()->country, Auth::user()->zipcode, Auth::user()->telephone, Auth::user()->email, $mycode[0]->alpha2Code);
+                    $info = $this->identificationAPI($url, $usersname[0], $usersname[1], Auth::user()->dayOfBirth, Auth::user()->monthOfBirth, Auth::user()->yearOfBirth, $minimuAge, Auth::user()->address, Auth::user()->city, Auth::user()->country, Auth::user()->zipcode, Auth::user()->telephone, Auth::user()->email, $mycode->code);
 
 
 
@@ -3496,8 +3497,9 @@ class HomeController extends Controller
                     else {
                         $countryInfo = $this->getCountryCode($userExists[0]['country']);
 
-                        $currencyCode = $countryInfo[0]->currencies[0]->code;
-                        $currencySymbol = $countryInfo[0]->currencies[0]->symbol;
+
+                        $currencyCode = $countryInfo->currencyCode;
+                        $currencySymbol = $countryInfo->currencySymbol;
 
                         $loginCount = $userExists[0]['loginCount'] + 1;
 

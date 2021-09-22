@@ -159,7 +159,7 @@ class GooglePaymentController extends Controller
 
                     $withdrawLimit = $this->getWithdrawalLimit($user->country, $user->id);
 
-                    if ($req->amount >= $withdrawLimit['withdrawal_per_transaction']) {
+                    if ($req->amount > $withdrawLimit['withdrawal_per_transaction']) {
 
                         $message = "Transaction limit for per transaction is " . $user->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_transaction'], 2) . ". Please withdraw a lesser amount";
 
@@ -169,7 +169,7 @@ class GooglePaymentController extends Controller
                         $respaction = 'error';
 
                         return redirect()->back()->with($respaction, $response);
-                    } elseif ($req->amount >= $withdrawLimit['withdrawal_per_day']) {
+                    } elseif ($req->amount > $withdrawLimit['withdrawal_per_day']) {
 
                         $message = "Transaction limit for per transaction is " . $user->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try again the next day";
 
@@ -179,7 +179,7 @@ class GooglePaymentController extends Controller
                         $respaction = 'error';
 
                         return redirect()->back()->with($respaction, $response);
-                    } elseif ($req->amount >= $withdrawLimit['withdrawal_per_week']) {
+                    } elseif ($req->amount > $withdrawLimit['withdrawal_per_week']) {
 
                         $message = "You have reached your limit for the week. Transaction limit per week is " . $user->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next week";
 
@@ -189,7 +189,7 @@ class GooglePaymentController extends Controller
                         $respaction = 'error';
 
                         return redirect()->back()->with($respaction, $response);
-                    } elseif ($req->amount >= $withdrawLimit['withdrawal_per_month']) {
+                    } elseif ($req->amount > $withdrawLimit['withdrawal_per_month']) {
 
                         $message = "You have reached your limit for the week. Transaction limit per month is " . $user->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next month";
 
@@ -691,7 +691,7 @@ class GooglePaymentController extends Controller
 
 
                                     // COnvert Currency for Wallet credit to receiver
-                                    $amount = $this->convertCurrencyRate($foreigncurrency[0]->currencies[0]->code, $req->currency, $req->amount);
+                                    $amount = $this->convertCurrencyRate($foreigncurrency->currencyCode, $req->currency, $req->amount);
                                 } else {
                                     $amount = $req->amount;
                                 }
@@ -761,11 +761,11 @@ class GooglePaymentController extends Controller
                                         $this->name = $thisuser->name;
                                         // $this->email = "bambo@vimfile.com";
                                         $this->email = $thisuser->email;
-                                        $this->subject = $foreigncurrency[0]->currencies[0]->code . ' ' . number_format($req->amount, 2) . " has been sent through Text-To-Transfer Platform from your Wallet with PaySprint.";
+                                        $this->subject = $foreigncurrency->currencyCode . ' ' . number_format($req->amount, 2) . " has been sent through Text-To-Transfer Platform from your Wallet with PaySprint.";
 
-                                        $this->message = '<p>You have sent <strong>' . $foreigncurrency[0]->currencies[0]->code . ' ' . number_format($req->amount, 2) . '</strong> to ' . $req->fname . ' ' . $req->lname . '. You now have <strong>' . $foreigncurrency[0]->currencies[0]->code . ' ' . number_format($wallet_balance, 2) . '</strong> balance in your account</p>';
+                                        $this->message = '<p>You have sent <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $req->fname . ' ' . $req->lname . '. You now have <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($wallet_balance, 2) . '</strong> balance in your account</p>';
 
-                                        $sendMsg = 'You have sent ' . $foreigncurrency[0]->currencies[0]->code . ' ' . number_format($req->amount, 2) . ' to ' . $req->fname . ' ' . $req->lname . '. You now have ' . $foreigncurrency[0]->currencies[0]->code . ' ' . number_format($wallet_balance, 2) . ' balance in your account';
+                                        $sendMsg = 'You have sent ' . $foreigncurrency->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $req->fname . ' ' . $req->lname . '. You now have ' . $foreigncurrency->currencyCode . ' ' . number_format($wallet_balance, 2) . ' balance in your account';
 
                                         $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -787,7 +787,7 @@ class GooglePaymentController extends Controller
                                         $this->name = $req->fname . ' ' . $req->lname;
                                         // $this->to = "bambo@vimfile.com";
                                         $this->to = $req->email;
-                                        $this->subject = $thisuser->name . " has sent you " . $foreigncurrency[0]->currencies[0]->code . ' ' . number_format($amount, 2) . " on PaySprint";
+                                        $this->subject = $thisuser->name . " has sent you " . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . " on PaySprint";
 
 
                                         if ($thisuser->accountType == "Individual" || $getInviteType->accountType == "Individual") {
@@ -796,9 +796,9 @@ class GooglePaymentController extends Controller
                                             $route = route('AdminRegister', 'user=' . $ref_code);
                                         }
 
-                                        $this->message = '<p>You have received <strong>' . $foreigncurrency[0]->currencies[0]->code . ' ' . number_format($amount, 2) . '</strong> from ' . $thisuser->name . '. You now have <strong>' . $foreigncurrency[0]->currencies[0]->code . ' ' . number_format($newwalletBal, 2) . '</strong> balance in your account</p><hr><p>To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE </p><p><a href="' . $route . '">' . $route . '</a></p>';
+                                        $this->message = '<p>You have received <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . '</strong> from ' . $thisuser->name . '. You now have <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($newwalletBal, 2) . '</strong> balance in your account</p><hr><p>To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE </p><p><a href="' . $route . '">' . $route . '</a></p>';
 
-                                        $recMesg = 'You have received ' . $foreigncurrency[0]->currencies[0]->code . ' ' . number_format($amount, 2) . ' from ' . $thisuser->name . '. You now have ' . $foreigncurrency[0]->currencies[0]->code . ' ' . number_format($newwalletBal, 2) . ' balance in your account. To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE ' . $route;
+                                        $recMesg = 'You have received ' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . ' from ' . $thisuser->name . '. You now have ' . $foreigncurrency->currencyCode . ' ' . number_format($newwalletBal, 2) . ' balance in your account. To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE ' . $route;
                                         $recPhone = "+" . $req->countryCode . $req->phone;
 
 
@@ -825,7 +825,7 @@ class GooglePaymentController extends Controller
                                         $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $paystatus, $action, $regards, 1, $statement_route, 'on', $thisuser->country);
 
                                         // Receiver Statement
-                                        $this->insStatement($req->email, $reference_code, "Received " . $foreigncurrency[0]->currencies[0]->code . '' . $amount . " in wallet for " . $service . " from " . $thisuser->name, $amount, 0, $balance, $trans_date, $paystatus, "Wallet credit", $ref_code, 1, $statement_route, 'on', $req->country);
+                                        $this->insStatement($req->email, $reference_code, "Received " . $foreigncurrency->currencyCode . '' . $amount . " in wallet for " . $service . " from " . $thisuser->name, $amount, 0, $balance, $trans_date, $paystatus, "Wallet credit", $ref_code, 1, $statement_route, 'on', $req->country);
 
 
 
@@ -980,7 +980,7 @@ class GooglePaymentController extends Controller
 
 
                                             // COnvert Currency for Wallet credit to receiver
-                                            $amount = $this->convertCurrencyRate($foreigncurrency[0]->currencies[0]->code, $req->currency, $req->amount);
+                                            $amount = $this->convertCurrencyRate($foreigncurrency->currencyCode, $req->currency, $req->amount);
                                         } else {
                                             $amount = $req->amount;
                                         }
@@ -1019,7 +1019,7 @@ class GooglePaymentController extends Controller
                                             $requestReceive = 2;
 
 
-                                            $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $newRefcode, 'user_id' => $userID, 'purpose' => $service, 'amount' => $foreigncurrency[0]->currencies[0]->code . ' ' . $req->amount, 'withdraws' => $foreigncurrency[0]->currencies[0]->code . ' ' . $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $amount, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission, 'amountindollars' => $foreigncurrency[0]->currencies[0]->code . ' ' . $amount, 'request_receive' => $requestReceive]);
+                                            $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $newRefcode, 'user_id' => $userID, 'purpose' => $service, 'amount' => $foreigncurrency->currencyCode . ' ' . $req->amount, 'withdraws' => $foreigncurrency->currencyCode . ' ' . $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $amount, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission, 'amountindollars' => $foreigncurrency->currencyCode . ' ' . $amount, 'request_receive' => $requestReceive]);
 
                                             if ($insertPay == true) {
 
@@ -1055,11 +1055,11 @@ class GooglePaymentController extends Controller
                                                 $this->name = $thisuser->name;
                                                 // $this->email = "bambo@vimfile.com";
                                                 $this->email = $thisuser->email;
-                                                $this->subject = $foreigncurrency[0]->currencies[0]->code . ' ' . number_format($req->amount, 2) . " has been sent through Text-To-Transfer Platform from your Wallet with PaySprint.";
+                                                $this->subject = $foreigncurrency->currencyCode . ' ' . number_format($req->amount, 2) . " has been sent through Text-To-Transfer Platform from your Wallet with PaySprint.";
 
-                                                $this->message = '<p>You have sent <strong>' . $foreigncurrency[0]->currencies[0]->code . ' ' . number_format($req->amount, 2) . '</strong> to ' . $req->fname . ' ' . $req->lname . '. You now have <strong>' . $foreigncurrency[0]->currencies[0]->code . ' ' . number_format($wallet_balance, 2) . '</strong> balance in your account</p>';
+                                                $this->message = '<p>You have sent <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $req->fname . ' ' . $req->lname . '. You now have <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($wallet_balance, 2) . '</strong> balance in your account</p>';
 
-                                                $sendMsg = 'You have sent ' . $foreigncurrency[0]->currencies[0]->code . ' ' . number_format($req->amount, 2) . ' to ' . $req->fname . ' ' . $req->lname . '. You now have ' . $foreigncurrency[0]->currencies[0]->code . ' ' . number_format($wallet_balance, 2) . ' balance in your account';
+                                                $sendMsg = 'You have sent ' . $foreigncurrency->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $req->fname . ' ' . $req->lname . '. You now have ' . $foreigncurrency->currencyCode . ' ' . number_format($wallet_balance, 2) . ' balance in your account';
 
                                                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -1089,7 +1089,7 @@ class GooglePaymentController extends Controller
                                                 $this->name = $req->fname . ' ' . $req->lname;
                                                 // $this->to = "bambo@vimfile.com";
                                                 $this->to = $req->email;
-                                                $this->subject = $thisuser->name . " has sent you " . $foreigncurrency[0]->currencies[0]->code . ' ' . number_format($amount, 2) . " on PaySprint";
+                                                $this->subject = $thisuser->name . " has sent you " . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . " on PaySprint";
 
 
                                                 if ($thisuser->accountType == "Individual" || $getInviteType->accountType == "Individual") {
@@ -1098,9 +1098,9 @@ class GooglePaymentController extends Controller
                                                     $route = route('AdminRegister', 'user=' . $ref_code);
                                                 }
 
-                                                $this->message = '<p>You have received <strong>' . $foreigncurrency[0]->currencies[0]->code . ' ' . number_format($amount, 2) . '</strong> from ' . $thisuser->name . '. You now have <strong>' . $foreigncurrency[0]->currencies[0]->code . ' ' . number_format($newwalletBal, 2) . '</strong> balance in your account</p><hr><p>To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE </p><p><a href="' . $route . '">' . $route . '</a></p>';
+                                                $this->message = '<p>You have received <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . '</strong> from ' . $thisuser->name . '. You now have <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($newwalletBal, 2) . '</strong> balance in your account</p><hr><p>To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE </p><p><a href="' . $route . '">' . $route . '</a></p>';
 
-                                                $recMesg = 'You have received ' . $foreigncurrency[0]->currencies[0]->code . ' ' . number_format($amount, 2) . ' from ' . $thisuser->name . '. You now have ' . $foreigncurrency[0]->currencies[0]->code . ' ' . number_format($newwalletBal, 2) . ' balance in your account. To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE ' . $route;
+                                                $recMesg = 'You have received ' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . ' from ' . $thisuser->name . '. You now have ' . $foreigncurrency->currencyCode . ' ' . number_format($newwalletBal, 2) . ' balance in your account. To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE ' . $route;
 
                                                 $recPhone = "+" . $req->countryCode . $req->phone;
 
@@ -1136,7 +1136,7 @@ class GooglePaymentController extends Controller
                                                 $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $paystatus, $action, $regards, 1, $statement_route, 'on', $thisuser->country);
 
                                                 // Receiver Statement
-                                                $this->insStatement($req->email, $reference_code, "Received " . $foreigncurrency[0]->currencies[0]->code . '' . $amount . " in wallet for " . $service . " from " . $thisuser->name, $amount, 0, $balance, $trans_date, $paystatus, "Wallet credit", $ref_code, 1, $statement_route, 'on', $req->country);
+                                                $this->insStatement($req->email, $reference_code, "Received " . $foreigncurrency->currencyCode . '' . $amount . " in wallet for " . $service . " from " . $thisuser->name, $amount, 0, $balance, $trans_date, $paystatus, "Wallet credit", $ref_code, 1, $statement_route, 'on', $req->country);
 
 
 

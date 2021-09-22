@@ -90,7 +90,7 @@ input[type="radio"] {
                                                 </div>
                                                 <div class="col-md-12">
                                                     <h4>
-                                                        {{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format(Auth::user()->wallet_balance, 2) }}
+                                                        {{ $data['currencyCode']->currencySymbol."".number_format(Auth::user()->wallet_balance, 2) }}
                                                     </h4>
                                                 </div>
                                             </div>
@@ -224,7 +224,7 @@ input[type="radio"] {
                                     <div class="form-group"> <label for="amount">
                                             <h6>Amount to Withdraw</h6>
                                         </label>
-                                        <div class="input-group"> <div class="input-group-append"> <span class="input-group-text text-muted"> {{ $data['currencyCode'][0]->currencies[0]->symbol }} </span> </div> <input type="number" min="0.00" max="10000.00" step="0.01" name="amount" id="amount" class="form-control" required>
+                                        <div class="input-group"> <div class="input-group-append"> <span class="input-group-text text-muted"> {{ $data['currencyCode']->currencySymbol }} </span> </div> <input type="number" min="0.00" max="10000.00" step="0.01" name="amount" id="amount" class="form-control" required>
                                             
                                         </div>
                                     </div>
@@ -259,7 +259,7 @@ input[type="radio"] {
                                 <div class="form-group disp-0"> <label for="netwmount">
                                         <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small></h6>
                                         <p style="font-weight: bold;">
-                                            {{ $data['currencyCode'][0]->currencies[0]->code }} <=> CAD
+                                            {{ $data['currencyCode']->currencyCode }} <=> CAD
                                         </p>
                                     </label>
                                     <div class="input-group"> 
@@ -333,7 +333,7 @@ input[type="radio"] {
                                     @endif
 
 
-                                    <input type="hidden" name="currencyCode" class="form-control" id="curCurrency" value="{{ $data['currencyCode'][0]->currencies[0]->code }}" readonly>
+                                    <input type="hidden" name="currencyCode" class="form-control" id="curCurrency" value="{{ $data['currencyCode']->currencyCode }}" readonly>
 
                                     <input type="hidden" name="mode" class="form-control" id="mode" value="live" readonly>
 
@@ -469,7 +469,7 @@ function runCommission(){
     
 
     var route = "{{ URL('Ajax/getCommission') }}";
-    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $('#card_type').val(), localcurrency: "{{ $data['currencyCode'][0]->currencies[0]->code }}", foreigncurrency: "USD", structure: "Withdrawal", structureMethod: structure};
+    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $('#card_type').val(), localcurrency: "{{ $data['currencyCode']->currencyCode }}", foreigncurrency: "USD", structure: "Withdrawal", structureMethod: structure};
 
 
     Pace.restart();
@@ -511,7 +511,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-success');
                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.toFixed(2)+" will be credited to your "+$('#card_type').val()+". Fee charge inclusive</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}"+result.data.toFixed(2)+" will be credited to your "+$('#card_type').val()+". Fee charge inclusive</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
@@ -530,7 +530,7 @@ function runCommission(){
                 //     $('.commissionInfo').addClass('alert alert-danger');
                 //     $('.commissionInfo').removeClass('alert alert-success');
 
-                //     $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+(+result.data + +result.collection).toFixed(2)+" will be charged from your "+$('#card_type').val()+".</span></li></li></ul>");
+                //     $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}"+(+result.data + +result.collection).toFixed(2)+" will be charged from your "+$('#card_type').val()+".</span></li></li></ul>");
 
                 //     $("#amounttosend").val(result.data);
                 //     $("#commissiondeduct").val(result.collection);
@@ -560,7 +560,7 @@ function currencyConvert(amount){
     $("#conversionamount").val("");
 
     var currency = "CAD";
-    var localcurrency = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
+    var localcurrency = "{{ $data['currencyCode']->currencyCode }}";
     var route = "{{ URL('Ajax/getconversion') }}";
     var thisdata = {currency: currency, amount: amount, val: "send", localcurrency: localcurrency};
 

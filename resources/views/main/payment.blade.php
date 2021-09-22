@@ -96,17 +96,17 @@ input[type="radio"] {
                                                     Invoice Number: <b>{{ $data['getinvoice'][0]->invoice_no }}</b>
                                                 </li>
                                                 <li>
-                                                    Invoice Amount: <b>{{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format($data['getinvoice'][0]->amount, 2) }}</b>
+                                                    Invoice Amount: <b>{{ $data['currencyCode']->currencySymbol."".number_format($data['getinvoice'][0]->amount, 2) }}</b>
                                                 </li>
                                                 <li>
-                                                    Tax Amount: <b>{{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format($data['getinvoice'][0]->tax_amount, 2) }}</b>
+                                                    Tax Amount: <b>{{ $data['currencyCode']->currencySymbol."".number_format($data['getinvoice'][0]->tax_amount, 2) }}</b>
                                                 </li>
                                                 <li>
-                                                    Total Amount: <b>{{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format($data['getinvoice'][0]->total_amount, 2) }}</b>
+                                                    Total Amount: <b>{{ $data['currencyCode']->currencySymbol."".number_format($data['getinvoice'][0]->total_amount, 2) }}</b>
                                                 </li>
                                                 
                                                 <li>
-                                                    Invoice Balance: <b>{{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format($data['getinvoice'][0]->remaining_balance, 2) }}</b>
+                                                    Invoice Balance: <b>{{ $data['currencyCode']->currencySymbol."".number_format($data['getinvoice'][0]->remaining_balance, 2) }}</b>
                                                 </li>
                                                 <li>
                                                     Service: <b>{{ $data['getinvoice'][0]->service }}</b>
@@ -134,7 +134,7 @@ input[type="radio"] {
                                                 </div>
                                                 <div class="col-md-12">
                                                     <h4>
-                                                        {{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format(Auth::user()->wallet_balance, 2) }}
+                                                        {{ $data['currencyCode']->currencySymbol."".number_format(Auth::user()->wallet_balance, 2) }}
                                                     </h4>
                                                 </div>
                                             </div>
@@ -165,7 +165,7 @@ input[type="radio"] {
                                         </label>
                                         <div class="input-group"> 
                                             <select name="currency" id="currency" class="form-control">
-                                                <option value="{{ $data['currencyCode'][0]->currencies[0]->symbol }}">{{ $data['currencyCode'][0]->currencies[0]->symbol }}</option>
+                                                <option value="{{ $data['currencyCode']->currencySymbol }}">{{ $data['currencyCode']->currencySymbol }}</option>
                                             </select>
                                             
                                         </div>
@@ -183,8 +183,8 @@ input[type="radio"] {
                                             }
                                         @endphp
 
-                                        <input type="hidden" value="{{ $data['currencyCode'][0]->currencies[0]->code }}" name="currencyCode">
-                                        <div class="input-group"> <span class="input-group-text text-muted"> {{ $data['currencyCode'][0]->currencies[0]->symbol }} </span> <input type="number" min="0.00" step="0.01" name="amountinvoiced" id="amountinvoiced" placeholder="50.00" class="form-control" value="{{ $amountInvoiced }}" readonly>
+                                        <input type="hidden" value="{{ $data['currencyCode']->currencyCode }}" name="currencyCode">
+                                        <div class="input-group"> <span class="input-group-text text-muted"> {{ $data['currencyCode']->currencySymbol }} </span> <input type="number" min="0.00" step="0.01" name="amountinvoiced" id="amountinvoiced" placeholder="50.00" class="form-control" value="{{ $amountInvoiced }}" readonly>
                                             <div class="input-group-append">  </div>
                                         </div>
                                     </div>
@@ -209,8 +209,8 @@ input[type="radio"] {
                                         <div class="form-group topay disp-0"> <label for="currency">
                                                 <h6>Amount to Pay</h6>
                                             </label>
-                                            <input type="hidden" value="{{ $data['currencyCode'][0]->currencies[0]->code }}" name="currencyCode">
-                                            <div class="input-group"> <span class="input-group-text text-muted"> {{ $data['currencyCode'][0]->currencies[0]->symbol }} </span> <input type="number" min="0.00" step="0.01" name="amount" id="typepayamount" placeholder="50.00" class="form-control" value="{{ $amountInvoiced }}">
+                                            <input type="hidden" value="{{ $data['currencyCode']->currencyCode }}" name="currencyCode">
+                                            <div class="input-group"> <span class="input-group-text text-muted"> {{ $data['currencyCode']->currencySymbol }} </span> <input type="number" min="0.00" step="0.01" name="amount" id="typepayamount" placeholder="50.00" class="form-control" value="{{ $amountInvoiced }}">
                                                 <div class="input-group-append"> </div>
                                             </div>
                                         </div>
@@ -232,8 +232,8 @@ input[type="radio"] {
                                     <div class="form-group topay disp-0"> <label for="currency">
                                                 <h6>Amount to Pay</h6>
                                             </label>
-                                            <input type="hidden" value="{{ $data['currencyCode'][0]->currencies[0]->code }}" name="currencyCode">
-                                            <div class="input-group"> <span class="input-group-text text-muted"> {{ $data['currencyCode'][0]->currencies[0]->symbol }} </span> <input type="number" min="0.00" step="0.01" name="amount" id="typepayamount" placeholder="50.00" class="form-control" value="{{ $amountInvoiced }}">
+                                            <input type="hidden" value="{{ $data['currencyCode']->currencyCode }}" name="currencyCode">
+                                            <div class="input-group"> <span class="input-group-text text-muted"> {{ $data['currencyCode']->currencySymbol }} </span> <input type="number" min="0.00" step="0.01" name="amount" id="typepayamount" placeholder="50.00" class="form-control" value="{{ $amountInvoiced }}">
                                                 <div class="input-group-append"> </div>
                                             </div>
                                         </div>
@@ -260,8 +260,8 @@ input[type="radio"] {
                                     <div class="form-group topay disp-0"> <label for="currency">
                                                 <h6>Amount to Pay</h6>
                                             </label>
-                                            <input type="hidden" value="{{ $data['currencyCode'][0]->currencies[0]->code }}" name="currencyCode">
-                                            <div class="input-group"> <span class="input-group-text text-muted"> {{ $data['currencyCode'][0]->currencies[0]->symbol }} </span> <input type="number" min="0.00" step="0.01" name="amount" id="typepayamount" placeholder="50.00" class="form-control" value="{{ $amountInvoiced }}">
+                                            <input type="hidden" value="{{ $data['currencyCode']->currencyCode }}" name="currencyCode">
+                                            <div class="input-group"> <span class="input-group-text text-muted"> {{ $data['currencyCode']->currencySymbol }} </span> <input type="number" min="0.00" step="0.01" name="amount" id="typepayamount" placeholder="50.00" class="form-control" value="{{ $amountInvoiced }}">
                                                 <div class="input-group-append"> </div>
                                             </div>
                                         </div>
@@ -498,7 +498,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-success');
                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+$("#typepayamount").val()+" will be deducted from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}"+$("#typepayamount").val()+" will be deducted from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
 
             }
 
