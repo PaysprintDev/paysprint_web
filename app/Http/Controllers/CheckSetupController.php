@@ -447,7 +447,22 @@ class CheckSetupController extends Controller
     public function updateNumberofWithdrawal()
     {
         try {
-            $users = User::all();
+            $users = User::where('accountType', 'Individual')->get();
+            foreach ($users as $user) {
+                User::where('id', $user->id)->update(['number_of_withdrawals' => 0]);
+
+                echo "Done for " . $user->name . " | " . $user->id;
+            }
+        } catch (\Throwable $th) {
+            print_r($th->getMessage());
+        }
+    }
+
+    // Update merchant withdrawals
+    public function updateMerchantNumberofWithdrawal()
+    {
+        try {
+            $users = User::where('accountType', 'Merchant')->get();
             foreach ($users as $user) {
                 User::where('id', $user->id)->update(['number_of_withdrawals' => 0]);
 

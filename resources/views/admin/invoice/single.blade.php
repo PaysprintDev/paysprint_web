@@ -331,6 +331,7 @@
                 </div>
             <!-- /.row -->
             </div>
+            
   
                 <div class="box-footer">
                   <button type="button" class="btn btn-primary btn-block" onclick="handShake('singleinvoice')" id="cardSubmit">Submit</button>

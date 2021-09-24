@@ -312,7 +312,7 @@
     <!-- navbar- -->
 
        
-   @elseif ($pages == "Donate to Haiti")
+   @elseif ($pages == "Supporting HAITI")
 
     <div class="d-flex">
       <span class="border-3 border-blue d-flex w-100"></span>

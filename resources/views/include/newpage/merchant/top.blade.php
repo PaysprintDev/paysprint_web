@@ -8,8 +8,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="description"
+
+  @if ($pages == "Supporting HAITI")
+        <meta name="description"
+        content="Supporting HAITI">
+  @else
+        <meta name="description"
         content="Fastest and affordable method of sending and receiving money, paying invoice and getting Paid at anytime!">
+  @endif
+
+
+
   <title>{{ config('app.name', 'PaySprint') }} | {{ $pages }}</title>
   <link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" type="image/x-icon" />
   <!-- Bootstrap , fonts & icons  -->

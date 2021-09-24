@@ -200,11 +200,21 @@ class AdminController extends Controller
                 'payInvoice' => $this->payInvoice(session('email')),
             ];
 
+            $data = array(
+                'getuserDetail' => $this->getmyPersonalDetail(session('user_id')),
+                'getbusinessDetail' => $this->getmyBusinessDetail(session('user_id')),
+                'merchantservice' => $this->_merchantServices(),
+                'getCard' => $this->getUserCard(session('myID')),
+                'getBank' => $this->getUserBank(session('myID')),
+                'getTax' => $this->getTax(session('myID')),
+                'listbank' => $this->getBankList(),
+            );
 
 
 
 
-            return view('admin.index')->with(['pages' => 'My Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'allusers' => $allusers, 'getUserDetail' => $getUserDetail, 'getCard' => $getCard, 'getBank' => $getBank, 'getTax' => $getTax, 'withdraws' => $withdraws, 'pending' => $pending, 'allcountries' => $allcountries, 'refund' => $refund, 'received' => $received]);
+
+            return view('admin.index')->with(['pages' => 'My Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'allusers' => $allusers, 'getUserDetail' => $getUserDetail, 'getCard' => $getCard, 'getBank' => $getBank, 'getTax' => $getTax, 'withdraws' => $withdraws, 'pending' => $pending, 'allcountries' => $allcountries, 'refund' => $refund, 'received' => $received, 'data' => $data]);
         } else {
             return redirect()->route('AdminLogin');
         }
@@ -6763,7 +6773,7 @@ class AdminController extends Controller
                 'currencyCode' => $this->getCountryCode(session('country')),
                 'getCard' => $this->getUserCard(session('myID')),
                 'paymentorg' => $this->getthisOrganization($user_id),
-                'othercurrencyCode' => $this->getCountryCode($user_id),
+                'othercurrencyCode' => $this->otherCurrencyCode($user_id),
                 'alpha2Code' => $this->getCountryCode(session('country')),
             );
 
@@ -12607,6 +12617,32 @@ class AdminController extends Controller
                 $resData = "Access Denied!";
             } else {
                 AllCountries::where('id', $req->country_id)->update(['approval' => 1]);
+                $resData = "Access Granted!";
+            }
+
+            $resp = "success";
+        } else {
+            $resData = "Not found";
+            $resp = "error";
+        }
+
+
+        return redirect()->back()->with($resp, $resData);
+    }
+
+    public function ajaxAccessToUsePaysprintImt(Request $req)
+    {
+
+
+        $check = AllCountries::where('id', $req->country_id)->first();
+
+        if (isset($check)) {
+
+            if ($check->imt == "true") {
+                AllCountries::where('id', $req->country_id)->update(['imt' => "false"]);
+                $resData = "Access Denied!";
+            } else {
+                AllCountries::where('id', $req->country_id)->update(['imt' => "true"]);
                 $resData = "Access Granted!";
             }
 

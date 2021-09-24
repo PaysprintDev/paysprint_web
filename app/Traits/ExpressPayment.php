@@ -67,7 +67,6 @@ trait ExpressPayment
 
 
                 // EPSVendor::updateOrCreate(['billerCode' => $dataItem->billerCode], $query);
-
             }
 
 
@@ -179,77 +178,77 @@ trait ExpressPayment
     {
 
 
-        // $responseCode = 00;
-        // $responseMessage = "Utility payment cannot be processed at this time. Please try again later";
-        // $status = 400;
+        $responseCode = 00;
+        $responseMessage = "Utility payment is currently under maintenance. Please try again later";
+        $status = 400;
 
-        // $data = [
-        //     'responseCode' => $responseCode,
-        //     'responseMessage' => $responseMessage,
-        //     'status' => $status
-        // ];
+        $data = [
+            'responseCode' => $responseCode,
+            'responseMessage' => $responseMessage,
+            'status' => $status
+        ];
 
-        // $result = json_encode($data);
+        $result = json_encode($data);
 
-        // return json_decode($result);
-
-
-        $checks = $this->checkAccount($postRequest, $bearerToken);
+        return json_decode($result);
 
 
-        if ($checks == true) {
-            $this->Base_Url = env('EXPRESS_PAY_ENDPOINT_URL') . '/process-transaction';
-            $transaction = [];
-
-            for ($i = 0; $i < count($postRequest['fieldName']); $i++) {
+        // $checks = $this->checkAccount($postRequest, $bearerToken);
 
 
+        // if ($checks == true) {
+        //     $this->Base_Url = env('EXPRESS_PAY_ENDPOINT_URL') . '/process-transaction';
+        //     $transaction = [];
 
-                if ($postRequest['fieldName'] != null) {
-
-                    $transaction[] = [
-                        'fieldName' => $postRequest['fieldName'][$i],
-                        'fieldValue' => $postRequest['fieldValue'][$i],
-                        'fieldControlType' => $postRequest['fieldControlType'][$i],
-                    ];
-                } else {
-                    $transaction[] = [
-                        'fieldName' => $postRequest['fieldName'],
-                        'fieldValue' => $postRequest['fieldValue'],
-                        'fieldControlType' => $postRequest['fieldControlType'],
-                    ];
-                }
-            }
+        //     for ($i = 0; $i < count($postRequest['fieldName']); $i++) {
 
 
 
-            $this->curlPost = json_encode([
-                'billerCode' => $postRequest['billerCode'],
-                'productId' => $postRequest['productId'],
-                'transDetails' => $transaction,
-            ]);
+        //         if ($postRequest['fieldName'] != null) {
+
+        //             $transaction[] = [
+        //                 'fieldName' => $postRequest['fieldName'][$i],
+        //                 'fieldValue' => $postRequest['fieldValue'][$i],
+        //                 'fieldControlType' => $postRequest['fieldControlType'][$i],
+        //             ];
+        //         } else {
+        //             $transaction[] = [
+        //                 'fieldName' => $postRequest['fieldName'],
+        //                 'fieldValue' => $postRequest['fieldValue'],
+        //                 'fieldControlType' => $postRequest['fieldControlType'],
+        //             ];
+        //         }
+        //     }
 
 
 
-            $data = $this->doPost();
+        //     $this->curlPost = json_encode([
+        //         'billerCode' => $postRequest['billerCode'],
+        //         'productId' => $postRequest['productId'],
+        //         'transDetails' => $transaction,
+        //     ]);
 
-            return $data;
-        } else {
 
-            $responseCode = 00;
-            $responseMessage = "Your wallet balance is low for this transaction. Please add money";
-            $status = 400;
 
-            $data = [
-                'responseCode' => $responseCode,
-                'responseMessage' => $responseMessage,
-                'status' => $status
-            ];
+        //     $data = $this->doPost();
 
-            $result = json_encode($data);
+        //     return $data;
+        // } else {
 
-            return json_decode($result);
-        }
+        //     $responseCode = 00;
+        //     $responseMessage = "Your wallet balance is low for this transaction. Please add money";
+        //     $status = 400;
+
+        //     $data = [
+        //         'responseCode' => $responseCode,
+        //         'responseMessage' => $responseMessage,
+        //         'status' => $status
+        //     ];
+
+        //     $result = json_encode($data);
+
+        //     return json_decode($result);
+        // }
     }
 
 
@@ -274,7 +273,7 @@ trait ExpressPayment
         if ($thisuser->country == "Nigeria") {
             $inputamount = $data['commissiondeduct'] + $data['amounttosend'];
         } else {
-            $myamount = $data['commissiondeduct'] + $data['amounttosend'];
+            $myamount = ($data['commissiondeduct'] + 0.01) + $data['amounttosend'];
 
             // Convert currency to Dollar
             $inputamount = $this->payBillCurrencyConvert("NGN", $thisuser->currencyCode, $myamount);
@@ -303,7 +302,7 @@ trait ExpressPayment
 
                         // For DSTV and GOTV
 
-                        if ($data['billerCode'] == "DSTV2" || $data['billerCode'] == "GOTV2" || $data['billerCode'] == "startimes") {
+                        if ($data['billerCode'] == "DSTV2" || $data['billerCode'] == "GOTV2" || $data['billerCode'] == "startimes" || $data['billerCode'] == "DSTV1" || $data['billerCode'] == "GOTV1") {
 
                             if ($data['fieldName'][$i] == "Select Package (Amount)" || $data['fieldName'][$i] == "Select Package" || $data['fieldName'][$i] == "Product") {
 
@@ -326,6 +325,7 @@ trait ExpressPayment
 
                 if ($walletBalance >= $myamount) {
 
+
                     if ($data['fieldName'] != null) {
 
                         if ($data['fieldName'][$i] == "Amount" || $data['fieldName'][$i] == "amount") {
@@ -340,7 +340,7 @@ trait ExpressPayment
 
                         // For DSTV and GOTV
 
-                        if ($data['billerCode'] == "DSTV2" || $data['billerCode'] == "GOTV2" || $data['billerCode'] == "startimes") {
+                        if ($data['billerCode'] == "DSTV2" || $data['billerCode'] == "GOTV2" || $data['billerCode'] == "startimes" || $data['billerCode'] == "DSTV1" || $data['billerCode'] == "GOTV1") {
 
                             if ($data['fieldName'][$i] == "Select Package (Amount)" || $data['fieldName'][$i] == "Select Package" || $data['fieldName'][$i] == "Product") {
 
@@ -564,6 +564,7 @@ trait ExpressPayment
         try {
             // Get Minimum Wallet Balance
             $minimumBalance = TransactionCost::where('method', 'Minimum Balance')->where('country', $country)->first();
+
 
             if (isset($minimumBalance) == true) {
                 $data = $minimumBalance->fixed;

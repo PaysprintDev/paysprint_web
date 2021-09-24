@@ -47,7 +47,7 @@ use App\Statement as Statement;
 use App\ReceivePay as ReceivePay;
 
 use App\AddCard as AddCard;
-
+use App\AllCountries;
 use App\Classes\mpgGlobals;
 use App\Classes\httpsPost;
 use App\Classes\mpgHttpsPost;
@@ -153,15 +153,17 @@ class GooglePaymentController extends Controller
                 $user = User::where('api_token', $req->api_token)->first();
 
 
+
                 if (isset($user)) {
 
                     // $client = ClientInfo::where('user_id', $req->user_id)->get();
 
                     $withdrawLimit = $this->getWithdrawalLimit($user->country, $user->id);
 
+
                     if ($req->amount > $withdrawLimit['withdrawal_per_transaction']) {
 
-                        $message = "Transaction limit for per transaction is " . $user->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_transaction'], 2) . ". Please withdraw a lesser amount";
+                        $message = "Transaction limit per transaction is " . $user->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_transaction'], 2) . ". Please withdraw a lesser amount";
 
                         $resData = ['res' => $message, 'message' => 'error', 'title' => 'Oops!'];
 
@@ -169,9 +171,9 @@ class GooglePaymentController extends Controller
                         $respaction = 'error';
 
                         return redirect()->back()->with($respaction, $response);
-                    } elseif ($req->amount > $withdrawLimit['withdrawal_per_day']) {
+                    } elseif ($withdrawLimit['withdrawal_per_day'] > $req->amount) {
 
-                        $message = "Transaction limit for per transaction is " . $user->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try again the next day";
+                        $message = "Transaction limit per day is " . $user->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try again the next day";
 
                         $resData = ['res' => $message, 'message' => 'error', 'title' => 'Oops!'];
 
@@ -179,7 +181,7 @@ class GooglePaymentController extends Controller
                         $respaction = 'error';
 
                         return redirect()->back()->with($respaction, $response);
-                    } elseif ($req->amount > $withdrawLimit['withdrawal_per_week']) {
+                    } elseif ($withdrawLimit['withdrawal_per_week'] > $req->amount) {
 
                         $message = "You have reached your limit for the week. Transaction limit per week is " . $user->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next week";
 
@@ -189,7 +191,7 @@ class GooglePaymentController extends Controller
                         $respaction = 'error';
 
                         return redirect()->back()->with($respaction, $response);
-                    } elseif ($req->amount > $withdrawLimit['withdrawal_per_month']) {
+                    } elseif ($withdrawLimit['withdrawal_per_month'] > $req->amount) {
 
                         $message = "You have reached your limit for the week. Transaction limit per month is " . $user->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next month";
 
@@ -219,6 +221,8 @@ class GooglePaymentController extends Controller
 
                                     $client = User::where('ref_code', $req->user_id)->first();
 
+                                    $imtCountry = AllCountries::where('name', $client->country)->first();
+
                                     // Check for Wallet Balance
 
                                     if ($req->amount > $user->wallet_balance) {
@@ -229,14 +233,25 @@ class GooglePaymentController extends Controller
                                         $respaction = 'error';
 
                                         return redirect()->back()->with($respaction, $response);
-                                    } elseif ($user->country != $client->country) {
-                                        $resData = ['res' => 'International money transfer is not available at the moment', 'message' => 'error', 'title' => 'Oops!'];
+                                    } elseif (isset($imtCountry) && $imtCountry->imt == "false") {
+                                        $resData = ['res' => 'International money transfer is not yet available to ' . $imtCountry->name, 'message' => 'error', 'title' => 'Oops!'];
 
-                                        $response = 'International money transfer is not available at the moment';
+                                        $response = 'International money transfer is not yet available to ' . $imtCountry->name;
                                         $respaction = 'error';
 
                                         return redirect()->back()->with($respaction, $response);
-                                    } else {
+                                    }
+
+                                    // elseif ($user->country != $client->country) {
+                                    //     $resData = ['res' => 'International money transfer is not available at the moment', 'message' => 'error', 'title' => 'Oops!'];
+
+                                    //     $response = 'International money transfer is not available at the moment';
+                                    //     $respaction = 'error';
+
+                                    //     return redirect()->back()->with($respaction, $response);
+                                    // }
+
+                                    else {
 
 
                                         if ($req->commission == "on") {
@@ -339,7 +354,7 @@ class GooglePaymentController extends Controller
 
 
 
-                                        $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $req->user_id, 'user_id' => $userID, 'purpose' => $service, 'amount' => $req->currency . ' ' . $req->amount, 'withdraws' => $req->currency . ' ' . $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $dataInfo, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission, 'amountindollars' => $req->localcurrency . ' ' . $req->conversionamount, 'request_receive' => $requestReceive]);
+                                        $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $req->user_id, 'user_id' => $userID, 'purpose' => $service, 'amount' => $req->localcurrency . ' ' . $req->amount, 'withdraws' => $req->localcurrency . ' ' . $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $dataInfo, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission, 'amountindollars' => $req->currency . ' ' . $req->conversionamount, 'request_receive' => $requestReceive]);
 
                                         if ($insertPay == true) {
 
@@ -422,7 +437,7 @@ class GooglePaymentController extends Controller
 
 
 
-                                            $sendMsg = "Hi " . $user->name . ", You have made a " . $activity . ". Your new wallet balance is " . $req->currency . ' ' . number_format($wallet_balance, 2) . ". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us. PaySprint Team";
+                                            $sendMsg = "Hi " . $user->name . ", You have made a " . $activity . ". Your new wallet balance is " . $req->localcurrency . ' ' . number_format($wallet_balance, 2) . ". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us. PaySprint Team";
 
                                             $usersPhone = User::where('email', $user->email)->where('telephone', 'LIKE', '%+%')->first();
 

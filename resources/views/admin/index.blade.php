@@ -239,8 +239,22 @@
 
 
             <div class="col-md-4 mb-3 sendMoney">
-              <a style="font-size: 14px; font-weight: bold;" type="button" href="{{ route('merchant send money', 'type='.base64_encode("local")) }}" class="btn btn-warning btn-block">Send Money <i class="fas fa-paper-plane"></i></a>
+              <a style="font-size: 14px; font-weight: bold;" type="button" href="{{ route('merchant send money', 'type='.base64_encode("local")) }}" class="btn btn-warning btn-block">Send Money (Local) <i class="fas fa-paper-plane"></i></a>
             </div>
+
+            @if ($imt = \App\AllCountries::where('name', session('country'))->where('imt', "true")->first())
+            
+              <div class="col-md-4 mb-3 sendMoney">
+                <a style="font-size: 14px; font-weight: bold; color: white; background: purple" type="button" href="{{ route('merchant send money', 'type='.base64_encode("international")) }}" class="btn btn-default btn-block">Send Money (Abroad) <i class="fas fa-paper-plane"></i></a>
+
+                <br>
+
+              </div>
+
+            @endif
+
+            
+
 
             <div class="col-md-4 mb-3 withdrawMoney">
               @if ($getUserDetail->approval == 2 && $getUserDetail->accountLevel == 3)

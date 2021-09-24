@@ -388,6 +388,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                         $thismerchant = User::where('ref_code', $req->merchant_id)->first();
 
+                        $imtCountry = AllCountries::where('name', $thismerchant->country)->first();
+
                         if ($thisuser->approval < 1 && $thisuser->accountLevel < 1) {
 
                             $response = 'You cannot pay invoice at the moment because your account is still on review.';
@@ -395,8 +397,14 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $data = [];
                             $status = 400;
                             $message = $response;
-                        } elseif ($thisuser->country != $thismerchant->country) {
-                            $response = 'International money transfer is not available at the moment';
+                        } elseif ($thisuser->country != $thismerchant->country && !isset($req->merchantpay)) {
+                            $response = 'Please visit the website on www.paysprint.ca to pay your international invoice';
+
+                            $data = [];
+                            $status = 400;
+                            $message = $response;
+                        } elseif (isset($imtCountry) && $imtCountry->imt == "false") {
+                            $response = 'International money transfer is not yet available to ' . $imtCountry->name;
 
                             $data = [];
                             $status = 400;
@@ -409,10 +417,15 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                             // Update Merchant Wallet 
 
+                            if ($thisuser->country != $thismerchant->country) {
+                                $paidinvoiceamount = $req->merchantpay;
+                            } else {
+                                $paidinvoiceamount = $req->amount;
+                            }
 
 
                             // Update Merchant Wallet Balance
-                            $merchantwalletBalance = $thismerchant->wallet_balance + $req->amount;
+                            $merchantwalletBalance = $thismerchant->wallet_balance + $paidinvoiceamount;
 
                             // User::where('ref_code', $req->merchant_id)->update(['wallet_balance' => $merchantwalletBalance]);
 
@@ -560,7 +573,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                             // Merchant Statement
 
-                                            $activity = "Added " . $req->currencyCode . '' . number_format($req->amount, 2) . " to Wallet";
+                                            $activity = "Added " . $thismerchant->currencyCode . '' . number_format($req->amount, 2) . " to Wallet";
                                             $credit = $req->amount;
                                             $debit = 0;
                                             $reference_code = $transactionID;
@@ -675,6 +688,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                         $thismerchant = User::where('ref_code', $req->merchant_id)->first();
 
+                        $imtCountry = AllCountries::where('name', $thismerchant->country)->first();
+
                         if ($thisuser->approval < 1 && $thisuser->accountLevel < 1) {
 
                             $response = 'You cannot pay invoice at the moment because your account is still on review.';
@@ -682,8 +697,14 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $data = [];
                             $status = 400;
                             $message = $response;
-                        } elseif ($thisuser->country != $thismerchant->country) {
-                            $response = 'International money transfer is not available at the moment';
+                        } elseif ($thisuser->country != $thismerchant->country && !isset($req->merchantpay)) {
+                            $response = 'Please visit the website on www.paysprint.ca to pay your international invoice';
+
+                            $data = [];
+                            $status = 400;
+                            $message = $response;
+                        } elseif (isset($imtCountry) && $imtCountry->imt == "false") {
+                            $response = 'International money transfer is not yet available to ' . $imtCountry->name;
 
                             $data = [];
                             $status = 400;
@@ -696,9 +717,24 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                             // Update Merchant Wallet 
 
+                            // TODO:: Continue international invoice
+
+                            if ($thisuser->country != $thismerchant->country) {
+
+                                $getthisinvoice = ImportExcel::where('invoice_no', $req->invoice_no)->first();
+
+                                if ($getthisinvoice->remaining_balance > 0) {
+                                    $paidinvoiceamount = $getthisinvoice->remaining_balance;
+                                } else {
+                                    $paidinvoiceamount = $getthisinvoice->total_amount + $getthisinvoice->remaining_balance;
+                                }
+                            } else {
+                                $paidinvoiceamount = $req->amount;
+                            }
+
 
                             // Update Merchant Wallet Balance
-                            $merchantwalletBalance = $thismerchant->wallet_balance + $req->amount;
+                            $merchantwalletBalance = $thismerchant->wallet_balance + $paidinvoiceamount;
 
                             User::where('ref_code', $req->merchant_id)->update(['wallet_balance' => $merchantwalletBalance]);
 
@@ -2500,15 +2536,15 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $data = [];
                         $message = "Withdrawal limit for per transaction is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_transaction'], 2) . ". Please withdraw a lesser amount";
                         $status = 400;
-                    } elseif ($req->amount > $withdrawLimit['withdrawal_per_day']) {
+                    } elseif ($withdrawLimit['withdrawal_per_day'] > $req->amount) {
                         $data = [];
                         $message = "Withdrawal limit per day is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try again the next day";
                         $status = 400;
-                    } elseif ($req->amount > $withdrawLimit['withdrawal_per_week']) {
+                    } elseif ($withdrawLimit['withdrawal_per_week'] > $req->amount) {
                         $data = [];
                         $message = "You have reached your limit for the week. Withdrawal limit per week is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next week";
                         $status = 400;
-                    } elseif ($req->amount > $withdrawLimit['withdrawal_per_month']) {
+                    } elseif ($withdrawLimit['withdrawal_per_month'] > $req->amount) {
                         $data = [];
                         $message = "You have reached your limit for the month. Withdrawal limit per month is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_month'], 2) . ". Please try again the next month";
                         $status = 400;
@@ -3322,8 +3358,14 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                     // Check number of withdrawal
                     if ($thisuser->number_of_withdrawals >= 1) {
+
+                        if ($thisuser->accountType == "Merchant") {
+                            $message = "You have already made withdrawal this week. Try again next week";
+                        } else {
+                            $message = "You have already made withdrawal this month. Try again next month";
+                        }
+
                         $data = [];
-                        $message = "You have already made withdrawal this month. Try again next month";
                         $status = 400;
                     } else {
                         $withdrawLimit = $this->getWithdrawalLimit($thisuser->country, $thisuser->id);
@@ -3334,15 +3376,15 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $data = [];
                             $message = "Withdrawal limit per transaction is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_transaction'], 2) . ". Please withdraw a lesser amount";
                             $status = 400;
-                        } elseif ($req->amount > $withdrawLimit['withdrawal_per_day']) {
+                        } elseif ($withdrawLimit['withdrawal_per_day'] > $req->amount) {
                             $data = [];
                             $message = "Withdrawal limit per day is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try again the next day";
                             $status = 400;
-                        } elseif ($req->amount > $withdrawLimit['withdrawal_per_week']) {
+                        } elseif ($withdrawLimit['withdrawal_per_week'] > $req->amount) {
                             $data = [];
                             $message = "You have reached your limit for the week. Withdrawal limit per week is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next week";
                             $status = 400;
-                        } elseif ($req->amount > $withdrawLimit['withdrawal_per_month']) {
+                        } elseif ($withdrawLimit['withdrawal_per_month'] > $req->amount) {
                             $data = [];
                             $message = "You have reached your limit for the month. Withdrawal limit per month is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_month'], 2) . ". Please try again the next month";
                             $status = 400;
@@ -3387,7 +3429,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
 
 
-                                $this->slack('Oops!, Though this is a test, but ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                                $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                             } elseif ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
                                 // Cannot withdraw minimum balance
 

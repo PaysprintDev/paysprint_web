@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\v1;
 
+use App\AllCountries;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -405,7 +406,7 @@ class MoneyTransferController extends Controller
         $statement_route = "wallet";
 
         // Senders statement
-        $this->insStatement($data->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on');
+        $this->insStatement($data->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $data->country);
 
 
         // Create Statement And Credit EXBC account holder
@@ -810,6 +811,8 @@ class MoneyTransferController extends Controller
                                     // Get Receivers Details
                                     $receiver = User::where('ref_code', $req->accountNumber)->first();
 
+                                    $imtCountry = AllCountries::where('name', $receiver->country)->first();
+
 
                                     if (isset($receiver)) {
 
@@ -830,13 +833,24 @@ class MoneyTransferController extends Controller
                                                 $status = 404;
 
                                                 $resData = ['data' => [], 'message' => 'You cannot send money at the moment because your account is still on review.', 'status' => $status];
-                                            } elseif ($receiver->country != $sender->country) {
+                                            } elseif (isset($imtCountry) && $imtCountry->imt == "false") {
                                                 $status = 404;
 
-                                                $resData = ['data' => [], 'message' => 'International money transfer is not available at the moment', 'status' => $status];
+                                                $resData = ['data' => [], 'message' => 'International money transfer is not yet available to ' . $imtCountry->name, 'status' => $status];
 
                                                 Log::info("International Transfer  between " . $sender->name . " and " . $receiver->name . ". Not available.");
-                                            } else {
+                                            }
+
+
+                                            // elseif ($receiver->country != $sender->country) {
+                                            //     $status = 404;
+
+                                            //     $resData = ['data' => [], 'message' => 'International money transfer is not available at the moment', 'status' => $status];
+
+                                            //     Log::info("International Transfer  between " . $sender->name . " and " . $receiver->name . ". Not available.");
+                                            // }  
+
+                                            else {
 
                                                 $amount = number_format($req->amount, 2);
 
@@ -847,6 +861,13 @@ class MoneyTransferController extends Controller
                                                     $service = $req->purposeOfPayment;
                                                 } else {
                                                     $service = $req->specifyPurpose;
+                                                }
+
+                                                if ($req->currency != $receiver->currencyCode) {
+                                                    $dataInfo = $this->convertCurrencyRate($receiver->currencyCode, $req->currency, $req->amount);
+                                                    // $dataInfo = $req->conversionamount;
+                                                } else {
+                                                    $dataInfo = $req->amount;
                                                 }
 
 
@@ -862,8 +883,11 @@ class MoneyTransferController extends Controller
                                                 $withdrawal_per_day = $sender->withdrawal_per_day + $req->amount;
                                                 $withdrawal_per_week = $sender->withdrawal_per_week + $withdrawal_per_day;
                                                 $withdrawal_per_month = $sender->withdrawal_per_month + $withdrawal_per_week;
+                                                $requestReceive = 2;
 
-                                                $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $req->accountNumber, 'user_id' => $userID, 'purpose' => $service, 'amount' => $req->amount, 'withdraws' => $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $req->amount, 'commission' => 0, 'approve_commission' => $approve_commission, 'request_receive' => 0]);
+                                                // $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $req->accountNumber, 'user_id' => $userID, 'purpose' => $service, 'amount' => $req->amount, 'withdraws' => $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $req->amount, 'commission' => 0, 'approve_commission' => $approve_commission, 'request_receive' => 0]);
+
+                                                $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $req->accountNumber, 'user_id' => $userID, 'purpose' => $service, 'amount' => $receiver->currencyCode . ' ' . $req->amount, 'withdraws' => $receiver->currencyCode . ' ' . $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $dataInfo, 'commission' => 0, 'approve_commission' => $approve_commission, 'amountindollars' => $req->currency . ' ' . $dataInfo, 'request_receive' => $requestReceive]);
 
 
                                                 if ($insertPay == true) {
@@ -886,7 +910,7 @@ class MoneyTransferController extends Controller
                                                         $this->coy_name = $receiver->name;
                                                         // $this->email = "bambo@vimfile.com";
                                                         $this->email = $sender->email;
-                                                        $this->amount = $req->currency . " " . $req->amount;
+                                                        $this->amount = $receiver->currencyCode . " " . $dataInfo;
                                                         $this->paypurpose = $service;
                                                         $this->subject = "Payment Received from " . $sender->name . " for " . $service;
                                                         $this->subject2 = "Your Payment to " . $receiver->name . " was successfull";
@@ -900,9 +924,9 @@ class MoneyTransferController extends Controller
 
 
                                                         // Insert Statement
-                                                        $activity = "Transfer of " . $req->currency . " " . number_format($req->amount, 2) . " to " . $receiver->name . " for " . $service . " on PaySprint Wallet.";
+                                                        $activity = "Transfer of " . $receiver->currencyCode . " " . number_format($dataInfo, 2) . " to " . $receiver->name . " for " . $service . " on PaySprint Wallet.";
                                                         $credit = 0;
-                                                        $debit = number_format($req->amount, 2);
+                                                        $debit = $req->amount;
                                                         $reference_code = $paymentToken;
                                                         $balance = 0;
                                                         $trans_date = date('Y-m-d');
@@ -915,15 +939,15 @@ class MoneyTransferController extends Controller
 
 
                                                         if ($receiver->auto_deposit == 'on') {
-                                                            $recWallet = $receiver->wallet_balance + $req->amount;
+                                                            $recWallet = $receiver->wallet_balance + $dataInfo;
                                                             $walletstatus = "Delivered";
 
-                                                            $recMsg = "Hi " . $receiver->name . ", You have received " . $req->currency . ' ' . number_format($req->amount, 2) . " in your PaySprint wallet for " . $service . " from " . $sender->name . ". You now have " . $req->currency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
+                                                            $recMsg = "Hi " . $receiver->name . ", You have received " . $receiver->currencyCode . ' ' . number_format($dataInfo, 2) . " in your PaySprint wallet for " . $service . " from " . $sender->name . ". You now have " . $receiver->currencyCode . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
                                                         } else {
                                                             $recWallet = $receiver->wallet_balance;
                                                             $walletstatus = "Pending";
 
-                                                            $recMsg = "Hi " . $receiver->name . ", You have received " . $req->currency . ' ' . number_format($req->amount, 2) . " for " . $service . " from " . $sender->name . ". Your wallet balance is " . $req->currency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
+                                                            $recMsg = "Hi " . $receiver->name . ", You have received " . $receiver->currencyCode . ' ' . number_format($dataInfo, 2) . " for " . $service . " from " . $sender->name . ". Your wallet balance is " . $receiver->currencyCode . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
                                                         }
 
                                                         User::where('ref_code', $req->accountNumber)->update(['wallet_balance' => $recWallet]);
@@ -969,10 +993,13 @@ class MoneyTransferController extends Controller
                                                         }
 
                                                         // Senders statement
-                                                        $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on');
+                                                        $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $sender->country);
 
                                                         // Receiver Statement
-                                                        $this->insStatement($receiver->email, $reference_code, "Received " . $req->currency . ' ' . number_format($req->amount, 2) . " in wallet for " . $service . " from " . $sender->name, number_format($req->amount, 2), 0, $balance, $trans_date, $walletstatus, "Wallet credit", $receiver->ref_code, 1, $statement_route, $receiver->auto_deposit);
+                                                        // $this->insStatement($receiver->email, $reference_code, "Received " . $receiver->currencyCode . ' ' . number_format($dataInfo, 2) . " in wallet for " . $service . " from " . $sender->name, number_format($req->amount, 2), 0, $balance, $trans_date, $walletstatus, "Wallet credit", $receiver->ref_code, 1, $statement_route, $receiver->auto_deposit);
+
+                                                        $this->insStatement($receiver->email, $reference_code, "Received " . $receiver->currencyCode . ' ' . number_format($dataInfo, 2) . " in wallet for " . $service . " from " . $sender->name, $dataInfo, 0, $balance, $trans_date, $walletstatus, "Wallet credit", $receiver->ref_code, 1, $statement_route, $receiver->auto_deposit, $receiver->country);
+
 
                                                         // $data = OrganizationPay::where('transactionid', $paymentToken)->first();
                                                         $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'cardRequest')->where('api_token', $req->bearerToken())->first();
@@ -1159,9 +1186,57 @@ class MoneyTransferController extends Controller
         return $this->returnJSON($resData, $status);
     }
 
-    public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $auto_deposit)
+    public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $auto_deposit, $country = null)
     {
-        Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route, 'auto_deposit' => $auto_deposit]);
+        Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route, 'auto_deposit' => $auto_deposit, 'country' => $country]);
+    }
+
+    public function convertCurrencyRate($foreigncurrency, $localcurrency, $amount)
+    {
+
+        $currency = 'USD' . $foreigncurrency;
+        $amount = $amount;
+        $localCurrency = 'USD' . $localcurrency;
+
+        $access_key = '6173fa628b16d8ce1e0db5cfa25092ac';
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'http://api.currencylayer.com/live?access_key=' . $access_key,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'Cookie: __cfduid=d430682460804be329186d07b6e90ef2f1616160177'
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        $result = json_decode($response);
+
+
+        if ($result->success == true) {
+
+            // Conversion Rate USD to Local currency
+            $convertLocal = $amount / $result->quotes->$localCurrency;
+
+
+            $convRate = $result->quotes->$currency * $convertLocal;
+        } else {
+            $convRate = "Sorry we can not process your transaction this time, try again later!.";
+        }
+
+
+
+        return $convRate;
     }
 
 

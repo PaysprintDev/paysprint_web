@@ -656,7 +656,7 @@
                                         <hr>
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="incorporation_doc_front">Document</label>
+                                                <label for="incorporation_doc_front" class="text-danger">Utility Bill</label>
                                                 <input type="file" class="form-control" name="incorporation_doc_front" id="incorporation_doc_front">
                                             </div>
                                         </div>

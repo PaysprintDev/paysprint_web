@@ -1,3 +1,4 @@
+<?php use \App\Http\Controllers\User; ?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -73,7 +74,23 @@ input[type="radio"] {
                         <div class="tab-content">
 
                             @if (count($data['getinvoice']) > 0)
+
+                                @if ($merchant = \App\User::where('ref_code', $data['getinvoice'][0]->uploaded_by)->first())
+                                                    
+                                    @php
+                                        $currencySymb = $merchant->currencySymbol;
+                                        $countryBase = $merchant->country;
+                                    @endphp
                                 
+                                @else
+
+                                    @php
+                                        $currencySymb = $data['currencyCode']->currencySymbol;
+                                        $countryBase = Auth::user()->country;
+                                    @endphp
+
+                                @endif
+
                             <!-- credit card info-->
                             <div id="credit-card" class="tab-pane fade show active pt-3">
                                 {{-- <form role="form" action="{{ route('PaymentInvoice') }}" method="POST" id="paymentForm"> --}}
@@ -96,17 +113,17 @@ input[type="radio"] {
                                                     Invoice Number: <b>{{ $data['getinvoice'][0]->invoice_no }}</b>
                                                 </li>
                                                 <li>
-                                                    Invoice Amount: <b>{{ $data['currencyCode']->currencySymbol."".number_format($data['getinvoice'][0]->amount, 2) }}</b>
+                                                    Invoice Amount: <b>{{ $currencySymb."".number_format($data['getinvoice'][0]->amount, 2) }}</b>
                                                 </li>
                                                 <li>
-                                                    Tax Amount: <b>{{ $data['currencyCode']->currencySymbol."".number_format($data['getinvoice'][0]->tax_amount, 2) }}</b>
+                                                    Tax Amount: <b>{{ $currencySymb."".number_format($data['getinvoice'][0]->tax_amount, 2) }}</b>
                                                 </li>
                                                 <li>
-                                                    Total Amount: <b>{{ $data['currencyCode']->currencySymbol."".number_format($data['getinvoice'][0]->total_amount, 2) }}</b>
+                                                    Total Amount: <b>{{ $currencySymb."".number_format($data['getinvoice'][0]->total_amount, 2) }}</b>
                                                 </li>
                                                 
                                                 <li>
-                                                    Invoice Balance: <b>{{ $data['currencyCode']->currencySymbol."".number_format($data['getinvoice'][0]->remaining_balance, 2) }}</b>
+                                                    Invoice Balance: <b>{{ $currencySymb."".number_format($data['getinvoice'][0]->remaining_balance, 2) }}</b>
                                                 </li>
                                                 <li>
                                                     Service: <b>{{ $data['getinvoice'][0]->service }}</b>
@@ -170,6 +187,36 @@ input[type="radio"] {
                                             
                                         </div>
                                     </div>
+                                    
+
+                                    @if ($countryBase != Auth::user()->country)
+
+                                    <div class="form-group"> <label for="currency">
+                                            <h6>Amount Invoiced</h6>
+                                        </label>
+
+                                        @php
+                                            if($data['remaining_invoice'] > 0){
+                                                $amountInvoiced = $data['remaining_invoice'];
+                                                $merchantPay = $data['getinvoice'][0]->remaining_balance;
+                                            }
+                                            else{
+                                                $amountInvoiced = $data['total_invoice'] + $data['remaining_invoice'];
+                                                $merchantPay = $data['getinvoice'][0]->total_amount + $data['getinvoice'][0]->remaining_balance;
+                                            }
+                                        @endphp
+
+                                        
+
+                                        <input type="hidden" value="{{ $data['currencyCode']->currencyCode }}" name="currencyCode">
+                                        <input type="hidden" value="{{ $merchantPay }}" name="merchantpay">
+                                        <div class="input-group"> <span class="input-group-text text-muted"> {{ $data['currencyCode']->currencySymbol }} </span> <input type="number" min="0.00" step="0.01" name="amountinvoiced" id="amountinvoiced" placeholder="50.00" class="form-control" value="{{ $amountInvoiced }}" readonly>
+                                            <div class="input-group-append">  </div>
+                                        </div>
+                                    </div>
+
+                                    @else
+
                                     <div class="form-group"> <label for="currency">
                                             <h6>Amount Invoiced</h6>
                                         </label>
@@ -188,6 +235,10 @@ input[type="radio"] {
                                             <div class="input-group-append">  </div>
                                         </div>
                                     </div>
+
+                                    @endif
+
+                                    {{--  //TODO:: Remove Installmental payment from international invoice  --}}
 
                                     @if ($data['getinvoice'][0]->installpay == "Yes")
 

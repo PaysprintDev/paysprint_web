@@ -569,132 +569,8 @@
 
             @if ($pages == "My Dashboard")
                     <li class="quicksetup">
-                <div class="card" style="width: auto;">
-                            <div class="card-header" style="background-color: #f6b60b; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
-                                Quick Wallet Setup
-                                @if ($getUserDetail->approval == 0 || count($getCard) <= 0 && count($getBank) <= 0 || $getUserDetail->transaction_pin == null || $getUserDetail->securityQuestion == null)
-                                <br>
-                                    <a href="javascript:void()" type="button" class="btn btn-danger fa-blink">Incomplete</a>
-                                @endif
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item" title="Upload Government issued photo ID e.g National ID, International Passport, Driver Licence">
-                                    <div class="row">
-                                        <div class="col-md-10">
-                                            <a href="{{ route('merchant profile') }}" style="color: navy; font-weight: 700;">Identity Verification</a>
-                                        </div>
-                                        <div class="col-md-2">
-                                            {!! $getUserDetail->approval > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
-                                        </div>
-                                    </div>
 
-                                    </li>
-                                <li class="list-group-item" title="To add money to your wallet, you need to add a credit/debit card to your account">
-
-                                    <div class="row">
-                                        <div class="col-md-10">
-                                             <a href="{{ route('merchant payment gateway', 'gateway=PaySprint') }}" style="color: navy; font-weight: 700;">Add Card/Bank Account </a>
-                                        </div>
-                                        <div class="col-md-2">
-                                            {!! count($getCard) > 0 || count($getBank) > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
-                                        </div>
-                                    </div>
-
-                                   
-                                </li>
-                                <li class="list-group-item" title="Setup transaction pin for security purpose" >
-
-                                    <div class="row">
-                                        <div class="col-md-10">
-                                            <a href="{{ route('merchant profile') }}" style="color: navy; font-weight: 700;">Set Transaction Pin </a>
-                                        </div>
-                                        <div class="col-md-2">
-                                            {!! $getUserDetail->transaction_pin != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
-                                        </div>
-                                    </div>
-                                    
-                                
-                                </li>
-                                <li class="list-group-item" title="Setup transaction pin for security purpose" >
-
-                                    <div class="row">
-                                        <div class="col-md-10">
-                                            <a href="{{ route('merchant profile') }}" style="color: navy; font-weight: 700;">Set Security Question </a>
-                                        </div>
-                                        <div class="col-md-2">
-                                            {!! $getUserDetail->securityQuestion != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
-                                        </div>
-                                    </div>
-                                    
-                                    
-                                
-                                </li>
-
-                                @if ($getUserDetail->country == "Nigeria")
-                                    <li class="list-group-item" title="Bank Verification (BVN)" >
-
-                                    <div class="row">
-                                        <div class="col-md-10">
-                                            <a href="{{ route('merchant profile') }}" style="color: navy; font-weight: 700;">Bank Verification (BVN) </a>
-                                        </div>
-                                        <div class="col-md-2">
-                                            {!! $getUserDetail->bvn_verification != null || $getUserDetail->bvn_verification != 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
-                                        </div>
-                                    </div>
-                                    
-                                    
-                                
-                                </li>
-                                @endif
-                                
-                                <li class="list-group-item" title="Set up Tax" >
-
-                                    <div class="row">
-                                        <div class="col-md-10">
-                                            <a href="{{ route('setup tax') }}" style="color: navy; font-weight: 700;">Set Up Tax</a>
-                                        </div>
-                                        <div class="col-md-2">
-                                            {!! count($getTax) > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
-                                        </div>
-                                    </div>
-                                    
-                                    
-                                
-                                </li>
-                            </ul>
-                    </div>
-
-
-                        <div class="card utilityBills" style="width: 100%;">
-                                <div class="card-header" style="background-color: #ff8a04; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
-                                    Pay Utility Bills
-                                </div>
-                                <ul class="list-group list-group-flush">
-
-                                
-                                    <li class="list-group-item" title="Pay Utility Bills">
-                                        <div class="row">
-                                            <div class="col-md-12">
-
-                                              @if (session('country') == "Nigeria")
-                                                    <a href="{{ route('utility bills') }}" style="color: navy; font-weight: 700;">Utility Payment</a>
-                                                @else
-                                                    <a href="{{ route('select utility bills country') }}" style="color: navy; font-weight: 700;">Utility Payment</small></a>
-                                                @endif
-
-
-                                                
-                                            </div>
-                                        </div>
-
-                                        </li>
-                                    
-                                </ul>
-                        </div>
-
-
-
-                <div class="card propertyManagement" style="width: 100%;">
+                      <div class="card propertyManagement" style="width: 100%;">
                             <div class="card-header" style="background-color: #5ed998; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
                                 Property Management
                                 
@@ -716,6 +592,240 @@
                                 
                             </ul>
                     </div>
+
+                    <div class="card" style="width: auto;">
+                        <div class="card-header" style="background-color: #f6b60b; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
+                            Quick Wallet Setup
+                            @if ($getUserDetail->approval == 0 || count($getCard) <= 0 && count($getBank) <= 0 || $getUserDetail->transaction_pin == null || $getUserDetail->securityQuestion == null)
+                            <br>
+                                <a href="javascript:void()" type="button" class="btn btn-danger fa-blink">Incomplete</a>
+                            @endif
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item" title="Upload Government issued photo ID e.g National ID, International Passport, Driver Licence">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <a href="{{ route('merchant profile') }}" style="color: navy; font-weight: 700;">Identity Verification</a>
+                                    </div>
+                                    <div class="col-md-2">
+                                        {!! $getUserDetail->approval > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                    </div>
+                                </div>
+
+                                </li>
+                            <li class="list-group-item" title="To add money to your wallet, you need to add a credit/debit card to your account">
+
+                                <div class="row">
+                                    <div class="col-md-10">
+                                          <a href="{{ route('merchant payment gateway', 'gateway=PaySprint') }}" style="color: navy; font-weight: 700;">Add Card/Bank Account </a>
+                                    </div>
+                                    <div class="col-md-2">
+                                        {!! count($getCard) > 0 || count($getBank) > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                    </div>
+                                </div>
+
+                                
+                            </li>
+                            <li class="list-group-item" title="Setup transaction pin for security purpose" >
+
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <a href="{{ route('merchant profile') }}" style="color: navy; font-weight: 700;">Set Transaction Pin </a>
+                                    </div>
+                                    <div class="col-md-2">
+                                        {!! $getUserDetail->transaction_pin != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                    </div>
+                                </div>
+                                
+                            
+                            </li>
+                            <li class="list-group-item" title="Setup transaction pin for security purpose" >
+
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <a href="{{ route('merchant profile') }}" style="color: navy; font-weight: 700;">Set Security Question </a>
+                                    </div>
+                                    <div class="col-md-2">
+                                        {!! $getUserDetail->securityQuestion != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                    </div>
+                                </div>
+                                
+                                
+                            
+                            </li>
+
+                            @if ($getUserDetail->country == "Nigeria")
+                                <li class="list-group-item" title="Bank Verification (BVN)" >
+
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <a href="{{ route('merchant profile') }}" style="color: navy; font-weight: 700;">Bank Verification (BVN) </a>
+                                    </div>
+                                    <div class="col-md-2">
+                                        {!! $getUserDetail->bvn_verification != null || $getUserDetail->bvn_verification != 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                    </div>
+                                </div>
+                                
+                                
+                            
+                            </li>
+                            @endif
+                            
+                            <li class="list-group-item" title="Set up Tax" >
+
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <a href="{{ route('setup tax') }}" style="color: navy; font-weight: 700;">Set Up Tax</a>
+                                    </div>
+                                    <div class="col-md-2">
+                                        {!! count($getTax) > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                    </div>
+                                </div>
+                                
+                                
+                            
+                            </li>
+                        </ul>
+                    </div>
+
+
+                      <div class="card utilityBills" style="width: 100%;">
+                            <div class="card-header" style="background-color: green; color: white; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
+                                Required Documents
+                                @if ($data['getuserDetail']->incorporation_doc_front == NULL || $data['getuserDetail']->directors_document == NULL || $data['getuserDetail']->shareholders_document == NULL || $data['getuserDetail']->proof_of_identity_1 == NULL || $data['getuserDetail']->proof_of_identity_2 == NULL || $data['getuserDetail']->aml_policy == NULL || $data['getuserDetail']->compliance_audit_report == NULL || $data['getuserDetail']->organizational_chart == NULL || $data['getuserDetail']->financial_license == NULL)
+                                    <a href="javascript:void()" type="button" class="btn btn-danger fa-blink">Incomplete</a>
+                                @endif
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item" title="Articles of Incorporation">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <a href="{{ route('merchant profile') }}" style="color: black; font-weight: bold;">Articles of Incorporation</a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! $data['getuserDetail']->incorporation_doc_front != NULL ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+
+                                    </li>
+                                <li class="list-group-item" title="Register of Directors">
+
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                             <a href="{{ route('merchant profile') }}" style="color: black; font-weight: bold;">Register of Directors</a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! $data['getuserDetail']->directors_document != NULL ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+
+                                   
+                                </li>
+                                <li class="list-group-item" title="Register of Shareholders" >
+
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <a href="{{ route('merchant profile') }}" style="color: black; font-weight: bold;">Register of Shareholders</a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! $data['getuserDetail']->shareholders_document != NULL ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+                                    
+                                
+                                </li>
+                                <li class="list-group-item" title="Proof of Identity - 1 Director" >
+
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <a href="{{ route('merchant profile') }}" style="color: black; font-weight: bold;">Proof of Identity - 1 Director</a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! $data['getuserDetail']->proof_of_identity_1 != NULL ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                
+                                </li>
+
+                                
+                                <li class="list-group-item" title="Proof of Identity - 1 UBO" >
+
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <a href="{{ route('merchant profile') }}" style="color: black; font-weight: bold;">Proof of Identity - 1 UBO</a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! $data['getuserDetail']->proof_of_identity_2 != NULL ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                
+                                </li>
+                                <li class="list-group-item" title="AML Policy and Procedures" >
+
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <a href="{{ route('merchant profile') }}" style="color: black; font-weight: bold;">AML Policy and Procedures</a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! $data['getuserDetail']->aml_policy != NULL ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                
+                                </li>
+                                <li class="list-group-item" title="Latest Compliance External Audit Report" >
+
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <a href="{{ route('merchant profile') }}" style="color: black; font-weight: bold;">Latest Compliance Exter...</a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! $data['getuserDetail']->compliance_audit_report != NULL ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                
+                                </li>
+                                <li class="list-group-item" title="Organizational Chart (including details of Compliance roles and functions)" >
+
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <a href="{{ route('merchant profile') }}" style="color: black; font-weight: bold;">Organizational Chart</a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! $data['getuserDetail']->organizational_chart != NULL ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                
+                                </li>
+                                <li class="list-group-item" title="Proof of Financial License" >
+
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <a href="{{ route('merchant profile') }}" style="color: black; font-weight: bold;">Proof of Financial License</a>
+                                        </div>
+                                        <div class="col-md-2">
+                                            {!! $data['getuserDetail']->financial_license != NULL ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                
+                                </li>
+                            </ul>
+                        </div>
+
+
+
+                
         </li>
         @endif
 

@@ -174,7 +174,7 @@ trait PaymentGateway
                     $transCost = TransactionCost::where('method', "Consumer Minimum Withdrawal")->where('country', $country)->first();
 
                     $result = [
-                        'withdrawal_per_transaction' => $transCost->fixed,
+                        'withdrawal_per_transaction' => $getUser->withdrawal_per_transaction,
                         'withdrawal_per_day' => $getPrice->withdrawal_per_day,
                         'withdrawal_per_week' => $getPrice->withdrawal_per_week,
                         'withdrawal_per_month' => $getPrice->withdrawal_per_month
@@ -182,7 +182,7 @@ trait PaymentGateway
                 } else {
                     $transCost = TransactionCost::where('method', "Merchant Minimum Withdrawal")->where('country', $country)->first();
                     $result = [
-                        'withdrawal_per_transaction' => $transCost->fixed,
+                        'withdrawal_per_transaction' => $getUser->withdrawal_per_transaction,
                         'withdrawal_per_day' => $getPrice->merchant_withdrawal_per_day,
                         'withdrawal_per_week' => $getPrice->merchant_withdrawal_per_week,
                         'withdrawal_per_month' => $getPrice->merchant_withdrawal_per_month
@@ -193,7 +193,7 @@ trait PaymentGateway
                     $transCost = TransactionCost::where('method', "Consumer Minimum Withdrawal")->where('country', $country)->first();
 
                     $result = [
-                        'withdrawal_per_transaction' => 0,
+                        'withdrawal_per_transaction' => $getUser->withdrawal_per_transaction,
                         'withdrawal_per_day' => 0,
                         'withdrawal_per_week' => 0,
                         'withdrawal_per_month' => 0
@@ -201,7 +201,7 @@ trait PaymentGateway
                 } else {
                     $transCost = TransactionCost::where('method', "Merchant Minimum Withdrawal")->where('country', $country)->first();
                     $result = [
-                        'withdrawal_per_transaction' => 0,
+                        'withdrawal_per_transaction' => $getUser->withdrawal_per_transaction,
                         'withdrawal_per_day' => 0,
                         'withdrawal_per_week' => 0,
                         'withdrawal_per_month' => 0

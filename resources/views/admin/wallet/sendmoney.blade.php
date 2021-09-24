@@ -54,7 +54,7 @@
                 @if (Request::get('type') == base64_encode("international"))
         
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-3 disp-0">
                             <label for="orgInfo">Country code</label>
                             <select name="countryCode" id="countryCode" class="form-control billinginput_box">
                                     <option data-countryCode="DZ" value="213">Algeria (+213)</option>
@@ -273,7 +273,7 @@
                                     <option data-countryCode="ZW" value="263">Zimbabwe (+263)</option>
                             </select>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-9">
                             <label for="orgInfo">Enter receivers account number</label>
                                 <input type="text" name="orgInfo" class="form-control billinginput_box" id="orgInfo" placeholder="e.g 81702">
 

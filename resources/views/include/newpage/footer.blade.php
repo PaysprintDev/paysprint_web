@@ -1,4 +1,4 @@
-@if ($pages != "Donate to Haiti")
+@if ($pages != "Supporting HAITI")
 
 <!-- Footer section -->
 <div class="footer-section bg-default-6">

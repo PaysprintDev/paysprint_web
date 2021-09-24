@@ -353,9 +353,6 @@ class Controller extends BaseController
     }
 
 
-    // TODO:: Update API with country layer and run daemon to update information
-
-
     public function getCountryCoded($country)
     {
 

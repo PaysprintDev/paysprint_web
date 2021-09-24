@@ -22,6 +22,7 @@
     <!-- Main content -->
     <section class="content">
 
+
         <div class="row">
                 <div class="col-md-2 col-md-offset-0">
                 <button class="btn btn-secondary btn-block bg-red" onclick="goBack()"><i class="fas fa-chevron-left"></i> Go back</button>
@@ -108,6 +109,7 @@
                                             
                                         </div>
                                     </div>
+
                                     
 
 
@@ -160,9 +162,9 @@
                                             <div class="form-group"> <label for="currency">
                                                     Currency
                                                 </label>
-                                                <input type="hidden" name="localcurrency" value="{{ $data['currencyCode']->currencyCode }}">
-                                                    <select name="currency" id="currency" class="form-control" readonly>
-                                                        <option value="{{ $data['othercurrencyCode']->currencyCode }}" selected>{{ $data['othercurrencyCode']->currencyCode }}</option>
+                                                <input type="hidden" name="currency" value="{{ $data['othercurrencyCode']->currencyCode }}">
+                                                    <select name="localcurrency" id="localcurrency" class="form-control" readonly>
+                                                        <option value="{{ $data['currencyCode']->currencyCode }}" selected>{{ $data['currencyCode']->currencyCode }}</option>
                                                     </select>
                                             </div>
                                         </div>
@@ -183,7 +185,7 @@
                                         </div>
                                     </div>
 
-                                    @if (Request::get('country') != $data['paymentorg']->country)
+                                    {{--  @if (Request::get('country') != $data['paymentorg']->country)
 
                                         <div class="form-group"> <label for="netwmount">
                                                Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small>
@@ -208,18 +210,71 @@
 
 
                                         
+                                    @endif  --}}
+
+
+
+
+                                    @if (Request::get('country') != $data['paymentorg']->country)
+
+                                        <div class="form-group"> <label for="netwmount">
+                                                <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate </b></small></h6>
+
+                                                <table class="table table-bordered table-striped">
+                                                        <tbody>
+                                                            <tr style="font-weight: bold;">
+                                                                <td>{{ $data['currencyCode']->currencyCode }}</td>
+                                                                <td>{{ $data['othercurrencyCode']->currencyCode }}</td>
+                                                            </tr>
+                                                            <tr style="font-weight: bold;">
+                                                                <td class="text-success">1</td>
+                                                                <td class="text-primary">{{ round($data['othercurrencyCode']['conversionrate'], 2) }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                            </label>
+                                            
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="conversionamount">
+                                                        Amount To Receive ({{ $data['othercurrencyCode']->currencyCode }}) <br><small class="text-success"><b>Total amount that would be received </b></small>
+                                                </label>
+                                                
+                                                <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
+                                        </div>
+
+
+                                        @else
+
+                                        <div class="form-group disp-0"> <label for="netwmount">
+                                                <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate </b></small></h6>
+                                                <p style="font-weight: bold;">
+                                                    {{ $data['currencyCode']->currencyCode }} <=> {{ $data['othercurrencyCode']->currencyCode }}
+                                                </p>
+                                            </label>
+                                                <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
+                                        </div>
+
+
+                                        <div class="form-group"> <label for="netwmount">
+                                                Net Amount <br><small class="text-success"><b>Total amount that would be received</b></small>
+                                                
+                                            </label>
+                                                <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
+                                        </div>
+
+
+                                        
                                     @endif
 
 
                                     
 
 
-                                <div class="form-group"> <label for="netwmount">
-                                    Net Amount <br><small class="text-success"><b>Total amount that would be received</b></small>
-                                    
-                                </label>
-                                    <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
-                            </div>
+                                
+                            
                                 <div class="form-group"> <label for="netwmount">
                                     Fee <small class="text-success"><b>(FREE)</b></small>
                                 </label>
@@ -230,9 +285,18 @@
                             </div>
 
 
+                                <div class="form-group"> <label for="netwmount">
+                                    Transaction Pin
+                                </label>
+                                    <input type="password" name="transaction_pin" class="form-control" id="transaction_pin" maxlength="4" required>
+
+                            </div>
+
+
+
                             @if (Request::get('country') != $data['paymentorg']->country)
                             <div class="form-group">
-                                <span class="text-success">Please note that International transfer are sent in USD conversion</span>
+                                <span class="text-success disp-0">Please note that International transfer are sent in USD conversion</span>
                             </div>
 
                             @endif

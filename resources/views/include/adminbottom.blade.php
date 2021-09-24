@@ -1997,6 +1997,25 @@ function grantCountry(id){
 }
 
 
+function grantImt(id){
+  var route = "{{ URL('Ajax/accesstousepaysprintimt') }}";
+
+  swal({
+      title: "Are you sure?",
+      text: "Your decision is about to be processed",
+      icon: "info",
+      buttons: true,
+      dangerMode: false,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        $("#grantimtform"+id).submit();
+
+      }
+    });
+}
+
+
 
 
 
@@ -2602,6 +2621,7 @@ else if(val == 'editcard'){
       });
 
 }
+
 
 else if(val == 'singleinvoice'){
 
@@ -3930,13 +3950,15 @@ function checkDetail(val){
 
                         $.each(res, function(v, k){
 
-                            if(result.country == k.country){
-                            sendBtn = "<button class='btn btn-primary' onclick=payOrg('"+k.ref_code+"')>Send Money</button>";
+                            // if(result.country == k.country){
+                            // sendBtn = "<button class='btn btn-primary' onclick=payOrg('"+k.ref_code+"')>Send Money</button>";
                                 
-                            }
-                            else{
-                                sendBtn = "<button class='btn btn-primary' onclick=cannotSend()>Send Money</button>";
-                            }
+                            // }
+                            // else{
+                            //     sendBtn = "<button class='btn btn-primary' onclick=cannotSend()>Send Money</button>";
+                            // }
+
+                            sendBtn = "<button class='btn btn-primary' onclick=payOrg('"+k.ref_code+"')>Send Money</button>";
 
                             if(k.avatar != null){
                                 avatar = k.avatar;

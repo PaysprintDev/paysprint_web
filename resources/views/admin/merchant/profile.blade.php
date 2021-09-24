@@ -143,7 +143,7 @@
                     </div>
               </div>
               <div class="row">
-                <div class="card" style="width: auto;">
+                        <div class="card" style="width: auto;">
                             <div class="card-header" style="background-color: green; color: white; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
                                 Required Documents
                                 @if ($data['getuserDetail']->incorporation_doc_front == NULL || $data['getuserDetail']->directors_document == NULL || $data['getuserDetail']->shareholders_document == NULL || $data['getuserDetail']->proof_of_identity_1 == NULL || $data['getuserDetail']->proof_of_identity_2 == NULL || $data['getuserDetail']->aml_policy == NULL || $data['getuserDetail']->compliance_audit_report == NULL || $data['getuserDetail']->organizational_chart == NULL || $data['getuserDetail']->financial_license == NULL)
@@ -275,7 +275,7 @@
                                 
                                 </li>
                             </ul>
-                    </div>
+                        </div>
               </div>
 
 

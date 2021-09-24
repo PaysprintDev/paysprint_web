@@ -51,6 +51,7 @@ Route::get('publisharchive', 'CheckSetupController@publishArchiveUsers');
 Route::get('publishexisting', 'CheckSetupController@publishExistingUsers');
 Route::get('transactionlimits', 'CheckSetupController@updateTransLimit');
 Route::get('numberofwithdrawals', 'CheckSetupController@updateNumberofWithdrawal');
+Route::get('numberofwithdrawalsformerchant', 'CheckSetupController@updateMerchantNumberofWithdrawal');
 
 // Get Path Address
 Route::get('pathaddress', 'CheckSetupController@getPathAddress');
@@ -96,7 +97,7 @@ Route::get('/merchant-home', ['uses' => 'HomeController@merchantIndex', 'as' => 
 
 Route::get('/home', ['uses' => 'HomeController@authIndex', 'as' => 'user home']);
 
-Route::get('/donate-to-haiti', ['uses' => 'HomeController@haitiDonation', 'as' => 'haiti donation']);
+Route::get('/supporting-haiti', ['uses' => 'HomeController@haitiDonation', 'as' => 'haiti donation']);
 
 Route::get('about', ['uses' => 'HomeController@about', 'as' => 'about']);
 
@@ -703,6 +704,7 @@ Route::group(['prefix' => 'Ajax'], function () {
 	Route::post('singleinvoiceusercheck', ['uses' => 'AdminController@ajaxSingleInvoiceUserCheck', 'as' => 'Ajaxsingleinvoiceusercheck']);
 	Route::post('refundmoneybacktowallet', ['uses' => 'AdminController@ajaxRefundMoneyBackToWallet', 'as' => 'Ajaxrefundmoneybacktowallet']);
 	Route::post('accesstousepaysprint', ['uses' => 'AdminController@ajaxAccessToUsePaysprint', 'as' => 'grant country']);
+	Route::post('accesstousepaysprintimt', ['uses' => 'AdminController@ajaxAccessToUsePaysprintImt', 'as' => 'grant imt']);
 
 
 	Route::post('quotedecision', ['uses' => 'ConsultantController@ajaxquotedecision', 'as' => 'Ajaxquotedecision']);

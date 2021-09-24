@@ -188,6 +188,26 @@
                                             @if (isset($data['payInvoice']))
 
                                                 @foreach (json_decode($data['payInvoice']) as $payInv)
+
+                                                {{--  Get Merchant Currency  --}}
+
+                                                @if ($merchant = \App\User::where('ref_code', $payInv->uploaded_by)->first())
+                                                    
+                                                    @php
+                                                        $currencySymb = $merchant->currencySymbol;
+                                                        $countryBase = $merchant->country;
+                                                    @endphp
+                                                
+                                                @else
+
+                                                    @php
+                                                        $currencySymb = $data['currencyCode']->currencySymbol;
+                                                        $countryBase = Auth::user()->country;
+                                                    @endphp
+
+                                                @endif
+
+
                                                     <tr>
                                                         <td><i class="fas fa-circle"></i></td>
                                                         <td>
@@ -202,7 +222,7 @@
                                                                         <div class="row">
                                                                             <div class="col-md-8">
                                                                             <small>
-                                                                                    {{ $payInv->invoice_no }}
+                                                                                    {{ $payInv->invoice_no }} {!! ($countryBase != Auth::user()->country) ? '<img src="https://img.icons8.com/color/30/000000/around-the-globe.png"/>' : '' !!}
                                                                                 </small>  
                                                                             </div>
                                                                             <div class="col-md-4">
@@ -223,12 +243,16 @@
                                                                         </div>
                                                                         <small>
                                                                             {{ date('d/m/Y h:i a', strtotime($payInv->created_at)) }}
+
                                                                         </small>
                                                                     </div>
                                                                 </div>
 
                                                             </td>
                                                         <td style="font-weight: 700">
+
+                                                            
+
                                                             @php
                                                                 if($payInv->total_amount != null || $payInv->total_amount != 0){
                                                                     $totalAmount = $payInv->total_amount;
@@ -238,14 +262,14 @@
                                                             @endphp
 
                                                             @if ($payInv->payment_status == 0)
-                                                                {{ "+".$data['currencyCode']->currencySymbol.number_format($totalAmount, 2) }}
+                                                                {{ "+".$currencySymb.number_format($totalAmount, 2) }}
                                                             @elseif($payInv->payment_status == 2)
-                                                                {{ "-".$data['currencyCode']->currencySymbol.number_format($payInv->remaining_balance, 2) }}
+                                                                {{ "-".$currencySymb.number_format($payInv->remaining_balance, 2) }}
                                                             @else
-                                                                {{ "-".$data['currencyCode']->currencySymbol.number_format($totalAmount, 2) }}
+                                                                {{ "-".$currencySymb.number_format($totalAmount, 2) }}
                                                             @endif
                                                             
-                                                            {{--  {{ ($payInv->payment_status == 0) ? "+".$data['currencyCode']->currencySymbol.number_format($totalAmount, 2) : "-".$data['currencyCode']->currencySymbol.number_format($totalAmount, 2) }}  --}}
+                                                            {{--  {{ ($payInv->payment_status == 0) ? "+".$currencySymb.number_format($totalAmount, 2) : "-".$currencySymb.number_format($totalAmount, 2) }}  --}}
                                                         
                                                         
                                                         </td>
