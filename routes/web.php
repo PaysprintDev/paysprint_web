@@ -43,6 +43,7 @@ Route::get('insertspecialinfoactivity', 'CheckSetupController@insertspecialinfoA
 Route::get('autofeestructure', 'CheckSetupController@setupFeeStructure');
 Route::get('checktelephone', 'CheckSetupController@checkTelephone');
 Route::get('userarchive', 'CheckSetupController@userAccountArchive');
+Route::get('matchedusersmove', 'CheckSetupController@matchedUsersAccount');
 Route::get('existingaccounts', 'CheckSetupController@existingAccounts');
 Route::get('updatewallet', 'CheckSetupController@updateExbcAccount');
 // Route::get('returnfee', 'MaintenanceFeeCharge@returnFeeCharge');

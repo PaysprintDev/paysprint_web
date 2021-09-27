@@ -127,7 +127,7 @@
                                                     <div class="col-md-2">
                                                         <select name="countryCode" id="reccountryCode" class="form-control billinginput_box" readonly>
                                                             <option value="{{ $data['getuserDetail']->code }}" selected>{{ $data['getuserDetail']->country }} (+{{ $data['getuserDetail']->code }})</option>
-                                                            {{-- <option data-countryCode="DZ" value="213">Algeria (+213)</option>
+                                                            <option data-countryCode="DZ" value="213">Algeria (+213)</option>
                                                             <option data-countryCode="AD" value="376">Andorra (+376)</option>
                                                             <option data-countryCode="AO" value="244">Angola (+244)</option>
                                                             <option data-countryCode="AI" value="1264">Anguilla (+1264)</option>
@@ -340,7 +340,7 @@
                                                             <option data-countryCode="YE" value="969">Yemen (North)(+969)</option>
                                                             <option data-countryCode="YE" value="967">Yemen (South)(+967)</option>
                                                             <option data-countryCode="ZM" value="260">Zambia (+260)</option>
-                                                            <option data-countryCode="ZW" value="263">Zimbabwe (+263)</option> --}}
+                                                            <option data-countryCode="ZW" value="263">Zimbabwe (+263)</option>
                                                     </select>
                                                     </div>
                                                     <div class="col-md-10">
@@ -359,7 +359,7 @@
                                          
                                             <select id="country" name="country" class="form-control" readonly>
                                                 <option value="{{ $data['getuserDetail']->country }}" selected>{{ $data['getuserDetail']->country }}</option>
-                                                {{-- <option value="Afghanistan">Afghanistan</option>
+                                                <option value="Afghanistan">Afghanistan</option>
                                                 <option value="Albania">Albania</option>
                                                 <option value="Algeria">Algeria</option>
                                                 <option value="American Samoa">American Samoa</option>
@@ -590,7 +590,7 @@
                                                 <option value="United Kingdom">United Kingdom</option>
                                                 <option value="Ukraine">Ukraine</option>
                                                 <option value="United Arab Erimates">United Arab Emirates</option>
-                                                <option value="United States of America">United States of America</option>
+                                                <option value="United States">United States</option>
                                                 <option value="Uraguay">Uruguay</option>
                                                 <option value="Uzbekistan">Uzbekistan</option>
                                                 <option value="Vanuatu">Vanuatu</option>
@@ -604,7 +604,7 @@
                                                 <option value="Yemen">Yemen</option>
                                                 <option value="Zaire">Zaire</option>
                                                 <option value="Zambia">Zambia</option>
-                                                <option value="Zimbabwe">Zimbabwe</option> --}}
+                                                <option value="Zimbabwe">Zimbabwe</option>
                                             </select>
 
                                             
@@ -683,6 +683,8 @@
                                 </label>
                                     <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
                             </div>
+
+
                                 <div class="form-group"> <label for="netwmount">
                                     Fee <small class="text-success"><b>(FREE)</b></small>
                                 </label>
@@ -690,6 +692,13 @@
 
                                     <input type="hidden" name="totalcharge" class="form-control" id="totalcharge" value="" placeholder="0.00" readonly>
 
+                            </div>
+
+
+                            <div class="form-group"> <label for="transaction_pin">
+                                    Transaction Pin
+                                </label>
+                                <input type="password" name="transaction_pin" id="transaction_pin" class="form-control" maxlength="4" required>
                             </div>
 
 

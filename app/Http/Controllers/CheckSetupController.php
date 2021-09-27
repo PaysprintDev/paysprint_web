@@ -172,6 +172,27 @@ class CheckSetupController extends Controller
     }
 
 
+    // Move Matched Users
+    public function matchedUsersAccount()
+    {
+        $getUsers = User::where('country', 'Nigeria')->where('bvn_verification', 1)->get();
+
+        foreach ($getUsers as $allusers) {
+
+            if ($allusers->accountType == "Merchant") {
+                $category = "Matched Merchant";
+            } else {
+                $category = "Matched Consumer";
+            }
+
+
+            $this->mailListCategorize($allusers->name, $allusers->email, $allusers->address, $allusers->telephone, $category, $allusers->country, 'Subscription');
+
+            echo "Moved for " . $allusers->name . " in " . $allusers->country . "<hr>";
+        }
+    }
+
+
     public function accountChecker($id, $fieldName)
     {
 

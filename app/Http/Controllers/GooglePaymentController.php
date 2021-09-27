@@ -171,7 +171,7 @@ class GooglePaymentController extends Controller
                         $respaction = 'error';
 
                         return redirect()->back()->with($respaction, $response);
-                    } elseif ($withdrawLimit['withdrawal_per_day'] > $req->amount) {
+                    } elseif ($req->amount > $withdrawLimit['withdrawal_per_day']) {
 
                         $message = "Transaction limit per day is " . $user->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try again the next day";
 
@@ -181,7 +181,7 @@ class GooglePaymentController extends Controller
                         $respaction = 'error';
 
                         return redirect()->back()->with($respaction, $response);
-                    } elseif ($withdrawLimit['withdrawal_per_week'] > $req->amount) {
+                    } elseif ($req->amount > $withdrawLimit['withdrawal_per_week']) {
 
                         $message = "You have reached your limit for the week. Transaction limit per week is " . $user->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next week";
 
@@ -191,7 +191,7 @@ class GooglePaymentController extends Controller
                         $respaction = 'error';
 
                         return redirect()->back()->with($respaction, $response);
-                    } elseif ($withdrawLimit['withdrawal_per_month'] > $req->amount) {
+                    } elseif ($req->amount > $withdrawLimit['withdrawal_per_month']) {
 
                         $message = "You have reached your limit for the week. Transaction limit per month is " . $user->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next month";
 
@@ -909,6 +909,8 @@ class GooglePaymentController extends Controller
                     // Get User Info
                     $thisuser = User::where('api_token', $req->bearerToken())->first();
 
+                    $imtCountry = AllCountries::where('name', $req->country)->first();
+
                     if (isset($thisuser)) {
 
                         $minBal = $this->minimumWithdrawal($thisuser->country);
@@ -926,8 +928,9 @@ class GooglePaymentController extends Controller
                             $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'link' => URL('payment/sendmoney/' . $checkExist->ref_code . '?country=' . $thisuser->country)];
 
                             return $this->returnJSON($resData, $status);
-                        } elseif ($thisuser->country != $req->country) {
-                            $response = 'International money transfer is not available at the moment';
+                        } elseif (isset($imtCountry) && $imtCountry->imt == "false") {
+
+                            $response = 'International money transfer is not yet available to ' . $imtCountry->name;
                             $data = [];
                             $message = $response;
                             $status = 403;
@@ -1070,11 +1073,11 @@ class GooglePaymentController extends Controller
                                                 $this->name = $thisuser->name;
                                                 // $this->email = "bambo@vimfile.com";
                                                 $this->email = $thisuser->email;
-                                                $this->subject = $foreigncurrency->currencyCode . ' ' . number_format($req->amount, 2) . " has been sent through Text-To-Transfer Platform from your Wallet with PaySprint.";
+                                                $this->subject = $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " has been sent through Text-To-Transfer Platform from your Wallet with PaySprint.";
 
-                                                $this->message = '<p>You have sent <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $req->fname . ' ' . $req->lname . '. You now have <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($wallet_balance, 2) . '</strong> balance in your account</p>';
+                                                $this->message = '<p>You have sent <strong>' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $req->fname . ' ' . $req->lname . '. You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($wallet_balance, 2) . '</strong> balance in your account</p>';
 
-                                                $sendMsg = 'You have sent ' . $foreigncurrency->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $req->fname . ' ' . $req->lname . '. You now have ' . $foreigncurrency->currencyCode . ' ' . number_format($wallet_balance, 2) . ' balance in your account';
+                                                $sendMsg = 'You have sent ' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $req->fname . ' ' . $req->lname . '. You now have ' . $thisuser->currencyCode . ' ' . number_format($wallet_balance, 2) . ' balance in your account';
 
                                                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -1140,7 +1143,7 @@ class GooglePaymentController extends Controller
                                                 $activity = $req->payment_method . " transfer of " . $req->currency . ' ' . number_format($req->amount, 2) . " to " . $req->fname . ' ' . $req->lname . " for " . $service;
                                                 $credit = 0;
                                                 // $debit = $req->conversionamount + $req->commissiondeduct;
-                                                $debit = $amount;
+                                                $debit = $req->amount;
                                                 $reference_code = $paymentToken;
                                                 $balance = 0;
                                                 $trans_date = date('Y-m-d');

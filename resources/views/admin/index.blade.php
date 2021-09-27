@@ -403,6 +403,25 @@
                 <?php $i = 1;?>
                 @foreach (json_decode($received['payInvoice']) as $payInv)
 
+
+                {{--  Get Merchant Currency  --}}
+
+                @if ($merchant = \App\User::where('ref_code', $payInv->uploaded_by)->first())
+                    
+                    @php
+                        $currencySymb = $merchant->currencySymbol;
+                        $countryBase = $merchant->country;
+                    @endphp
+                
+                @else
+
+                    @php
+                        $currencySymb = $getUserDetail->currencySymbol;
+                        $countryBase = session('country');
+                    @endphp
+
+                @endif
+
                     <tr>
 
 
@@ -411,7 +430,9 @@
                         {!! 'Invoice for '.$payInv->service.' to '.$payInv->merchantName !!}
                       </td>
 
-                      <td>{{ $payInv->invoice_no }}</td>
+                      <td>{{ $payInv->invoice_no }} {!! ($countryBase != session('country')) ? '<img src="https://img.icons8.com/color/30/000000/around-the-globe.png"/>' : '' !!}</td>
+
+                      
                       
                       @if ($payInv->payment_status == 0)
                           <td>
@@ -435,11 +456,11 @@
                         @endphp
 
                         @if ($payInv->payment_status == 0)
-                            {{ "+".$getUserDetail->currencySymbol.number_format($totalAmount, 2) }}
+                            {{ "+".$currencySymb.number_format($totalAmount, 2) }}
                         @elseif($payInv->payment_status == 2)
-                            {{ "-".$getUserDetail->currencySymbol.number_format($payInv->remaining_balance, 2) }}
+                            {{ "-".$currencySymb.number_format($payInv->remaining_balance, 2) }}
                         @else
-                            {{ "-".$getUserDetail->currencySymbol.number_format($totalAmount, 2) }}
+                            {{ "-".$currencySymb.number_format($totalAmount, 2) }}
                         @endif
                       
                       </td>
@@ -609,7 +630,7 @@
                         <td>{{ $payInvoices->transactionid }}</td>
                         <td>{{ $payInvoices->name }}</td>
                         <td>{{ $payInvoices->email }}</td>
-                        <td style="font-weight: bold; color: green;">${{ number_format($payInvoices->amount) }}</td>
+                        <td style="font-weight: bold; color: green;">{{ number_format($payInvoices->amount) }}</td>
                         <td>{{ $payInvoices->invoice_no }}</td>
                         <td>{{ $payInvoices->service }}</td>
                         <td>{{ $payInvoices->business_name }}</td>
@@ -657,7 +678,7 @@
                         <td>{{ $payInvoices->transactionid }}</td>
                         <td>{{ $payInvoices->name }}</td>
                         <td>{{ $payInvoices->email }}</td>
-                        <td style="font-weight: bold; color: green;">${{ number_format($payInvoices->amount) }}</td>
+                        <td style="font-weight: bold; color: green;">{{ $getUserDetail->currencySymbol.number_format($payInvoices->amount) }}</td>
                         <td>{{ $payInvoices->invoice_no }}</td>
                         <td>{{ $payInvoices->service }}</td>
                         <td>{{ date('d/M/Y', strtotime($payInvoices->created_at)) }}</td>

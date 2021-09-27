@@ -189,6 +189,7 @@
 
                                                 @foreach (json_decode($data['payInvoice']) as $payInv)
 
+
                                                 {{--  Get Merchant Currency  --}}
 
                                                 @if ($merchant = \App\User::where('ref_code', $payInv->uploaded_by)->first())

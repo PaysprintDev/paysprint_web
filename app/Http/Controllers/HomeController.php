@@ -3264,7 +3264,7 @@ class HomeController extends Controller
         $mydata = ImportExcel::select('import_excel.*', 'invoice_payment.*')->join('invoice_payment', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')->where('import_excel.payee_email', $email)->orderBy('import_excel.created_at', 'DESC')->limit(5)->get();
 
         if (count($mydata) > 0) {
-            $newdata = ImportExcel::where('payee_email', $email)->orderBy('created_at', 'DESC')->limit(5)->get();
+            $newdata = ImportExcel::where('payee_email', $email)->where('payment_status', 0)->orderBy('created_at', 'DESC')->limit(5)->get();
             $data = array_merge($mydata->toArray(), $newdata->toArray());
         } else {
             $data = ImportExcel::where('payee_email', $email)->orderBy('created_at', 'DESC')->limit(5)->get();
@@ -3422,8 +3422,8 @@ class HomeController extends Controller
 
                         if ($result->Record->RecordStatus == "nomatch") {
 
-                            $message = "error";
-                            $title = "Oops!";
+                            $message = "success";
+                            $title = "Great!";
                             $link = "contact";
 
                             $resInfo = strtoupper($info->Record->RecordStatus) . ", Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.ca";
@@ -3441,8 +3441,8 @@ class HomeController extends Controller
                             User::where('id', Auth::user()->id)->update(['accountLevel' => 3, 'approval' => 2, 'countryapproval' => 1]);
                         }
                     } else {
-                        $message = "error";
-                        $title = "Oops!";
+                        $message = "success";
+                        $title = "Great!";
                         $link = "contact";
                         $resInfo = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.ca";
 

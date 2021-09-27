@@ -2271,6 +2271,8 @@ function showForm(val){
 
 $('#single_tax').change(function(){
 
+  var amount = $('#single_amount').val();
+
   if($('#single_tax').val() == ""){
     swal('Oops!', 'Please select a tax', 'info');
   }
@@ -2279,7 +2281,7 @@ $('#single_tax').change(function(){
   }
   else if($('#single_tax').val() == "No Tax"){
     $('#single_tax_amount').val(0.00);
-    $('#single_total_amount').val(0.00);
+    $('#single_total_amount').val(amount);
   }
   else{
 
