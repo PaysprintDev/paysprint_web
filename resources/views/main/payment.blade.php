@@ -79,6 +79,7 @@ input[type="radio"] {
                                                     
                                     @php
                                         $currencySymb = $merchant->currencySymbol;
+                                        $currencycod = $merchant->currencyCode;
                                         $countryBase = $merchant->country;
                                     @endphp
                                 
@@ -86,10 +87,12 @@ input[type="radio"] {
 
                                     @php
                                         $currencySymb = $data['currencyCode']->currencySymbol;
+                                        $currencycod = $data['currencyCode']->currencyCode;
                                         $countryBase = Auth::user()->country;
                                     @endphp
 
                                 @endif
+
 
                             <!-- credit card info-->
                             <div id="credit-card" class="tab-pane fade show active pt-3">
@@ -191,6 +194,40 @@ input[type="radio"] {
 
                                     @if ($countryBase != Auth::user()->country)
 
+
+                                    <div class="form-group converter"> <label for="netwmount">
+                                            <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate </b> <br> <span id="rateToday"></span> </small></h6>
+                                            {{-- <p style="font-weight: bold;">
+                                                {{ $data['currencyCode']->currencyCode }} <=> {{ $data['othercurrencyCode']->currencyCode }}
+                                            </p> --}}
+
+                                            <table class="table table-bordered table-striped" width="100%">
+                                                    <tbody>
+                                                        <tr style="font-weight: bold;">
+                                                            <td>{{ $data['currencyCode']->currencyCode }}</td>
+                                                            <td>{{ $currencycod }}</td>
+                                                        </tr>
+                                                        <tr style="font-weight: bold;">
+                                                            <td class="text-success" id="typedAmount"></td>
+                                                            <td class="text-primary" id="convertedAmount"></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                        </label>
+
+
+                                        
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group"> 
+                                            <p style="color: red; font-weight: bold;"><input type="checkbox" name="convertRate" id="convertRate" onchange="checkBoxConfirm()"> Accept conversion rate</p>
+                                            
+                                        </div>
+                                    </div>
+
+
                                     <div class="form-group"> <label for="currency">
                                             <h6>Amount Invoiced</h6>
                                         </label>
@@ -217,6 +254,15 @@ input[type="radio"] {
 
                                     @else
 
+
+                                    <div class="form-group disp-0">
+                                        <div class="input-group"> 
+                                            <p style="color: red; font-weight: bold;"><input type="checkbox" checked name="convertRate" id="convertRate"> Accept conversion rate</p>
+                                            
+                                        </div>
+                                    </div>
+
+
                                     <div class="form-group"> <label for="currency">
                                             <h6>Amount Invoiced</h6>
                                         </label>
@@ -239,7 +285,17 @@ input[type="radio"] {
                                     @endif
 
 
+
                                     @if ($countryBase == Auth::user()->country)
+
+
+                                    <div class="form-group disp-0">
+                                        <div class="input-group"> 
+                                            <p style="color: red; font-weight: bold;"><input type="checkbox" checked name="convertRate" id="convertRate"> Accept conversion rate</p>
+                                            
+                                        </div>
+                                    </div>
+
                                             @if ($data['getinvoice'][0]->installpay == "Yes")
 
                                                 @if ($data['getinvoice'][0]->installlimit > $data['getinvoice'][0]->installcount)
@@ -294,6 +350,11 @@ input[type="radio"] {
                                             {{--  @if ($data['getinvoice'][0]->installpay == "Yes" && $data['getinvoice'][0]->installlimit == $data['getinvoice'][0]->installcount)  --}}
 
                                             @else
+
+                                            
+
+
+                                            
 
                                             <div class="form-group disp-0"> <label for="currency">
                                                         <h6>Do you want to pay intallmentally?</h6>
@@ -350,6 +411,14 @@ input[type="radio"] {
                                     
 
                                     <hr>
+
+                                    <div class="form-group"> <label for="transaction_pin">
+                                            <h6>Transaction Pin</h6>
+                                        </label>
+                                        <div class="input-group"> <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fas fa-lock"></i> </span> </div> <input type="password" name="transaction_pin" id="transaction_pin" class="form-control" maxlength="4" required>
+                                            
+                                        </div>
+                                    </div>
 
                                     <div class="form-group">
                                         <strong><span class="text-danger wallet-info"></span></strong>
@@ -467,7 +536,33 @@ input[type="radio"] {
                     runCommission();
                 });
 
+
+
+                currencyConvert();
+
+
                 })
+
+
+
+
+function checkBoxConfirm(){
+
+    
+    var convertRate = $('#convertRate').prop("checked");
+
+
+    if(convertRate ==  true){
+        // Enable button
+        $(".sendmoneyBtn").attr("disabled", false);
+    }
+    else{
+        // Disable button
+        $(".sendmoneyBtn").attr("disabled", true);
+
+    }
+
+}
 
 
 $("#pay_installment").change(function(){
@@ -483,6 +578,62 @@ $("#pay_installment").change(function(){
         $('.topay').addClass('disp-0');
     }
 });
+
+
+ function currencyConvert(){
+
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = dd + '/' + mm + '/' + yyyy;
+
+    var amount = "{{ $amountInvoiced }}";
+    var currency = "{{ $currencycod }}";
+    var currencySymb = "{{ $currencySymb }}";
+    var localcurrency = "{{ $data['currencyCode']->currencyCode }}";
+    var route = "{{ URL('Ajax/getconversion') }}";
+    var thisdata = {currency: currency, amount: amount, val: "send", localcurrency: localcurrency};
+
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: thisdata,
+        dataType: 'JSON',
+        success: function(result){
+
+
+            if(localcurrency != currency){
+                $('.converter').removeClass('disp-0');
+            }
+            else{
+                $('.converter').addClass('disp-0');
+                
+            }
+
+            $('#convertedAmount').text((result.data).toFixed(2));
+
+            var mycurrentCurrency = $('#typedAmount').text(amount);
+
+
+            var todayRate = result.data / amount;
+
+                // Put Exchange rate
+            $('#rateToday').html("<span class='text-danger'><strong>1"+localcurrency+" == "+todayRate.toFixed(2)+''+currency+'<br>Today: '+today+"</strong></span>");
+            
+
+        }
+
+    });
+}
+
+
+
+
+
+
 
 
 function handShake(val){
@@ -538,6 +689,8 @@ if('payinvoice'){
 
 
 function runCommission(){
+
+    $(".sendmoneyBtn").attr("disabled", true);
     
     $('.commissionInfo').html("");
     var amount = $("#typepayamount").val();
@@ -569,10 +722,14 @@ function runCommission(){
 
                 if(result.walletCheck != ""){
                     $(".sendmoneyBtn").attr("disabled", true);
+                    checkBoxConfirm();
+
 
                 }
                 else{
                     $(".sendmoneyBtn").attr("disabled", false);
+                    checkBoxConfirm();
+
                 }
 
                     $('.commissionInfo').addClass('alert alert-success');
@@ -627,49 +784,6 @@ function monerisPay(){
 
         $("#paymentForm").submit();
 
-            // route = "{{ URL('Ajax/PaymentInvoice') }}";
-            // thisdata = {
-            //     name: name,
-            //     email: email,
-            //     user_id: user_id,
-            //     invoice_no: invoice_no,
-            //     service: service,
-            //     amount: amount,
-            //     typepayamount: typepayamount,
-            //     creditcard_no: creditcard_no,
-            //     payment_method: payment_method,
-            //     month: month,
-            //     expirydate: expirydate,
-            // };
-
-            // Pace.restart();
-            // Pace.track(function(){
-            //         setHeaders();
-            //         jQuery.ajax({
-            //         url: route,
-            //         method: 'post',
-            //         data: thisdata,
-            //         dataType: 'JSON',
-            //         beforeSend: function(){
-            //             $('#payBill').text('Please wait...');
-            //         },
-            //         success: function(result){
-
-            //             if(result.message == "success"){
-            //                 $('#payBill').text('Proceed to Pay');
-            //                 swal(result.title, result.res, result.message);
-            //                 setTimeout(function(){ location.reload(); }, 3000);
-            //             }
-            //             else{
-            //                 $('#payBill').text('Proceed to Pay');
-            //                 swal(result.title, result.res, result.message);
-            //             }
-
-
-            //         }
-
-            //     });
-            // });
     }
 
 
@@ -691,6 +805,9 @@ function monerisPay(){
       }
     });
  }
+
+
+
 
         </script>
 

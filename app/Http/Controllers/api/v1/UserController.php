@@ -154,7 +154,9 @@ class UserController extends Controller
                 ]);
             }
 
-            $getcurrentUser = User::where('ref_code', $newRefcode)->first();
+
+
+            $getcurrentUser = User::where('ref_code', $user->ref_code)->first();
 
             // Log::info($getcurrentUser);
 

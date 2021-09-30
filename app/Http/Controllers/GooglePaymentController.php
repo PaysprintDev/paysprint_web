@@ -127,8 +127,10 @@ class GooglePaymentController extends Controller
     public $curl_data;
 
 
+
     public function orgPaymentInvoice(Request $req)
     {
+
 
         if ($req->amount < 0) {
             $resData = ['res' => 'Please enter a positive amount to send', 'message' => 'error', 'title' => 'Oops!'];
@@ -589,6 +591,7 @@ class GooglePaymentController extends Controller
     public function sendMoneyToAnonymous(Request $req)
     {
 
+
         if ($req->amount < 0) {
             $response = 'Please enter a positive amount to send';
             $data = [];
@@ -706,7 +709,7 @@ class GooglePaymentController extends Controller
 
 
                                     // COnvert Currency for Wallet credit to receiver
-                                    $amount = $this->convertCurrencyRate($foreigncurrency->currencyCode, $req->currency, $req->amount);
+                                    $amount = $this->convertCurrencyRate($foreigncurrency->currencyCode, $thisuser->currencyCode, $req->amount);
                                 } else {
                                     $amount = $req->amount;
                                 }
@@ -826,7 +829,7 @@ class GooglePaymentController extends Controller
 
 
                                         // Insert Statement
-                                        $activity = $req->payment_method . " transfer of " . $req->currency . ' ' . number_format($req->amount, 2) . " to " . $req->fname . ' ' . $req->lname . " for " . $service;
+                                        $activity = $req->payment_method . " transfer of " . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " to " . $req->fname . ' ' . $req->lname . " for " . $service;
                                         $credit = 0;
                                         // $debit = $req->conversionamount + $req->commissiondeduct;
                                         $debit = $amount;
@@ -998,7 +1001,7 @@ class GooglePaymentController extends Controller
 
 
                                             // COnvert Currency for Wallet credit to receiver
-                                            $amount = $this->convertCurrencyRate($foreigncurrency->currencyCode, $req->currency, $req->amount);
+                                            $amount = $this->convertCurrencyRate($foreigncurrency->currencyCode, $thisuser->currencyCode, $req->amount);
                                         } else {
                                             $amount = $req->amount;
                                         }
@@ -1140,7 +1143,7 @@ class GooglePaymentController extends Controller
 
 
                                                 // Insert Statement
-                                                $activity = $req->payment_method . " transfer of " . $req->currency . ' ' . number_format($req->amount, 2) . " to " . $req->fname . ' ' . $req->lname . " for " . $service;
+                                                $activity = $req->payment_method . " transfer of " . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " to " . $req->fname . ' ' . $req->lname . " for " . $service;
                                                 $credit = 0;
                                                 // $debit = $req->conversionamount + $req->commissiondeduct;
                                                 $debit = $req->amount;
@@ -1229,9 +1232,13 @@ class GooglePaymentController extends Controller
     public function convertCurrencyRate($foreigncurrency, $localcurrency, $amount)
     {
 
+
+
         $currency = 'USD' . $foreigncurrency;
         $amount = $amount;
         $localCurrency = 'USD' . $localcurrency;
+
+        Log::info("Foreign: " . $currency . " | Local Currency: " . $localCurrency);
 
         $access_key = '6173fa628b16d8ce1e0db5cfa25092ac';
 
@@ -1258,6 +1265,8 @@ class GooglePaymentController extends Controller
         $result = json_decode($response);
 
 
+
+
         if ($result->success == true) {
 
             // Conversion Rate USD to Local currency
@@ -1269,7 +1278,10 @@ class GooglePaymentController extends Controller
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }
 
+        $this->slack($convRate, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
+
+        // dd($convRate);
 
         return $convRate;
     }

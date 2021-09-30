@@ -57,32 +57,41 @@ class InvoiceController extends Controller
     public $total_amount;
 
 
+
     public function getAllInvoices(Request $req)
     {
 
-        $user = User::where('api_token', $req->bearerToken())->first();
+        try {
+            $user = User::where('api_token', $req->bearerToken())->first();
 
-        if (isset($user)) {
+            if (isset($user)) {
 
-            $data = ImportExcel::where('payee_email', $user->email)->orderBy('created_at', 'DESC')->get();
+                $data = ImportExcel::where('payee_email', $user->email)->orderBy('created_at', 'DESC')->get();
 
-            if (count($data) > 0) {
-                $status = 200;
+                if (count($data) > 0) {
 
-                $resData = ['data' => $data, 'message' => 'success', 'status' => $status];
 
-                // Log::info("Get all invoice for :=> ".$user->name);
+                    $status = 200;
 
-                $this->slack("Get all invoice for :=> " . $user->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                    $resData = ['data' => $data, 'message' => 'success', 'status' => $status];
+
+                    // Log::info("Get all invoice for :=> ".$user->name);
+
+                    $this->slack("Get all invoice for :=> " . $user->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                } else {
+                    $status = 400;
+
+                    $resData = ['data' => [], 'message' => 'No record found', 'status' => $status];
+                }
             } else {
                 $status = 400;
 
-                $resData = ['data' => [], 'message' => 'No record found', 'status' => $status];
+                $resData = ['data' => [], 'message' => 'Token mismatch', 'status' => $status];
             }
-        } else {
+        } catch (\Throwable $th) {
             $status = 400;
 
-            $resData = ['data' => [], 'message' => 'Token mismatch', 'status' => $status];
+            $resData = ['data' => [], 'message' => $th->getMessage(), 'status' => $status];
         }
 
         return $this->returnJSON($resData, $status);
@@ -253,6 +262,12 @@ class InvoiceController extends Controller
                             $businessName = $getClient->business_name;
                         }
 
+                        if (isset($getTax)) {
+                            $taxData = $getTax->rate . '% ' . $getTax->name;
+                        } else {
+                            $taxData = "0%";
+                        }
+
 
                         $this->to = $req->single_email;
                         // $this->to = "adenugaadebambo41@gmail.com";
@@ -273,7 +288,7 @@ class InvoiceController extends Controller
                         $this->state = $thisuser->state;
                         $this->zipcode = $thisuser->zipcode;
                         $this->customer_id = $thisuser->ref_code;
-                        $this->tax = $getTax->rate . '% ' . $getTax->name;
+                        $this->tax = $taxData;
                         $this->tax_amount = $thisuser->currencySymbol . number_format($req->single_tax_amount, 2);
 
                         $this->subject = 'You have an invoice ' . $req->single_invoiceno . ' from  ' . $this->clientname . ' on PaySprint';

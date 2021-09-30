@@ -353,6 +353,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     }
 
 
+
     // Pay Invoice from Wallet
     public function payInvoice(Request $req)
     {
@@ -377,6 +378,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     'currencyCode' => 'required|string',
                     'amountinvoiced' => 'required|string',
                     'payInstallment' => 'required|string',
+                    'transaction_pin' => 'required|string',
                 ]);
 
                 if ($validator->passes()) {
@@ -403,13 +405,17 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $data = [];
                             $status = 400;
                             $message = $response;
-                        } elseif (isset($imtCountry) && $imtCountry->imt == "false") {
-                            $response = 'International money transfer is not yet available to ' . $imtCountry->name;
+                        }
 
-                            $data = [];
-                            $status = 400;
-                            $message = $response;
-                        } else {
+                        // elseif (isset($imtCountry) && $imtCountry->imt == "false") {
+                        //     $response = 'International money transfer is not yet available to ' . $imtCountry->name;
+
+                        //     $data = [];
+                        //     $status = 400;
+                        //     $message = $response;
+                        // } 
+
+                        else {
                             // Get My Wallet Balance
                             $walletBalance = $thisuser->wallet_balance - $req->amount;
 
@@ -677,506 +683,528 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     'currencyCode' => 'required|string',
                     'amountinvoiced' => 'required|string',
                     'payInstallment' => 'required|string',
+                    'transaction_pin' => 'required|string',
                 ]);
 
                 if ($validator->passes()) {
 
                     try {
+
                         $transactionID = "invoice-" . date('dmY') . time();
 
                         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                        $thismerchant = User::where('ref_code', $req->merchant_id)->first();
+                        // Check Transaction PIn
+                        if ($thisuser->transaction_pin != null) {
+                            // Validate Transaction PIN
+                            if (Hash::check($req->transaction_pin, $thisuser->transaction_pin)) {
+                                $thismerchant = User::where('ref_code', $req->merchant_id)->first();
 
-                        $imtCountry = AllCountries::where('name', $thismerchant->country)->first();
+                                $imtCountry = AllCountries::where('name', $thismerchant->country)->first();
 
-                        if ($thisuser->approval < 1 && $thisuser->accountLevel < 1) {
+                                if ($thisuser->approval < 1 && $thisuser->accountLevel < 1) {
 
-                            $response = 'You cannot pay invoice at the moment because your account is still on review.';
+                                    $response = 'You cannot pay invoice at the moment because your account is still on review.';
 
-                            $data = [];
-                            $status = 400;
-                            $message = $response;
-                        } elseif ($thisuser->country != $thismerchant->country && !isset($req->merchantpay)) {
-                            $response = 'Please visit the website on www.paysprint.ca to pay your international invoice';
+                                    $data = [];
+                                    $status = 400;
+                                    $message = $response;
+                                } elseif ($thisuser->country != $thismerchant->country && !isset($req->merchantpay)) {
+                                    $response = 'Please visit the website on www.paysprint.ca to pay your international invoice';
 
-                            $data = [];
-                            $status = 400;
-                            $message = $response;
-                        } elseif (isset($imtCountry) && $imtCountry->imt == "false") {
-                            $response = 'International money transfer is not yet available to ' . $imtCountry->name;
+                                    $data = [];
+                                    $status = 400;
+                                    $message = $response;
+                                }
+                                // elseif (isset($imtCountry) && $imtCountry->imt == "false") {
+                                //     $response = 'International money transfer is not yet available to ' . $imtCountry->name;
 
-                            $data = [];
-                            $status = 400;
-                            $message = $response;
+                                //     $data = [];
+                                //     $status = 400;
+                                //     $message = $response;
+                                // }
+                                else {
+
+                                    // Get My Wallet Balance
+                                    $walletBalance = $thisuser->wallet_balance - $req->amount;
+
+                                    User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBalance]);
+
+                                    // Update Merchant Wallet 
+
+
+                                    if ($thisuser->country != $thismerchant->country) {
+
+                                        $getthisinvoice = ImportExcel::where('invoice_no', $req->invoice_no)->first();
+
+                                        if ($getthisinvoice->remaining_balance > 0) {
+                                            $paidinvoiceamount = $getthisinvoice->remaining_balance;
+                                        } else {
+                                            $paidinvoiceamount = $getthisinvoice->total_amount + $getthisinvoice->remaining_balance;
+                                        }
+                                    } else {
+                                        $paidinvoiceamount = $req->amount;
+                                    }
+
+
+                                    // Update Merchant Wallet Balance
+                                    $merchantwalletBalance = $thismerchant->wallet_balance + $paidinvoiceamount;
+
+                                    User::where('ref_code', $req->merchant_id)->update(['wallet_balance' => $merchantwalletBalance]);
+
+                                    // Get Invoice Service
+
+                                    // $invData = ImportExcel::where('invoice_no', $req->invoice_no)->first();
+
+                                    $purpose = $req->service;
+
+
+                                    if ($thisuser->country != $thismerchant->country) {
+
+                                        $insPay = InvoicePayment::updateOrCreate(['invoice_no' => $req->invoice_no], ['transactionid' => $transactionID, 'name' => $thisuser->name, 'email' => $thisuser->email, 'amount' => $paidinvoiceamount, 'invoice_no' => $req->invoice_no, 'service' => $purpose, 'client_id' => $req->merchant_id, 'payment_method' => $req->payment_method]);
+
+
+                                        if ($insPay) {
+                                            // Update Import Excel Record
+                                            $getInv = ImportExcel::where('invoice_no', $req->invoice_no)->get();
+
+                                            if (count($getInv) > 0) {
+
+                                                // Check if instalmental or not
+
+                                                if ($getthisinvoice->installpay == "No" && $req->payInstallment == "Yes") {
+
+                                                    $response = 'Installmental payment is not allowed for this invoice';
+
+                                                    $data = [];
+                                                    $status = 400;
+                                                    $message = $response;
+                                                } else {
+
+                                                    if ($req->payInstallment == "Yes") {
+
+                                                        if ($getthisinvoice->remaining_balance > 0 || $getthisinvoice->remaining_balance != null) {
+                                                            // Get Amount
+                                                            $prevAmount = $getthisinvoice->remaining_balance;
+                                                        } else {
+                                                            $prevAmount = $getthisinvoice->amount;
+                                                        }
+
+                                                        $paidAmount = $paidinvoiceamount;
+
+                                                        $newAmount = $prevAmount - $paidAmount;
+
+                                                        $instcount = $getthisinvoice->installcount + 1;
+
+                                                        if ($getthisinvoice->installlimit > $instcount) {
+                                                            $installcounter = $getthisinvoice->installlimit;
+                                                        } else {
+                                                            $installcounter = $instcount;
+                                                        }
+                                                    } else {
+
+                                                        if ($getthisinvoice->remaining_balance > 0 || $getthisinvoice->remaining_balance != null) {
+                                                            // Get Amount
+                                                            $prevAmount = $getthisinvoice->remaining_balance;
+                                                        } else {
+                                                            $prevAmount = $getthisinvoice->amount;
+                                                        }
+
+                                                        $paidAmount = $paidinvoiceamount;
+
+                                                        $newAmount = $prevAmount - $paidAmount;
+
+                                                        $instcount = $getthisinvoice->installcount;
+
+                                                        if ($getthisinvoice->installlimit > $instcount) {
+                                                            $installcounter = $getthisinvoice->installlimit;
+                                                        } else {
+                                                            $installcounter = $instcount;
+                                                        }
+                                                    }
+
+
+                                                    // if payment status is 2, there sre still some pending payments to make, if 1, payments are cleared off
+
+                                                    if ($newAmount > 0) {
+                                                        $payment_status = 2;
+                                                    } elseif ($newAmount == 0) {
+                                                        $payment_status = 1;
+                                                    } else {
+                                                        $payment_status = 0;
+                                                    }
+
+
+                                                    ImportExcel::where('invoice_no', $req->invoice_no)->update(['installcount' => $installcounter, 'payment_status' => $payment_status, 'remaining_balance' => $newAmount]);
+
+                                                    // Update Price Record
+                                                    $updtPrice = InvoicePayment::where('transactionid', $transactionID)->update(['remaining_balance' => $newAmount, 'opening_balance' => $prevAmount, 'payment_method' => $req->payment_method]);
+
+                                                    if (isset($updtPrice)) {
+
+                                                        $client = ClientInfo::where('user_id', $req->merchant_id)->get();
+
+                                                        // Insert PAYCAWithdraw
+                                                        PaycaWithdraw::insert(['withdraw_id' => $transactionID, 'client_id' => $req->merchant_id, 'client_name' => $req->name, 'card_method' => $req->payment_method, 'client_email' => $req->email, 'amount_to_withdraw' => $paidinvoiceamount, 'remittance' => 0]);
+
+
+                                                        $activity = "Payment for " . $purpose . " from " . $req->payment_method;
+                                                        $credit = 0;
+                                                        $debit = $req->amount;
+                                                        $balance = $newAmount;
+                                                        $status = "Delivered";
+                                                        $action = "Wallet debit";
+                                                        $regards = $req->merchant_id;
+                                                        $reference_code = $transactionID;
+                                                        $trans_date = date('Y-m-d');
+                                                        $statement_route = "wallet";
+
+
+                                                        // My Statement
+                                                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country);
+
+                                                        $this->name = $thisuser->name;
+                                                        $this->email = $thisuser->email;
+                                                        // $this->email = "bambo@vimfile.com";
+                                                        $this->subject = "Your Invoice # [" . $req->invoice_no . "] of " . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' from ' . $thismerchant->businessname .  " is Paid";
+
+                                                        $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is <strong>' . $thismerchant->currencyCode . ' ' . number_format($newAmount, 2) . '</strong>. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
+
+                                                        $this->sendEmail($this->email, "Fund remittance");
+
+                                                        $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is ' . $thismerchant->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
+
+                                                        $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                        if (isset($userPhone)) {
+
+                                                            $sendPhone = $thisuser->telephone;
+                                                        } else {
+                                                            $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                                                        }
+
+                                                        if ($thisuser->country == "Nigeria") {
+
+                                                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                            $this->sendSms($sendMsg, $correctPhone);
+                                                        } else {
+                                                            $this->sendMessage($sendMsg, $sendPhone);
+                                                        }
+
+
+
+                                                        /*---------------------------------------------------------------------------------------------------------------------*/
+
+                                                        // Merchant Statement
+
+                                                        $activity = "Added " . $thismerchant->currencyCode . '' . number_format($paidinvoiceamount, 2) . " to Wallet";
+                                                        $credit = $paidinvoiceamount;
+                                                        $debit = 0;
+                                                        $reference_code = $transactionID;
+                                                        $balance = 0;
+                                                        $trans_date = date('Y-m-d');
+                                                        $status = "Delivered";
+                                                        $action = "Wallet credit";
+                                                        $regards = $thismerchant->ref_code;
+                                                        $statement_route = "wallet";
+
+                                                        // Senders statement
+                                                        $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thismerchant->country);
+
+
+                                                        $this->name = $thismerchant->name;
+                                                        $this->email = $thismerchant->email;
+                                                        // $this->email = "bambo@vimfile.com";
+                                                        $this->subject = $thisuser->name . " has paid Invoice: [" . $req->invoice_no . "]";
+
+                                                        $this->message = '<p>You have received <strong>' . $thismerchant->currencyCode . '' . number_format($paidinvoiceamount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>, invoice balance left is ' . $thismerchant->currencyCode . ' ' . number_format($newAmount, 2) . '.</p> <p>You now have <strong>' . $thismerchant->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
+
+                                                        $this->sendEmail($this->email, "Fund remittance");
+
+                                                        $recMesg = 'You have received ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . ', invoice balance left is ' . $thismerchant->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $thismerchant->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
+
+                                                        $userPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                        if (isset($userPhone)) {
+
+                                                            $recPhone = $thismerchant->telephone;
+                                                        } else {
+                                                            $recPhone = "+" . $thismerchant->code . $thismerchant->telephone;
+                                                        }
+
+                                                        if ($thismerchant->country == "Nigeria") {
+
+                                                            $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                                                            $this->sendSms($recMesg, $correctPhone);
+                                                        } else {
+                                                            $this->sendMessage($recMesg, $recPhone);
+                                                        }
+
+
+
+
+                                                        $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $req->bearerToken())->first();
+
+
+                                                        $data = $userInfo;
+                                                        $status = 200;
+                                                        $message = 'You have successfully paid invoice of ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2);
+
+                                                        $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                        $this->createNotification($thismerchant->ref_code, $recMesg);
+                                                    } else {
+
+                                                        $response = 'Something went wrong';
+
+                                                        $data = [];
+                                                        $status = 400;
+                                                        $message = $response;
+                                                    }
+                                                }
+                                            } else {
+
+                                                $response = 'Invoice not found';
+                                                $data = [];
+                                                $status = 400;
+                                                $message = $response;
+                                            }
+                                        } else {
+                                            $response = 'Information not documented, contact Admin';
+
+                                            $data = [];
+                                            $status = 400;
+                                            $message = $response;
+                                        }
+                                    } else {
+                                        $insPay = InvoicePayment::updateOrCreate(['invoice_no' => $req->invoice_no], ['transactionid' => $transactionID, 'name' => $thisuser->name, 'email' => $thisuser->email, 'amount' => $req->amount, 'invoice_no' => $req->invoice_no, 'service' => $purpose, 'client_id' => $req->merchant_id, 'payment_method' => $req->payment_method]);
+
+
+                                        if ($insPay) {
+                                            // Update Import Excel Record
+                                            $getInv = ImportExcel::where('invoice_no', $req->invoice_no)->get();
+
+                                            if (count($getInv) > 0) {
+
+                                                // Check if instalmental or not
+
+                                                if ($getInv[0]->installpay == "No" && $req->payInstallment == "Yes") {
+
+                                                    $response = 'Installmental payment is not allowed for this invoice';
+
+                                                    $data = [];
+                                                    $status = 400;
+                                                    $message = $response;
+                                                } else {
+
+                                                    if ($req->payInstallment == "Yes") {
+
+                                                        if ($getInv[0]->remaining_balance > 0 || $getInv[0]->remaining_balance != null) {
+                                                            // Get Amount
+                                                            $prevAmount = $getInv[0]->remaining_balance;
+                                                        } else {
+                                                            $prevAmount = $getInv[0]->amount;
+                                                        }
+
+                                                        $paidAmount = $req->amount;
+
+                                                        $newAmount = $prevAmount - $paidAmount;
+
+                                                        $instcount = $getInv[0]->installcount + 1;
+
+                                                        if ($getInv[0]->installlimit > $instcount) {
+                                                            $installcounter = $getInv[0]->installlimit;
+                                                        } else {
+                                                            $installcounter = $instcount;
+                                                        }
+                                                    } else {
+
+                                                        if ($getInv[0]->remaining_balance > 0 || $getInv[0]->remaining_balance != null) {
+                                                            // Get Amount
+                                                            $prevAmount = $getInv[0]->remaining_balance;
+                                                        } else {
+                                                            $prevAmount = $getInv[0]->amount;
+                                                        }
+
+                                                        $paidAmount = $req->amount;
+
+                                                        $newAmount = $prevAmount - $paidAmount;
+
+                                                        $instcount = $getInv[0]->installcount;
+
+                                                        if ($getInv[0]->installlimit > $instcount) {
+                                                            $installcounter = $getInv[0]->installlimit;
+                                                        } else {
+                                                            $installcounter = $instcount;
+                                                        }
+                                                    }
+
+
+                                                    // if payment status is 2, there sre still some pending payments to make, if 1, payments are cleared off
+
+                                                    if ($newAmount > 0) {
+                                                        $payment_status = 2;
+                                                    } elseif ($newAmount == 0) {
+                                                        $payment_status = 1;
+                                                    } else {
+                                                        $payment_status = 0;
+                                                    }
+
+
+                                                    ImportExcel::where('invoice_no', $req->invoice_no)->update(['installcount' => $installcounter, 'payment_status' => $payment_status, 'remaining_balance' => $newAmount]);
+
+                                                    // Update Price Record
+                                                    $updtPrice = InvoicePayment::where('transactionid', $transactionID)->update(['remaining_balance' => $newAmount, 'opening_balance' => $prevAmount, 'payment_method' => $req->payment_method]);
+
+                                                    if (isset($updtPrice)) {
+
+                                                        $client = ClientInfo::where('user_id', $req->merchant_id)->get();
+
+                                                        // Insert PAYCAWithdraw
+                                                        PaycaWithdraw::insert(['withdraw_id' => $transactionID, 'client_id' => $req->merchant_id, 'client_name' => $req->name, 'card_method' => $req->payment_method, 'client_email' => $req->email, 'amount_to_withdraw' => $req->amount, 'remittance' => 0]);
+
+
+                                                        $activity = "Payment for " . $purpose . " from " . $req->payment_method;
+                                                        $credit = 0;
+                                                        $debit = $req->amount;
+                                                        $balance = $newAmount;
+                                                        $status = "Delivered";
+                                                        $action = "Wallet debit";
+                                                        $regards = $req->merchant_id;
+                                                        $reference_code = $transactionID;
+                                                        $trans_date = date('Y-m-d');
+                                                        $statement_route = "wallet";
+
+
+                                                        // My Statement
+                                                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country);
+
+                                                        $this->name = $thisuser->name;
+                                                        $this->email = $thisuser->email;
+                                                        // $this->email = "bambo@vimfile.com";
+                                                        $this->subject = "Your Invoice # [" . $req->invoice_no . "] of " . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' from ' . $thismerchant->businessname . ' ' . number_format($req->amount, 2) . " is Paid";
+
+                                                        $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is <strong>' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '</strong>. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
+
+                                                        $this->sendEmail($this->email, "Fund remittance");
+
+                                                        $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
+
+                                                        $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                        if (isset($userPhone)) {
+
+                                                            $sendPhone = $thisuser->telephone;
+                                                        } else {
+                                                            $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                                                        }
+
+                                                        if ($thisuser->country == "Nigeria") {
+
+                                                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                            $this->sendSms($sendMsg, $correctPhone);
+                                                        } else {
+                                                            $this->sendMessage($sendMsg, $sendPhone);
+                                                        }
+
+
+
+                                                        /*---------------------------------------------------------------------------------------------------------------------*/
+
+                                                        // Merchant Statement
+
+                                                        $activity = "Added " . $req->currencyCode . '' . number_format($req->amount, 2) . " to Wallet";
+                                                        $credit = $req->amount;
+                                                        $debit = 0;
+                                                        $reference_code = $transactionID;
+                                                        $balance = 0;
+                                                        $trans_date = date('Y-m-d');
+                                                        $status = "Delivered";
+                                                        $action = "Wallet credit";
+                                                        $regards = $thismerchant->ref_code;
+                                                        $statement_route = "wallet";
+
+                                                        // Senders statement
+                                                        $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thismerchant->country);
+
+
+                                                        $this->name = $thismerchant->name;
+                                                        $this->email = $thismerchant->email;
+                                                        // $this->email = "bambo@vimfile.com";
+                                                        $this->subject = $thisuser->name . " has paid Invoice: [" . $req->invoice_no . "]";
+
+                                                        $this->message = '<p>You have received <strong>' . $req->currencyCode . '' . number_format($req->amount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>, invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '.</p> <p>You now have <strong>' . $req->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
+
+                                                        $this->sendEmail($this->email, "Fund remittance");
+
+                                                        $recMesg = 'You have received ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . ', invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
+
+                                                        $userPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                        if (isset($userPhone)) {
+
+                                                            $recPhone = $thismerchant->telephone;
+                                                        } else {
+                                                            $recPhone = "+" . $thismerchant->code . $thismerchant->telephone;
+                                                        }
+
+                                                        if ($thismerchant->country == "Nigeria") {
+
+                                                            $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                                                            $this->sendSms($recMesg, $correctPhone);
+                                                        } else {
+                                                            $this->sendMessage($recMesg, $recPhone);
+                                                        }
+
+
+
+
+                                                        $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $req->bearerToken())->first();
+
+
+                                                        $data = $userInfo;
+                                                        $status = 200;
+                                                        $message = 'You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2);
+
+                                                        $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                        $this->createNotification($thismerchant->ref_code, $recMesg);
+                                                    } else {
+
+                                                        $response = 'Something went wrong';
+
+                                                        $data = [];
+                                                        $status = 400;
+                                                        $message = $response;
+                                                    }
+                                                }
+                                            } else {
+
+                                                $response = 'Invoice not found';
+                                                $data = [];
+                                                $status = 400;
+                                                $message = $response;
+                                            }
+                                        } else {
+                                            $response = 'Information not documented, contact Admin';
+
+                                            $data = [];
+                                            $status = 400;
+                                            $message = $response;
+                                        }
+                                    }
+                                }
+                            } else {
+                                $response = 'Invalid transaction pin!';
+
+                                $data = [];
+                                $status = 400;
+                                $message = $response;
+                            }
                         } else {
-
-                            // Get My Wallet Balance
-                            $walletBalance = $thisuser->wallet_balance - $req->amount;
-
-                            User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBalance]);
-
-                            // Update Merchant Wallet 
-
-
-                            if ($thisuser->country != $thismerchant->country) {
-
-                                $getthisinvoice = ImportExcel::where('invoice_no', $req->invoice_no)->first();
-
-                                if ($getthisinvoice->remaining_balance > 0) {
-                                    $paidinvoiceamount = $getthisinvoice->remaining_balance;
-                                } else {
-                                    $paidinvoiceamount = $getthisinvoice->total_amount + $getthisinvoice->remaining_balance;
-                                }
-                            } else {
-                                $paidinvoiceamount = $req->amount;
-                            }
-
-
-                            // Update Merchant Wallet Balance
-                            $merchantwalletBalance = $thismerchant->wallet_balance + $paidinvoiceamount;
-
-                            User::where('ref_code', $req->merchant_id)->update(['wallet_balance' => $merchantwalletBalance]);
-
-                            // Get Invoice Service
-
-                            // $invData = ImportExcel::where('invoice_no', $req->invoice_no)->first();
-
-                            $purpose = $req->service;
-
-
-                            if ($thisuser->country != $thismerchant->country) {
-
-                                $insPay = InvoicePayment::updateOrCreate(['invoice_no' => $req->invoice_no], ['transactionid' => $transactionID, 'name' => $thisuser->name, 'email' => $thisuser->email, 'amount' => $paidinvoiceamount, 'invoice_no' => $req->invoice_no, 'service' => $purpose, 'client_id' => $req->merchant_id, 'payment_method' => $req->payment_method]);
-
-
-                                if ($insPay) {
-                                    // Update Import Excel Record
-                                    $getInv = ImportExcel::where('invoice_no', $req->invoice_no)->get();
-
-                                    if (count($getInv) > 0) {
-
-                                        // Check if instalmental or not
-
-                                        if ($getthisinvoice->installpay == "No" && $req->payInstallment == "Yes") {
-
-                                            $response = 'Installmental payment is not allowed for this invoice';
-
-                                            $data = [];
-                                            $status = 400;
-                                            $message = $response;
-                                        } else {
-
-                                            if ($req->payInstallment == "Yes") {
-
-                                                if ($getthisinvoice->remaining_balance > 0 || $getthisinvoice->remaining_balance != null) {
-                                                    // Get Amount
-                                                    $prevAmount = $getthisinvoice->remaining_balance;
-                                                } else {
-                                                    $prevAmount = $getthisinvoice->amount;
-                                                }
-
-                                                $paidAmount = $paidinvoiceamount;
-
-                                                $newAmount = $prevAmount - $paidAmount;
-
-                                                $instcount = $getthisinvoice->installcount + 1;
-
-                                                if ($getthisinvoice->installlimit > $instcount) {
-                                                    $installcounter = $getthisinvoice->installlimit;
-                                                } else {
-                                                    $installcounter = $instcount;
-                                                }
-                                            } else {
-
-                                                if ($getthisinvoice->remaining_balance > 0 || $getthisinvoice->remaining_balance != null) {
-                                                    // Get Amount
-                                                    $prevAmount = $getthisinvoice->remaining_balance;
-                                                } else {
-                                                    $prevAmount = $getthisinvoice->amount;
-                                                }
-
-                                                $paidAmount = $paidinvoiceamount;
-
-                                                $newAmount = $prevAmount - $paidAmount;
-
-                                                $instcount = $getthisinvoice->installcount;
-
-                                                if ($getthisinvoice->installlimit > $instcount) {
-                                                    $installcounter = $getthisinvoice->installlimit;
-                                                } else {
-                                                    $installcounter = $instcount;
-                                                }
-                                            }
-
-
-                                            // if payment status is 2, there sre still some pending payments to make, if 1, payments are cleared off
-
-                                            if ($newAmount > 0) {
-                                                $payment_status = 2;
-                                            } elseif ($newAmount == 0) {
-                                                $payment_status = 1;
-                                            } else {
-                                                $payment_status = 0;
-                                            }
-
-
-                                            ImportExcel::where('invoice_no', $req->invoice_no)->update(['installcount' => $installcounter, 'payment_status' => $payment_status, 'remaining_balance' => $newAmount]);
-
-                                            // Update Price Record
-                                            $updtPrice = InvoicePayment::where('transactionid', $transactionID)->update(['remaining_balance' => $newAmount, 'opening_balance' => $prevAmount, 'payment_method' => $req->payment_method]);
-
-                                            if (isset($updtPrice)) {
-
-                                                $client = ClientInfo::where('user_id', $req->merchant_id)->get();
-
-                                                // Insert PAYCAWithdraw
-                                                PaycaWithdraw::insert(['withdraw_id' => $transactionID, 'client_id' => $req->merchant_id, 'client_name' => $req->name, 'card_method' => $req->payment_method, 'client_email' => $req->email, 'amount_to_withdraw' => $paidinvoiceamount, 'remittance' => 0]);
-
-
-                                                $activity = "Payment for " . $purpose . " from " . $req->payment_method;
-                                                $credit = 0;
-                                                $debit = $req->amount;
-                                                $balance = $newAmount;
-                                                $status = "Delivered";
-                                                $action = "Wallet debit";
-                                                $regards = $req->merchant_id;
-                                                $reference_code = $transactionID;
-                                                $trans_date = date('Y-m-d');
-                                                $statement_route = "wallet";
-
-
-                                                // My Statement
-                                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country);
-
-                                                $this->name = $thisuser->name;
-                                                $this->email = $thisuser->email;
-                                                // $this->email = "bambo@vimfile.com";
-                                                $this->subject = "Your Invoice # [" . $req->invoice_no . "] of " . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' from ' . $thismerchant->businessname .  " is Paid";
-
-                                                $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is <strong>' . $thismerchant->currencyCode . ' ' . number_format($newAmount, 2) . '</strong>. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
-
-                                                $this->sendEmail($this->email, "Fund remittance");
-
-                                                $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is ' . $thismerchant->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
-
-                                                $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                                if (isset($userPhone)) {
-
-                                                    $sendPhone = $thisuser->telephone;
-                                                } else {
-                                                    $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                                                }
-
-                                                if ($thisuser->country == "Nigeria") {
-
-                                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                                                    $this->sendSms($sendMsg, $correctPhone);
-                                                } else {
-                                                    $this->sendMessage($sendMsg, $sendPhone);
-                                                }
-
-
-
-                                                /*---------------------------------------------------------------------------------------------------------------------*/
-
-                                                // Merchant Statement
-
-                                                $activity = "Added " . $thismerchant->currencyCode . '' . number_format($paidinvoiceamount, 2) . " to Wallet";
-                                                $credit = $paidinvoiceamount;
-                                                $debit = 0;
-                                                $reference_code = $transactionID;
-                                                $balance = 0;
-                                                $trans_date = date('Y-m-d');
-                                                $status = "Delivered";
-                                                $action = "Wallet credit";
-                                                $regards = $thismerchant->ref_code;
-                                                $statement_route = "wallet";
-
-                                                // Senders statement
-                                                $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thismerchant->country);
-
-
-                                                $this->name = $thismerchant->name;
-                                                $this->email = $thismerchant->email;
-                                                // $this->email = "bambo@vimfile.com";
-                                                $this->subject = $thisuser->name . " has paid Invoice: [" . $req->invoice_no . "]";
-
-                                                $this->message = '<p>You have received <strong>' . $thismerchant->currencyCode . '' . number_format($paidinvoiceamount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>, invoice balance left is ' . $thismerchant->currencyCode . ' ' . number_format($newAmount, 2) . '.</p> <p>You now have <strong>' . $thismerchant->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
-
-                                                $this->sendEmail($this->email, "Fund remittance");
-
-                                                $recMesg = 'You have received ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . ', invoice balance left is ' . $thismerchant->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $thismerchant->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
-
-                                                $userPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                                if (isset($userPhone)) {
-
-                                                    $recPhone = $thismerchant->telephone;
-                                                } else {
-                                                    $recPhone = "+" . $thismerchant->code . $thismerchant->telephone;
-                                                }
-
-                                                if ($thismerchant->country == "Nigeria") {
-
-                                                    $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
-                                                    $this->sendSms($recMesg, $correctPhone);
-                                                } else {
-                                                    $this->sendMessage($recMesg, $recPhone);
-                                                }
-
-
-
-
-                                                $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $req->bearerToken())->first();
-
-
-                                                $data = $userInfo;
-                                                $status = 200;
-                                                $message = 'You have successfully paid invoice of ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2);
-
-                                                $this->createNotification($thisuser->ref_code, $sendMsg);
-                                                $this->createNotification($thismerchant->ref_code, $recMesg);
-                                            } else {
-
-                                                $response = 'Something went wrong';
-
-                                                $data = [];
-                                                $status = 400;
-                                                $message = $response;
-                                            }
-                                        }
-                                    } else {
-
-                                        $response = 'Invoice not found';
-                                        $data = [];
-                                        $status = 400;
-                                        $message = $response;
-                                    }
-                                } else {
-                                    $response = 'Information not documented, contact Admin';
-
-                                    $data = [];
-                                    $status = 400;
-                                    $message = $response;
-                                }
-                            } else {
-                                $insPay = InvoicePayment::updateOrCreate(['invoice_no' => $req->invoice_no], ['transactionid' => $transactionID, 'name' => $thisuser->name, 'email' => $thisuser->email, 'amount' => $req->amount, 'invoice_no' => $req->invoice_no, 'service' => $purpose, 'client_id' => $req->merchant_id, 'payment_method' => $req->payment_method]);
-
-
-                                if ($insPay) {
-                                    // Update Import Excel Record
-                                    $getInv = ImportExcel::where('invoice_no', $req->invoice_no)->get();
-
-                                    if (count($getInv) > 0) {
-
-                                        // Check if instalmental or not
-
-                                        if ($getInv[0]->installpay == "No" && $req->payInstallment == "Yes") {
-
-                                            $response = 'Installmental payment is not allowed for this invoice';
-
-                                            $data = [];
-                                            $status = 400;
-                                            $message = $response;
-                                        } else {
-
-                                            if ($req->payInstallment == "Yes") {
-
-                                                if ($getInv[0]->remaining_balance > 0 || $getInv[0]->remaining_balance != null) {
-                                                    // Get Amount
-                                                    $prevAmount = $getInv[0]->remaining_balance;
-                                                } else {
-                                                    $prevAmount = $getInv[0]->amount;
-                                                }
-
-                                                $paidAmount = $req->amount;
-
-                                                $newAmount = $prevAmount - $paidAmount;
-
-                                                $instcount = $getInv[0]->installcount + 1;
-
-                                                if ($getInv[0]->installlimit > $instcount) {
-                                                    $installcounter = $getInv[0]->installlimit;
-                                                } else {
-                                                    $installcounter = $instcount;
-                                                }
-                                            } else {
-
-                                                if ($getInv[0]->remaining_balance > 0 || $getInv[0]->remaining_balance != null) {
-                                                    // Get Amount
-                                                    $prevAmount = $getInv[0]->remaining_balance;
-                                                } else {
-                                                    $prevAmount = $getInv[0]->amount;
-                                                }
-
-                                                $paidAmount = $req->amount;
-
-                                                $newAmount = $prevAmount - $paidAmount;
-
-                                                $instcount = $getInv[0]->installcount;
-
-                                                if ($getInv[0]->installlimit > $instcount) {
-                                                    $installcounter = $getInv[0]->installlimit;
-                                                } else {
-                                                    $installcounter = $instcount;
-                                                }
-                                            }
-
-
-                                            // if payment status is 2, there sre still some pending payments to make, if 1, payments are cleared off
-
-                                            if ($newAmount > 0) {
-                                                $payment_status = 2;
-                                            } elseif ($newAmount == 0) {
-                                                $payment_status = 1;
-                                            } else {
-                                                $payment_status = 0;
-                                            }
-
-
-                                            ImportExcel::where('invoice_no', $req->invoice_no)->update(['installcount' => $installcounter, 'payment_status' => $payment_status, 'remaining_balance' => $newAmount]);
-
-                                            // Update Price Record
-                                            $updtPrice = InvoicePayment::where('transactionid', $transactionID)->update(['remaining_balance' => $newAmount, 'opening_balance' => $prevAmount, 'payment_method' => $req->payment_method]);
-
-                                            if (isset($updtPrice)) {
-
-                                                $client = ClientInfo::where('user_id', $req->merchant_id)->get();
-
-                                                // Insert PAYCAWithdraw
-                                                PaycaWithdraw::insert(['withdraw_id' => $transactionID, 'client_id' => $req->merchant_id, 'client_name' => $req->name, 'card_method' => $req->payment_method, 'client_email' => $req->email, 'amount_to_withdraw' => $req->amount, 'remittance' => 0]);
-
-
-                                                $activity = "Payment for " . $purpose . " from " . $req->payment_method;
-                                                $credit = 0;
-                                                $debit = $req->amount;
-                                                $balance = $newAmount;
-                                                $status = "Delivered";
-                                                $action = "Wallet debit";
-                                                $regards = $req->merchant_id;
-                                                $reference_code = $transactionID;
-                                                $trans_date = date('Y-m-d');
-                                                $statement_route = "wallet";
-
-
-                                                // My Statement
-                                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country);
-
-                                                $this->name = $thisuser->name;
-                                                $this->email = $thisuser->email;
-                                                // $this->email = "bambo@vimfile.com";
-                                                $this->subject = "Your Invoice # [" . $req->invoice_no . "] of " . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' from ' . $thismerchant->businessname . ' ' . number_format($req->amount, 2) . " is Paid";
-
-                                                $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is <strong>' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '</strong>. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
-
-                                                $this->sendEmail($this->email, "Fund remittance");
-
-                                                $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
-
-                                                $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                                if (isset($userPhone)) {
-
-                                                    $sendPhone = $thisuser->telephone;
-                                                } else {
-                                                    $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                                                }
-
-                                                if ($thisuser->country == "Nigeria") {
-
-                                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                                                    $this->sendSms($sendMsg, $correctPhone);
-                                                } else {
-                                                    $this->sendMessage($sendMsg, $sendPhone);
-                                                }
-
-
-
-                                                /*---------------------------------------------------------------------------------------------------------------------*/
-
-                                                // Merchant Statement
-
-                                                $activity = "Added " . $req->currencyCode . '' . number_format($req->amount, 2) . " to Wallet";
-                                                $credit = $req->amount;
-                                                $debit = 0;
-                                                $reference_code = $transactionID;
-                                                $balance = 0;
-                                                $trans_date = date('Y-m-d');
-                                                $status = "Delivered";
-                                                $action = "Wallet credit";
-                                                $regards = $thismerchant->ref_code;
-                                                $statement_route = "wallet";
-
-                                                // Senders statement
-                                                $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thismerchant->country);
-
-
-                                                $this->name = $thismerchant->name;
-                                                $this->email = $thismerchant->email;
-                                                // $this->email = "bambo@vimfile.com";
-                                                $this->subject = $thisuser->name . " has paid Invoice: [" . $req->invoice_no . "]";
-
-                                                $this->message = '<p>You have received <strong>' . $req->currencyCode . '' . number_format($req->amount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>, invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '.</p> <p>You now have <strong>' . $req->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
-
-                                                $this->sendEmail($this->email, "Fund remittance");
-
-                                                $recMesg = 'You have received ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . ', invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
-
-                                                $userPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                                if (isset($userPhone)) {
-
-                                                    $recPhone = $thismerchant->telephone;
-                                                } else {
-                                                    $recPhone = "+" . $thismerchant->code . $thismerchant->telephone;
-                                                }
-
-                                                if ($thismerchant->country == "Nigeria") {
-
-                                                    $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
-                                                    $this->sendSms($recMesg, $correctPhone);
-                                                } else {
-                                                    $this->sendMessage($recMesg, $recPhone);
-                                                }
-
-
-
-
-                                                $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $req->bearerToken())->first();
-
-
-                                                $data = $userInfo;
-                                                $status = 200;
-                                                $message = 'You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2);
-
-                                                $this->createNotification($thisuser->ref_code, $sendMsg);
-                                                $this->createNotification($thismerchant->ref_code, $recMesg);
-                                            } else {
-
-                                                $response = 'Something went wrong';
-
-                                                $data = [];
-                                                $status = 400;
-                                                $message = $response;
-                                            }
-                                        }
-                                    } else {
-
-                                        $response = 'Invoice not found';
-                                        $data = [];
-                                        $status = 400;
-                                        $message = $response;
-                                    }
-                                } else {
-                                    $response = 'Information not documented, contact Admin';
-
-                                    $data = [];
-                                    $status = 400;
-                                    $message = $response;
-                                }
-                            }
+                            $response = 'Please provide transaction pin or login on the web www.paysprint.ca to pay invoice';
+
+                            $data = [];
+                            $status = 400;
+                            $message = $response;
                         }
                     } catch (\Throwable $th) {
                         $data = [];

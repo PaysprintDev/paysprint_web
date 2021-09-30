@@ -12773,9 +12773,9 @@ class AdminController extends Controller
     {
 
         if (session('role') == "Customer Marketing") {
-            $data = Notifications::where('country', 'Canada')->orWhere('country', 'United States')->orderBy('created_at', 'DESC')->take(2000)->get();
+            $data = Notifications::where('country', 'Canada')->orWhere('country', 'United States')->orderBy('created_at', 'DESC')->take(1000)->get();
         } else {
-            $data = Notifications::orderBy('created_at', 'DESC')->take(2000)->get();
+            $data = Notifications::orderBy('created_at', 'DESC')->take(1000)->get();
         }
 
         return $data;
@@ -12785,9 +12785,9 @@ class AdminController extends Controller
     {
 
         if (session('role') == "Customer Marketing") {
-            $data = Notifications::where('country', 'Canada')->orWhere('country', 'United States')->whereBetween('created_at', [$start, $end])->orderBy('period', 'DESC')->groupBy('period')->take(2000)->get();
+            $data = Notifications::where('country', 'Canada')->orWhere('country', 'United States')->whereBetween('created_at', [$start, $end])->orderBy('period', 'DESC')->groupBy('period')->take(1000)->get();
         } else {
-            $data = Notifications::whereBetween('created_at', [$start, $end])->orderBy('period', 'DESC')->groupBy('period')->take(2000)->get();
+            $data = Notifications::whereBetween('created_at', [$start, $end])->orderBy('period', 'DESC')->groupBy('period')->take(1000)->get();
         }
 
 
@@ -13221,7 +13221,7 @@ class AdminController extends Controller
         $mydata = ImportExcel::select('import_excel.*', 'invoice_payment.*')->join('invoice_payment', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')->where('import_excel.payee_email', $email)->orderBy('import_excel.created_at', 'DESC')->limit(5)->get();
 
         if (count($mydata) > 0) {
-            $newdata = ImportExcel::where('payee_email', $email)->orderBy('created_at', 'DESC')->limit(5)->get();
+            $newdata = ImportExcel::where('payee_email', $email)->where('payment_status', 0)->orderBy('created_at', 'DESC')->limit(5)->get();
             $data = array_merge($mydata->toArray(), $newdata->toArray());
         } else {
             $data = ImportExcel::where('payee_email', $email)->orderBy('created_at', 'DESC')->limit(5)->get();

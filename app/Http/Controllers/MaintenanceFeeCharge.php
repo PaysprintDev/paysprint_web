@@ -34,6 +34,7 @@ class MaintenanceFeeCharge extends Controller
                 $subType = "Merchant Monthly Subscription";
             }
 
+
             $minBal = $this->maintenanceBalanceWithdrawal($subType, $value->country);
 
 
@@ -46,7 +47,7 @@ class MaintenanceFeeCharge extends Controller
 
                     $walletBalance = $value->wallet_balance - $getTranscost->fixed;
 
-                    User::where('id', $value->id)->update(['wallet_balance' => $walletBalance]);
+                    User::where('id', $value->id)->where('wallet_balance', '>=', $minBal)->update(['wallet_balance' => $walletBalance]);
 
                     // Send Mail
                     $transaction_id = "wallet-" . date('dmY') . time();
@@ -127,7 +128,7 @@ class MaintenanceFeeCharge extends Controller
 
         foreach ($users as $user) {
             // Check User where walletbalance is < 0
-            $checker = MonthlyFee::where('ref_code', $user->ref_code)->where('created_at', '>', date('2021-08-28'))->first();
+            $checker = MonthlyFee::where('ref_code', $user->ref_code)->where('created_at', '>', date('2021-09-06'))->first();
 
             if (isset($checker)) {
 
@@ -159,10 +160,10 @@ class MaintenanceFeeCharge extends Controller
 
                 $this->createNotification($user->ref_code, "Hello " . strtoupper($user->name) . ", " . $sendMsg);
 
-                MonthlyFee::where('ref_code', $user->ref_code)->where('created_at', '>', date('2021-08-28'))->delete();
+                MonthlyFee::where('ref_code', $user->ref_code)->where('created_at', '>', date('2021-09-06'))->delete();
 
 
-                echo "Done for " . $user->name . "<hr>";
+                echo "Done for " . $user->name . " | Wallet Balance: " . $walletBalance . "<hr>";
             }
         }
     }

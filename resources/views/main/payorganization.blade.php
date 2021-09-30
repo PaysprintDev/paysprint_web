@@ -39,7 +39,7 @@
 
 @section('content')
     <!-- Banner area -->
-    <section class="banner_area" data-stellar-background-ratio="0.5">
+    <section class="banner_area" data-stellar-background-ratio="0.5" @if(Request::get('type') == base64_encode("international")) style="background-image: url('https://res.cloudinary.com/pilstech/image/upload/v1632419190/R_kw5udg.png') !important; background-position: top center; background-repeat: no-repeat; background-size: contain; background-color: #e5eff3;" @endif>
         <h2>MONEY TRANSFER</h2>
         <ol class="breadcrumb">
             <li><a href="{{ route('home') }}">Home</a></li>
@@ -49,7 +49,7 @@
     <!-- End Banner area -->
 
     <!-- Our Services Area -->
-    <section class="our_services_tow" @if(Request::get('type') == base64_encode("international")) style="background-image: url('https://res.cloudinary.com/pilstech/image/upload/v1632419190/R_kw5udg.png'); background-position: top; background-repeat: no-repeat; background-size: cover; background-color: #e5eff3;" @endif>
+    <section class="our_services_tow">
         <div class="container">
             <div class="architecture_area services_pages">
                 <div class="portfolio_filter portfolio_filter_2">

@@ -18,6 +18,7 @@ use App\AllCountries as AllCountries;
 use App\TransactionCost as TransactionCost;
 use App\RequestRefund as RequestRefund;
 use App\SpecialInformation as SpecialInformation;
+use App\ImportExcel as ImportExcel;
 
 
 use App\Traits\ExpressPayment;
@@ -431,6 +432,30 @@ class CheckSetupController extends Controller
     public function maintinsStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route)
     {
         Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route]);
+    }
+
+    public function updateImportExcelCurrency()
+    {
+
+        $data = ImportExcel::all();
+
+        foreach ($data as $value) {
+            $merchant = User::where('ref_code', $value->uploaded_by)->first();
+
+            if (isset($merchant)) {
+
+                if ($merchant->country == "Nigeria") {
+                    $currencySymb = "₦";
+                } else {
+                    $currencySymb = $merchant->currencySymbol;
+                }
+
+
+                ImportExcel::where('uploaded_by', $merchant->ref_code)->update(['merchantcurrencyCode' => $merchant->currencyCode, 'merchantcurrencySymbol' => $currencySymb]);
+
+                echo "Done for : " . $merchant->name . " | Currency Symbol: " . $currencySymb . " | Currency Code: " . $merchant->currencyCode . "<hr>";
+            }
+        }
     }
 
 

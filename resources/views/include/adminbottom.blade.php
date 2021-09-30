@@ -2625,6 +2625,7 @@ else if(val == 'editcard'){
 }
 
 
+
 else if(val == 'singleinvoice'){
 
   formData = new FormData(formElem);
