@@ -1407,6 +1407,70 @@ function invoiceVisit(id, val){
 
 }
 
+
+function invoiceLinkVisit(id, val){
+
+  var route = "{{ URL('Ajax/invoicelinkVisit') }}";
+  var thisdata;
+  var spinner = $('.spinner'+val);
+
+  if(val == "delete"){
+
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this invoice!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        thisdata = {id: id, val: val};
+          setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: thisdata,
+            dataType: 'JSON',
+            beforeSend: function(){
+              spinner.removeClass('disp-0');
+            },
+            success: function(result){
+              spinner.addClass('disp-0');
+
+                if (result.message == "success") {
+                  // Route to another page
+                  swal(result.title, result.res, result.message);
+                  setTimeout(function(){ location.href = location.origin+"/Admin"; }, 2000);
+                }
+
+                else{
+                  swal(result.title, result.res, result.message);
+                }
+
+
+            }
+
+          });
+
+      } 
+      else {
+
+      }
+    });
+
+
+  }
+  else{
+    $('.mainText').addClass('disp-0');
+    $('.mainInput').removeClass('disp-0');
+    $('.edit').addClass('disp-0');
+    $('.updt').removeClass('disp-0');
+  }
+
+
+}
+
 function del(val, id){
 if(val == "deletefee" || val == "deletecardissuer" || val == "deletespecialinfo"){
       swal({
@@ -1442,6 +1506,28 @@ function markasPaid(id){
       if (willDelete) {
 
         location.href = '/Admin/invoicecomment/'+id;
+      } 
+      else {
+
+      }
+    });
+
+}
+
+
+function markasLinkPaid(id){
+
+  swal({
+      title: "Are you sure?",
+      text: "Be sure this is properly reviewed",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+
+        location.href = '/Admin/invoicelinkcomment/'+id;
       } 
       else {
 
@@ -2632,6 +2718,53 @@ else if(val == 'singleinvoice'){
 
 
       route = "{{ URL('/api/v1/singleinvoice') }}";
+
+          Pace.restart();
+      Pace.track(function(){
+          setHeaders();
+          jQuery.ajax({
+          url: route,
+          method: 'post',
+          data: formData,
+          cache: false,
+          processData: false,
+          contentType: false,
+          dataType: 'JSON',
+          beforeSend: function(){
+              $('#cardSubmit').text('Please wait...');
+          },
+          success: function(result){
+              // console.log(result);
+
+              $('#cardSubmit').text('Submit');
+
+              if(result.status == 200){
+                      swal("Success", result.message, "success");
+                      setTimeout(function(){ location.href="{{ route('Admin') }}"; }, 2000);
+                  }
+                  else{
+                      swal("Oops", result.message, "error");
+                  }
+
+          },
+          error: function(err) {
+              swal("Oops", err.responseJSON.message, "error");
+
+          } 
+
+      });
+      });
+
+}
+
+// Generate Invoice Links
+
+else if(val == 'singleinvoicelink'){
+
+  formData = new FormData(formElem);
+
+
+      route = "{{ URL('/api/v1/singleinvoicelink') }}";
 
           Pace.restart();
       Pace.track(function(){

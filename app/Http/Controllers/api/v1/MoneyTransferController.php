@@ -833,7 +833,7 @@ class MoneyTransferController extends Controller
                                                 $status = 404;
 
                                                 $resData = ['data' => [], 'message' => 'You cannot send money at the moment because your account is still on review.', 'status' => $status];
-                                            } elseif (isset($imtCountry) && $imtCountry->imt == "false") {
+                                            } elseif (isset($imtCountry) && $imtCountry->imt == "false" && $receiver->country != $sender->country) {
                                                 $status = 404;
 
                                                 $resData = ['data' => [], 'message' => 'International money transfer is not yet available to ' . $imtCountry->name, 'status' => $status];

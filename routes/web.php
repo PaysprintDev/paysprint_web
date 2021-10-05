@@ -130,6 +130,9 @@ Route::get('privacy-policy', ['uses' => 'HomeController@privacyPolicy', 'as' => 
 
 Route::get('payment/{invoice}', ['uses' => 'HomeController@payment', 'as' => 'payment']);
 
+// Payment Link for Invoice
+Route::get('payment/link/{invoice}/{country}', ['uses' => 'HomeController@paymentFromLink', 'as' => 'payment from link']);
+
 Route::get('payment/sendmoney/{user_id}', ['uses' => 'HomeController@paymentOrganization', 'as' => 'sendmoney payment']);
 Route::get('new/payment/createuser', ['uses' => 'HomeController@createnewPayment', 'as' => 'create new payment']);
 Route::get('payment/receivemoney/{id}', ['uses' => 'HomeController@receiveMoney', 'as' => 'receivemoney payment']);
@@ -138,6 +141,8 @@ Route::get('payment/receivemoney/{id}', ['uses' => 'HomeController@receiveMoney'
 
 // Stripe Route
 Route::post('create-payment-intent', ['uses' => 'MonerisController@paymentIntent', 'as' => 'stripe payment intent']);
+
+Route::post('create-payment-invoice-intent', ['uses' => 'MonerisController@invoicepaymentIntent', 'as' => 'stripe invoice payment intent']);
 
 
 // Express Payment Callback
@@ -408,6 +413,8 @@ Route::prefix('Admin/card')->group(function () {
 Route::prefix('Admin/invoice')->group(function () {
 
 	Route::get('single', ['uses' => 'AdminController@createSingleInvoice', 'as' => 'create single invoice']);
+	Route::get('single/link', ['uses' => 'AdminController@createLinkInvoice', 'as' => 'create link invoice']);
+
 	Route::get('bulk', ['uses' => 'AdminController@createBulkInvoice', 'as' => 'create bulk invoice']);
 });
 
@@ -504,8 +511,14 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('comissionreport', ['uses' => 'AdminController@comissionreport', 'as' => 'comissionreport']);
 
 	Route::get('customer/{id}', ['uses' => 'AdminController@customer', 'as' => 'customer']);
+	Route::get('linkcustomer/{id}', ['uses' => 'AdminController@linkCustomer', 'as' => 'link customer']);
+
 	Route::get('invoicecomment/{id}', ['uses' => 'AdminController@invoiceComment', 'as' => 'invoice comment']);
 	Route::post('myinvoicecomment/{id}', ['uses' => 'MonerisController@myInvoiceComment', 'as' => 'my invoice comment']);
+
+
+	Route::get('invoicelinkcomment/{id}', ['uses' => 'AdminController@invoiceLinkComment', 'as' => 'invoice link comment']);
+	Route::post('myinvoicelinkcomment/{id}', ['uses' => 'MonerisController@myInvoiceLinkComment', 'as' => 'my invoice link comment']);
 
 
 
@@ -581,6 +594,8 @@ Route::post('deletecardissuer/{id}', ['uses' => 'AdminController@deleteCardIssue
 
 
 Route::post('updateinvoice', ['uses' => 'AdminController@updateinvoice', 'as' => 'updateinvoice']);
+
+Route::post('updateinvoicelink', ['uses' => 'AdminController@updateinvoicelink', 'as' => 'updateinvoicelink']);
 
 
 Route::post('increasetranslimit', ['uses' => 'AdminController@increaseTransLimit', 'as' => 'increase trans limit']);
@@ -682,6 +697,9 @@ Route::group(['prefix' => 'Ajax'], function () {
 	Route::post('setupTrans', ['uses' => 'AdminController@ajaxsetupTrans', 'as' => 'AjaxsetupTrans']);
 	Route::post('checkfeeReport', ['uses' => 'AdminController@ajaxcheckfeeReport', 'as' => 'AjaxcheckfeeReport']);
 	Route::post('invoiceVisit', ['uses' => 'AdminController@ajaxinvoiceVisit', 'as' => 'AjaxinvoiceVisit']);
+
+	Route::post('invoicelinkVisit', ['uses' => 'AdminController@ajaxinvoicelinkVisit', 'as' => 'AjaxinvoicelinkVisit']);
+
 	Route::post('confirmpayment', ['uses' => 'AdminController@ajaxconfirmpayment', 'as' => 'Ajaxconfirmpayment']);
 
 

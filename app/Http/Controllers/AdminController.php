@@ -74,6 +74,8 @@ use App\AllCountries as AllCountries;
 
 use App\InAppMessage as InAppMessage;
 
+use App\ImportExcelLink as ImportExcelLink;
+
 
 use App\MonerisActivity as MonerisActivity;
 
@@ -144,6 +146,7 @@ class AdminController extends Controller
             if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                 $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $invoiceLinkImport = ImportExcelLink::orderBy('created_at', 'DESC')->get();
                 $payInvoice = DB::table('client_info')
                     ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
                     ->orderBy('invoice_payment.created_at', 'DESC')
@@ -153,6 +156,7 @@ class AdminController extends Controller
             } else {
                 $adminUser = Admin::where('username', session('username'))->get();
                 $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $invoiceLinkImport = ImportExcelLink::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
                 $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
                 $otherPays = OrganizationPay::where('coy_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
 
@@ -214,7 +218,7 @@ class AdminController extends Controller
 
 
 
-            return view('admin.index')->with(['pages' => 'My Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'allusers' => $allusers, 'getUserDetail' => $getUserDetail, 'getCard' => $getCard, 'getBank' => $getBank, 'getTax' => $getTax, 'withdraws' => $withdraws, 'pending' => $pending, 'allcountries' => $allcountries, 'refund' => $refund, 'received' => $received, 'data' => $data]);
+            return view('admin.index')->with(['pages' => 'My Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'invoiceLinkImport' => $invoiceLinkImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'allusers' => $allusers, 'getUserDetail' => $getUserDetail, 'getCard' => $getCard, 'getBank' => $getBank, 'getTax' => $getTax, 'withdraws' => $withdraws, 'pending' => $pending, 'allcountries' => $allcountries, 'refund' => $refund, 'received' => $received, 'data' => $data]);
         } else {
             return redirect()->route('AdminLogin');
         }
@@ -688,6 +692,53 @@ class AdminController extends Controller
     }
 
 
+    public function linkCustomer(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getLinkCustomer($req->route('id'));
+
+            return view('admin.linkcustomer')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '']);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
 
     public function invoiceComment(Request $req, $id)
     {
@@ -729,6 +780,52 @@ class AdminController extends Controller
             $getCustomer = $this->getCustomer($req->route('id'));
 
             return view('admin.invoicecomment')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '']);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
+    public function invoiceLinkComment(Request $req, $id)
+    {
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::where('id', $id)->first();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('id', $id)->first();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getLinkCustomer($req->route('id'));
+
+            return view('admin.invoicelinkcomment')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '']);
         } else {
             return redirect()->route('AdminLogin');
         }
@@ -1402,6 +1499,64 @@ class AdminController extends Controller
 
 
             return view('admin.invoice.single')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+    public function createLinkInvoice(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+
+            $data = array(
+                'getServiceType' => $this->getServiceTypes(),
+                'getTax' => $this->getTax(session('myID')),
+                'getpersonalData' => $this->getmyPersonalDetail(session('user_id')),
+                'allthecountries' => $this->getAllCountries()
+            );
+
+
+            return view('admin.invoice.singlelink')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'data' => $data]);
         } else {
             return redirect()->route('AdminLogin');
         }
@@ -4589,6 +4744,17 @@ class AdminController extends Controller
     {
 
         $data = $this->dothisflag($req->transaction_id);
+
+        // Send Mail
+
+        // Send Mail to the support agent
+        $this->name = $data->name;
+        $this->email = $data->email;
+        $this->info = "Fund remittance";
+
+        $this->message = '<p>Hello ' . $this->name . ', </p><p>This is to inform you that your account has been randomly selected for review, because your funding source does not tally with your account information.</p><p>Kindly attach your Utility bill showing your information to <a href="mailto:customerserviceafrica@paysprint.ca">customerserviceafrica@paysprint.ca</a></p><p>Thanks</p>';
+
+        $this->sendEmail($this->email, "Fund remittance");
 
         return back()->with('success', 'Successful!');
     }
@@ -7802,6 +7968,62 @@ class AdminController extends Controller
         }
 
         return view('admin.customer')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => $status, 'message' => $message]);
+    }
+
+
+    public function updateinvoicelink(Request $req)
+    {
+        if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+            $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+            $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+            $payInvoice = DB::table('client_info')
+                ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                ->orderBy('invoice_payment.created_at', 'DESC')
+                ->get();
+
+            $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+        } else {
+            $adminUser = Admin::where('username', session('username'))->get();
+            $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+            $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+            $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+        }
+
+        // dd($payInvoice);
+
+        $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+        $transCost = $this->transactionCost();
+
+        $getwithdraw = $this->withdrawRemittance();
+        $collectfee = $this->allcollectionFee();
+        $getClient = $this->getallClient();
+
+        // Update User
+        $update = ImportExcelLink::where('id', $req->id)->update(['transaction_date' => $req->transaction_date, 'payee_ref_no' => $req->payee_ref_no, 'name' => $req->name, 'description' => $req->description, 'amount' => $req->amount, 'remaining_balance' => $req->remaining_balance, 'payment_due_date' => $req->payment_due_date, 'payee_email' => $req->payee_email, 'service' => $req->service, 'installpay' => $req->installpay, 'installlimit' => $req->installlimit, 'recurring' => $req->recurring, 'reminder' => $req->reminder, 'created_at' => date('Y-m-d H:i:s', strtotime($req->created_at))]);
+
+
+        if ($update ==  1) {
+            $message = 'Updated Successfully';
+            $status = 'success';
+
+            $getCustomer = $this->getLinkCustomer($req->id);
+        } else {
+
+            $message = 'Something went wrong';
+            $status = 'error';
+
+            $getCustomer = $this->getLinkCustomer($req->id);
+        }
+
+        return view('admin.linkcustomer')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => $status, 'message' => $message]);
     }
 
     public function increaseTransLimit(Request $req)
@@ -11581,6 +11803,25 @@ class AdminController extends Controller
         return $this->returnJSON($resData, 200);
     }
 
+
+    public function ajaxinvoicelinkVisit(Request $req)
+    {
+        if ($req->val == "delete") {
+            $getInv = ImportExcelLink::where('id', $req->id)->get();
+
+            if (count($getInv) > 0) {
+                // Delete
+                ImportExcelLink::where('id', $req->id)->delete();
+
+                $resData = ['res' => 'Deleted!', 'message' => 'success', 'title' => 'Great'];
+            } else {
+                $resData = ['res' => 'Something went wrong', 'message' => 'error', 'title' => 'Oops!'];
+            }
+        }
+
+        return $this->returnJSON($resData, 200);
+    }
+
     public function ajaxconfirmpayment(Request $req)
     {
 
@@ -11643,7 +11884,7 @@ class AdminController extends Controller
             $user->where('id', $req->id)->update(['approval' => 0, 'accountLevel' => 0, 'disableAccount' => 'on']);
 
             $subject = 'Account information not approved';
-            $message = "This is to inform you that your account information does not match the requirement for review. You will not be able to login or conduct any transaction both on the mobile app and on the web during this period. We shall inform you when your PaySprint account is available for use. We regret any inconvenience this action might cause you. If you have any concern, please send us a message on : compliance@paysprint.ca";
+            $message = "This is to inform you that your account information does not match the requirement for review. You will not be able to login or conduct any transaction both on the mobile app and on the web during this period. Kindly attach a copy of your Utility bill and send to compliance@paysprint.ca . We shall inform you when your PaySprint account is available for use. We regret any inconvenience this action might cause you. If you have any concern, please send us a message on : compliance@paysprint.ca";
 
             $query = [
                 'user_id' => session('user_id'),
@@ -11735,7 +11976,7 @@ class AdminController extends Controller
         $user->where('id', $req->id)->update(['approval' => 0, 'accountLevel' => 0, 'disableAccount' => 'on']);
 
         $subject = 'Account information not approved';
-        $message = "This is to inform you that your account information does not match the requirement for review. You will not be able to conduct any transaction both on the mobile app and on the web during this period. We shall inform you when your PaySprint account is available for use. We regret any inconvenience this action might cause you. If you have any concern, please send us a message on : compliance@paysprint.ca";
+        $message = "This is to inform you that your account information does not match the requirement for review. You will not be able to conduct any transaction both on the mobile app and on the web during this period. Kindly attach a copy of your Utility bill and send to compliance@paysprint.ca . We shall inform you when your PaySprint account is available for use. We regret any inconvenience this action might cause you. If you have any concern, please send us a message on : compliance@paysprint.ca";
 
 
         // Send Mail to Receiver
@@ -12013,7 +12254,7 @@ class AdminController extends Controller
             $thisuser = $userclosed->where('user_id', $req->id)->first();
 
             $subject = 'Account currently closed on PaySprint';
-            $message = "This is to inform you that your account is currenctly closed on PaySprint. You will not be able to login or conduct any transaction both on the mobile app and on the web during this period. We regret any inconvenience this action might caused you. If you have any concern, please send us a message on : compliance@paysprint.ca";
+            $message = "This is to inform you that your account is currenctly closed on PaySprint. You will not be able to login or conduct any transaction both on the mobile app and on the web during this period. Kindly attach a copy of your Utility bill and send to compliance@paysprint.ca . We regret any inconvenience this action might caused you. If you have any concern, please send us a message on : compliance@paysprint.ca";
 
             // Send Mail to Receiver
             $this->name = $thisuser->name;
@@ -12295,7 +12536,7 @@ class AdminController extends Controller
         if ($thisuser->flagged == 0) {
             $user->where('id', $req->id)->update(['flagged' => 1, 'accountLevel' => 2]);
             $subject = "Review of PaySprint Account";
-            $message = "This is to inform you that your account  has been randomly selected for review. You will not be able to login or conduct any transaction both on the mobile app and on the web during the review period, which might last for 48 hours. We shall inform you when your PaySprint account is available for use. We regret any inconvenience this action might cause you. If you have any concern, please send us a message on : compliance@paysprint.ca";
+            $message = "This is to inform you that your account has been randomly selected for review, because your credit/debit card information does not tally with your account information. You will not be able to login or conduct any transaction both on the mobile app and on the web during the review period, which might last for 48 hours. We shall inform you when your PaySprint account is available for use. We regret any inconvenience this action might cause you. If you have any concern, please send us a message on : compliance@paysprint.ca";
         } else {
             $user->where('id', $req->id)->update(['flagged' => 0, 'accountLevel' => 3]);
             $subject = "Review of PaySprint Account";
@@ -12855,6 +13096,15 @@ class AdminController extends Controller
     {
 
         $getcustomer = ImportExcel::where('id', $id)->get();
+
+        return $getcustomer;
+    }
+
+
+    public function getLinkCustomer($id)
+    {
+
+        $getcustomer = ImportExcelLink::where('id', $id)->get();
 
         return $getcustomer;
     }

@@ -931,7 +931,7 @@ class GooglePaymentController extends Controller
                             $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'link' => URL('payment/sendmoney/' . $checkExist->ref_code . '?country=' . $thisuser->country)];
 
                             return $this->returnJSON($resData, $status);
-                        } elseif (isset($imtCountry) && $imtCountry->imt == "false") {
+                        } elseif (isset($imtCountry) && $imtCountry->imt == "false" && $req->country != $thisuser->country) {
 
                             $response = 'International money transfer is not yet available to ' . $imtCountry->name;
                             $data = [];

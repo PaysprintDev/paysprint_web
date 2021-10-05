@@ -481,7 +481,25 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li ><a href="{{ route('create single invoice') }}"><i class="fa fa-circle-o text-green"></i> Single </a></li>
+            <li class="treeview">
+
+              <a href="#">
+                <i class="fa fa-book"></i>
+                <span> Single</span>
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+
+              <ul class="treeview-menu">
+                <li>
+                      <a href="{{ route('create single invoice') }}"><i class="fa fa-circle-o text-green"></i> Customer on PS </a>
+                </li>
+                <li>
+                      <a href="{{ route('create link invoice') }}"><i class="fa fa-circle-o text-green"></i>Customer not on PS </a>
+                </li>
+              </ul>
+
             {{-- <li ><a href="{{ route('create bulk invoice') }}"><i class="fa fa-circle-o text-red"></i> Batch</a></li> --}}
              <li onclick="comingSoon()"><a href="javascript:void()"><i class="fa fa-circle-o text-red"></i> Batch [Coming Soon]</a></li> 
             {{-- <li><a href="#"><i class="fa fa-circle-o text-info"></i> Check Sold Tickets</a></li>

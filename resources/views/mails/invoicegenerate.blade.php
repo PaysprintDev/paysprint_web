@@ -822,6 +822,17 @@
                                                             {{ $maildata->zipcode }}</td>
                                                         </tr>
 
+                                                        @if ($maildata->generated_link  != null)
+
+                                                            <tr>
+                                                              <td>Pay Using Link: </td>
+                                                              <td style="font-weight: bold;">
+                                                                {{ $maildata->generated_link }}</td>
+                                                            </tr>
+                                                            
+                                                        @endif
+                                                        
+
 
 
                                                       </tbody>
@@ -830,14 +841,27 @@
                                                     <br />
 
 
+                                                    
+
 
                                                     <h4>Pay Invoice on PaySprint by following these steps:</h4>
                                                     <hr>
+
+                                                    @if ($maildata->generated_link  != null)
+
+                                                    <p>a. Click on the link to get access to your invoice <a href="{{ $maildata->generated_link }}">{{ $maildata->generated_link }}</a></p>
+                                                    <p>b. Confirm invoice details as shown on your browser</p>
+                                                    <p>c. Make payment using our secure payment gateway available for you.</p>
+                                                    
+                                                    @else
+
                                                     <p>a. Download Paysprint Mobile App on Google Play Store or App
                                                       Store or visit <a href="{{ route('home') }}">www.paysprint.ca</a>
                                                       to login/Sign up for FREE</p>
                                                     <p>b. On the menu option, click on Invoice, select the service type
                                                       and type the invoice reference number to view or pay invoice.</p>
+
+                                                    @endif
 
                                                     <hr>
 

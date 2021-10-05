@@ -591,6 +591,112 @@
 
         </section>
         <!-- /.Left col -->
+
+
+        {{--  Invoice Link Customer  --}}
+
+                <!-- Left col -->
+        <section class="col-lg-12 connectedSortable">
+
+
+          <!-- TO DO List -->
+          <div class="box box-primary importList">
+            <div class="box-header">
+              <i class="ion ion-clipboard"></i>
+
+              <h3 class="box-title">Invoice To Link Customers</h3>
+
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table table-responsive">
+               <table id="example4" class="table table-bordered table-hover">
+                   {{-- @if(session('role') != "Super")<caption><button type="button" class="btn btn-success" style="float:right" id="recurAll" onclick="recurring('All', {{ session('user_id') }})">Recur All</button></caption>@endif --}}
+                <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Created Date</th>
+                  <th>Trans. Date</th>
+                  <th>Invoice #</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Service</th>
+                  <th>Amount</th>
+                  <th>Tax Amount</th>
+                  <th>Total Amount</th>
+                  <th>Status</th>
+                  <th>Pay Due Date</th>
+                  @if(session('role') != "Super" && session('role') != "Access to Level 1 and 2 only" && session('role') != "Access to Level 1 only")<th>Action</th>@endif
+                </tr>
+                </thead>
+                <tbody>
+                @if(count($invoiceLinkImport) > 0)
+                <?php $i = 1;?>
+                @foreach ($invoiceLinkImport as $invoiceLinkImports)
+
+                    <tr>
+
+
+                      <td>{{ $i++ }}</td>
+                      <td>{{ date('d/M/Y', strtotime($invoiceLinkImports->created_at)) }}</td>
+                      <td>{{ date('d/M/Y', strtotime($invoiceLinkImports->transaction_date)) }}</td>
+                      <td>{{ $invoiceLinkImports->invoice_no }}</td>
+                      <td>{{ $invoiceLinkImports->name }}</td>
+                    <td title="{{ $invoiceLinkImports->payee_email }}"><?php $string = $invoiceLinkImports->payee_email; $output = strlen($string) > 10 ? substr($string,0,10)."..." : $string; echo $output;?></td>
+                    <td title="{{ $invoiceLinkImports->service }}"><?php $string = $invoiceLinkImports->service; $output = strlen($string) > 10 ? substr($string,0,10)."..." : $string; echo $output;?></td>
+                      <td align="center" style="font-weight: bold; color: navy;">@if (isset($getUserDetail) == true) {{ $getUserDetail->currencySymbol.number_format($invoiceLinkImports->amount, 2) }} @else {{ number_format($invoiceLinkImports->amount, 2) }} @endif </td>
+
+                      <td align="center" style="font-weight: bold; color: purple;">@if (isset($getUserDetail) == true) {{ $getUserDetail->currencySymbol.number_format($invoiceLinkImports->tax_amount, 2) }} @else {{ number_format($invoiceLinkImports->tax_amount, 2) }} @endif </td>
+
+                      <td align="center" style="font-weight: bold; color: green;">@if (isset($getUserDetail) == true) {{ $getUserDetail->currencySymbol.number_format($invoiceLinkImports->total_amount, 2) }} @else {{ number_format($invoiceLinkImports->total_amount, 2) }} @endif </td>
+
+                      @if ($invoiceLinkImports->payment_status == 1)
+                          <td align="center" style="font-weight: bold; color: green;">Paid</td>
+
+                      @elseif ($invoiceLinkImports->payment_status == 2)
+
+                          <td align="center" style="font-weight: bold; color: purple;">Part Pay</td>
+
+                      @else
+
+                        <td align="center" style="font-weight: bold; color: red;">Unpaid</td>
+
+                      @endif
+
+
+                      {{-- @if($leftOver = \App\InvoicePayment::where('invoice_no', $invoiceLinkImports->invoice_no)->get())
+                        
+                        @if(count($leftOver) > 0)
+                        <td align="center" style="font-weight: bold; color: green;">Paid</td>
+
+                        @else
+                        <td align="center" style="font-weight: bold; color: red;">Pending</td>
+
+                        @endif
+
+                      @endif --}}
+                      <td>{{ date('d/M/Y', strtotime($invoiceLinkImports->payment_due_date)) }}</td>
+
+                   @if(session('role') != "Super" && session('role') != "Access to Level 1 and 2 only" && session('role') != "Access to Level 1 only") <td><button type="button" class="btn btn-primary" id="viewdetails{{ $invoiceLinkImports->id }}" onclick="location.href='Admin/linkcustomer/{{ $invoiceLinkImports->id }}'">View Details</button></td>@endif
+                </tr>
+                @endforeach
+                @else
+                  <tr>
+                  <td colspan="10" align="center"> No uploaded Invoice yet</td>
+                </tr>
+                @endif
+
+
+                </tbody>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+
+
+        </section>
+
+
         <!-- right col (We are only adding the ID to make the widgets sortable)-->
         <section class="col-lg-12 connectedSortable">
 

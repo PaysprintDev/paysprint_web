@@ -437,7 +437,7 @@ class CheckSetupController extends Controller
     public function updateImportExcelCurrency()
     {
 
-        $data = ImportExcel::all();
+        $data = ImportExcel::where('merchantcurrencyCode', NULL)->get();
 
         foreach ($data as $value) {
             $merchant = User::where('ref_code', $value->uploaded_by)->first();

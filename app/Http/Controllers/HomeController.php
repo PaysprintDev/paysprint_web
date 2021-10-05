@@ -74,7 +74,7 @@ use App\CardIssuer as CardIssuer;
 use App\Notifications as Notifications;
 
 use App\AllCountries as AllCountries;
-
+use App\ImportExcelLink;
 use App\PricingSetup as PricingSetup;
 
 use App\Traits\RpmApp;
@@ -121,7 +121,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation']]);
+        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink']]);
 
         $location = $this->myLocation();
 
@@ -576,6 +576,88 @@ class HomeController extends Controller
 
 
         return view('main.payment')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function paymentFromLink(Request $req, $invoice, $country)
+    {
+
+
+        // Get Invoice Details
+        $invDetails = $this->getthisLinkInvoice($invoice, $country);
+
+        $this->page = 'Payment';
+        $this->name = $invDetails[0]->name;
+        $this->email = $invDetails[0]->payee_email;
+
+
+
+
+        if (isset($invDetails)) {
+            // Proceed
+
+
+
+            $getCurrencyCode = $this->getPaymentGateway(base64_decode($country));
+
+
+            if (isset($getCurrencyCode)) {
+                // International Transaction
+                $merchant = User::where('ref_code', $invDetails[0]->uploaded_by)->first();
+
+                if ($invDetails[0]->remaining_balance > 0) {
+                    if (
+                        $merchant->country != base64_decode($country)
+                    ) {
+                        $dataInfo = $this->convertCurrencyRate($getCurrencyCode->currencyCode, $merchant->currencyCode, $invDetails[0]->remaining_balance);
+                        $dataTot = $this->convertCurrencyRate($getCurrencyCode->currencyCode, $merchant->currencyCode, $invDetails[0]->total_amount);
+
+                        $totalInvoice = $dataInfo;
+                        $totalAmt = $dataTot;
+                    } else {
+                        $totalInvoice = $invDetails[0]->remaining_balance;
+                        $totalAmt = $invDetails[0]->total_amount;
+                    }
+                } else {
+
+                    $remBal = $invDetails[0]->total_amount + $invDetails[0]->remaining_balance;
+
+                    if (
+                        $merchant->country != base64_decode($country)
+                    ) {
+                        $dataInfo = $this->convertCurrencyRate($getCurrencyCode->currencyCode, $merchant->currencyCode, $remBal);
+                        $dataTot = $this->convertCurrencyRate($getCurrencyCode->currencyCode, $merchant->currencyCode, $invDetails[0]->total_amount);
+                        $totalInvoice = $dataInfo;
+                        $totalAmt = $dataTot;
+                    } else {
+                        $totalInvoice = $remBal;
+                        $totalAmt = $invDetails[0]->total_amount;
+                    }
+                }
+
+                $data = array(
+                    'getinvoice' => $this->getthisLinkInvoice($invoice, $country),
+                    'currencyCode' => $this->getCountryCode($getCurrencyCode->name),
+                    'continent' => $this->timezone[0],
+                    'remaining_invoice' => $totalInvoice,
+                    'total_invoice' => $totalAmt
+
+                );
+
+
+                // dd($data);
+
+
+
+                return view('main.paymentlink')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+            } else {
+                // Redirect to Login
+                return redirect()->route('login')->with('error', 'Unable to detect your country. Invoice payment cannot be processed');
+            }
+        } else {
+            // Redirect to Login
+            return redirect()->route('login');
+        }
     }
 
 
@@ -1470,6 +1552,26 @@ class HomeController extends Controller
             $data = $getInvoice;
         } else {
             $data = ImportExcel::where('invoice_no', $invoice)->get();
+        }
+
+        return $data;
+    }
+
+
+    public function getthisLinkInvoice($invoice, $country)
+    {
+        $getInvoice = DB::table('import_excel_link')
+            ->select(DB::raw('import_excel_link.name as name, import_excel_link.payee_ref_no, import_excel_link.payee_email as payee_email, import_excel_link.service as service, invoice_payment.remaining_balance as remaining_balance, import_excel_link.amount as amount, import_excel_link.uploaded_by, import_excel_link.invoice_no, import_excel_link.tax_amount, import_excel_link.total_amount, import_excel_link.installpay, import_excel_link.installlimit, import_excel_link.installcount, invoice_payment.amount as amount_paid'))
+            ->join('invoice_payment', 'import_excel_link.invoice_no', '=', 'invoice_payment.invoice_no')
+            ->where('import_excel_link.invoice_no', $invoice)
+            ->where('import_excel_link.country', base64_decode($country))
+            ->orderBy('invoice_payment.created_at', 'DESC')
+            ->get();
+
+        if (count($getInvoice) > 0) {
+            $data = $getInvoice;
+        } else {
+            $data = ImportExcelLink::where('invoice_no', $invoice)->where('country', base64_decode($country))->get();
         }
 
         return $data;

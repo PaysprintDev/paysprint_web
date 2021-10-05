@@ -40,7 +40,14 @@ Route::prefix('/v1')->group(function () {
 
         Route::post('currencyconversion',  ['uses' => 'CurrencyConverterApiController@mycurrencyConvert']);
 
+
+        Route::get('conversionrate/{local}/{foreign}',  ['uses' => 'Controller@getConversionRate']);
+
         Route::get('classifiedbusinessdirectory',  ['uses' => 'api\v1\UserController@classifiedBusinessDirectory']);
+
+
+        // pay Invoice
+        Route::post('payinvoicelink',  ['uses' => 'MonerisController@payInvoiceLink'])->name('pay invoice link from gateway');
     });
 
 
@@ -207,6 +214,7 @@ Route::prefix('/v1')->group(function () {
 
         // Create Single Invoice
         Route::post('singleinvoice',  ['uses' => 'api\v1\InvoiceController@singleInvoice'])->name('create single invoice');
+        Route::post('singleinvoicelink',  ['uses' => 'api\v1\InvoiceController@singleInvoiceLink'])->name('create link invoice');
         Route::post('bulkinvoice',  ['uses' => 'api\v1\InvoiceController@bulkInvoice'])->name('create bulk invoice');
 
 
