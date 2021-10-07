@@ -228,5 +228,13 @@ Route::prefix('/v1')->group(function () {
         // Receive Money To PaySprint
         Route::post('customers',  ['uses' => 'api\v1\MerchantApiController@receiveMoneyFromPaysprintCustomer']);
         Route::post('visitors',  ['uses' => 'api\v1\MerchantApiController@receiveMoneyFromVisitors']);
+
+
+        // Checkout Routes
+
+
+        Route::prefix('transaction')->group(function () {
+            Route::post('/initialize', ['uses' => 'api\v1\CheckoutController@initialize', 'as' => 'initialize transaction']);
+        });
     });
 });

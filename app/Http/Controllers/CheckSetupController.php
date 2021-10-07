@@ -552,6 +552,7 @@ class CheckSetupController extends Controller
     }
 
 
+
     public function insertCountry()
     {
         $country = '[{"name": "Afghanistan", "code": "AF", "gateway": ""},
@@ -813,17 +814,17 @@ class CheckSetupController extends Controller
     {
         // Create Statement And Credit EXBC account holder
         // $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
-        $exbcMerchant = User::where('email', 'adenugaadebambo41@gmail.com')->first();
+        $exbcMerchant = User::where('email', 'duntanadebiyi@yahoo.com')->first();
 
         if (isset($exbcMerchant)) {
 
 
             // $transaction_id = "wallet-".date('dmY').time();
-            $transaction_id = "ostu94qyby";
+            $transaction_id = "ord-051021-153246";
 
             // $activity = "Added ".$exbcMerchant->currencyCode.''.number_format(20, 2)." to your Wallet to load EXBC Prepaid Card";
-            $activity = "Added " . $exbcMerchant->currencyCode . '' . number_format(1967, 2) . " to Wallet including a fee charge of " . $exbcMerchant->currencyCode . '' . number_format(33, 2) . " was deducted from your Debit Card";
-            $credit = 1967;
+            $activity = "Added " . $exbcMerchant->currencyCode . '' . number_format(689.1, 2) . " to Wallet including a fee charge of " . $exbcMerchant->currencyCode . '' . number_format(10.90, 2) . " was deducted from your Debit Card";
+            $credit = 689.1;
             $debit = 0;
             $reference_code = $transaction_id;
             $balance = 0;
@@ -833,9 +834,9 @@ class CheckSetupController extends Controller
             $regards = $exbcMerchant->ref_code;
             $statement_route = "wallet";
 
-            $merchantwalletBal = $exbcMerchant->wallet_balance + 1967;
+            $merchantwalletBal = $exbcMerchant->wallet_balance + 689.1;
 
-            User::where('email', 'adenugaadebambo41@gmail.com')->update([
+            User::where('email', 'duntanadebiyi@yahoo.com')->update([
                 'wallet_balance' => $merchantwalletBal
             ]);
 
@@ -844,11 +845,11 @@ class CheckSetupController extends Controller
             // Senders statement
             $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
 
-            $this->getfeeTransaction($reference_code, $exbcMerchant->ref_code, 2000, 33, 1967);
+            $this->getfeeTransaction($reference_code, $exbcMerchant->ref_code, 700, 10.90, 689.1);
 
             // $sendMerchantMsg = "Hi ".$exbcMerchant->name.", ".$exbcMerchant->currencyCode." 20.00 was added to your wallet to load EXBC Prepaid Card. Your new wallet balance is ".$exbcMerchant->currencyCode.' '.number_format($merchantwalletBal, 2).". Thanks.";
 
-            $sendMerchantMsg = 'You have added ' . $exbcMerchant->currencyCode . ' ' . number_format(1967, 2) . ' (Gross Amount of ' . $exbcMerchant->currencyCode . ' ' . number_format(2000, 2) . ' less transaction fee ' . $exbcMerchant->currencyCode . ' ' . number_format(33, 2) . ') to your wallet with PaySprint. You now have ' . $exbcMerchant->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
+            $sendMerchantMsg = 'You have added ' . $exbcMerchant->currencyCode . ' ' . number_format(689.1, 2) . ' (Gross Amount of ' . $exbcMerchant->currencyCode . ' ' . number_format(700, 2) . ' less transaction fee ' . $exbcMerchant->currencyCode . ' ' . number_format(10.90, 2) . ') to your wallet with PaySprint. You now have ' . $exbcMerchant->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
 
             $this->createNotification($exbcMerchant->ref_code, $sendMerchantMsg);
 
@@ -857,7 +858,88 @@ class CheckSetupController extends Controller
             $gateway = ucfirst($getGateway->gateway);
 
 
-            $message = 'You have successfully added ' . $exbcMerchant->currencyCode . ' ' . number_format(1967, 2) . ' to your wallet';
+            $message = 'You have successfully added ' . $exbcMerchant->currencyCode . ' ' . number_format(689.1, 2) . ' to your wallet';
+
+            $this->keepRecord($reference_code, $message, "Success", $gateway, $exbcMerchant->country);
+
+            $userPhone = User::where('email', $exbcMerchant->email)->where('telephone', 'LIKE', '%+%')->first();
+
+            if (isset($userPhone)) {
+
+                $sendPhone = $exbcMerchant->telephone;
+            } else {
+                $sendPhone = "+" . $exbcMerchant->code . $exbcMerchant->telephone;
+            }
+
+            if ($exbcMerchant->country == "Nigeria") {
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                $this->sendSms($sendMerchantMsg, $correctPhone);
+            } else {
+                $this->sendMessage($sendMerchantMsg, $sendPhone);
+            }
+
+
+            // Log::info($sendMerchantMsg);
+
+            $this->slack($sendMerchantMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+            echo $sendMerchantMsg;
+        } else {
+            // Do nothing
+        }
+    }
+
+
+    public function reverseFund()
+    {
+        // Create Statement And Credit EXBC account holder
+        // $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
+        $exbcMerchant = User::where('email', 'lg751763@gmail.com')->first();
+
+        if (isset($exbcMerchant)) {
+
+
+            $transaction_id = "wallet-" . date('dmY') . time();
+            // $transaction_id = "pi_3JhWOuHJCM3bYqU11nuYRlIa";
+
+            // $activity = "Added ".$exbcMerchant->currencyCode.''.number_format(20, 2)." to your Wallet to load EXBC Prepaid Card";
+            $activity = "Wallet reversal of " . $exbcMerchant->currencyCode . '' . number_format(45769.00, 2) . " has been returned to your Bank Account";
+            $credit = 0;
+            $debit = 45769.00;
+            $reference_code = $transaction_id;
+            $balance = 0;
+            $trans_date = date('Y-m-d');
+            $transstatus = "Delivered";
+            $action = "Wallet debit";
+            $regards = $exbcMerchant->ref_code;
+            $statement_route = "wallet";
+
+            $merchantwalletBal = $exbcMerchant->wallet_balance - 45769.00;
+
+            User::where('email', 'lg751763@gmail.com')->update([
+                'wallet_balance' => $merchantwalletBal
+            ]);
+
+
+
+            // Senders statement
+            $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
+
+            $this->getfeeTransaction($reference_code, $exbcMerchant->ref_code, 45769.00, 0.00, 45769.00);
+
+            // $sendMerchantMsg = "Hi ".$exbcMerchant->name.", ".$exbcMerchant->currencyCode." 20.00 was added to your wallet to load EXBC Prepaid Card. Your new wallet balance is ".$exbcMerchant->currencyCode.' '.number_format($merchantwalletBal, 2).". Thanks.";
+
+            $sendMerchantMsg = 'Wallet reversal of ' . $exbcMerchant->currencyCode . ' ' . number_format(45769.00, 2) . ' (Gross Amount of ' . $exbcMerchant->currencyCode . ' ' . number_format(45769.00, 2) . ' less transaction fee ' . $exbcMerchant->currencyCode . ' ' . number_format(0.00, 2) . ') has been returned to your Bank Account. You now have ' . $exbcMerchant->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your PaySprint Wallet.';
+
+            $this->createNotification($exbcMerchant->ref_code, $sendMerchantMsg);
+
+            $getGateway = AllCountries::where('name', $exbcMerchant->country)->first();
+
+            $gateway = ucfirst($getGateway->gateway);
+
+
+            $message = 'Wallet reversal of ' . $exbcMerchant->currencyCode . ' ' . number_format(45769.00, 2) . ' has been returned to your Bank Account';
 
             $this->keepRecord($reference_code, $message, "Success", $gateway, $exbcMerchant->country);
 

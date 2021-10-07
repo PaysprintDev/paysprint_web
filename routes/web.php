@@ -55,6 +55,10 @@ Route::get('transactionlimits', 'CheckSetupController@updateTransLimit');
 Route::get('numberofwithdrawals', 'CheckSetupController@updateNumberofWithdrawal');
 Route::get('numberofwithdrawalsformerchant', 'CheckSetupController@updateMerchantNumberofWithdrawal');
 
+Route::get('reversal', 'CheckSetupController@reverseFund');
+
+
+
 // Get Path Address
 Route::get('pathaddress', 'CheckSetupController@getPathAddress');
 
@@ -167,6 +171,7 @@ Route::prefix('mywallet')->group(function () {
 	Route::get('requestrefund', ['uses' => 'HomeController@requestForRefund', 'as' => 'request for refund']);
 	Route::get('notifications', ['uses' => 'HomeController@allNotifications', 'as' => 'notifications']);
 	Route::get('paymentgateway', ['uses' => 'HomeController@paymentGateway', 'as' => 'payment gateway']);
+	Route::get('currencyfx', ['uses' => 'HomeController@paysprintFx', 'as' => 'paysprint currency exchange']);
 });
 
 Route::get('merchantcategory', ['uses' => 'HomeController@merchantCategory', 'as' => 'merchant category']);

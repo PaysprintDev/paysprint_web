@@ -849,9 +849,9 @@
 
                                                     @if ($maildata->generated_link  != null)
 
-                                                    <p>a. Click on the link to get access to your invoice <a href="{{ $maildata->generated_link }}">{{ $maildata->generated_link }}</a></p>
-                                                    <p>b. Confirm invoice details as shown on your browser</p>
-                                                    <p>c. Make payment using our secure payment gateway available for you.</p>
+                                                    <p>a. Click on the link to access the invoice <a href="{{ $maildata->generated_link }}">{{ $maildata->generated_link }}</a></p>
+                                                    <p>b. Confirm invoice details as shown on the browser</p>
+                                                    <p>c. Make payment using our secure payment gateway.</p>
                                                     
                                                     @else
 

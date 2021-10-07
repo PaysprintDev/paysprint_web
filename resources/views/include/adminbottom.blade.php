@@ -239,11 +239,11 @@ s0.parentNode.insertBefore(s1,s0);
             }
             else if(result.message == "error" && result.title == "email"){
                 $(".emailcheck").removeClass("disp-0");
-                $(".emailcheck").text("Email Address is not available. (Invoice goes to Customer directly)");
+                $(".emailcheck").text("Email Address is not available. (Customer does not need to create a PaySprint Account to Pay Invoice)");
             }
             else if(result.message == "error" && result.title == "telephone"){
                 $(".phonecheck").removeClass("disp-0");
-                $(".phonecheck").text("Telephone is not available. (Invoice goes to Customer directly)");
+                $(".phonecheck").text("Telephone is not available. (Customer does not need to create a PaySprint Account to Pay Invoice)");
             }
 
 

@@ -37,6 +37,7 @@
                         <p class="footer-title gr-text-11 mb-7" style="font-size: 20px;"><strong>QUICK LINK</strong></p>
                         <ul class="footer-list list-unstyled">
                             <li class="py-2"><a class="gr-text-9 gr-text-color" href="{{ route('about') }}">About us</a></li>
+                            <li class="py-2"><a class="gr-text-9 gr-text-color" href="/blog">Blog</a></li>
                             <li class="py-2"><a class="gr-text-9 gr-text-color" href="{{ route('contact') }}">Contact us</a></li>
                             <li class="py-2"><a class="gr-text-9 gr-text-color" href="{{ route('terms of use') }}">Terms of Use</a></li>
                             <li class="py-2"><a class="gr-text-9 gr-text-color" href="{{ route('privacy policy') }}">Privacy Policy</a></li>

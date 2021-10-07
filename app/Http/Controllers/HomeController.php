@@ -645,9 +645,6 @@ class HomeController extends Controller
                 );
 
 
-                // dd($data);
-
-
 
                 return view('main.paymentlink')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
             } else {
@@ -890,6 +887,42 @@ class HomeController extends Controller
         // dd($data);
 
         return view('main.myaccount')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    // PaySprint Currency FX
+    public function paysprintFx(Request $req)
+    {
+
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'My Wallet';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            } else {
+                $this->page = 'My Wallet';
+                $this->name = '';
+            }
+        } else {
+            $this->page = 'My Wallet';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+
+        $data = array(
+            'currencyCode' => $this->getCountryCode(Auth::user()->country),
+            'getCard' => $this->getUserCard(),
+            'getBank' => $this->getUserBankDetail(),
+            'walletStatement' => $this->walletStatement(),
+            'continent' => $this->timezone[0],
+            'specialInfo' => $this->getthisInfo(Auth::user()->country),
+        );
+
+        // dd($data);
+
+        return view('main.currencyfx')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -1561,7 +1594,7 @@ class HomeController extends Controller
     public function getthisLinkInvoice($invoice, $country)
     {
         $getInvoice = DB::table('import_excel_link')
-            ->select(DB::raw('import_excel_link.name as name, import_excel_link.payee_ref_no, import_excel_link.payee_email as payee_email, import_excel_link.service as service, invoice_payment.remaining_balance as remaining_balance, import_excel_link.amount as amount, import_excel_link.uploaded_by, import_excel_link.invoice_no, import_excel_link.tax_amount, import_excel_link.total_amount, import_excel_link.installpay, import_excel_link.installlimit, import_excel_link.installcount, invoice_payment.amount as amount_paid'))
+            ->select(DB::raw('import_excel_link.name as name, import_excel_link.payee_ref_no, import_excel_link.payee_email as payee_email, import_excel_link.service as service, invoice_payment.remaining_balance as remaining_balance, import_excel_link.amount as amount, import_excel_link.uploaded_by, import_excel_link.invoice_no, import_excel_link.tax_amount, import_excel_link.total_amount, import_excel_link.installpay, import_excel_link.installlimit, import_excel_link.installcount, import_excel_link.merchantName, invoice_payment.amount as amount_paid'))
             ->join('invoice_payment', 'import_excel_link.invoice_no', '=', 'invoice_payment.invoice_no')
             ->where('import_excel_link.invoice_no', $invoice)
             ->where('import_excel_link.country', base64_decode($country))

@@ -464,7 +464,7 @@ input[type="radio"] {
                                     </div>
 
 
-                                    <div class="card-footer"> <button type="button" onclick="handShake('payinvoicelink')" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Pay Invoice </button></div>
+                                    <div class="card-footer"> <button type="button" onclick="handShake('payinvoicelink')" class="subscribe btn btn-primary btn-block shadow-sm {{ ($countryBase == $data['currencyCode']->name) ? 'cardSubmit' : 'sendmoneyBtn' }}"> Pay Invoice </button></div>
 
                                 @endif
 
@@ -485,7 +485,7 @@ input[type="radio"] {
 
 
 
-                                <div class="card-footer"> <button type="submit" class="subscribe btn btn-info btn-block shadow-sm sendmoneyBtn"> Pay Invoice</button></div>
+                                <div class="card-footer"> <button type="submit" class="subscribe btn btn-info btn-block shadow-sm {{ ($countryBase == $data['currencyCode']->name) ? 'cardSubmit' : 'sendmoneyBtn' }}"> Pay Invoice</button></div>
 
                                 @endif
 
@@ -532,7 +532,7 @@ input[type="radio"] {
 
                                 
 
-                                    <div class="card-footer"> <button type="button" onclick="payWithPaystack('{{ $email }}')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Pay Invoice </button></div>
+                                    <div class="card-footer"> <button type="button" onclick="payWithPaystack('{{ $email }}')" class="subscribe btn btn-info btn-block shadow-sm {{ ($countryBase == $data['currencyCode']->name) ? 'cardSubmit' : 'sendmoneyBtn' }}"> Pay Invoice </button></div>
 
                                 @endif
 

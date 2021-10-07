@@ -45,6 +45,11 @@
                     </li>
 
                     <li class="nav-item">
+                        <a class="nav-link" href="/blog" role="button" aria-expanded="false">BLOG</a>
+                    </li>
+
+
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('contact') }}" role="button" aria-expanded="false">CONTACT</a>
                     </li>
 
@@ -74,6 +79,11 @@
                         
                     <li class="nav-item">
                       <a class="nav-link" href="{{ route('Admin') }}" role="button" aria-expanded="false">DASHBOARD</a>
+                    </li>
+
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/blog" role="button" aria-expanded="false">BLOG</a>
                     </li>
 
 
@@ -428,6 +438,11 @@
                         <a class="nav-link" href="{{ route('about') }}" role="button" aria-expanded="false">ABOUT US</a>
                     </li>
 
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/blog" role="button" aria-expanded="false">BLOG</a>
+                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('contact') }}" role="button" aria-expanded="false">CONTACT</a>
                     </li>
@@ -459,6 +474,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('my account') }}" role="button" aria-expanded="false">MY WALLET</a>
                     </li>
+                    
 
                     <li class="nav-item">
                         <a class="nav-link" href="javascript:void()" onclick="$('#sendMoney').click()" role="button" aria-expanded="false">MONEY TRANSFER</a>
@@ -470,6 +486,10 @@
 
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('statement') }}" role="button" aria-expanded="false">TRANSACTION HISTORY</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/blog" role="button" aria-expanded="false">BLOG</a>
                     </li>
 
 

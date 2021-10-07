@@ -31,7 +31,7 @@ trait FlagPayment
 
         $getUser = Statement::where('reference_code', $transaction_id)->first();
 
-        User::where('email', $getUser->user_id)->update(['flagged' => 1]);
+        User::where('email', $getUser->user_id)->update(['flagged' => $flag]);
 
         $getAccount = User::where('email', $getUser->user_id)->first();
 

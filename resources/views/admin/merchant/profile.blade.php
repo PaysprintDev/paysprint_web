@@ -920,7 +920,7 @@
                         <form action="#" method="post" id="formElemtransactionpinsettings">
                             
                             <div class="form-group">
-                                <label for="oldpin">Old Pin <strong><p class="text-danger" style="cursor: pointer;" onclick="resetPin('{{ $data['getuserDetail']->securityQuestion }}','transaction')">Have you forgotten your old transaction pin? <span style="text-decoration: underline;">Click here to reset</span></p></strong></label>
+                                <label for="oldpin">Old Pin <strong><p class="text-danger" style="cursor: pointer;" onclick='resetPin("{{ $data["getuserDetail"]->securityQuestion }}","transaction")'>Have you forgotten your old transaction pin? <span style="text-decoration: underline;">Click here to reset</span></p></strong></label>
                                 <input type="password" name="oldpin" id="oldpin" class="form-control" placeholder="Pin" maxlength="4">
                             </div>
                             <div class="form-group">
@@ -1018,7 +1018,7 @@
                   <form action="#" method="post" id="formElempasswordsettings">
 
                         <div class="form-group">
-                            <label for="oldpassword">Old Password <strong><p class="text-danger" style="cursor: pointer;" onclick="resetPin('{{ $data['getuserDetail']->securityQuestion }}','password')">Have you forgotten your old password? <span style="text-decoration: underline;">Click here to reset</span></p></strong></label>
+                            <label for="oldpassword">Old Password <strong><p class="text-danger" style="cursor: pointer;" onclick='resetPin("{{ $data["getuserDetail"]->securityQuestion }}","password")'>Have you forgotten your old password? <span style="text-decoration: underline;">Click here to reset</span></p></strong></label>
                             <input type="password" name="oldpassword" id="oldpassword" class="form-control" placeholder="Password">
                         </div>
                         <div class="form-group">
@@ -1050,6 +1050,18 @@
                     <div class="form-group">
                         <label for="securityQuestion">Question</label>
                         <input type="text" name="securityQuestion" id="securityQuestion" class="form-control" placeholder="Question">
+
+
+                        <select name="securityQuestion" id="securityQuestion" class="form-control">
+                          <option value="">Select Question</option>
+                          <option value="What was your first pet's name?" {{ ($data['getuserDetail']->securityQuestion == "What was your first pet's name?") ? "selected" : "" }}>What was your first pet's name?</option>
+                          <option value="What is the name of the city where you were born?" {{ ($data['getuserDetail']->securityQuestion == "What is the name of the city where you were born?") ? "selected" : "" }}>What is the name of the city where you were born?</option>
+                          <option value="What was your childhood nickname?" {{ ($data['getuserDetail']->securityQuestion == "What was your childhood nickname?") ? "selected" : "" }}>What was your childhood nickname?</option>
+                          <option value="What is the name of the city where your parents met?" {{ ($data['getuserDetail']->securityQuestion == "What is the name of the city where your parents met?") ? "selected" : "" }}>What is the name of the city where your parents met?</option>
+                          <option value="What is the first name of your oldest cousin?" {{ ($data['getuserDetail']->securityQuestion == "What is the first name of your oldest cousin?") ? "selected" : "" }}>What is the first name of your oldest cousin?</option>
+                          <option value="What is the name of the first school you attended?" {{ ($data['getuserDetail']->securityQuestion == "What is the name of the first school you attended?") ? "selected" : "" }}>What is the name of the first school you attended?</option>
+                      </select>
+
                     </div>
                     <div class="form-group">
                         <label for="securityAnswer">Answer</label>

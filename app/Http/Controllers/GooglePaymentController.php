@@ -163,19 +163,9 @@ class GooglePaymentController extends Controller
                     $withdrawLimit = $this->getWithdrawalLimit($user->country, $user->id);
 
 
-                    if ($req->amount > $withdrawLimit['withdrawal_per_transaction']) {
+                    if ($req->amount > $withdrawLimit['withdrawal_per_day']) {
 
-                        $message = "Transaction limit per transaction is " . $user->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_transaction'], 2) . ". Please withdraw a lesser amount";
-
-                        $resData = ['res' => $message, 'message' => 'error', 'title' => 'Oops!'];
-
-                        $response = $message;
-                        $respaction = 'error';
-
-                        return redirect()->back()->with($respaction, $response);
-                    } elseif ($req->amount > $withdrawLimit['withdrawal_per_day']) {
-
-                        $message = "Transaction limit per day is " . $user->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try again the next day";
+                        $message = "Transaction limit per day is " . $user->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try a lesser amount";
 
                         $resData = ['res' => $message, 'message' => 'error', 'title' => 'Oops!'];
 
@@ -328,7 +318,7 @@ class GooglePaymentController extends Controller
 
                                             $response = $this->monerisWalletProcess($user->api_token, $req->card_id, $monerisDeductamount, "purchase", "PaySprint Send Money to the Wallet of " . $client->name, $mode);
 
-                                            if ($response->responseData['Message'] == "APPROVED           *                    =") {
+                                            if ($response->responseData['ResponseCode'] == "000" || $response->responseData['ResponseCode'] == "001" || $response->responseData['ResponseCode'] == "002" || $response->responseData['ResponseCode'] == "003" || $response->responseData['ResponseCode'] == "004" || $response->responseData['ResponseCode'] == "005" || $response->responseData['ResponseCode'] == "006" || $response->responseData['ResponseCode'] == "007" || $response->responseData['ResponseCode'] == "008" || $response->responseData['ResponseCode'] == "009" || $response->responseData['ResponseCode'] == "010" || $response->responseData['ResponseCode'] == "023" || $response->responseData['ResponseCode'] == "024" || $response->responseData['ResponseCode'] == "025" || $response->responseData['ResponseCode'] == "026" || $response->responseData['ResponseCode'] == "027" || $response->responseData['ResponseCode'] == "028" || $response->responseData['ResponseCode'] == "029") {
 
                                                 $reference_code = $response->responseData['ReceiptId'];
 

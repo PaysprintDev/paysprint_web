@@ -65,8 +65,9 @@ trait PaymentGateway
             $getUser = User::where('email', $getStatement->user_id)->first();
 
             $walletBal = $getUser->wallet_balance + $debit;
+            $numOfWithdrawal = $getUser->number_of_withdrawals - 1;
 
-            User::where('email', $getStatement->user_id)->update(['wallet_balance' => $walletBal]);
+            User::where('email', $getStatement->user_id)->update(['wallet_balance' => $walletBal, 'number_of_withdrawals' => $numOfWithdrawal]);
 
             // Delete Bank WithDrawal
             BankWithdrawal::where('transaction_id', $reference_code)->delete();

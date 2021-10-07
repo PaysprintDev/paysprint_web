@@ -111,7 +111,7 @@
                             <td>{{ $email }}</td>
                             <td>{{ $accountType }}</td>
                             
-                            <td>{{ $data->activity }}</td>
+                            <td>{!! $data->activity !!}</td>
                             <td>{{ strtoupper($data->country) }}</td>
                             <td>{{ strtoupper($data->platform) }}</td>
                             <td>{{ $loginCount }}</td>

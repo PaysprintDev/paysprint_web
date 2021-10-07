@@ -4750,11 +4750,11 @@ class AdminController extends Controller
         // Send Mail to the support agent
         $this->name = $data->name;
         $this->email = $data->email;
-        $this->info = "Fund remittance";
+        $this->subject = "Your PaySprint Account is Temporarily Suspended. Take These Steps to Resolve it!!!";
 
-        $this->message = '<p>Hello ' . $this->name . ', </p><p>This is to inform you that your account has been randomly selected for review, because your funding source does not tally with your account information.</p><p>Kindly attach your Utility bill showing your information to <a href="mailto:customerserviceafrica@paysprint.ca">customerserviceafrica@paysprint.ca</a></p><p>Thanks</p>';
+        $this->message = '<p>Hello ' . $this->name . ', </p><p>Your PaySprint Account is temporarily suspended as our system is unable to match the details on your profile with the details on the source of funding your wallet which is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the temporary suspension on your account, kindly take the following steps:</p><p>a. Desist from adding funds to your wallet from Funding Source that does not have same details with your PaySprint profile and Government issued photo ID</p><p>b. Send us a copy of a Utility Bill with address that matches the address on your profile. Please send the copy of utility bill to: info@paysprint.ca</p><p>c. Upload a selfie of yourself (if you are yet to do so)</p><p>Kindly login to www.paysprint.ca and upload Items B and C above when the suspension on your PaySprint Account is removed.</p><p>We thank you for your understanding</p><p>Compliance Team at paysprint.ca</p><p></p>';
 
-        $this->sendEmail($this->email, "Fund remittance");
+        $this->sendEmail($this->email, "Flagged Account");
 
         return back()->with('success', 'Successful!');
     }
@@ -12535,8 +12535,9 @@ class AdminController extends Controller
 
         if ($thisuser->flagged == 0) {
             $user->where('id', $req->id)->update(['flagged' => 1, 'accountLevel' => 2]);
-            $subject = "Review of PaySprint Account";
-            $message = "This is to inform you that your account has been randomly selected for review, because your credit/debit card information does not tally with your account information. You will not be able to login or conduct any transaction both on the mobile app and on the web during the review period, which might last for 48 hours. We shall inform you when your PaySprint account is available for use. We regret any inconvenience this action might cause you. If you have any concern, please send us a message on : compliance@paysprint.ca";
+            $subject = "Your PaySprint Account is Temporarily Suspended. Take These Steps to Resolve it!!!";
+            $message = "<p>Your PaySprint Account is temporarily suspended as our system is unable to match the details on your profile with the details on the Bank Card added which 
+is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the temporary suspension on your account, kindly take the following steps:</p><p>a.  Delete and desist from using a Bank Card with details that are different from your PaySprint profile and Government issued photo ID</p><p>b. Send us a copy of a Utility Bill with address that matches the address on your profile. Please send the copy of utility bill to: info@paysprint.ca</p><p>c. Upload a selfie of yourself (if you are yet to do so)</p><p>Kindly login to www.paysprint.ca and upload Items B and C above when the suspension on your PaySprint Account is removed.</p><p>We thank you for your understanding</p><p>Compliance Team at paysprint.ca</p>";
         } else {
             $user->where('id', $req->id)->update(['flagged' => 0, 'accountLevel' => 3]);
             $subject = "Review of PaySprint Account";
@@ -12801,6 +12802,9 @@ class AdminController extends Controller
 
             $this->subject = $req->subject;
             $this->message = $req->message;
+
+
+            $this->createNotification($user->ref_code, strip_tags($req->message));
 
 
             $this->sendEmail($this->to, "Refund Request");

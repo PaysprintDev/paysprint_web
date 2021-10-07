@@ -107,10 +107,15 @@ input[type="radio"] {
                                                                 Wallet Balance
                                                             </h6>
                                                         </div>
-                                                        <div class="col-md-12">
+                                                        <div class="col-md-7">
                                                             <h4>
                                                                 {{ $data['currencyCode']->currencySymbol."".number_format(Auth::user()->wallet_balance, 2) }}
                                                             </h4>
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <a href="{{ route('paysprint currency exchange') }}" style="font-weight: bold; text-decoration: none;">
+                                                                Currency Exchange <img src="https://img.icons8.com/external-wanicon-two-tone-wanicon/30/000000/external-currency-stock-market-wanicon-two-tone-wanicon.png"/>
+                                                            </a>
                                                         </div>
                                                     </div>
                                             </div>
