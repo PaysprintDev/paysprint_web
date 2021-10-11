@@ -59,6 +59,8 @@ Route::get('reversal', 'CheckSetupController@reverseFund');
 
 
 
+
+
 // Get Path Address
 Route::get('pathaddress', 'CheckSetupController@getPathAddress');
 
@@ -155,6 +157,12 @@ Route::prefix('expresspay')->group(function () {
 });
 
 
+// Currency FX Page
+Route::prefix('currencyfx')->group(function () {
+	Route::get('/', ['uses' => 'CurrencyFxController@index', 'as' => 'paysprint currency exchange']);
+	Route::get('marketplace', ['uses' => 'CurrencyFxController@marketPlace', 'as' => 'paysprint currency market place']);
+});
+
 // Wallet Page
 
 Route::prefix('mywallet')->group(function () {
@@ -171,7 +179,6 @@ Route::prefix('mywallet')->group(function () {
 	Route::get('requestrefund', ['uses' => 'HomeController@requestForRefund', 'as' => 'request for refund']);
 	Route::get('notifications', ['uses' => 'HomeController@allNotifications', 'as' => 'notifications']);
 	Route::get('paymentgateway', ['uses' => 'HomeController@paymentGateway', 'as' => 'payment gateway']);
-	Route::get('currencyfx', ['uses' => 'HomeController@paysprintFx', 'as' => 'paysprint currency exchange']);
 });
 
 Route::get('merchantcategory', ['uses' => 'HomeController@merchantCategory', 'as' => 'merchant category']);
@@ -531,6 +538,12 @@ Route::prefix('Admin/')->group(function () {
 
 	Route::get('pricingsetup', ['uses' => 'AdminController@pricingSetup', 'as' => 'pricing setup']);
 	Route::get('pricingsetupbycountry', ['uses' => 'AdminController@pricingSetupByCountry', 'as' => 'pricing setup by country']);
+
+	Route::get('markupconversion', ['uses' => 'AdminController@markupCurrencyConversion', 'as' => 'markup conversion']);
+
+
+	Route::post('savemarkup', ['uses' => 'AdminController@saveMarkup', 'as' => 'save markup']);
+
 	Route::get('countrypricing', ['uses' => 'AdminController@countryPricing', 'as' => 'country pricing']);
 	Route::get('editpricing', ['uses' => 'AdminController@editPricing', 'as' => 'edit pricing']);
 	Route::post('createpricingsetup', ['uses' => 'AdminController@createPricingSetup', 'as' => 'create pricing setup']);

@@ -1006,6 +1006,11 @@ class MerchantApiController extends Controller
     public function convertCurrency($currency, $amount, $localcurrency)
     {
 
+        // Get Markup
+        $markuppercent = $this->markupPercentage();
+
+        $markValue = (1 + ($markuppercent[0]->percentage / 100));
+
         $currency = 'USD' . $currency;
         $amount = $amount;
         $localCurrency = 'USD' . $localcurrency;
@@ -1041,7 +1046,7 @@ class MerchantApiController extends Controller
         if ($result->success == true) {
 
             // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
-            $convertLocal = $amount / $result->quotes->$localCurrency;
+            $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
 
             // Converting your USD value to other currency ie CAD * Y 
             $convRate = $result->quotes->$currency * $convertLocal;

@@ -1433,10 +1433,11 @@ class HomeController extends Controller
             'continent' => $this->timezone[0]
         );
 
-
-
-
-        return view('main.payutility')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+        if ($data['getvendors'] != []) {
+            return view('main.payutility')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+        } else {
+            return view('errors.503page');
+        }
     }
 
 
@@ -1568,7 +1569,13 @@ class HomeController extends Controller
 
         $data['conversionrate'] = $this->getConversionRate(Auth::user()->currencyCode, $data->currencyCode);
 
-        return $data;
+        $resp = [
+            'data' => $data,
+            'conversionrate' => $data['conversionrate'],
+        ];
+
+
+        return $resp;
     }
 
 
@@ -4437,6 +4444,11 @@ class HomeController extends Controller
     public function convertCurrencyRate($foreigncurrency, $localcurrency, $amount)
     {
 
+        // Get Markup
+        $markuppercent = $this->markupPercentage();
+
+        $markValue = (1 + ($markuppercent[0]->percentage / 100));
+
         $currency = 'USD' . $foreigncurrency;
         $amount = $amount;
         $localCurrency = 'USD' . $localcurrency;
@@ -4470,7 +4482,7 @@ class HomeController extends Controller
         if ($result->success == true) {
 
             // Conversion Rate USD to Local currency
-            $convertLocal = $amount / $result->quotes->$localCurrency;
+            $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
 
 
 

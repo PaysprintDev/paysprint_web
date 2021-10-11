@@ -220,6 +220,10 @@ Route::prefix('/v1')->group(function () {
 
         // Send Money to User not on PS
         Route::post('sendmoneytoanonymous',  ['uses' => 'GooglePaymentController@sendMoneyToAnonymous'])->name('send money to user not on ps');
+
+
+        // CurrencyFX Active Order
+        Route::get('/activeorders', ['uses' => 'CurrencyFxController@getActiveOrders', 'as' => 'currency fx active orders']);
     });
 
 
@@ -237,4 +241,7 @@ Route::prefix('/v1')->group(function () {
             Route::post('/initialize', ['uses' => 'api\v1\CheckoutController@initialize', 'as' => 'initialize transaction']);
         });
     });
+
+
+    Route::get('/userdata', ['uses' => 'CurrencyFxController@getUserData', 'as' => 'currency user data']);
 });

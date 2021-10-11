@@ -19,11 +19,12 @@ use App\ConversionCountry as ConversionCountry;
 use App\Classes\Mobile_Detect;
 
 use App\User as User;
+use App\Traits\PaymentGateway;
 
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, PaymentGateway;
 
 
 
@@ -94,6 +95,11 @@ class Controller extends BaseController
     public function currencyConvert($curCurrency, $curAmount)
     {
 
+        // Get Markup
+        $markuppercent = $this->markupPercentage();
+
+        $markValue = (1 + ($markuppercent[0]->percentage / 100));
+
         $currency = 'USD' . $curCurrency;
         $amount = $curAmount;
 
@@ -123,7 +129,7 @@ class Controller extends BaseController
 
         if ($result->success == true) {
             // This amount is in dollars
-            $convRate = $amount / $result->quotes->$currency;
+            $convRate = ($amount / $result->quotes->$currency) * $markValue;
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }
@@ -136,6 +142,12 @@ class Controller extends BaseController
 
     public function platformcurrencyConvert()
     {
+
+        // Get Markup
+        $markuppercent = $this->markupPercentage();
+
+        $markValue = (1 + ($markuppercent[0]->percentage / 100));
+
 
 
         $access_key = '6173fa628b16d8ce1e0db5cfa25092ac';
@@ -166,7 +178,8 @@ class Controller extends BaseController
         $countryQuery = [];
 
         foreach ($result->quotes as $value) {
-            $query[] = $value;
+
+            $query[] = $value * $markValue;
         }
 
         $countryRec = ConversionCountry::orderBy('id', 'ASC')->get();
@@ -234,6 +247,12 @@ class Controller extends BaseController
     public function getConversionRate($localcountry, $foreign)
     {
 
+
+        // Get Markup
+        $markuppercent = $this->markupPercentage();
+
+        $markValue = (1 + ($markuppercent[0]->percentage / 100));
+
         $currencyA = "USD" . $foreign;
         $currencyB = "USD" . $localcountry;
 
@@ -266,7 +285,7 @@ class Controller extends BaseController
             $convRateA = $result->quotes->$currencyA;
             $convRateB = $result->quotes->$currencyB;
 
-            $convRate = $convRateA / $convRateB;
+            $convRate = ($convRateA / $convRateB) * $markValue;
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }

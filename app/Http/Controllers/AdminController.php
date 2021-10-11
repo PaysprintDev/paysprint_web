@@ -87,8 +87,7 @@ use App\UserClosed as UserClosed;
 use App\PricingSetup as PricingSetup;
 
 use App\MailCampaign as MailCampaign;
-
-
+use App\MarkUp;
 use App\Traits\Trulioo;
 
 use App\Traits\AccountNotify;
@@ -1010,6 +1009,76 @@ class AdminController extends Controller
             return redirect()->route('AdminLogin');
         }
     }
+
+    public function markupCurrencyConversion(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+
+            $data = array(
+                'percentage' => $this->markupPercentage()
+            );
+
+
+
+
+            return view('admin.markupconversion')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+    public function saveMarkup(Request $req)
+    {
+
+        MarkUp::where('percentage', '!=', null)->update(['percentage' => $req->percentage]);
+
+
+        return redirect()->back()->with('success', 'Successfully created!');
+    }
+
+
+
     public function countryPricing(Request $req)
     {
 
@@ -6945,6 +7014,7 @@ class AdminController extends Controller
 
 
 
+
             return view('admin.wallet.payment')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
         } else {
             return redirect()->route('AdminLogin');
@@ -10631,7 +10701,7 @@ class AdminController extends Controller
 
                         User::where('email', $getMerchant->email)->update(['lastLogin' => date('d-m-Y h:i A'), 'loginCount' => $loginCount, 'countryapproval' => 1, 'pass_date' => $pass_date]);
 
-                        $req->session()->put(['user_id' => $adminCheck[0]['user_id'], 'firstname' => $adminCheck[0]['firstname'], 'lastname' => $adminCheck[0]['lastname'], 'username' => $adminCheck[0]['username'], 'role' => 'Merchant', 'email' => $adminCheck[0]['email'], 'api_token' => $api_token, 'myID' => $getMerchant->id, 'country' => $getMerchant->country, 'businessname' => $getMerchant->businessname, 'loginCount' => $loginCount]);
+                        $req->session()->put(['user_id' => $adminCheck[0]['user_id'], 'firstname' => $adminCheck[0]['firstname'], 'lastname' => $adminCheck[0]['lastname'], 'username' => $adminCheck[0]['username'], 'role' => 'Merchant', 'email' => $adminCheck[0]['email'], 'api_token' => $api_token, 'myID' => $getMerchant->id, 'country' => $getMerchant->country, 'businessname' => $getMerchant->businessname, 'loginCount' => $loginCount, 'currencyCode' => $getMerchant->currencyCode]);
 
                         $usercity = $this->myLocation()->city;
                         $usercountry = $this->myLocation()->country;
@@ -10659,7 +10729,7 @@ class AdminController extends Controller
                 // COnfirm Password
                 if (Hash::check($req->password, $superCheck[0]['password'])) {
                     // Set session
-                    $req->session()->put(['user_id' => $superCheck[0]['user_id'], 'firstname' => $superCheck[0]['firstname'], 'lastname' => $superCheck[0]['lastname'], 'username' => $superCheck[0]['username'], 'role' => $superCheck[0]['role'], 'email' => $superCheck[0]['email'], 'country' => $superCheck[0]['country'], 'myID' => $superCheck[0]['id'], 'loginCount' => 1]);
+                    $req->session()->put(['user_id' => $superCheck[0]['user_id'], 'firstname' => $superCheck[0]['firstname'], 'lastname' => $superCheck[0]['lastname'], 'username' => $superCheck[0]['username'], 'role' => $superCheck[0]['role'], 'email' => $superCheck[0]['email'], 'country' => $superCheck[0]['country'], 'myID' => $superCheck[0]['id'], 'loginCount' => 1, 'currencyCode' => 'USD']);
 
                     $query = [
                         'user_id' => $superCheck[0]['user_id'],
@@ -10692,7 +10762,7 @@ class AdminController extends Controller
 
 
 
-            $req->session()->put(['user_id' => $adminCheck[0]['user_id'], 'firstname' => $adminCheck[0]['firstname'], 'lastname' => $adminCheck[0]['lastname'], 'username' => $adminCheck[0]['username'], 'role' => 'Merchant', 'email' => $adminCheck[0]['email'], 'loginCount' => 1]);
+            $req->session()->put(['user_id' => $adminCheck[0]['user_id'], 'firstname' => $adminCheck[0]['firstname'], 'lastname' => $adminCheck[0]['lastname'], 'username' => $adminCheck[0]['username'], 'role' => 'Merchant', 'email' => $adminCheck[0]['email'], 'loginCount' => 1, 'currencyCode' => 'USD']);
 
             $resData = ['res' => 'Logging in...', 'message' => 'success', 'link' => 'Admin'];
         } else {
@@ -10791,7 +10861,7 @@ class AdminController extends Controller
                         $getMerchant = User::where('ref_code', $req->ref_code)->first();
 
 
-                        $req->session()->put(['user_id' => $req->ref_code, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $req->username, 'role' => 'Merchant', 'email' => $getanonuser->email, 'api_token' => $api_token, 'myID' => $getMerchant->id, 'country' => $getanonuser->country, 'businessname' => $getanonuser->businessname, 'loginCount' => $getMerchant->loginCount]);
+                        $req->session()->put(['user_id' => $req->ref_code, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $req->username, 'role' => 'Merchant', 'email' => $getanonuser->email, 'api_token' => $api_token, 'myID' => $getMerchant->id, 'country' => $getanonuser->country, 'businessname' => $getanonuser->businessname, 'loginCount' => $getMerchant->loginCount, 'currencyCode' => $getMerchant->currencyCode]);
 
                         $getMoney = Statement::where('user_id', $getanonuser->email)->get();
 
@@ -10970,7 +11040,7 @@ class AdminController extends Controller
 
                         // Set session
 
-                        $req->session()->put(['user_id' => $newRefcode, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $req->username, 'role' => 'Merchant', 'email' => $req->email, 'api_token' => $api_token, 'myID' => $getMerchant->id, 'country' => $req->country, 'loginCount' => $getMerchant->loginCount]);
+                        $req->session()->put(['user_id' => $newRefcode, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $req->username, 'role' => 'Merchant', 'email' => $req->email, 'api_token' => $api_token, 'myID' => $getMerchant->id, 'country' => $req->country, 'loginCount' => $getMerchant->loginCount, 'currencyCode' => $getMerchant->currencyCode]);
 
                         Log::info("New merchant registration via web by: " . $req->firstname . ' ' . $req->lastname . " from " . $req->state . ", " . $req->country);
 
@@ -13467,7 +13537,15 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
         $data = $this->getCountryCode($userData->country);
 
-        return $data;
+        $data['conversionrate'] = $this->getConversionRate(session('currencyCode'), $data->currencyCode);
+
+
+        $resp = [
+            'data' => $data,
+            'conversionrate' => $data['conversionrate'],
+        ];
+
+        return $resp;
     }
 
     public function payInvoice($email)

@@ -27,12 +27,15 @@ use App\Mail\sendEmail;
 
 use Twilio\Rest\Client;
 
+use App\Traits\PaymentGateway;
+
 
 trait ExpressPayment
 {
 
     public $Base_Url;
     public $curlPost;
+    use PaymentGateway;
 
     // Get Vendors
     public function getVendors()
@@ -500,6 +503,11 @@ trait ExpressPayment
     public function payBillCurrencyConvert($billerCurrency, $myCurrency, $amount)
     {
 
+        // Get Markup
+        $markuppercent = $this->markupPercentage();
+
+        $markValue = (1 + ($markuppercent[0]->percentage / 100));
+
         // EPS currency
         $currency = 'USD' . $billerCurrency;
 
@@ -538,7 +546,7 @@ trait ExpressPayment
         if ($result->success == true) {
 
             // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
-            $convertLocal = $amount / $result->quotes->$localCurrency;
+            $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
 
             // Converting your USD value to other currency ie CAD * Y 
             $convRate = $result->quotes->$currency * $convertLocal;

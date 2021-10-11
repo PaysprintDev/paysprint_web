@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\MonerisActivity as MonerisActivity;
 
 use App\BankWithdrawal as BankWithdrawal;
-
+use App\MarkUp;
 use App\Statement as Statement;
 
 use App\PricingSetup as PricingSetup;
@@ -223,5 +223,12 @@ trait PaymentGateway
         $getPrice = PricingSetup::where('country', $country)->first();
 
         return $getPrice;
+    }
+
+    public function markupPercentage()
+    {
+        $data = MarkUp::all();
+
+        return $data;
     }
 }

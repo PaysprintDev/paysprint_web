@@ -1194,6 +1194,11 @@ class MoneyTransferController extends Controller
     public function convertCurrencyRate($foreigncurrency, $localcurrency, $amount)
     {
 
+        // Get Markup
+        $markuppercent = $this->markupPercentage();
+
+        $markValue = (1 + ($markuppercent[0]->percentage / 100));
+
         $currency = 'USD' . $foreigncurrency;
         $amount = $amount;
         $localCurrency = 'USD' . $localcurrency;
@@ -1226,7 +1231,7 @@ class MoneyTransferController extends Controller
         if ($result->success == true) {
 
             // Conversion Rate USD to Local currency
-            $convertLocal = $amount / $result->quotes->$localCurrency;
+            $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
 
 
             $convRate = $result->quotes->$currency * $convertLocal;
