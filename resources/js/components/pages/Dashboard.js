@@ -102,7 +102,7 @@ class Dashboard extends Component {
                                     <h3 className="h2 mb-0">What do you want to do today?</h3>
                                 </div>
                                 <div className="col-auto d-flex align-items-center my-2 my-sm-0">
-                                    <a href="#" className="btn btn-lg btn-outline-dark px-3 me-2 me-md-3"><span className="ps-1">Create
+                                    <a href="javascript:void(0);" className="btn btn-lg btn-outline-dark px-3 me-2 me-md-3 customize-btn"><span className="ps-1">New
                                         Offer</span> <svg className="ms-4" xmlns="http://www.w3.org/2000/svg" width="14"
                                             height="14" viewBox="0 0 14 14">
                                             <rect data-name="Icons/Tabler/Add background" width="14" height="14" fill="none" />
@@ -125,29 +125,25 @@ class Dashboard extends Component {
                                             <li className="dropdown-sub-title">
                                                 <span>WALLET ACTIONS</span>
                                             </li>
-                                            <li><a className="dropdown-item" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16"
-                                                height="16" viewBox="0 0 16 16">
-                                                <g data-name="Icons/Tabler/Share" transform="translate(0)">
-                                                    <rect data-name="Icons/Tabler/Code background" width="16" height="16"
-                                                        fill="none" />
-                                                    <path
-                                                        d="M6.21,13.982a.6.6,0,0,1-.463-.647l.014-.08L9.044.455A.617.617,0,0,1,9.79.018a.6.6,0,0,1,.463.647l-.014.08-3.282,12.8a.612.612,0,0,1-.6.455A.629.629,0,0,1,6.21,13.982Zm5.458-3.357a.588.588,0,0,1-.059-.781l.059-.067L14.514,7,11.668,4.225a.588.588,0,0,1-.059-.781l.059-.068a.627.627,0,0,1,.8-.059l.069.059,3.282,3.2a.59.59,0,0,1,.059.781l-.059.068-3.282,3.2a.627.627,0,0,1-.87,0Zm-8.136.058-.069-.058L.18,7.424a.589.589,0,0,1-.059-.781L.18,6.575l3.282-3.2a.627.627,0,0,1,.87,0,.588.588,0,0,1,.059.781l-.059.068L1.486,7,4.333,9.776a.588.588,0,0,1,.059.781l-.059.068a.627.627,0,0,1-.8.058Z"
-                                                        transform="translate(0 1)" fill="#495057" />
-                                                </g>
-                                            </svg><span className="ms-2">MONEY TRANSFER</span></a></li>
-                                            <li><a className="dropdown-item" href="#"><svg data-name="Icons/Tabler/Share"
+                                            <li><a className="dropdown-item" href="/mywallet"><svg data-name="Icons/Tabler/Share"
+                                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                                                <rect data-name="Icons/Tabler/File background" width="16" height="16" fill="none" />
+                                                <path data-name="Combined Shape"
+                                                    d="M2.256,16A2.259,2.259,0,0,1,0,13.744V2.256A2.259,2.259,0,0,1,2.256,0H8a.613.613,0,0,1,.4.148l0,0L8.41.157l0,0,.005.005L8.425.17l0,0L8.435.18l4.1,4.1a.614.614,0,0,1,.185.44v9.026A2.259,2.259,0,0,1,10.462,16ZM1.231,2.256V13.744a1.026,1.026,0,0,0,1.025,1.025h8.205a1.027,1.027,0,0,0,1.026-1.025V5.333H8.821A1.436,1.436,0,0,1,7.387,3.979l0-.082V1.231H2.256A1.026,1.026,0,0,0,1.231,2.256ZM8.616,3.9a.206.206,0,0,0,.168.2l.037,0h1.8l-2-2ZM3.9,12.718a.615.615,0,0,1-.059-1.228l.059,0H8.821a.615.615,0,0,1,.059,1.228l-.059,0Zm0-3.282a.615.615,0,0,1-.059-1.228l.059,0H8.821a.615.615,0,0,1,.059,1.228l-.059,0Zm0-3.281a.616.616,0,0,1-.059-1.228l.059,0h.821a.615.615,0,0,1,.059,1.228l-.059,0Z"
+                                                    transform="translate(2)" fill="#495057" />
+                                            </svg><span className="ms-2">MY WALLET</span></a></li>
+                                            <li><a className="dropdown-item" href="/mywallet/addmoney"><svg data-name="Icons/Tabler/Share"
                                                 xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
                                                 <rect data-name="Icons/Tabler/File background" width="16" height="16" fill="none" />
                                                 <path data-name="Combined Shape"
                                                     d="M2.256,16A2.259,2.259,0,0,1,0,13.744V2.256A2.259,2.259,0,0,1,2.256,0H8a.613.613,0,0,1,.4.148l0,0L8.41.157l0,0,.005.005L8.425.17l0,0L8.435.18l4.1,4.1a.614.614,0,0,1,.185.44v9.026A2.259,2.259,0,0,1,10.462,16ZM1.231,2.256V13.744a1.026,1.026,0,0,0,1.025,1.025h8.205a1.027,1.027,0,0,0,1.026-1.025V5.333H8.821A1.436,1.436,0,0,1,7.387,3.979l0-.082V1.231H2.256A1.026,1.026,0,0,0,1.231,2.256ZM8.616,3.9a.206.206,0,0,0,.168.2l.037,0h1.8l-2-2ZM3.9,12.718a.615.615,0,0,1-.059-1.228l.059,0H8.821a.615.615,0,0,1,.059,1.228l-.059,0Zm0-3.282a.615.615,0,0,1-.059-1.228l.059,0H8.821a.615.615,0,0,1,.059,1.228l-.059,0Zm0-3.281a.616.616,0,0,1-.059-1.228l.059,0h.821a.615.615,0,0,1,.059,1.228l-.059,0Z"
                                                     transform="translate(2)" fill="#495057" />
                                             </svg><span className="ms-2">ADD MONEY</span></a></li>
-                                            <li><a className="dropdown-item" href="#"><svg data-name="Icons/Tabler/Share"
+                                            <li><a className="dropdown-item" href="/mywallet/withdrawmoney"><svg data-name="Icons/Tabler/Share"
                                                 xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-                                                <rect data-name="Icons/Tabler/Code02 background" width="16" height="16"
-                                                    fill="none" />
+                                                <rect data-name="Icons/Tabler/File background" width="16" height="16" fill="none" />
                                                 <path data-name="Combined Shape"
-                                                    d="M2.256,16A2.259,2.259,0,0,1,0,13.744V2.256A2.259,2.259,0,0,1,2.256,0H8a.613.613,0,0,1,.4.148l0,0L8.41.157l0,0,.005.005L8.425.17l0,0L8.435.18l4.1,4.1a.614.614,0,0,1,.185.44v9.026A2.259,2.259,0,0,1,10.462,16ZM1.231,2.256V13.744a1.026,1.026,0,0,0,1.025,1.025h8.205a1.027,1.027,0,0,0,1.026-1.025V5.333H8.821A1.436,1.436,0,0,1,7.387,3.979l0-.082V1.231H2.256A1.026,1.026,0,0,0,1.231,2.256ZM8.616,3.9a.206.206,0,0,0,.168.2l.037,0h1.8l-2-2Zm-.891,8.756a.615.615,0,0,1-.3-.768l.025-.058.683-1.366L7.449,9.1A.616.616,0,0,1,7.67,8.3l.055-.031a.615.615,0,0,1,.795.22l.031.055.821,1.641a.617.617,0,0,1,.029.484l-.029.067L8.55,12.378a.614.614,0,0,1-.825.275ZM4.2,12.433l-.031-.055-.821-1.641a.617.617,0,0,1-.029-.484l.029-.067.821-1.641a.615.615,0,0,1,1.126.492L5.269,9.1l-.684,1.366.684,1.366a.615.615,0,0,1-.22.794l-.055.031a.615.615,0,0,1-.795-.22Z"
+                                                    d="M2.256,16A2.259,2.259,0,0,1,0,13.744V2.256A2.259,2.259,0,0,1,2.256,0H8a.613.613,0,0,1,.4.148l0,0L8.41.157l0,0,.005.005L8.425.17l0,0L8.435.18l4.1,4.1a.614.614,0,0,1,.185.44v9.026A2.259,2.259,0,0,1,10.462,16ZM1.231,2.256V13.744a1.026,1.026,0,0,0,1.025,1.025h8.205a1.027,1.027,0,0,0,1.026-1.025V5.333H8.821A1.436,1.436,0,0,1,7.387,3.979l0-.082V1.231H2.256A1.026,1.026,0,0,0,1.231,2.256ZM8.616,3.9a.206.206,0,0,0,.168.2l.037,0h1.8l-2-2ZM3.9,12.718a.615.615,0,0,1-.059-1.228l.059,0H8.821a.615.615,0,0,1,.059,1.228l-.059,0Zm0-3.282a.615.615,0,0,1-.059-1.228l.059,0H8.821a.615.615,0,0,1,.059,1.228l-.059,0Zm0-3.281a.616.616,0,0,1-.059-1.228l.059,0h.821a.615.615,0,0,1,.059,1.228l-.059,0Z"
                                                     transform="translate(2)" fill="#495057" />
                                             </svg><span className="ms-2">WITHDRAW</span></a></li>
                                             <li>

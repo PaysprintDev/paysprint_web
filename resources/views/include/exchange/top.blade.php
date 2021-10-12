@@ -9,6 +9,8 @@
         content="Fastest and affordable method of sending and receiving money, paying invoice and getting Paid at anytime!">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png"
         type="image/x-icon" />
 

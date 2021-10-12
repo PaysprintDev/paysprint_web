@@ -3,9 +3,155 @@ import { Link } from 'react-router-dom';
 
 class Aside extends Component{
 
+
+    createOffer = (e) => {
+        console.log(e);
+    }
+
     render(){
         return(
             <div>
+
+                  <div className="customize-sidebar">
+    <div className="border-bottom border-gray-200 p-3 p-md-4">
+      <div className="text-end">
+        <a href="javascript:void(0);" className="btn btn-light btn-icon rounded-pill customize-close">
+          <svg data-name="icons/tabler/close" xmlns="http://www.w3.org/2000/svg" width="15" height="15"
+            viewBox="0 0 16 16">
+            <rect data-name="Icons/Tabler/Close background" width="16" height="16" fill="none"></rect>
+            <path
+              d="M.82.1l.058.05L6,5.272,11.122.151A.514.514,0,0,1,11.9.82l-.05.058L6.728,6l5.122,5.122a.514.514,0,0,1-.67.777l-.058-.05L6,6.728.878,11.849A.514.514,0,0,1,.1,11.18l.05-.058L5.272,6,.151.878A.514.514,0,0,1,.75.057Z"
+              transform="translate(2 2)" fill="#1E1E1E"></path>
+          </svg>
+        </a>
+      </div>
+      
+      <div className="px-2 px-md-4">
+        <h3 className="mb-0"><img src="https://img.icons8.com/external-becris-lineal-becris/20/000000/external-add-mintab-for-ios-becris-lineal-becris-2.png"
+            alt="Tio Tune" /> Create an Offer</h3>
+        <p className="text-gray-700 mb-0 lh-lg">Default rates are according to PaySprint rates.</p>
+      </div>
+    </div>
+    <div className="customize-body" data-simplebar>
+
+
+            <form onSubmit={this.createOffer}>
+
+
+      <div className="p-4 px-lg-12 border-bottom border-gray-200">
+
+            <h6 className="font-weight-semibold mb-3">Currency Exchange</h6>
+
+        <div className="d-flex muze-skins customizer-controls">
+
+            <div className="mb-4 mb-xl-2" style={{ width: "20%" }}>
+                <input type="text" placeholder="NGN" id="sell" className="form-control form-control-xl" readOnly/>
+            </div>
+            <div className="mb-4 mb-xl-10" style={{ width: "80%" }}>
+                <input type="number" placeholder="Sell Currency" min="0.00" step="any" id="sell" className="form-control form-control-xl" />
+            </div>
+
+        </div>
+
+        <div className="d-flex muze-skins customizer-controls">
+
+            <div className="mb-4 mb-xl-2" style={{ width: "25%" }}>
+                <select id="buy_currency" className="form-control form-control-xl">
+                    <option value="NGN">NGN</option>
+                    <option selected value="USD">USD</option>
+                    <option value="CAD">CAD</option>
+                </select>
+            </div>
+            <div className="mb-4 mb-xl-10" style={{ width: "75%" }}>
+                <input type="number" placeholder="Buy Currency" min="0.00" step="any" id="buy" className="form-control form-control-xl" />
+            </div>
+                
+
+        </div>
+
+
+      </div>
+
+      
+      <div className="p-4 px-lg-12 border-bottom border-gray-200">
+
+          <h6 className="font-weight-semibold mb-3">Your Desired Rate</h6>
+
+        <div className="d-flex muze-skins customizer-controls">
+
+          <div className="mb-4 mb-xl-10" style={{ width: "75%" }}>
+                <input type="number" value="1.00" id="buy" className="form-control form-control-xl" readOnly/>
+            </div>
+          <div className="mb-4 mb-xl-2" style={{ width: "25%" }}>
+                <select id="sell_rate" className="form-control form-control-xl" readOnly>
+                    <option selected value="NGN">NGN</option>
+                </select>
+            </div>
+
+            
+
+        </div>
+
+        <div className="d-flex muze-skins customizer-controls">
+
+          <div className="mb-4 mb-xl-10" style={{ width: "75%" }}>
+                <input type="number" placeholder="1.00" min="0.00" step="any" id="buy" className="form-control form-control-xl"/>
+            </div>
+          <div className="mb-4 mb-xl-2" style={{ width: "25%" }}>
+                <select id="buy_rate" className="form-control form-control-xl">
+                    <option value="NGN">NGN</option>
+                    <option selected value="USD">USD</option>
+                    <option value="CAD">CAD</option>
+                </select>
+            </div>
+
+            
+
+        </div>
+
+        <p className="text-gray-600 pt-2 mb-0 font-weight-semibold">1 NGN  - 0.003 USD</p>
+        <p className="text-gray-600 pt-2 mb-0 font-weight-semibold">1 USD  - 580.44 NGN</p>
+
+      </div>
+
+
+      <div className="p-4 px-lg-12 border-bottom border-gray-200">
+
+          <h6 className="font-weight-semibold mb-3">Offer Expiration</h6>
+
+        <div className="d-flex muze-skins customizer-controls">
+
+          <div className="mb-4 mb-xl-10" style={{ width: "100%" }}>
+                <input type="date" name="expiry" id="expiry" className="form-control form-control-xl"/>
+            </div>
+          
+
+        </div>
+
+      </div>
+
+
+      
+      
+      
+
+            </form>
+
+
+    </div>
+    <div className="p-4 px-lg-5 border-top border-gray-200 bg-white">
+      <div className="row">
+        <div className="col-6 d-grid">
+          <a href="Javascript:void(0);" className="btn btn-xl btn-outline-dark" id="ResetCustomizer">Reset</a>
+        </div>
+        <div className="col-6 d-grid">
+          <a href="Javascript:void(0);" className="btn btn-xl btn-primary" id="CustomizerPreview">Submit</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
                 <nav className="navbar navbar-vertical navbar-expand-lg navbar-light">
     <a className="navbar-brand mx-auto d-none d-lg-block my-0 my-lg-4" href="#"><img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
             alt="Muze" /><img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
@@ -52,7 +198,7 @@ class Aside extends Component{
             </li>
 
             <li className="nav-item">
-                <a className="nav-link collapsed" href="#sidebarMarketPlace" data-bs-toggle="collapse" role="button"
+                <a className="nav-link collapsed" href="/currencyfx/marketplace" data-bs-toggle="collapse" role="button"
                     aria-expanded="false" aria-controls="sidebarMarketPlace">
                     <svg data-name="Icons/Tabler/Bolt" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                         viewBox="0 0 16 16">

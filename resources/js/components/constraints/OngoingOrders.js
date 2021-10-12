@@ -1,26 +1,12 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import Aside from '../includes/Aside';
 import Header from '../includes/Header';
 
 const apiToken = document.getElementById('user_api_token').value;
 
-class MarketPlace extends Component {
-  _isMounted = false;
-
-  componentDidMount() {
-    this._isMounted = true;
-  }
-
-
-
-
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-
-
+class OngoingOrders extends Component {
   render() {
-
     return (
       <div>
         <Aside />
@@ -63,10 +49,10 @@ class MarketPlace extends Component {
               <div className="mb-2 mb-md-3 mb-xl-4 pb-2">
                 <ul className="nav nav-tabs nav-tabs-md nav-tabs-line position-relative zIndex-0">
                   <li className="nav-item">
-                    <a className="nav-link active" href="/currencyfx/marketplace">All Orders</a>
+                    <a className="nav-link" href="/currencyfx/marketplace">All Orders</a>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="/currencyfx/ongoing">Active Orders</a>
+                    <a className="nav-link active" href="/currencyfx/ongoing">Active Orders</a>
                   </li>
                   <li className="nav-item">
                     <a className="nav-link" href="/currencyfx/pending">Pending Orders</a>
@@ -84,7 +70,7 @@ class MarketPlace extends Component {
                 <div className="col-12 mb-4">
                   <div className="card rounded-12 shadow-dark-80 border border-gray-50">
                     <div className="d-flex align-items-center px-3 px-md-4 py-3">
-                      <h5 className="card-header-title mb-0 ps-md-2 font-weight-semibold">All Orders</h5>
+                      <h5 className="card-header-title mb-0 ps-md-2 font-weight-semibold">Active Orders</h5>
                       <div className="dropdown export-dropdown ms-auto pe-md-2">
                         <a href="#" role="button" id="Sources" data-bs-toggle="dropdown" aria-expanded="false"
                           className="btn btn-outline-dark text-gray-700 border-gray-700 px-3"><span>Today
@@ -132,41 +118,6 @@ class MarketPlace extends Component {
                           </tr>
                         </thead>
                         <tbody className="list">
-
-                          <tr>
-                            <td><span className="font-weight-semibold text-gray-700">PS-1543390-SAT</span></td>
-                            <td><span className="font-weight-semibold text-gray-700">15000 NGN</span></td>
-                            <td><span className="font-weight-semibold text-gray-700">13 USD</span></td>
-                            <td><span className="font-weight-semibold text-gray-700">1 NGN - 0.0012 USD</span></td>
-                            <td><span className="font-weight-semibold text-gray-700">20 Oct 2021</span></td>
-                            <td><span className="font-weight-semibold text-gray-700">Sold</span></td>
-                            <td>
-                              <div className="dropdown ">
-                                <a href="#" className="btn btn-dark-100 btn-icon btn-sm rounded-circle"
-                                  role="button" data-bs-toggle="dropdown" aria-haspopup="true"
-                                  aria-expanded="false">
-                                  <svg data-name="Icons/Tabler/Notification"
-                                    xmlns="http://www.w3.org/2000/svg" width="13.419"
-                                    height="13.419" viewBox="0 0 13.419 13.419">
-                                    <rect data-name="Icons/Tabler/Dots background"
-                                      width="13.419" height="13.419" fill="none" />
-                                    <path
-                                      d="M0,10.4a1.342,1.342,0,1,1,1.342,1.342A1.344,1.344,0,0,1,0,10.4Zm1.15,0a.192.192,0,1,0,.192-.192A.192.192,0,0,0,1.15,10.4ZM0,5.871A1.342,1.342,0,1,1,1.342,7.213,1.344,1.344,0,0,1,0,5.871Zm1.15,0a.192.192,0,1,0,.192-.192A.192.192,0,0,0,1.15,5.871ZM0,1.342A1.342,1.342,0,1,1,1.342,2.684,1.344,1.344,0,0,1,0,1.342Zm1.15,0a.192.192,0,1,0,.192-.192A.192.192,0,0,0,1.15,1.342Z"
-                                      transform="translate(5.368 0.839)" fill="#6c757d" />
-                                  </svg>
-                                </a>
-
-
-                                <div className="dropdown-menu dropdown-menu-end">
-                                  <a href="#" className="dropdown-item">
-                                    Deal Closed
-                                  </a>
-                                </div>
-
-
-                              </div>
-                            </td>
-                          </tr>
                           <tr>
                             <td><span className="font-weight-semibold text-gray-700">PS-1543390-SAT</span></td>
                             <td><span className="font-weight-semibold text-gray-700">15000 NGN</span></td>
@@ -222,4 +173,4 @@ class MarketPlace extends Component {
   }
 }
 
-export default MarketPlace;
+export default OngoingOrders;

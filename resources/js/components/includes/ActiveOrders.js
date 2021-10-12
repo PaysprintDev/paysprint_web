@@ -231,14 +231,14 @@ class ActiveOrders extends Component{
                         </div>
 
                         <div className="d-flex align-items-center p-3 p-md-4 border-top border-gray-200">
-                            <Link to={"/currencyfx/trasactionhistory"} className="my-1 tiny font-weight-semibold mx-auto btn btn-link link-dark">Visit Market Place<svg className="ms-1" data-name="icons/tabler/chevron right"
+                            <a href="/currencyfx/marketplace" className="my-1 tiny font-weight-semibold mx-auto btn btn-link link-dark">Visit Market Place<svg className="ms-1" data-name="icons/tabler/chevron right"
                                     xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 16 16">
                                     <rect data-name="Icons/Tabler/Chevron Right background" width="16" height="16"
                                         fill="none"></rect>
                                     <path
                                         d="M.26.26A.889.889,0,0,1,1.418.174l.1.086L8.629,7.371a.889.889,0,0,1,.086,1.157l-.086.1L1.517,15.74A.889.889,0,0,1,.174,14.582l.086-.1L6.743,8,.26,1.517A.889.889,0,0,1,.174.36Z"
                                         transform="translate(4)" fill="#1e1e1e"></path>
-                                </svg></Link>
+                                </svg></a>
                         </div>
                     </div>
                 </div>
