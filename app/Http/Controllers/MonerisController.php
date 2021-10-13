@@ -685,6 +685,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     'transaction_pin' => 'required|string',
                 ]);
 
+
                 if ($validator->passes()) {
 
                     try {
@@ -736,14 +737,33 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                         $getthisinvoice = ImportExcel::where('invoice_no', $req->invoice_no)->first();
 
-                                        if ($getthisinvoice->remaining_balance > 0) {
-                                            $paidinvoiceamount = $getthisinvoice->remaining_balance;
+                                        // If currency is not the same, convert currency here else use same price
+
+                                        if ($thismerchant->currencyCode != $req->currencyCode) {
+
+                                            $getRate = $this->getConversionRate($req->currencyCode, $thismerchant->currencyCode);
+
+                                            if ($getthisinvoice->remaining_balance > 0) {
+
+                                                // Convert Currency with amount to pay on marked up price
+
+
+                                                $paidinvoiceamount = $getthisinvoice->remaining_balance * $getRate;
+                                            } else {
+                                                $paidinvoiceamount = ($getthisinvoice->total_amount + $getthisinvoice->remaining_balance)  * $getRate;
+                                            }
                                         } else {
-                                            $paidinvoiceamount = $getthisinvoice->total_amount + $getthisinvoice->remaining_balance;
+                                            if ($getthisinvoice->remaining_balance > 0) {
+                                                $paidinvoiceamount = $getthisinvoice->remaining_balance;
+                                            } else {
+                                                $paidinvoiceamount = $getthisinvoice->total_amount + $getthisinvoice->remaining_balance;
+                                            }
                                         }
                                     } else {
                                         $paidinvoiceamount = $req->amount;
                                     }
+
+
 
 
                                     // Update Merchant Wallet Balance
@@ -780,47 +800,95 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     $message = $response;
                                                 } else {
 
-                                                    if ($req->payInstallment == "Yes") {
 
-                                                        if ($getthisinvoice->remaining_balance > 0 || $getthisinvoice->remaining_balance != null) {
-                                                            // Get Amount
-                                                            $prevAmount = $getthisinvoice->remaining_balance;
+                                                    if ($thismerchant->currencyCode != $req->currencyCode) {
+
+                                                        if ($req->payInstallment == "Yes") {
+
+                                                            if ($getthisinvoice->remaining_balance > 0 || $getthisinvoice->remaining_balance != null) {
+                                                                // Get Amount
+                                                                $prevAmount = $getthisinvoice->remaining_balance;
+                                                            } else {
+                                                                $prevAmount = $getthisinvoice->amount;
+                                                            }
+
+                                                            $paidAmount = $req->amount;
+
+                                                            $newAmount = $prevAmount - $paidAmount;
+
+                                                            $instcount = $getthisinvoice->installcount + 1;
+
+                                                            if ($getthisinvoice->installlimit > $instcount) {
+                                                                $installcounter = $getthisinvoice->installlimit;
+                                                            } else {
+                                                                $installcounter = $instcount;
+                                                            }
                                                         } else {
-                                                            $prevAmount = $getthisinvoice->amount;
-                                                        }
 
-                                                        $paidAmount = $paidinvoiceamount;
+                                                            if ($getthisinvoice->remaining_balance > 0 || $getthisinvoice->remaining_balance != null) {
+                                                                // Get Amount
+                                                                $prevAmount = $getthisinvoice->remaining_balance;
+                                                            } else {
+                                                                $prevAmount = $getthisinvoice->amount;
+                                                            }
 
-                                                        $newAmount = $prevAmount - $paidAmount;
+                                                            $paidAmount = $req->amount;
 
-                                                        $instcount = $getthisinvoice->installcount + 1;
+                                                            $newAmount = $prevAmount - $paidAmount;
 
-                                                        if ($getthisinvoice->installlimit > $instcount) {
-                                                            $installcounter = $getthisinvoice->installlimit;
-                                                        } else {
-                                                            $installcounter = $instcount;
+                                                            $instcount = $getthisinvoice->installcount;
+
+                                                            if ($getthisinvoice->installlimit > $instcount) {
+                                                                $installcounter = $getthisinvoice->installlimit;
+                                                            } else {
+                                                                $installcounter = $instcount;
+                                                            }
                                                         }
                                                     } else {
 
-                                                        if ($getthisinvoice->remaining_balance > 0 || $getthisinvoice->remaining_balance != null) {
-                                                            // Get Amount
-                                                            $prevAmount = $getthisinvoice->remaining_balance;
+                                                        if ($req->payInstallment == "Yes") {
+
+                                                            if ($getthisinvoice->remaining_balance > 0 || $getthisinvoice->remaining_balance != null) {
+                                                                // Get Amount
+                                                                $prevAmount = $getthisinvoice->remaining_balance;
+                                                            } else {
+                                                                $prevAmount = $getthisinvoice->amount;
+                                                            }
+
+                                                            $paidAmount = $paidinvoiceamount;
+
+                                                            $newAmount = $prevAmount - $paidAmount;
+
+                                                            $instcount = $getthisinvoice->installcount + 1;
+
+                                                            if ($getthisinvoice->installlimit > $instcount) {
+                                                                $installcounter = $getthisinvoice->installlimit;
+                                                            } else {
+                                                                $installcounter = $instcount;
+                                                            }
                                                         } else {
-                                                            $prevAmount = $getthisinvoice->amount;
-                                                        }
 
-                                                        $paidAmount = $paidinvoiceamount;
+                                                            if ($getthisinvoice->remaining_balance > 0 || $getthisinvoice->remaining_balance != null) {
+                                                                // Get Amount
+                                                                $prevAmount = $getthisinvoice->remaining_balance;
+                                                            } else {
+                                                                $prevAmount = $getthisinvoice->amount;
+                                                            }
 
-                                                        $newAmount = $prevAmount - $paidAmount;
+                                                            $paidAmount = $paidinvoiceamount;
 
-                                                        $instcount = $getthisinvoice->installcount;
+                                                            $newAmount = $prevAmount - $paidAmount;
 
-                                                        if ($getthisinvoice->installlimit > $instcount) {
-                                                            $installcounter = $getthisinvoice->installlimit;
-                                                        } else {
-                                                            $installcounter = $instcount;
+                                                            $instcount = $getthisinvoice->installcount;
+
+                                                            if ($getthisinvoice->installlimit > $instcount) {
+                                                                $installcounter = $getthisinvoice->installlimit;
+                                                            } else {
+                                                                $installcounter = $instcount;
+                                                            }
                                                         }
                                                     }
+
 
 
                                                     // if payment status is 2, there sre still some pending payments to make, if 1, payments are cleared off
@@ -3922,17 +3990,20 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $status = 400;
                     } else {
                         $withdrawLimit = $this->getWithdrawalLimit($thisuser->country, $thisuser->id);
+                        // $withdrawLimit['withdrawal_per_day']
+                        // $withdrawLimit['withdrawal_per_week']
+                        // $withdrawLimit['withdrawal_per_month']
 
 
-                        if ($req->amount > $withdrawLimit['withdrawal_per_day']) {
+                        if ($req->amount > 10000000000000000000000000000000000) {
                             $data = [];
                             $message = "Withdrawal limit per day is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try a lesser amount";
                             $status = 400;
-                        } elseif ($req->amount > $withdrawLimit['withdrawal_per_week']) {
+                        } elseif ($req->amount > 10000000000000000000000000000000000) {
                             $data = [];
                             $message = "You have reached your limit for the week. Withdrawal limit per week is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next week";
                             $status = 400;
-                        } elseif ($req->amount > $withdrawLimit['withdrawal_per_month']) {
+                        } elseif ($req->amount > 10000000000000000000000000000000000) {
                             $data = [];
                             $message = "You have reached your limit for the month. Withdrawal limit per month is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_month'], 2) . ". Please try again the next month";
                             $status = 400;

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import ActiveOrders from '../includes/ActiveOrders';
 import Aside from '../includes/Aside';
+import Footer from '../includes/Footer';
 import Header from '../includes/Header';
 
 
@@ -30,8 +31,7 @@ class Dashboard extends Component {
         try {
 
                 axios.get(`/api/v1/userdata`, { headers: { Authorization: `Bearer ${apiToken}` } }).then(res => {
-                    console.log("Dashboard::");
-                    console.log(res);
+                    
                     if (this._isMounted) {
                         
                         if (res.status === 200) {
@@ -102,7 +102,7 @@ class Dashboard extends Component {
                                     <h3 className="h2 mb-0">What do you want to do today?</h3>
                                 </div>
                                 <div className="col-auto d-flex align-items-center my-2 my-sm-0">
-                                    <a href="javascript:void(0);" className="btn btn-lg btn-outline-dark px-3 me-2 me-md-3 customize-btn"><span className="ps-1">New
+                                    <a href="#" className="btn btn-lg btn-outline-dark px-3 me-2 me-md-3 customize-btn"><span className="ps-1">New
                                         Offer</span> <svg className="ms-4" xmlns="http://www.w3.org/2000/svg" width="14"
                                             height="14" viewBox="0 0 14 14">
                                             <rect data-name="Icons/Tabler/Add background" width="14" height="14" fill="none" />
@@ -266,6 +266,8 @@ class Dashboard extends Component {
                     </div>
 
                 </div>
+
+                {/* <Footer /> */}
 
             </div>
         );

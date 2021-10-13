@@ -4,17 +4,12 @@ class HeaderFunction extends Component{
 
     render(){
 
-        if (this.props.loading) {
-            return (
-                <img src="https://img.icons8.com/ios/35/000000/spinner-frame-4.png" className="fa fa-spin" />
-            );
-        }
-        else {
-
             return(
                 this.props.data.map((item) => {
-                    return (
-                        <a href="#" className="dropdown-item text-wrap" key={item.id}>
+
+                    if (item != null) {
+                        return (
+                            <a href="#" className="dropdown-item text-wrap" key={item.id}>
                             <div className="media">
                                 <span className="d-flex align-items-center">
                                     <span
@@ -33,9 +28,13 @@ class HeaderFunction extends Component{
                             </div>
                         </a>
                     );
+                    }else{
+                        return null;
+                    }
+
+                    
                 })
             );
-        }
     }
 
 }

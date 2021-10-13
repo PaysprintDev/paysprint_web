@@ -21,7 +21,7 @@ class PendingOrders extends Component {
           </div>
           <div className="col-auto d-flex align-items-center my-2 my-sm-0">
 
-          <a href="javascript:void(0);" className="btn btn-lg btn-outline-dark px-3 me-2 me-md-3 customize-btn"><span className="ps-1">New
+          <a href="#" className="btn btn-lg btn-outline-dark px-3 me-2 me-md-3 customize-btn"><span className="ps-1">New
                                         Offer</span> <svg className="ms-4" xmlns="http://www.w3.org/2000/svg" width="14"
                                             height="14" viewBox="0 0 14 14">
                                             <rect data-name="Icons/Tabler/Add background" width="14" height="14" fill="none" />
@@ -32,14 +32,14 @@ class PendingOrders extends Component {
                                     </a>
 
 
-            <a href="/currencyfx" className="btn btn-lg btn-warning"><svg className="me-2" data-name="Icons/Tabler/Paperclip Copy 2"
+            <Link to={"/currencyfx/"} className="btn btn-lg btn-warning"><svg className="me-2" data-name="Icons/Tabler/Paperclip Copy 2"
                 xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 18 18">
                 <rect data-name="Icons/Tabler/Bolt background" width="18" height="18" fill="none" />
                 <path
                   d="M6.377,18a.7.7,0,0,1-.709-.6l-.006-.1V11.537H.709A.7.7,0,0,1,.1,11.193a.673.673,0,0,1-.014-.672l.054-.083L7.693.274,7.755.2,7.828.141,7.913.087,7.981.055l.087-.03L8.16.006,8.256,0h.037l.059.005.04.007.052.011.045.014.043.016.052.023.089.055.016.011A.765.765,0,0,1,8.756.2L8.82.273l.055.083.033.067.03.085L8.957.6l.007.094V6.461h4.952a.7.7,0,0,1,.613.345.672.672,0,0,1,.013.672l-.053.082L6.942,17.714A.691.691,0,0,1,6.377,18ZM7.548,2.821,2.1,10.153H6.369a.7.7,0,0,1,.7.6l.006.093v4.331l5.449-7.331H8.256a.7.7,0,0,1-.7-.6l-.007-.094Z"
                   transform="translate(2.25 0)" fill="#1E1E1E" />
               </svg><span>Dashboard</span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -49,16 +49,16 @@ class PendingOrders extends Component {
         <div className="mb-2 mb-md-3 mb-xl-4 pb-2">
           <ul className="nav nav-tabs nav-tabs-md nav-tabs-line position-relative zIndex-0">
             <li className="nav-item">
-              <a className="nav-link" href="/currencyfx/marketplace">All Orders</a>
+              <Link className="nav-link" to={"/currencyfx/marketplace"}>All Orders</Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/currencyfx/ongoing">Active Orders</a>
+              <Link className="nav-link" to={"/currencyfx/ongoing"}>Active Orders</Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link active" href="/currencyfx/pending">Pending Orders</a>
+              <Link className="nav-link active" to={"/currencyfx/pending"}>Pending Orders</Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/currencyfx/myorders">My Orders</a>
+              <Link className="nav-link" to={"/currencyfx/myorders"}>My Orders</Link>
             </li>
           </ul>
         </div>

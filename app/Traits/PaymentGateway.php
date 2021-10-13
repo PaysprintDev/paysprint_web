@@ -66,8 +66,11 @@ trait PaymentGateway
 
             $walletBal = $getUser->wallet_balance + $debit;
             $numOfWithdrawal = $getUser->number_of_withdrawals - 1;
+            $withdrawal_per_day = $getUser->withdrawal_per_day - $debit;
+            $withdrawal_per_week = $getUser->withdrawal_per_week - $debit;
+            $withdrawal_per_month = $getUser->withdrawal_per_month - $debit;
 
-            User::where('email', $getStatement->user_id)->update(['wallet_balance' => $walletBal, 'number_of_withdrawals' => $numOfWithdrawal]);
+            User::where('email', $getStatement->user_id)->update(['wallet_balance' => $walletBal, 'number_of_withdrawals' => $numOfWithdrawal, 'withdrawal_per_day' => $withdrawal_per_day, 'withdrawal_per_week' => $withdrawal_per_week, 'withdrawal_per_month' => $withdrawal_per_month]);
 
             // Delete Bank WithDrawal
             BankWithdrawal::where('transaction_id', $reference_code)->delete();

@@ -1564,6 +1564,7 @@ class AdminController extends Controller
                 'getServiceType' => $this->getServiceTypes(),
                 'getTax' => $this->getTax(session('myID')),
                 'getpersonalData' => $this->getmyPersonalDetail(session('user_id')),
+                'getimt' => $this->getImtCountry()
             );
 
 
@@ -12943,6 +12944,13 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
 
         return redirect()->back()->with($resp, $resData);
+    }
+
+    public function getImtCountry()
+    {
+        $data = AllCountries::where('imt', "true")->get();
+
+        return $data;
     }
 
     public function ajaxAccessToUsePaysprintImt(Request $req)

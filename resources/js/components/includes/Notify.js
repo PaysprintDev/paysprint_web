@@ -60,8 +60,7 @@ class Notify extends Component {
         try {
 
             axios.get(`/api/v1/notification`, { headers: { Authorization: `Bearer ${this.props.apiToken}` } }).then(res => {
-                console.log("Notify::");
-                console.log(res);
+                
                 if (this._isMounted) {
 
                     if (res.status === 200) {

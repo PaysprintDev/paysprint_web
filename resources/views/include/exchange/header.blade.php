@@ -15,7 +15,7 @@
                         alt="Muze" class="white-logo">
                 </a>
                 <div class="col d-flex align-items-center">
-                    <a href="javascript:void(0);"
+                    <a href="#"
                         class="back-arrow bg-white circle circle-sm shadow border border-gray-200 rounded mb-0"><svg
                             xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 16 16">
                             <g data-name="icons/tabler/chevrons-left" transform="translate(0)">

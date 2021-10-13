@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\v1;
 
+use App\AllCountries;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -199,6 +200,7 @@ class InvoiceController extends Controller
         ]);
 
 
+
         if ($validator->passes()) {
             try {
                 $thisuser = User::where('api_token', $req->bearerToken())->first();
@@ -233,12 +235,20 @@ class InvoiceController extends Controller
 
                         $getTax = Tax::where('id', $req->single_tax)->first();
 
+                        if (isset($req->single_currency)) {
+                            $invoicedCurrency = $req->single_currency;
+                        } else {
+                            $invoicedCurrency = $thisuser->currencyCode;
+                        }
+
+                        $thiscurrencySymbol = AllCountries::where('currencyCode', $invoicedCurrency)->first();
+
                         // Insert Record
                         $query = [
-                            'transaction_date' => $req->single_transaction_date, 'invoice_no' => $req->single_invoiceno, 'payee_ref_no' => $req->single_transaction_ref, 'name' => $req->single_firstname . ' ' . $req->single_lastname, 'transaction_ref' => $req->single_transaction_ref, 'description' => $req->single_description, 'amount' => $req->single_amount, 'payment_due_date' => $req->single_payment_due_date, 'payee_email' => $req->single_email, 'address' => $address, 'customer_id' => $thisuser->ref_code, 'service' => $req->single_service, 'installpay' => $req->single_installpay, 'installlimit' => $req->single_installlimit, 'status' => 'invoice', 'uploaded_by' => $thisuser->ref_code, 'merchantName' => $thisuser->businessname, 'recurring' => $req->single_recurring_service, 'reminder' => $req->single_reminder_service, 'telephone' => $req->single_telephone, 'tax' => $req->single_tax, 'tax_amount' => $req->single_tax_amount, 'total_amount' => $req->single_total_amount, 'remaining_balance' => $req->single_total_amount
+                            'transaction_date' => $req->single_transaction_date, 'invoice_no' => $req->single_invoiceno, 'payee_ref_no' => $req->single_transaction_ref, 'name' => $req->single_firstname . ' ' . $req->single_lastname, 'transaction_ref' => $req->single_transaction_ref, 'description' => $req->single_description, 'amount' => $req->single_amount, 'payment_due_date' => $req->single_payment_due_date, 'payee_email' => $req->single_email, 'address' => $address, 'customer_id' => $thisuser->ref_code, 'service' => $req->single_service, 'installpay' => $req->single_installpay, 'installlimit' => $req->single_installlimit, 'status' => 'invoice', 'uploaded_by' => $thisuser->ref_code, 'merchantName' => $thisuser->businessname, 'recurring' => $req->single_recurring_service, 'reminder' => $req->single_reminder_service, 'telephone' => $req->single_telephone, 'tax' => $req->single_tax, 'tax_amount' => $req->single_tax_amount, 'total_amount' => $req->single_total_amount, 'remaining_balance' => $req->single_total_amount, 'invoiced_currency' => $invoicedCurrency, 'invoiced_currency_symbol' => $thiscurrencySymbol->currencySymbol
                         ];
 
-                        $insertData = ImportExcel::insert($query);
+                        ImportExcel::insert($query);
 
                         // Insert Statement
                         $activity = "Invoice on " . $req->single_service;
@@ -271,6 +281,7 @@ class InvoiceController extends Controller
                         }
 
 
+
                         $this->to = $req->single_email;
                         // $this->to = "adenugaadebambo41@gmail.com";
                         $this->name = $req->single_firstname . ' ' . $req->single_lastname;
@@ -280,8 +291,8 @@ class InvoiceController extends Controller
                         $this->transaction_ref = $req->single_transaction_ref;
                         $this->description = $req->single_description;
                         $this->payment_due_date = $req->single_payment_due_date;
-                        $this->amount = $thisuser->currencySymbol . number_format($req->single_amount, 2);
-                        $this->total_amount = $thisuser->currencySymbol . number_format($req->single_total_amount, 2);
+                        $this->amount = $thiscurrencySymbol->currencySymbol . number_format($req->single_amount, 2);
+                        $this->total_amount = $thiscurrencySymbol->currencySymbol . number_format($req->single_total_amount, 2);
                         $this->address = $thisuser->address;
                         $this->service = $req->single_service;
                         $this->clientname = $businessName;
@@ -292,7 +303,7 @@ class InvoiceController extends Controller
                         $this->customer_id = $thisuser->ref_code;
                         $this->generated_link = null;
                         $this->tax = $taxData;
-                        $this->tax_amount = $thisuser->currencySymbol . number_format($req->single_tax_amount, 2);
+                        $this->tax_amount = $thiscurrencySymbol->currencySymbol . number_format($req->single_tax_amount, 2);
 
                         $this->subject = 'You have an invoice ' . $req->single_invoiceno . ' from  ' . $this->clientname . ' on PaySprint';
 

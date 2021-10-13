@@ -3,6 +3,21 @@ import { Link } from 'react-router-dom';
 
 class Aside extends Component{
 
+    constructor(props) {
+        super(props)
+    
+        this.state = {value: 'USD'};
+
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+
+    handleChange(event) {
+        console.log(event.target.value);
+        this.setState({value: event.target.value});
+    }
+    
+
 
     createOffer = (e) => {
         console.log(e);
@@ -15,7 +30,7 @@ class Aside extends Component{
                   <div className="customize-sidebar">
     <div className="border-bottom border-gray-200 p-3 p-md-4">
       <div className="text-end">
-        <a href="javascript:void(0);" className="btn btn-light btn-icon rounded-pill customize-close">
+        <a href="#" className="btn btn-light btn-icon rounded-pill customize-close">
           <svg data-name="icons/tabler/close" xmlns="http://www.w3.org/2000/svg" width="15" height="15"
             viewBox="0 0 16 16">
             <rect data-name="Icons/Tabler/Close background" width="16" height="16" fill="none"></rect>
@@ -56,9 +71,9 @@ class Aside extends Component{
         <div className="d-flex muze-skins customizer-controls">
 
             <div className="mb-4 mb-xl-2" style={{ width: "25%" }}>
-                <select id="buy_currency" className="form-control form-control-xl">
+                <select value={this.state.value} id="buy_currency" className="form-control form-control-xl" onChange={this.handleChange}>
                     <option value="NGN">NGN</option>
-                    <option selected value="USD">USD</option>
+                    <option value="USD">USD</option>
                     <option value="CAD">CAD</option>
                 </select>
             </div>
@@ -84,7 +99,7 @@ class Aside extends Component{
             </div>
           <div className="mb-4 mb-xl-2" style={{ width: "25%" }}>
                 <select id="sell_rate" className="form-control form-control-xl" readOnly>
-                    <option selected value="NGN">NGN</option>
+                    <option value="NGN">NGN</option>
                 </select>
             </div>
 
@@ -98,9 +113,9 @@ class Aside extends Component{
                 <input type="number" placeholder="1.00" min="0.00" step="any" id="buy" className="form-control form-control-xl"/>
             </div>
           <div className="mb-4 mb-xl-2" style={{ width: "25%" }}>
-                <select id="buy_rate" className="form-control form-control-xl">
+                <select value={this.state.value} id="buy_rate" className="form-control form-control-xl" onChange={this.handleChange}>
                     <option value="NGN">NGN</option>
-                    <option selected value="USD">USD</option>
+                    <option value="USD">USD</option>
                     <option value="CAD">CAD</option>
                 </select>
             </div>
@@ -142,10 +157,10 @@ class Aside extends Component{
     <div className="p-4 px-lg-5 border-top border-gray-200 bg-white">
       <div className="row">
         <div className="col-6 d-grid">
-          <a href="Javascript:void(0);" className="btn btn-xl btn-outline-dark" id="ResetCustomizer">Reset</a>
+          <a href="#" className="btn btn-xl btn-outline-dark" id="ResetCustomizer">Reset</a>
         </div>
         <div className="col-6 d-grid">
-          <a href="Javascript:void(0);" className="btn btn-xl btn-primary" id="CustomizerPreview">Submit</a>
+          <a href="#" className="btn btn-xl btn-primary" id="CustomizerPreview">Submit</a>
         </div>
       </div>
     </div>
@@ -153,15 +168,15 @@ class Aside extends Component{
 
 
                 <nav className="navbar navbar-vertical navbar-expand-lg navbar-light">
-    <a className="navbar-brand mx-auto d-none d-lg-block my-0 my-lg-4" href="#"><img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
+    <Link className="navbar-brand mx-auto d-none d-lg-block my-0 my-lg-4" to={"/currencyfx/"}><img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
             alt="Muze" /><img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
             alt="Muze" className="white-logo2" /><img src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_icon_png_rhxm1e.png"
             className="muze-icon" alt="Muze" /><img src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_icon_png_rhxm1e.png"
-            className="muze-icon-white" alt="Muze" /> </a> 
+            className="muze-icon-white" alt="Muze" /> </Link> 
     <div className="navbar-collapse">
         <ul className="navbar-nav mb-2" id="accordionExample" data-simplebar>
             <li className="nav-item">
-                <a className="nav-link collapsed" href="/currencyfx" data-bs-toggle="collapse" role="button"
+                <Link className="nav-link collapsed" to={"/currencyfx/"} data-bs-toggle="collapse" role="button"
                     aria-expanded="true" aria-controls="sidebarDashboards">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
                         <g data-name="icons/tabler/chart" transform="translate(0)">
@@ -171,7 +186,7 @@ class Aside extends Component{
                                 transform="translate(0 1)" fill="#1e1e1e" />
                         </g>
                     </svg> &nbsp;<span className="ms-2">Dashboards</span>
-                </a>
+                </Link>
 
             </li>
             <li className="nav-item">
@@ -198,7 +213,7 @@ class Aside extends Component{
             </li>
 
             <li className="nav-item">
-                <a className="nav-link collapsed" href="/currencyfx/marketplace" data-bs-toggle="collapse" role="button"
+                <Link className="nav-link collapsed" to={"/currencyfx/marketplace"} data-bs-toggle="collapse" role="button"
                     aria-expanded="false" aria-controls="sidebarMarketPlace">
                     <svg data-name="Icons/Tabler/Bolt" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                         viewBox="0 0 16 16">
@@ -207,7 +222,7 @@ class Aside extends Component{
                             d="M1.975,14A1.977,1.977,0,0,1,0,12.026V1.975A1.977,1.977,0,0,1,1.975,0h5.04a.535.535,0,0,1,.249.069l.007,0h0a.534.534,0,0,1,.109.084l3.574,3.575a.536.536,0,0,1,.163.289h0l0,.013h0l0,.013v0l0,.011v.053s0,.009,0,.014v7.9A1.977,1.977,0,0,1,9.154,14Zm-.9-12.026V12.026a.9.9,0,0,0,.9.9H9.154a.9.9,0,0,0,.9-.9V4.667H7.718a1.255,1.255,0,0,1-1.248-1.12L6.461,3.41V1.077H1.975A.9.9,0,0,0,1.077,1.975ZM7.538,3.41a.179.179,0,0,0,.122.17l.057.01H9.29L7.538,1.838Z"
                             transform="translate(2 1)" fill="#1e1e1e" />
                     </svg> &nbsp;<span className="ms-2">Market Place</span>
-                </a>
+                </Link>
             </li>
             <li className="nav-item">
                 <a className="nav-link collapsed" href="/mywallet" data-bs-toggle="collapse" role="button"
