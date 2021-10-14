@@ -741,7 +741,15 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                         if ($thismerchant->currencyCode != $req->currencyCode) {
 
-                                            $getRate = $this->getConversionRate($req->currencyCode, $thismerchant->currencyCode);
+
+                                            if ($thisuser->currencyCode == $getthisinvoice->invoiced_currency) {
+                                                // $getRate = $this->getConversionRate($req->currencyCode, $thismerchant->currencyCode);
+                                                $getRate = $this->getOfficialConversionRate($req->currencyCode, $thismerchant->currencyCode);
+                                            } else {
+                                                $getRate = $this->getOfficialConversionRate($getthisinvoice->invoiced_currency, $thismerchant->currencyCode);
+                                            }
+
+
 
                                             if ($getthisinvoice->remaining_balance > 0) {
 
@@ -812,7 +820,14 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 $prevAmount = $getthisinvoice->amount;
                                                             }
 
-                                                            $paidAmount = $req->amount;
+                                                            if ($thisuser->currencyCode == $getthisinvoice->invoiced_currency) {
+                                                                $paidAmount = $req->amount;
+                                                            } else {
+                                                                $paidAmount = $prevAmount;
+                                                            }
+
+
+
 
                                                             $newAmount = $prevAmount - $paidAmount;
 
@@ -832,7 +847,14 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 $prevAmount = $getthisinvoice->amount;
                                                             }
 
-                                                            $paidAmount = $req->amount;
+                                                            if ($thisuser->currencyCode == $getthisinvoice->invoiced_currency) {
+                                                                $paidAmount = $req->amount;
+                                                            } else {
+                                                                $paidAmount = $prevAmount;
+                                                            }
+
+
+
 
                                                             $newAmount = $prevAmount - $paidAmount;
 

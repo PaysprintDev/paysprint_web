@@ -289,7 +289,8 @@
                                                 <input type="hidden"
                                                     value="{{ $data['currencyCode']->currencyCode }}"
                                                     name="currencyCode">
-                                                <input type="hidden" value="{{ $merchantPay }}" name="merchantpay">
+                                                <input type="hidden" value="{{ $merchantPay }}" name="merchantpay"
+                                                    id="merchantpay">
                                                 <div class="input-group"> <span class="input-group-text text-muted">
                                                         {{ $data['currencyCode']->currencySymbol }} </span> <input
                                                         type="number" min="0.00" step="0.01" name="amountinvoiced"
@@ -715,6 +716,7 @@
                 var route = "{{ URL('Ajax/getconversion') }}";
                 var merchantcountry = "{{ $countryBase }}";
                 var country = "{{ Auth::user()->country }}";
+                var mainAmount = $('#merchantpay').val();
                 var thisdata = {
                     currency: currency,
                     amount: amount,
@@ -739,7 +741,13 @@
 
                         }
 
-                        $('#convertedAmount').text((result.data).toFixed(2));
+                        if (localcurrency != currency) {
+                            $('#convertedAmount').text(parseInt(mainAmount).toFixed(2));
+
+                        } else {
+                            $('#convertedAmount').text((result.data).toFixed(2));
+
+                        }
 
                         var mycurrentCurrency = $('#typedAmount').text(amount);
 
@@ -748,7 +756,8 @@
 
                         // Put Exchange rate
                         $('#rateToday').html("<span class='text-danger'><strong>1" + localcurrency + " == " +
-                            todayRate.toFixed(2) + '' + currency + '<br>Today: ' + today + "</strong></span>");
+                            todayRate.toFixed(2) + '' + currency + '<br>Today: ' + today +
+                            "</strong></span>");
 
 
                     }
