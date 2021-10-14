@@ -114,18 +114,20 @@ use App\Classes\mcCorpar;
 use App\Classes\mcTax;
 use App\Classes\CofInfo;
 use App\Classes\MCPRate;
-use App\ImportExcelLink;
+
+
 use App\Traits\PaymentGateway;
 use App\Traits\PaystackPayment;
 use App\Traits\ExpressPayment;
 use App\Traits\ElavonPayment;
 use App\Traits\Xwireless;
+use App\Traits\PaysprintPoint;
 use Throwable;
 
 class MonerisController extends Controller
 {
 
-    use PaymentGateway, PaystackPayment, ExpressPayment, ElavonPayment, Xwireless;
+    use PaymentGateway, PaystackPayment, ExpressPayment, ElavonPayment, Xwireless, PaysprintPoint;
 
     public $to;
     public $name;
@@ -556,6 +558,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                             $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
+                                            
+
                                             if (isset($userPhone)) {
 
                                                 $sendPhone = $thisuser->telephone;
@@ -685,9 +689,14 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     'transaction_pin' => 'required|string',
                 ]);
 
+            
+
+
                 if ($validator->passes()) {
 
                     try {
+
+                        
 
                         $transactionID = "invoice-" . date('dmY') . time();
 
@@ -744,6 +753,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     } else {
                                         $paidinvoiceamount = $req->amount;
                                     }
+
+                                    
 
 
                                     // Update Merchant Wallet Balance
@@ -872,8 +883,13 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                         $this->sendEmail($this->email, "Fund remittance");
 
                                                         $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is ' . $thismerchant->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
+                                                        
+
+                                                        $this->updatePoints($thisuser->accountType, $thisuser->id, 'Pay invoice');
 
                                                         $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                        
 
                                                         if (isset($userPhone)) {
 
@@ -951,6 +967,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                                         $this->createNotification($thisuser->ref_code, $sendMsg);
                                                         $this->createNotification($thismerchant->ref_code, $recMesg);
+                                                        $this->updatePoints($thisuser->accountType, $thisuser->id, 'Pay invoice');
                                                     } else {
 
                                                         $response = 'Something went wrong';
@@ -1166,6 +1183,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                                         $this->createNotification($thisuser->ref_code, $sendMsg);
                                                         $this->createNotification($thismerchant->ref_code, $recMesg);
+                                                        $this->updatePoints($thisuser->accountType, $thisuser->id, 'Pay invoice');
                                                     } else {
 
                                                         $response = 'Something went wrong';
@@ -1190,6 +1208,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                             $message = $response;
                                         }
                                     }
+
                                 }
                             } else {
                                 $response = 'Invalid transaction pin!';
@@ -1208,7 +1227,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     } catch (\Throwable $th) {
                         $data = [];
                         $status = 400;
-                        $message = "Error: " . $th;
+                        $message = "Error: " . $th->getMessage();
                     }
                 } else {
 
@@ -1233,277 +1252,6 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
 
-    // Pay Invoice from Gateway
-    public function payInvoiceLink(Request $req)
-    {
-
-
-        // Get Invoice Details from Invoice link
-        $getInvoice = ImportExcelLink::where('invoice_no', $req->invoice_no)->first();
-
-
-
-
-        try {
-
-            if (isset($getInvoice)) {
-
-
-
-                if ($req->paymentToken != null) {
-
-                    $merchantId = $getInvoice->uploaded_by;
-                    $merchantName = $getInvoice->merchantName;
-                    $amount = $req->amountinvoiced;
-                    $merchantpay = $req->merchantpay;
-
-
-
-                    $thisuser = User::where('ref_code', $merchantId)->where('businessname', $merchantName)->first();
-
-
-                    // Credit Merchant Wallet and Add Statement
-                    // Update Wallet Balance
-                    $walletBal = $thisuser->wallet_balance + $merchantpay;
-                    User::where('ref_code', $merchantId)->where('businessname', $merchantName)->update(['wallet_balance' => $walletBal]);
-
-
-                    // Generate Statement
-
-                    $activity = 'You have received ' . $thisuser->currencyCode . ' ' . number_format($merchantpay, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $req->name . '. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
-                    $credit = $merchantpay;
-                    $debit = 0;
-                    $reference_code = $req->paymentToken;
-                    $balance = 0;
-                    $trans_date = date('Y-m-d');
-                    $status = "Delivered";
-                    $action = "Wallet credit";
-                    $regards = $thisuser->ref_code;
-                    $statement_route = "wallet";
-
-                    // Senders statement
-                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
-
-                    $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amountinvoiced);
-
-                    // Notification
-
-
-                    $this->name = $req->name;
-                    $this->email = $req->email;
-                    $this->subject = "Invoice payment of " . $req->currencyCode . ' ' . number_format($req->amount, 2) . " sent to " . $thisuser->businessname;
-
-                    $this->message = '<p>Invoice amount of <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> has been sent to ' . $thisuser->businessname . '. Your debit card was charged <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> successfully.</p><p>Thank you for choosing PaySprint.</p>';
-
-
-
-                    $sendMsg = 'Invoice amount of ' . $thisuser->currencyCode . ' ' . number_format($merchantpay, 2) . ' has been sent to your wallet with PaySprint from ' . $req->name . '. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
-
-                    $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                    if (isset($userPhone)) {
-
-                        $sendPhone = $thisuser->telephone;
-                    } else {
-                        $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                    }
-
-                    if ($thisuser->country == "Nigeria") {
-
-                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                        $this->sendSms($sendMsg, $correctPhone);
-                    } else {
-                        $this->sendMessage($sendMsg, $sendPhone);
-                    }
-
-                    // Update Invoice Link Payment Status
-                    ImportExcelLink::where('invoice_no', $req->invoice_no)->update(['payment_status' => 1]);
-
-                    // Insert to Invoice Payment Page
-                    $query = [
-                        'transactionid' => $req->paymentToken,
-                        'name' => $req->name,
-                        'email' => $req->email,
-                        'amount' => $req->amount,
-                        'invoice_no' => $req->invoice_no,
-                        'service' => $req->service,
-                        'payment_method' => $req->payment_method,
-                        'client_id' => time(),
-                        'opening_balance' => $req->amount,
-                        'remaining_balance' => 0,
-                        'withdraws' => 0,
-                        'mystatus' => "payment",
-                    ];
-                    InvoicePayment::insert($query);
-
-                    $merchantData = User::where('ref_code', $merchantId)->where('businessname', $merchantName)->first();
-
-                    // Send Mail to Sender
-
-
-
-                    $this->sendEmail($req->email, "Fund remittance");
-
-                    $data = $merchantData;
-                    $message = "Payment Successfully received";
-                    $status = 200;
-                } else {
-                    // Process payment for moneris gateway
-
-
-
-                    $merchantId = $getInvoice->uploaded_by;
-                    $creditcard_no = $req->creditcard_no;
-                    $merchantName = $getInvoice->merchantName;
-
-                    $month = $req->month;
-                    $expirydate = $req->expirydate;
-                    $amount = $req->amountinvoiced;
-                    $merchantpay = $req->merchantpay;
-
-
-
-                    $response = $this->paywithmonerisWalletProcessLink($merchantId, $creditcard_no, $month, $expirydate, $amount, "purchase", "PaySprint/Vimfile Pay Invoice to " . $getInvoice->merchantName);
-
-
-
-                    if ($response->responseData['ResponseCode'] == "000" || $response->responseData['ResponseCode'] == "001" || $response->responseData['ResponseCode'] == "002" || $response->responseData['ResponseCode'] == "003" || $response->responseData['ResponseCode'] == "004" || $response->responseData['ResponseCode'] == "005" || $response->responseData['ResponseCode'] == "006" || $response->responseData['ResponseCode'] == "007" || $response->responseData['ResponseCode'] == "008" || $response->responseData['ResponseCode'] == "009" || $response->responseData['ResponseCode'] == "010" || $response->responseData['ResponseCode'] == "023" || $response->responseData['ResponseCode'] == "024" || $response->responseData['ResponseCode'] == "025" || $response->responseData['ResponseCode'] == "026" || $response->responseData['ResponseCode'] == "027" || $response->responseData['ResponseCode'] == "028" || $response->responseData['ResponseCode'] == "029") {
-
-                        // Credit Merchants Wallet and Add Statement
-
-                        $thisuser = User::where('ref_code', $merchantId)->where('businessname', $merchantName)->first();
-
-
-                        // Credit Merchant Wallet and Add Statement
-                        // Update Wallet Balance
-                        $walletBal = $thisuser->wallet_balance + $merchantpay;
-                        User::where('ref_code', $merchantId)->where('businessname', $merchantName)->update(['wallet_balance' => $walletBal]);
-
-
-                        // Generate Statement
-
-                        $activity = 'You have received ' . $thisuser->currencyCode . ' ' . number_format($merchantpay, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $req->name . '. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
-                        $credit = $merchantpay;
-                        $debit = 0;
-                        $reference_code = $response->responseData['ReceiptId'];
-                        $balance = 0;
-                        $trans_date = date('Y-m-d');
-                        $status = "Delivered";
-                        $action = "Wallet credit";
-                        $regards = $thisuser->ref_code;
-                        $statement_route = "wallet";
-
-                        // Senders statement
-                        $this->insStatement(
-                            $thisuser->email,
-                            $reference_code,
-                            $activity,
-                            $credit,
-                            $debit,
-                            $balance,
-                            $trans_date,
-                            $status,
-                            $action,
-                            $regards,
-                            1,
-                            $statement_route,
-                            $thisuser->country
-                        );
-
-                        $this->getfeeTransaction($reference_code, $thisuser->ref_code, $merchantpay, "0.00", $req->amountinvoiced);
-
-                        // Notification
-
-
-                        $this->name = $req->name;
-                        $this->email = $req->email;
-                        $this->subject = "Invoice payment of " . $req->currencyCode . ' ' . number_format($req->amount, 2) . " sent to " . $thisuser->businessname;
-
-                        $this->message = '<p>Invoice amount of <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> has been sent to ' . $thisuser->businessname . '. Your debit card was charged <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> successfully.</p><p>Thank you for choosing PaySprint.</p>';
-
-                        $sendMsg = 'Invoice amount of ' . $thisuser->currencyCode . ' ' . number_format($merchantpay, 2) . ' has been paid to your wallet with PaySprint. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
-
-                        $userPhone = User::where('email', $thisuser->email)->where(
-                            'telephone',
-                            'LIKE',
-                            '%+%'
-                        )->first();
-
-                        if (isset($userPhone)) {
-
-                            $sendPhone = $thisuser->telephone;
-                        } else {
-                            $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                        }
-
-                        if ($thisuser->country == "Nigeria") {
-
-                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                            $this->sendSms($sendMsg, $correctPhone);
-                        } else {
-                            $this->sendMessage($sendMsg, $sendPhone);
-                        }
-
-                        // Update Invoice Link Payment Status
-                        ImportExcelLink::where('invoice_no', $req->invoice_no)->update(['payment_status' => 1]);
-
-                        // Insert to Invoice Payment Page
-                        $query = [
-                            'transactionid' => $response->responseData['ReceiptId'],
-                            'name' => $req->name,
-                            'email' => $req->email,
-                            'amount' => $merchantpay,
-                            'invoice_no' => $req->invoice_no,
-                            'service' => $req->service,
-                            'payment_method' => $req->payment_method,
-                            'client_id' => time(),
-                            'opening_balance' => $merchantpay,
-                            'remaining_balance' => 0,
-                            'withdraws' => 0,
-                            'mystatus' => "payment",
-                        ];
-                        InvoicePayment::insert($query);
-
-                        $merchantData = User::where('ref_code', $merchantId)->where('businessname', $merchantName)->first();
-
-                        // Send Mail to Sender
-
-
-
-                        $this->sendEmail($req->email, "Fund remittance");
-
-                        $data = $merchantData;
-                        $message = "Payment Successfully received";
-                        $status = 200;
-                    } else {
-                        $data = [];
-                        $message = $response->responseData['Message'];
-                        $status = 400;
-                    }
-                }
-            } else {
-                $data = [];
-                $message = "Invoice data not found. Please contact your vendor";
-                $status = 400;
-            }
-        } catch (\Throwable $th) {
-
-            $data = [];
-            $message = $th->getMessage();
-            $status = 400;
-        }
-
-
-        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
-
-        return $this->returnJSON(
-            $resData,
-            $status
-        );
-    }
-
-
-
     public function myInvoiceComment(Request $req, $id)
     {
 
@@ -1522,59 +1270,6 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                 $insPay = InvoicePayment::updateOrCreate(['invoice_no' => $getInvoice->invoice_no], ['transactionid' => $transactionID, 'name' => $thisuser->name, 'email' => $thisuser->email, 'amount' => $getInvoice->total_amount, 'invoice_no' => $getInvoice->invoice_no, 'service' => $getInvoice->service, 'client_id' => $merchantInfo->ref_code, 'payment_method' => $req->payment_method]);
-
-                // Insert Wallet Statement
-
-                $activity = "Invoice of " . $merchantInfo->currencyCode . '' . number_format($req->amount, 2) . " paid from " . $req->payment_method . " | " . $req->comment;
-                $credit = $getInvoice->total_amount;
-                $debit = 0;
-                $reference_code = $transactionID;
-                $balance = 0;
-                $trans_date = date('Y-m-d');
-                $status = "Delivered";
-                $action = "Invoice paid";
-                $regards = $merchantInfo->ref_code;
-                $statement_route = "Others";
-
-                // Senders statement
-                $this->insStatement($merchantInfo->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $merchantInfo->country);
-
-
-                $this->createNotification($merchantInfo->ref_code, $activity);
-
-
-                $resData = "Invoice marked as paid";
-                $resp = "success";
-            } catch (\Throwable $th) {
-                $resData = $th->getMessage();
-                $resp = "error";
-            }
-        } else {
-            $resData = "Cannot find this invoice";
-            $resp = "error";
-        }
-
-
-        return redirect()->route('Admin')->with($resp, $resData);
-    }
-
-
-    public function myInvoiceLinkComment(Request $req, $id)
-    {
-
-        $getInvoice = ImportExcelLink::where('id', $req->id)->first();
-
-        if (isset($getInvoice)) {
-            try {
-
-                $merchantInfo = User::where('ref_code', $getInvoice->uploaded_by)->first();
-
-                $transactionID = "invoice-" . date('dmY') . time();
-
-                ImportExcelLink::where('id', $req->id)->update(['payment_status' => 1]);
-
-
-                InvoicePayment::updateOrCreate(['invoice_no' => $getInvoice->invoice_no], ['transactionid' => $transactionID, 'name' => $getInvoice->name, 'email' => $getInvoice->payee_email, 'amount' => $getInvoice->total_amount, 'invoice_no' => $getInvoice->invoice_no, 'service' => $getInvoice->service, 'client_id' => $merchantInfo->ref_code, 'payment_method' => $req->payment_method]);
 
                 // Insert Wallet Statement
 
@@ -1783,6 +1478,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to your wallet';
 
                     $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                    $this->updatePoints($thisuser->accountType, $thisuser->id, 'Add money');
 
                     // $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country);
 
@@ -2133,7 +1830,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "purchase", "PaySprint/Vimfile Add Money to the Wallet of " . $thisuser->name, $req->mode);
 
 
-                            if ($response->responseData['ResponseCode'] == "000" || $response->responseData['ResponseCode'] == "001" || $response->responseData['ResponseCode'] == "002" || $response->responseData['ResponseCode'] == "003" || $response->responseData['ResponseCode'] == "004" || $response->responseData['ResponseCode'] == "005" || $response->responseData['ResponseCode'] == "006" || $response->responseData['ResponseCode'] == "007" || $response->responseData['ResponseCode'] == "008" || $response->responseData['ResponseCode'] == "009" || $response->responseData['ResponseCode'] == "010" || $response->responseData['ResponseCode'] == "023" || $response->responseData['ResponseCode'] == "024" || $response->responseData['ResponseCode'] == "025" || $response->responseData['ResponseCode'] == "026" || $response->responseData['ResponseCode'] == "027" || $response->responseData['ResponseCode'] == "028" || $response->responseData['ResponseCode'] == "029") {
+                            if ($response->responseData['Message'] == "APPROVED           *                    =") {
 
                                 $reference_code = $response->responseData['ReceiptId'];
 
@@ -2246,7 +1943,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "purchase", "PaySprint/Vimfile Add Money to the Wallet of " . $thisuser->name, $req->mode);
 
 
-                        if ($response->responseData['ResponseCode'] == "000" || $response->responseData['ResponseCode'] == "001" || $response->responseData['ResponseCode'] == "002" || $response->responseData['ResponseCode'] == "003" || $response->responseData['ResponseCode'] == "004" || $response->responseData['ResponseCode'] == "005" || $response->responseData['ResponseCode'] == "006" || $response->responseData['ResponseCode'] == "007" || $response->responseData['ResponseCode'] == "008" || $response->responseData['ResponseCode'] == "009" || $response->responseData['ResponseCode'] == "010" || $response->responseData['ResponseCode'] == "023" || $response->responseData['ResponseCode'] == "024" || $response->responseData['ResponseCode'] == "025" || $response->responseData['ResponseCode'] == "026" || $response->responseData['ResponseCode'] == "027" || $response->responseData['ResponseCode'] == "028" || $response->responseData['ResponseCode'] == "029") {
+                        if ($response->responseData['Message'] == "APPROVED           *                    =") {
 
                             $reference_code = $response->responseData['ReceiptId'];
 
@@ -2504,6 +2201,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     $this->createNotification($thisuser->ref_code, $sendMsg);
 
                     $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country);
+
+                    $this->updatePoints($thisuser->accountType, $thisuser->id, 'Add money');
 
                     // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
@@ -2832,10 +2531,14 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                 // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
+                                $this->updatePoints($thisuser->accountType, $thisuser->id, 'Add money');
+
                                 $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                 $monerisactivity = $thisuser->name . ' ' . $sendMsg;
                                 $this->keepRecord($reference_code, $responseCode, $monerisactivity, $gateway, $thisuser->country);
+
+
                             } else {
                                 $data = [];
                                 $message = $responseCode;
@@ -2855,7 +2558,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "purchase", "PaySprint/Vimfile Add Money to the Wallet of " . $thisuser->name, $req->mode);
 
 
-                            if ($response->responseData['ResponseCode'] == "000" || $response->responseData['ResponseCode'] == "001" || $response->responseData['ResponseCode'] == "002" || $response->responseData['ResponseCode'] == "003" || $response->responseData['ResponseCode'] == "004" || $response->responseData['ResponseCode'] == "005" || $response->responseData['ResponseCode'] == "006" || $response->responseData['ResponseCode'] == "007" || $response->responseData['ResponseCode'] == "008" || $response->responseData['ResponseCode'] == "009" || $response->responseData['ResponseCode'] == "010" || $response->responseData['ResponseCode'] == "023" || $response->responseData['ResponseCode'] == "024" || $response->responseData['ResponseCode'] == "025" || $response->responseData['ResponseCode'] == "026" || $response->responseData['ResponseCode'] == "027" || $response->responseData['ResponseCode'] == "028" || $response->responseData['ResponseCode'] == "029") {
+                            if ($response->responseData['Message'] == "APPROVED           *                    =") {
 
                                 $reference_code = $response->responseData['ReceiptId'];
 
@@ -2928,6 +2631,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                 $this->createNotification($thisuser->ref_code, $sendMsg);
 
+                                $this->updatePoints($thisuser->accountType, $thisuser->id, 'Add money');
+
                                 // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
                                 $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
@@ -2963,7 +2668,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "purchase", "PaySprint/Vimfile Add Money to the Wallet of " . $thisuser->name, $req->mode);
 
 
-                        if ($response->responseData['ResponseCode'] == "000" || $response->responseData['ResponseCode'] == "001" || $response->responseData['ResponseCode'] == "002" || $response->responseData['ResponseCode'] == "003" || $response->responseData['ResponseCode'] == "004" || $response->responseData['ResponseCode'] == "005" || $response->responseData['ResponseCode'] == "006" || $response->responseData['ResponseCode'] == "007" || $response->responseData['ResponseCode'] == "008" || $response->responseData['ResponseCode'] == "009" || $response->responseData['ResponseCode'] == "010" || $response->responseData['ResponseCode'] == "023" || $response->responseData['ResponseCode'] == "024" || $response->responseData['ResponseCode'] == "025" || $response->responseData['ResponseCode'] == "026" || $response->responseData['ResponseCode'] == "027" || $response->responseData['ResponseCode'] == "028" || $response->responseData['ResponseCode'] == "029") {
+                        if ($response->responseData['Message'] == "APPROVED           *                    =") {
 
                             $reference_code = $response->responseData['ReceiptId'];
 
@@ -3036,6 +2741,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                             $this->createNotification($thisuser->ref_code, $sendMsg);
 
+                            $this->updatePoints($thisuser->accountType, $thisuser->id, 'Add money');
+
                             // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
                             $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
@@ -3100,9 +2807,14 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                     $withdrawLimit = $this->getWithdrawalLimit($thisuser->country, $thisuser->id);
 
-                    if ($withdrawLimit['withdrawal_per_day'] > $req->amount) {
+                    if ($req->amount > $withdrawLimit['withdrawal_per_transaction']) {
+
                         $data = [];
-                        $message = "Withdrawal limit per day is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try a lesser amount";
+                        $message = "Withdrawal limit for per transaction is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_transaction'], 2) . ". Please withdraw a lesser amount";
+                        $status = 400;
+                    } elseif ($withdrawLimit['withdrawal_per_day'] > $req->amount) {
+                        $data = [];
+                        $message = "Withdrawal limit per day is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try again the next day";
                         $status = 400;
                     } elseif ($withdrawLimit['withdrawal_per_week'] > $req->amount) {
                         $data = [];
@@ -3139,6 +2851,17 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $status = 400;
 
                             // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
+
+                            $this->slack('Oops!, Though this is a test, but ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                        } elseif ($minWithdrawalBal > $req->amount) {
+                            // Cannot withdraw minimum balance
+
+                            $data = [];
+                            $message = "Minimum amount to withdraw is " . $req->currencyCode . ' ' . number_format($minWithdrawalBal, 2);
+                            $status = 400;
+
+                            // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
+
 
                             $this->slack('Oops!, Though this is a test, but ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                         } elseif ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
@@ -3448,7 +3171,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                                 // $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "ind_refund", "PaySprint Withdraw from Wallet to ".$thisuser->name, $req->mode);
 
-                                                // if($response->responseData['ResponseCode'] == "000" || $response->responseData['ResponseCode'] == "001" || $response->responseData['ResponseCode'] == "002" || $response->responseData['ResponseCode'] == "003" || $response->responseData['ResponseCode'] == "004" || $response->responseData['ResponseCode'] == "005" || $response->responseData['ResponseCode'] == "006" || $response->responseData['ResponseCode'] == "007" || $response->responseData['ResponseCode'] == "008" || $response->responseData['ResponseCode'] == "009" || $response->responseData['ResponseCode'] == "010" || $response->responseData['ResponseCode'] == "023" || $response->responseData['ResponseCode'] == "024" || $response->responseData['ResponseCode'] == "025" || $response->responseData['ResponseCode'] == "026" || $response->responseData['ResponseCode'] == "027" || $response->responseData['ResponseCode'] == "028" || $response->responseData['ResponseCode'] == "029"){
+                                                // if($response->responseData['Message'] == "APPROVED           *                    ="){
 
                                                 $walletBal = $thisuser->wallet_balance - $req->amount;
                                                 $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
@@ -3786,7 +3509,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     // $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "ind_refund", "PaySprint Withdraw from Wallet to ".$thisuser->name, $req->mode);
 
 
-                                                    // if($response->responseData['ResponseCode'] == "000" || $response->responseData['ResponseCode'] == "001" || $response->responseData['ResponseCode'] == "002" || $response->responseData['ResponseCode'] == "003" || $response->responseData['ResponseCode'] == "004" || $response->responseData['ResponseCode'] == "005" || $response->responseData['ResponseCode'] == "006" || $response->responseData['ResponseCode'] == "007" || $response->responseData['ResponseCode'] == "008" || $response->responseData['ResponseCode'] == "009" || $response->responseData['ResponseCode'] == "010" || $response->responseData['ResponseCode'] == "023" || $response->responseData['ResponseCode'] == "024" || $response->responseData['ResponseCode'] == "025" || $response->responseData['ResponseCode'] == "026" || $response->responseData['ResponseCode'] == "027" || $response->responseData['ResponseCode'] == "028" || $response->responseData['ResponseCode'] == "029"){
+                                                    // if($response->responseData['Message'] == "APPROVED           *                    ="){
 
                                                     $walletBal = $thisuser->wallet_balance - $req->amount;
                                                     $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
@@ -3924,15 +3647,20 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $withdrawLimit = $this->getWithdrawalLimit($thisuser->country, $thisuser->id);
 
 
-                        if ($req->amount > $withdrawLimit['withdrawal_per_day']) {
+                        if ($req->amount > $withdrawLimit['withdrawal_per_transaction']) {
+
                             $data = [];
-                            $message = "Withdrawal limit per day is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try a lesser amount";
+                            $message = "Withdrawal limit per transaction is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_transaction'], 2) . ". Please withdraw a lesser amount";
                             $status = 400;
-                        } elseif ($req->amount > $withdrawLimit['withdrawal_per_week']) {
+                        } elseif ($withdrawLimit['withdrawal_per_day'] > $req->amount) {
+                            $data = [];
+                            $message = "Withdrawal limit per day is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try again the next day";
+                            $status = 400;
+                        } elseif ($withdrawLimit['withdrawal_per_week'] > $req->amount) {
                             $data = [];
                             $message = "You have reached your limit for the week. Withdrawal limit per week is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next week";
                             $status = 400;
-                        } elseif ($req->amount > $withdrawLimit['withdrawal_per_month']) {
+                        } elseif ($withdrawLimit['withdrawal_per_month'] > $req->amount) {
                             $data = [];
                             $message = "You have reached your limit for the month. Withdrawal limit per month is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_month'], 2) . ". Please try again the next month";
                             $status = 400;
@@ -3965,6 +3693,17 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $status = 400;
 
                                 // Log::info('Oops!, '.$thisuser->name.' has '.$message);
+
+                                $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                            } elseif ($minWithdrawalBal > $req->amount) {
+                                // Cannot withdraw minimum balance
+
+                                $data = [];
+                                $message = "Minimum amount to withdraw is " . $req->currencyCode . ' ' . number_format($minWithdrawalBal, 2);
+                                $status = 400;
+
+                                // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
+
 
                                 $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                             } elseif ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
@@ -4284,7 +4023,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                                     // $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "ind_refund", "PaySprint Withdraw from Wallet to ".$thisuser->name, $req->mode);
 
-                                                    // if($response->responseData['ResponseCode'] == "000" || $response->responseData['ResponseCode'] == "001" || $response->responseData['ResponseCode'] == "002" || $response->responseData['ResponseCode'] == "003" || $response->responseData['ResponseCode'] == "004" || $response->responseData['ResponseCode'] == "005" || $response->responseData['ResponseCode'] == "006" || $response->responseData['ResponseCode'] == "007" || $response->responseData['ResponseCode'] == "008" || $response->responseData['ResponseCode'] == "009" || $response->responseData['ResponseCode'] == "010" || $response->responseData['ResponseCode'] == "023" || $response->responseData['ResponseCode'] == "024" || $response->responseData['ResponseCode'] == "025" || $response->responseData['ResponseCode'] == "026" || $response->responseData['ResponseCode'] == "027" || $response->responseData['ResponseCode'] == "028" || $response->responseData['ResponseCode'] == "029"){
+                                                    // if($response->responseData['Message'] == "APPROVED           *                    ="){
 
                                                     $walletBal = $thisuser->wallet_balance - $req->amount;
                                                     $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
@@ -4639,7 +4378,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                         // $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "ind_refund", "PaySprint Withdraw from Wallet to ".$thisuser->name, $req->mode);
 
 
-                                                        // if($response->responseData['ResponseCode'] == "000" || $response->responseData['ResponseCode'] == "001" || $response->responseData['ResponseCode'] == "002" || $response->responseData['ResponseCode'] == "003" || $response->responseData['ResponseCode'] == "004" || $response->responseData['ResponseCode'] == "005" || $response->responseData['ResponseCode'] == "006" || $response->responseData['ResponseCode'] == "007" || $response->responseData['ResponseCode'] == "008" || $response->responseData['ResponseCode'] == "009" || $response->responseData['ResponseCode'] == "010" || $response->responseData['ResponseCode'] == "023" || $response->responseData['ResponseCode'] == "024" || $response->responseData['ResponseCode'] == "025" || $response->responseData['ResponseCode'] == "026" || $response->responseData['ResponseCode'] == "027" || $response->responseData['ResponseCode'] == "028" || $response->responseData['ResponseCode'] == "029"){
+                                                        // if($response->responseData['Message'] == "APPROVED           *                    ="){
 
                                                         $walletBal = $thisuser->wallet_balance - $req->amount;
                                                         $no_of_withdraw = $thisuser->number_of_withdrawals + 1;
@@ -5069,6 +4808,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                         $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amounttosend, $req->commissiondeduct, $req->amounttosend);
 
+                                        $this->updatePoints($thisuser->accountType, $thisuser->id, 'Pay bills');
+
                                         if ($thisuser->country == "Nigeria") {
 
                                             $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
@@ -5197,6 +4938,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                                             $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                                            $this->updatePoints($thisuser->accountType, $thisuser->id, 'Pay bills');
 
                                             if ($thisuser->country == "Nigeria") {
 
@@ -5527,126 +5270,6 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     }
 
 
-    public function paywithmonerisWalletProcessLink($merchantId, $creditcard_no, $month, $year, $amount, $type, $description)
-    {
-
-        $thisuser = User::where('ref_code', $merchantId)->first();
-
-
-        // Get Card Details
-
-        if (env('APP_ENV') == 'local') {
-            $mode = "test";
-        } else {
-            $mode = "live";
-        }
-
-
-
-        if ($mode == "test") {
-            if ($type == "purchase") {
-                // Test API
-                $store_id = 'monca04155';
-                $api_token = 'KvTMr066FKlJm9rD3i71';
-            } else {
-                // Test API
-                $store_id = 'store5';
-                $api_token = 'yesguy';
-            }
-
-            $setMode = true;
-            $indicator = "Z";
-        } else {
-
-            if ($thisuser->country == "Nigeria") {
-                // Live API
-                $store_id = env('MONERIS_STORE_ID_VIM');
-                $api_token = env('MONERIS_API_TOKEN_VIM');
-
-                $indicator = "U";
-                $setMode = false;
-            } else {
-
-                // Live API
-                $store_id = env('MONERIS_STORE_ID');
-                $api_token = env('MONERIS_API_TOKEN');
-
-                $setMode = false;
-                $indicator = "Z";
-            }
-        }
-
-
-
-
-
-
-
-        $type = $type;
-        $cust_id = $thisuser->ref_code;
-        $order_id = 'ord-' . date("dmy-Gis");
-        // $amount= number_format($dollaramount, 2);
-        $amount = $amount;
-
-        if ($thisuser->country == "Canada") {
-            $amount = number_format($amount, 2);
-        } else {
-            $amount = $amount;
-        }
-
-
-
-        $month = $month;
-
-        $pan = $creditcard_no;
-        $expiry_date = $year . $month;
-        $crypt = '7';
-        $dynamic_descriptor = $description;
-        $status_check = 'false';
-
-        /*********************** Transactional Associative Array **********************/
-        $txnArray = array(
-            'type' => $type,
-            'order_id' => $order_id,
-            'cust_id' => $cust_id,
-            'amount' => $amount,
-            'pan' => $pan,
-            'expdate' => $expiry_date,
-            'crypt_type' => $crypt,
-            'dynamic_descriptor' => $dynamic_descriptor
-        );
-
-        // dd($txnArray);
-        /**************************** Transaction Object *****************************/
-        $mpgTxn = new mpgTransaction($txnArray);
-
-
-        /******************* Credential on File **********************************/
-        $cof = new CofInfo();
-        $cof->setPaymentIndicator($indicator);
-        $cof->setPaymentInformation("2");
-        $cof->setIssuerId("168451306048014");
-        $mpgTxn->setCofInfo($cof);
-
-        /****************************** Request Object *******************************/
-        $mpgRequest = new mpgRequest($mpgTxn);
-        $mpgRequest->setProcCountryCode("CA"); //"US" for sending transaction to US environment
-        $mpgRequest->setTestMode($setMode); //false or comment out this line for production transactions
-        /***************************** HTTPS Post Object *****************************/
-        /* Status Check Example
-        $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgRequest);
-        */
-        $mpgHttpPost = new mpgHttpsPost($store_id, $api_token, $mpgRequest);
-        /******************************* Response ************************************/
-        $mpgResponse = $mpgHttpPost->getMpgResponse();
-
-
-
-
-        return $mpgResponse;
-    }
-
-
 
     public function orgPaymentInvoice(Request $req)
     {
@@ -5883,6 +5506,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
         $response = 'Money successfully transferred to your ' . $req->payment_method;
         $action = 'success';
 
+
+
         return redirect()->route('payorganization')->with($action, $response);
     }
 
@@ -5975,53 +5600,6 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 'currency' => $req->currencyCode,
                 'receipt_email' => $req->email,
                 'description' => "Add " . $req->currencyCode . " " . number_format($req->amounttosend, 2) . " to PaySprint wallet, Charge fee of: " . $req->currencyCode . " " . number_format($req->commissiondeduct, 2) . " inclusive",
-            ]);
-
-
-            $output = [
-                'clientSecret' => $paymentIntent->client_secret,
-                'transactionId' => $paymentIntent->id,
-            ];
-
-            $data = $output;
-            $message = 'success';
-            $status = 200;
-        } catch (Throwable $e) {
-
-            $data = [];
-            $message = json_encode(['error' => $e->getMessage()]);
-            $status = 500;
-        }
-
-
-        $resData = ['res' => $data, 'message' => $message, 'status' => $status];
-
-
-        return $this->returnJSON($resData, $status);
-    }
-
-
-    public function invoicepaymentIntent(Request $req)
-    {
-
-
-        if (env('APP_ENV') == "local") {
-            Stripe::setApiKey(env('STRIPE_LOCAL_SECRET_KEY'));
-        } else {
-            Stripe::setApiKey(env('STRIPE_LIVE_SECRET_KEY'));
-        }
-
-        // This is your real test secret API key.
-
-        header('Content-Type: application/json');
-
-        try {
-
-            $paymentIntent = PaymentIntent::create([
-                'amount' => $req->amount * 100,
-                'currency' => $req->currencyCode,
-                'receipt_email' => $req->email,
-                'description' => "Paid invoice of " . $req->currencyCode . " " . number_format($req->amount, 2) . " to PaySprint wallet",
             ]);
 
 

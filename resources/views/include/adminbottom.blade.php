@@ -1557,6 +1557,25 @@ function whatyouOffer(email){
     });
 }
 
+function viewConsultant(email){
+    swal({
+      title: "Are you a Service Provider?",
+      text: "Click on OK if you are a service provider",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        // Show the property I own
+
+        location.href = "/rentalmanagement/consultant"
+      } 
+      else {
+
+      }
+    });
+}
 
 function flagMoney(val, id){
     swal({

@@ -96,11 +96,12 @@ use App\Classes\MCPRate;
 
 use App\Traits\PaymentGateway;
 use App\Traits\Xwireless;
+use App\Traits\PaysprintPoint;
 
 class GooglePaymentController extends Controller
 {
 
-    use PaymentGateway, Xwireless;
+    use PaymentGateway, Xwireless, PaysprintPoint;
 
     public $to;
     public $name;
@@ -454,6 +455,10 @@ class GooglePaymentController extends Controller
                                             $this->createNotification($user->ref_code, $sendMsg);
 
                                             $this->createNotification($client->ref_code, $recMsg);
+
+                                            $this->updatePoints($user->accountType, $user->id, 'Send money');
+                                            $this->updatePoints($client->accountType, $client->id, 'Receive money');
+                                            // $this->updatePoints($user->accountType, $user->id, 'Pay invoice');
 
 
 
@@ -1162,6 +1167,12 @@ class GooglePaymentController extends Controller
                                                 $this->createNotification($thisuser->ref_code, $sendMsg);
 
                                                 $this->createNotification($ref_code, $recMesg);
+
+                                                $this->updatePoints($thisuser->accountType, $thisuser->id, 'Send money');
+
+                                                $this->updatePoints($thisuser->accountType, $thisuser->id, 'Receive money');
+
+                                                // $this->updatePoints($thisuser->accountType, $thisuser->id, 'Pay invoice');
 
                                                 // Log::info("Congratulations!, ".$thisuser->name." ".$sendMsg);
                                                 // Log::info("Congratulations!, ".$this->name." ".$recMesg);

@@ -11,11 +11,12 @@ use App\User as User;
 use App\Tax as Tax;
 
 use App\Traits\Xwireless;
+use App\Traits\PaysprintPoint;
 
 class TaxController extends Controller
 {
 
-    use Xwireless;
+    use Xwireless, PaysprintPoint;
 
     public function setupTax(Request $req){
         $validator = Validator::make($req->all(), [
@@ -35,7 +36,7 @@ class TaxController extends Controller
             $status = 200;
             $message = "Saved";
 
-
+            $this->updatePoints($thisuser->accountType, $thisuser->id, 'Quick set up');
         }
         else{
 
