@@ -62,8 +62,7 @@ class Header extends Component {
         try {
 
             axios.get(`/api/v1/userdata`, { headers: { Authorization: `Bearer ${this.props.apiToken}` } }).then(res => {
-                console.log("Header:: ");
-                console.log(res);
+                
                 if (this._isMounted) {
 
                     if (res.status === 200) {

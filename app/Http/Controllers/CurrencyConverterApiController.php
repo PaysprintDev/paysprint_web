@@ -56,9 +56,14 @@ class CurrencyConverterApiController extends Controller
         if ($result->success == true) {
 
             if ($req->val == "send") {
-                // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
-                $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
 
+                if ($req->localcurrency != $req->currency) {
+                    // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
+                    $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
+                } else {
+                    // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
+                    $convertLocal = $amount / $result->quotes->$localCurrency;
+                }
                 // Converting your USD value to other currency ie CAD * Y 
                 $convRate = $result->quotes->$currency * $convertLocal;
             } else {

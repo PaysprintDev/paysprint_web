@@ -310,15 +310,38 @@ class MoneyTransferController extends Controller
 
                             if (isset($getStatement) == true) {
 
-                                $insertRecord = RequestRefund::insert(['user_id' => $thisuser->id, 'transaction_id' => $req->transaction_id, 'reason' => $req->reason]);
+                                // Check if RequestRefund not processed
+                                $checkRefund = RequestRefund::where('transaction_id', $req->transaction_id)->first();
 
-                                $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'cardRequest')->where('api_token', $req->bearerToken())->first();
-                                $status = 200;
-                                $message = 'You have successfully made request for refund. Kindly note that refund takes up to 5 days for review.';
+                                if (isset($checkRefund)) {
 
-                                Log::info("Request for refund by " . $thisuser->name);
+                                    if ($checkRefund->status == "PROCESSED") {
+                                        $error = "This transaction request had already been processed back to your wallet. Thanks";
+
+                                        $data = [];
+                                        $status = 400;
+                                        $message = $error;
+                                    } else {
+
+                                        $error = "Your request has been received and will be processed. Thanks";
+
+                                        $data = [];
+                                        $status = 400;
+                                        $message = $error;
+                                    }
+                                } else {
+
+                                    RequestRefund::insert(['user_id' => $thisuser->id, 'transaction_id' => $req->transaction_id, 'reason' => $req->reason]);
+
+                                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'cardRequest')->where('api_token', $req->bearerToken())->first();
+
+                                    $status = 200;
+                                    $message = 'You have successfully made request for refund. Kindly note that refund takes up to 5 days for review.';
+                                }
 
                                 $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message);
+
+                                Log::info("Request for refund by " . $thisuser->name);
                             } else {
                                 $error = "Invalid Transaction ID!";
 

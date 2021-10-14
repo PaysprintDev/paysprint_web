@@ -175,11 +175,18 @@ class Controller extends BaseController
         $result = json_decode($response);
 
         $query = [];
+        $official = [];
         $countryQuery = [];
 
         foreach ($result->quotes as $value) {
 
-            $query[] = $value * $markValue;
+            if ($value == 1) {
+                $query[] = $value;
+            } else {
+                $query[] = $value * $markValue;
+            }
+
+            $official[] = $value;
         }
 
         $countryRec = ConversionCountry::orderBy('id', 'ASC')->get();
@@ -192,10 +199,11 @@ class Controller extends BaseController
         $dataInfo = [
             'country' => $countryQuery,
             'query' => $query,
+            'official' => $official,
         ];
 
         for ($i = 0; $i < count($countryQuery); $i++) {
-            ConversionCountry::where('country', $dataInfo['country'][$i])->update(['rate' => $dataInfo['query'][$i]]);
+            ConversionCountry::where('country', $dataInfo['country'][$i])->update(['rate' => $dataInfo['query'][$i], 'official' => $dataInfo['official'][$i]]);
         }
 
 
@@ -285,7 +293,11 @@ class Controller extends BaseController
             $convRateA = $result->quotes->$currencyA;
             $convRateB = $result->quotes->$currencyB;
 
-            $convRate = ($convRateA / $convRateB) * $markValue;
+            if ($localcountry == $foreign) {
+                $convRate = $convRateA / $convRateB;
+            } else {
+                $convRate = ($convRateA / $convRateB) * $markValue;
+            }
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }

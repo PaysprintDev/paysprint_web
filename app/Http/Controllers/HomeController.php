@@ -533,29 +533,60 @@ class HomeController extends Controller
             // International Transaction
             $merchant = User::where('ref_code', $myinvoice[0]->uploaded_by)->first();
 
-            if ($myinvoice[0]->remaining_balance > 0) {
-                if ($merchant->country != Auth::user()->country) {
-                    $dataInfo = $this->convertCurrencyRate(Auth::user()->currencyCode, $merchant->currencyCode, $myinvoice[0]->remaining_balance);
-                    $dataTot = $this->convertCurrencyRate(Auth::user()->currencyCode, $merchant->currencyCode, $myinvoice[0]->total_amount);
 
-                    $totalInvoice = $dataInfo;
-                    $totalAmt = $dataTot;
+            // Check if Invoice currency code is not null
+
+            if ($myinvoice[0]->invoiced_currency != NULL) {
+
+                if ($myinvoice[0]->remaining_balance > 0) {
+                    if ($myinvoice[0]->invoiced_currency == Auth::user()->currencyCode) {
+                        $totalInvoice = $myinvoice[0]->remaining_balance;
+                        $totalAmt = $myinvoice[0]->total_amount;
+                    } else {
+                        $dataInfo = $this->convertCurrencyRate(Auth::user()->currencyCode, $myinvoice[0]->invoiced_currency, $myinvoice[0]->remaining_balance);
+                        $dataTot = $this->convertCurrencyRate(Auth::user()->currencyCode, $myinvoice[0]->invoiced_currency, $myinvoice[0]->total_amount);
+
+                        $totalInvoice = $dataInfo;
+                        $totalAmt = $dataTot;
+                    }
                 } else {
-                    $totalInvoice = $myinvoice[0]->remaining_balance;
-                    $totalAmt = $myinvoice[0]->total_amount;
+                    $remBal = $myinvoice[0]->total_amount + $myinvoice[0]->remaining_balance;
+
+                    if ($merchant->country != Auth::user()->country) {
+                        $dataInfo = $this->convertCurrencyRate(Auth::user()->currencyCode, $myinvoice[0]->invoiced_currency, $remBal);
+                        $dataTot = $this->convertCurrencyRate(Auth::user()->currencyCode, $myinvoice[0]->invoiced_currency, $myinvoice[0]->total_amount);
+                        $totalInvoice = $dataInfo;
+                        $totalAmt = $dataTot;
+                    } else {
+                        $totalInvoice = $remBal;
+                        $totalAmt = $myinvoice[0]->total_amount;
+                    }
                 }
             } else {
+                if ($myinvoice[0]->remaining_balance > 0) {
+                    if ($merchant->country != Auth::user()->country) {
+                        $dataInfo = $this->convertCurrencyRate(Auth::user()->currencyCode, $merchant->currencyCode, $myinvoice[0]->remaining_balance);
+                        $dataTot = $this->convertCurrencyRate(Auth::user()->currencyCode, $merchant->currencyCode, $myinvoice[0]->total_amount);
 
-                $remBal = $myinvoice[0]->total_amount + $myinvoice[0]->remaining_balance;
-
-                if ($merchant->country != Auth::user()->country) {
-                    $dataInfo = $this->convertCurrencyRate(Auth::user()->currencyCode, $merchant->currencyCode, $remBal);
-                    $dataTot = $this->convertCurrencyRate(Auth::user()->currencyCode, $merchant->currencyCode, $myinvoice[0]->total_amount);
-                    $totalInvoice = $dataInfo;
-                    $totalAmt = $dataTot;
+                        $totalInvoice = $dataInfo;
+                        $totalAmt = $dataTot;
+                    } else {
+                        $totalInvoice = $myinvoice[0]->remaining_balance;
+                        $totalAmt = $myinvoice[0]->total_amount;
+                    }
                 } else {
-                    $totalInvoice = $remBal;
-                    $totalAmt = $myinvoice[0]->total_amount;
+
+                    $remBal = $myinvoice[0]->total_amount + $myinvoice[0]->remaining_balance;
+
+                    if ($merchant->country != Auth::user()->country) {
+                        $dataInfo = $this->convertCurrencyRate(Auth::user()->currencyCode, $merchant->currencyCode, $remBal);
+                        $dataTot = $this->convertCurrencyRate(Auth::user()->currencyCode, $merchant->currencyCode, $myinvoice[0]->total_amount);
+                        $totalInvoice = $dataInfo;
+                        $totalAmt = $dataTot;
+                    } else {
+                        $totalInvoice = $remBal;
+                        $totalAmt = $myinvoice[0]->total_amount;
+                    }
                 }
             }
         } else {
@@ -573,6 +604,7 @@ class HomeController extends Controller
             'total_invoice' => $totalAmt
 
         );
+
 
 
         return view('main.payment')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
