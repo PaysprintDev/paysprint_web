@@ -444,19 +444,43 @@
                                             @foreach (json_decode($received['payInvoice']) as $payInv)
 
 
+
+
+
+
                                                 {{-- Get Merchant Currency --}}
 
                                                 @if ($merchant = \App\User::where('ref_code', $payInv->uploaded_by)->first())
 
+                                                    @if ($payInv->invoiced_currency != null)
+                                                        @php
+                                                            $currencySymb = $payInv->invoiced_currency_symbol;
+                                                        @endphp
+                                                    @else
+                                                        @php
+                                                            $currencySymb = $merchant->currencySymbol;
+                                                        @endphp
+                                                    @endif
+
+
                                                     @php
-                                                        $currencySymb = $merchant->currencySymbol;
                                                         $countryBase = $merchant->country;
                                                     @endphp
 
+
                                                 @else
 
+                                                    @if ($payInv->invoiced_currency != null)
+                                                        @php
+                                                            $currencySymb = $payInv->invoiced_currency_symbol;
+                                                        @endphp
+                                                    @else
+                                                        @php
+                                                            $currencySymb = $getUserDetail->currencySymbol;
+                                                        @endphp
+                                                    @endif
+
                                                     @php
-                                                        $currencySymb = $getUserDetail->currencySymbol;
                                                         $countryBase = session('country');
                                                     @endphp
 

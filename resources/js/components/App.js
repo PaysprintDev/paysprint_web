@@ -25,15 +25,6 @@ function App() {
 }
 
 
-class TransactionHistory extends Component{
-    render(){
-        return(
-            <div>
-                <h2>Transaction</h2>
-            </div>
-        );
-    }
-}
 
 export default App;
 

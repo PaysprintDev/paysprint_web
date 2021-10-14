@@ -935,11 +935,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                         // $this->email = "bambo@vimfile.com";
                                                         $this->subject = "Your Invoice # [" . $req->invoice_no . "] of " . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' from ' . $thismerchant->businessname .  " is Paid";
 
-                                                        $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is <strong>' . $thismerchant->currencyCode . ' ' . number_format($newAmount, 2) . '</strong>. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
+                                                        $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
 
                                                         $this->sendEmail($this->email, "Fund remittance");
 
-                                                        $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is ' . $thismerchant->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
+                                                        $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
 
                                                         $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -984,11 +984,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                         // $this->email = "bambo@vimfile.com";
                                                         $this->subject = $thisuser->name . " has paid Invoice: [" . $req->invoice_no . "]";
 
-                                                        $this->message = '<p>You have received <strong>' . $thismerchant->currencyCode . '' . number_format($paidinvoiceamount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>, invoice balance left is ' . $thismerchant->currencyCode . ' ' . number_format($newAmount, 2) . '.</p> <p>You now have <strong>' . $thismerchant->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
+                                                        $this->message = '<p>You have received <strong>' . $thismerchant->currencyCode . '' . number_format($paidinvoiceamount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>.</p> <p>You now have <strong>' . $thismerchant->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
 
                                                         $this->sendEmail($this->email, "Fund remittance");
 
-                                                        $recMesg = 'You have received ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . ', invoice balance left is ' . $thismerchant->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $thismerchant->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
+                                                        $recMesg = 'You have received ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . '. You now have ' . $thismerchant->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
 
                                                         $userPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -1150,11 +1150,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                         // $this->email = "bambo@vimfile.com";
                                                         $this->subject = "Your Invoice # [" . $req->invoice_no . "] of " . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' from ' . $thismerchant->businessname . ' ' . number_format($req->amount, 2) . " is Paid";
 
-                                                        $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is <strong>' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '</strong>. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
+                                                        $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
 
                                                         $this->sendEmail($this->email, "Fund remittance");
 
-                                                        $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
+                                                        $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
 
                                                         $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -1199,11 +1199,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                         // $this->email = "bambo@vimfile.com";
                                                         $this->subject = $thisuser->name . " has paid Invoice: [" . $req->invoice_no . "]";
 
-                                                        $this->message = '<p>You have received <strong>' . $req->currencyCode . '' . number_format($req->amount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>, invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '.</p> <p>You now have <strong>' . $req->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
+                                                        $this->message = '<p>You have received <strong>' . $req->currencyCode . '' . number_format($req->amount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>.</p> <p>You now have <strong>' . $req->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
 
                                                         $this->sendEmail($this->email, "Fund remittance");
 
-                                                        $recMesg = 'You have received ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . ', invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
+                                                        $recMesg = 'You have received ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
 
                                                         $userPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
 
