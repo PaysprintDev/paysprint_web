@@ -250,7 +250,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
         // dd($mpgResponse);
 
 
-        if ($mpgResponse->responseData['Message'] == "APPROVED           *                    =") {
+        if ($mpgResponse->responseData['ResponseCode'] == "000" || $mpgResponse->responseData['ResponseCode'] == "001" || $mpgResponse->responseData['ResponseCode'] == "002" || $mpgResponse->responseData['ResponseCode'] == "003" || $mpgResponse->responseData['ResponseCode'] == "004" || $mpgResponse->responseData['ResponseCode'] == "005" || $mpgResponse->responseData['ResponseCode'] == "006" || $mpgResponse->responseData['ResponseCode'] == "007" || $mpgResponse->responseData['ResponseCode'] == "008" || $mpgResponse->responseData['ResponseCode'] == "009" || $mpgResponse->responseData['ResponseCode'] == "010" || $mpgResponse->responseData['ResponseCode'] == "023" || $mpgResponse->responseData['ResponseCode'] == "024" || $mpgResponse->responseData['ResponseCode'] == "025" || $mpgResponse->responseData['ResponseCode'] == "026" || $mpgResponse->responseData['ResponseCode'] == "027" || $mpgResponse->responseData['ResponseCode'] == "028" || $mpgResponse->responseData['ResponseCode'] == "029") {
 
             // Insert Record to DB...
             $insPay = InvoicePayment::updateOrCreate(['invoice_no' => $req->invoice_no], ['transactionid' => $mpgResponse->responseData['ReceiptId'], 'name' => $req->name, 'email' => $req->email, 'amount' => $mpgResponse->responseData['TransAmount'], 'invoice_no' => $req->invoice_no, 'service' => $req->service, 'client_id' => $req->user_id, 'payment_method' => $req->payment_method]);
@@ -5812,7 +5812,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
 
-        if ($mpgResponse->responseData['Message'] == "APPROVED           *                    =") {
+        if ($mpgResponse->responseData['ResponseCode'] == "000" || $mpgResponse->responseData['ResponseCode'] == "001" || $mpgResponse->responseData['ResponseCode'] == "002" || $mpgResponse->responseData['ResponseCode'] == "003" || $mpgResponse->responseData['ResponseCode'] == "004" || $mpgResponse->responseData['ResponseCode'] == "005" || $mpgResponse->responseData['ResponseCode'] == "006" || $mpgResponse->responseData['ResponseCode'] == "007" || $mpgResponse->responseData['ResponseCode'] == "008" || $mpgResponse->responseData['ResponseCode'] == "009" || $mpgResponse->responseData['ResponseCode'] == "010" || $mpgResponse->responseData['ResponseCode'] == "023" || $mpgResponse->responseData['ResponseCode'] == "024" || $mpgResponse->responseData['ResponseCode'] == "025" || $mpgResponse->responseData['ResponseCode'] == "026" || $mpgResponse->responseData['ResponseCode'] == "027" || $mpgResponse->responseData['ResponseCode'] == "028" || $mpgResponse->responseData['ResponseCode'] == "029") {
 
 
             // Get User Info
