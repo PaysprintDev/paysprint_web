@@ -456,10 +456,8 @@ class GooglePaymentController extends Controller
 
                                             $this->createNotification($client->ref_code, $recMsg);
 
-                                            $this->updatePoints($user->accountType, $user->id, 'Send money');
-                                            $this->updatePoints($client->accountType, $client->id, 'Receive money');
-                                            // $this->updatePoints($user->accountType, $user->id, 'Pay invoice');
-
+                                            $this->updatePoints($user->id, 'Send money');
+                                            $this->updatePoints($client->id, 'Receive money');
 
 
                                             $resData = ['res' => 'Money sent successfully', 'message' => 'success', 'title' => 'Good!'];
@@ -1168,11 +1166,7 @@ class GooglePaymentController extends Controller
 
                                                 $this->createNotification($ref_code, $recMesg);
 
-                                                $this->updatePoints($thisuser->accountType, $thisuser->id, 'Send money');
-
-                                                $this->updatePoints($thisuser->accountType, $thisuser->id, 'Receive money');
-
-                                                // $this->updatePoints($thisuser->accountType, $thisuser->id, 'Pay invoice');
+                                                $this->updatePoints($thisuser->id, 'Send money');
 
                                                 // Log::info("Congratulations!, ".$thisuser->name." ".$sendMsg);
                                                 // Log::info("Congratulations!, ".$this->name." ".$recMesg);

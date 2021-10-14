@@ -124,6 +124,8 @@ class CardController extends Controller
 
                         $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully added a new " . $req->card_provider . ".");
 
+                        $this->updatePoints($thisuser->id, 'Quick set up');
+
                         // Log::info("New ".$req->card_provider." added by :=> ".$thisuser->name);
 
                         $this->slack("New " . $req->card_provider . " added by :=> " . $thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
@@ -189,7 +191,7 @@ class CardController extends Controller
 
                 $this->slack("New bank added by :=> " . $thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
-                $this->updatePoints($thisuser->accountType, $thisuser->id, 'Quick set up');
+                $this->updatePoints($thisuser->id, 'Quick set up');
             } catch (\Throwable $th) {
                 $data = [];
                 $status = 400;

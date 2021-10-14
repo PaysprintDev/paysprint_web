@@ -456,7 +456,6 @@ class UserController extends Controller
 
         $resData = ['data' => $data, 'message' => 'Profile updated', 'status' => $status];
 
-        $this->updatePoints($user->accountType, $user->id, 'Quick set up');
 
         return $this->returnJSON($resData, $status);
     }
@@ -512,7 +511,6 @@ class UserController extends Controller
 
         $resData = ['data' => $data, 'message' => 'Profile updated', 'status' => $status];
 
-        $this->updatePoints($user->accountType, $user->id, 'Quick set up');
 
         return $this->returnJSON($resData, $status);
     }
@@ -574,7 +572,7 @@ class UserController extends Controller
 
         $resData = ['data' => $data, 'message' => 'Profile updated', 'status' => $status];
 
-        $this->updatePoints($user->accountType, $user->id, 'Promote business');
+        $this->updatePoints($user->id, 'Promote business');
 
         return $this->returnJSON($resData, $status);
     }
@@ -716,7 +714,7 @@ class UserController extends Controller
 
                     $resData = ['data' => $data, 'message' => 'Business Promoted. You can see your business get listed on www.getverifiedpro.com', 'status' => $status];
 
-                    $this->updatePoints($user->accountType, $user->id, 'Promote Business');
+                    $this->updatePoints($user->id, 'Promote Business');
                 } else {
 
                     $data = [];
@@ -866,7 +864,7 @@ class UserController extends Controller
 
                     $resData = ['data' => $data, 'message' => 'Business Promoted. You can see your business get listed on www.getverifiedpro.com', 'status' => $status];
 
-                    $this->updatePoints($user->accountType, $user->id, 'Promote business');
+                    $this->updatePoints($user->id, 'Promote business');
                 } else {
 
                     $data = [];
@@ -1073,6 +1071,9 @@ class UserController extends Controller
                 $message = "Saved";
                 $status = 200;
 
+                $this->updatePoints($thisuser->id, 'Quick set up');
+
+
                 $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully created your transaction pin. Keep it SAFE!.");
             }
         } else {
@@ -1116,9 +1117,7 @@ class UserController extends Controller
 
             $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully set up your security question and answer.");
 
-            $this->updatePoints($thisuser->accountType, $thisuser->id, 'Quick set up');
-
-            
+            $this->updatePoints($thisuser->id, 'Quick set up');
         } else {
 
             $error = implode(",", $validator->messages()->all());
@@ -1149,12 +1148,12 @@ class UserController extends Controller
 
                 if ($thisuser->approval == 2 && $thisuser->accountLevel == 3) {
                     User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 3, 'approval' => 2,  'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
-
-                    $this->updatePoints($thisuser->accountType, $thisuser->id, 'Quick set up');
                 } else {
                     User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 2, 'approval' => 1,  'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
                 }
 
+
+                $this->updatePoints($thisuser->id, 'Quick set up');
 
 
 
@@ -1526,8 +1525,6 @@ class UserController extends Controller
                     $this->createNotification($thisuser->ref_code, "Transaction pin updated");
 
                     $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully changed your transaction pin. Keep it SAFE!.");
-
-                    $this->updatePoints($thisuser->accountType, $thisuser->id, 'Quick set up');
                 }
             }
         } else {
@@ -1573,8 +1570,6 @@ class UserController extends Controller
                     $status = 200;
 
                     $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully updated your transaction pin. Keep it SAFE!.");
-
-                    $this->updatePoints($thisuser->accountType, $thisuser->id, 'Quick set up');
                 } else {
                     $data = [];
                     $message = "Your old transaction pin is incorrect";
@@ -1619,6 +1614,8 @@ class UserController extends Controller
 
 
         User::where('id', $id)->update(['' . $rowName . '' => $docPath]);
+
+        $this->updatePoints($id, 'Quick set up');
     }
 
 

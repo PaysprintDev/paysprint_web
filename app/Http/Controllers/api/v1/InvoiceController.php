@@ -311,7 +311,7 @@ class InvoiceController extends Controller
 
                         $this->sendEmail($this->to, $this->subject);
 
-                        $this->updatePoints($thisuser->accountType, $thisuser->id, 'Create and send invoice');
+                        $this->updatePoints($thisuser->id, 'Create and send invoice');
 
                         // Send SMS
                         $sendMsg = "Hello " . $this->name . ", " . $this->subject . ". Login to your PaySprint App to make payment. " . route('login');
@@ -493,6 +493,8 @@ class InvoiceController extends Controller
 
                         // Send SMS
                         $sendMsg = "Hello " . $this->name . ", " . $this->subject . ". Click on the link below or copy link to browser to pay Invoice. " . $generated_link;
+
+                        $this->updatePoints($thisuser->id, 'Create and send invoice');
 
                         $sendPhone = $telephone;
                         // $sendPhone = "+23408137492316";

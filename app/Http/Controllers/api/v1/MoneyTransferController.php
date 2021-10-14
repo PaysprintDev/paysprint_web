@@ -762,7 +762,7 @@ class MoneyTransferController extends Controller
 
                                             $resData = ['data' => $data, 'message' => 'Money Sent Successfully', 'status' => $status];
 
-                                            $this->updatePoints($sender->accountType, $sender->id, 'Send money');
+                                            $this->updatePoints($sender->id, 'Send money');
 
 
                                             Log::info("Sent money from " . $sender->name . " to " . $receiver->name . ". This is a test environment");
@@ -1041,8 +1041,7 @@ class MoneyTransferController extends Controller
 
                                                         $this->createNotification($sender->ref_code, $sendMsg);
 
-                                                        $this->updatePoints($sender->accountType, $sender->id, 'Send money');
-
+                                                        $this->updatePoints($sender->id, 'Send money');
                                                     } catch (\Throwable $th) {
                                                         $status = 400;
 
