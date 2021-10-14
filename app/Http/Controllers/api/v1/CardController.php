@@ -18,11 +18,12 @@ use App\DeletedCards as DeletedCards;
 use App\DeletedBanks as DeletedBanks;
 
 use App\Traits\Xwireless;
+use App\Traits\PaysprintPoint;
 
 class CardController extends Controller
 {
 
-    use Xwireless;
+    use Xwireless, PaysprintPoint;
 
     public function getCard(Request $req)
     {
@@ -187,6 +188,8 @@ class CardController extends Controller
 
 
                 $this->slack("New bank added by :=> " . $thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                $this->updatePoints($thisuser->accountType, $thisuser->id, 'Quick set up');
             } catch (\Throwable $th) {
                 $data = [];
                 $status = 400;

@@ -692,6 +692,32 @@
                              </ul>
                          </div>
 
+                         <div class="card propertyManagement" style="width: 100%;">
+                            <div class="card-header"
+                                style="background-color: #5ed998; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
+                                Property Management
+
+                            </div>
+                            <ul class="list-group list-group-flush">
+
+
+                                <li class="list-group-item" title="Rental Property Management">
+                                    <div class="row">
+                                        <div class="col-md-12">
+
+                                            <a href="javascript:void()"
+                                                onclick="viewConsultant('{{ session('email') }}')"
+                                                style="color: navy; font-weight: 700;">View as Consultant</a>
+
+                                            {{-- <a href="{{ route('rentalManagementAdmin') }}" style="color: navy; font-weight: 700;">Rental Property Management</a> --}}
+                                        </div>
+                                    </div>
+
+                                </li>
+
+                            </ul>
+                        </div>
+
                          <div class="card" style="width: auto;">
                              <div class="card-header"
                                  style="background-color: #f6b60b; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">

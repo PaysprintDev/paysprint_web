@@ -48,11 +48,12 @@ use App\RequestRefund as RequestRefund;
 
 use App\Traits\Xwireless;
 use App\Traits\PaymentGateway;
+use App\Traits\PaysprintPoint;
 
 class MoneyTransferController extends Controller
 {
 
-    use Xwireless, PaymentGateway;
+    use Xwireless, PaymentGateway, PaysprintPoint;
 
     public $to;
     public $name;
@@ -761,6 +762,8 @@ class MoneyTransferController extends Controller
 
                                             $resData = ['data' => $data, 'message' => 'Money Sent Successfully', 'status' => $status];
 
+                                            $this->updatePoints($sender->accountType, $sender->id, 'Send money');
+
 
                                             Log::info("Sent money from " . $sender->name . " to " . $receiver->name . ". This is a test environment");
 
@@ -1037,6 +1040,9 @@ class MoneyTransferController extends Controller
                                                         $this->createNotification($receiver->ref_code, $recMsg);
 
                                                         $this->createNotification($sender->ref_code, $sendMsg);
+
+                                                        $this->updatePoints($sender->accountType, $sender->id, 'Send money');
+
                                                     } catch (\Throwable $th) {
                                                         $status = 400;
 

@@ -620,6 +620,7 @@ else if(val == 'addcard'){
       var amount = (+netamount + +feeamount).toFixed(2);
     var handler = PaystackPop.setup({
       key: '{{ env("PAYSTACK_PUBLIC_KEY") }}',
+    //   key: '{{ env("PAYSTACK_LOCAL_PUBLIC_KEY") }}',
       email: email,
       amount: amount * 100,
       currency: "NGN",

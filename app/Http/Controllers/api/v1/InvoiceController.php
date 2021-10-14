@@ -26,10 +26,12 @@ use App\Tax as Tax;
 
 use App\Traits\Xwireless;
 
+use App\Traits\PaysprintPoint;
+
 class InvoiceController extends Controller
 {
 
-    use Xwireless;
+    use Xwireless, PaysprintPoint;
 
     public $to = "info@paysprint.ca";
     public $name;
@@ -308,6 +310,8 @@ class InvoiceController extends Controller
                         $this->subject = 'You have an invoice ' . $req->single_invoiceno . ' from  ' . $this->clientname . ' on PaySprint';
 
                         $this->sendEmail($this->to, $this->subject);
+
+                        $this->updatePoints($thisuser->accountType, $thisuser->id, 'Create and send invoice');
 
                         // Send SMS
                         $sendMsg = "Hello " . $this->name . ", " . $this->subject . ". Login to your PaySprint App to make payment. " . route('login');
