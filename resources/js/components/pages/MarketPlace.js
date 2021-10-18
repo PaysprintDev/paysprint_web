@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Aside from '../includes/Aside';
 import Header from '../includes/Header';
-import Footer from '../includes/Footer';
 
 const apiToken = document.getElementById('user_api_token').value;
+const myCurrencyCode = document.getElementById('user_currency_code').value;
 
 class MarketPlace extends Component {
   _isMounted = false;
@@ -25,7 +25,7 @@ class MarketPlace extends Component {
 
     return (
       <div>
-        <Aside />
+        <Aside apiToken={apiToken} currencycode={myCurrencyCode} />
         <Header apiToken={apiToken} />
         <div className="main-content">
           <div className="px-3 px-xxl-5 py-3 py-lg-4 border-bottom border-gray-200 after-header">
@@ -220,7 +220,6 @@ class MarketPlace extends Component {
           </div>
         </div>
 
-        {/* <Footer /> */}
       </div>
     );
   }

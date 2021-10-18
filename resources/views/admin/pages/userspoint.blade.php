@@ -45,52 +45,72 @@
                   <th>S/N</th>
                   <th>Name</th>
                   <th>Add Money</th>
+
                   <th>Send Money</th>
                   <th>Receive Money</th>
                   <th>Pay Invoice</th>
+
                   <th>Pay Bills</th>
                   <th>Create And Send Invoice</th>
                   <th>Active Rental Property</th>
+
                   <th>Quick Set Up</th>
                   <th>Identity Verification</th>
                   <th>Business Verification</th>
+                  <th>Promote Business</th>
+
                   <th>Activate Ordering System</th>
                   <th>Identify Verification</th>
                   <th>Activate RPM</th>
+
                   <th>Activate Currency Exchange</th>
                   <th>Activate Cash Advance</th>
                   <th>Activate Crypto Currency Account</th>
+                  <th>Total</th>
+
                 </tr>
                 </thead>
                 <tbody>
                     @if (count($data['mainpoint']) > 0)
                     <?php $i = 1;?>
                         @foreach ($data['mainpoint'] as $item)
-                        <tr>
+
+                        @if($item != null)
+                          <tr>
                             <td>{{ $i++ }}</td>
                             
-                            <td>{{ $item->name }}</td>
+                            <td>{{ ($item->accountType == "Merchant") ? $item->businessname : $item->name }}</td>
                             <td>{{ $item->add_money }}</td>
+
                             <td>{{ $item->send_money }}</td>
                             <td>{{ $item->receive_money }}</td>
                             <td>{{ $item->pay_invoice }}</td>
+
                             <td>{{ $item->pay_bills }}</td>
                             <td>{{ $item->create_and_send_invoice }}</td>
                             <td>{{ $item->active_rental_property }}</td>
+
                             <td>{{ $item->quick_set_up }}</td>
                             <td>{{ $item->identity_verification }}</td>
                             <td>{{ $item->business_verification }}</td>
+
                             <td>{{ $item->promote_business }}</td>
                             <td>{{ $item->activate_ordering_system }}</td>
                             <td>{{ $item->identify_verification }}</td>
+
                             <td>{{ $item->activate_rpm }}</td>
                             <td>{{ $item->activate_currency_exchange }}</td>
                             <td>{{ $item->activate_cash_advance }}</td>
+
                             <td>{{ $item->activate_crypto_currency_account }}</td>
+
+                            <td>{{ ($item->add_money + $item->send_money + $item->receive_money + $item->pay_invoice + $item->pay_bills + $item->create_and_send_invoice + $item->active_rental_property + $item->quick_set_up + $item->identity_verification + $item->business_verification + $item->promote_business + $item->activate_ordering_system + $item->identify_verification + $item->activate_rpm + $item->activate_currency_exchange + $item->activate_cash_advance + $item->activate_crypto_currency_account) }}</td>
                             
 
 
                         </tr>
+                        @endif
+                        
                         @endforeach
 
                         

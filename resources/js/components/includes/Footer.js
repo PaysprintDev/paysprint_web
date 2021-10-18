@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { Helmet } from "react-helmet";
 
 class Footer extends Component {
     render() {
         return (
             <div>
-                <Helmet>
                     <script src="/js/app.js"></script>
                     <script src="/cfx/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"
                         type="04582d9de1de2a8cfcfff4c5-text/javascript"></script>
@@ -25,7 +23,6 @@ class Footer extends Component {
                         data-cf-settings="04582d9de1de2a8cfcfff4c5-|49" defer=""></script>
 
                     <script src="https://kit.fontawesome.com/384ade21a6.js" crossorigin="anonymous"></script>
-                </Helmet>
             </div>
         )
     }

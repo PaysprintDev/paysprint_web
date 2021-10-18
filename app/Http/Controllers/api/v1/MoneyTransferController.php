@@ -1214,6 +1214,33 @@ class MoneyTransferController extends Controller
         return $this->returnJSON($resData, $status);
     }
 
+
+
+    // POST ROUTES
+    public function createNewOrder(Request $req){
+
+        dd($req->all());
+
+        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+        if(isset($thisuser)){
+
+            // Do Validate
+            $validator = Validator::make($req->all(), [
+
+            ]);
+        }
+        else{
+            $status = 400;
+
+            $resData = ['data' => [], 'message' => 'Token mismatch', 'status' => $status];
+        }
+
+
+        return $this->returnJSON($resData, $status);
+
+    }
+
     public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $auto_deposit, $country = null)
     {
         Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route, 'auto_deposit' => $auto_deposit, 'country' => $country]);

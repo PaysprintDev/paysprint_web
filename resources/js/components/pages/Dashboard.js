@@ -3,11 +3,11 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import ActiveOrders from '../includes/ActiveOrders';
 import Aside from '../includes/Aside';
-import Footer from '../includes/Footer';
 import Header from '../includes/Header';
 
 
 const apiToken = document.getElementById('user_api_token').value;
+const myCurrencyCode = document.getElementById('user_currency_code').value;
 
 class Dashboard extends Component {
 
@@ -20,8 +20,11 @@ class Dashboard extends Component {
             data: [],
             message: '',
             loading: true,
+            currency: '',
         }
     }
+
+    
 
 
     componentDidMount() {
@@ -39,6 +42,7 @@ class Dashboard extends Component {
                                 data: res.data.data,
                                 message: res.data.message,
                                 loading: false,
+                                currency: res.data.data.currencySymbol,
                             });
                         }
                         else {
@@ -46,6 +50,7 @@ class Dashboard extends Component {
                                 data: res.data.data,
                                 message: res.data.message,
                                 loading: false,
+                                currency: '',
                             });
                         }
                         
@@ -90,7 +95,7 @@ class Dashboard extends Component {
 
         return (
             <div>
-                <Aside />
+                <Aside apiToken={apiToken} currencycode={myCurrencyCode} />
 
                 <Header apiToken={apiToken} />
                 <div className="main-content">
@@ -266,8 +271,6 @@ class Dashboard extends Component {
                     </div>
 
                 </div>
-
-                {/* <Footer /> */}
 
             </div>
         );

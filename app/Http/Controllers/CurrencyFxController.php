@@ -160,4 +160,9 @@ class CurrencyFxController extends Controller
 
         return $this->returnJSON($resData, $status);
     }
+
+
+
+
+
 }
