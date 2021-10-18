@@ -66,7 +66,7 @@
 
 
                         <ul class="nav nav-tabs">
-                        <li class="tab-menu active"><a data-toggle="tab" href="#home">Facility / Amenity Details</a></li>
+                        <li class="tab-menu active"><a data-toggle="tab" href="#home">Make A Booking</a></li>
                         <li class="tab-menu"><a data-toggle="tab" href="#menu1">Options</a></li>
                         </ul>
 
@@ -79,119 +79,14 @@
                                 <h2>Facility / Amenity Details</h2>
                             </div>
 
-                            <div class="table table-responsive">
-
-                               
-
-                                <a type="button" href="{{ route('makeabooking', $data['currentfacility']) }}" class="btn btn-primary">Make a Booking</a>
-
-                                <br><br>
+                    
                             <table class="table table-striped table-hover table-bordered">
+                                
 
                                 <tbody>
                                     @if (count($facilityinfo) > 0)
 
-                                    <tr>
-                                        <td colspan="2" align="center" style="font-weight: bold;">OWNER'S INFORMATION</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Fullname:</td>
-                                        <td>{{ $facilityinfo[0]->owner_name }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Phone Number:</td>
-                                        <td>{{ $facilityinfo[0]->owner_phone }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Email Address:</td>
-                                        <td>{{ $facilityinfo[0]->owner_email }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Street Number:</td>
-                                        <td>{{ $facilityinfo[0]->owner_street_number }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Street Name:</td>
-                                        <td>{{ $facilityinfo[0]->owner_street_name }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>City:</td>
-                                        <td>{{ $facilityinfo[0]->owner_city }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Postal / Zip Code:</td>
-                                        <td>{{ $facilityinfo[0]->owner_zipcode }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>State / Province:</td>
-                                        <td>{{ $facilityinfo[0]->owner_state }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Country:</td>
-                                        <td>{{ $facilityinfo[0]->owner_country }}</td>
-                                    </tr>
-
-
-                                    <tr>
-                                        <td colspan="2" align="center" style="font-weight: bold;">AGENT'S INFORMATION</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Fullname:</td>
-                                        <td>{{ $facilityinfo[0]->agent_name }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Phone Number:</td>
-                                        <td>{{ $facilityinfo[0]->agent_phone }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Email Address:</td>
-                                        <td>{{ $facilityinfo[0]->agent_email }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Street Number:</td>
-                                        <td>{{ $facilityinfo[0]->agent_street_number }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Street Name:</td>
-                                        <td>{{ $facilityinfo[0]->agent_street_name }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>City:</td>
-                                        <td>{{ $facilityinfo[0]->agent_city }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Postal / Zip Code:</td>
-                                        <td>{{ $facilityinfo[0]->agent_zipcode }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>State / Province:</td>
-                                        <td>{{ $facilityinfo[0]->agent_state }}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Country:</td>
-                                        <td>{{ $facilityinfo[0]->agent_country }}</td>
-                                    </tr>
-
-
-                                    <tr>
+                                                                       <tr>
                                         <td colspan="2" align="center" style="font-weight: bold;">FACILITY LOCATION</td>
                                     </tr>
 
@@ -286,14 +181,14 @@
 
 
 
-                            <a type="button" href="#" class="btn btn-primary">Make a Booking</a>
+                            
 
 
                         </div>
 
                         </div>
 
-                            </div>
+                            
 
 
 

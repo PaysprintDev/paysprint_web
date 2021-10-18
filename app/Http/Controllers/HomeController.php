@@ -2919,7 +2919,8 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
-                    'continent' => $this->timezone[0]
+                    'continent' => $this->timezone[0],
+                    'currentfacility'=>$id
                 );
             } else {
                 // $this->page = 'Rental Property Amenities';
@@ -2939,7 +2940,8 @@ class HomeController extends Controller
             $this->email = Auth::user()->email;
             $data = array(
                 'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
-                'continent' => $this->timezone[0]
+                'continent' => $this->timezone[0],
+                'currentfacility'=>$id
             );
         }
 
@@ -2948,6 +2950,49 @@ class HomeController extends Controller
 
         return view('main.facilityview')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'facilityinfo' => $facilityinfo, 'data' => $data]);
     }
+
+    public function makeBooking(Request $req, $id)
+    {
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Rental Property Amenities';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0],
+                    'currentfacility'=>$id
+                );
+            } else {
+                // $this->page = 'Rental Property Amenities';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+
+            $this->page = 'Rental Property Amenities';
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+            $data = array(
+                'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                'continent' => $this->timezone[0],
+                'currentfacility'=>$id
+            );
+        }
+
+        $facilityinfo = $this->facilityInfo($id);
+
+
+        return view('main.makeabooking')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'facilityinfo' => $facilityinfo, 'data' => $data]);
+    }
+
 
     public function messages(Request $req)
     {

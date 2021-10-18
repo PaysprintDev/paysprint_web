@@ -260,6 +260,7 @@ Route::get('maintenance/edit/{id}', ['uses' => 'HomeController@maintenanceEdit',
 Route::get('amenities', ['uses' => 'HomeController@amenities', 'as' => 'amenities']);
 
 Route::get('amenities/facilityview/{id}', ['uses' => 'HomeController@facilityview', 'as' => 'facilityview']);
+Route::get('amenities/makeabooking/{id}', ['uses' => 'HomeController@makeBooking', 'as' => 'makeabooking']);
 
 
 
@@ -562,6 +563,8 @@ Route::prefix('Admin/')->group(function () {
 
 	Route::get('activity', ['uses' => 'AdminController@platformActivity', 'as' => 'platform activity']);
 	Route::get('activity-report', ['uses' => 'AdminController@activityReport', 'as' => 'activity report']);
+	Route::get('paysprintpoint', ['uses' => 'AdminController@paysprintPoint', 'as' => 'paysprint point']);
+	Route::get('userspoint', ['uses' => 'AdminController@usersPoint', 'as' => 'users points']);
 
 	Route::get('gatewayactivity', ['uses' => 'AdminController@gatewayActivity', 'as' => 'gateway activity']);
 	Route::get('checktransaction/{id}', ['uses' => 'AdminController@checkTransaction', 'as' => 'check transaction']);

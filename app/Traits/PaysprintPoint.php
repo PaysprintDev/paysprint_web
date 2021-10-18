@@ -170,4 +170,26 @@ trait PaysprintPoint
             'user_id' => $user_id, 'add_money' => $add_money, 'send_money' => $send_money, 'receive_money' => $receive_money, 'pay_invoice' => $pay_invoice, 'pay_bills' => $pay_bills, 'create_and_send_invoice' => $create_and_send_invoice, 'active_rental_property' => $active_rental_property, 'quick_set_up' => $quick_set_up, 'identity_verification' => $identity_verification, 'business_verification' => $business_verification, 'promote_business' => $promote_business, 'activate_ordering_system' => $activate_ordering_system, 'identify_verification' => $identify_verification, 'activate_rpm' => $activate_rpm, 'activate_currency_exchange' => $activate_currency_exchange, 'activate_cash_advance' => $activate_cash_advance, 'activate_crypto_currency_account' => $activate_crypto_currency_account
         ]);
     }
+
+    public function getMainPoint($country){
+        $array = [];
+
+        $data = Points::all();
+
+        if(count($data) > 0){
+            foreach ($data as $value) {
+                $checkuser = User::select('users.id', 'name', 'paysprint_point.add_money', 'paysprint_point.send_money', 'paysprint_point.receive_money', 'paysprint_point.pay_invoice', 'paysprint_point.pay_bills', 'paysprint_point.create_and_send_invoice', 'paysprint_point.active_rental_property', 'paysprint_point.quick_set_up', 'paysprint_point.identity_verification', 'paysprint_point.business_verification', 'paysprint_point.promote_business', 'paysprint_point.activate_ordering_system', 'paysprint_point.identify_verification', 'paysprint_point.activate_rpm', 'paysprint_point.activate_currency_exchange', 'paysprint_point.activate_cash_advance', 'paysprint_point.activate_crypto_currency_account' )->join('paysprint_point', 'paysprint_point.user_id', '=', 'users.id')->where('users.country', $country)->where('users.id', $value->user_id)->first();
+
+                $array[]=$checkuser;
+            }
+
+            return $array;
+        }
+        else{
+            return $array;
+        }
+
+        
+
+    }
 }
