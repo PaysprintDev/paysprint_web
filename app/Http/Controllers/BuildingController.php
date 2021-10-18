@@ -9,9 +9,12 @@ use Session;
 use App\User as User;
 
 use App\Building as Building;
+use App\Traits\PaysprintPoint;
 
 class BuildingController extends Controller
 {
+
+    use PaysprintPoint;
     // Facility Information
 
     public function createFacility(Request $req, Building $building){
@@ -77,6 +80,11 @@ class BuildingController extends Controller
         if($info == true){
             $resData = "Created successfully";
             $resp = "success";
+
+            $thisuser = User::where('email', $building->owner_email)->first();
+
+            $this->updatePoints($thisuser->id, 'Active rental property');
+            $this->updatePoints($thisuser->id, 'Activate rpm');
         }
         else{
             $resData = "Something went wrong!";
