@@ -120,12 +120,14 @@ use App\Traits\PaystackPayment;
 use App\Traits\ExpressPayment;
 use App\Traits\ElavonPayment;
 use App\Traits\Xwireless;
+use App\Traits\PaysprintPoint;
+
 use Throwable;
 
 class MonerisController extends Controller
 {
 
-    use PaymentGateway, PaystackPayment, ExpressPayment, ElavonPayment, Xwireless;
+    use PaymentGateway, PaystackPayment, ExpressPayment, ElavonPayment, Xwireless, PaysprintPoint;
 
     public $to;
     public $name;
@@ -1876,6 +1878,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                     $this->createNotification($thisuser->ref_code, $sendMsg);
 
+                    $this->updatePoints($thisuser->id, 'Add money');
+
                     // $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country);
 
                     // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg.". This is a test environment");
@@ -2597,6 +2601,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                     $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country);
 
+                    $this->updatePoints($thisuser->id, 'Add money');
+
                     // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
                     $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
@@ -2922,6 +2928,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                 $this->createNotification($thisuser->ref_code, $sendMsg);
 
+                                $this->updatePoints($thisuser->id, 'Add money');
+
                                 // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
                                 $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
@@ -3019,6 +3027,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to your wallet';
 
                                 $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                                $this->updatePoints($thisuser->id, 'Add money');
+
+                                
 
                                 // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
@@ -3127,6 +3139,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to your wallet';
 
                             $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                            $this->updatePoints($thisuser->id, 'Add money');
 
                             // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 

@@ -169,6 +169,8 @@
                                         </td>
                                     </tr>
 
+                                    
+
 
                                     @else
                                         <tr>
@@ -178,6 +180,10 @@
 
                                 </tbody>
                             </table>
+
+                            <div class="form-group">
+                                <button type="button" onclick="handShake('updateprofile')" class="btn btn-primary btn-block" id="updateBtn">Make Booking</button>
+                            </div>
 
 
 
