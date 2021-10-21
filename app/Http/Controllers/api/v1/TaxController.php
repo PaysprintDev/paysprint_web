@@ -37,7 +37,7 @@ class TaxController extends Controller
             $status = 200;
             $message = "Saved";
 
-            $this->updatePoints($thisuser->id, 'Quick set up');
+            $this->updatePoints($thisuser->id, 'Approved Merchants');
         } else {
 
             $error = implode(",", $validator->messages()->all());

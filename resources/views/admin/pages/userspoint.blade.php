@@ -55,8 +55,8 @@
                   <th>Active Rental Property</th>
 
                   <th>Quick Set Up</th>
-                  <th>Identity Verification</th>
-                  <th>Business Verification</th>
+                  <th>Approved Customers</th>
+                  <th>Approved Merchants</th>
                   <th>Promote Business</th>
 
                   <th>Activate Ordering System</th>
@@ -89,10 +89,11 @@
                             <td>{{ $item->pay_bills }}</td>
                             <td>{{ $item->create_and_send_invoice }}</td>
                             <td>{{ $item->active_rental_property }}</td>
-
                             <td>{{ $item->quick_set_up }}</td>
-                            <td>{{ $item->identity_verification }}</td>
-                            <td>{{ $item->business_verification }}</td>
+
+                            <td>{{ $item->approved_customers }}</td>
+                            <td>{{ $item->approved_merchants }}</td>
+                            {{-- <td>{{ $item->business_verification }}</td> --}}
 
                             <td>{{ $item->promote_business }}</td>
                             <td>{{ $item->activate_ordering_system }}</td>
@@ -104,7 +105,7 @@
 
                             <td>{{ $item->activate_crypto_currency_account }}</td>
 
-                            <td>{{ ($item->add_money + $item->send_money + $item->receive_money + $item->pay_invoice + $item->pay_bills + $item->create_and_send_invoice + $item->active_rental_property + $item->quick_set_up + $item->identity_verification + $item->business_verification + $item->promote_business + $item->activate_ordering_system + $item->identify_verification + $item->activate_rpm + $item->activate_currency_exchange + $item->activate_cash_advance + $item->activate_crypto_currency_account) }}</td>
+                            <td>{{ ($item->add_money + $item->send_money + $item->receive_money + $item->pay_invoice + $item->pay_bills + $item->create_and_send_invoice + $item->active_rental_property + $item->approved_customers + $item->approved_merchants +  $item->promote_business + $item->activate_ordering_system + $item->identify_verification + $item->activate_rpm + $item->activate_currency_exchange + $item->activate_cash_advance + $item->activate_crypto_currency_account) }}</td>
                             
 
 
