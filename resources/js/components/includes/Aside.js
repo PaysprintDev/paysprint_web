@@ -1,6 +1,5 @@
 import axios from 'axios';
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 
 class Aside extends Component {
 	constructor(props) {
@@ -23,20 +22,113 @@ class Aside extends Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-	handleChange(event) {
+	async handleChange(event) {
 		this.setState({ [event.target.name]: event.target.value });
+
+		const headers = {
+			Authorization: `Bearer base64:JFM+PJaWD/pBypX+NhXudDrAmianZdGYZ41qz4WhXL0=`,
+			'Content-Type': 'application/json'
+		};
+
+		document.getElementById('sellCurrencyRateResult').innerHTML = '0.00';
+		document.getElementById('buyCurrencyRateResult').innerHTML = '0.00';
+		document.getElementById('buyCurrencyCode').innerHTML = '';
+		document.getElementById('sellCurrencyCode').innerHTML = '';
+		document.getElementById('buyAmount').readOnly = true;
+
+		// Do Axios
+
+		try {
+			/** 
+			 * Calculate PaySprint Rate On Handle Change with Default Rate
+			 * Then if desiredRate < or > PaySprint Rate
+			 * Add charges note to the response and update state
+			**/
+
+			const resultA = await axios.get(
+				`/api/v1/conversionrate/${this.state.sellCurrency}/${this.state.buyCurrency}`,
+				{ headers: headers }
+			);
+
+			const resultB = await axios.get(
+				`/api/v1/conversionrate/${this.state.buyCurrency}/${this.state.sellCurrency}`,
+				{ headers: headers }
+			);
+
+			if (resultA.status === 200 && resultB.status === 200) {
+				var buying = this.state.sellAmount / resultB.data;
+
+				document.getElementById('buyCurrencyCode').innerHTML = `1 ${this.state.sellCurrency} - `;
+				document.getElementById('sellCurrencyCode').innerHTML = `1 ${this.state.buyCurrency} - `;
+
+				document.getElementById('sellCurrencyRateResult').innerHTML =
+					resultA.data.toFixed(2) + ` ${this.state.buyCurrency}`;
+
+				document.getElementById('buyCurrencyRateResult').innerHTML =
+					resultB.data.toFixed(2) + ` ${this.state.sellCurrency}`;
+
+				document.getElementById('desiredBuyRate').value = resultA.data.toFixed(2);
+				document.getElementById('desiredBuyCurrency').value = `${this.state.buyCurrency}`;
+				document.getElementById('buyAmount').value = `${buying}`;
+				this.setState({
+					buyAmount: `${buying}`,
+					desiredBuyRate: resultA.data.toFixed(2),
+					desiredBuyCurrency: `${this.state.buyCurrency}`
+				});
+			} else {
+				document.getElementById('buyCurrencyCode').innerHTML = `1 ${this.state.sellCurrency} - `;
+				document.getElementById('sellCurrencyCode').innerHTML = `1 ${this.state.buyCurrency} - `;
+				document.getElementById('sellCurrencyRateResult').innerHTML = '0.00';
+				document.getElementById('buyCurrencyRateResult').innerHTML = '0.00';
+			}
+		} catch (error) {
+			document.getElementById('buyCurrencyCode').innerHTML = `1 ${this.state.sellCurrency} - `;
+			document.getElementById('sellCurrencyCode').innerHTML = `1 ${this.state.buyCurrency} - `;
+			document.getElementById('sellCurrencyRateResult').innerHTML = `${error}`;
+			document.getElementById('buyCurrencyRateResult').innerHTML = `${error}`;
+		}
+
+		// if (event.target.name === 'desiredBuyRate') return console.log(event.target.name, event.target.value);
 	}
 
 	async handleSubmit(event) {
 		event.preventDefault();
 
-		const res = await axios.post(
-			'/api/v1/createoffer',
-			{ headers: { Authorization: `Bearer ${this.props.apiToken}` } },
-			this.state
-		);
+		const headers = {
+			Authorization: `Bearer ${this.props.apiToken}`,
+			'Content-Type': 'application/json'
+		};
 
-		console.log(res);
+		try {
+			// Response Data
+			const res = await axios({ method: 'POST', url: '/api/v1/createoffer', data: this.state, headers: headers });
+
+			if (res.status === 200) {
+				this.setState({
+					sellCurrency: this.props.currencycode,
+					sellAmount: '',
+					buyCurrency: 'USD',
+					buyAmount: '',
+					desiredSellRate: '1.00',
+					desiredSellCurrency: this.props.currencycode,
+					desiredBuyCurrency: 'USD',
+					desiredBuyRate: '',
+					expiryDate: ''
+				});
+
+				swal('Great!', 'Offer created!', 'success');
+				setTimeout(() => {
+					location.reload();
+				}, 2000);
+			} else {
+				this.setState({ [event.target.name]: event.target.value });
+
+				swal('Oops!', 'Something went wrong', 'error');
+			}
+		} catch (error) {
+			// Catch Error
+			swal('Oops!', `${error.message}`, 'error');
+		}
 	}
 
 	render() {
@@ -73,7 +165,7 @@ class Aside extends Component {
 								<img
 									src="https://img.icons8.com/external-becris-lineal-becris/20/000000/external-add-mintab-for-ios-becris-lineal-becris-2.png"
 									alt="Tio Tune"
-								/>{' '}
+								/>
 								Create an Offer
 							</h3>
 							<p className="text-gray-700 mb-0 lh-lg">Default rates are according to PaySprint rates.</p>
@@ -202,11 +294,11 @@ class Aside extends Component {
 									</div>
 								</div>
 
-								<p className="text-gray-600 pt-2 mb-0 font-weight-semibold" id="sellCurrencyRateResult">
-									1 NGN - 0.003 USD
+								<p className="text-gray-600 pt-2 mb-0 font-weight-semibold">
+									<span id="buyCurrencyCode" /> <span id="sellCurrencyRateResult" />
 								</p>
-								<p className="text-gray-600 pt-2 mb-0 font-weight-semibold" id="buyCurrencyRateResult">
-									1 USD - 580.44 NGN
+								<p className="text-gray-600 pt-2 mb-0 font-weight-semibold">
+									<span id="sellCurrencyCode" /> <span id="buyCurrencyRateResult" />
 								</p>
 							</div>
 
@@ -227,10 +319,14 @@ class Aside extends Component {
 								</div>
 							</div>
 
-							<input type="submit" value="Submit" className="form-control form-control-xl" />
+							<input
+								type="submit"
+								value="Submit"
+								className="form-control form-control-xl btn btn-xl btn-primary"
+							/>
 						</form>
 					</div>
-					<div className="p-4 px-lg-5 border-top border-gray-200 bg-white">
+					{/* <div className="p-4 px-lg-5 border-top border-gray-200 bg-white">
 						<div className="row">
 							<div className="col-6 d-grid">
 								<a href="#" className="btn btn-xl btn-outline-dark" id="ResetCustomizer">
@@ -243,11 +339,11 @@ class Aside extends Component {
 								</a>
 							</div>
 						</div>
-					</div>
+					</div> */}
 				</div>
 
 				<nav className="navbar navbar-vertical navbar-expand-lg navbar-light">
-					<Link className="navbar-brand mx-auto d-none d-lg-block my-0 my-lg-4" to={'/currencyfx/'}>
+					<a className="navbar-brand mx-auto d-none d-lg-block my-0 my-lg-4" href="/currencyfx">
 						<img
 							src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
 							alt="Muze"
@@ -266,14 +362,14 @@ class Aside extends Component {
 							src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_icon_png_rhxm1e.png"
 							className="muze-icon-white"
 							alt="Muze"
-						/>{' '}
-					</Link>
+						/>
+					</a>
 					<div className="navbar-collapse">
 						<ul className="navbar-nav mb-2" id="accordionExample" data-simplebar>
 							<li className="nav-item">
-								<Link
+								<a
 									className="nav-link collapsed"
-									to={'/currencyfx/'}
+									href="/currencyfx"
 									data-bs-toggle="collapse"
 									role="button"
 									aria-expanded="true"
@@ -293,9 +389,9 @@ class Aside extends Component {
 												fill="#1e1e1e"
 											/>
 										</g>
-									</svg>{' '}
+									</svg>
 									&nbsp;<span className="ms-2">Dashboards</span>
-								</Link>
+								</a>
 							</li>
 							<li className="nav-item">
 								<a
@@ -324,7 +420,7 @@ class Aside extends Component {
 											transform="translate(1)"
 											fill="#1e1e1e"
 										/>
-									</svg>{' '}
+									</svg>
 									&nbsp;<span className="ms-2">Send Money</span>
 								</a>
 								<div
@@ -351,9 +447,9 @@ class Aside extends Component {
 							</li>
 
 							<li className="nav-item">
-								<Link
+								<a
 									className="nav-link collapsed"
-									to={'/currencyfx/marketplace'}
+									href="/currencyfx/marketplace"
 									data-bs-toggle="collapse"
 									role="button"
 									aria-expanded="false"
@@ -377,9 +473,9 @@ class Aside extends Component {
 											transform="translate(2 1)"
 											fill="#1e1e1e"
 										/>
-									</svg>{' '}
+									</svg>
 									&nbsp;<span className="ms-2">Market Place</span>
-								</Link>
+								</a>
 							</li>
 							<li className="nav-item">
 								<a
@@ -408,7 +504,7 @@ class Aside extends Component {
 											transform="translate(3)"
 											fill="#1e1e1e"
 										/>
-									</svg>{' '}
+									</svg>
 									&nbsp;<span className="ms-2">E-Wallet</span>
 								</a>
 							</li>
@@ -435,9 +531,9 @@ class Aside extends Component {
 												fill="#1e1e1e"
 											/>
 										</g>
-									</svg>{' '}
+									</svg>
 									&nbsp;<span className="ms-2 position-relative">
-										Transaction History{' '}
+										Transaction History
 										<sup className="status bg-warning ms-2 position-absolute">&nbsp;</sup>
 									</span>
 								</a>

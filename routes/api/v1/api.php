@@ -226,7 +226,7 @@ Route::prefix('/v1')->group(function () {
         Route::get('/activeorders', ['uses' => 'CurrencyFxController@getActiveOrders', 'as' => 'currency fx active orders']);
 
         // Create Orders
-        Route::get('/createoffer', ['uses' => 'api\v1\MoneyTransferController@createNewOrder', 'as' => 'currency fx create orders']);
+        Route::post('/createoffer', ['uses' => 'api\v1\MoneyTransferController@createNewOrder', 'as' => 'currency fx create orders']);
     });
 
 

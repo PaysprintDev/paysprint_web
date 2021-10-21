@@ -43,12 +43,13 @@ use App\ReceivePay as ReceivePay;
 use App\TransactionCost as TransactionCost;
 
 use App\CardRequest as CardRequest;
-
+use App\MarketPlace as AppMarketPlace;
 use App\RequestRefund as RequestRefund;
 
 use App\Traits\Xwireless;
 use App\Traits\PaymentGateway;
 use App\Traits\PaysprintPoint;
+use Twilio\Rest\Preview\Marketplace;
 
 class MoneyTransferController extends Controller
 {
@@ -419,7 +420,7 @@ class MoneyTransferController extends Controller
         // Insert Statement
         $activity = "Debited " . $data->currencyCode . " " . number_format(20, 2) . " for " . $card_provider . " request from PaySprint Wallet.";
         $credit = 0;
-        $debit = number_format(20, 2);
+        $debit = 20;
         $reference_code = $transaction_id;
         $balance = 0;
         $trans_date = date('Y-m-d');
@@ -439,7 +440,7 @@ class MoneyTransferController extends Controller
         if (isset($exbcMerchant)) {
 
             $activity = "Added " . $data->currencyCode . '' . number_format(20, 2) . " to your Wallet for EXBC Prepaid Card Request";
-            $credit = number_format(20, 2);
+            $credit = 20;
             $debit = 0;
             $reference_code = $transaction_id;
             $balance = 0;
@@ -683,7 +684,7 @@ class MoneyTransferController extends Controller
                                             // Insert Statement
                                             $activity = "Transfer of " . $req->currency . " " . number_format($req->amount, 2) . " to " . $receiver->name . " for " . $service . " on PaySprint Wallet.";
                                             $credit = 0;
-                                            $debit = number_format($req->amount, 2);
+                                            $debit = $req->amount;
                                             $reference_code = $paymentToken;
                                             $balance = 0;
                                             $trans_date = date('Y-m-d');
@@ -1219,16 +1220,122 @@ class MoneyTransferController extends Controller
     // POST ROUTES
     public function createNewOrder(Request $req){
 
-        dd($req->all());
-
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
         if(isset($thisuser)){
 
             // Do Validate
             $validator = Validator::make($req->all(), [
-
+                "sellCurrency" => "required|string",
+                "sellAmount" => "required|string",
+                "buyCurrency" =>"required|string",
+                "buyAmount" =>"required|string",
+                "desiredSellRate" =>"required|string",
+                "desiredSellCurrency" => "required|string",
+                "desiredBuyCurrency" =>"required|string",
+                "desiredBuyRate" => "required|string",
+                "expiryDate" => "required|string"
             ]);
+
+
+            if($validator->fails() == true){
+
+                $error = implode(",", $validator->messages()->all());
+
+                $status = 400;
+
+                $resData = ['data' => [], 'message' => $error, 'status' => $status];
+            }
+            else{
+                $minBal = $this->minimumWithdrawal($thisuser->country);
+
+                $walletBal = $thisuser->wallet_balance - $minBal;
+                // Check if User has sufficient sell
+                if ($walletBal < $req->sellAmount) {
+                    $status = 400;
+
+                    $resData = ['data' => [], 'message' => 'You do not have sufficient balance for this transaction', 'status' => $status];
+                }
+
+                // Debit Wallet 
+                $debitWallet = $walletBal - $req->sellAmount;
+
+                User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $debitWallet]);
+
+                // Continue insert here
+                $query = [
+                    'user_id' => $thisuser->id,
+                    'order_id' => 'PS-' . mt_rand(000000000, 999999999) . '-' . strtoupper(date('D')),
+                    'sell' => $req->sellAmount,
+                    'buy' => $req->buyAmount,
+                    'default_currencyCode' => $thisuser->currencyCode,
+                    'sell_currencyCode' => $req->sellCurrency,
+                    'buy_currencyCode' => $req->buyCurrency,
+                    'rate' => $req->desiredSellRate . ' ' . $req->desiredSellCurrency . ' - ' . $req->desiredBuyRate . ' ' . $req->desiredBuyCurrency,
+                    'expiry' => date('d M Y', strtotime($req->expiryDate)),
+                    'bid_amount' => $req->sellAmount,
+                    'status' => "Bid Pending",
+                    'color' => "red"
+                ];
+
+                AppMarketPlace::insert($query);
+
+
+                // Wallet Statement
+
+                $transaction_id = "wallet-" . date('dmY') . time();
+
+                // Insert Statement
+                $activity = "Wallet debit of " . $thisuser->currencyCode . " " . number_format($req->sellAmount, 2) . " from PaySprint wallet for Currency Exchange.";
+                $credit = 0;
+                $debit = $req->sellAmount;
+                $reference_code = $transaction_id;
+                $balance = 0;
+                $trans_date = date('Y-m-d');
+                $status = "Delivered";
+                $action = "Wallet debit";
+                $regards = $thisuser->ref_code;
+
+                $statement_route = "wallet";
+
+                // Senders statement
+                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $thisuser->country);
+
+                $getWallet = User::where('api_token', $req->bearerToken())->first();
+
+
+                $sendMsg = "Hi " . $thisuser->name . ", You have made a " . $activity . " Your new Wallet balance is " . $thisuser->currencyCode . ' ' . number_format($getWallet->wallet_balance, 2) . ".";
+
+                $usergetPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                if (isset($usergetPhone)) {
+
+                    $sendPhone = $thisuser->telephone;
+                } else {
+                    $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                }
+
+                if ($thisuser->country == "Nigeria") {
+
+                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                    $this->sendSms($sendMsg, $correctPhone);
+                } else {
+                    $this->sendMessage($sendMsg, $sendPhone);
+                }
+
+                Log::info("Currency exchange transaction of " . $thisuser->currencyCode . " " . number_format($req->sellAmount, 2) . " by " . $thisuser->name);
+
+                $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $sendMsg);
+
+                // Return Success
+                $myBid = AppMarketPlace::where('user_id', $thisuser->id)->get();
+
+                $status = 200;
+
+                $resData = ['data' => $myBid, 'message' => 'success', 'status' => $status];
+            }
+
+
         }
         else{
             $status = 400;

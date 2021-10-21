@@ -398,9 +398,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $data = [];
                             $status = 400;
                             $message = $response;
-                        }
-                        
-                        elseif ($thisuser->country != $thismerchant->country && !isset($req->merchantpay)) {
+                        } elseif ($thisuser->country != $thismerchant->country && !isset($req->merchantpay)) {
                             $response = 'Please visit the website on www.paysprint.ca to pay your international invoice';
 
                             $data = [];
@@ -5564,7 +5562,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
         $amount = $dollaramount;
 
         if ($thisuser->country == "Canada") {
-            $amount = number_format($dollaramount, 2);
+            $amount = round($dollaramount, 2);
         } else {
             $amount = $dollaramount;
         }

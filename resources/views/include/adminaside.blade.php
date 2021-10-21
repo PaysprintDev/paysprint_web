@@ -205,7 +205,7 @@
                      </li>
 
                      <li>
-                         <a href="{{ route('account report', 'country=Canada') }}">
+                         <a href="{{ route('account report') }}">
                              <i class="fa fa-book"></i>
                              <span>Account Report</span>
                          </a>

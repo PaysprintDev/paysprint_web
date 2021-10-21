@@ -9199,10 +9199,9 @@ class AdminController extends Controller
             $servicetypes = $this->getServiceTypes();
 
             $data = [
-                'result' => $this->usersInCountry($req->get('country')),
+                'activecountries' => $this->getActiveCountries()
             ];
-
-
+            
 
 
             return view('admin.report.accountreport')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes, 'data' => $data]);
@@ -13532,6 +13531,15 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     {
 
         $data = AllCountries::where('name', $country)->first();
+
+        return $data;
+    }
+
+
+    public function getActiveCountries()
+    {
+
+        $data = AllCountries::where('approval', 1)->get();
 
         return $data;
     }

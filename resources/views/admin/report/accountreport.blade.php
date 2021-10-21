@@ -44,35 +44,30 @@
                   
                 <thead>
                     <tr>
-                        <td>Account #</td>
-                        <td>Holder</td>
-                        <td>Email</td>
+                        <td>#</td>
+                        <td>Country</td>
                         <td>Added to Wallet</td>
                         <td>Money Received</td>
                         <td>Money Sent</td>
                         {{-- <td>Monthly Fee</td> --}}
+                        <td>Fund from Invoice</td>
+                        <td>Fund from Utility</td>
                         <td>Withdraw</td>
-                        <td>Expected Wallet Balance</td>
                         <td>Actual Wallet Balance</td>
+                        
                     </tr>
                 </thead>
 
-                @if($currency = \App\User::where('country', Request::get('country'))->first())
-                
-                    @php
-                        $currency = $currency->currencyCode;
-                    @endphp
-                @endif
 
-                @if (count($data['result']) > 0)
+                @if (count($data['activecountries']) > 0)
 
-                <?php $expected = 0; $actual= 0;?>
+                <?php $expected = 0; $actual= 0; $i=1;?>
 
-                @foreach ($data['result'] as $item)
+                @foreach ($data['activecountries'] as $item)
                     <tr>
 
                         {{-- Added Money --}}
-                        @if($addedAmount = \App\Statement::where('user_id', $item->email)->where('report_status', 'Added to wallet')->sum('credit'))
+                        @if($addedAmount = \App\Statement::where('country', $item->name)->where('report_status', 'Added to wallet')->sum('credit'))
 
                             @php
                                 $addedAmount = $addedAmount;
@@ -87,7 +82,7 @@
 
 
                         {{-- Received Money --}}
-                        @if($receivedAmount = \App\Statement::where('user_id', $item->email)->where('report_status', 'Money received')->sum('credit'))
+                        @if($receivedAmount = \App\Statement::where('country', $item->name)->where('report_status', 'Money received')->sum('credit'))
                             @php
                                 $receivedAmount = $receivedAmount;
                             @endphp
@@ -103,7 +98,7 @@
 
                             
                         {{-- Money Sent --}}
-                        @if($debitedAmount = \App\Statement::where('user_id', $item->email)->where('report_status', 'Money sent')->sum('debit'))
+                        @if($debitedAmount = \App\Statement::where('country', $item->name)->where('report_status', 'Money sent')->sum('debit'))
                                 @php
                                     $debitedAmount = $debitedAmount;
                                 @endphp
@@ -116,7 +111,7 @@
                         @endif
 
                         {{-- Withdrawal Amount --}}
-                        @if($withdrawAmount = \App\Statement::where('user_id', $item->email)->where('report_status', 'Withdraw from wallet')->sum('debit'))
+                        @if($withdrawAmount = \App\Statement::where('country', $item->name)->where('report_status', 'Withdraw from wallet')->sum('debit'))
                             @php
                                 $withdrawAmount = $withdrawAmount;
                             @endphp
@@ -130,7 +125,7 @@
 
 
                         {{-- Monthly Fee --}}
-                        @if($monthlyAmount = \App\Statement::where('user_id', $item->email)->where('report_status', 'Monthly fee')->sum('debit'))
+                        @if($monthlyAmount = \App\Statement::where('country', $item->name)->where('report_status', 'Monthly fee')->sum('debit'))
                             @php
                                 $monthlyAmount = $monthlyAmount;
                             @endphp
@@ -142,23 +137,53 @@
                             @endphp
                         @endif
 
+
+                        {{--  Fund from Invoice  --}}
+
+                        @if($sendInvoice = \App\Statement::where('country', $item->name)->where('action', 'Invoice')->sum('credit'))
+                            @php
+                                $sendInvoice = $sendInvoice;
+                            @endphp
+
+                            @else
+
+                            @php
+                                $sendInvoice = 0;
+                            @endphp
+                        @endif
+
+
+                        {{--  Fund for Utility  --}}
+
+                        @if($utilityFund = \App\Statement::where('country', $item->name)->where('activity', 'LIKE', '%Success: %')->sum('debit'))
+                            @php
+                                $utilityFund = $utilityFund;
+                            @endphp
+
+                            @else
+
+                            @php
+                                $utilityFund = 0;
+                            @endphp
+                        @endif
+
                         @php
                           //  $debits = $debitedAmount - $monthlyAmount - $withdrawAmount;
-                           $credits = $addedAmount + $receivedAmount + (- $debitedAmount - $monthlyAmount - $withdrawAmount);
+                           $credits = $addedAmount + $receivedAmount + $sendInvoice + (- $debitedAmount - $monthlyAmount - $withdrawAmount);
 
                           //  $totAmountExp = $credits - $debits;
                            $totAmountExp = $credits;
                         @endphp
 
-                        <td>{{ $item->ref_code }}</td>
+                        <td>{{ $i++ }}</td>
                         <td>{{ $item->name }}</td>
-                        <td>{{ $item->email }}</td>
                         <td>{{ number_format($addedAmount, 2) }}</td>
                         <td>{{ number_format($receivedAmount, 2) }}</td>
                         <td>{{ number_format($debitedAmount, 2) }}</td>
                         {{-- <td>{{ number_format($monthlyAmount,2) }}</td> --}}
+                        <td>{{ number_format($sendInvoice, 2) }}</td>
+                        <td>{{ number_format($utilityFund, 2) }}</td>
                         <td>{{ number_format($withdrawAmount, 2) }}</td>
-                        <td>{{ number_format($totAmountExp, 2) }}</td>
                         <td>{{ number_format($item->wallet_balance, 2) }}</td>
 
                     </tr>
