@@ -235,9 +235,7 @@
                                                     <h6>Currency Conversion <br><small
                                                             class="text-info"><b>Exchange rate </b> <br> <span
                                                                 id="rateToday"></span> </small></h6>
-                                                    {{-- <p style="font-weight: bold;">
-                                                {{ $data['currencyCode']->currencyCode }} <=> {{ $data['othercurrencyCode']->currencyCode }}
-                                            </p> --}}
+                                                    
 
                                                     <table class="table table-bordered table-striped" width="100%">
                                                         <tbody>
@@ -720,7 +718,7 @@
                 var thisdata = {
                     currency: currency,
                     amount: amount,
-                    val: "send",
+                    val: "pay",
                     localcurrency: localcurrency
                 };
 

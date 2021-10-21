@@ -4181,13 +4181,15 @@ function checkDetail(val){
 
                         $.each(res, function(v, k){
 
-                            if(result.country == k.country){
-                            sendBtn = "<button class='btn btn-primary' onclick=payOrg('"+k.ref_code+"')>Send Money</button>";
+                            // if(result.country == k.country){
+                            // sendBtn = "<button class='btn btn-primary' onclick=payOrg('"+k.ref_code+"')>Send Money</button>";
                                 
-                            }
-                            else{
-                                sendBtn = "<button class='btn btn-primary' onclick=cannotSend()>Send Money</button>";
-                            }
+                            // }
+                            // else{
+                            //     sendBtn = "<button class='btn btn-primary' onclick=cannotSend()>Send Money</button>";
+                            // }
+
+                            sendBtn = "<button class='btn btn-primary' onclick=payOrg('"+k.ref_code+"')>Send Money</button>";
 
                             if(k.avatar != null){
                                 avatar = k.avatar;

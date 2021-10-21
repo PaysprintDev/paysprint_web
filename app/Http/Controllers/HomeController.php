@@ -605,6 +605,8 @@ class HomeController extends Controller
 
         );
 
+        // dd($data);
+
 
 
         return view('main.payment')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -717,11 +719,14 @@ class HomeController extends Controller
         $data = array(
             'paymentorg' => $this->getthisOrganization($user_id),
             'currencyCode' => $this->getCountryCode(Auth::user()->country),
-            'othercurrencyCode' => $this->otherCurrencyCode($user_id),
+            'othercurrencyCode' => $this->otherCurrencyCodeOfficial($user_id),
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBank(),
             'continent' => $this->timezone[0]
         );
+
+
+
 
 
         return view('main.paymentorganization')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -1600,6 +1605,24 @@ class HomeController extends Controller
         $data = $this->getCountryCode($userData->country);
 
         $data['conversionrate'] = $this->getConversionRate(Auth::user()->currencyCode, $data->currencyCode);
+
+        $resp = [
+            'data' => $data,
+            'conversionrate' => $data['conversionrate'],
+        ];
+
+
+        return $resp;
+    }
+
+    
+    public function otherCurrencyCodeOfficial($user_id)
+    {
+        $userData = User::where('ref_code', $user_id)->first();
+
+        $data = $this->getCountryCode($userData->country);
+
+        $data['conversionrate'] = $this->getOfficialConversionRate(Auth::user()->currencyCode, $data->currencyCode);
 
         $resp = [
             'data' => $data,

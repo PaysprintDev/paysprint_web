@@ -14,6 +14,8 @@ class CurrencyFxController extends Controller
 
     public function index(Request $req)
     {
+
+
         if ($req->session()->has('email') == false) {
             if (Auth::check() == false) {
                 return redirect()->route('login');

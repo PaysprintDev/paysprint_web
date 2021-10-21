@@ -1566,7 +1566,7 @@ class AdminController extends Controller
                 'getServiceType' => $this->getServiceTypes(),
                 'getTax' => $this->getTax(session('myID')),
                 'getpersonalData' => $this->getmyPersonalDetail(session('user_id')),
-                'getimt' => $this->getImtCountry()
+                'getimt' => $this->getActiveCountries()
             );
 
 

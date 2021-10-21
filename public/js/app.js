@@ -6017,7 +6017,7 @@ var Dashboard = /*#__PURE__*/function (_Component) {
         return Math.round(m) / 100 * Math.sign(num);
       }
 
-      var walletBalance = "";
+      var walletBalance = '';
 
       if (this.state.loading) {
         walletBalance = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
@@ -6064,7 +6064,7 @@ var Dashboard = /*#__PURE__*/function (_Component) {
                     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("span", {
                       className: "ps-1",
                       children: "New Offer"
-                    }), " ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("svg", {
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("svg", {
                       className: "ms-4",
                       xmlns: "http://www.w3.org/2000/svg",
                       width: "14",
@@ -6092,7 +6092,7 @@ var Dashboard = /*#__PURE__*/function (_Component) {
                       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("span", {
                         className: "ps-1",
                         children: "Wallet"
-                      }), " ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("svg", {
+                      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("svg", {
                         className: "ms-4",
                         xmlns: "http://www.w3.org/2000/svg",
                         width: "14",
@@ -6249,6 +6249,13 @@ var Dashboard = /*#__PURE__*/function (_Component) {
                             className: "ms-2 arrow-icon",
                             alt: "img"
                           })]
+                        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("a", {
+                          href: "#",
+                          className: "btn btn-lg px-3 me-2 me-md-3 badge-lg text-white badge-primary mt-5",
+                          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("span", {
+                            className: "ps-1",
+                            children: "Fund Escrow Account"
+                          })
                         })]
                       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
                         className: "col-lg-8",
@@ -6315,13 +6322,13 @@ var Dashboard = /*#__PURE__*/function (_Component) {
                               className: "col p-0",
                               children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("p", {
                                 className: "mb-1",
-                                children: ["This month we gave away ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("span", {
+                                children: ["This month we gave away", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("span", {
                                   style: {
-                                    fontWeight: "bold",
-                                    fontSize: "20px"
+                                    fontWeight: 'bold',
+                                    fontSize: '20px'
                                   },
                                   children: "$5,000"
-                                }), " in referrals. You could earn with referrals too!"]
+                                }), "in referrals. You could earn with referrals too!"]
                               })
                             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
                               className: "col-auto",

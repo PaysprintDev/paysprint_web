@@ -891,7 +891,7 @@ class MoneyTransferController extends Controller
                                                 }
 
                                                 if ($req->currency != $receiver->currencyCode) {
-                                                    $dataInfo = $this->convertCurrencyRate($receiver->currencyCode, $req->currency, $req->amount);
+                                                    $dataInfo = $this->convertCurrencyRate($receiver->currencyCode, $req->currency, $req->amount, 'send');
                                                     // $dataInfo = $req->conversionamount;
                                                 } else {
                                                     $dataInfo = $req->amount;
@@ -1353,7 +1353,7 @@ class MoneyTransferController extends Controller
         Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route, 'auto_deposit' => $auto_deposit, 'country' => $country]);
     }
 
-    public function convertCurrencyRate($foreigncurrency, $localcurrency, $amount)
+    public function convertCurrencyRate($foreigncurrency, $localcurrency, $amount, $route)
     {
 
         // Get Markup
@@ -1392,11 +1392,31 @@ class MoneyTransferController extends Controller
 
         if ($result->success == true) {
 
-            // Conversion Rate USD to Local currency
-            $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
+            if($route == "send"){
+
+                // Conversion Rate USD to Local currency
+                $convertLocal = $amount / $result->quotes->$localCurrency;
 
 
-            $convRate = $result->quotes->$currency * $convertLocal;
+                $convRate = $result->quotes->$currency * $convertLocal;
+
+            }
+            elseif($route == "pay"){
+
+                // Conversion Rate USD to Local currency
+                $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
+
+
+                $convRate = $result->quotes->$currency * $convertLocal;
+
+            }
+            else{
+
+            }
+
+
+
+
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }

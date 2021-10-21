@@ -67,7 +67,7 @@
 
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('home') }}" style="color: #000000 !important; text-decoration: underline; background-color: #e8aa07; border-radius: 10px; font-size: 17px; padding: 5px;">{{ "Are you a USER? ".strtoupper(" CLICK HERE") }}</a>
+                        <a class="nav-link" href="{{ route('home') }}" style="color: #000000 !important; text-decoration: underline; background-color: #e8aa07; border-radius: 10px; font-size: 17px; padding: 5px;">{{ "Are you a CONSUMER? ".strtoupper(" CLICK HERE") }}</a>
                     </li>
 
                 @endguest
