@@ -3528,6 +3528,7 @@ else if(val == "merchantprofile"){
     route = "{{ URL('/api/v1/merchantprofile') }}";
 
 
+
     Pace.restart();
     Pace.track(function(){
         setHeaders();

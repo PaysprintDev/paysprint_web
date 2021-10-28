@@ -214,6 +214,32 @@
 
                  @endif
 
+                 
+                 @if (session('role') == 'Super')
+
+
+                     <li class="treeview">
+                         <a href="#">
+                             <i class="fa fa-book"></i>
+                             <span>Commission</span>
+                             <span class="pull-right-container">
+                                 <i class="fa fa-angle-left pull-right"></i>
+                             </span>
+                         </a>
+                         <ul class="treeview-menu">
+                             <li title="Invoice Commission"><a href="{{ route('invoice commission') }}"><i
+                                         class="fa fa-circle-o text-red"></i> Invoice</a></li>
+                             <li title="Currency FX Commission"><a href="#"><i
+                                         class="fa fa-circle-o text-red"></i> Currency FX</a></li>
+                             <li title="Move Money Commission"><a href="#"><i
+                                         class="fa fa-circle-o text-red"></i> Move Money</a></li>
+                         </ul>
+                     </li>
+                     <li>
+
+
+                 @endif
+
 
                  @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only')
                      <li>

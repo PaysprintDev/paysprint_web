@@ -176,7 +176,7 @@ class ActiveOrders extends Component {
 										aria-expanded="false"
 										className="btn btn-outline-dark text-gray-700 border-gray-700 px-3"
 									>
-										<span>Today</span>{' '}
+										<span>Today</span>
 										<svg
 											className="ms-2"
 											xmlns="http://www.w3.org/2000/svg"

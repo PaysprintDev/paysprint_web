@@ -227,6 +227,11 @@ Route::prefix('/v1')->group(function () {
 
         // Create Orders
         Route::post('/createoffer', ['uses' => 'api\v1\MoneyTransferController@createNewOrder', 'as' => 'currency fx create orders']);
+
+
+        // Get My Escrow account
+        Route::get('/getescrow', ['uses' => 'CurrencyFxController@getEscrow', 'as' => 'get escrow account']);
+
     });
 
 

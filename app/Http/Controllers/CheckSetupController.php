@@ -176,7 +176,7 @@ class CheckSetupController extends Controller
     // Move Matched Users
     public function matchedUsersAccount()
     {
-        $getUsers = User::where('country', 'Nigeria')->where('bvn_verification', 1)->get();
+        $getUsers = User::where('country', 'Nigeria')->where('bvn_verification', 1)->inRandomOrder()->take(20)->get();
 
         foreach ($getUsers as $allusers) {
 

@@ -206,7 +206,7 @@ class UserController extends Controller
                         $message = "success";
                         $title = "Great";
                         $link = "/";
-                        $resInfo = strtoupper($info->Record->RecordStatus) . ", Congratulations!!!. Your account has been approved. Please complete the Quick Set up to enjoy PaySprint.";
+                        $resInfo = strtoupper($info->Record->RecordStatus) . ", Congratulations!!!. Your account has been approved. Please complete the Quick Set Up to enjoy PaySprint.";
                         $data = $user;
                         $statusCode = 200;
 
@@ -1071,7 +1071,7 @@ class UserController extends Controller
                 $message = "Saved";
                 $status = 200;
 
-                $this->updatePoints($thisuser->id, 'Quick set up');
+                $this->updatePoints($thisuser->id, 'Quick Set Up');
 
 
                 $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully created your transaction pin. Keep it SAFE!.");
@@ -1117,7 +1117,7 @@ class UserController extends Controller
 
             $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", You have successfully set up your security question and answer.");
 
-            $this->updatePoints($thisuser->id, 'Quick set up');
+            $this->updatePoints($thisuser->id, 'Quick Set Up');
         } else {
 
             $error = implode(",", $validator->messages()->all());
@@ -1153,7 +1153,7 @@ class UserController extends Controller
                 }
 
 
-                $this->updatePoints($thisuser->id, 'Quick set up');
+                $this->updatePoints($thisuser->id, 'Quick Set Up');
 
 
 
@@ -1615,7 +1615,7 @@ class UserController extends Controller
 
         User::where('id', $id)->update(['' . $rowName . '' => $docPath]);
 
-        $this->updatePoints($id, 'Quick set up');
+        $this->updatePoints($id, 'Quick Set Up');
     }
 
 

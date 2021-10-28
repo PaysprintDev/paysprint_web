@@ -159,11 +159,17 @@ Route::prefix('expresspay')->group(function () {
 
 // Currency FX Page
 Route::prefix('currencyfx')->group(function () {
+	Route::get('/start', ['uses' => 'CurrencyFxController@start', 'as' => 'paysprint currency exchange start']);
 	Route::get('/', ['uses' => 'CurrencyFxController@index', 'as' => 'paysprint currency exchange']);
 	Route::get('marketplace', ['uses' => 'CurrencyFxController@marketPlace', 'as' => 'paysprint currency market place']);
 	Route::get('ongoing', ['uses' => 'CurrencyFxController@marketPlaceOngoingTransaction', 'as' => 'paysprint currency market place ongoing']);
 	Route::get('pending', ['uses' => 'CurrencyFxController@marketPlacePendingTransaction', 'as' => 'paysprint currency market place pending']);
 	Route::get('myorders', ['uses' => 'CurrencyFxController@marketPlaceMyOrder', 'as' => 'paysprint currency market place myorders']);
+
+	// Fund FX Account
+	Route::prefix('fund')->group(function(){
+		Route::get('/', ['uses' => 'CurrencyFxController@fundAccount', 'as' => 'currency exhcange funding']);
+	});
 });
 
 // Wallet Page
@@ -470,6 +476,7 @@ Route::prefix('Admin/overview/report')->group(function () {
 
 	Route::get('business', ['uses' => 'AdminController@businessReport', 'as' => 'business report']);
 	Route::get('accountreport', ['uses' => 'AdminController@accountReport', 'as' => 'account report']);
+	Route::get('invoicecommission', ['uses' => 'AdminController@invoiceCommissionReport', 'as' => 'invoice commission']);
 	Route::get('businessreport', ['uses' => 'AdminController@getBusinessReport', 'as' => 'get business report']);
 	Route::get('inflow', ['uses' => 'AdminController@inflowReport', 'as' => 'inflow reports']);
 	Route::get('inflowbycountry', ['uses' => 'AdminController@inflowByCountryReport', 'as' => 'inflow by country']);

@@ -61,6 +61,9 @@ trait PaysprintPoint
             $myAcquiredPoint = 0;
         }
 
+
+        $addedPoint = 0;
+
         switch ($activity) {
             case 'Add money':
 
@@ -297,7 +300,6 @@ trait PaysprintPoint
 
                 break;
             default:
-                echo "Nothing";
                 break;
         }
 

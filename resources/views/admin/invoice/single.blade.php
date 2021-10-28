@@ -58,6 +58,23 @@
                                 </div>
                             </div>
 
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group has-success">
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label for="single_businessname">Business Name</label>
+                                                <input type="text" name="single_businessname" id="single_businessname"
+                                                    class="form-control" placeholder="Business Name">
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group has-success">

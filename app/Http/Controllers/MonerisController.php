@@ -115,6 +115,7 @@ use App\Classes\mcTax;
 use App\Classes\CofInfo;
 use App\Classes\MCPRate;
 use App\ImportExcelLink;
+use App\InvoiceCommission;
 use App\Traits\PaymentGateway;
 use App\Traits\PaystackPayment;
 use App\Traits\ExpressPayment;
@@ -733,11 +734,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBalance]);
 
                                     // Update Merchant Wallet 
+                                    $getthisinvoice = ImportExcel::where('invoice_no', $req->invoice_no)->first();
 
 
                                     if ($thisuser->country != $thismerchant->country) {
 
-                                        $getthisinvoice = ImportExcel::where('invoice_no', $req->invoice_no)->first();
 
                                         // If currency is not the same, convert currency here else use same price
 
@@ -745,7 +746,6 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                                             if ($thisuser->currencyCode == $getthisinvoice->invoiced_currency) {
-                                                // $getRate = $this->getConversionRate($req->currencyCode, $thismerchant->currencyCode);
                                                 $getRate = $this->getOfficialConversionRate($req->currencyCode, $thismerchant->currencyCode);
                                             } else {
                                                 $getRate = $this->getOfficialConversionRate($getthisinvoice->invoiced_currency, $thismerchant->currencyCode);
@@ -791,6 +791,47 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     if ($thisuser->country != $thismerchant->country) {
 
                                         $insPay = InvoicePayment::updateOrCreate(['invoice_no' => $req->invoice_no], ['transactionid' => $transactionID, 'name' => $thisuser->name, 'email' => $thisuser->email, 'amount' => $paidinvoiceamount, 'invoice_no' => $req->invoice_no, 'service' => $purpose, 'client_id' => $req->merchant_id, 'payment_method' => $req->payment_method]);
+
+
+                                        
+
+
+                                        /**
+                                         * Get Mark up rate to sender i.e localcurrency (NGN for example = 584.33) take as X
+                                         * Get Official rate to the receiver i.e currency with which payment will be made and then convert to sender's country currency take as Y
+                                         * Subtract and Get Profit value in Senders local currency i.e X-Y = Z (NGN)
+                                        **/
+                                        
+
+                                        // Markup value to sender local currency i.e USD/NGN = 584.33
+
+                                        $markedupRate = $this->getConversionRate($getthisinvoice->invoiced_currency, $thismerchant->currencyCode);
+
+                                        // Customer Official rate i.e USD/CAD = 1.22
+                                        $officialRate = $this->getOfficialConversionRate($getthisinvoice->invoiced_currency, $thisuser->currencyCode);
+
+
+                                        // Get Rate to Merchant currency
+                                        $convertedRate = $markedupRate / $officialRate;
+
+
+                                        $newProfit = $markedupRate - $convertedRate;
+
+
+
+                                        $profit_sender = $markedupRate - $getRate;
+
+                                        $profit_receiver = $markedupRate / $profit_sender;
+                                        
+
+                                        // Insert Commission Info
+                                        $commissionQuery = [
+                                                'invoice_no' => $req->invoice_no, 'sender' => $getthisinvoice->merchantName, 'receiver' => $getthisinvoice->name, 'invoice_amount' => $getthisinvoice->total_amount, 'invoiced_currency' => $getthisinvoice->invoiced_currency, 'official_rate' => $getRate, 'markedup_rate' => $markedupRate, 'profit_sender' => $newProfit, 'sender_currency' => $thismerchant->currencyCode, 'profit_receiver' => $profit_receiver, 'receiver_currency' => $thisuser->currencyCode
+                                            ];
+
+
+                                        InvoiceCommission::insert($commissionQuery);
+
 
 
                                         if ($insPay) {
@@ -1300,7 +1341,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     } catch (\Throwable $th) {
                         $data = [];
                         $status = 400;
-                        $message = "Error: " . $th;
+                        $message = "Error: " . $th->getMessage();
                     }
                 } else {
 

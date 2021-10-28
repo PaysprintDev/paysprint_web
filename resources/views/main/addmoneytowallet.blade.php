@@ -24,7 +24,14 @@
 
 @if($data['paymentgateway']->gateway == "PayPal")
 
+@if (env('APP_ENV') == "local")
+<script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_LOCAL_CLIENT_ID') }}&currency={{ Auth::user()->currencyCode }}"></script>
+    
+@else
 <script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ Auth::user()->currencyCode }}"></script>
+    
+@endif
+
 
 @endif
 

@@ -16,34 +16,66 @@ class Dashboard extends Component {
 		this.state = {
 			data: [],
 			message: '',
-			loading: true,
-			currency: ''
+			loading: true
 		};
+
+		this.handleChange = this.handleChange.bind(this);
 	}
 
 	componentDidMount() {
 		this._isMounted = true;
 
 		try {
-			axios.get(`/api/v1/userdata`, { headers: { Authorization: `Bearer ${apiToken}` } }).then((res) => {
+			axios.get(`/api/v1/getescrow`, { headers: { Authorization: `Bearer ${apiToken}` } }).then((res) => {
 				if (this._isMounted) {
 					if (res.status === 200) {
 						this.setState({
 							data: res.data.data,
 							message: res.data.message,
-							loading: false,
-							currency: res.data.data.currencySymbol
+							loading: false
 						});
 					} else {
 						this.setState({
 							data: res.data.data,
 							message: res.data.message,
-							loading: false,
-							currency: ''
+							loading: false
 						});
 					}
 				}
 			});
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	async handleChange(event) {
+		this.setState({ [event.target.name]: event.target.value });
+
+		console.log(event.target.value);
+
+		const headers = {
+			Authorization: `Bearer ${apiToken}`,
+			'Content-Type': 'application/json'
+		};
+
+		// Do Axios
+
+		try {
+			const result = await axios.get(`/api/v1/getescrow?currency=${event.target.value}`, { headers: headers });
+
+			if (result.status === 200) {
+				this.setState({
+					data: result.data.data,
+					message: result.data.message,
+					loading: false
+				});
+			} else {
+				this.setState({
+					data: result.data.data,
+					message: result.data.message,
+					loading: false
+				});
+			}
 		} catch (error) {
 			console.log(error);
 		}
@@ -60,6 +92,9 @@ class Dashboard extends Component {
 		}
 
 		var walletBalance = '';
+		var walletCurrency = '';
+
+		var options = [];
 
 		if (this.state.loading) {
 			walletBalance = (
@@ -68,11 +103,30 @@ class Dashboard extends Component {
 				</div>
 			);
 		} else {
-			walletBalance = (
-				<div className="col-auto">
-					<h2>{this.state.data.currencySymbol + '' + round(this.state.data.wallet_balance)}</h2>
-				</div>
-			);
+			// Loop Through
+			this.state.data.map((item) => {
+				if (item.active == 'true') {
+					walletBalance = (
+						<div className="col-auto">
+							<h2>{item.currencySymbol + '' + round(item.wallet_balance)}</h2>
+						</div>
+					);
+
+					options.push(
+						<option key={item.id} value={item.currencyCode} selected>
+							{item.currencyCode}
+						</option>
+					);
+				} else {
+					options.push(
+						<option key={item.id} value={item.currencyCode}>
+							{item.currencyCode}
+						</option>
+					);
+				}
+
+				walletCurrency = options;
+			});
 		}
 
 		return (
@@ -268,10 +322,10 @@ class Dashboard extends Component {
 												</h2>
 
 												<a
-													href="#"
+													href="/currencyfx/fund"
 													className="btn btn-lg px-3 me-2 me-md-3 badge-lg text-white badge-primary mt-5"
 												>
-													<span className="ps-1">Fund Escrow Account</span>
+													<span className="ps-1">Fund FX Wallet</span>
 												</a>
 											</div>
 
@@ -292,7 +346,7 @@ class Dashboard extends Component {
 							<ActiveOrders apiToken={apiToken} />
 
 							<div className="row">
-								<div className="col-12 col-xxl-5 mb-4">
+								<div className="col-12 col-xxl-7 mb-4">
 									<div className="card rounded-12 shadow-dark-80 overflow-hidden border border-gray-50">
 										<div className="card-body px-0 pb-0">
 											<div className="list-group list-group-flush my-n3">
@@ -306,18 +360,54 @@ class Dashboard extends Component {
 															/>
 														</div>
 														<div className="col p-0">
-															<h4 className="mb-1 font-weight-semibold">
-																Wallet balance
-															</h4>
+															<h4 className="mb-1 font-weight-semibold">Balance</h4>
+														</div>
+														<div className="col-3 p-0">
+															<select
+																className="form-control"
+																onChange={this.handleChange}
+															>
+																{walletCurrency}
+															</select>
 														</div>
 														{walletBalance}
+													</div>
+
+													<div className="row align-items-center px-md-2">
+														<div className="col-8">
+															<a
+																href="#"
+																style={{
+																	fontSize: '14px',
+																	fontWeight: 'bold',
+																	textDecoration: 'underline'
+																}}
+															>
+																Create Wallet
+															</a>
+														</div>
+														<div className="col-4 col-md-offset-2">
+															<a
+																href="/currencyfx/fund"
+																style={{
+																	fontSize: '14px',
+																	fontWeight: 'bold',
+																	textDecoration: 'underline',
+																	color: 'red',
+																	textAlign: 'center'
+																}}
+															>
+																Fund FX Wallet
+															</a>
+														</div>
 													</div>
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-								<div className="col-12 col-xxl-7 mb-4">
+
+								<div className="col-12 col-xxl-5 mb-4">
 									<div className="card rounded-12 shadow-dark-80 h-100 border border-gray-50">
 										<div className="card-body px-0 pb-0">
 											<div className="list-group list-group-flush my-n3">

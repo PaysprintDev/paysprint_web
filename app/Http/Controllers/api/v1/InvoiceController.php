@@ -21,6 +21,7 @@ use App\User as User;
 use App\ImportExcel as ImportExcel;
 use App\ClientInfo as ClientInfo;
 use App\ImportExcelLink as ImportExcelLink;
+use App\InvoiceCommission;
 use App\Statement as Statement;
 use App\Tax as Tax;
 
@@ -245,12 +246,23 @@ class InvoiceController extends Controller
 
                         $thiscurrencySymbol = AllCountries::where('currencyCode', $invoicedCurrency)->first();
 
+
+                        if($req->single_businessname != null){
+                            $saveName = $req->single_businessname;
+                        }
+                        else{
+                            $saveName = $req->single_firstname . ' ' . $req->single_lastname;
+                        }
+
                         // Insert Record
                         $query = [
-                            'transaction_date' => $req->single_transaction_date, 'invoice_no' => $req->single_invoiceno, 'payee_ref_no' => $req->single_transaction_ref, 'name' => $req->single_firstname . ' ' . $req->single_lastname, 'transaction_ref' => $req->single_transaction_ref, 'description' => $req->single_description, 'amount' => $req->single_amount, 'payment_due_date' => $req->single_payment_due_date, 'payee_email' => $req->single_email, 'address' => $address, 'customer_id' => $thisuser->ref_code, 'service' => $req->single_service, 'installpay' => $req->single_installpay, 'installlimit' => $req->single_installlimit, 'status' => 'invoice', 'uploaded_by' => $thisuser->ref_code, 'merchantName' => $thisuser->businessname, 'recurring' => $req->single_recurring_service, 'reminder' => $req->single_reminder_service, 'telephone' => $req->single_telephone, 'tax' => $req->single_tax, 'tax_amount' => $req->single_tax_amount, 'total_amount' => $req->single_total_amount, 'remaining_balance' => $req->single_total_amount, 'invoiced_currency' => $invoicedCurrency, 'invoiced_currency_symbol' => $thiscurrencySymbol->currencySymbol
+                            'transaction_date' => $req->single_transaction_date, 'invoice_no' => $req->single_invoiceno, 'payee_ref_no' => $req->single_transaction_ref, 'name' => $saveName, 'transaction_ref' => $req->single_transaction_ref, 'description' => $req->single_description, 'amount' => $req->single_amount, 'payment_due_date' => $req->single_payment_due_date, 'payee_email' => $req->single_email, 'address' => $address, 'customer_id' => $thisuser->ref_code, 'service' => $req->single_service, 'installpay' => $req->single_installpay, 'installlimit' => $req->single_installlimit, 'status' => 'invoice', 'uploaded_by' => $thisuser->ref_code, 'merchantName' => $thisuser->businessname, 'recurring' => $req->single_recurring_service, 'reminder' => $req->single_reminder_service, 'telephone' => $req->single_telephone, 'tax' => $req->single_tax, 'tax_amount' => $req->single_tax_amount, 'total_amount' => $req->single_total_amount, 'remaining_balance' => $req->single_total_amount, 'invoiced_currency' => $invoicedCurrency, 'invoiced_currency_symbol' => $thiscurrencySymbol->currencySymbol
                         ];
 
                         ImportExcel::insert($query);
+
+
+                        
 
                         // Insert Statement
                         $activity = "Invoice on " . $req->single_service;
@@ -286,7 +298,7 @@ class InvoiceController extends Controller
 
                         $this->to = $req->single_email;
                         // $this->to = "adenugaadebambo41@gmail.com";
-                        $this->name = $req->single_firstname . ' ' . $req->single_lastname;
+                        $this->name = $saveName;
                         $this->transaction_date = $req->single_transaction_date;
                         $this->invoice_no = $req->single_invoiceno;
                         $this->payee_ref_no = $req->single_transaction_ref;
@@ -426,9 +438,16 @@ class InvoiceController extends Controller
 
                         $generated_link = route('payment from link', ['invoice' => $req->single_invoiceno, 'country' => base64_encode($req->single_country)]);
 
+
+                        if ($req->single_businessname != null) {
+                            $saveName = $req->single_businessname;
+                        } else {
+                            $saveName = $req->single_firstname . ' ' . $req->single_lastname;
+                        }
+
                         // Insert Record
                         $query = [
-                            'transaction_date' => $req->single_transaction_date, 'invoice_no' => $req->single_invoiceno, 'payee_ref_no' => $req->single_transaction_ref, 'name' => $req->single_firstname . ' ' . $req->single_lastname, 'transaction_ref' => $req->single_transaction_ref, 'description' => $req->single_description, 'amount' => $req->single_amount, 'payment_due_date' => $req->single_payment_due_date, 'payee_email' => $req->single_email, 'address' => $address, 'customer_id' => $thisuser->ref_code, 'service' => $req->single_service, 'installpay' => $req->single_installpay, 'installlimit' => $req->single_installlimit, 'status' => 'invoice', 'uploaded_by' => $thisuser->ref_code, 'merchantName' => $thisuser->businessname, 'recurring' => $req->single_recurring_service, 'reminder' => $req->single_reminder_service, 'telephone' => $req->single_telephone, 'tax' => $req->single_tax, 'tax_amount' => $req->single_tax_amount, 'total_amount' => $req->single_total_amount, 'remaining_balance' => $req->single_total_amount, 'country' => $req->single_country, 'generated_link' => $generated_link
+                            'transaction_date' => $req->single_transaction_date, 'invoice_no' => $req->single_invoiceno, 'payee_ref_no' => $req->single_transaction_ref, 'name' => $saveName, 'transaction_ref' => $req->single_transaction_ref, 'description' => $req->single_description, 'amount' => $req->single_amount, 'payment_due_date' => $req->single_payment_due_date, 'payee_email' => $req->single_email, 'address' => $address, 'customer_id' => $thisuser->ref_code, 'service' => $req->single_service, 'installpay' => $req->single_installpay, 'installlimit' => $req->single_installlimit, 'status' => 'invoice', 'uploaded_by' => $thisuser->ref_code, 'merchantName' => $thisuser->businessname, 'recurring' => $req->single_recurring_service, 'reminder' => $req->single_reminder_service, 'telephone' => $req->single_telephone, 'tax' => $req->single_tax, 'tax_amount' => $req->single_tax_amount, 'total_amount' => $req->single_total_amount, 'remaining_balance' => $req->single_total_amount, 'country' => $req->single_country, 'generated_link' => $generated_link
                         ];
 
                         $insertData = ImportExcelLink::insert($query);
@@ -466,7 +485,7 @@ class InvoiceController extends Controller
 
                         $this->to = $req->single_email;
                         // $this->to = "adenugaadebambo41@gmail.com";
-                        $this->name = $req->single_firstname . ' ' . $req->single_lastname;
+                        $this->name = $saveName;
                         $this->transaction_date = $req->single_transaction_date;
                         $this->invoice_no = $req->single_invoiceno;
                         $this->payee_ref_no = $req->single_transaction_ref;
