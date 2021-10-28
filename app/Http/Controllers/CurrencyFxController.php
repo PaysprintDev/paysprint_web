@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\AllCountries;
 use App\MarketPlace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 use App\User;
 use App\EscrowAccount;
@@ -53,8 +55,6 @@ class CurrencyFxController extends Controller
             $user = User::where('email', session('email'))->first();
 
             Auth::login($user);
-
-
         }
 
         // Check if User has a forex account
@@ -63,12 +63,35 @@ class CurrencyFxController extends Controller
 
         if (count($checkUser) <= 0) {
             // Create Escrow Account
-            EscrowAccount::insert(['user_id' => Auth::id(), 'escrow_id' => 'ES_' . uniqid() .'_'. strtoupper(date('D')), 'currencyCode' => Auth::user()->currencyCode,'currencySymbol' => Auth::user()->currencySymbol, 'wallet_balance' => "0.00", 'country' => Auth::user()->country, 'active' => "true"]);
+            EscrowAccount::insert(['user_id' => Auth::id(), 'escrow_id' => 'ES_' . uniqid() . '_' . strtoupper(date('D')), 'currencyCode' => Auth::user()->currencyCode, 'currencySymbol' => Auth::user()->currencySymbol, 'wallet_balance' => "0.00", 'country' => Auth::user()->country, 'active' => "true"]);
         }
 
 
 
         return view('currencyexchange.index');
+    }
+
+    // Create FX Wallet
+    public function createWallet(Request $req)
+    {
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == false) {
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+        }
+
+        $data = array(
+            'allcountry' => $this->getCountryAndCurrency(),
+            'mycountry' => $this->personalCountry(Auth::user()->country),
+            'mywallet' => Auth::user()->forexAccount
+        );
+
+        return view('currencyexchange.createwallet')->with(['pages' => 'Create FX Wallet', 'data' => $data]);
     }
 
     // Fund FX Account
@@ -200,17 +223,15 @@ class CurrencyFxController extends Controller
 
         if (isset($thisuser)) {
 
-            if($req->get('currency') != null){
+            if ($req->get('currency') != null) {
 
                 EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', '!=', $req->get('currency'))->update(['active' => "false"]);
 
                 EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $req->get('currency'))->update(['active' => "true"]);
 
                 $myaccount = User::where('id', $thisuser->id)->first()->forexAccount;
-            }
-            else{
+            } else {
                 $myaccount = User::where('id', $thisuser->id)->first()->forexAccount;
-
             }
 
 
@@ -221,6 +242,81 @@ class CurrencyFxController extends Controller
             $data = [];
             $message = 'Session expired. Please re-login';
             $status = 201;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+    // Create New Wallet
+    public function createNewWallet(Request $req)
+    {
+        try {
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            if (isset($thisuser)) {
+
+                $validator = Validator::make($req->all(), [
+                    'currencyCode' => 'required|string',
+                ]);
+
+                if ($validator->passes()) {
+
+                    $allcountry = AllCountries::where('name', $req->currencyCode)->first();
+
+
+                    // Check Escrow wallet
+                    $checkAccount = EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $allcountry->currencyCode)->first();
+
+                    if (isset($checkAccount)) {
+                        $data = [];
+                        $message = 'You have already created a wallet in ' . $req->currencyCode . ' (' . strtoupper($allcountry->currencyCode) . ')';
+                        $status = 400;
+                    } else {
+
+
+                        // Create New Wallet
+                        $query = [
+                            'user_id' => $thisuser->id,
+                            'escrow_id' => $req->escrow_id,
+                            'currencyCode' => $allcountry->currencyCode,
+                            'currencySymbol' => $allcountry->currencySymbol,
+                            'wallet_balance' => "0.00",
+                            'country' => $req->country,
+                            'active' => "false"
+                        ];
+
+                        $createWallet = EscrowAccount::insert($query);
+
+
+                        $data = $createWallet;
+                        $status = 200;
+                        $message = 'You have successfully added  ' . $req->currencyCode . '(' . $allcountry->currencyCode . ') to your FX Account. Proceed to fund your wallet';
+
+                        $this->createNotification(
+                            $thisuser->ref_code,
+                            "Hello " . strtoupper($thisuser->name) . $message . "."
+                        );
+
+                        $this->slack("New FX Account of " . $allcountry->currencyCode . " created by :=> " . $thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                    }
+                } else {
+                    $error = implode(",", $validator->messages()->all());
+
+                    $data = [];
+                    $status = 400;
+                    $message = $error;
+                }
+            } else {
+                $data = [];
+                $message = 'Invalid Authorization token. Kindly login and try again';
+                $status = 400;
+            }
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
         }
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
@@ -370,9 +466,4 @@ class CurrencyFxController extends Controller
 
         return $this->returnJSON($resData, $status);
     }
-
-
-
-
-
 }

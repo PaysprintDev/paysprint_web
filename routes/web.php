@@ -166,9 +166,12 @@ Route::prefix('currencyfx')->group(function () {
 	Route::get('pending', ['uses' => 'CurrencyFxController@marketPlacePendingTransaction', 'as' => 'paysprint currency market place pending']);
 	Route::get('myorders', ['uses' => 'CurrencyFxController@marketPlaceMyOrder', 'as' => 'paysprint currency market place myorders']);
 
+
+	Route::get('createwallet', ['uses' => 'CurrencyFxController@createWallet', 'as' => 'paysprint currency fx create wallet']);
+
 	// Fund FX Account
 	Route::prefix('fund')->group(function(){
-		Route::get('/', ['uses' => 'CurrencyFxController@fundAccount', 'as' => 'currency exhcange funding']);
+		Route::get('/', ['uses' => 'CurrencyFxController@fundAccount', 'as' => 'currency exchange funding']);
 	});
 });
 

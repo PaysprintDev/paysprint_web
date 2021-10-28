@@ -376,7 +376,7 @@ class Dashboard extends Component {
 													<div className="row align-items-center px-md-2">
 														<div className="col-8">
 															<a
-																href="#"
+																href="/currencyfx/createwallet"
 																style={{
 																	fontSize: '14px',
 																	fontWeight: 'bold',

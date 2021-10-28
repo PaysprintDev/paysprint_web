@@ -232,6 +232,11 @@ Route::prefix('/v1')->group(function () {
         // Get My Escrow account
         Route::get('/getescrow', ['uses' => 'CurrencyFxController@getEscrow', 'as' => 'get escrow account']);
 
+
+        // Create FX Wallet
+        
+        Route::post('/createfxwallet', ['uses' => 'CurrencyFxController@createNewWallet', 'as' => 'currency fx create wallet']);
+
     });
 
 
