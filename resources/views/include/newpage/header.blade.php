@@ -86,6 +86,10 @@
                         <a class="nav-link" href="{{ route('api integration') }}" role="button" aria-expanded="false">API INTEGRATION</a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('api integration') }}" role="button" aria-expanded="false">EARNED POINTS</a>
+                    </li>
+
 
                     <li class="nav-item dropdown">
 
