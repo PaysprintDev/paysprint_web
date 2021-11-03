@@ -12,11 +12,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         All IDV Failed By Country
+         All Industry In {{ Request::get('country') }}
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">All IDV Failed By Country</li>
+        <li class="active">All Industry In {{ Request::get('country') }}</li>
       </ol>
     </section>
 
@@ -49,34 +49,30 @@
                   </div>
                 <tr>
                   <th>S/N</th>
-                  <th>Country</th>
-                  <th>Total Count</th>
-                  <th>Action</th>
+                  <th>Ref. No</th>
+                  <th>Business Name</th>
+                  <th>Address</th>
+                  <th>Type of Service</th>
+                  <th>Industry</th>
+                  <th>Email</th>
+                  <th>Phone Number</th>
                 </tr>
                 </thead>
                 <tbody>
-                    @if (count($allusers) > 0)
+                    @if (count($data['industryCategory']) > 0)
                     <?php $i = 1;?>
-                        @foreach ($allusers as $data)
+                        @foreach ($data['industryCategory'] as $data)
                         <tr>
                             <td>{{ $i++ }}</td>
                             
-                            <td>{{ $data->country }}</td>
-
-                            @if($allusersdata = \App\User::where('country', $data->country)->where('accountLevel', 2)->where('approval', 0)->where('archive', '!=', 1)->count())
-                                <td>{{ $allusersdata }}</td>
-                            @endif
-
+                            <td>{{ $data->user_id }}</td>
+                            <td>{{ $data->business_name }}</td>
+                            <td>{{ $data->address }}</td>
+                            <td>{{ $data->type_of_service }}</td>
+                            <td>{{ $data->industry }}</td>
+                            <td>{{ $data->email }}</td>
+                            <td>{{ $data->telephone }}</td>
                             
-
-                            <td>
-
-                              <a href="{{ route('overrideusers', 'country='.$data->country) }}" type="button" class="btn btn-primary">View details</a>
-
-                              
-                            </td>
-
-
                         </tr>
                         @endforeach
 
@@ -84,7 +80,7 @@
 
                     @else
                     <tr>
-                        <td colspan="4" align="center">No record available</td>
+                        <td colspan="8" align="center">No record available</td>
                     </tr>
                     @endif
                 </tbody>

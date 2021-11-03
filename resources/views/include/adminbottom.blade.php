@@ -1618,6 +1618,27 @@ function delSupport(id){
 }
 
 
+function confirmEsPay(escrow_id){
+        swal({
+      title: "Are you sure?",
+      text: "Kindly confirm you have thoroughly checked before accepting payment",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+
+        $("#thisform"+escrow_id).submit();
+
+      } 
+      else {
+
+      }
+    });
+}
+
+
 
 function confirmPay(transactionid, user_id, coy_id){
   var thisdata;

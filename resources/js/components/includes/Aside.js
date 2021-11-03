@@ -123,7 +123,7 @@ class Aside extends Component {
 			} else {
 				this.setState({ [event.target.name]: event.target.value });
 
-				swal('Oops!', 'Something went wrong', 'error');
+				swal('Oops!', res.data.message, 'error');
 			}
 		} catch (error) {
 			// Catch Error
@@ -178,7 +178,7 @@ class Aside extends Component {
 
 								<div className="d-flex muze-skins customizer-controls">
 									<div className="mb-4 mb-xl-2" style={{ width: '20%' }}>
-										<input
+										{/* <input
 											type="text"
 											placeholder="NGN"
 											name="sellCurrency"
@@ -187,7 +187,20 @@ class Aside extends Component {
 											id="sellCurrency"
 											className="form-control form-control-xl"
 											readOnly
-										/>
+										/> */}
+
+										<select
+											value={this.state.sellCurrency}
+											id="sellCurrency"
+											name="sellCurrency"
+											onChange={this.handleChange}
+											className="form-control form-control-xl"
+											onChange={this.handleChange}
+										>
+											<option value={`${this.state.sellCurrency}`}>
+												{this.state.sellCurrency}
+											</option>
+										</select>
 									</div>
 									<div className="mb-4 mb-xl-10" style={{ width: '80%' }}>
 										<input
@@ -480,7 +493,7 @@ class Aside extends Component {
 							<li className="nav-item">
 								<a
 									className="nav-link collapsed"
-									href="/mywallet"
+									href="/currencyfx/mywallet"
 									data-bs-toggle="collapse"
 									role="button"
 									aria-expanded="false"
@@ -511,7 +524,7 @@ class Aside extends Component {
 							<li className="nav-item">
 								<a
 									className="nav-link collapsed"
-									href="/Statement"
+									href="/currencyfx/transactionhistory"
 									data-bs-toggle="collapse"
 									role="button"
 									aria-expanded="false"

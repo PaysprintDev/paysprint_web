@@ -12,11 +12,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         All IDV Failed By Country
+         All KYB Pending By Country
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">All IDV Failed By Country</li>
+        <li class="active">All KYB Pending By Country</li>
       </ol>
     </section>
 
@@ -55,23 +55,21 @@
                 </tr>
                 </thead>
                 <tbody>
-                    @if (count($allusers) > 0)
+                    @if (count($data['merchantByCountry']) > 0)
                     <?php $i = 1;?>
-                        @foreach ($allusers as $data)
+                        @foreach ($data['merchantByCountry'] as $data)
                         <tr>
                             <td>{{ $i++ }}</td>
                             
                             <td>{{ $data->country }}</td>
 
-                            @if($allusersdata = \App\User::where('country', $data->country)->where('accountLevel', 2)->where('approval', 0)->where('archive', '!=', 1)->count())
+                            @if($allusersdata = \App\User::where('accountType', 'Merchant')->where('country', $data->country)->where('accountLevel', '<=', 2)->where('approval', '<=', 1)->count())
                                 <td>{{ $allusersdata }}</td>
                             @endif
 
-                            
-
                             <td>
 
-                              <a href="{{ route('overrideusers', 'country='.$data->country) }}" type="button" class="btn btn-primary">View details</a>
+                              <a href="{{ route('kybpending', 'country='.$data->country) }}" type="button" class="btn btn-primary">View details</a>
 
                               
                             </td>

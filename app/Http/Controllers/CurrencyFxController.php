@@ -10,13 +10,16 @@ use Illuminate\Support\Facades\Validator;
 
 use App\User;
 use App\EscrowAccount;
+use App\FxPayment;
+use App\FxStatement;
 
+use App\Traits\Xwireless;
 use App\Traits\MyFX;
 
 class CurrencyFxController extends Controller
 {
 
-    use MyFX;
+    use MyFX, Xwireless;
 
     public function start(Request $req)
     {
@@ -137,6 +140,45 @@ class CurrencyFxController extends Controller
     }
 
 
+
+    public function transactionHistory(Request $req)
+    {
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == false) {
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+        }
+
+
+
+        return view('currencyexchange.transactionhistory');
+    }
+
+
+    public function myWallet(Request $req)
+    {
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == false) {
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+        }
+
+
+
+        return view('currencyexchange.mywallet');
+    }
+
+
     public function marketPlaceOngoingTransaction(Request $req)
     {
         if ($req->session()->has('email') == false) {
@@ -219,29 +261,92 @@ class CurrencyFxController extends Controller
     public function getEscrow(Request $req)
     {
 
-        $thisuser = User::where('api_token', $req->bearerToken())->first();
+        try {
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-        if (isset($thisuser)) {
+            if (isset($thisuser)) {
 
-            if ($req->get('currency') != null) {
+                if ($req->get('currency') != null) {
 
-                EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', '!=', $req->get('currency'))->update(['active' => "false"]);
+                    EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', '!=', $req->get('currency'))->update(['active' => "false"]);
 
-                EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $req->get('currency'))->update(['active' => "true"]);
+                    EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $req->get('currency'))->update(['active' => "true"]);
 
-                $myaccount = User::where('id', $thisuser->id)->first()->forexAccount;
+                    $myaccount = User::where('id', $thisuser->id)->first()->forexAccount;
+                } else {
+                    $myaccount = User::where('id', $thisuser->id)->first()->forexAccount;
+                }
+
+
+                $data = $myaccount;
+                $message = 'success';
+                $status = 200;
             } else {
-                $myaccount = User::where('id', $thisuser->id)->first()->forexAccount;
+                $data = [];
+                $message = 'Session expired. Please re-login';
+                $status = 201;
             }
-
-
-            $data = $myaccount;
-            $message = 'success';
-            $status = 200;
-        } else {
+        } catch (\Throwable $th) {
             $data = [];
-            $message = 'Session expired. Please re-login';
-            $status = 201;
+            $message = $th->getMessage();
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+    // Get FX Transaction History
+    public function fxTransactionHistory(Request $req)
+    {
+        try {
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+            // Get Transaction History for this user...
+            $transData = FxStatement::where('regards', $thisuser->ref_code)->orderBy('created_at', 'DESC')->get();
+
+            if (count($transData) > 0) {
+                $data = $transData;
+                $message = 'success';
+                $status = 200;
+            } else {
+                $data = [];
+                $message = 'No record';
+                $status = 201;
+            }
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+    public function fxWallets(Request $req)
+    {
+        try {
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            $getmywallet = EscrowAccount::where('user_id', $thisuser->id)->get();
+
+            if (count($getmywallet) > 0) {
+                $data = $getmywallet;
+                $message = 'success';
+                $status = 200;
+            } else {
+                $data = [];
+                $message = 'No record';
+                $status = 201;
+            }
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
         }
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
@@ -258,12 +363,12 @@ class CurrencyFxController extends Controller
             if (isset($thisuser)) {
 
                 $validator = Validator::make($req->all(), [
-                    'currencyCode' => 'required|string',
+                    'country' => 'required|string',
                 ]);
 
                 if ($validator->passes()) {
 
-                    $allcountry = AllCountries::where('name', $req->currencyCode)->first();
+                    $allcountry = AllCountries::where('name', $req->country)->first();
 
 
                     // Check Escrow wallet
@@ -271,7 +376,7 @@ class CurrencyFxController extends Controller
 
                     if (isset($checkAccount)) {
                         $data = [];
-                        $message = 'You have already created a wallet in ' . $req->currencyCode . ' (' . strtoupper($allcountry->currencyCode) . ')';
+                        $message = 'You have already created a wallet in ' . $req->country . ' (' . strtoupper($allcountry->currencyCode) . ')';
                         $status = 400;
                     } else {
 
@@ -292,7 +397,7 @@ class CurrencyFxController extends Controller
 
                         $data = $createWallet;
                         $status = 200;
-                        $message = 'You have successfully added  ' . $req->currencyCode . '(' . $allcountry->currencyCode . ') to your FX Account. Proceed to fund your wallet';
+                        $message = 'You have successfully added  ' . $req->country . '(' . $allcountry->currencyCode . ') to your FX Account. Proceed to fund your wallet';
 
                         $this->createNotification(
                             $thisuser->ref_code,
@@ -312,6 +417,108 @@ class CurrencyFxController extends Controller
                 $data = [];
                 $message = 'Invalid Authorization token. Kindly login and try again';
                 $status = 400;
+            }
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+    // Fund FX Wallet
+    public function fundFXWallet(Request $req)
+    {
+
+
+        try {
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            // Check if amount is not negative
+            if ($req->fx_amount < 0) {
+                $data = [];
+                $message = "You cannot insert a negative value";
+                $status = 400;
+            } else {
+                // Add Money Here and put on pending if Wired Transfer
+                $myaccount = EscrowAccount::where('escrow_id', $req->fx_wallet)->first();
+
+                if (isset($myaccount)) {
+
+                    $transaction_id = "es-wallet-" . date('dmY') . time();
+
+                    $activity = "Added " . $myaccount->currencyCode . '' . number_format($req->fx_amount, 2) . " to Escrow Wallet.";
+                    $credit = $req->fx_amount;
+                    $debit = 0;
+                    $reference_code = $transaction_id;
+                    $balance = 0;
+                    $trans_date = date('Y-m-d');
+                    $status = "Delivered";
+                    $action = "Escrow Wallet credit";
+                    $regards = $thisuser->ref_code;
+                    $statement_route = "escrow wallet";
+
+
+                    if ($req->fx_payment_method == "Wire Transfer") {
+
+                        $this->insFXStatement($req->fx_wallet, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $myaccount->country, 'pending');
+
+                        $sendMsg = "Hi " . $thisuser->name . ", You have " . $activity . " Your transaction status is PENDING. Your current escrow balance is " . $myaccount->currencyCode . ' ' . number_format($myaccount->wallet_balance, 2) . ".";
+                    } else {
+
+                        $newBalance = $myaccount->wallet_balance + $req->fx_amount;
+
+                        EscrowAccount::where('escrow_id', $req->fx_wallet)->update(['wallet_balance' => $newBalance]);
+
+                        $myBalance = EscrowAccount::where('escrow_id', $req->fx_wallet)->first();
+
+                        $this->insFXStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $thisuser->country, 'confirmed');
+
+                        $sendMsg = "Hi " . $thisuser->name . ", You have " . $activity . " Your current escrow balance is " . $myaccount->currencyCode . ' ' . number_format($myBalance, 2) . ".";
+
+                        $usergetPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                        if (isset($usergetPhone)) {
+
+                            $sendPhone = $thisuser->telephone;
+                        } else {
+                            $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                        }
+
+                        if ($thisuser->country == "Nigeria") {
+
+                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                            $this->sendSms($sendMsg, $correctPhone);
+                        } else {
+                            $this->sendMessage($sendMsg, $sendPhone);
+                        }
+                    }
+
+                    // Insert Money Payment
+                    $queryRec = [
+                        'user_id' => $thisuser->id, 'escrow_id' => $req->fx_wallet, 'amount' => $req->fx_amount, 'currencyCode' => $myaccount->currencyCode, 'currencySymbol' => $myaccount->currencySymbol, 'reference_number' => $transaction_id, 'payment_method' => $req->fx_payment_method, 'bank_name' => $req->fx_payment_bank_name, 'account_number'  => $req->fx_account_number, 'account_name'  => $req->fx_account_name
+                    ];
+                    FxPayment::insert($queryRec);
+
+                    // Log Activities here
+                    $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                    $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                    $getAccount = EscrowAccount::where('escrow_id', $req->fx_wallet)->first();
+
+                    $data = $getAccount;
+                    $message = "Success | Your wallet will be updated within 24hrs";
+                    $status = 200;
+                } else {
+                    $data = [];
+                    $message = "Wallet not found!";
+                    $status = 400;
+                }
             }
         } catch (\Throwable $th) {
             $data = [];
@@ -397,7 +604,41 @@ class CurrencyFxController extends Controller
         return $this->returnJSON($resData, $status);
     }
 
-    //TODO:: Pending Orders
+    public function getSoldOrders(Request $req)
+    {
+        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+
+        try {
+            if (isset($thisuser)) {
+                $market = MarketPlace::where('status', 'Sold')->orderBy('created_at', 'DESC')->get();
+
+                if (count($market) > 0) {
+                    $data = $market;
+                    $message = 'success';
+                    $status = 200;
+                } else {
+                    $data = [];
+                    $message = 'No active order available';
+                    $status = 200;
+                }
+            } else {
+                $data = [];
+                $message = 'Session expired. Please re-login';
+                $status = 201;
+            }
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 201;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
     public function getPendingOrders(Request $req)
     {
         $thisuser = User::where('api_token', $req->bearerToken())->first();
@@ -405,7 +646,7 @@ class CurrencyFxController extends Controller
 
         try {
             if (isset($thisuser)) {
-                $market = MarketPlace::where('status', 'Bid Pending')->orderBy('created_at', 'DESC')->get();
+                $market = MarketPlace::where('status', 'Bid Pending')->where('expiry', '>=', date('d F Y'))->orderBy('created_at', 'DESC')->get();
 
                 if (count($market) > 0) {
                     $data = $market;
@@ -432,7 +673,6 @@ class CurrencyFxController extends Controller
         return $this->returnJSON($resData, $status);
     }
 
-    //TODO:: My Orders
     public function getMyOrders(Request $req)
     {
         $thisuser = User::where('api_token', $req->bearerToken())->first();
@@ -448,7 +688,7 @@ class CurrencyFxController extends Controller
                     $status = 200;
                 } else {
                     $data = [];
-                    $message = 'No pending order available';
+                    $message = 'No order available';
                     $status = 200;
                 }
             } else {
@@ -465,5 +705,11 @@ class CurrencyFxController extends Controller
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
+    }
+
+
+    public function insFXStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $auto_deposit, $country = null, $confirmation)
+    {
+        FxStatement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route, 'auto_deposit' => $auto_deposit, 'country' => $country, 'confirmation' => 'pending']);
     }
 }

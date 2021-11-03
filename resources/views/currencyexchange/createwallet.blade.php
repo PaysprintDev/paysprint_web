@@ -113,14 +113,14 @@
 
                                     <input type="hidden" name="escrow_id" value="{{ $escrowId }}">
 
-                                    <div class="form-group"> <label for="currencyCode">
-                                            <h6>Select Wallet Currency</h6>
+                                    <div class="form-group"> <label for="country">
+                                            <h6>Select Wallet Country and Currency</h6>
                                         </label>
                                         <div class="input-group">
                                             <div class="input-group-append"> <span class="input-group-text text-muted">
                                                     <img src="https://img.icons8.com/cotton/20/000000/money--v4.png" />
                                                 </span> </div>
-                                            <select name="currencyCode" id="currencyCode" class="form-control" required>
+                                            <select name="country" id="country" class="form-control" required>
                                                 @foreach ($data['allcountry'] as $mywallet)
                                                     <option value="{{ $mywallet->name }}">
                                                         {{ $mywallet->name . ' (' . $mywallet->currencyCode.')' }}

@@ -15,6 +15,7 @@ use App\AddBank as AddBank;
 use App\Statement as Statement;
 use App\FeeTransaction as FeeTransaction;
 use App\AllCountries as AllCountries;
+use App\ClientInfo;
 use App\TransactionCost as TransactionCost;
 use App\RequestRefund as RequestRefund;
 use App\SpecialInformation as SpecialInformation;
@@ -170,13 +171,16 @@ class CheckSetupController extends Controller
                 User::where('id', $allusers->id)->update(['archive' => 0]);
             }
         }
+
+
+        $this->slack('userAccountArchive Cron Completed', $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
     }
 
 
     // Move Matched Users
     public function matchedUsersAccount()
     {
-        $getUsers = User::where('country', 'Nigeria')->where('bvn_verification', 1)->inRandomOrder()->take(20)->get();
+        $getUsers = User::where('bvn_verification', '>=', 1)->inRandomOrder()->take(20)->get();
 
         foreach ($getUsers as $allusers) {
 
@@ -192,6 +196,75 @@ class CheckSetupController extends Controller
             echo "Moved for " . $allusers->name . " in " . $allusers->country . "<hr>";
         }
     }
+
+    // Move Approved Users
+    public function approvedUsersAccount()
+    {
+        $getUsers = User::where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', '>=', 1)->inRandomOrder()->take(30)->get();
+
+        foreach ($getUsers as $allusers) {
+
+            if ($allusers->accountType == "Merchant") {
+                $category = "Approved Merchant";
+            } else {
+                $category = "Approved Consumer";
+            }
+
+
+            $this->mailListCategorize($allusers->name, $allusers->email, $allusers->address, $allusers->telephone, $category, $allusers->country, 'Subscription');
+
+            echo "Moved for approved " . $allusers->name . " in " . $allusers->country . " of " . $allusers->accountType . " category" . "<hr>";
+        }
+    }
+
+
+    // Move KYB Completed
+    public function moveKYBCompleted()
+    {
+        $getUsers = User::where('accountType', 'Merchant')->where('accountLevel', 3)->where('approval', 2)->inRandomOrder()->take(30)->get();
+
+        foreach ($getUsers as $allusers) {
+
+            if ($allusers->businessname != NULL) {
+                $business = $allusers->businessname;
+            } else {
+                $business = $allusers->name;
+            }
+
+            $category = "KYB Completed";
+
+            $this->mailListCategorize($business, $allusers->email, $allusers->address, $allusers->telephone, $category, $allusers->country, 'Subscription');
+
+            echo "Moved for " . $category . " " . $business . " in " . $allusers->country . "<hr>";
+        }
+    }
+
+
+    public function moveIndustry()
+    {
+
+        $getUsers = User::where('accountType', 'Merchant')->inRandomOrder()->take(30)->get();
+
+
+        foreach ($getUsers as $allusers) {
+
+            $getIndustry = ClientInfo::where('user_id', $allusers->ref_code)->first();
+
+
+            if ($allusers->businessname != NULL) {
+                $business = $allusers->businessname . " of (" . $getIndustry->industry . ")";
+            } else {
+                $business = $allusers->name . " of (" . $getIndustry->industry . ")";
+            }
+
+            $category = "Industry";
+
+            $this->mailListCategorize($business, $allusers->email, $allusers->address, $allusers->telephone, $category, $allusers->country, 'Subscription');
+
+            echo "Moved for " . $category . " " . $business . " in " . $allusers->country . "<hr>";
+        }
+    }
+
 
 
     public function accountChecker($id, $fieldName)
@@ -814,17 +887,17 @@ class CheckSetupController extends Controller
     {
         // Create Statement And Credit EXBC account holder
         // $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
-        $exbcMerchant = User::where('email', 'duntanadebiyi@yahoo.com')->first();
+        $exbcMerchant = User::where('email', 'tochukwumar@gmail.com')->first();
 
         if (isset($exbcMerchant)) {
 
 
             // $transaction_id = "wallet-".date('dmY').time();
-            $transaction_id = "ord-051021-153246";
+            $transaction_id = "esytiw0o2f";
 
             // $activity = "Added ".$exbcMerchant->currencyCode.''.number_format(20, 2)." to your Wallet to load EXBC Prepaid Card";
-            $activity = "Added " . $exbcMerchant->currencyCode . '' . number_format(689.1, 2) . " to Wallet including a fee charge of " . $exbcMerchant->currencyCode . '' . number_format(10.90, 2) . " was deducted from your Debit Card";
-            $credit = 689.1;
+            $activity = "Added " . $exbcMerchant->currencyCode . '' . number_format(983.5, 2) . " to Wallet including a fee charge of " . $exbcMerchant->currencyCode . '' . number_format(16.5, 2) . " was deducted from your Debit Card";
+            $credit = 983.5;
             $debit = 0;
             $reference_code = $transaction_id;
             $balance = 0;
@@ -834,9 +907,9 @@ class CheckSetupController extends Controller
             $regards = $exbcMerchant->ref_code;
             $statement_route = "wallet";
 
-            $merchantwalletBal = $exbcMerchant->wallet_balance + 689.1;
+            $merchantwalletBal = $exbcMerchant->wallet_balance + 983.5;
 
-            User::where('email', 'duntanadebiyi@yahoo.com')->update([
+            User::where('email', 'tochukwumar@gmail.com')->update([
                 'wallet_balance' => $merchantwalletBal
             ]);
 
@@ -845,11 +918,11 @@ class CheckSetupController extends Controller
             // Senders statement
             $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
 
-            $this->getfeeTransaction($reference_code, $exbcMerchant->ref_code, 700, 10.90, 689.1);
+            $this->getfeeTransaction($reference_code, $exbcMerchant->ref_code, 1000, 16.5, 983.5);
 
             // $sendMerchantMsg = "Hi ".$exbcMerchant->name.", ".$exbcMerchant->currencyCode." 20.00 was added to your wallet to load EXBC Prepaid Card. Your new wallet balance is ".$exbcMerchant->currencyCode.' '.number_format($merchantwalletBal, 2).". Thanks.";
 
-            $sendMerchantMsg = 'You have added ' . $exbcMerchant->currencyCode . ' ' . number_format(689.1, 2) . ' (Gross Amount of ' . $exbcMerchant->currencyCode . ' ' . number_format(700, 2) . ' less transaction fee ' . $exbcMerchant->currencyCode . ' ' . number_format(10.90, 2) . ') to your wallet with PaySprint. You now have ' . $exbcMerchant->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
+            $sendMerchantMsg = 'You have added ' . $exbcMerchant->currencyCode . ' ' . number_format(983.5, 2) . ' (Gross Amount of ' . $exbcMerchant->currencyCode . ' ' . number_format(1000, 2) . ' less transaction fee ' . $exbcMerchant->currencyCode . ' ' . number_format(16.5, 2) . ') to your wallet with PaySprint. You now have ' . $exbcMerchant->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
 
             $this->createNotification($exbcMerchant->ref_code, $sendMerchantMsg);
 
@@ -858,7 +931,7 @@ class CheckSetupController extends Controller
             $gateway = ucfirst($getGateway->gateway);
 
 
-            $message = 'You have successfully added ' . $exbcMerchant->currencyCode . ' ' . number_format(689.1, 2) . ' to your wallet';
+            $message = 'You have successfully added ' . $exbcMerchant->currencyCode . ' ' . number_format(983.5, 2) . ' to your wallet';
 
             $this->keepRecord($reference_code, $message, "Success", $gateway, $exbcMerchant->country);
 

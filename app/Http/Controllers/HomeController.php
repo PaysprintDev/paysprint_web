@@ -1615,7 +1615,7 @@ class HomeController extends Controller
         return $resp;
     }
 
-    
+
     public function otherCurrencyCodeOfficial($user_id)
     {
         $userData = User::where('ref_code', $user_id)->first();
@@ -2943,7 +2943,7 @@ class HomeController extends Controller
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                     'continent' => $this->timezone[0],
-                    'currentfacility'=>$id
+                    'currentfacility' => $id
                 );
             } else {
                 // $this->page = 'Rental Property Amenities';
@@ -2964,7 +2964,7 @@ class HomeController extends Controller
             $data = array(
                 'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                 'continent' => $this->timezone[0],
-                'currentfacility'=>$id
+                'currentfacility' => $id
             );
         }
 
@@ -2985,7 +2985,7 @@ class HomeController extends Controller
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                     'continent' => $this->timezone[0],
-                    'currentfacility'=>$id
+                    'currentfacility' => $id
                 );
             } else {
                 // $this->page = 'Rental Property Amenities';
@@ -3006,7 +3006,7 @@ class HomeController extends Controller
             $data = array(
                 'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                 'continent' => $this->timezone[0],
-                'currentfacility'=>$id
+                'currentfacility' => $id
             );
         }
 
@@ -3659,10 +3659,26 @@ class HomeController extends Controller
 
                         $result = $this->transStatus($info->TransactionID);
 
-                        // $res = $this->getTransRec($result->TransactionRecordId);
+                        // if (isset($result)) {
+
+                        //     if (isset($result->TransactionRecordId)) {
+                        //         $transxID = $result->TransactionRecordId;
+                        //     } else {
+                        //         $transxID = $result['TransactionRecordId'];
+                        //     }
+
+                        //     Log::info(json_encode($transxID));
+
+                        //     $verifyRes = $this->getTransRec($transxID);
+
+                        //     $verRes = $verifyRes->Record->RecordStatus;
+                        // } else {
+                        //     $verRes = "nomatch";
+                        // }
 
 
-                        if ($result->Record->RecordStatus == "nomatch") {
+
+                        if ($info->Record->RecordStatus == "nomatch") {
 
                             $message = "success";
                             $title = "Great!";
@@ -3670,7 +3686,7 @@ class HomeController extends Controller
 
                             $resInfo = strtoupper($info->Record->RecordStatus) . ", Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.ca";
 
-                            User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'countryapproval' => 1]);
+                            User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'countryapproval' => 1, 'transactionRecordId' => $info->TransactionID]);
                         } else {
                             $message = "success";
                             $title = "Great";
@@ -3680,7 +3696,7 @@ class HomeController extends Controller
 
 
                             // Udpate User Info
-                            User::where('id', Auth::user()->id)->update(['accountLevel' => 3, 'approval' => 2, 'countryapproval' => 1]);
+                            User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'approval' => 1, 'countryapproval' => 1, 'bvn_verification' => 1, 'transactionRecordId' => $info->TransactionID]);
                         }
                     } else {
                         $message = "success";
@@ -3688,7 +3704,7 @@ class HomeController extends Controller
                         $link = "contact";
                         $resInfo = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.ca";
 
-                        User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'countryapproval' => 1]);
+                        User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'countryapproval' => 1, 'transactionRecordId' => NULL]);
 
                         // $resp = $info->Message;
                     }
@@ -3714,7 +3730,7 @@ class HomeController extends Controller
                     $link = "contact";
                     $resInfo = "PaySprint is not yet available for use in your country. You can contact our Customer Service Executives for further assistance";
 
-                    User::where('id', Auth::user()->id)->update(['accountLevel' => 0, 'countryapproval' => 0]);
+                    User::where('id', Auth::user()->id)->update(['accountLevel' => 0, 'countryapproval' => 0, 'transactionRecordId' => NULL]);
                 }
 
 

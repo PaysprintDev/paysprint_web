@@ -7,7 +7,113 @@ import Header from '../includes/Header';
 const apiToken = document.getElementById('user_api_token').value;
 
 class MyOrders extends Component {
+	_isMounted = false;
+
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			data: [],
+			message: '',
+			loading: true
+		};
+	}
+
+	async componentDidMount() {
+		this._isMounted = true;
+
+		const res = await axios.get(`/api/v1/myorders`, {
+			headers: { Authorization: `Bearer ${apiToken}` }
+		});
+
+		try {
+			if (this._isMounted) {
+				if (res.status === 200) {
+					this.setState({
+						data: res.data.data,
+						message: res.data.message,
+						loading: false
+					});
+				} else {
+					this.setState({
+						data: res.data.data,
+						message: res.data.message,
+						loading: false
+					});
+				}
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	componentWillUnmount() {
+		this._isMounted = false;
+	}
+
 	render() {
+		var data_HTML_ACTIVE_ORDERS = '';
+		var status_HTML = '';
+
+		if (this.state.loading) {
+			data_HTML_ACTIVE_ORDERS = (
+				<tr>
+					<td colSpan="6" align="center">
+						<span className="font-weight-semibold text-gray-700 text-center">
+							<img
+								src="https://img.icons8.com/ios/35/000000/spinner-frame-4.png"
+								className="fa fa-spin"
+							/>
+						</span>
+					</td>
+				</tr>
+			);
+		} else {
+			if (this.state.message != 'success') {
+				data_HTML_ACTIVE_ORDERS = (
+					<tr>
+						<td colSpan="6" align="center">
+							<span className="font-weight-semibold text-gray-700 text-center">{this.state.message}</span>
+						</td>
+					</tr>
+				);
+			} else {
+				data_HTML_ACTIVE_ORDERS = this.state.data.map((activeOrders) => {
+					return (
+						<tr key={activeOrders.id}>
+							<td>
+								<span className="font-weight-semibold text-gray-700">{activeOrders.order_id}</span>
+							</td>
+							<td>
+								<span className="font-weight-semibold text-gray-500">
+									{parseFloat(activeOrders.sell).toFixed(2) + ' ' + activeOrders.sell_currencyCode}
+								</span>
+							</td>
+							<td>
+								<span className="font-weight-semibold text-gray-500">
+									{parseFloat(activeOrders.buy).toFixed(2) + ' ' + activeOrders.buy_currencyCode}
+								</span>
+							</td>
+							<td>
+								<span className="font-weight-semibold text-gray-500">{activeOrders.rate}</span>
+							</td>
+							<td>
+								<span className="font-weight-semibold text-gray-500">{activeOrders.expiry}</span>
+							</td>
+							<td>
+								<span
+									className="font-weight-semibold text-gray-500"
+									style={{ color: `${activeOrders.color}` }}
+								>
+									{activeOrders.status}
+								</span>
+							</td>
+						</tr>
+					);
+				});
+			}
+		}
+
 		return (
 			<div>
 				<Aside />
@@ -23,28 +129,6 @@ class MyOrders extends Component {
 									<h1 className="h2 mb-0 lh-sm">Market Place</h1>
 								</div>
 								<div className="col-auto d-flex align-items-center my-2 my-sm-0">
-									<a href="#" className="btn btn-lg btn-outline-dark px-3 me-2 me-md-3 customize-btn">
-										<span className="ps-1">New Offer</span>{' '}
-										<svg
-											className="ms-4"
-											xmlns="http://www.w3.org/2000/svg"
-											width="14"
-											height="14"
-											viewBox="0 0 14 14"
-										>
-											<rect
-												data-name="Icons/Tabler/Add background"
-												width="14"
-												height="14"
-												fill="none"
-											/>
-											<path
-												d="M6.329,13.414l-.006-.091V7.677H.677A.677.677,0,0,1,.585,6.329l.092-.006H6.323V.677A.677.677,0,0,1,7.671.585l.006.092V6.323h5.646a.677.677,0,0,1,.091,1.348l-.091.006H7.677v5.646a.677.677,0,0,1-1.348.091Z"
-												fill="#1e1e1e"
-											/>
-										</svg>
-									</a>
-
 									<Link to={'/currencyfx/'} className="btn btn-lg btn-warning">
 										<svg
 											className="me-2"
@@ -205,151 +289,9 @@ class MyOrders extends Component {
 														<th>Rate</th>
 														<th>Expire On</th>
 														<th>Status</th>
-														<th>&nbsp;</th>
 													</tr>
 												</thead>
-												<tbody className="list">
-													<tr>
-														<td>
-															<span className="font-weight-semibold text-gray-700">
-																PS-1543390-SAT
-															</span>
-														</td>
-														<td>
-															<span className="font-weight-semibold text-gray-700">
-																15000 NGN
-															</span>
-														</td>
-														<td>
-															<span className="font-weight-semibold text-gray-700">
-																13 USD
-															</span>
-														</td>
-														<td>
-															<span className="font-weight-semibold text-gray-700">
-																1 NGN - 0.0012 USD
-															</span>
-														</td>
-														<td>
-															<span className="font-weight-semibold text-gray-700">
-																20 Oct 2021
-															</span>
-														</td>
-														<td>
-															<span className="font-weight-semibold text-gray-700">
-																Bid Pending
-															</span>
-														</td>
-														<td>
-															<div className="dropdown ">
-																<a
-																	href="#"
-																	className="btn btn-dark-100 btn-icon btn-sm rounded-circle"
-																	role="button"
-																	data-bs-toggle="dropdown"
-																	aria-haspopup="true"
-																	aria-expanded="false"
-																>
-																	<svg
-																		data-name="Icons/Tabler/Notification"
-																		xmlns="http://www.w3.org/2000/svg"
-																		width="13.419"
-																		height="13.419"
-																		viewBox="0 0 13.419 13.419"
-																	>
-																		<rect
-																			data-name="Icons/Tabler/Dots background"
-																			width="13.419"
-																			height="13.419"
-																			fill="none"
-																		/>
-																		<path
-																			d="M0,10.4a1.342,1.342,0,1,1,1.342,1.342A1.344,1.344,0,0,1,0,10.4Zm1.15,0a.192.192,0,1,0,.192-.192A.192.192,0,0,0,1.15,10.4ZM0,5.871A1.342,1.342,0,1,1,1.342,7.213,1.344,1.344,0,0,1,0,5.871Zm1.15,0a.192.192,0,1,0,.192-.192A.192.192,0,0,0,1.15,5.871ZM0,1.342A1.342,1.342,0,1,1,1.342,2.684,1.344,1.344,0,0,1,0,1.342Zm1.15,0a.192.192,0,1,0,.192-.192A.192.192,0,0,0,1.15,1.342Z"
-																			transform="translate(5.368 0.839)"
-																			fill="#6c757d"
-																		/>
-																	</svg>
-																</a>
-
-																<div className="dropdown-menu dropdown-menu-end">
-																	<a href="#" className="dropdown-item">
-																		Accept & Transfer
-																	</a>
-																</div>
-															</div>
-														</td>
-													</tr>
-													<tr>
-														<td>
-															<span className="font-weight-semibold text-gray-700">
-																PS-1543390-SAT
-															</span>
-														</td>
-														<td>
-															<span className="font-weight-semibold text-gray-700">
-																15000 NGN
-															</span>
-														</td>
-														<td>
-															<span className="font-weight-semibold text-gray-700">
-																13 USD
-															</span>
-														</td>
-														<td>
-															<span className="font-weight-semibold text-gray-700">
-																1 NGN - 0.0012 USD
-															</span>
-														</td>
-														<td>
-															<span className="font-weight-semibold text-gray-700">
-																20 Oct 2021
-															</span>
-														</td>
-														<td>
-															<span className="font-weight-semibold text-gray-700">
-																Sold
-															</span>
-														</td>
-														<td>
-															<div className="dropdown ">
-																<a
-																	href="#"
-																	className="btn btn-dark-100 btn-icon btn-sm rounded-circle"
-																	role="button"
-																	data-bs-toggle="dropdown"
-																	aria-haspopup="true"
-																	aria-expanded="false"
-																>
-																	<svg
-																		data-name="Icons/Tabler/Notification"
-																		xmlns="http://www.w3.org/2000/svg"
-																		width="13.419"
-																		height="13.419"
-																		viewBox="0 0 13.419 13.419"
-																	>
-																		<rect
-																			data-name="Icons/Tabler/Dots background"
-																			width="13.419"
-																			height="13.419"
-																			fill="none"
-																		/>
-																		<path
-																			d="M0,10.4a1.342,1.342,0,1,1,1.342,1.342A1.344,1.344,0,0,1,0,10.4Zm1.15,0a.192.192,0,1,0,.192-.192A.192.192,0,0,0,1.15,10.4ZM0,5.871A1.342,1.342,0,1,1,1.342,7.213,1.344,1.344,0,0,1,0,5.871Zm1.15,0a.192.192,0,1,0,.192-.192A.192.192,0,0,0,1.15,5.871ZM0,1.342A1.342,1.342,0,1,1,1.342,2.684,1.344,1.344,0,0,1,0,1.342Zm1.15,0a.192.192,0,1,0,.192-.192A.192.192,0,0,0,1.15,1.342Z"
-																			transform="translate(5.368 0.839)"
-																			fill="#6c757d"
-																		/>
-																	</svg>
-																</a>
-
-																<div className="dropdown-menu dropdown-menu-end">
-																	<a href="#" className="dropdown-item">
-																		Deal Closed
-																	</a>
-																</div>
-															</div>
-														</td>
-													</tr>
-												</tbody>
+												<tbody className="list">{data_HTML_ACTIVE_ORDERS}</tbody>
 											</table>
 										</div>
 									</div>

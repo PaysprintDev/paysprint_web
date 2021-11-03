@@ -64,8 +64,14 @@ trait PaymentGateway
             // Credit User Wallet
             $getUser = User::where('email', $getStatement->user_id)->first();
 
+            if ($getUser->number_of_withdrawals > 0) {
+                $numOfWithdrawal = $getUser->number_of_withdrawals - 1;
+            } else {
+                $numOfWithdrawal = 0;
+            }
+
             $walletBal = $getUser->wallet_balance + $debit;
-            $numOfWithdrawal = $getUser->number_of_withdrawals - 1;
+
             $withdrawal_per_day = $getUser->withdrawal_per_day - $debit;
             $withdrawal_per_week = $getUser->withdrawal_per_week - $debit;
             $withdrawal_per_month = $getUser->withdrawal_per_month - $debit;

@@ -26,7 +26,13 @@ trait MailChimpNewsLetter
     {
         $username = explode(" ", $name);
 
-        $result = Newsletter::subscribeOrUpdate($email, ['FNAME' => $username[0], 'LNAME' => $username[1], 'ADDRESS' => $address, 'PHONE' => $phone, 'CATEGORY' => $tags, 'COUNTRY' => $country], $list);
+        if (isset($username[1])) {
+            $result = Newsletter::subscribeOrUpdate($email, ['FNAME' => $username[0], 'LNAME' => $username[1], 'ADDRESS' => $address, 'PHONE' => $phone, 'CATEGORY' => $tags, 'COUNTRY' => $country], $list);
+        } else {
+            $result = Newsletter::subscribeOrUpdate($email, ['FNAME' => $name, 'LNAME' => "", 'ADDRESS' => $address, 'PHONE' => $phone, 'CATEGORY' => $tags, 'COUNTRY' => $country], $list);
+        }
+
+
 
         return $result;
     }
