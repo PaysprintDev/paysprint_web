@@ -162,22 +162,22 @@ class MyOrders extends Component {
 								<ul className="nav nav-tabs nav-tabs-md nav-tabs-line position-relative zIndex-0">
 									<li className="nav-item">
 										<Link className="nav-link" to={'/currencyfx/marketplace'}>
-											All Orders
+											All Offers
 										</Link>
 									</li>
 									<li className="nav-item">
 										<Link className="nav-link" to={'/currencyfx/ongoing'}>
-											Active Orders
+											Closed Offers
 										</Link>
 									</li>
 									<li className="nav-item">
 										<Link className="nav-link" to={'/currencyfx/pending'}>
-											Pending Orders
+											Pending Offers
 										</Link>
 									</li>
 									<li className="nav-item">
 										<Link className="nav-link active" to={'/currencyfx/myorders'}>
-											My Orders
+											My Offers
 										</Link>
 									</li>
 								</ul>
@@ -188,7 +188,7 @@ class MyOrders extends Component {
 									<div className="card rounded-12 shadow-dark-80 border border-gray-50">
 										<div className="d-flex align-items-center px-3 px-md-4 py-3">
 											<h5 className="card-header-title mb-0 ps-md-2 font-weight-semibold">
-												My Orders
+												My Offers
 											</h5>
 											<div className="dropdown export-dropdown ms-auto pe-md-2">
 												<a

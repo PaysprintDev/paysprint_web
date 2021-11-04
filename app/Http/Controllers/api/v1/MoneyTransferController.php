@@ -1250,7 +1250,7 @@ class MoneyTransferController extends Controller
                 $resData = ['data' => [], 'message' => $error, 'status' => $status];
             } else {
 
-                $getescrow = EscrowAccount::where('currencyCode', $req->sellCurrency)->first();
+                $getescrow = EscrowAccount::where('currencyCode', $req->sellCurrency)->where('user_id', $thisuser->id)->first();
 
                 // $minBal = $this->minimumWithdrawal($thisuser->country);
 
@@ -1311,7 +1311,7 @@ class MoneyTransferController extends Controller
                     $statement_route = "wallet";
 
                     // Senders Escrow statement
-                    $this->insFXStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $thisuser->country, "confirmed");
+                    $this->insFXStatement($getescrow->escrow_id, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $thisuser->country, "confirmed");
 
                     $getWallet = EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $req->sellCurrency)->first();
 

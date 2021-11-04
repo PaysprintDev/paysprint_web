@@ -303,7 +303,7 @@
                                         <div class="row">
                                             
                                             <div class="col-md-12 mb-3">
-                                                <button type="button" onclick="handShake('fundfx')" class="btn btn-primary btn-block cardSubmit">Submit</button>
+                                                <button type="button" onclick="handShake('fundfx')" class="btn btn-primary btn-block cardSubmit">I have transferred the fund</button>
                                             </div>
                                             
                                         </div>
@@ -392,7 +392,7 @@ if(val == 'fundfx'){
         success: function(result){
             console.log(result);
 
-            $('.cardSubmit').text('Submit');
+            $('.cardSubmit').text('I have transferred the fund');
 
             if(result.status == 200){
                     swal("Success", result.message, "success");
@@ -404,7 +404,7 @@ if(val == 'fundfx'){
 
         },
         error: function(err) {
-            $('.cardSubmit').text('Submit');
+            $('.cardSubmit').text('I have transferred the fund');
             swal("Oops", err.responseJSON.message, "error");
 
         } 

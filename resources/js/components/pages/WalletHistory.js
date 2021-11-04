@@ -4,8 +4,9 @@ import Aside from '../includes/Aside';
 import Header from '../includes/Header';
 
 const apiToken = document.getElementById('user_api_token').value;
+const myCurrencyCode = document.getElementById('user_currency_code').value;
 
-class OngoingOrders extends Component {
+class WalletHistory extends Component {
 	_isMounted = false;
 
 	constructor(props) {
@@ -14,35 +15,39 @@ class OngoingOrders extends Component {
 		this.state = {
 			data: [],
 			message: '',
-			loading: true
+			loading: true,
+			currency: ''
 		};
 	}
 
-	async componentDidMount() {
+	componentDidMount() {
+		const currency = this.props.location.search;
+
 		this._isMounted = true;
 
-		const res = await axios.get(`/api/v1/ongoingorders`, {
-			headers: { Authorization: `Bearer ${apiToken}` }
-		});
-
 		try {
-			if (this._isMounted) {
-				if (res.status === 200) {
-					this.setState({
-						data: res.data.data,
-						message: res.data.message,
-						loading: false
-					});
-				} else {
-					this.setState({
-						data: res.data.data,
-						message: res.data.message,
-						loading: false
-					});
-				}
-			}
+			axios
+				.get(`/api/v1/fxtransactionhistory${currency}`, { headers: { Authorization: `Bearer ${apiToken}` } })
+				.then((res) => {
+					console.log(res);
+					if (this._isMounted) {
+						if (res.status === 200) {
+							this.setState({
+								data: res.data.data,
+								message: res.data.message,
+								loading: false
+							});
+						} else {
+							this.setState({
+								data: res.data.data,
+								message: res.data.message,
+								loading: false
+							});
+						}
+					}
+				});
 		} catch (error) {
-			console.error(error);
+			swal('Oops', `${error.message}`, 'error');
 		}
 	}
 
@@ -51,13 +56,15 @@ class OngoingOrders extends Component {
 	}
 
 	render() {
+		// Get Data Here
 		var data_HTML_ACTIVE_ORDERS = '';
 		var status_HTML = '';
+		var amountStatus = '';
 
 		if (this.state.loading) {
 			data_HTML_ACTIVE_ORDERS = (
 				<tr>
-					<td colSpan="7" align="center">
+					<td colSpan="6" align="center">
 						<span className="font-weight-semibold text-gray-700 text-center">
 							<img
 								src="https://img.icons8.com/ios/35/000000/spinner-frame-4.png"
@@ -71,93 +78,54 @@ class OngoingOrders extends Component {
 			if (this.state.message != 'success') {
 				data_HTML_ACTIVE_ORDERS = (
 					<tr>
-						<td colSpan="7" align="center">
+						<td colSpan="6" align="center">
 							<span className="font-weight-semibold text-gray-700 text-center">{this.state.message}</span>
 						</td>
 					</tr>
 				);
 			} else {
-				data_HTML_ACTIVE_ORDERS = this.state.data.map((activeOrders) => {
-					if (activeOrders.status == 'Sold') {
+				data_HTML_ACTIVE_ORDERS = this.state.data.map((transdata) => {
+					if (transdata.confirmation == 'confirmed') {
 						status_HTML = (
-							<div className="dropdown-menu dropdown-menu-end">
-								<a href="#" className="dropdown-item">
-									Bid closed
-								</a>
-							</div>
+							<span className="font-weight-semibold text-gray-700 text-success">CONFIRMED</span>
 						);
 					} else {
-						status_HTML = (
-							<div className="dropdown-menu dropdown-menu-end">
-								<a href="#" className="dropdown-item">
-									Make a bid
-								</a>
-							</div>
+						status_HTML = <span className="font-weight-semibold text-gray-700 text-danger">PENDING</span>;
+					}
+
+					if (transdata.credit > 0) {
+						amountStatus = (
+							<span className="font-weight-semibold text-gray-700 text-success">
+								{'+' + parseFloat(transdata.credit).toFixed(2)}
+							</span>
+						);
+					} else {
+						amountStatus = (
+							<span className="font-weight-semibold text-gray-700 text-danger">
+								{'-' + parseFloat(transdata.debit).toFixed(2)}
+							</span>
 						);
 					}
 
 					return (
-						<tr key={activeOrders.id}>
+						<tr key={transdata.id}>
 							<td>
-								<span className="font-weight-semibold text-gray-700">{activeOrders.order_id}</span>
+								<span className="font-weight-semibold text-gray-700">{transdata.trans_date}</span>
 							</td>
 							<td>
-								<span className="font-weight-semibold text-gray-500">
-									{parseFloat(activeOrders.sell).toFixed(2) + ' ' + activeOrders.sell_currencyCode}
-								</span>
+								<span className="font-weight-semibold text-gray-700">{transdata.reference_code}</span>
 							</td>
 							<td>
-								<span className="font-weight-semibold text-gray-500">
-									{parseFloat(activeOrders.buy).toFixed(2) + ' ' + activeOrders.buy_currencyCode}
-								</span>
+								<span className="font-weight-semibold text-gray-700">{transdata.activity}</span>
 							</td>
+							<td>{amountStatus}</td>
+							<td>{status_HTML}</td>
 							<td>
-								<span className="font-weight-semibold text-gray-500">{activeOrders.rate}</span>
-							</td>
-							<td>
-								<span className="font-weight-semibold text-gray-500">{activeOrders.expiry}</span>
-							</td>
-							<td>
-								<span
-									className="font-weight-semibold text-gray-500"
-									style={{ color: `${activeOrders.color}` }}
-								>
-									{activeOrders.status}
-								</span>
-							</td>
-							<td>
-								<div className="dropdown ">
-									<a
-										href="#"
-										className="btn btn-dark-100 btn-icon btn-sm rounded-circle"
-										role="button"
-										data-bs-toggle="dropdown"
-										aria-haspopup="true"
-										aria-expanded="false"
-									>
-										<svg
-											data-name="Icons/Tabler/Notification"
-											xmlns="http://www.w3.org/2000/svg"
-											width="13.419"
-											height="13.419"
-											viewBox="0 0 13.419 13.419"
-										>
-											<rect
-												data-name="Icons/Tabler/Dots background"
-												width="13.419"
-												height="13.419"
-												fill="none"
-											/>
-											<path
-												d="M0,10.4a1.342,1.342,0,1,1,1.342,1.342A1.344,1.344,0,0,1,0,10.4Zm1.15,0a.192.192,0,1,0,.192-.192A.192.192,0,0,0,1.15,10.4ZM0,5.871A1.342,1.342,0,1,1,1.342,7.213,1.344,1.344,0,0,1,0,5.871Zm1.15,0a.192.192,0,1,0,.192-.192A.192.192,0,0,0,1.15,5.871ZM0,1.342A1.342,1.342,0,1,1,1.342,2.684,1.344,1.344,0,0,1,0,1.342Zm1.15,0a.192.192,0,1,0,.192-.192A.192.192,0,0,0,1.15,1.342Z"
-												transform="translate(5.368 0.839)"
-												fill="#6c757d"
-											/>
-										</svg>
-									</a>
-
-									{status_HTML}
-								</div>
+								<a href="#">
+									<span className="font-weight-semibold text-gray-700">
+										<small>View details</small>
+									</span>
+								</a>
 							</td>
 						</tr>
 					);
@@ -167,7 +135,7 @@ class OngoingOrders extends Component {
 
 		return (
 			<div>
-				<Aside />
+				<Aside apiToken={apiToken} currencycode={myCurrencyCode} />
 				<Header apiToken={apiToken} />
 				<div className="main-content">
 					<div className="px-3 px-xxl-5 py-3 py-lg-4 border-bottom border-gray-200 after-header">
@@ -177,10 +145,10 @@ class OngoingOrders extends Component {
 									<span className="text-uppercase tiny text-gray-600 Montserrat-font font-weight-semibold">
 										Currency Exchange
 									</span>
-									<h1 className="h2 mb-0 lh-sm">Market Place</h1>
+									<h1 className="h2 mb-0 lh-sm">Transaction History</h1>
 								</div>
 								<div className="col-auto d-flex align-items-center my-2 my-sm-0">
-									<Link to={'/currencyfx/'} className="btn btn-lg btn-warning">
+									<Link to={'/currencyfx/transactionhistory'} className="btn btn-lg btn-warning">
 										<svg
 											className="me-2"
 											data-name="Icons/Tabler/Paperclip Copy 2"
@@ -201,7 +169,7 @@ class OngoingOrders extends Component {
 												fill="#1E1E1E"
 											/>
 										</svg>
-										<span>Dashboard</span>
+										<span>Go back</span>
 									</Link>
 								</div>
 							</div>
@@ -209,37 +177,12 @@ class OngoingOrders extends Component {
 					</div>
 					<div className="p-3 p-xxl-5">
 						<div className="container-fluid px-0">
-							<div className="mb-2 mb-md-3 mb-xl-4 pb-2">
-								<ul className="nav nav-tabs nav-tabs-md nav-tabs-line position-relative zIndex-0">
-									<li className="nav-item">
-										<Link className="nav-link" to={'/currencyfx/marketplace'}>
-											All Offers
-										</Link>
-									</li>
-									<li className="nav-item">
-										<Link className="nav-link active" to={'/currencyfx/ongoing'}>
-											Closed Offers
-										</Link>
-									</li>
-									<li className="nav-item">
-										<Link className="nav-link" to={'/currencyfx/pending'}>
-											Pending Offers
-										</Link>
-									</li>
-									<li className="nav-item">
-										<Link className="nav-link" to={'/currencyfx/myorders'}>
-											My Offers
-										</Link>
-									</li>
-								</ul>
-							</div>
-
 							<div className="row group-cards pt-2">
 								<div className="col-12 mb-4">
 									<div className="card rounded-12 shadow-dark-80 border border-gray-50">
 										<div className="d-flex align-items-center px-3 px-md-4 py-3">
 											<h5 className="card-header-title mb-0 ps-md-2 font-weight-semibold">
-												Closed Offers
+												Transaction History
 											</h5>
 											<div className="dropdown export-dropdown ms-auto pe-md-2">
 												<a
@@ -250,7 +193,7 @@ class OngoingOrders extends Component {
 													aria-expanded="false"
 													className="btn btn-outline-dark text-gray-700 border-gray-700 px-3"
 												>
-													<span>Today</span>{' '}
+													<span>All Time</span>{' '}
 													<svg
 														className="ms-2"
 														xmlns="http://www.w3.org/2000/svg"
@@ -334,13 +277,12 @@ class OngoingOrders extends Component {
 											<table className="table card-table table-nowrap overflow-hidden">
 												<thead>
 													<tr>
-														<th>Order ID</th>
-														<th>Selling</th>
-														<th>Buying</th>
-														<th>Rate</th>
-														<th>Expire On</th>
+														<th>Date</th>
+														<th>Reference ID</th>
+														<th>Description</th>
+														<th>Amount</th>
 														<th>Status</th>
-														<th>&nbsp;</th>
+														<th>View</th>
 													</tr>
 												</thead>
 												<tbody className="list">{data_HTML_ACTIVE_ORDERS}</tbody>
@@ -357,4 +299,4 @@ class OngoingOrders extends Component {
 	}
 }
 
-export default OngoingOrders;
+export default WalletHistory;

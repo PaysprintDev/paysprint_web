@@ -73,11 +73,17 @@
                                 $currencyCode = $user->currencyCode;
                             @endphp
 
-                              @if ($user->accountType == "Merchant")
-                                  <td>{{ $user->businessname }}</td>
-                              @else
-                                  <td>{{ $user->name }}</td>
-                              @endif
+                                @if ($user->accountType == "Merchant")
+                                    <td>{{ $user->businessname }}</td>
+                                @else
+                                    <td>{{ $user->name }}</td>
+                                @endif
+
+                            @else
+
+                            @php
+                                $currencyCode = "-";
+                            @endphp
 
                             @endif
 

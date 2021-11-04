@@ -50,7 +50,7 @@
 
                                 <tr>
                                 <td>{{ $i++ }}</td>
-                                <td>{{ $data->name }}</td>
+                                <td>{{ $data->name }} {!! ($data->flagged == 1) ? '<img src="https://img.icons8.com/emoji/20/000000/triangular-flag.png"/>' : '' !!}</td>
                                 
                                 <td>
                                     <a href="{{ route('get user card', $data->user_id) }}" type="button" class="btn btn-primary">View Cards</a>

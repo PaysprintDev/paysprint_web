@@ -2578,7 +2578,7 @@ class AdminController extends Controller
 
     public function cardCategory()
     {
-        $data = AddCard::select('users.*', 'add_card.*')->join('users', 'users.id', '=', 'add_card.user_id')->where('users.flagged', 0)->orderBy('add_card.created_at', 'DESC')->groupBy('users.name')->get();
+        $data = AddCard::select('users.*', 'add_card.*')->join('users', 'users.id', '=', 'add_card.user_id')->orderBy('add_card.created_at', 'DESC')->groupBy('users.name')->get();
 
         return $data;
     }

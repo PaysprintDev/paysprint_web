@@ -160,6 +160,25 @@ class CurrencyFxController extends Controller
     }
 
 
+    public function walletHistory(Request $req)
+    {
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == false) {
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+        }
+
+
+
+        return view('currencyexchange.wallethistory');
+    }
+
+
     public function myWallet(Request $req)
     {
         if ($req->session()->has('email') == false) {
@@ -301,10 +320,12 @@ class CurrencyFxController extends Controller
     // Get FX Transaction History
     public function fxTransactionHistory(Request $req)
     {
+
+
         try {
             $thisuser = User::where('api_token', $req->bearerToken())->first();
             // Get Transaction History for this user...
-            $transData = FxStatement::where('regards', $thisuser->ref_code)->orderBy('created_at', 'DESC')->get();
+            $transData = FxStatement::where('regards', $thisuser->ref_code)->where('user_id', $req->currency)->orderBy('created_at', 'DESC')->get();
 
             if (count($transData) > 0) {
                 $data = $transData;

@@ -170,6 +170,7 @@ Route::prefix('currencyfx')->group(function () {
 	Route::get('/', ['uses' => 'CurrencyFxController@index', 'as' => 'paysprint currency exchange']);
 	Route::get('marketplace', ['uses' => 'CurrencyFxController@marketPlace', 'as' => 'paysprint currency market place']);
 	Route::get('transactionhistory', ['uses' => 'CurrencyFxController@transactionHistory', 'as' => 'paysprint currency transaction history']);
+	Route::get('wallethistory', ['uses' => 'CurrencyFxController@walletHistory', 'as' => 'paysprint currency wallet history']);
 	Route::get('mywallet', ['uses' => 'CurrencyFxController@myWallet', 'as' => 'paysprint currency wallets']);
 	Route::get('ongoing', ['uses' => 'CurrencyFxController@marketPlaceOngoingTransaction', 'as' => 'paysprint currency market place ongoing']);
 	Route::get('pending', ['uses' => 'CurrencyFxController@marketPlacePendingTransaction', 'as' => 'paysprint currency market place pending']);

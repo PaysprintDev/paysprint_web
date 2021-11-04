@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import MarketPlace from './pages/MarketPlace';
 import Start from './pages/Start';
 import TransactionHistory from './pages/TransactionHistory';
+import WalletHistory from './pages/WalletHistory';
 import EWallet from './pages/EWallet';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
 				<Route path="/currencyfx/pending" component={PendingOrders} />
 				<Route path="/currencyfx/myorders" component={MyOrders} />
 				<Route path="/currencyfx/transactionhistory" component={TransactionHistory} />
+				<Route path="/currencyfx/wallethistory" component={WalletHistory} />
 				<Route path="/currencyfx/mywallet" component={EWallet} />
 			</Switch>
 		</Router>

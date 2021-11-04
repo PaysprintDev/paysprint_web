@@ -14,12 +14,44 @@ class Aside extends Component {
 			desiredSellCurrency: this.props.currencycode,
 			desiredBuyCurrency: 'USD',
 			desiredBuyRate: '',
-			expiryDate: ''
+			expiryDate: '',
+			selloption: ''
 		};
 
 		this.handleChange = this.handleChange.bind(this);
 
 		this.handleSubmit = this.handleSubmit.bind(this);
+	}
+
+	async componentDidMount() {
+		const selloption = [];
+
+		// Get My Wallet Currency
+		try {
+			const res = await axios.get('/api/v1/fxwallets', {
+				headers: { Authorization: `Bearer ${this.props.apiToken}` }
+			});
+
+			if (res.status === 200) {
+				const result = res.data.data;
+
+				result.map((item) => {
+					selloption.push(
+						<option key={item.id} value={item.currencyCode}>
+							{item.currencyCode}
+						</option>
+					);
+				});
+
+				this.setState({
+					selloption: selloption
+				});
+			} else {
+				swal('Oops!', res.data.message, 'error');
+			}
+		} catch (error) {
+			swal('Oops!', `${error.message}`, 'error');
+		}
 	}
 
 	async handleChange(event) {
@@ -30,11 +62,24 @@ class Aside extends Component {
 			'Content-Type': 'application/json'
 		};
 
-		document.getElementById('sellCurrencyRateResult').innerHTML = '0.00';
-		document.getElementById('buyCurrencyRateResult').innerHTML = '0.00';
+		document.getElementById('sellCurrencyRateResult').innerHTML = '';
+		document.getElementById('buyCurrencyRateResult').innerHTML = '';
 		document.getElementById('buyCurrencyCode').innerHTML = '';
 		document.getElementById('sellCurrencyCode').innerHTML = '';
-		document.getElementById('buyAmount').readOnly = true;
+
+		if (event.target.name == 'sellCurrency') {
+			this.state.sellCurrency = event.target.value;
+		}
+		if (event.target.name == 'buyCurrency') {
+			this.state.buyCurrency = event.target.value;
+		}
+
+		this.setState({
+			buyAmount: '',
+			desiredBuyRate: '',
+			desiredBuyCurrency: '',
+			desiredSellCurrency: ''
+		});
 
 		// Do Axios
 
@@ -55,25 +100,32 @@ class Aside extends Component {
 				{ headers: headers }
 			);
 
+			console.log(resultA);
+			console.log(resultB);
+
 			if (resultA.status === 200 && resultB.status === 200) {
+				// var buying = this.state.sellAmount / resultB.data;
+
 				var buying = this.state.sellAmount / resultB.data;
 
 				document.getElementById('buyCurrencyCode').innerHTML = `1 ${this.state.sellCurrency} - `;
 				document.getElementById('sellCurrencyCode').innerHTML = `1 ${this.state.buyCurrency} - `;
 
 				document.getElementById('sellCurrencyRateResult').innerHTML =
-					resultA.data.toFixed(2) + ` ${this.state.buyCurrency}`;
+					parseFloat(resultA.data).toFixed(4) + ` ${this.state.buyCurrency}`;
 
 				document.getElementById('buyCurrencyRateResult').innerHTML =
-					resultB.data.toFixed(2) + ` ${this.state.sellCurrency}`;
+					parseFloat(resultB.data).toFixed(4) + ` ${this.state.sellCurrency}`;
 
-				document.getElementById('desiredBuyRate').value = resultA.data.toFixed(2);
+				document.getElementById('desiredBuyRate').value = parseFloat(resultA.data).toFixed(4);
 				document.getElementById('desiredBuyCurrency').value = `${this.state.buyCurrency}`;
+				document.getElementById('desiredSellCurrency').value = `${this.state.sellCurrency}`;
 				document.getElementById('buyAmount').value = `${buying}`;
 				this.setState({
 					buyAmount: `${buying}`,
-					desiredBuyRate: resultA.data.toFixed(2),
-					desiredBuyCurrency: `${this.state.buyCurrency}`
+					desiredBuyRate: parseFloat(resultA.data).toFixed(4),
+					desiredBuyCurrency: `${this.state.buyCurrency}`,
+					desiredSellCurrency: `${this.state.sellCurrency}`
 				});
 			} else {
 				document.getElementById('buyCurrencyCode').innerHTML = `1 ${this.state.sellCurrency} - `;
@@ -94,6 +146,8 @@ class Aside extends Component {
 	async handleSubmit(event) {
 		event.preventDefault();
 
+		document.getElementById('submitOffer').disabled = true;
+
 		const headers = {
 			Authorization: `Bearer ${this.props.apiToken}`,
 			'Content-Type': 'application/json'
@@ -102,6 +156,8 @@ class Aside extends Component {
 		try {
 			// Response Data
 			const res = await axios({ method: 'POST', url: '/api/v1/createoffer', data: this.state, headers: headers });
+
+			document.getElementById('submitOffer').innerHTML = 'Please wait...';
 
 			if (res.status === 200) {
 				this.setState({
@@ -125,6 +181,9 @@ class Aside extends Component {
 
 				swal('Oops!', res.data.message, 'error');
 			}
+
+			document.getElementById('submitOffer').innerHTML = 'Submit Offer';
+			document.getElementById('submitOffer').disabled = false;
 		} catch (error) {
 			// Catch Error
 			swal('Oops!', `${error.message}`, 'error');
@@ -178,17 +237,6 @@ class Aside extends Component {
 
 								<div className="d-flex muze-skins customizer-controls">
 									<div className="mb-4 mb-xl-2" style={{ width: '20%' }}>
-										{/* <input
-											type="text"
-											placeholder="NGN"
-											name="sellCurrency"
-											value={this.state.sellCurrency}
-											onChange={this.handleChange}
-											id="sellCurrency"
-											className="form-control form-control-xl"
-											readOnly
-										/> */}
-
 										<select
 											value={this.state.sellCurrency}
 											id="sellCurrency"
@@ -197,9 +245,7 @@ class Aside extends Component {
 											className="form-control form-control-xl"
 											onChange={this.handleChange}
 										>
-											<option value={`${this.state.sellCurrency}`}>
-												{this.state.sellCurrency}
-											</option>
+											{this.state.selloption}
 										</select>
 									</div>
 									<div className="mb-4 mb-xl-10" style={{ width: '80%' }}>
@@ -227,9 +273,7 @@ class Aside extends Component {
 											className="form-control form-control-xl"
 											onChange={this.handleChange}
 										>
-											<option value="NGN">NGN</option>
-											<option value="USD">USD</option>
-											<option value="CAD">CAD</option>
+											{this.state.selloption}
 										</select>
 									</div>
 									<div className="mb-4 mb-xl-10" style={{ width: '75%' }}>
@@ -272,7 +316,7 @@ class Aside extends Component {
 											className="form-control form-control-xl"
 											readOnly
 										>
-											<option value="NGN">NGN</option>
+											{this.state.selloption}
 										</select>
 									</div>
 								</div>
@@ -300,9 +344,7 @@ class Aside extends Component {
 											className="form-control form-control-xl"
 											onChange={this.handleChange}
 										>
-											<option value="NGN">NGN</option>
-											<option value="USD">USD</option>
-											<option value="CAD">CAD</option>
+											{this.state.selloption}
 										</select>
 									</div>
 								</div>
@@ -334,8 +376,9 @@ class Aside extends Component {
 
 							<input
 								type="submit"
-								value="Submit"
+								value="Submit Offer"
 								className="form-control form-control-xl btn btn-xl btn-primary"
+								id="submitOffer"
 							/>
 						</form>
 					</div>
@@ -457,6 +500,38 @@ class Aside extends Component {
 										</li>
 									</ul>
 								</div>
+							</li>
+
+							<li className="nav-item">
+								<a
+									className="nav-link collapsed"
+									href="#"
+									data-bs-toggle="collapse"
+									role="button"
+									aria-expanded="false"
+									aria-controls="sidebarPayInvoice"
+								>
+									<svg
+										data-name="Icons/Tabler/Bolt"
+										xmlns="http://www.w3.org/2000/svg"
+										width="16"
+										height="16"
+										viewBox="0 0 16 16"
+									>
+										<rect
+											data-name="Icons/Tabler/Page background"
+											width="16"
+											height="16"
+											fill="none"
+										/>
+										<path
+											d="M1.975,14A1.977,1.977,0,0,1,0,12.026V1.975A1.977,1.977,0,0,1,1.975,0h5.04a.535.535,0,0,1,.249.069l.007,0h0a.534.534,0,0,1,.109.084l3.574,3.575a.536.536,0,0,1,.163.289h0l0,.013h0l0,.013v0l0,.011v.053s0,.009,0,.014v7.9A1.977,1.977,0,0,1,9.154,14Zm-.9-12.026V12.026a.9.9,0,0,0,.9.9H9.154a.9.9,0,0,0,.9-.9V4.667H7.718a1.255,1.255,0,0,1-1.248-1.12L6.461,3.41V1.077H1.975A.9.9,0,0,0,1.077,1.975ZM7.538,3.41a.179.179,0,0,0,.122.17l.057.01H9.29L7.538,1.838Z"
+											transform="translate(2 1)"
+											fill="#1e1e1e"
+										/>
+									</svg>
+									&nbsp;<span className="ms-2">Pay Invoice</span>
+								</a>
 							</li>
 
 							<li className="nav-item">

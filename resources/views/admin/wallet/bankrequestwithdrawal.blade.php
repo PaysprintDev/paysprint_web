@@ -64,10 +64,17 @@
 
                             @if($user = \App\User::where('ref_code', $data->ref_code)->first())
 
-                            @php
-                                $currencyCode = $user->currencyCode;
-                                $currencySymbol = $user->currencySymbol;
-                            @endphp
+                              @php
+                                  $currencyCode = $user->currencyCode;
+                                  $currencySymbol = $user->currencySymbol;
+                              @endphp
+
+                              @else
+
+                                @php
+                                  $currencyCode = "-";
+                                  $currencySymbol = "-";
+                              @endphp
 
                             @endif
 

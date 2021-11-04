@@ -24,25 +24,23 @@ class TransactionHistory extends Component {
 		this._isMounted = true;
 
 		try {
-			axios
-				.get(`/api/v1/fxtransactionhistory`, { headers: { Authorization: `Bearer ${apiToken}` } })
-				.then((res) => {
-					if (this._isMounted) {
-						if (res.status === 200) {
-							this.setState({
-								data: res.data.data,
-								message: res.data.message,
-								loading: false
-							});
-						} else {
-							this.setState({
-								data: res.data.data,
-								message: res.data.message,
-								loading: false
-							});
-						}
+			axios.get(`/api/v1/fxwallets`, { headers: { Authorization: `Bearer ${apiToken}` } }).then((res) => {
+				if (this._isMounted) {
+					if (res.status === 200) {
+						this.setState({
+							data: res.data.data,
+							message: res.data.message,
+							loading: false
+						});
+					} else {
+						this.setState({
+							data: res.data.data,
+							message: res.data.message,
+							loading: false
+						});
 					}
-				});
+				}
+			});
 		} catch (error) {
 			console.log(error);
 		}
@@ -56,7 +54,7 @@ class TransactionHistory extends Component {
 		// Get Data Here
 		var data_HTML_ACTIVE_ORDERS = '';
 		var status_HTML = '';
-		var amountStatus = '';
+		var i = 0;
 
 		if (this.state.loading) {
 			data_HTML_ACTIVE_ORDERS = (
@@ -81,48 +79,43 @@ class TransactionHistory extends Component {
 					</tr>
 				);
 			} else {
-				data_HTML_ACTIVE_ORDERS = this.state.data.map((transdata) => {
-					if (transdata.confirmation == 'confirmed') {
-						status_HTML = (
-							<span className="font-weight-semibold text-gray-700 text-success">CONFIRMED</span>
-						);
+				data_HTML_ACTIVE_ORDERS = this.state.data.map((mywalletdata) => {
+					i++;
+					if (mywalletdata.active == 'true') {
+						status_HTML = <span className="font-weight-semibold text-success">default</span>;
 					} else {
-						status_HTML = <span className="font-weight-semibold text-gray-700 text-danger">PENDING</span>;
-					}
-
-					if (transdata.credit > 0) {
-						amountStatus = (
-							<span className="font-weight-semibold text-gray-700 text-success">
-								{'+' + parseFloat(transdata.credit).toFixed(2)}
-							</span>
-						);
-					} else {
-						amountStatus = (
-							<span className="font-weight-semibold text-gray-700 text-danger">
-								{'-' + parseFloat(transdata.debit).toFixed(2)}
-							</span>
-						);
+						status_HTML = <span className="font-weight-semibold text-warning">secondary</span>;
 					}
 
 					return (
-						<tr key={transdata.id}>
+						<tr key={mywalletdata.id}>
+							<td>{i}</td>
+
 							<td>
-								<span className="font-weight-semibold text-gray-700">{transdata.trans_date}</span>
+								<span className="font-weight-semibold text-gray-700">{mywalletdata.escrow_id}</span>
 							</td>
 							<td>
-								<span className="font-weight-semibold text-gray-700">{transdata.reference_code}</span>
+								<span className="font-weight-semibold text-gray-700">{mywalletdata.currencyCode}</span>
 							</td>
 							<td>
-								<span className="font-weight-semibold text-gray-700">{transdata.activity}</span>
+								<span className="font-weight-semibold text-gray-700">
+									{mywalletdata.currencySymbol +
+										' ' +
+										parseFloat(mywalletdata.wallet_balance).toFixed(2)}
+								</span>
 							</td>
-							<td>{amountStatus}</td>
 							<td>{status_HTML}</td>
 							<td>
-								<a href="#">
+								<Link
+									to={{
+										pathname: `/currencyfx/wallethistory`,
+										search: `currency=${mywalletdata.escrow_id}`
+									}}
+								>
 									<span className="font-weight-semibold text-gray-700">
-										<small>View details</small>
+										<small>View Statement</small>
 									</span>
-								</a>
+								</Link>
 							</td>
 						</tr>
 					);
@@ -145,29 +138,7 @@ class TransactionHistory extends Component {
 									<h1 className="h2 mb-0 lh-sm">Transaction History</h1>
 								</div>
 								<div className="col-auto d-flex align-items-center my-2 my-sm-0">
-									<a href="#" className="btn btn-lg btn-outline-dark px-3 me-2 me-md-3 customize-btn">
-										<span className="ps-1">New Offer</span>{' '}
-										<svg
-											className="ms-4"
-											xmlns="http://www.w3.org/2000/svg"
-											width="14"
-											height="14"
-											viewBox="0 0 14 14"
-										>
-											<rect
-												data-name="Icons/Tabler/Add background"
-												width="14"
-												height="14"
-												fill="none"
-											/>
-											<path
-												d="M6.329,13.414l-.006-.091V7.677H.677A.677.677,0,0,1,.585,6.329l.092-.006H6.323V.677A.677.677,0,0,1,7.671.585l.006.092V6.323h5.646a.677.677,0,0,1,.091,1.348l-.091.006H7.677v5.646a.677.677,0,0,1-1.348.091Z"
-												fill="#1e1e1e"
-											/>
-										</svg>
-									</a>
-
-									<Link to={'/currencyfx/'} className="btn btn-lg btn-warning">
+									<a href="/currencyfx/" className="btn btn-lg btn-warning">
 										<svg
 											className="me-2"
 											data-name="Icons/Tabler/Paperclip Copy 2"
@@ -189,7 +160,7 @@ class TransactionHistory extends Component {
 											/>
 										</svg>
 										<span>Dashboard</span>
-									</Link>
+									</a>
 								</div>
 							</div>
 						</div>
@@ -296,12 +267,12 @@ class TransactionHistory extends Component {
 											<table className="table card-table table-nowrap overflow-hidden">
 												<thead>
 													<tr>
-														<th>Date</th>
-														<th>Reference ID</th>
-														<th>Description</th>
-														<th>Amount</th>
+														<th>#</th>
+														<th>Wallet ID</th>
+														<th>Wallet Currency</th>
+														<th>Wallet Balance</th>
 														<th>Status</th>
-														<th>View</th>
+														<th>Action</th>
 													</tr>
 												</thead>
 												<tbody className="list">{data_HTML_ACTIVE_ORDERS}</tbody>
