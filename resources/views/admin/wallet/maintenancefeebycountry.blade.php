@@ -48,6 +48,7 @@
                   <th>Phone</th>
                   <th>Account Type</th>
                   <th>Amount</th>
+                  <th>Period</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -58,12 +59,23 @@
                             <td>{{ $i++ }}</td>
 
                             @if($user = \App\User::where('ref_code', $data->ref_code)->first())
-                                @php
+
+                              @if ($user->accountType == "Individual")
+                                  @php
                                     $name = $user->name;
                                     $email = $user->email;
                                     $telephone = $user->telephone;
                                     $accountType = $user->accountType;
                                 @endphp
+                              @else
+                                  @php
+                                    $name = $user->businessname;
+                                    $email = $user->email;
+                                    $telephone = $user->telephone;
+                                    $accountType = $user->accountType;
+                                @endphp
+                              @endif
+                                
 
                                 
                             @endif
@@ -75,6 +87,7 @@
 
                             
                             <td style="font-weight: 700;">{{ $data->currency.' '.number_format($data->amount, 2) }}</td>
+                            <td>{{ date('F/Y', strtotime($data->created_at)) }}</td>
                         </tr>
 
                         @php
@@ -87,7 +100,7 @@
 
                     @else
                     <tr>
-                        <td colspan="6" align="center">No record available</td>
+                        <td colspan="7" align="center">No record available</td>
                     </tr>
                     @endif
                 </tbody>
@@ -101,6 +114,7 @@
                         <td></td>
                         <td style="font-weight: bold; color: black;">Total: </td>
                         <td style="font-weight: bold; color: green;">{{ '+'.$data->currency.' '.number_format($totalPaid, 2) }}</td>
+                        <td></td>
 
                     </tr>
                 </tfoot>

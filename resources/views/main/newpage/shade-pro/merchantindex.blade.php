@@ -19,6 +19,7 @@
     <!-- Hero Area -->
     <div class="position-relative bg-default-2 bg-pattern pattern-2 pt-27 pt-lg-32 pb-15 pb-lg-27">
       <div class="container">
+        {{-- <p style="background: aquamarine;padding: 10px;border-radius: 10px;font-size: 20px;font-weight: 700;"><marquee behavior="" direction="">You are at the right website, Paypinn.com is same as Paysprint.ca!!!</marquee></p> --}}
         <div class="row justify-content-center align-items-center">
           <div class="col-9 col-md-7 col-lg-5 offset-xl-1 align-self-sm-end order-lg-2">
             <div class="hero-img position-relative" data-aos="fade-left" data-aos-duration="500" data-aos-once="true">
@@ -31,8 +32,8 @@
           <div class="col-11 col-md-10 col-lg-7 col-xl-6 order-lg-1" data-aos="fade-right" data-aos-duration="500" data-aos-once="true">
             <div class="hero-content mt-11 mt-lg-0">
               <h4 class="pre-title gr-text-12 text-red text-uppercase mb-7" style="font-size: 22px;">Let’s lift your business</h4>
-              <h1 class="title gr-text-2 mb-8" style="font-size:60px">Create and Send Professional Invoices for Free!</h1>
-              <p class="gr-text-8 mb-11 pr-md-12">Create invoices at the click of a button and accept payments from customers with ease, anytime, anywhere!</p>
+              <h1 class="title gr-text-2 mb-8" style="font-size:60px">Connect with Customers nearby for Free!</h1>
+              <p class="gr-text-8 mb-11 pr-md-12">Create invoices at the click of a button and accept payments with ease, anytime, anywhere!</p>
 
               
 
@@ -67,6 +68,74 @@
         </div>
       </div>
     </div>
+
+
+    <!-- Featured On -->
+
+
+    <div class="brand-section pt-13 pt-lg-17 pb-11 border-bottom bg-default-6">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-8">
+                {{-- <p class="gr-text-9 text-center mb-7">Trusted and Featured on:
+                </p> --}}
+                <h2 class="gr-text-4 text-center mb-8">Featured on</h2>
+            </div>
+            <div class="col-12">
+                <div
+                    class="brand-logos d-flex justify-content-center justify-content-xl-between align-items-center mx-n9 flex-wrap">
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/questrade_znhne7.png" alt="" class="w-100" width="80" height="80">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-delay="600" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/YahooFinanceLogo_geieeb.png" alt="" class="w-100" width="60" height="60">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/private_capital_lxc1jr.png" alt="" class="w-100" width="60" height="60">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/benzinga_qpr7ot.png" alt="" class="w-100" width="100" height="100">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/reuters_o3wnje.png" alt="" class="w-100" width="100" height="100">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-delay="400" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/canadianbusinessjournal_e3mobm.png" alt="" class="w-100" width="100" height="100">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628673759/paysprint_asset/featuredon/magazinetoday_nsudvk.jpg" alt="" class="w-100" width="80" height="80">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/morningstar_ehxgue.png" alt="" class="w-100" width="100" height="100">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628701963/paysprint_asset/featuredon/1280px-The_Globe_and_Mail__2019-10-31_.svg_ph46rz.png" alt="" class="w-100" style="width: 300px !important;">
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <!-- End Featured On -->
+
+
     <!-- Service section  -->
     <div class="service-section bg-default-4 pt-15 pb-13 py-lg-25 disp-0">
       <div class="container">
@@ -513,7 +582,7 @@
 
 
     <div class="content-section pt-13 pt-lg-12 pb-11 pb-lg-22 hover-tilt bg-default-8">
-    <div class="container">
+      <div class="container">
         <div class="row align-items-center justify-content-center">
             {{-- <div class="col-sm-10 col-md-9 col-lg-6 col-xl-5 mb-n7 mb-lg-0">
                 <div class="double-image-group position-relative" data-aos="fade-right" data-aos-duration="1000"
@@ -625,8 +694,8 @@
                 <div class="hero-img" data-aos="fade-left" data-aos-duration="500" data-aos-once="true">
                   <div class="hero-video-thumb position-relative gr-z-index-1">
                     <center>
-<img src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg" alt="" class="w-100 rounded-8" style="height: 350px !important;width: 350px !important;">
-</center>
+                      <img src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg" alt="" class="w-100 rounded-8" style="height: 350px !important;width: 350px !important;">
+                    </center>
                     <a class="video-play-trigger gr-abs-center bg-white circle-xl gr-flex-all-center gr-abs-hover-y focus-reset" data-fancybox="" href="https://youtu.be/txfp2Pzbzrg" tabindex="-1"><i class="icon icon-triangle-right-17-2"></i></a>
                     {{-- <div class="abs-shape gr-abs-tr-custom gr-z-index-n1">
                       <img src="{{ asset('newpage/image/l4/png/l4-hero-shape.png') }}" alt="" class="w-100" data-aos="zoom-in" data-aos-delay="400" data-aos-duration="800" data-aos-once="true">

@@ -44,7 +44,16 @@
                               $currencyCode = $userInfo->currencyCode;
                               $name = $userInfo->name;
                           @endphp
-                        @endif
+
+                          @else
+
+                          @php
+                              $currencySymbol = "-";
+                              $currencyCode = "-";
+                              $name = "-";
+                          @endphp
+
+                    @endif
 
                       <tr>
                         <td>Customer Name</td>

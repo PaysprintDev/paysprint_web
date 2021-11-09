@@ -4,6 +4,17 @@
 
 <!-- jQuery 3 -->
 <script src="{{ asset('ext/bower_components/jquery/dist/jquery.min.js') }}"></script>
+
+
+@if (Session::has('username') == true)
+    @if (session('loginCount') < 1)
+      <script src="{{ asset('hopscotch/dist/js/hopscotch.js') }}"></script>
+    @endif
+@endif
+
+  <!-- Tour Guide plugin -->
+<script src="{{ asset('js/my_first_tour.js') }}"></script>
+
 <script src="https://raw.githubusercontent.com/HubSpot/pace/v1.0.0/pace.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
@@ -23,8 +34,8 @@
 <script src="{{ asset('ext/bower_components/morris.js/morris.min.js') }}"></script>
 
 <!-- DataTables -->
-<script src="{{ asset('ext/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('ext/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+{{--  <script src="{{ asset('ext/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>  --}}
+{{--  <script src="{{ asset('ext/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>  --}}
 
 <!-- Sparkline -->
 <script src="{{ asset('ext/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js') }}"></script>
@@ -79,13 +90,24 @@
 
 <script src="{{ asset('js/country-state-select.js') }}"></script>
 
-<script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+ 
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.25/b-1.7.1/b-html5-1.7.1/datatables.min.js"></script>
 
+
+{{--  <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>  --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+{{--  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>  --}}
+{{--  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>  --}}
+{{--  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>  --}}
+{{--  <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>  --}}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
+
+
+@if (session('role') != "Super")
+    
     <!--Start of Tawk.to Script-->
 <script type="text/javascript">
 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
@@ -100,6 +122,10 @@ s0.parentNode.insertBefore(s1,s0);
 </script>
 <!--End of Tawk.to Script-->
 
+@endif
+
+
+
 
 <!-- CK Editor -->
 <script src="{{ asset('ext/bower_components/ckeditor/ckeditor.js') }}"></script>
@@ -111,7 +137,9 @@ s0.parentNode.insertBefore(s1,s0);
 
 <script>
   $(document).ready(function(){
-    $('#example4').DataTable();
+    $('#example4').DataTable({
+      'pageLength'   : 200,
+    });
     $('#message').summernote({
       height: 300,
     });
@@ -120,18 +148,22 @@ s0.parentNode.insertBefore(s1,s0);
 
 <script>
   $(function () {
-    $('#example1').DataTable();
+    $('#example1').DataTable({
+      'pageLength'   : 200,
+    });
     $('#example2').DataTable({
       'paging'      : true,
       'lengthChange': false,
       'searching'   : false,
       'ordering'    : true,
       'info'        : true,
-      'autoWidth'   : false
+      'autoWidth'   : false,
+      'pageLength'   : 200,
     });
 
     $('#example3').DataTable( {
       'paging'      : true,
+      'pageLength'   : 200,
       'lengthChange': true,
       'searching'   : true,
       'ordering'    : true,
@@ -207,11 +239,11 @@ s0.parentNode.insertBefore(s1,s0);
             }
             else if(result.message == "error" && result.title == "email"){
                 $(".emailcheck").removeClass("disp-0");
-                $(".emailcheck").text("Email Address is not available. (Invoice goes to Customer directly)");
+                $(".emailcheck").text("Email Address is not available. (Customer does not need to create a PaySprint Account to Pay Invoice)");
             }
             else if(result.message == "error" && result.title == "telephone"){
                 $(".phonecheck").removeClass("disp-0");
-                $(".phonecheck").text("Telephone is not available. (Invoice goes to Customer directly)");
+                $(".phonecheck").text("Telephone is not available. (Customer does not need to create a PaySprint Account to Pay Invoice)");
             }
 
 
@@ -1375,8 +1407,72 @@ function invoiceVisit(id, val){
 
 }
 
-function del(val){
-if(val == "deletefee" || val == "deletecardissuer"){
+
+function invoiceLinkVisit(id, val){
+
+  var route = "{{ URL('Ajax/invoicelinkVisit') }}";
+  var thisdata;
+  var spinner = $('.spinner'+val);
+
+  if(val == "delete"){
+
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this invoice!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        thisdata = {id: id, val: val};
+          setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: thisdata,
+            dataType: 'JSON',
+            beforeSend: function(){
+              spinner.removeClass('disp-0');
+            },
+            success: function(result){
+              spinner.addClass('disp-0');
+
+                if (result.message == "success") {
+                  // Route to another page
+                  swal(result.title, result.res, result.message);
+                  setTimeout(function(){ location.href = location.origin+"/Admin"; }, 2000);
+                }
+
+                else{
+                  swal(result.title, result.res, result.message);
+                }
+
+
+            }
+
+          });
+
+      } 
+      else {
+
+      }
+    });
+
+
+  }
+  else{
+    $('.mainText').addClass('disp-0');
+    $('.mainInput').removeClass('disp-0');
+    $('.edit').addClass('disp-0');
+    $('.updt').removeClass('disp-0');
+  }
+
+
+}
+
+function del(val, id){
+if(val == "deletefee" || val == "deletecardissuer" || val == "deletespecialinfo"){
       swal({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this data",
@@ -1387,7 +1483,7 @@ if(val == "deletefee" || val == "deletecardissuer"){
     .then((willDelete) => {
       if (willDelete) {
 
-        $("#"+val).submit();
+        $("#"+val+id).submit();
 
       } 
       else {
@@ -1395,6 +1491,130 @@ if(val == "deletefee" || val == "deletecardissuer"){
       }
     });
 }
+}
+
+function markasPaid(id){
+
+  swal({
+      title: "Are you sure?",
+      text: "Be sure this is properly reviewed",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+
+        location.href = '/Admin/invoicecomment/'+id;
+      } 
+      else {
+
+      }
+    });
+
+}
+
+
+function markasLinkPaid(id){
+
+  swal({
+      title: "Are you sure?",
+      text: "Be sure this is properly reviewed",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+
+        location.href = '/Admin/invoicelinkcomment/'+id;
+      } 
+      else {
+
+      }
+    });
+
+}
+
+
+function whatyouOffer(email){
+    swal({
+      title: "Are you a Property Owner?",
+      text: "Click on OK if you are a property owner",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        // Show the property I own
+
+        location.href = "/myrentalmanagementfacility/admin/"+btoa(email);
+      } 
+      else {
+
+      }
+    });
+}
+
+function viewConsultant(email){
+    swal({
+      title: "Are you a Service Provider?",
+      text: "Click on OK if you are a service provider",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        // Show the property I own
+
+        location.href = "/rentalmanagement/consultant"
+      } 
+      else {
+
+      }
+    });
+}
+
+function flagMoney(val, id){
+    swal({
+    title: "Are you sure?",
+    text: "Be sure you want to continue.",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  })
+  .then((willDelete) => {
+    if (willDelete) {
+
+      $("#"+val+id).submit();
+
+    } 
+    else {
+
+    }
+  });
+}
+
+function delSupport(id){
+      swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this data",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+
+        $("#delSupport"+id).submit();
+
+      } 
+      else {
+
+      }
+    });
 }
 
 
@@ -1549,6 +1769,56 @@ function approveaccount(id){
 
 }
 
+
+function disapproveaccount(id){
+
+  var thisdata;
+  var spinner = $('.spindis'+id);
+  var route = "{{ URL('Ajax/disapproveUser') }}";
+
+  swal({
+      title: "Are you sure?",
+      text: "You are about to disapprove this user from using PaySprint",
+      icon: "info",
+      buttons: true,
+      dangerMode: false,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        thisdata = {id: id};
+          setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: thisdata,
+            dataType: 'JSON',
+            beforeSend: function(){
+              spinner.removeClass('disp-0');
+            },
+            success: function(result){
+              spinner.addClass('disp-0');
+                
+                if (result.message == "success") {
+
+                  swal(result.title, result.res, result.message);
+                  setTimeout(function(){ location.reload(); }, 2000);
+
+                }
+
+                else{
+                  swal(result.title, result.res, result.message);
+                }
+
+
+            }
+
+          });
+
+      }
+    });
+
+}
+
 function moveaccount(id){
 
   var thisdata;
@@ -1599,6 +1869,60 @@ function moveaccount(id){
 }
 
 
+function reverseFee(reference_code){
+
+  var thisdata;
+  var spinner = $('.spin'+reference_code);
+  var route = "{{ URL('Ajax/paychargeback') }}";
+
+  swal({
+      title: "Are you sure?",
+      text: "Please be sure before you proceed!",
+      icon: "info",
+      buttons: true,
+      dangerMode: false,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        thisdata = {reference_code: reference_code};
+          setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: thisdata,
+            dataType: 'JSON',
+            beforeSend: function(){
+              spinner.removeClass('disp-0');
+            },
+            success: function(result){
+              spinner.addClass('disp-0');
+                
+                if (result.status == 200) {
+
+                  swal("Great!", result.message, "success");
+                  setTimeout(function(){ location.reload(); }, 2000);
+
+                }
+
+                else{
+                  swal("Oops!", result.message, "error");
+                }
+
+
+            },
+            error: function(err){
+              spinner.addClass('disp-0');
+              swal("Oops!", err.responseJSON.message, "error");
+            }
+
+          });
+
+      }
+    });
+
+}
+
+
 function closeAccount(id){
 
   var thisdata;
@@ -1630,7 +1954,7 @@ function closeAccount(id){
                 if (result.message == "success") {
 
                   swal(result.title, result.res, result.message);
-                  setTimeout(function(){ location.reload(); }, 2000);
+                  // setTimeout(function(){ location.reload(); }, 2000);
 
                 }
 
@@ -1647,6 +1971,13 @@ function closeAccount(id){
     });
 
 }
+
+
+function increaseLimit(id, currentLimit){
+  $("#currLimit").html("<span style='color: navy; font-weight:bold;'>Current Transaction Limit: "+currentLimit+"</span>");
+  $("#limit"+id).click();
+}
+
 
 function openAccount(id){
 
@@ -1679,7 +2010,7 @@ function openAccount(id){
                 if (result.message == "success") {
 
                   swal(result.title, result.res, result.message);
-                  setTimeout(function(){ location.reload(); }, 2000);
+                  // setTimeout(function(){ location.reload(); }, 2000);
 
                 }
 
@@ -1741,7 +2072,7 @@ function checkverification(id){
             },
             error: function(err){
               spinner.addClass('disp-0');
-              swal("Oops!", error.responseJSON.message, "error");
+              swal("Oops!", err.responseJSON.message, "error");
             }
 
           });
@@ -1765,6 +2096,25 @@ function grantCountry(id){
     .then((willDelete) => {
       if (willDelete) {
         $("#grantform"+id).submit();
+
+      }
+    });
+}
+
+
+function grantImt(id){
+  var route = "{{ URL('Ajax/accesstousepaysprintimt') }}";
+
+  swal({
+      title: "Are you sure?",
+      text: "Your decision is about to be processed",
+      icon: "info",
+      buttons: true,
+      dangerMode: false,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        $("#grantimtform"+id).submit();
 
       }
     });
@@ -1799,7 +2149,17 @@ var route = "{{ URL('Ajax/paybankwithdrawal') }}";
 var thisdata = {id: id};
 var spinner = $('.spin'+id);
 
-            setHeaders();
+
+  swal({
+      title: "Are you sure?",
+      text: "Please make sure you have confirmed user information before you proceed",
+      icon: "info",
+      buttons: true,
+      dangerMode: false,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        setHeaders();
             jQuery.ajax({
             url: route,
             method: 'post',
@@ -1826,11 +2186,17 @@ var spinner = $('.spin'+id);
             },
             error: function(err){
               spinner.addClass('disp-0');
-              swal("Oops!", error.responseJSON.message, "error");
+              swal("Oops!", err.responseJSON.message, "error");
             }
 
 
           });
+
+      }
+    });
+
+
+            
 
 }
 
@@ -1840,6 +2206,16 @@ var route = "{{ URL('Ajax/paycardwithdrawal') }}";
 var thisdata = {id: id};
 var spinner = $('.spin'+id);
 
+
+  swal({
+      title: "Are you sure?",
+      text: "Please make sure you have confirmed user information before you proceed",
+      icon: "info",
+      buttons: true,
+      dangerMode: false,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
             setHeaders();
             jQuery.ajax({
             url: route,
@@ -1867,11 +2243,16 @@ var spinner = $('.spin'+id);
             },
             error: function(err){
               spinner.addClass('disp-0');
-              swal("Oops!", error.responseJSON.message, "error");
+              swal("Oops!", err.responseJSON.message, "error");
             }
 
 
           });
+
+      }
+    });
+
+
 
 }
 
@@ -1919,7 +2300,7 @@ function refundMoney(id, val){
             },
             error: function(err){
               spinner.addClass('disp-0');
-              swal("Oops!", error.responseJSON.message, "error");
+              swal("Oops!", err.responseJSON.message, "error");
             }
 
           });
@@ -1973,7 +2354,7 @@ function flagAccount(id){
             },
             error: function(err){
               spinner.addClass('disp-0');
-              swal("Oops!", error.responseJSON.message, "error");
+              swal("Oops!", err.responseJSON.message, "error");
             }
 
           });
@@ -1995,6 +2376,8 @@ function showForm(val){
 
 $('#single_tax').change(function(){
 
+  var amount = $('#single_amount').val();
+
   if($('#single_tax').val() == ""){
     swal('Oops!', 'Please select a tax', 'info');
   }
@@ -2003,7 +2386,7 @@ $('#single_tax').change(function(){
   }
   else if($('#single_tax').val() == "No Tax"){
     $('#single_tax_amount').val(0.00);
-    $('#single_total_amount').val(0.00);
+    $('#single_total_amount').val(amount);
   }
   else{
 
@@ -2346,12 +2729,61 @@ else if(val == 'editcard'){
 
 }
 
+
+
 else if(val == 'singleinvoice'){
 
   formData = new FormData(formElem);
 
 
       route = "{{ URL('/api/v1/singleinvoice') }}";
+
+          Pace.restart();
+      Pace.track(function(){
+          setHeaders();
+          jQuery.ajax({
+          url: route,
+          method: 'post',
+          data: formData,
+          cache: false,
+          processData: false,
+          contentType: false,
+          dataType: 'JSON',
+          beforeSend: function(){
+              $('#cardSubmit').text('Please wait...');
+          },
+          success: function(result){
+              // console.log(result);
+
+              $('#cardSubmit').text('Submit');
+
+              if(result.status == 200){
+                      swal("Success", result.message, "success");
+                      setTimeout(function(){ location.href="{{ route('Admin') }}"; }, 2000);
+                  }
+                  else{
+                      swal("Oops", result.message, "error");
+                  }
+
+          },
+          error: function(err) {
+              swal("Oops", err.responseJSON.message, "error");
+
+          } 
+
+      });
+      });
+
+}
+
+// Generate Invoice Links
+
+else if(val == 'singleinvoicelink'){
+
+  formData = new FormData(formElem);
+
+
+      route = "{{ URL('/api/v1/singleinvoicelink') }}";
 
           Pace.restart();
       Pace.track(function(){
@@ -3096,6 +3528,7 @@ else if(val == "merchantprofile"){
     route = "{{ URL('/api/v1/merchantprofile') }}";
 
 
+
     Pace.restart();
     Pace.track(function(){
         setHeaders();
@@ -3174,6 +3607,146 @@ else if(val == "merchantbusiness"){
         },
         error: function(err) {
             $('#updatemyBusinessProfile').text('Update Business');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+else if(val == "ownerandcontrollers"){
+
+ formData = new FormData(formElemShareholder);
+
+    route = "{{ URL('/api/v1/ownerandcontrollersprofile') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#updatemyOwnership').text('Updating Business...');
+        },
+        success: function(result){
+
+            $('#updatemyOwnership').text('Update Information');
+
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $('#updatemyOwnership').text('Update Information');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+else if(val == "promotebusiness"){
+
+ formData = new FormData(formElemBusinessProfile);
+
+    route = "{{ URL('/api/v1/promotebusiness') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#promoteMyBusiness').text('Processing Information...');
+        },
+        success: function(result){
+
+            $('#promoteMyBusiness').text('Promote Business');
+
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 7000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $('#promotemyBusinessProfile').text('Promote Business');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+
+else if(val == "broadcastbusiness"){
+
+ formData = new FormData(formElemBusinessProfile);
+
+    route = "{{ URL('/api/v1/broadcastbusiness') }}";
+
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('#broadcastMyBusiness').text('Processing Information...');
+        },
+        success: function(result){
+
+            $('#broadcastMyBusiness').text('Broadcast Business');
+
+
+                if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.reload(); }, 7000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+
+        },
+        error: function(err) {
+            $('#broadcastmyBusinessProfile').text('Broadcast Business');
             swal("Oops", err.responseJSON.message, "error");
 
         } 
@@ -3294,6 +3867,74 @@ $("#bank_code").change(function(){
 });
 
 
+function promotionAction(val, id){
+
+var route = "{{ URL('Ajax/promotionaction') }}";
+
+  var action;
+  var thisdata;
+  var button = $("#"+val+""+id);
+  
+  if(val == "Remove"){
+    action = "This business will be removed from promotions";
+  }
+  else{
+    action = "You have confirmed this business is successfully broadcasted";
+  }
+
+    swal({
+      title: "Are you sure?",
+      text: action,
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        thisdata = {id: id, val: val};
+          setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'post',
+            data: thisdata,
+            dataType: 'JSON',
+            beforeSend: function(){
+              button.text("Please wait...");
+            },
+            success: function(result){
+              button.text(val);
+
+                if (result.message == "success") {
+                  // Route to another page
+                  swal(result.title, result.res, result.message);
+                  setTimeout(function(){ location.reload(); }, 5000);
+                }
+
+                else{
+                  swal(result.title, result.res, result.message);
+                }
+
+
+            },
+            error: function(err) {
+
+                button.text(val);
+                swal("Oops", err.responseJSON.message, "error");
+
+
+            } 
+
+          });
+
+      } 
+      else {
+        swal('','Cancelled', 'info');
+      }
+    });
+
+}
+
+
 
 function notifyForm(email){
     var route = "{{ URL('Ajax/notifyupdate') }}";
@@ -3336,9 +3977,16 @@ function payOrg(user_id){
 
 
  function restriction(val, name){
-    if(val == "withdrawal"){
+   $('.specialText').addClass("disp-0");
+
+    if(val == "withdrawal")
         swal('Hello '+name, 'Your account need to be verified before you can make withdrawal', 'info');
-    }
+    
+    if(val == "invoice")
+        swal('Hello '+name, 'Your account need to be verified before you can pay for invoice', 'info');
+
+    if(val == "specialinfo")
+        $('.specialText').removeClass("disp-0");
  }
 
   function comingSoon(){
@@ -3458,13 +4106,15 @@ function checkDetail(val){
 
                         $.each(res, function(v, k){
 
-                            if(result.country == k.country){
-                            sendBtn = "<button class='btn btn-primary' onclick=payOrg('"+k.ref_code+"')>Send Money</button>";
+                            // if(result.country == k.country){
+                            // sendBtn = "<button class='btn btn-primary' onclick=payOrg('"+k.ref_code+"')>Send Money</button>";
                                 
-                            }
-                            else{
-                                sendBtn = "<button class='btn btn-primary' onclick=cannotSend()>Send Money</button>";
-                            }
+                            // }
+                            // else{
+                            //     sendBtn = "<button class='btn btn-primary' onclick=cannotSend()>Send Money</button>";
+                            // }
+
+                            sendBtn = "<button class='btn btn-primary' onclick=payOrg('"+k.ref_code+"')>Send Money</button>";
 
                             if(k.avatar != null){
                                 avatar = k.avatar;
@@ -3532,13 +4182,15 @@ function checkDetail(val){
 
                         $.each(res, function(v, k){
 
-                            if(result.country == k.country){
-                            sendBtn = "<button class='btn btn-primary' onclick=payOrg('"+k.ref_code+"')>Send Money</button>";
+                            // if(result.country == k.country){
+                            // sendBtn = "<button class='btn btn-primary' onclick=payOrg('"+k.ref_code+"')>Send Money</button>";
                                 
-                            }
-                            else{
-                                sendBtn = "<button class='btn btn-primary' onclick=cannotSend()>Send Money</button>";
-                            }
+                            // }
+                            // else{
+                            //     sendBtn = "<button class='btn btn-primary' onclick=cannotSend()>Send Money</button>";
+                            // }
+
+                            sendBtn = "<button class='btn btn-primary' onclick=payOrg('"+k.ref_code+"')>Send Money</button>";
 
                             if(k.avatar != null){
                                 avatar = k.avatar;
@@ -3551,6 +4203,7 @@ function checkDetail(val){
 
                            datainfo += datarec;
                         });
+                        
 
                         
 
@@ -3569,6 +4222,104 @@ function checkDetail(val){
     }
 
 }
+
+
+function getFormData(form){
+  $('#btnSelector').text('Please wait...');
+    var unindexed_array = form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function(n, i){
+       indexed_array[n['name']] = n['value'];
+    });
+    return indexed_array;
+}
+
+function moveSelected(){
+  var formData = new FormData();
+  var checkedData = document.querySelector('.checkerInfo');
+      swal({
+      title: "Are you sure?",
+      text: "This users will be moved to the next level",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+
+          var selectedItem = $("input[name^=checkState]:checked"); 
+
+          var responseMessage = "";
+          
+          if(selectedItem.length > 0){
+
+
+            for (let i = 0; i < selectedItem.length; i++) {
+              const element = selectedItem[i].defaultValue;
+
+              if(element != undefined){
+
+                    formData.append("id", element);
+
+                    var route = "{{ route('move selected users') }}";
+
+                    Pace.restart();
+                    Pace.track(function(){
+                        setHeaders();
+                        jQuery.ajax({
+                        url: route,
+                        method: 'post',
+                        data: formData,
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'JSON',
+                        beforeSend: function(){
+                            $('#btnSelector').text('Please wait...');
+                        },
+                        success: function(result){
+
+                            $('#btnSelector').text('Move all selected');
+
+                            if(result.message == "success"){
+                                    swal("Success", result.message, "success");
+                                    // setTimeout(function(){ location.reload(); }, 2000);
+                                }
+                                else{
+                                    swal("Oops", result.message, "error");
+
+                                }
+
+                        },
+                        error: function(err) {
+                            $('#btnSelector').text('Withdraw Money');
+                            swal("Oops", err.responseJSON.message, "error");
+
+
+                        } 
+
+                    });
+                    });
+              }
+              
+            }
+
+            setTimeout(function(){ location.reload(); }, 15000);
+          }
+
+
+      } 
+      else {
+        swal('','Cancelled', 'info');
+      }
+    });
+}
+
+
+ function cannotSend(){
+     swal('International Transfer Coming Soon!', 'We detected this is an international transaction. We\'ll notify you when it is available', 'info');
+ }
 
  function setHeaders(){
     $.ajaxSetup({

@@ -13,13 +13,21 @@
         <span class="sr-only">Toggle navigation</span>
       </a>
 
+      @php
+              $usersName = (strlen(session('firstname').' '.session('lastname')) < 15) ? session('firstname').' '.session('lastname') : substr(session('firstname').' '.session('lastname'), 0, 15)."***";
+              $usersBusiness = (strlen(session('businessname')) < 15) ? session('businessname') : substr(session('businessname'), 0, 15)."***";
+          @endphp
+
       <div class="navbar-custom-menu">
+
+        
+
         <ul class="nav navbar-nav">
           <!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" class="user-image" alt="User Image">
-              <span class="hidden-xs">{{ session('firstname').' '.session('lastname') }}</span>
+              <span class="hidden-xs">{{ (session('businessname') != NULL) ? $usersBusiness : $usersName }}</span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -27,7 +35,7 @@
                 <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" class="img-circle" alt="User Image">
 
                 <p>
-                  {{ session('firstname').' '.session('lastname') }}
+                  {{ (session('businessname') != NULL) ? $usersBusiness : $usersName }}
                 </p>
               </li>
               <!-- Menu Footer-->

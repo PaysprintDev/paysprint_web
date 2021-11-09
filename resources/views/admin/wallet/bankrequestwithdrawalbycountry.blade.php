@@ -57,6 +57,7 @@
                   <th>Status</th>
                   <th>Request Date</th>
                   <th>Action</th>
+                  <th>&nbsp;</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -72,7 +73,11 @@
                                 $currencyCode = $user->currencyCode;
                             @endphp
 
-                            <td>{{ $user->name }}</td>
+                              @if ($user->accountType == "Merchant")
+                                  <td>{{ $user->businessname }}</td>
+                              @else
+                                  <td>{{ $user->name }}</td>
+                              @endif
 
                             @endif
 
@@ -107,12 +112,16 @@
                                 <button class="{{ $btnClass }}" {{ $disabled }} onclick="payBank('{{ $data->id }}')">{{ $btnVal }} <img class="spin{{ $data->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></button>
                             </td>
 
+                            <td>
+                              <a class="btn btn-warning" href="{{ route('return bank withdrawal request', $data->transaction_id) }}">Return Withd. Request</a>
+                            </td>
+
                         </tr>
                         @endforeach
 
                     @else
                     <tr>
-                        <td colspan="11" align="center">No record available</td>
+                        <td colspan="12" align="center">No record available</td>
                     </tr>
                     @endif
                 </tbody>

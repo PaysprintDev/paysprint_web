@@ -61,7 +61,7 @@ input[type="radio"] {
             </div>
         </div> <!-- End -->
         <div class="row">
-            <div class="col-lg-10 mx-auto">
+            <div class="col-lg-12 mx-auto">
                 
                 <div class="card ">
                     <div class="card-header">
@@ -70,7 +70,7 @@ input[type="radio"] {
                             
                             <!-- Credit card form tabs -->
                             <ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
-                                <li class="nav-item"> <a data-toggle="pill" href="{{ route('home') }}" class="nav-link active "> <i class="fas fa-home"></i> Go Back </a> </li>
+                                <li class="nav-item"> <a data-toggle="pill" href="{{ route('all merchant') }}" class="nav-link active "> <i class="fas fa-home"></i> Go Back </a> </li>
                                 {{-- <li class="nav-item"> <a data-toggle="pill" href="#paypal" class="nav-link "> <i class="fab fa-paypal mr-2"></i> Debit Card </a> </li>
                                 <li class="nav-item"> <a data-toggle="pill" href="#net-banking" class="nav-link "> <i class="fas fa-mobile-alt mr-2"></i> EXBC Card </a> </li> --}}
                             </ul>
@@ -90,9 +90,8 @@ input[type="radio"] {
                                                 <th>Address</th>
                                                 <th>Phone</th>
                                                 <th>Website</th>
-                                                <th>City</th>
-                                                <th>Province/State</th>
-                                                <th>Country</th>
+                                                <th>Location</th>
+                                                <th>Description</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -121,13 +120,10 @@ input[type="radio"] {
                                                         {{ ($merchantData->website != null) ? $merchantData->website : "N/A" }}
                                                     </td>
                                                     <td>
-                                                        {{ $merchantData->city }}
+                                                        {{ $merchantData->city.', '.$merchantData->state }}
                                                     </td>
                                                     <td>
-                                                        {{ $merchantData->state }}
-                                                    </td>
-                                                    <td>
-                                                        {{ $merchantData->country }}
+                                                        {{ ($merchantData->description != null) ? $merchantData->description : "N/A" }}
                                                     </td>
                                                     
                                                     
@@ -138,7 +134,7 @@ input[type="radio"] {
                                             @else
 
                                             <tr>
-                                                <td align="center" colspan="8">
+                                                <td align="center" colspan="7">
                                                     No record in your country
                                                 </td>
                                             </tr>

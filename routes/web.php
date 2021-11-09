@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,10 +33,69 @@ Route::get('reportstatus', 'CheckSetupController@reportStatus');
 Route::get('updatefee', 'CheckSetupController@updateMonthlyFee');
 Route::get('refundbycountryupdate', 'CheckSetupController@refundbyCountry');
 Route::get('passwordreminder', 'CheckSetupController@passwordReminder');
-Route::get('epsvendorupdate', 'CheckSetupController@updateEPSVendor');
+// Route::get('epsvendorupdate', 'CheckSetupController@updateEPSVendor');
 Route::get('notification-table', 'CheckSetupController@notificationTable');
+Route::get('notification-period', 'CheckSetupController@notificationPeriod');
+Route::get('monthlytransaction', 'CheckSetupController@monthlyTransactionHistory');
+Route::get('exbccardrequest', 'CheckSetupController@checkExbcCardRequest');
+Route::get('migratetolevelone', 'CheckSetupController@migrateUsersToLevelOne');
+Route::get('insertspecialinfoactivity', 'CheckSetupController@insertspecialinfoActivity');
+Route::get('autofeestructure', 'CheckSetupController@setupFeeStructure');
+Route::get('checktelephone', 'CheckSetupController@checkTelephone');
+Route::get('userarchive', 'CheckSetupController@userAccountArchive');
+Route::get('matchedusersmove', 'CheckSetupController@matchedUsersAccount');
+Route::get('existingaccounts', 'CheckSetupController@existingAccounts');
+Route::get('updatewallet', 'CheckSetupController@updateExbcAccount');
+Route::get('returnfee', 'MaintenanceFeeCharge@returnFeeCharge');
+Route::get('getinvoicecurrency', 'CheckSetupController@updateImportExcelCurrency');
+Route::get('updatebankdetails', 'CheckSetupController@addedBanksCountry');
+Route::get('publisharchive', 'CheckSetupController@publishArchiveUsers');
+Route::get('publishexisting', 'CheckSetupController@publishExistingUsers');
+Route::get('transactionlimits', 'CheckSetupController@updateTransLimit');
+Route::get('numberofwithdrawals', 'CheckSetupController@updateNumberofWithdrawal');
+Route::get('numberofwithdrawalsformerchant', 'CheckSetupController@updateMerchantNumberofWithdrawal');
+
+Route::get('reversal', 'CheckSetupController@reverseFund');
+
+
+
+
+
+// Get Path Address
+Route::get('pathaddress', 'CheckSetupController@getPathAddress');
+
+// Country Update Currency
+Route::get('countryupdate', 'CheckSetupController@countryUpdate');
+
+
+// Transaction Limit
+Route::get('dailylimit', 'CheckSetupController@dailyLimit');
+Route::get('weeklylimit', 'CheckSetupController@weeklyLimit');
+Route::get('monthlylimit', 'CheckSetupController@monthlyLimit');
+
+
+// SET OTP REQUEST
+Route::post('otpstore', ['uses' => 'OtpController@store', 'as' => 'otp.store']);
+
 
 Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
+
+Route::get('/run-queue', function () {
+
+	Artisan::call('queue:work');
+	return "Queue work done!";
+});
+
+
+Route::get('/clear', function () {
+
+	Artisan::call('config:clear');
+	// Artisan::call('config:cache');
+	// Artisan::call('cache:clear');
+	// Artisan::call('route:clear');
+	// Artisan::call('view:clear');
+	return "Package Cleared!";
+});
 
 // Major Routes
 
@@ -42,6 +104,8 @@ Route::get('/', ['uses' => 'HomeController@homePage', 'as' => 'home']);
 Route::get('/merchant-home', ['uses' => 'HomeController@merchantIndex', 'as' => 'merchant home']);
 
 Route::get('/home', ['uses' => 'HomeController@authIndex', 'as' => 'user home']);
+
+Route::get('/supporting-haiti', ['uses' => 'HomeController@haitiDonation', 'as' => 'haiti donation']);
 
 Route::get('about', ['uses' => 'HomeController@about', 'as' => 'about']);
 
@@ -72,11 +136,41 @@ Route::get('privacy-policy', ['uses' => 'HomeController@privacyPolicy', 'as' => 
 
 Route::get('payment/{invoice}', ['uses' => 'HomeController@payment', 'as' => 'payment']);
 
+// Payment Link for Invoice
+Route::get('payment/link/{invoice}/{country}', ['uses' => 'HomeController@paymentFromLink', 'as' => 'payment from link']);
+
 Route::get('payment/sendmoney/{user_id}', ['uses' => 'HomeController@paymentOrganization', 'as' => 'sendmoney payment']);
 Route::get('new/payment/createuser', ['uses' => 'HomeController@createnewPayment', 'as' => 'create new payment']);
 Route::get('payment/receivemoney/{id}', ['uses' => 'HomeController@receiveMoney', 'as' => 'receivemoney payment']);
 
 
+
+// Stripe Route
+Route::post('create-payment-intent', ['uses' => 'MonerisController@paymentIntent', 'as' => 'stripe payment intent']);
+
+Route::post('create-payment-invoice-intent', ['uses' => 'MonerisController@invoicepaymentIntent', 'as' => 'stripe invoice payment intent']);
+
+
+// Express Payment Callback
+Route::prefix('expresspay')->group(function () {
+	Route::get('/resp', ['uses' => 'MonerisController@expressCallback', 'as' => 'express callback']);
+});
+
+
+// Currency FX Page
+Route::prefix('currencyfx')->group(function () {
+	Route::get('/start', ['uses' => 'CurrencyFxController@start', 'as' => 'paysprint currency exchange start']);
+	Route::get('/', ['uses' => 'CurrencyFxController@index', 'as' => 'paysprint currency exchange']);
+	Route::get('marketplace', ['uses' => 'CurrencyFxController@marketPlace', 'as' => 'paysprint currency market place']);
+	Route::get('ongoing', ['uses' => 'CurrencyFxController@marketPlaceOngoingTransaction', 'as' => 'paysprint currency market place ongoing']);
+	Route::get('pending', ['uses' => 'CurrencyFxController@marketPlacePendingTransaction', 'as' => 'paysprint currency market place pending']);
+	Route::get('myorders', ['uses' => 'CurrencyFxController@marketPlaceMyOrder', 'as' => 'paysprint currency market place myorders']);
+
+	// Fund FX Account
+	Route::prefix('fund')->group(function(){
+		Route::get('/', ['uses' => 'CurrencyFxController@fundAccount', 'as' => 'currency exhcange funding']);
+	});
+});
 
 // Wallet Page
 
@@ -88,15 +182,18 @@ Route::prefix('mywallet')->group(function () {
 	Route::get('editcard/{id}', ['uses' => 'HomeController@editCard', 'as' => 'Edit card']);
 	Route::get('editbank/{id}', ['uses' => 'HomeController@editBank', 'as' => 'Edit bank']);
 	Route::get('addmoney', ['uses' => 'HomeController@addMoney', 'as' => 'Add Money']);
+	Route::get('processmoney', ['uses' => 'HomeController@processMoney', 'as' => 'Process Money']);
 	Route::get('withdrawmoney', ['uses' => 'HomeController@withdrawMoney', 'as' => 'Withdraw Money']);
 	Route::get('addbank', ['uses' => 'HomeController@addBankDetail', 'as' => 'Add bank detail']);
 	Route::get('requestrefund', ['uses' => 'HomeController@requestForRefund', 'as' => 'request for refund']);
 	Route::get('notifications', ['uses' => 'HomeController@allNotifications', 'as' => 'notifications']);
 	Route::get('paymentgateway', ['uses' => 'HomeController@paymentGateway', 'as' => 'payment gateway']);
-	
 });
 
 Route::get('merchantcategory', ['uses' => 'HomeController@merchantCategory', 'as' => 'merchant category']);
+Route::get('allmerchantcategory', ['uses' => 'HomeController@allMerchantCategory', 'as' => 'all merchant']);
+
+Route::get('selectcountryutilitybills', ['uses' => 'HomeController@selectCountryUtilityBills', 'as' => 'select utility bills country']);
 Route::get('payutilitybills', ['uses' => 'HomeController@expressUtilities', 'as' => 'utility bills']);
 Route::get('buyutilitybills/{id}', ['uses' => 'HomeController@expressBuyUtilities', 'as' => 'buy utility bills']);
 
@@ -104,14 +201,20 @@ Route::get('signout/{id}',  ['uses' => 'api\v1\UserController@logout'])->name('s
 
 
 
- 
+
 
 
 
 // General Rental Management PAGE
 Route::get('rentalmanagement-start', ['uses' => 'HomeController@rentalManagementStart', 'as' => 'rentalmanagement start']);
+Route::get('rentalmanagement-admin-start', ['uses' => 'HomeController@rentalManagementAdminStart', 'as' => 'rentalmanagement admin start']);
 
 Route::get('rentalmanagement', ['uses' => 'HomeController@rentalManagement', 'as' => 'rentalmanagement']);
+
+Route::get('myrentalmanagementfacility/admin/{email}', ['uses' => 'HomeController@myRentalManagementFacility', 'as' => 'myRentalManagementFacility']);
+
+Route::post('deleteproperty',  ['uses' => 'HomeController@deleteProperty'])->name('delete property');
+
 
 // Admin Rental Management Page
 Route::get('rentalmanagement/admin', ['uses' => 'HomeController@rentalManagementAdmin', 'as' => 'rentalManagementAdmin']);
@@ -164,6 +267,7 @@ Route::get('maintenance/edit/{id}', ['uses' => 'HomeController@maintenanceEdit',
 Route::get('amenities', ['uses' => 'HomeController@amenities', 'as' => 'amenities']);
 
 Route::get('amenities/facilityview/{id}', ['uses' => 'HomeController@facilityview', 'as' => 'facilityview']);
+Route::get('amenities/makeabooking/{id}', ['uses' => 'HomeController@makeBooking', 'as' => 'makeabooking']);
 
 
 
@@ -189,29 +293,65 @@ Route::get('allusers', ['uses' => 'AdminController@allPlatformUsers', 'as' => 'a
 
 Route::get('approvedusers', ['uses' => 'AdminController@allApprovedUsers', 'as' => 'approvedusers']);
 Route::get('matchedusers', ['uses' => 'AdminController@allMatchedUsers', 'as' => 'matchedusers']);
+Route::get('leveltwousers', ['uses' => 'AdminController@allLevelTwoUsers', 'as' => 'leveltwousers']);
 Route::get('pendingusers', ['uses' => 'AdminController@allPendingUsers', 'as' => 'pendingusers']);
 Route::get('overrideusers', ['uses' => 'AdminController@allOverrideUsers', 'as' => 'overrideusers']);
 Route::get('closedusers', ['uses' => 'AdminController@allClosedUsers', 'as' => 'closedusers']);
+Route::get('newusers', ['uses' => 'AdminController@allNewusers', 'as' => 'newusers']);
+Route::get('newmerchants', ['uses' => 'AdminController@allNewMerchants', 'as' => 'newmerchants']);
+Route::get('archiveduserslist', ['uses' => 'AdminController@archivedUsersList', 'as' => 'archiveduserslist']);
+
+
+Route::get('Admin/x-wireless', ['uses' => 'AdminController@smsWirelessPlatform', 'as' => 'sms wireless platform']);
+
+// Get currency conversion rate
+Route::get('Admin/getcurrencyrate', ['uses' => 'AdminController@getCurrencyRate', 'as' => 'getcurrencyrate']);
+
+// Promote Business
+Route::get('Admin/businesspromotion', ['uses' => 'AdminController@businessPromotion', 'as' => 'business promotion']);
+
+Route::get('Admin/emailcampaign', ['uses' => 'AdminController@runEmailCampaign', 'as' => 'run mail campaign']);
+
+
 
 
 Route::get('allusersbycountry', ['uses' => 'AdminController@allPlatformUsersByCountry', 'as' => 'all users by country']);
 
 
 Route::get('approvedusersbycountry', ['uses' => 'AdminController@allApprovedUsersByCountry', 'as' => 'approved users by country']);
+Route::get('leveltwousersbycountry', ['uses' => 'AdminController@levelTwoUsersByCountry', 'as' => 'level two users by country']);
 Route::get('matchedusersbycountry', ['uses' => 'AdminController@allMatchedUsersByCountry', 'as' => 'matched users by country']);
 Route::get('pendingusersbycountry', ['uses' => 'AdminController@allPendingUsersByCountry', 'as' => 'pending users by country']);
 Route::get('overrideusersbycountry', ['uses' => 'AdminController@allOverrideUsersByCountry', 'as' => 'override users by country']);
 Route::get('closedusersbycountry', ['uses' => 'AdminController@allClosedUsersByCountry', 'as' => 'closed users by country']);
 
 
+Route::get('newusersbycountry', ['uses' => 'AdminController@newUsersByCountry', 'as' => 'new users by country']);
+Route::get('newmerchantsbycountry', ['uses' => 'AdminController@newMerchantsByCountry', 'as' => 'new merchants by country']);
+
+Route::get('archivedusersbycountry', ['uses' => 'AdminController@archivedUsersByCountry', 'as' => 'archived users by country']);
+
+
 Route::get('usermoredetail/{id}', ['uses' => 'AdminController@userMoreDetail', 'as' => 'user more detail']);
+Route::get('closedusermoredetail/{id}', ['uses' => 'AdminController@closedUserMoreDetail', 'as' => 'closed user more detail']);
 
 
 Route::prefix('Admin/wallet')->group(function () {
 
 	Route::get('/', ['uses' => 'AdminController@walletBalance', 'as' => 'wallet balance']);
+	Route::get('/user-statement', ['uses' => 'AdminController@userWalletStatement', 'as' => 'users wallet statement']);
+	Route::get('/user-purchase-statement', ['uses' => 'AdminController@userWalletPurchaseStatement', 'as' => 'user purchase statement']);
+	Route::get('/user-wallet-purchase', ['uses' => 'AdminController@userWalletPurchase', 'as' => 'users wallet purchase']);
 	Route::get('bankrequestwithdrawal', ['uses' => 'AdminController@bankRequestWithdrawal', 'as' => 'bank request withdrawal']);
+
+	Route::get('merchantbankdetails', ['uses' => 'AdminController@merchantBanksDetails', 'as' => 'merchant banking details']);
+
+	Route::get('merchantbankdetailsbycountry', ['uses' => 'AdminController@merchantBankDetailsByCountry', 'as' => 'merchant bank details by country']);
+
+	Route::get('purchaserequestreturn', ['uses' => 'AdminController@purchaseRefundReturn', 'as' => 'purchase refund request']);
 	Route::get('bankrequestwithdrawalbycountry', ['uses' => 'AdminController@bankRequestWithdrawalByCountry', 'as' => 'bank withdrawal by country']);
+	Route::get('returnwithdrawal/{id}', ['uses' => 'AdminController@returnWithdrawal', 'as' => 'return withdrawal request']);
+	Route::get('returnbankwithdrawal/{id}', ['uses' => 'AdminController@returnBankWithdrawal', 'as' => 'return bank withdrawal request']);
 	Route::get('cardrequestwithdrawal', ['uses' => 'AdminController@cardRequestWithdrawal', 'as' => 'card request withdrawal']);
 
 
@@ -247,11 +387,15 @@ Route::prefix('Admin/wallet')->group(function () {
 	Route::get('bankrequestprocessed', ['uses' => 'AdminController@bankRequestProcessed', 'as' => 'processed payment']);
 	Route::get('refunddetails/{transid}', ['uses' => 'AdminController@getRefundDetails', 'as' => 'refund details']);
 
+	Route::post('returnrefundmoney/{reference_code}', ['uses' => 'AdminController@sendStaffRefundNotification', 'as' => 'return refund money']);
+
+	Route::post('actonreturnrefundmoney/{reference_code}', ['uses' => 'AdminController@returnRefundMoney', 'as' => 'act on return refund money']);
+
 	Route::get('balancebycountry', ['uses' => 'AdminController@balanceByCountry', 'as' => 'balance by country']);
 	Route::get('maintenancefee', ['uses' => 'AdminController@maintenancefeeDetail', 'as' => 'maintenance fee detail']);
 	Route::get('maintenancefeebycountry', ['uses' => 'AdminController@maintenancefeeByCountry', 'as' => 'maintenance fee by country']);
 
-	
+
 	Route::get('withdrawal', ['uses' => 'AdminController@merchantWithdrawal', 'as' => 'merchant withdrawal']);
 	Route::get('addmoney', ['uses' => 'AdminController@merchantAddMoney', 'as' => 'merchant add money']);
 	Route::get('sendmoney', ['uses' => 'AdminController@merchantSendMoney', 'as' => 'merchant send money']);
@@ -261,7 +405,6 @@ Route::prefix('Admin/wallet')->group(function () {
 	Route::get('new/payment/createuser', ['uses' => 'AdminController@createnewPayment', 'as' => 'create new merchant payment']);
 
 	Route::get('payment/sendmoney/{user_id}', ['uses' => 'AdminController@paymentOrganization', 'as' => 'merchant sendmoney payment']);
-	
 });
 
 
@@ -272,8 +415,11 @@ Route::prefix('Admin/card')->group(function () {
 	Route::get('editcardissuer/{id}', ['uses' => 'AdminController@editCardIssuer', 'as' => 'editcardissuer']);
 
 	Route::get('addedcards', ['uses' => 'AdminController@allAddedCards', 'as' => 'all added cards']);
+	Route::get('deletedcards', ['uses' => 'AdminController@allDeletedCards', 'as' => 'all deleted cards']);
 	Route::get('getusercard/{user_id}', ['uses' => 'AdminController@getUsersCard', 'as' => 'get user card']);
+	Route::get('getuserdeletedcard/{user_id}', ['uses' => 'AdminController@getUsersDeletedCard', 'as' => 'get user deleted card']);
 	Route::get('redflagged', ['uses' => 'AdminController@redFlaggedAccount', 'as' => 'red flagged account']);
+	Route::get('redflaggedmoney', ['uses' => 'AdminController@redFlaggedMoney', 'as' => 'red flagged money']);
 
 
 	Route::get('merchantcreditcard/{id}', ['uses' => 'AdminController@merchantCreditCard', 'as' => 'merchant credit card']);
@@ -284,22 +430,21 @@ Route::prefix('Admin/card')->group(function () {
 	Route::get('merchantprepaidcard/{id}', ['uses' => 'AdminController@merchantPrepaidCard', 'as' => 'merchant prepaid card']);
 	Route::get('merchantbankaccount/{id}', ['uses' => 'AdminController@merchantBankAccount', 'as' => 'merchant bank account']);
 	Route::get('editmerchantbankaccount/{id}', ['uses' => 'AdminController@editMerchantBankAccount', 'as' => 'Edit merchant bank account']);
-	
 });
 
 
 Route::prefix('Admin/invoice')->group(function () {
 
 	Route::get('single', ['uses' => 'AdminController@createSingleInvoice', 'as' => 'create single invoice']);
+	Route::get('single/link', ['uses' => 'AdminController@createLinkInvoice', 'as' => 'create link invoice']);
+
 	Route::get('bulk', ['uses' => 'AdminController@createBulkInvoice', 'as' => 'create bulk invoice']);
-	
 });
 
 
 Route::prefix('Admin/merchant')->group(function () {
 
 	Route::get('profile', ['uses' => 'AdminController@merchantProfile', 'as' => 'merchant profile']);
-	
 });
 
 
@@ -326,13 +471,13 @@ Route::prefix('Admin/performance/report')->group(function () {
 	Route::get('tax', ['uses' => 'AdminController@taxReport', 'as' => 'tax report']);
 	Route::get('invoicetype', ['uses' => 'AdminController@invoiceTypeReport', 'as' => 'invoice type']);
 	Route::get('recurring', ['uses' => 'AdminController@recurringReport', 'as' => 'recurring invoice']);
-	
 });
 
 Route::prefix('Admin/overview/report')->group(function () {
 
 	Route::get('business', ['uses' => 'AdminController@businessReport', 'as' => 'business report']);
 	Route::get('accountreport', ['uses' => 'AdminController@accountReport', 'as' => 'account report']);
+	Route::get('invoicecommission', ['uses' => 'AdminController@invoiceCommissionReport', 'as' => 'invoice commission']);
 	Route::get('businessreport', ['uses' => 'AdminController@getBusinessReport', 'as' => 'get business report']);
 	Route::get('inflow', ['uses' => 'AdminController@inflowReport', 'as' => 'inflow reports']);
 	Route::get('inflowbycountry', ['uses' => 'AdminController@inflowByCountryReport', 'as' => 'inflow by country']);
@@ -358,22 +503,24 @@ Route::prefix('Admin/overview/report')->group(function () {
 	Route::get('amountwithdrawnfromwallet', ['uses' => 'AdminController@amountWithdrawnFromWallet', 'as' => 'amount withdrawn from wallet']);
 	Route::get('chargesonwithdrawal', ['uses' => 'AdminController@chargesOnWithdrawals', 'as' => 'charges on withdrawal']);
 	Route::get('walletmaintenancefee', ['uses' => 'AdminController@walletMaintenanceFee', 'as' => 'wallet maintenance fee']);
-	
 });
 
-
+// Api documentation
+Route::get('api/documentation', ['uses' => 'AdminController@apiDocumentation', 'as' => 'api integration']);
+Route::get('earnedpoints', ['uses' => 'AdminController@earnedPoints', 'as' => 'earned points']);
 Route::prefix('Admin/')->group(function () {
 
 	Route::get('invoicetypes', ['uses' => 'AdminController@createServiceTypes', 'as' => 'create service types']);
 	Route::get('setuptax', ['uses' => 'AdminController@setupTax', 'as' => 'setup tax']);
 	Route::get('edittax/{id}', ['uses' => 'AdminController@editTax', 'as' => 'edit tax']);
-	Route::get('api-documentation', ['uses' => 'AdminController@apiDocumentation', 'as' => 'api integration']);
 
 	Route::get('statement', ['uses' => 'AdminController@getStatement', 'as' => 'getStatement']);
 	Route::get('statementreport', ['uses' => 'AdminController@getStatementReport', 'as' => 'statement report']);
 
 	Route::get('walletstatement', ['uses' => 'AdminController@getWalletStatement', 'as' => 'getwalletStatement']);
 	Route::get('walletstatementreport', ['uses' => 'AdminController@getWalletStatementReport', 'as' => 'wallet report']);
+	Route::get('user-wallet-report', ['uses' => 'AdminController@getUserWalletStatementReport', 'as' => 'user wallet report']);
+	Route::get('user-wallet-purchase-report', ['uses' => 'AdminController@getUserWalletPurchaseStatementReport', 'as' => 'user wallet purchase report']);
 
 	Route::get('payreport', ['uses' => 'AdminController@payreport', 'as' => 'payreport']);
 	Route::get('epayreport', ['uses' => 'AdminController@epayreport', 'as' => 'epayreport']);
@@ -388,6 +535,14 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('comissionreport', ['uses' => 'AdminController@comissionreport', 'as' => 'comissionreport']);
 
 	Route::get('customer/{id}', ['uses' => 'AdminController@customer', 'as' => 'customer']);
+	Route::get('linkcustomer/{id}', ['uses' => 'AdminController@linkCustomer', 'as' => 'link customer']);
+
+	Route::get('invoicecomment/{id}', ['uses' => 'AdminController@invoiceComment', 'as' => 'invoice comment']);
+	Route::post('myinvoicecomment/{id}', ['uses' => 'MonerisController@myInvoiceComment', 'as' => 'my invoice comment']);
+
+
+	Route::get('invoicelinkcomment/{id}', ['uses' => 'AdminController@invoiceLinkComment', 'as' => 'invoice link comment']);
+	Route::post('myinvoicelinkcomment/{id}', ['uses' => 'MonerisController@myInvoiceLinkComment', 'as' => 'my invoice link comment']);
 
 
 
@@ -395,6 +550,12 @@ Route::prefix('Admin/')->group(function () {
 
 	Route::get('pricingsetup', ['uses' => 'AdminController@pricingSetup', 'as' => 'pricing setup']);
 	Route::get('pricingsetupbycountry', ['uses' => 'AdminController@pricingSetupByCountry', 'as' => 'pricing setup by country']);
+
+	Route::get('markupconversion', ['uses' => 'AdminController@markupCurrencyConversion', 'as' => 'markup conversion']);
+
+
+	Route::post('savemarkup', ['uses' => 'AdminController@saveMarkup', 'as' => 'save markup']);
+
 	Route::get('countrypricing', ['uses' => 'AdminController@countryPricing', 'as' => 'country pricing']);
 	Route::get('editpricing', ['uses' => 'AdminController@editPricing', 'as' => 'edit pricing']);
 	Route::post('createpricingsetup', ['uses' => 'AdminController@createPricingSetup', 'as' => 'create pricing setup']);
@@ -409,16 +570,43 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('xreceivemoney', ['uses' => 'AdminController@xreceivemoney', 'as' => 'xreceivemoney']);
 
 	Route::get('activity', ['uses' => 'AdminController@platformActivity', 'as' => 'platform activity']);
+	Route::get('activity-report', ['uses' => 'AdminController@activityReport', 'as' => 'activity report']);
+	Route::get('paysprintpoint', ['uses' => 'AdminController@paysprintPoint', 'as' => 'paysprint point']);
+	Route::get('userspoint', ['uses' => 'AdminController@usersPoint', 'as' => 'users points']);
+
 	Route::get('gatewayactivity', ['uses' => 'AdminController@gatewayActivity', 'as' => 'gateway activity']);
+	Route::get('checktransaction/{id}', ['uses' => 'AdminController@checkTransaction', 'as' => 'check transaction']);
+	Route::get('supportactivity', ['uses' => 'AdminController@supportPlatformActivity', 'as' => 'support activity']);
+	Route::get('activityperday', ['uses' => 'AdminController@platformActivityPerDay', 'as' => 'activity per day']);
+
 	Route::get('generatespecialinfoactivity', ['uses' => 'AdminController@generateSpecialInfoActivity', 'as' => 'generate special information activity']);
+
+	Route::get('createusersupportagent', ['uses' => 'AdminController@createSupportAgent', 'as' => 'create user support agent']);
+	Route::get('editusersupportagent/{id}', ['uses' => 'AdminController@editSupportAgent', 'as' => 'edit support agent']);
+	Route::get('viewusersupportagent', ['uses' => 'AdminController@viewSupportAgent', 'as' => 'view user support agent']);
+	Route::post('generateusersupportagent', ['uses' => 'AdminController@generateSupportAgent', 'as' => 'generate account for support']);
+	Route::post('editthisusersupportagent', ['uses' => 'AdminController@editThisSupportAgent', 'as' => 'edit account for support']);
+	Route::post('deletesupport/{id}', ['uses' => 'AdminController@deleteSupportAgent', 'as' => 'delete support agent']);
+
+
+
+	Route::post('flagthismoney', ['uses' => 'AdminController@flagThisMoney', 'as' => 'flag this money']);
+
+
 	Route::get('specialinfoactivity', ['uses' => 'AdminController@specialInfoActivity', 'as' => 'special information activity']);
+	Route::get('editspecialinfoactivity/{id}', ['uses' => 'AdminController@editspecialInfoActivity', 'as' => 'edit special activity']);
 	Route::post('createspecialinfoactivity', ['uses' => 'AdminController@createSpecialInfoActivity', 'as' => 'create special information']);
+	Route::post('deletespecialactivity', ['uses' => 'AdminController@deleteSpecialInfoActivity', 'as' => 'delete special activity']);
 	Route::get('allcountries', ['uses' => 'AdminController@allCountries', 'as' => 'all countries']);
 
 
 	Route::get('sendmessage', ['uses' => 'AdminController@sendUserMessage', 'as' => 'send message']);
 	Route::post('sendusermessage', ['uses' => 'AdminController@sendNewUserMessage', 'as' => 'send user message']);
-	
+	Route::post('runmailcampaign', ['uses' => 'AdminController@runMailChimpCampaign', 'as' => 'run mail campaign to users']);
+
+
+	// Move Multiple Users
+	Route::post('moveselectedusers', ['uses' => 'AdminController@ajaxmoveSelectedUser', 'as' => 'move selected users']);
 });
 
 Route::get('AdminLogin', ['uses' => 'AdminController@adminlogin', 'as' => 'AdminLogin']);
@@ -438,6 +626,11 @@ Route::post('deletecardissuer/{id}', ['uses' => 'AdminController@deleteCardIssue
 
 
 Route::post('updateinvoice', ['uses' => 'AdminController@updateinvoice', 'as' => 'updateinvoice']);
+
+Route::post('updateinvoicelink', ['uses' => 'AdminController@updateinvoicelink', 'as' => 'updateinvoicelink']);
+
+
+Route::post('increasetranslimit', ['uses' => 'AdminController@increaseTransLimit', 'as' => 'increase trans limit']);
 
 
 
@@ -472,110 +665,130 @@ Route::post('completedworkorder', ['uses' => 'ConsultantController@completedwork
 
 Route::post('create_facility', ['uses' => 'BuildingController@createFacility', 'as' => 'create_facility']);
 
+Route::post('exporttoExcel', ['uses' => 'HomeController@exportToExcel', 'as' => 'export to excel']);
+Route::post('exportstatementtoExcel', ['uses' => 'AdminController@exportStatementToExcel', 'as' => 'export statement to excel']);
+Route::post('exporttoPdf', ['uses' => 'HomeController@exportToPdf', 'as' => 'export to pdf']);
+
+
+
 
 
 Auth::routes();
 
 // Ajax Route
-Route::group(['prefix' => 'Ajax'], function(){
+Route::group(['prefix' => 'Ajax'], function () {
 
-// User Registrations
-Route::post('Ajaxregister', ['uses' => 'HomeController@ajaxregister', 'as' => 'Ajaxregister']);
-Route::post('Ajaxlogin', ['uses' => 'HomeController@ajaxlogin', 'as' => 'Ajaxlogin']);
-Route::post('contactus', ['uses' => 'HomeController@contactus', 'as' => 'contactus']);
-
-
-// Logout
-// Route::get('logout', 'LoginController@logout');
+	// User Registrations
+	Route::post('Ajaxregister', ['uses' => 'HomeController@ajaxregister', 'as' => 'Ajaxregister']);
+	Route::post('Ajaxlogin', ['uses' => 'HomeController@ajaxlogin', 'as' => 'Ajaxlogin']);
+	Route::post('contactus', ['uses' => 'HomeController@contactus', 'as' => 'contactus']);
 
 
-// Setup Billing
-Route::post('setupBills', ['uses' => 'HomeController@setupBills', 'as' => 'setupBills']);
-Route::post('checkmyBills', ['uses' => 'HomeController@checkmyBills', 'as' => 'checkmyBills']);
-Route::post('getmyInvoice', ['uses' => 'HomeController@getmyInvoice', 'as' => 'getmyInvoice']);
-Route::post('getPayment', ['uses' => 'HomeController@getPayment', 'as' => 'getPayment']);
-Route::post('getmystatement', ['uses' => 'HomeController@getmystatement', 'as' => 'getmystatement']);
-Route::post('getOrganization', ['uses' => 'HomeController@getOrganization', 'as' => 'getOrganization']);
+	// Logout
+	// Route::get('logout', 'LoginController@logout');
 
-Route::post('PaymentInvoice', ['uses' => 'MonerisController@purchase', 'as' => 'PaymentInvoice']);
-// Route::post('orgPaymentInvoice', ['uses' => 'MonerisController@orgPaymentInvoice', 'as' => 'orgPaymentInvoice']);
-Route::post('orgPaymentInvoice', ['uses' => 'GooglePaymentController@orgPaymentInvoice', 'as' => 'orgPaymentInvoice']);
-Route::post('receivemoneyProcess', ['uses' => 'MonerisController@receivemoneyProcess', 'as' => 'receivemoneyProcess']);
 
-// External Source
-Route::post('loginApi', ['uses' => 'HomeController@loginApi', 'as' => 'loginApi']);
+	// Setup Billing
+	Route::post('setupBills', ['uses' => 'HomeController@setupBills', 'as' => 'setupBills']);
+	Route::post('checkmyBills', ['uses' => 'HomeController@checkmyBills', 'as' => 'checkmyBills']);
+	Route::post('getmyInvoice', ['uses' => 'HomeController@getmyInvoice', 'as' => 'getmyInvoice']);
+	Route::post('getPayment', ['uses' => 'HomeController@getPayment', 'as' => 'getPayment']);
+	Route::post('getmystatement', ['uses' => 'HomeController@getmystatement', 'as' => 'getmystatement']);
 
-// Create Event Ajax
-Route::post('Adminlogin', ['uses' => 'AdminController@ajaxadminlogin', 'as' => 'AjaxAdminlogin']);
-Route::post('Adminspeciallogin', ['uses' => 'AdminController@ajaxAdminspeciallogin', 'as' => 'AjaxAdminspeciallogin']);
-Route::post('Adminlogout', ['uses' => 'AdminController@ajaxadminLogout', 'as' => 'AjaxAdminlogout']);
-Route::post('Adminregister', ['uses' => 'AdminController@ajaxadminregister', 'as' => 'AjaxAdminRegister']);
-Route::post('CreateEvent', ['uses' => 'AdminController@ajaxcreateEvent', 'as' => 'AjaxCreateEvent']);
-Route::post('WithdrawCash', ['uses' => 'AdminController@ajaxWithdrawCash', 'as' => 'AjaxWithdrawCash']);
-Route::post('getmyStatement', ['uses' => 'AdminController@ajaxgetmyStatement', 'as' => 'AjaxgetmyStatement']);
-Route::post('getmyreportStatement', ['uses' => 'AdminController@ajaxgetmyreportStatement', 'as' => 'AjaxgetmyreportStatement']);
-Route::post('getBronchure', ['uses' => 'HomeController@ajaxgetBronchure', 'as' => 'AjaxgetBronchure']);
+	Route::post('getOrganization', ['uses' => 'HomeController@getOrganization', 'as' => 'getOrganization']);
 
 
 
-Route::post('epaywithdraw', ['uses' => 'AdminController@ajaxepaywithdraw', 'as' => 'Ajaxepaywithdraw']);
-Route::post('remitCash', ['uses' => 'AdminController@ajaxremitCash', 'as' => 'AjaxremitCash']);
-Route::post('remitdetailsCash', ['uses' => 'AdminController@ajaxremitdetailsCash', 'as' => 'AjaxremitdetailsCash']);
+	Route::post('PaymentInvoice', ['uses' => 'MonerisController@purchase', 'as' => 'PaymentInvoice']);
+	// Route::post('orgPaymentInvoice', ['uses' => 'MonerisController@orgPaymentInvoice', 'as' => 'orgPaymentInvoice']);
+	Route::post('orgPaymentInvoice', ['uses' => 'GooglePaymentController@orgPaymentInvoice', 'as' => 'orgPaymentInvoice']);
+	Route::post('receivemoneyProcess', ['uses' => 'MonerisController@receivemoneyProcess', 'as' => 'receivemoneyProcess']);
 
-Route::post('getmremittance', ['uses' => 'AdminController@ajaxgetmremittance', 'as' => 'Ajaxgetmremittance']);
+	// External Source
+	Route::post('loginApi', ['uses' => 'HomeController@loginApi', 'as' => 'loginApi']);
 
-Route::post('setupTrans', ['uses' => 'AdminController@ajaxsetupTrans', 'as' => 'AjaxsetupTrans']);
-Route::post('checkfeeReport', ['uses' => 'AdminController@ajaxcheckfeeReport', 'as' => 'AjaxcheckfeeReport']);
-Route::post('invoiceVisit', ['uses' => 'AdminController@ajaxinvoiceVisit', 'as' => 'AjaxinvoiceVisit']);
-Route::post('confirmpayment', ['uses' => 'AdminController@ajaxconfirmpayment', 'as' => 'Ajaxconfirmpayment']);
-
-
-Route::post('openuseraccount', ['uses' => 'AdminController@ajaxOpenUserAccount', 'as' => 'Ajaxopenuseraccount']);
-Route::post('closeuseraccount', ['uses' => 'AdminController@ajaxCloseUserAccount', 'as' => 'Ajaxcloseuseraccount']);
-Route::post('approveUser', ['uses' => 'AdminController@ajaxapproveUser', 'as' => 'AjaxapproveUser']);
-Route::post('downgradeaccount', ['uses' => 'AdminController@ajaxdowngradeaccount', 'as' => 'Ajaxdowngradeaccount']);
-
-
-Route::post('moveUser', ['uses' => 'AdminController@ajaxmoveUser', 'as' => 'AjaxmoveUser']);
-Route::post('checkverification', ['uses' => 'AdminController@ajaxCheckVerification', 'as' => 'Ajaxcheckverification']);
-Route::post('paybankwithdrawal', ['uses' => 'AdminController@ajaxpayBankWithdrawal', 'as' => 'Ajaxpaybankwithdrawal']);
-Route::post('paycardwithdrawal', ['uses' => 'AdminController@ajaxpayCardWithdrawal', 'as' => 'Ajaxpaycardwithdrawal']);
-Route::post('flagguser', ['uses' => 'AdminController@ajaxflagUser', 'as' => 'Ajaxflagguser']);
-
-Route::post('singleinvoiceusercheck', ['uses' => 'AdminController@ajaxSingleInvoiceUserCheck', 'as' => 'Ajaxsingleinvoiceusercheck']);
-Route::post('refundmoneybacktowallet', ['uses' => 'AdminController@ajaxRefundMoneyBackToWallet', 'as' => 'Ajaxrefundmoneybacktowallet']);
-Route::post('accesstousepaysprint', ['uses' => 'AdminController@ajaxAccessToUsePaysprint', 'as' => 'grant country']);
-
-
-Route::post('quotedecision', ['uses' => 'ConsultantController@ajaxquotedecision', 'as' => 'Ajaxquotedecision']);
-Route::post('quotedecisionmaker', ['uses' => 'ConsultantController@ajaxquotedecisionmaker', 'as' => 'Ajaxquotedecisionmaker']);
-Route::post('negotiatequote', ['uses' => 'ConsultantController@ajaxnegotiatequote', 'as' => 'negotiatequote']);
-Route::post('respondquote', ['uses' => 'ConsultantController@ajaxrespondquote', 'as' => 'respondquote']);
+	// Create Event Ajax
+	Route::post('Adminlogin', ['uses' => 'AdminController@ajaxadminlogin', 'as' => 'AjaxAdminlogin']);
+	Route::post('Adminspeciallogin', ['uses' => 'AdminController@ajaxAdminspeciallogin', 'as' => 'AjaxAdminspeciallogin']);
+	Route::post('Adminlogout', ['uses' => 'AdminController@ajaxadminLogout', 'as' => 'AjaxAdminlogout']);
+	Route::post('Adminregister', ['uses' => 'AdminController@ajaxadminregister', 'as' => 'AjaxAdminRegister']);
+	Route::post('CreateEvent', ['uses' => 'AdminController@ajaxcreateEvent', 'as' => 'AjaxCreateEvent']);
+	Route::post('WithdrawCash', ['uses' => 'AdminController@ajaxWithdrawCash', 'as' => 'AjaxWithdrawCash']);
+	Route::post('getmyStatement', ['uses' => 'AdminController@ajaxgetmyStatement', 'as' => 'AjaxgetmyStatement']);
+	Route::post('getmyreportStatement', ['uses' => 'AdminController@ajaxgetmyreportStatement', 'as' => 'AjaxgetmyreportStatement']);
+	Route::post('getBronchure', ['uses' => 'HomeController@ajaxgetBronchure', 'as' => 'AjaxgetBronchure']);
 
 
 
-Route::post('createMaintenance', ['uses' => 'HomeController@ajaxcreateMaintenance', 'as' => 'AjaxcreateMaintenance']);
+	Route::post('epaywithdraw', ['uses' => 'AdminController@ajaxepaywithdraw', 'as' => 'Ajaxepaywithdraw']);
+	Route::post('remitCash', ['uses' => 'AdminController@ajaxremitCash', 'as' => 'AjaxremitCash']);
+	Route::post('remitdetailsCash', ['uses' => 'AdminController@ajaxremitdetailsCash', 'as' => 'AjaxremitdetailsCash']);
 
-Route::post('getFacility', ['uses' => 'HomeController@ajaxgetFacility', 'as' => 'AjaxgetFacility']);
-Route::post('getbuildingaddress', ['uses' => 'HomeController@ajaxgetbuildingaddress', 'as' => 'Ajaxgetbuildingaddress']);
+	Route::post('getmremittance', ['uses' => 'AdminController@ajaxgetmremittance', 'as' => 'Ajaxgetmremittance']);
+
+	Route::post('setupTrans', ['uses' => 'AdminController@ajaxsetupTrans', 'as' => 'AjaxsetupTrans']);
+	Route::post('checkfeeReport', ['uses' => 'AdminController@ajaxcheckfeeReport', 'as' => 'AjaxcheckfeeReport']);
+	Route::post('invoiceVisit', ['uses' => 'AdminController@ajaxinvoiceVisit', 'as' => 'AjaxinvoiceVisit']);
+
+	Route::post('invoicelinkVisit', ['uses' => 'AdminController@ajaxinvoicelinkVisit', 'as' => 'AjaxinvoicelinkVisit']);
+
+	Route::post('confirmpayment', ['uses' => 'AdminController@ajaxconfirmpayment', 'as' => 'Ajaxconfirmpayment']);
 
 
-Route::post('notifyupdate', ['uses' => 'HomeController@ajaxnotifyupdate', 'as' => 'Ajaxnotifyupdate']);
+	Route::post('openuseraccount', ['uses' => 'AdminController@ajaxOpenUserAccount', 'as' => 'Ajaxopenuseraccount']);
+	Route::post('closeuseraccount', ['uses' => 'AdminController@ajaxCloseUserAccount', 'as' => 'Ajaxcloseuseraccount']);
+	Route::post('approveUser', ['uses' => 'AdminController@ajaxapproveUser', 'as' => 'AjaxapproveUser']);
+	Route::post('disapproveUser', ['uses' => 'AdminController@ajaxdisapproveUser', 'as' => 'AjaxdisapproveUser']);
+	Route::post('downgradeaccount', ['uses' => 'AdminController@ajaxdowngradeaccount', 'as' => 'Ajaxdowngradeaccount']);
 
 
-// Get Commision and payment
-Route::post('getCommission', ['uses' => 'HomeController@ajaxgetCommission', 'as' => 'AjaxgetCommission']);
-Route::post('getwalletBalance', ['uses' => 'HomeController@ajaxgetwalletBalance', 'as' => 'AjaxgetwalletBalance']);
+	Route::post('paychargeback', ['uses' => 'MonerisController@paymentChargeBack', 'as' => 'Ajaxpaychargeback']);
 
-Route::post('charges', ['uses' => 'ApplePayController@ajaxcharges', 'as' => 'charges']);
 
-Route::post('getconversion', ['uses' => 'CurrencyConverterApiController@currencyConverter', 'as' => 'getconversion']);
+	Route::post('moveUser', ['uses' => 'AdminController@ajaxmoveUser', 'as' => 'AjaxmoveUser']);
 
+
+	Route::post('checkverification', ['uses' => 'AdminController@ajaxCheckVerification', 'as' => 'Ajaxcheckverification']);
+	Route::post('paybankwithdrawal', ['uses' => 'AdminController@ajaxpayBankWithdrawal', 'as' => 'Ajaxpaybankwithdrawal']);
+	Route::post('paycardwithdrawal', ['uses' => 'AdminController@ajaxpayCardWithdrawal', 'as' => 'Ajaxpaycardwithdrawal']);
+	Route::post('flagguser', ['uses' => 'AdminController@ajaxflagUser', 'as' => 'Ajaxflagguser']);
+
+	Route::post('singleinvoiceusercheck', ['uses' => 'AdminController@ajaxSingleInvoiceUserCheck', 'as' => 'Ajaxsingleinvoiceusercheck']);
+	Route::post('refundmoneybacktowallet', ['uses' => 'AdminController@ajaxRefundMoneyBackToWallet', 'as' => 'Ajaxrefundmoneybacktowallet']);
+	Route::post('accesstousepaysprint', ['uses' => 'AdminController@ajaxAccessToUsePaysprint', 'as' => 'grant country']);
+	Route::post('accesstousepaysprintimt', ['uses' => 'AdminController@ajaxAccessToUsePaysprintImt', 'as' => 'grant imt']);
+
+
+	Route::post('quotedecision', ['uses' => 'ConsultantController@ajaxquotedecision', 'as' => 'Ajaxquotedecision']);
+	Route::post('quotedecisionmaker', ['uses' => 'ConsultantController@ajaxquotedecisionmaker', 'as' => 'Ajaxquotedecisionmaker']);
+	Route::post('negotiatequote', ['uses' => 'ConsultantController@ajaxnegotiatequote', 'as' => 'negotiatequote']);
+	Route::post('respondquote', ['uses' => 'ConsultantController@ajaxrespondquote', 'as' => 'respondquote']);
+
+
+
+	Route::post('createMaintenance', ['uses' => 'HomeController@ajaxcreateMaintenance', 'as' => 'AjaxcreateMaintenance']);
+
+	Route::post('getFacility', ['uses' => 'HomeController@ajaxgetFacility', 'as' => 'AjaxgetFacility']);
+	Route::post('getbuildingaddress', ['uses' => 'HomeController@ajaxgetbuildingaddress', 'as' => 'Ajaxgetbuildingaddress']);
+
+
+	Route::post('notifyupdate', ['uses' => 'HomeController@ajaxnotifyupdate', 'as' => 'Ajaxnotifyupdate']);
+
+	Route::post('promotionaction', ['uses' => 'AdminController@ajaxpromotionaction', 'as' => 'Ajaxpromotionaction']);
+
+
+	// Get Commision and payment
+	Route::post('getCommission', ['uses' => 'HomeController@ajaxgetCommission', 'as' => 'AjaxgetCommission']);
+	Route::post('getwalletBalance', ['uses' => 'HomeController@ajaxgetwalletBalance', 'as' => 'AjaxgetwalletBalance']);
+
+	Route::post('charges', ['uses' => 'ApplePayController@ajaxcharges', 'as' => 'charges']);
+
+	Route::post('getconversion', ['uses' => 'CurrencyConverterApiController@currencyConverter', 'as' => 'getconversion']);
 });
 
 
 
 // Exbc Route
-Route::group(['prefix' => 'Exbc'], function() {
+Route::group(['prefix' => 'Exbc'], function () {
 	Route::post('index', ['uses' => 'ExbcController@index', 'as' => 'index']);
 });

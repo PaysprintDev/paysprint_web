@@ -66,6 +66,8 @@
                   <th>Name</th>
                   <th>Username</th>
                   <th>Email</th>
+                  <th>Telephone</th>
+                  <th>Address</th>
                   <th>Account Type</th>
                   <th>Identification</th>
                   <th>Platform</th>
@@ -93,6 +95,8 @@
                               <td>-</td>
                             @endif
                             <td>{{ $datainfo->email }}</td>
+                            <td>{{ $datainfo->telephone }}</td>
+                            <td>{{ $datainfo->address }}</td>
                             <td>{{ $datainfo->accountType }}</td>
                             <td>
 
@@ -198,10 +202,11 @@
 
                     @else
                     <tr>
-                        <td colspan="9" align="center">No record available</td>
+                        <td colspan="11" align="center">No record available</td>
                     </tr>
                     @endif
 
+                    
 
                     @else
                     @if (count($allusers) > 0)

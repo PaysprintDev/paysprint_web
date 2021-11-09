@@ -25,7 +25,7 @@
                         <br>
                         <br>
 
-                        These Terms of Service set out the terms that apply to your use of our Website, Mobile and Services in general. We may change these terms from time to time. If we do, we shall post a revision of these Terms at <strong><a href="{{ route('terms of use') }}">https://paysprint.net/terms-of-service</a></strong> and your continued use of Services shall be subject to such revised terms.
+                        These Terms of Service set out the terms that apply to your use of our Website, Mobile and Services in general. We may change these terms from time to time. If we do, we shall post a revision of these Terms at <strong><a href="{{ route('terms of use') }}">https://paysprint.ca/terms-of-service</a></strong> and your continued use of Services shall be subject to such revised terms.
 
                         <br>
                         <br>
@@ -167,7 +167,7 @@
                         <br>
                         <br>
 
-                        PS NOTIFICATION: For requests for change of Services under this Agreement, including cancellations, or to provide notice of other changes impacting your Account please use your Customer Account login or Merchant Administrator login to communicate directly to PS, or send an email to your account manager and copy support@paysprint.net.
+                        PS NOTIFICATION: For requests for change of Services under this Agreement, including cancellations, or to provide notice of other changes impacting your Account please use your Customer Account login or Merchant Administrator login to communicate directly to PS, or send an email to your account manager and copy support@paysprint.ca.
 
                         <br>
                         <br>
@@ -266,7 +266,7 @@
                         <br>
                         <br>
 
-                        Unauthorized payments and Errors: If an Error (as defined) occurs that is solely our fault, we will use all reasonable efforts to remedy that Error (subject to the limitations provided in Clause 5). You must notify us immediately if you think there may be an Error or if you need more information about an Error at: <strong><a href="mailto:support@paysprint.net">support@paysprint.net</a></strong>.
+                        Unauthorized payments and Errors: If an Error (as defined) occurs that is solely our fault, we will use all reasonable efforts to remedy that Error (subject to the limitations provided in Clause 5). You must notify us immediately if you think there may be an Error or if you need more information about an Error at: <strong><a href="mailto:support@paysprint.ca">support@paysprint.ca</a></strong>.
 
                         <br>
                         <br>
@@ -283,7 +283,7 @@
                         <br>
                         <br>
 
-                        In case of suspected unauthorized activity in relation to your Account, or questions about payments made or received, contact us as soon as you can at: <strong><a href="mailto:support@paysprint.net">support@paysprint.net</a></strong>
+                        In case of suspected unauthorized activity in relation to your Account, or questions about payments made or received, contact us as soon as you can at: <strong><a href="mailto:support@paysprint.ca">support@paysprint.ca</a></strong>
 
                         <br>
                         <br>
@@ -414,7 +414,7 @@
                         <br>
 
 
-                        If you think that your Account or log-in credentials may have been compromised at any time, please notify us immediately at <strong><a href="mailto:support@paysprint.net">support@paysprint.net</a></strong>.
+                        If you think that your Account or log-in credentials may have been compromised at any time, please notify us immediately at <strong><a href="mailto:support@paysprint.ca">support@paysprint.ca</a></strong>.
 
                         
                         <br>
@@ -812,7 +812,7 @@
                         You means a person or entity using the Services or visiting the Website (and includes Customers and Merchants).
                         <br>
                         <br>
-                        Website means, as the circumstances require, the websites located at www.paysprint.net.
+                        Website means, as the circumstances require, the websites located at www.paysprint.ca.
                         <br>
                         <br>
                         PS includes PaySprint, EXBC or Express Ca Corp, subsidiaries, associates, and affiliates.

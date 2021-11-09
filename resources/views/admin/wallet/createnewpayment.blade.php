@@ -43,7 +43,7 @@
 
                                     <input type="hidden" name="orgpayemail" id="orgpayemail" value="{{ session('email') }}">
 
-                                    <input type="hidden" name="code" id="code" value="{{ $data['currencyCode'][0]->callingCodes[0] }}">
+                                    <input type="hidden" name="code" id="code" value="{{ $data['currencyCode']->callingCode }}">
 
                                     <input type="hidden" name="paymentToken" id="paymentToken" value="">
 
@@ -127,7 +127,7 @@
                                                     <div class="col-md-2">
                                                         <select name="countryCode" id="reccountryCode" class="form-control billinginput_box" readonly>
                                                             <option value="{{ $data['getuserDetail']->code }}" selected>{{ $data['getuserDetail']->country }} (+{{ $data['getuserDetail']->code }})</option>
-                                                            {{-- <option data-countryCode="DZ" value="213">Algeria (+213)</option>
+                                                            <option data-countryCode="DZ" value="213">Algeria (+213)</option>
                                                             <option data-countryCode="AD" value="376">Andorra (+376)</option>
                                                             <option data-countryCode="AO" value="244">Angola (+244)</option>
                                                             <option data-countryCode="AI" value="1264">Anguilla (+1264)</option>
@@ -340,7 +340,7 @@
                                                             <option data-countryCode="YE" value="969">Yemen (North)(+969)</option>
                                                             <option data-countryCode="YE" value="967">Yemen (South)(+967)</option>
                                                             <option data-countryCode="ZM" value="260">Zambia (+260)</option>
-                                                            <option data-countryCode="ZW" value="263">Zimbabwe (+263)</option> --}}
+                                                            <option data-countryCode="ZW" value="263">Zimbabwe (+263)</option>
                                                     </select>
                                                     </div>
                                                     <div class="col-md-10">
@@ -359,7 +359,7 @@
                                          
                                             <select id="country" name="country" class="form-control" readonly>
                                                 <option value="{{ $data['getuserDetail']->country }}" selected>{{ $data['getuserDetail']->country }}</option>
-                                                {{-- <option value="Afghanistan">Afghanistan</option>
+                                                <option value="Afghanistan">Afghanistan</option>
                                                 <option value="Albania">Albania</option>
                                                 <option value="Algeria">Algeria</option>
                                                 <option value="American Samoa">American Samoa</option>
@@ -590,7 +590,7 @@
                                                 <option value="United Kingdom">United Kingdom</option>
                                                 <option value="Ukraine">Ukraine</option>
                                                 <option value="United Arab Erimates">United Arab Emirates</option>
-                                                <option value="United States of America">United States of America</option>
+                                                <option value="United States">United States</option>
                                                 <option value="Uraguay">Uruguay</option>
                                                 <option value="Uzbekistan">Uzbekistan</option>
                                                 <option value="Vanuatu">Vanuatu</option>
@@ -604,7 +604,7 @@
                                                 <option value="Yemen">Yemen</option>
                                                 <option value="Zaire">Zaire</option>
                                                 <option value="Zambia">Zambia</option>
-                                                <option value="Zimbabwe">Zimbabwe</option> --}}
+                                                <option value="Zimbabwe">Zimbabwe</option>
                                             </select>
 
                                             
@@ -636,9 +636,9 @@
                                             <div class="form-group"> <label for="currency">
                                                     Currency
                                                 </label>
-                                                <input type="hidden" name="localcurrency" value="{{ $data['currencyCode'][0]->currencies[0]->code }}">
+                                                <input type="hidden" name="localcurrency" value="{{ $data['currencyCode']->currencyCode }}">
                                                     <select name="currency" id="currency" class="form-control" readonly>
-                                                        <option value="{{ $data['currencyCode'][0]->currencies[0]->code }}" selected>{{ $data['currencyCode'][0]->currencies[0]->code }}</option>
+                                                        <option value="{{ $data['currencyCode']->currencyCode }}" selected>{{ $data['currencyCode']->currencyCode }}</option>
                                                     </select>
                                                     
                                             </div>
@@ -668,7 +668,7 @@
                                     <div class="form-group disp-0"> <label for="netwmount">
                                             <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small></h6>
                                             <p style="font-weight: bold;">
-                                                {{ $data['currencyCode'][0]->currencies[0]->code }} <=> USD
+                                                {{ $data['currencyCode']->currencyCode }} <=> USD
                                             </p>
                                         </label>
                                         <div class="input-group"> 
@@ -683,6 +683,8 @@
                                 </label>
                                     <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
                             </div>
+
+
                                 <div class="form-group"> <label for="netwmount">
                                     Fee <small class="text-success"><b>(FREE)</b></small>
                                 </label>
@@ -690,6 +692,13 @@
 
                                     <input type="hidden" name="totalcharge" class="form-control" id="totalcharge" value="" placeholder="0.00" readonly>
 
+                            </div>
+
+
+                            <div class="form-group"> <label for="transaction_pin">
+                                    Transaction Pin
+                                </label>
+                                <input type="password" name="transaction_pin" id="transaction_pin" class="form-control" maxlength="4" required>
                             </div>
 
 
@@ -826,7 +835,7 @@ function runCommission(){
 
 
     var route = "{{ URL('Ajax/getCommission') }}";
-    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $("#make_payment_method").val(), localcurrency: "{{ $data['currencyCode'][0]->currencies[0]->code }}", foreigncurrency: "{{ $data['currencyCode'][0]->currencies[0]->code }}", structure: "Send Money/Pay Invoice", structureMethod: "Wallet"};
+    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $("#make_payment_method").val(), localcurrency: "{{ $data['currencyCode']->currencyCode }}", foreigncurrency: "{{ $data['currencyCode']->currencyCode }}", structure: "Send Money/Pay Invoice", structureMethod: "Wallet"};
 
 
     Pace.restart();
@@ -866,7 +875,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-success');
                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.toFixed(2)+" will be deducted from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}"+result.data.toFixed(2)+" will be deducted from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
@@ -884,7 +893,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-success');
                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+(+result.data + +result.collection).toFixed(2)+" will be deducted from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}"+(+result.data + +result.collection).toFixed(2)+" will be deducted from your "+$('#make_payment_method').val()+".</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
@@ -909,8 +918,8 @@ function currencyConvert(amount){
 
     $("#conversionamount").val("");
 
-    var currency = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
-    var localcurrency = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
+    var currency = "{{ $data['currencyCode']->currencyCode }}";
+    var localcurrency = "{{ $data['currencyCode']->currencyCode }}";
     var route = "{{ URL('Ajax/getconversion') }}";
     var thisdata = {currency: currency, amount: amount, val: "send", localcurrency: localcurrency};
 
@@ -1113,8 +1122,8 @@ function currencyConvert(amount){
          */
         function getGoogleTransactionInfo() {
           return {
-            countryCode: "{{ $data['currencyCode'][0]->alpha2Code }}",
-            currencyCode: "{{ $data['currencyCode'][0]->currencies[0]->code }}",
+            countryCode: "{{ $data['currencyCode']->code }}",
+            currencyCode: "{{ $data['currencyCode']->currencyCode }}",
             totalPriceStatus: "FINAL",
             // set to cart total
             totalPrice: $("#totalcharge").val()
@@ -1131,7 +1140,7 @@ function currencyConvert(amount){
           // transactionInfo must be set but does not affect cache
           paymentDataRequest.transactionInfo = {
             totalPriceStatus: 'NOT_CURRENTLY_KNOWN',
-            currencyCode: "{{ $data['currencyCode'][0]->currencies[0]->code }}"
+            currencyCode: "{{ $data['currencyCode']->currencyCode }}"
           };
           const paymentsClient = getGooglePaymentsClient();
           paymentsClient.prefetchPaymentData(paymentDataRequest);

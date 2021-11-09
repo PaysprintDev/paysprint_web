@@ -1,3 +1,5 @@
+@if ($pages != "Supporting HAITI")
+
 <!-- Footer section -->
 <div class="footer-section bg-default-6">
     <div class="container">
@@ -35,6 +37,7 @@
                         <p class="footer-title gr-text-11 mb-7" style="font-size: 20px;"><strong>QUICK LINK</strong></p>
                         <ul class="footer-list list-unstyled">
                             <li class="py-2"><a class="gr-text-9 gr-text-color" href="{{ route('about') }}">About us</a></li>
+                            <li class="py-2"><a class="gr-text-9 gr-text-color" href="/blog">Blog</a></li>
                             <li class="py-2"><a class="gr-text-9 gr-text-color" href="{{ route('contact') }}">Contact us</a></li>
                             <li class="py-2"><a class="gr-text-9 gr-text-color" href="{{ route('terms of use') }}">Terms of Use</a></li>
                             <li class="py-2"><a class="gr-text-9 gr-text-color" href="{{ route('privacy policy') }}">Privacy Policy</a></li>
@@ -52,7 +55,7 @@
                         <p class="footer-title gr-text-11 mb-7" style="font-size: 20px;"><strong>CONTACT US</strong></p>
                         <ul class="footer-list list-unstyled">
                             <li class="py-2"><a class="gr-text-9 text-primary font-weight-bold hover-underline active"
-                                    href="mailto:info@paysprint.net"><i class="fa fa-envelope" aria-hidden="true"></i> info@paysprint.net</a></li>
+                                    href="mailto:info@paysprint.ca"><i class="fa fa-envelope" aria-hidden="true"></i> info@paysprint.ca</a></li>
                             <li class="py-2"><a class="gr-text-9 text-primary font-weight-bold hover-underline active"
                                     href="javascript:void()"><i class="fa fa-map-marker" aria-hidden="true"></i> PaySprint by Express Ca Corp,
                                     10 George St. North, Brampton. ON. L6X1R2. Canada</a></li>
@@ -92,3 +95,5 @@
         </div>
     </div>
 </div>
+
+@endif

@@ -81,6 +81,8 @@
                 <thead>
                 <tr>
                   <th>#</th>
+                  <th>Date</th>
+                  <th>Tranx. ID</th>
                   <th>Description</th>
                   <th>Amount</th>
                 </tr>
@@ -90,6 +92,12 @@
                     @foreach ($thisdata['result'] as $walletstatements)
                             <tr>
                                 <td><i class="fas fa-circle {{ ($walletstatements->credit != 0) ? "text-success" : "text-danger" }}"></i></td>
+                                <td>
+                                  {{ date('d/m/Y', strtotime($walletstatements->created_at)) }}
+                                </td>
+                                <td>
+                                  {{ $walletstatements->reference_code }}
+                                </td>
                                 <td>
 
                                         <div class="row">

@@ -110,7 +110,7 @@ input[type="radio"] {
                                                 </div>
                                                 <div class="col-md-12">
                                                     <h4>
-                                                        {{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format(Auth::user()->wallet_balance, 2) }}
+                                                        {{ $data['currencyCode']->currencySymbol."".number_format(Auth::user()->wallet_balance, 2) }}
                                                     </h4>
                                                 </div>
                                             </div>
@@ -154,7 +154,7 @@ input[type="radio"] {
                                         </label>
                                         <div class="input-group"> 
                                             <select name="currency" id="currency" class="form-control">
-                                                <option value="{{ $data['currencyCode'][0]->currencies[0]->code }}" selected>{{ $data['currencyCode'][0]->currencies[0]->code }}</option>
+                                                <option value="{{ $data['currencyCode']->currencyCode }}" selected>{{ $data['currencyCode']->currencyCode }}</option>
                                             </select>
                                             
                                         </div>
@@ -176,7 +176,7 @@ input[type="radio"] {
                                     <div class="form-group"> <label for="netwmount">
                                             <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small></h6>
                                             <p style="font-weight: bold;">
-                                                USD <=> {{ $data['currencyCode'][0]->currencies[0]->code }}
+                                                USD <=> {{ $data['currencyCode']->currencyCode }}
                                             </p>
                                         </label>
                                         <div class="input-group"> 
@@ -185,7 +185,7 @@ input[type="radio"] {
                                     </div>
 
                                     <div class="form-group">
-                                            <span class="text-danger" style="font-weight: 800">International transfers are received in USD{{ $data['currencyCode'][0]->currencies[0]->code }} rates</span>
+                                            <span class="text-danger" style="font-weight: 800">International transfers are received in USD{{ $data['currencyCode']->currencyCode }} rates</span>
                                         </div>
 
                                         @endif
@@ -314,7 +314,7 @@ input[type="radio"] {
 
         $("#conversionamount").val("");
 
-        var currency = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
+        var currency = "{{ $data['currencyCode']->currencyCode }}";
         var route = "{{ URL('Ajax/getconversion') }}";
         var thisdata = {currency: currency, amount: $("#amount_to_receive").val(), val: "receive"};
 

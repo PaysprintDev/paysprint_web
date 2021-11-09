@@ -64,10 +64,10 @@
                                 <input type="hidden" name="invname" id="invname" value="{{ $name }}">
                                 <input type="hidden" name="invemail" id="invemail" value="{{ $email }}">
                                 <select name="invoiceService" class="form-control billinginput_box" id="invoiceService">
-                                    <option value="">--Select Invoice--</option>
+                                    <option value="">--Select Service Type--</option>
                                     @if(count($service) > 0)
                                         @foreach($service as $services)
-                                            <option value="{{ $services->name }}">{{ $services->name }}</option>
+                                            <option value="{{ $services->name }}">{{ ucfirst($services->name) }}</option>
                                         @endforeach
                                     @endif
 

@@ -129,14 +129,23 @@ input[type="radio"] {
                                         </strong>
                                     </div>
                                 </div>
+
+                                    
                                 </center>
                                     
-
+                                
                         </div> <!-- End -->
-                        
+                            
                     </div>
+                    
                 </div>
+
+                
             </div>
+
+            <p class="text-center mt-4">
+                <strong><img src="https://img.icons8.com/cotton/40/000000/cloud-alert.png"/> Note: Name on the Card or Bank Account must match your PaySprint profile</strong>
+            </p>
         </div>
 
     

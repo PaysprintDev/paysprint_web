@@ -155,7 +155,7 @@
         <form action="#" method="post" id="formElemtransactionpinsettings">
             
             <div class="form-group">
-                <label for="oldpin">Old Pin <strong><p class="text-danger" style="cursor: pointer;" onclick="resetPin('{{ Auth::user()->securityQuestion }}','transaction')">Have you forgotten your old transaction pin? Click here to reset</p></strong></label>
+                <label for="oldpin">Old Pin <strong><p class="text-danger" style="cursor: pointer;" onclick='resetPin("{{ Auth::user()->securityQuestion }}", "transaction")'>Have you forgotten your old transaction pin? Click here to reset</p></strong></label>
                 <input type="password" name="oldpin" id="oldpin" class="form-control" placeholder="Pin" maxlength="4">
             </div>
             <div class="form-group">
@@ -207,7 +207,7 @@
     <div class="panel-heading" role="tab" id="headingSeven">
       <h4 class="panel-title">
         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
-          BVN Verification {!! (Auth::user()->bvn_verification == 1) ? '<img src="https://img.icons8.com/fluent/25/000000/verified-account.png"/>' : ""  !!}
+          BVN Verification {!! (Auth::user()->bvn_verification >= 1) ? '<img src="https://img.icons8.com/fluent/25/000000/verified-account.png"/>' : ""  !!}
         </a>
       </h4>
     </div>
@@ -216,11 +216,11 @@
         <form action="#" method="post" id="formElembvnverification">
 
             <div class="form-group">
-                <label for="bvn">Bank Verification Number @if(Auth::user()->bvn_number == null) <strong><p class="text-warning" style="cursor: pointer;">Enter your bank verification number</p></strong> @endif</label>
+                <label for="bvn">Bank Verification Number @if(Auth::user()->bvn_verification == null || Auth::user()->bvn_verification == 0) <strong><p class="text-warning" style="cursor: pointer;">Enter your bank verification number</p></strong> @endif</label>
                 <input type="number" name="bvn" id="bvn" class="form-control" @if(Auth::user()->bvn_number != null) value="{{ Auth::user()->bvn_number }}" readonly @else placeholder="BVN" @endif >
             </div>
 
-            @if (Auth::user()->bvn_number == null)
+            @if (Auth::user()->bvn_verification == null || Auth::user()->bvn_verification == 0)
 
             <div class="form-group">
                     <label for="account_number">Bank Account Number <strong><p class="text-warning" style="cursor: pointer;">Enter your bank account number</p></strong></label>
@@ -278,7 +278,7 @@
 
 
             <div class="form-group">
-                <label for="oldpassword">Old Password <strong><p class="text-danger" style="cursor: pointer;" onclick="resetPin('{{ Auth::user()->securityQuestion }}','password')">Have you forgotten your old password? Click here to reset</p></strong></label>
+                <label for="oldpassword">Old Password <strong><p class="text-danger" style="cursor: pointer;" onclick='resetPin("{{ Auth::user()->securityQuestion }}","password")'>Have you forgotten your old password? Click here to reset</p></strong></label>
                 <input type="password" name="oldpassword" id="oldpassword" class="form-control" placeholder="Password">
             </div>
             <div class="form-group">
@@ -320,11 +320,11 @@
                 <select name="securityQuestion" id="securityQuestion" class="form-control">
                     <option value="">Select Question</option>
                     <option value="What was your first pet's name?" {{ (Auth::user()->securityQuestion == "What was your first pet's name?") ? "selected" : "" }}>What was your first pet's name?</option>
-                    <option value="What's the name of the city where you were born?" {{ (Auth::user()->securityQuestion == "What's the name of the city where you were born?") ? "selected" : "" }}>What's the name of the city where you were born?</option>
+                    <option value="What is the name of the city where you were born?" {{ (Auth::user()->securityQuestion == "What is the name of the city where you were born?") ? "selected" : "" }}>What is the name of the city where you were born?</option>
                     <option value="What was your childhood nickname?" {{ (Auth::user()->securityQuestion == "What was your childhood nickname?") ? "selected" : "" }}>What was your childhood nickname?</option>
-                    <option value="What's the name of the city where your parents met?" {{ (Auth::user()->securityQuestion == "What's the name of the city where your parents met?") ? "selected" : "" }}>What's the name of the city where your parents met?</option>
-                    <option value="What's the first name of your oldest cousin?" {{ (Auth::user()->securityQuestion == "What's the first name of your oldest cousin?") ? "selected" : "" }}>What's the first name of your oldest cousin?</option>
-                    <option value="What's the name of the first school you attended?" {{ (Auth::user()->securityQuestion == "What's the name of the first school you attended?") ? "selected" : "" }}>What's the name of the first school you attended?</option>
+                    <option value="What is the name of the city where your parents met?" {{ (Auth::user()->securityQuestion == "What is the name of the city where your parents met?") ? "selected" : "" }}>What is the name of the city where your parents met?</option>
+                    <option value="What is the first name of your oldest cousin?" {{ (Auth::user()->securityQuestion == "What is the first name of your oldest cousin?") ? "selected" : "" }}>What is the first name of your oldest cousin?</option>
+                    <option value="What is the name of the first school you attended?" {{ (Auth::user()->securityQuestion == "What is the name of the first school you attended?") ? "selected" : "" }}>What is the name of the first school you attended?</option>
                 </select>
 
                 {{--  <input type="text" name="securityQuestion" id="securityQuestion" class="form-control" placeholder="Question">  --}}
@@ -656,7 +656,7 @@
                                         <hr>
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="incorporation_doc_front">Document</label>
+                                                <label for="incorporation_doc_front" class="text-danger">Utility Bill</label>
                                                 <input type="file" class="form-control" name="incorporation_doc_front" id="incorporation_doc_front">
                                             </div>
                                         </div>

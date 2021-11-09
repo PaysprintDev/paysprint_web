@@ -39,7 +39,7 @@
 
 @section('content')
     <!-- Banner area -->
-    <section class="banner_area" data-stellar-background-ratio="0.5">
+    <section class="banner_area" data-stellar-background-ratio="0.5" @if(Request::get('type') == base64_encode("international")) style="background-image: url('https://res.cloudinary.com/pilstech/image/upload/v1632419190/R_kw5udg.png') !important; background-position: top center; background-repeat: no-repeat; background-size: contain; background-color: #e5eff3;" @endif>
         <h2>MONEY TRANSFER</h2>
         <ol class="breadcrumb">
             <li><a href="{{ route('home') }}">Home</a></li>
@@ -98,7 +98,7 @@
         
                                         </select> --}}
         
-                                        @if (Request::get('type') == "international")
+                                        @if (Request::get('type') == base64_encode("international"))
         
                                         <div class="row">
                                             <div class="col-md-3 disp-0">

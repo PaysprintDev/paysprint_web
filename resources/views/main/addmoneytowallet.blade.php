@@ -14,6 +14,27 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
 <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
 
+
+@if($data['paymentgateway']->gateway == "Stripe")
+
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+
+@endif
+
+@if($data['paymentgateway']->gateway == "PayPal")
+
+@if (env('APP_ENV') == "local")
+<script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_LOCAL_CLIENT_ID') }}&currency={{ Auth::user()->currencyCode }}"></script>
+    
+@else
+<script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ Auth::user()->currencyCode }}"></script>
+    
+@endif
+
+
+@endif
+
     <title>PaySprint | Payment</title>
 
     <style>
@@ -76,15 +97,15 @@ input[type="radio"] {
                                     @csrf
 
 
-                                    <div class="form-group"> <label for="gateway">
+                                    <div @if($data['paymentgateway']->gateway == "Moneris") class="form-group" @else class="form-group disp-0" @endif> <label for="gateway">
                                             {{--  <h6>Select Card Type/ Bank Account</h6>  --}}
                                             <h6>Select Payment Gateway</h6>
                                         </label>
                                         <div class="input-group"> 
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/cotton/20/000000/money--v4.png"/> </span> </div>
                                             <select name="gateway" id="gateway" class="form-control" required>
-                                                <option value="">Select option</option>
-                                                <option value="PaySprint">PaySprint</option>
+                                                <option value="PaySprint">Select option</option>
+                                                <option value="PaySprint" selected>PaySprint</option>
                                                  {{-- <option value="Google Pay">Google Pay</option>  --}}
                                                 {{-- <option value="Prepaid Card">Prepaid Card</option> --}}
                                                 {{-- <option value="Bank Account">Bank Account</option> --}}
@@ -93,13 +114,13 @@ input[type="radio"] {
                                         </div>
                                     </div>
 
-                                    <div class="form-group"> <label for="card_type">
+                                    <div @if($data['paymentgateway']->gateway == "Moneris") class="form-group" @else class="form-group disp-0" @endif> <label for="card_type">
                                             <h6>Select Card Type/ Bank Account</h6>
                                         </label>
                                         <div class="input-group"> 
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/cotton/20/000000/money--v4.png"/> </span> </div>
                                             <select name="card_type" id="card_type" class="form-control" required>
-                                                <option value="">Select option</option>
+                                                <option value="Debit Card" selected>Select option</option>
                                                 @if (Auth::user()->country != "Nigeria")
                                                     <option value="Credit Card">Credit Card</option>
                                                 @endif
@@ -113,12 +134,13 @@ input[type="radio"] {
                                     </div>
 
 
-                                    <div class="form-group selectCard"> <label for="card_id">
+                                    <div @if($data['paymentgateway']->gateway == "Moneris") class="form-group selectCard" @else class="form-group selectCard disp-0" @endif> <label for="card_id">
                                             <h6>Select Card</h6>
                                         </label>
                                         <div class="input-group"> 
                                             <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/fluent/20/000000/bank-card-back-side.png"/> </span> </div>
                                             <select name="card_id" id="card_id" class="form-control" required>
+                                                <option value="NULL">Select option</option>
                                                 {{-- @if (count($data['getCard']) > 0)
                                                 
                                                     @foreach ($data['getCard'] as $mycard)
@@ -140,9 +162,13 @@ input[type="radio"] {
                                     <div class="form-group"> <label for="amount">
                                             <h6>Amount</h6>
                                         </label>
-                                        <div class="input-group"> <div class="input-group-append"> <span class="input-group-text text-muted"> {{ $data['currencyCode'][0]->currencies[0]->symbol }} </span> </div> <input type="number" min="0.00" step="0.01" name="amount" id="amount" class="form-control" required>
+                                        <div class="input-group"> <div class="input-group-append"> <span class="input-group-text text-muted"> {{ $data['currencyCode']->currencySymbol }} </span> </div> <input type="number" min="0.00" step="0.01" name="amount" id="amount" class="form-control" required>
 
-                                        <input type="hidden" name="currencyCode" class="form-control" id="curCurrency" value="{{ $data['currencyCode'][0]->currencies[0]->code }}" readonly>
+                                        <input type="hidden" name="currencyCode" class="form-control" id="curCurrency" value="{{ $data['currencyCode']->currencyCode }}" readonly>
+                                        <input type="hidden" name="name" class="form-control" id="nameInput" value="{{ Auth::user()->name }}" readonly>
+                                        <input type="hidden" name="phone" class="form-control" id="phoneInput" value="{{ Auth::user()->telephone }}" readonly>
+                                        <input type="hidden" name="api_token" class="form-control" id="apiTokenInput" value="{{ Auth::user()->api_token }}" readonly>
+                                         <input type="hidden" name="email" class="form-control" id="emailInput" value="{{ Auth::user()->email }}" readonly>
 
                                         <input type="hidden" name="paymentToken" class="form-control" id="paymentToken" value="" readonly>
 
@@ -185,7 +211,7 @@ input[type="radio"] {
                                 <div class="form-group disp-0"> <label for="netwmount">
                                         <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small></h6>
                                         <p style="font-weight: bold;">
-                                            {{ $data['currencyCode'][0]->currencies[0]->code }} <=> CAD
+                                            {{ $data['currencyCode']->currencyCode }} <=> CAD
                                         </p>
                                     </label>
                                     <div class="input-group"> 
@@ -193,14 +219,34 @@ input[type="radio"] {
                                     </div>
                                 </div>
 
+                                @if($data['paymentgateway']->gateway == "Stripe")
+                                <div class="form-group"> <label for="card-elemet">
+                                            <h6>Card Detail</h6>
+                                    </label>
+                                    <div id="card-element"></div>
+                                </div>
+                                @endif
+
 
                                 <div class="form-group">
                                     <div class="commissionInfo"></div>
                                 </div>
 
                                 
-                                    @if (Auth::user()->country == "Nigeria")
+                                    @if ($data['paymentgateway']->gateway == "PayStack")
+                                    
+                                    {{-- <div class="card-footer"> <a type="button" id="epsButton" href="" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </a></div> --}}
+
+
                                         <div class="card-footer"> <button type="button" onclick="payWithPaystack('{{ Auth::user()->email }}')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </button></div>
+
+                                    @elseif($data['paymentgateway']->gateway == "Stripe")
+                                    
+                                        <div class="card-footer"> <button type="submit" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Pay Now</button></div>
+
+                                    @elseif($data['paymentgateway']->gateway == "PayPal")
+                                        {{--  PayPal  --}}
+                                        <div class="card-footer" id="paypal-button-container"></div>
                                     @else
                                         <div class="card-footer"> <button type="button" onclick="handShake('addmoney')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </button></div>
                                     @endif
@@ -240,6 +286,7 @@ input[type="radio"] {
     <script src="{{ asset('pace/pace.min.js') }}"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://js.paystack.co/v1/inline.js"></script>
+    
 
 
 
@@ -329,10 +376,11 @@ function runCommission(){
     $('.commissionInfo').html("");
     var amount = $("#amount").val();
     // var amount = $("#conversionamount").val();
+    var card_type = $("#card_type").val();
 
 
     var route = "{{ URL('Ajax/getCommission') }}";
-    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $("#card_type").val(), localcurrency: "{{ $data['currencyCode'][0]->currencies[0]->code }}", foreigncurrency: "USD", structure: "Add Funds/Money", structureMethod: $("#card_type").val()};
+    var thisdata = {check: $('#commission').prop("checked"), amount: amount, pay_method: $("#card_type").val(), localcurrency: "{{ $data['currencyCode']->currencyCode }}", foreigncurrency: "USD", structure: "Add Funds/Money", structureMethod: "Debit Card"};
 
 
     Pace.restart();
@@ -375,7 +423,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-success');
                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+chargeAmount+" will be charged from your "+$('#card_type').val()+".</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}"+chargeAmount+" will be charged from your "+$('#card_type').val()+".</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
@@ -393,7 +441,7 @@ function runCommission(){
                     $('.commissionInfo').addClass('alert alert-danger');
                     $('.commissionInfo').removeClass('alert alert-success');
 
-                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+(+result.data + +result.collection).toFixed(2)+" will be charged from your "+$('#card_type').val()+".</span></li></li></ul>");
+                    $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}"+(+result.data + +result.collection).toFixed(2)+" will be charged from your "+$('#card_type').val()+".</span></li></li></ul>");
 
                     $("#amounttosend").val(result.data);
                     $("#commissiondeduct").val(result.collection);
@@ -405,6 +453,27 @@ function runCommission(){
                     currencyConvert(totalCharge);
 
                 }
+
+
+                var netVal = $('#amounttosend').val();
+                var feeVal = $('#commissiondeduct').val();
+                var conversionVal = $('#conversionamount').val();
+                var commissionVal = $('#commission').prop("checked");
+
+                var amountVal = (+netVal + +feeVal).toFixed(2);
+
+                var currencyCode = "{{ $data['currencyCode']->currencyCode }}";
+
+                var email = $('#emailInput').val();
+                var name = $('#nameInput').val();
+                var phone = $('#phoneInput').val();
+                var api_token = $('#apiTokenInput').val();
+                var transactionId = 'ps_'+Math.floor((Math.random() * 1000000000) + 1);
+                var stringUrl = "amount="+btoa(amountVal)+"&email="+btoa(email)+"&name="+btoa(name)+"&transactionId="+btoa(transactionId)+"&phone="+btoa(phone)+"&api_token="+btoa(api_token)+"&commissiondeduct="+btoa(feeVal)+"&amounttosend="+btoa(netVal)+"&currencyCode="+btoa(currencyCode)+"&conversionamount="+btoa(conversionVal)+"&commission="+btoa(commissionVal);
+
+
+                // ADD URL
+                $('#epsButton').attr('href', "/mywallet/processmoney?"+stringUrl);
 
 
             }
@@ -423,7 +492,7 @@ function currencyConvert(amount){
     $("#conversionamount").val("");
 
     var currency = "CAD";
-    var localcurrency = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
+    var localcurrency = "{{ $data['currencyCode']->currencyCode }}";
     var route = "{{ URL('Ajax/getconversion') }}";
     var thisdata = {currency: currency, amount: amount, val: "send", localcurrency: localcurrency};
 
@@ -519,12 +588,12 @@ else if(val == 'addcard'){
         contentType: false,
         dataType: 'JSON',
         beforeSend: function(){
-            $('#cardSubmit').text('Please wait...');
+            $('.cardSubmit').text('Please wait...');
         },
         success: function(result){
             console.log(result);
 
-            $('#cardSubmit').text('Submit');
+            $('.cardSubmit').text('Submit');
 
             if(result.status == 200){
                     swal("Success", result.message, "success");
@@ -558,6 +627,7 @@ else if(val == 'addcard'){
       var amount = (+netamount + +feeamount).toFixed(2);
     var handler = PaystackPop.setup({
       key: '{{ env("PAYSTACK_PUBLIC_KEY") }}',
+    //   key: '{{ env("PAYSTACK_LOCAL_PUBLIC_KEY") }}',
       email: email,
       amount: amount * 100,
       currency: "NGN",
@@ -572,13 +642,15 @@ else if(val == 'addcard'){
             {
                 display_name: "Description",
                 variable_name: "description",
-                value: "Added {{ $data['currencyCode'][0]->currencies[0]->code }}"+netamount+" to PaySprint Wallet and a Fee of "+feeamount+" inclusive."
+                value: "Added {{ $data['currencyCode']->currencyCode }}"+netamount+" to PaySprint Wallet and a Fee of "+feeamount+" inclusive."
             }
          ]
       },
       callback: function(response){
           
           $('#paymentToken').val(response.reference);
+        //   $('#paymentToken').val(response.transaction);
+
 
             setTimeout(() => {
                 handShake('addmoney');
@@ -783,8 +855,8 @@ function goBack() {
             var charge = ParseFloat(totalcharge, 2);
 
           return {
-            countryCode: "{{ $data['currencyCode'][0]->alpha2Code }}",
-            currencyCode: "{{ $data['currencyCode'][0]->currencies[0]->code }}",
+            countryCode: "{{ $data['currencyCode']->code }}",
+            currencyCode: "{{ $data['currencyCode']->currencyCode }}",
             totalPriceStatus: "FINAL",
             // set to cart total
             totalPrice: ""+charge+""
@@ -808,7 +880,7 @@ function goBack() {
           // transactionInfo must be set but does not affect cache
           paymentDataRequest.transactionInfo = {
             totalPriceStatus: 'NOT_CURRENTLY_KNOWN',
-            currencyCode: "{{ $data['currencyCode'][0]->currencies[0]->code }}"
+            currencyCode: "{{ $data['currencyCode']->currencyCode }}"
           };
           const paymentsClient = getGooglePaymentsClient();
           paymentsClient.prefetchPaymentData(paymentDataRequest);
@@ -906,6 +978,8 @@ function goBack() {
 // Gpay Ends
 
 
+
+
 function setHeaders(){
 
     $.ajaxSetup({
@@ -920,6 +994,201 @@ function setHeaders(){
 
         </script>
 
+
+@if($data['paymentgateway']->gateway == "PayPal")
+        <script>
+            // Paypal Integration Start
+
+paypal.Buttons({
+
+    createOrder: function(data, actions) {
+
+    var netamount = $('#amounttosend').val();
+    var feeamount = $('#commissiondeduct').val();
+    var amount = (+netamount + +feeamount).toFixed(2);
+
+      // Set up the transaction
+      return actions.order.create({
+        purchase_units: [{
+          amount: {
+            value: amount
+          }
+        }]
+      });
+    },
+    onApprove: function(data, actions) {
+      // This function captures the funds from the transaction.
+      return actions.order.capture().then(function(details) {
+
+          if(details.status == "COMPLETED"){
+                $('#paymentToken').val(data.orderID);
+
+                // alert("Looks like the transaction is approved.");
+                setTimeout(() => {
+                    handShake('addmoney');
+                }, 1000);
+          }
+
+        // This function shows a transaction success message to your buyer.
+        // alert('Transaction completed by ' + details.payer.name.given_name);
+      });
+    },
+    onCancel: function (data) {
+        alert("Transaction cancelled for "+data.orderID);
+    },
+    onError: function (err) {
+        alert(err);
+    }
+  }).render('#paypal-button-container');
+  
+
+// PayPal Integration End
+        </script>
+
+
+
+@endif
+
+
+
+@if($data['paymentgateway']->gateway == "Stripe")
+
+<script>
+
+    // Stripe Integration Starts
+
+    
+
+document.addEventListener('DOMContentLoaded', async () => {
+
+    var stripe = Stripe('{{ env("STRIPE_LIVE_PUBLIC_KEY") }}');
+    // var stripe = Stripe('{{ env("STRIPE_LOCAL_PUBLIC_KEY") }}');
+
+    var elements = stripe.elements();
+
+    var cardElement = elements.create('card');
+    cardElement.mount('#card-element');
+
+
+    var form = document.querySelector('#formElem');
+
+    form.addEventListener('submit', async(e) => {
+      e.preventDefault();
+
+    var netamount = $('#amounttosend').val();
+    var feeamount = $('#commissiondeduct').val();
+    var amount = (+netamount + +feeamount).toFixed(2);
+
+     var route = '/create-payment-intent';   
+
+     var formData = new FormData(formElem);
+
+     formData.append('paymentMethodType', 'card');
+     formData.append('amount', amount);
+
+    Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('.cardSubmit').text('Please wait...');
+        },
+        success: function(result){
+
+            if(result.status == 200){
+
+                // swal("Success", result.message, "success");
+                // setTimeout(function(){ location.reload(); }, 2000);
+
+                var nameInput = document.querySelector('#nameInput');
+                var emailInput = document.querySelector('#emailInput');
+
+                var paymentIntent = stripe.confirmCardPayment(
+                    result.res.clientSecret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            name: nameInput.value,
+                            email: emailInput.value,
+                        }
+                    }
+                    }
+                ).then(function(result){
+                    $('.cardSubmit').text('Pay Now');
+
+                    if(result.error){
+                        swal("Oops", result.error.message, "error");
+                    }else{
+
+                        $('#paymentToken').val(result.paymentIntent.id);
+
+                        setTimeout(() => {
+                            handShake('addmoney');
+                        }, 1000);
+
+                    }
+
+                });
+
+
+            }
+            else{
+                swal("Oops", result.message, "error");
+            }
+
+
+
+        },
+        error: function(err) {
+            $('.cardSubmit').text('Pay Now');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+
+      // Create PaymentIntent on the server
+    //   var {clientSecret} = await fetch('/create-payment-intent', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'X-CSRF-TOKEN': "{{csrf_token()}}",
+    //     },
+    //     body: JSON.stringify({
+    //       paymentMethodType: 'card',
+    //       currency: $('#curCurrency').val(),
+    //       amount: amount,
+    //     }),
+        
+    //   }).then(resp=>resp.json);
+
+
+
+      
+
+    //   console.log(paymentIntent);
+
+    });
+
+});
+
+
+
+// Stripe Integration Ends
+
+
+</script>
+
+@endif
 
 
         {{-- Google Pay API --}}

@@ -8,9 +8,15 @@ use Illuminate\Support\Facades\Validator;
 
 use App\ServiceType as ServiceType;
 use App\EPSVendor as EPSVendor;
+use App\AllCountries as AllCountries;
+
+use App\Traits\Xwireless;
 
 class ServiceController extends Controller
 {
+
+    use Xwireless;
+
     public function getServicetype(){
 
         $resp = ServiceType::all();
@@ -28,6 +34,18 @@ class ServiceController extends Controller
             $message = "No record";
             $status = 400;
         }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+    public function paymentGateway(){
+
+        $data = AllCountries::where('approval', 1)->orderBy('name', 'ASC')->get();
+
+        $message = "Success";
+        $status = 200;
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 

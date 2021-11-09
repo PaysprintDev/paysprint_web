@@ -756,7 +756,7 @@
     </li>
                                                       </ul> <br>
                                                       Visit our website, <a
-                                                        href="{{ route('home') }}">www.paysprint.net</a> to open a
+                                                        href="{{ route('home') }}">www.paysprint.ca</a> to open a
                                                       Merchant account.
                                                     </p>
 

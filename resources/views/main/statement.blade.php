@@ -120,9 +120,19 @@
                                 <th>Click to View</th>
                             </tr>
                         </thead>
+
                         <tbody id="statementRec">
 
                         </tbody>
+
+                        <form action="{{ route('export to excel') }}" id="exporttoExcel" class="disp-0" method="post">
+                            @csrf
+                            <input type="hidden" name="type" id="doc_type" value="">
+                            <input type="hidden" name="start_date" id="start_date_excel" value="">
+                            <input type="hidden" name="end_date" id="end_date_excel" value="">
+                            <input type="hidden" name="service" id="service_excel" value="">
+                        </form>
+
                     </table>
                 </div>
             </div>

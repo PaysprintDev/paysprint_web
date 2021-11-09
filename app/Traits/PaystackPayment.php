@@ -31,7 +31,14 @@ trait PaystackPayment{
 
 
     // Verify Transactions
-    public function verifyTransaction(){
+    public function verifyTransaction($transaction){
+
+        $this->baseUrl = 'https://api.paystack.co/transaction/verify/'.$transaction;
+
+        $data = $this->doCurlGet();
+        
+
+        return $data;
 
     }
 
@@ -51,15 +58,45 @@ trait PaystackPayment{
 
         $username = explode(" ", $name);
 
+        if(is_array($username)){
+            
+            if(isset($username[0])){
+
+                $userlastname = $username[0];
+            }
+            else{
+                $userlastname = "";
+
+            }
+
+            if(isset($username[1])){
+                $userfirstname = $username[1];
+            }
+            else{
+                $userfirstname = "";
+            }
+
+
+            $lastname = $userfirstname;
+            $firstname = $userlastname;
+
+
+        }
+        else{
+            $firstname = $name;
+            $lastname = "";
+        }
+
         $this->baseUrl = "https://api.paystack.co/bvn/match";
 
         $this->curlPost = [
             "bvn" => $bvn,
             "account_number" => $account_number,
             "bank_code" => $bank_code,
-            "first_name" => $username[1],
-            "last_name" => $username[0]
+            "first_name" => $firstname,
+            "last_name" => $lastname
         ];
+
 
         $data = $this->doCurlPost();
 
@@ -89,6 +126,7 @@ trait PaystackPayment{
 
         return $data;
     }
+
 
     
 

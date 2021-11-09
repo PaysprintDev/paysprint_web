@@ -67,9 +67,11 @@
                   <th>Name</th>
                   <th>Username</th>
                   <th>Email</th>
+                  <th>Address</th>
                   <th>Account Type</th>
                   <th>Identification</th>
                   <th>Platform</th>
+                  <th>Wallet Balance</th>
                   <th>Date Closed</th>
                   <th>Status</th>
                   <th>Action</th>
@@ -94,6 +96,7 @@
                               <td>-</td>
                             @endif
                             <td>{{ $datainfo->email }}</td>
+                            <td>{{ $datainfo->address }}</td>
                             <td>{{ $datainfo->accountType }}</td>
                             <td>
 
@@ -145,9 +148,17 @@
 
                             <td>{{ $datainfo->platform }}</td>
 
+
+                            <td>
+                                {{ $datainfo->currencySymbol.number_format($datainfo->wallet_balance, 2) }}
+                            </td>
+
                             <td>
                                 {{ date('d/M/Y h:i:a', strtotime($datainfo->created_at)) }}
                             </td>
+
+
+                            
 
                             @if ($datainfo->approval == 1 && $datainfo->accountLevel > 0)
 
@@ -163,7 +174,7 @@
                             
                             <td align="center">
 
-                              <a href="{{ route('user more detail', $datainfo->id) }}"><i class="far fa-eye text-primary" style="font-size: 20px;" title="More details"></i></strong></a> 
+                              <a href="{{ route('closed user more detail', $datainfo->id) }}"><i class="far fa-eye text-primary" style="font-size: 20px;" title="More details"></i></strong></a> 
 
 
 

@@ -47,8 +47,11 @@
                   <th>S/N</th>
                   <th>Countries</th>
                   <th>Code</th>
+                  <th>Gateway</th>
+                  <th>IMT Enabled</th>
                   <th>Status</th>
                   <th>Action</th>
+                  <th>&nbsp;</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -60,17 +63,29 @@
 
                             <td>{{ $data->name }}</td>
                             <td>{{ $data->code }}</td>
+                            <td>{{ $data->gateway }}</td>
+                            <td>{{ strtoupper($data->imt) }}</td>
                             <td style="{{ ($data->approval == 1) ? "color: green;" : "color: red;" }} font-weight: bold;">{{ ($data->approval == 1) ? "Access Granted" : "Not Granted Access" }}</td>
                             
                             <form action="{{ route('grant country') }}" method="POST" id="grantform{{ $data->id }}">
-                                        @csrf
-                                        <input type="hidden" value="{{ $data->id }}" name="country_id">
+                                @csrf
+                                <input type="hidden" value="{{ $data->id }}" name="country_id">
 
-                                        <td>
-                                            <button type="button" class="btn {{ ($data->approval == 1) ? 'btn-danger' : 'btn-primary' }}" onclick="grantCountry('{{ $data->id }}')">{{ ($data->approval == 1) ? "Disable Access" : "Grant Access" }}</button>
-                                        </td>
-                                            
-                                    </form>
+                                <td>
+                                    <button type="button" class="btn {{ ($data->approval == 1) ? 'btn-danger' : 'btn-primary' }}" onclick="grantCountry('{{ $data->id }}')">{{ ($data->approval == 1) ? "Disable Access" : "Grant Access" }}</button>
+                                </td>
+                                    
+                            </form>
+
+
+                            <form action="{{ route('grant imt') }}" method="POST" id="grantimtform{{ $data->id }}">
+                            @csrf
+                            <input type="hidden" value="{{ $data->id }}" name="country_id">
+                            <td>
+                                <button type="button" class="btn {{ ($data->imt == "true") ? 'btn-danger' : 'btn-primary' }}" onclick="grantImt('{{ $data->id }}')">{{ ($data->imt == "true") ? "Disable IMT" : "Grant IMT" }}</button>
+                            </td>
+
+                            </form>
 
 
                         </tr>
@@ -80,7 +95,7 @@
                          
                     @else
                     <tr>
-                        <td colspan="5" align="center">No record available</td>
+                        <td colspan="7" align="center">No record available</td>
                     </tr>
                     @endif
                 </tbody>

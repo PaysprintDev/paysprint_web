@@ -107,11 +107,16 @@ input[type="radio"] {
                                                                 Wallet Balance
                                                             </h6>
                                                         </div>
-                                                        <div class="col-md-12">
+                                                        <div class="col-md-7">
                                                             <h4>
-                                                                {{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format(Auth::user()->wallet_balance, 2) }}
+                                                                {{ $data['currencyCode']->currencySymbol."".number_format(Auth::user()->wallet_balance, 2) }}
                                                             </h4>
                                                         </div>
+                                                        {{--  <div class="col-md-5">
+                                                            <a href="{{ route('paysprint currency exchange') }}" style="font-weight: bold; text-decoration: none;">
+                                                                Currency Exchange <img src="https://img.icons8.com/external-wanicon-two-tone-wanicon/30/000000/external-currency-stock-market-wanicon-two-tone-wanicon.png"/>
+                                                            </a>
+                                                        </div>  --}}
                                                     </div>
                                             </div>
 
@@ -407,10 +412,26 @@ input[type="radio"] {
                                             <a type="button" href="{{ route('Add Money') }}" class="btn btn-info btn-block">Add Money <i class="fa fa-plus"></i></a>
                                         </div>
 
-                                        @if (Auth::user()->approval == 1)
+                                        @if (Auth::user()->approval == 2 && Auth::user()->accountLevel == 3)
+
+                                        @if (isset($data['specialInfo']))
+
+                                        
+
+                                            <div class="col-md-6 mb-3">
+                                                <a type="button" href="javascript:void()" class="btn btn-secondary btn-block" onclick="restriction('specialinfo', '{{ Auth::user()->name }}')">Withdraw Money <i class="fa fa-credit-card"></i></a>
+
+                                            </div>
+
+                                            @else
+
                                             <div class="col-md-6 mb-3">
                                                 <a type="button" href="{{ route('Withdraw Money') }}" class="btn btn-secondary btn-block">Withdraw Money <i class="fa fa-credit-card"></i></a>
                                             </div>
+
+                                        @endif
+                                        
+                                            
                                         @else
 
                                         <div class="col-md-6 mb-3">
@@ -422,6 +443,18 @@ input[type="radio"] {
                                         
                                     </div>
 
+                                    @if (isset($data['specialInfo']))
+
+                                    <div class="alert alert-danger alert-dismissible show specialText disp-0" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="$('.specialText').addClass('disp-0')">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        {!! $data['specialInfo']->information !!}
+                                    </div>
+
+                                    @endif
+
+                                    
                                     
 
                                     <div class="form-group"> 
@@ -431,9 +464,9 @@ input[type="radio"] {
                                                     <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Credit <i class="fas fa-circle text-success"></i></button>
                                                     <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Debit <i class="fas fa-circle text-danger"></i></button>
                                                     @if (Auth::user()->accountType == "Individual")
-                                                        <button class="nav-link" data-bs-toggle="tab" type="button" role="tab" aria-selected="false" onclick="location.href='{{ url('payorganization?type=local') }}'">Send Money <i class="fas fa-circle text-warning"></i></button>
+                                                        <button class="nav-link" data-bs-toggle="tab" type="button" role="tab" aria-selected="false" onclick="location.href='{{ url('payorganization?type='.base64_encode('local')) }}'">Send Money <i class="fas fa-circle text-warning"></i></button>
                                                     @else
-                                                        <button class="nav-link" data-bs-toggle="tab" type="button" role="tab" aria-selected="false" onclick="location.href='{{ route('merchant send money', 'type=local') }}'">Send Money <i class="fas fa-circle text-warning"></i></button>
+                                                        <button class="nav-link" data-bs-toggle="tab" type="button" role="tab" aria-selected="false" onclick="location.href='{{ route('merchant send money', 'type='.base64_encode('local')) }}'">Send Money <i class="fas fa-circle text-warning"></i></button>
                                                     @endif
                                                     
 
@@ -490,7 +523,7 @@ input[type="radio"] {
                                                                                 </div>
 
                                                                             </td>
-                                                                        <td style="font-weight: 700" class="{{ ($walletstatements->credit != 0) ? "text-success" : "text-danger" }}">{{ ($walletstatements->credit != 0) ? "+".$data['currencyCode'][0]->currencies[0]->symbol.number_format($walletstatements->credit, 2) : "-".$data['currencyCode'][0]->currencies[0]->symbol.number_format($walletstatements->debit, 2) }} <br> <small class="{{ ($walletstatements->status == "Delivered") ? "text-primary" : "text-secondary" }}"><strong>{{ $walletstatements->status }}</strong></small> </td>
+                                                                        <td style="font-weight: 700" class="{{ ($walletstatements->credit != 0) ? "text-success" : "text-danger" }}">{{ ($walletstatements->credit != 0) ? "+".$data['currencyCode']->currencySymbol.number_format($walletstatements->credit, 2) : "-".$data['currencyCode']->currencySymbol.number_format($walletstatements->debit, 2) }} <br> <small class="{{ ($walletstatements->status == "Delivered") ? "text-primary" : "text-secondary" }}"><strong>{{ $walletstatements->status }}</strong></small> </td>
                                                                     </tr>
                                                 
                                                                 @endforeach
@@ -542,7 +575,7 @@ input[type="radio"] {
                                                                                 </div>
 
                                                                             </td>
-                                                                            <td style="font-weight: 700" class="text-success">{{ "+".$data['currencyCode'][0]->currencies[0]->symbol.number_format($walletstatements->credit, 2) }}<br> <small class="{{ ($walletstatements->status == "Delivered") ? "text-primary" : "text-secondary" }}"><strong>{{ $walletstatements->status }}</strong></small></td>
+                                                                            <td style="font-weight: 700" class="text-success">{{ "+".$data['currencyCode']->currencySymbol.number_format($walletstatements->credit, 2) }}<br> <small class="{{ ($walletstatements->status == "Delivered") ? "text-primary" : "text-secondary" }}"><strong>{{ $walletstatements->status }}</strong></small></td>
                                                                         </tr>
 
                                                                     @endif
@@ -593,7 +626,7 @@ input[type="radio"] {
 
                                                                             </td>
                                                                             <td style="font-weight: 700" class="text-danger">
-                                                                                {{ "-".$data['currencyCode'][0]->currencies[0]->symbol.number_format($walletstatements->debit, 2) }}<br> <small class="{{ ($walletstatements->status == "Delivered") ? "text-primary" : "text-secondary" }}"><strong>{{ $walletstatements->status }}</strong></small>
+                                                                                {{ "-".$data['currencyCode']->currencySymbol.number_format($walletstatements->debit, 2) }}<br> <small class="{{ ($walletstatements->status == "Delivered") ? "text-primary" : "text-secondary" }}"><strong>{{ $walletstatements->status }}</strong></small>
                                                                             </td>
                                                                         </tr>
 
@@ -736,7 +769,7 @@ input[type="radio"] {
 
         $("#conversionamount").val("");
 
-        var currency = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
+        var currency = "{{ $data['currencyCode']->currencyCode }}";
         var route = "{{ URL('Ajax/getconversion') }}";
         var thisdata = {currency: currency, amount: $("#amount_to_receive").val(), val: "receive"};
 
@@ -826,8 +859,12 @@ function comingSoon(val){
  }
 
  function restriction(val, name){
+     $('.specialText').addClass("disp-0");
     if(val == "withdrawal"){
         swal('Hello '+name, 'Your account need to be verified before you can make withdrawal', 'info');
+    }
+    else if(val == "specialinfo"){
+        $('.specialText').removeClass("disp-0");
     }
  }
 

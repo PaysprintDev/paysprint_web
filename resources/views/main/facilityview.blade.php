@@ -81,7 +81,9 @@
 
                             <div class="table table-responsive">
 
-                                <a type="button" href="#" class="btn btn-primary">Make a Booking</a>
+                               
+
+                                <a type="button" href="{{ route('makeabooking', $data['currentfacility']) }}" class="btn btn-primary">Make a Booking</a>
 
                                 <br><br>
                             <table class="table table-striped table-hover table-bordered">

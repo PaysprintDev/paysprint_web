@@ -117,7 +117,14 @@
                     </center>
                 </div>
               </div><!-- /.box-body -->
+
+              
+
             </div><!-- /.box -->
+
+            <p class="text-center mt-4">
+                <strong><img src="https://img.icons8.com/cotton/40/000000/cloud-alert.png"/> Note: Name on the Card or Bank Account must match your PaySprint profile</strong>
+            </p>
           </div><!-- /.col -->
           
         </div><!-- /.row -->

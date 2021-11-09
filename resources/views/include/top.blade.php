@@ -64,7 +64,7 @@
                     <span class="icon-bar"></span>
                     </button>
                     {{-- <a class="navbar-brand" href="{{ route('home') }}"><p style="font-weight: bold; font-size: 30px; color: #f6b60b;"><span style="color: #111f29">Pay</span>Sprint</p></a> --}}
-                    <a class="navbar-brand" @guest href="{{ route('home') }}" @endguest  @auth href="{{ route('user home') }}" @endauth><img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png" style="top: -13px; position: relative;  width: 200px; height: inherit;"></a>
+                    <a class="navbar-brand" @guest href="{{ route('home') }}" @endguest  @auth href="{{ route('user home') }}" @endauth><img src="        " style="top: -13px; position: relative;  width: 200px; height: inherit;"></a>
 
                 </div>
             </div>
@@ -167,6 +167,10 @@
                             <a {{ (Auth::user()->accountType != "Individual") ? 'href='.route('getStatement') :  'href='.route('statement') }}>Transaction</a>
                         </li>
 
+                        <li class="dropdown submenu">
+                            <a {{ (Auth::user()->accountType != "Individual") ? 'href='.route('getStatement') :  'href='.route('statement') }}>Earned Points</a>
+                        </li>
+                        
                         @auth
                             <li class="dropdown submenu">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">SWITCH ACCOUNT<span class="caret"></span></a>

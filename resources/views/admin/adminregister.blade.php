@@ -127,7 +127,7 @@
         
 
       <div class="form-group has-feedback">
-        <label for="business_name"><span class="reqField">*</span> Business Name</label>
+        <label for="business_name"><span class="reqField">*</span> Legal Entity Name</label>
         <input type="hidden" name="ref_code" id="ref_code" @if($ref_code != "") value="{{ $ref_code }}" readonly @else placeholder="Ref code" @endif>
         <input type="hidden" name="user_id" id="user_id" class="form-control" value="{{ 'PaySprint_'.mt_rand(1000, 9999) }}">
         <input type="text" name="business_name" id="business_name" class="form-control" placeholder="Business Name*">
@@ -552,6 +552,12 @@
         </div>
       </div>
 
+      <div class="form-group has-feedback">
+        <label for="referred_by">Referred By <small class="reqField">(Optional)</small></label>
+        <input type="text" name="referred_by" id="referred_by" class="form-control" placeholder="E.g 69212">
+        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+      </div>
+
 
 
       <div class="row">
@@ -824,6 +830,7 @@ function signUp(){
     password: $('#password').val(),
     business_zip_code: $('#business_zip_code').val(),
     zip_code: $('#postal_code').val(),
+    referred_by: $('#referred_by').val(),
   };
 
         Pace.restart();

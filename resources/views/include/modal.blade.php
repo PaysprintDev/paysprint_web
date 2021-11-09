@@ -1,3 +1,7 @@
+
+
+<?php use \App\Http\Controllers\AllCountries; ?>
+
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary disp-0" data-toggle="modal" data-target="#exampleModalCenter" id="sendMoney">
     Launch demo modal
@@ -19,20 +23,62 @@
         </div>  --}}
         <div class="modal-footer">
 
+
           <div class="row">
             <center>
               <div class="col-md-6">
-                <a href="{{ url('payorganization?type=local') }}" title="Local">
+                <a href="{{ url('payorganization?type='.base64_encode('local')) }}" title="Local">
                 <img src="https://img.icons8.com/cotton/64/000000/location-update.png"/>
                 </a>
               </div>
 
-              <div class="col-md-6">
-                <a href="javascript:void()" onclick="comingSoon()" title="International">
-                  <img src="https://img.icons8.com/cotton/64/000000/worldwide-location.png"/>
+              @if (Auth::check() == true)
+
+              @if ($imt = \App\AllCountries::where('name', Auth::user()->country)->where('imt', "true")->first())
+                
+                @if (isset($imt))
+                    <div class="col-md-6">
+                      <a href="{{ url('payorganization?type='.base64_encode('international')) }}" title="International">
+                        <img src="https://img.icons8.com/cotton/64/000000/worldwide-location.png"/>
+                        
+                      </a>
+                    </div>
+                @else
+
+                <div class="col-md-6">
+                    <a href="javascript:void()" onclick="comingSoon()" title="International">
+                      <img src="https://img.icons8.com/cotton/64/000000/worldwide-location.png"/>
+                      
+                    </a>
+                  </div>
+                    
+                @endif
+
+                @else
+
+                <div class="col-md-6">
+                    <a href="javascript:void()" onclick="comingSoon()" title="International">
+                      <img src="https://img.icons8.com/cotton/64/000000/worldwide-location.png"/>
+                      
+                    </a>
+                  </div>
                   
-                </a>
-              </div>
+              @endif
+
+              
+                  
+              @else
+                  <div class="col-md-6">
+                    <a href="javascript:void()" onclick="comingSoon()" title="International">
+                      <img src="https://img.icons8.com/cotton/64/000000/worldwide-location.png"/>
+                      
+                    </a>
+                  </div>
+              @endif
+
+              
+
+
             </center>
           </div>
 

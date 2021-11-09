@@ -17,6 +17,8 @@
     
 
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description"
+        content="Fastest and affordable method of sending and receiving money, paying invoice and getting Paid at anytime!">
     <title>{{ config('app.name', 'PaySprint') }} | {{ $pages }}</title>
         <!-- Favicon -->
 <link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png" type="image/x-icon" />

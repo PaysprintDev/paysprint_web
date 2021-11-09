@@ -49,6 +49,8 @@
                   <th>Message</th>
                   <th>Country</th>
                   <th>Date Added</th>
+                  <th>Action</th>
+                  <th>&nbsp;</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -61,6 +63,13 @@
                             <td>{{ $data->information }}</td>
                             <td>{{ strtoupper($data->country) }}</td>
                             <td>{{ date('d/M/Y', strtotime($data->created_at)) }}</td>
+                            <td>
+                              <a href="{{ route('edit special activity', $data->id) }}" class="btn btn-info">Edit</a>
+                            </td>
+                            <td>
+                                <form action="{{ route('delete special activity') }}" method="post" id="deletespecialinfo{{ $data->id }}">@csrf <input type="hidden" value="{{ $data->id }}" name="id"></form>
+                              <a href="javascript:void(0)" class="btn btn-danger" onclick="del('deletespecialinfo', '{{ $data->id }}')">Delete</a>
+                            </td>
                         </tr>
                         @endforeach
 

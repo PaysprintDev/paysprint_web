@@ -6,7 +6,11 @@
 <!-- Hero Area -->
 <!-- Hero Area -->
 <div class="bg-default-8 pb-15 pt-24 pt-lg-32 pb-lg-28" id="hero-area-animation" style="background: #f2f2f2; !important">
+
+
     <div class="container" id="animation-area-1">
+    {{-- <p style="background: aquamarine;padding: 10px;border-radius: 10px;font-size: 20px;font-weight: 700;"><marquee behavior="" direction="">You are at the right website, Paypinn.com is same as Paysprint.ca!!!</marquee></p> --}}
+
         <div class="row align-items-center justify-content-center">
             <div class="col-9 col-md-7 col-lg-5 offset-xl-1 align-self-sm-end order-lg-2">
                 <div class="hero-img image-group-p12 position-relative mb-9 mb-sm-15 mb-lg-0" data-aos="fade-left"
@@ -19,7 +23,7 @@
                 <div class=" hero-sm-card-1">
                     <div class="px-7 py-6 d-flex bg-white shadow-10 rounded-15 w-xs-75 w-lg-76 w-xl-68 hero-card-1-animation"
                         id="an-item-1p1">
-                        <p class="gr-text-11 mb-0 text-mirage-2">“I want to send money to my family and friends, but they are no on PaySprint.”</p>
+                        <p class="gr-text-11 mb-0 text-mirage-2">“I want to send money to my family and friends, but they are not on PaySprint.”</p>
                         <div class="small-card-img ml-6">
                             <img src="https://img.icons8.com/bubbles/50/000000/night-man.png" alt="night-man.png" class="circle-42">
                         </div>
@@ -89,18 +93,20 @@
 
 
 
-<div class="brand-section pt-13 pt-lg-17 pb-11 border-bottom bg-default-6 disp-0">
+<div class="brand-section pt-13 pt-lg-17 pb-11 border-bottom bg-default-6">
     <div class="container">
         <div class="row justify-content-center align-items-center">
             <div class="col-md-8">
-                <p class="gr-text-9 text-center mb-7">Trusted by over 4,000+ customers, some of them are here
-                </p>
+                {{-- <p class="gr-text-9 text-center mb-7">Trusted and Featured on:
+                </p> --}}
+                <h2 class="gr-text-4 text-center mb-8">Featured on</h2>
             </div>
             <div class="col-12">
                 <div
                     class="brand-logos d-flex justify-content-center justify-content-xl-between align-items-center mx-n9 flex-wrap">
                     <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                         data-aos-duration="500" data-aos-once="true">
+<<<<<<< HEAD
                         <img src="image/l4/png/l4-brand1.png" alt="l4-brand1.png" class="w-100">
                     </div>
                     <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
@@ -118,7 +124,48 @@
                     <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                         data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
                         <img src="image/l4/png/l4-brand6.png" alt="l4-brand6.png" class="w-100">
+=======
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/questrade_znhne7.png" alt="" class="w-100" width="80" height="80">
                     </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-delay="600" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/YahooFinanceLogo_geieeb.png" alt="" class="w-100" width="60" height="60">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/private_capital_lxc1jr.png" alt="" class="w-100" width="60" height="60">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/benzinga_qpr7ot.png" alt="" class="w-100" width="100" height="100">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/reuters_o3wnje.png" alt="" class="w-100" width="100" height="100">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-delay="400" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/canadianbusinessjournal_e3mobm.png" alt="" class="w-100" width="100" height="100">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628673759/paysprint_asset/featuredon/magazinetoday_nsudvk.jpg" alt="" class="w-100" width="80" height="80">
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/morningstar_ehxgue.png" alt="" class="w-100" width="100" height="100">
+>>>>>>> 934aed415b63044acb39c631dae37372a19ded74
+                    </div>
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1628701963/paysprint_asset/featuredon/1280px-The_Globe_and_Mail__2019-10-31_.svg_ph46rz.png" alt="" class="w-100" style="width: 300px !important;">
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    
                 </div>
             </div>
         </div>
@@ -560,6 +607,32 @@ PaySprint is all you need.</p>
         </div>
     </div>
 </div>
+
+
+    <!-- Testimonial section 2 -->
+    <div class="testimonial-section2 position-relative bg-dark dark-mode-texts bg-pattern pattern-4 pt-14 pt-lg-26 pb-14 pb-lg-26 disp-0">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-8 col-lg-7 col-xl-6">
+            <div class="section-title text-center mb-9">
+              <h4 class="pre-title gr-text-12 text-green text-uppercase mb-0">Testimonial</h4>
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-center justify-content-around">
+          <div class="col-lg-7 col-md-9">
+            <div class="single-testimonial text-center">
+              <h3 class="review-text gr-text-5 mb-11">“Simply the best. Better than all the rest. I’d recommend this product to beginners and advanced users.”</h3>
+              <div class="reviewer-img mb-7">
+                <img class="circle-lg mx-auto" src="{{ asset('newpage/image/l5/jpg/l5-testimonial2.jpg') }}" alt="">
+              </div>
+              <h3 class="username gr-text-9 mb-1">Ian Klein</h3>
+              <span class="rank gr-text-11 gr-text-color-opacity">Digital Marketer</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
 

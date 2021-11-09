@@ -37,6 +37,10 @@ class User extends Authenticatable
         return $this->hasOne('App\LinkAccount', 'user_id');
     }
 
-    protected $table = "users";
-}
+    public function forexAccount(){
+        return $this->hasMany('App\EscrowAccount', 'user_id');
+    }
 
+    protected $table = "users";
+    
+}

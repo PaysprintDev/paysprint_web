@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SuperAdmin extends Model
 {
-    protected $fillable = ['user_id', 'firstname', 'lastname', 'username', 'password', 'role', 'email', 'created_at', 'updated_at'];
+    protected $guarded = [];
 
     protected $table = "super_admin";
 }

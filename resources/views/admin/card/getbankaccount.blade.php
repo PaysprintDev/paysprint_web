@@ -135,8 +135,17 @@
                                                 <option data-tokens="DUCA" value="DUCA">DUCA</option>
                                                 <option data-tokens="TD CANADA TRUST" value="TD CANADA TRUST">TD CANADA TRUST</option>
                                             </select>
-                                        @else
 
+                                            @elseif($userInfo->country == "Nigeria")
+                                            <select name="bankName" id="bankName" class="form-control">
+                                                    @if (count($data['listbank']) > 0)
+                                                    <option value="">Select your bank</option>
+                                                        @foreach ($data['listbank'] as $banksData)
+                                                            <option value="{{ $banksData->name }}">{{ $banksData->name }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
+                                        @else
                                         <input type="text" name="bankName" id="bankName" class="form-control" required>
                                         @endif
 

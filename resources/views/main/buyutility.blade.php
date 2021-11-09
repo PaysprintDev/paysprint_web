@@ -88,7 +88,7 @@ input[type="radio"] {
                                                 </div>
                                                 <div class="col-md-12">
                                                     <h4>
-                                                        {{ $data['currencyCode'][0]->currencies[0]->symbol."".number_format(Auth::user()->wallet_balance, 2) }}
+                                                        {{ $data['currencyCode']->currencySymbol."".number_format(Auth::user()->wallet_balance, 2) }}
                                                     </h4>
                                                 </div>
                                             </div>
@@ -248,10 +248,11 @@ input[type="radio"] {
                                                             @endforeach
                                                         </select>
                                                     @else
-                                                        <select name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control">
+                                                    
+                                                        <select name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control priceChecker">
                                                             <option value="">{{ $dataProduct->FieldName }}</option>
                                                             @foreach ($dataProduct->ListItems as $listItem)
-                                                                <option value="{{ $listItem->ItemType }}">{{ $listItem->ItemName.': '.Auth::user()->currencySymbol.$listItem->Amount.' ('.$listItem->ItemDesc.')' }}</option>
+                                                                <option value="{{ $listItem->ItemType }}">{{ $listItem->ItemName.': ₦'.$listItem->Amount.' ('.$listItem->ItemDesc.')' }}</option>
                                                             @endforeach
                                                         </select>
                                                         
@@ -265,7 +266,7 @@ input[type="radio"] {
                                                         @if ($dataProduct->FieldName == "Email")
                                                             <div class="input-group-append"> </div> <input type="text" name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control" readonly value="{{ Auth::user()->email }}">
                                                         @elseif ($dataProduct->FieldName == "Amount")
-                                                            <div class="input-group-append"> <span class="input-group-text text-muted"> {{ Auth::user()->currencySymbol }} </span> </div> <input type="number" min="0.00" max="{{ $dataProduct->MaxAmount }}" step="0.01" name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control" required>
+                                                            <div class="input-group-append"> <span class="input-group-text text-muted currencySymb"> {{ Auth::user()->currencySymbol }} </span> </div> <input type="number" min="0.00" max="{{ $dataProduct->MaxAmount }}" step="0.01" name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control" required>
                                                         @else
                                                             <div class="input-group-append"> </div> <input type="text" name="fieldValue[]" id="{{ $dataProduct->PaymentInputKey }}" class="form-control" required>
                                                         @endif
@@ -280,8 +281,9 @@ input[type="radio"] {
 
 
                                     @endforeach
+                                    
 
-                                    @if (Request::get('billername') == "DSTV2" || Request::get('billername') == "ABUJA POSTPAID" || Request::get('billername') == "ABUJA PREPAID" || Request::get('billername') == "EKO ELECTRIC POSTPAID" || Request::get('billername') == "EKO ELECTRIC PREPAID" || Request::get('billername') == "GOTV2" || Request::get('billername') == "IKEJA ELECTRIC POSTPAID" || Request::get('billername') == "IKEJA ELECTRIC PREPAID" || Request::get('billername') == "JOS ELECTRIC POSTPAID" || Request::get('billername') == "JOS ELECTRIC PREPAID" || Request::get('billername') == "KADUNA ELECTRIC POSTPAID" || Request::get('billername') == "KADUNA ELECTRIC PREPAID" || Request::get('billername') == "KANO POSTPAID" || Request::get('billername') == "KANO PREPAID" || Request::get('billername') == "PHED2")
+                                    @if (Request::get('billername') == "DSTV2" || Request::get('billername') == "GOTV2" || Request::get('billername') == "DSTV1" || Request::get('billername') == "GOTV1" || Request::get('billername') == "ABUJA POSTPAID" || Request::get('billername') == "ABUJA PREPAID" || Request::get('billername') == "EKO ELECTRIC POSTPAID" || Request::get('billername') == "EKO ELECTRIC PREPAID" || Request::get('billername') == "GOTV2" || Request::get('billername') == "IKEJA ELECTRIC POSTPAID" || Request::get('billername') == "IKEJA ELECTRIC PREPAID" || Request::get('billername') == "JOS ELECTRIC POSTPAID" || Request::get('billername') == "JOS ELECTRIC PREPAID" || Request::get('billername') == "KADUNA ELECTRIC POSTPAID" || Request::get('billername') == "KADUNA ELECTRIC PREPAID" || Request::get('billername') == "KANO POSTPAID" || Request::get('billername') == "KANO PREPAID" || Request::get('billername') == "PHED2" || Request::get('billername') == "STARTIMES")
                                         <hr>
                                         <button class="btn btn-success" onclick="getaccountLookup()" id="verifyAccount">Verify Account</button>
                                         <hr>
@@ -291,6 +293,38 @@ input[type="radio"] {
 
                                     <div class="form-group">
                                         <div class="accountInfo"></div>
+                                    </div>
+
+
+                                    <div class="form-group disp-0">
+                                        <div class="input-group"> 
+                                            <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission" checked> Include fee</p>
+                                            
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group converter disp-0"> <label for="netwmount">
+                                            <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate </b> <br> <span id="rateToday"></span> </small></h6>
+                                            {{-- <p style="font-weight: bold;">
+                                                {{ $data['currencyCode']->currencyCode }} <=> {{ $data['othercurrencyCode']->currencyCode }}
+                                            </p> --}}
+
+                                            <table class="table table-bordered table-striped" width="100%">
+                                                    <tbody>
+                                                        <tr style="font-weight: bold;">
+                                                            <td>{{ $data['currencyCode']->currencyCode }}</td>
+                                                            <td>NGN</td>
+                                                        </tr>
+                                                        <tr style="font-weight: bold;">
+                                                            <td class="text-success" id="typedAmount"></td>
+                                                            <td class="text-primary" id="convertedAmount"></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                        </label>
+                                        
                                     </div>
 
 
@@ -323,7 +357,7 @@ input[type="radio"] {
                                 {{-- <div class="form-group disp-0"> <label for="netwmount">
                                         <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate today according to currencylayer.com</b></small></h6>
                                         <p style="font-weight: bold;">
-                                            {{ $data['currencyCode'][0]->currencies[0]->code }} <=> CAD
+                                            {{ $data['currencyCode']->currencyCode }} <=> CAD
                                         </p>
                                     </label>
                                     <div class="input-group"> 
@@ -408,6 +442,8 @@ input[type="radio"] {
 
                                 </form>
                             </div>
+
+                            
 
                             @else
 
@@ -520,6 +556,11 @@ function runCardType(){
 function runCommission(){
     
     $('.commissionInfo').html("");
+    $('.payutilityBtn').addClass('btn-danger');
+    $('.payutilityBtn').removeClass('btn-primary');
+    $('.payutilityBtn').attr('disabled', true);
+    $('.payutilityBtn').text('Please wait...');
+    
     var amount = $("#amount").val();
     var billerCode = $("#billerCode").val();
 
@@ -540,10 +581,18 @@ function runCommission(){
         dataType: 'JSON',
         beforeSend: function(){
             $('.commissionInfo').addClass('');
+            $('.payutilityBtn').addClass('btn-danger');
+            $('.payutilityBtn').removeClass('btn-primary');
+            $('.payutilityBtn').attr('disabled', true);
+            $('.payutilityBtn').text('Please wait...');
         },
         
         success: function(result){
 
+            $('.payutilityBtn').removeClass('btn-danger');
+            $('.payutilityBtn').addClass('btn-primary');
+            $('.payutilityBtn').attr('disabled', false);
+            $('.payutilityBtn').text('Pay');
 
             if(result.message == "success"){
 
@@ -551,7 +600,7 @@ function runCommission(){
                 $('.commissionInfo').addClass('alert alert-success');
                 $('.commissionInfo').removeClass('alert alert-danger');
 
-                $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a discounted amount of: {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.walletCharge.toFixed(2)+" will be deducted from your Wallet. You have a discount of {{ $data['currencyCode'][0]->currencies[0]->symbol }}"+result.data.walletDiscount.toFixed(2)+" on your {{ strtoupper(Request::get('billername')) }}. Thanks for choosing PaySprint.</span></li></li></ul>");
+                $('.commissionInfo').html("<ul><li><span style='font-weight: bold;'>Kindly note that a discounted amount of: {{ $data['currencyCode']->currencySymbol }}"+result.data.walletCharge.toFixed(2)+" will be deducted from your Wallet. You have a discount of {{ $data['currencyCode']->currencySymbol }}"+result.data.walletDiscount.toFixed(2)+" on your {{ strtoupper(Request::get('billername')) }}. Thanks for choosing PaySprint.</span></li></li></ul>");
 
                 $("#amounttosend").val(result.data.walletCharge);
                 $("#commissiondeduct").val(result.data.walletDiscount);
@@ -626,36 +675,57 @@ function getaccountLookup(){
 }
 
 
-// function currencyConvert(amount){
+function currencyConvert(amount){
 
-//     $("#conversionamount").val("");
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
 
-//     var currency = "CAD";
-//     var localcurrency = "{{ $data['currencyCode'][0]->currencies[0]->code }}";
-//     var route = "{{ URL('Ajax/getconversion') }}";
-//     var thisdata = {currency: currency, amount: amount, val: "send", localcurrency: localcurrency};
+    today = dd + '/' + mm + '/' + yyyy;
 
-//         setHeaders();
-//         jQuery.ajax({
-//         url: route,
-//         method: 'post',
-//         data: thisdata,
-//         dataType: 'JSON',
-//         success: function(result){
+    $("#conversionamount").val("");
 
+    var currency = "NGN";
+    var localcurrency = "{{ $data['currencyCode']->currencyCode }}";
+    var route = "{{ URL('Ajax/getconversion') }}";
+    var thisdata = {currency: currency, amount: amount, val: "send", localcurrency: localcurrency};
 
-//             if(result.message == "success"){
-//                 $("#conversionamount").val(result.data);
-//             }
-//             else{
-//                 $("#conversionamount").val("");
-//             }
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: thisdata,
+        dataType: 'JSON',
+        success: function(result){
 
 
-//         }
+            if(localcurrency != currency){
+                $('.converter').removeClass('disp-0');
+            }
+            else{
+                $('.converter').addClass('disp-0');
 
-//     });
-// }
+                
+            }
+
+            $('#convertedAmount').text((result.data).toFixed(2));
+                $("#amount").val((result.data).toFixed(2));
+                $('.currencySymb').text('₦');
+                $("#amount").attr('readonly', true);
+
+                var mycurrentCurrency = $('#typedAmount').text();
+
+                var todayRate = result.data / mycurrentCurrency;
+
+                // Put Exchange rate
+                $('#rateToday').html("<span class='text-danger'><strong>1"+localcurrency+" == "+todayRate.toFixed(2)+''+currency+'<br>Today: '+today+"</strong></span>");
+            
+
+        }
+
+    });
+}
 
 
 function handShake(val){
@@ -757,6 +827,226 @@ else if(val == 'addcard'){
 }
 
 }
+
+
+$('.priceChecker, #quantity').change(function(){
+
+    var selectedOption = $(".priceChecker option:selected").text();
+
+    var quantity = $("#quantity option:selected").text();
+
+    var productCode = "{{ Request::get('productid') }}";
+
+    var currencySymbol = "{{ Auth::user()->currencySymbol }}";
+
+
+    $('.payutilityBtn').addClass('btn-danger');
+    $('.payutilityBtn').removeClass('btn-primary');
+    $('.payutilityBtn').attr('disabled', true);
+    $('.payutilityBtn').text('Please wait...');
+
+    // Do Ajax
+    if($('.priceChecker').val() != null){
+        
+
+        var route;
+
+    route = "/api/v1/getproductdetails/"+productCode;
+
+        Pace.restart();
+    Pace.track(function(){
+            setHeaders();
+            jQuery.ajax({
+            url: route,
+            method: 'get',
+            dataType: 'JSON',
+            beforeSend: function(){
+                $('.payutilityBtn').addClass('btn-danger');
+                $('.payutilityBtn').removeClass('btn-primary');
+                $('.payutilityBtn').attr('disabled', true);
+                $('.payutilityBtn').text('Please wait...');
+            },
+            success: function(result){
+
+                $('.payutilityBtn').removeClass('btn-danger');
+                $('.payutilityBtn').addClass('btn-primary');
+                $('.payutilityBtn').attr('disabled', false);
+                $('.payutilityBtn').text('Pay');
+
+                var data = result.data;
+                var getAmount = 0;
+                var payInput = "";
+                var numberOfMonths = 1;
+
+                if(result.status == 200){
+
+                    $.each(data, function(v,k){
+
+
+                        if(k.FieldName == "Amount"){
+                            payInput = k.PaymentInputKey;
+                        }
+
+                        if(k.FieldName == "Number of Months"){
+
+                            $.each(k.ListItems, function(k,l){
+
+                                var monthCheck = l.ItemName+' month';
+
+
+                                if(monthCheck == quantity){
+
+                                    numberOfMonths =  l.ItemType;
+                                    
+                                }  
+                                
+
+                            });
+                        }
+
+
+                        if(k.FieldName == "Product type" || k.FieldName == "Product Type" || k.FieldName == "Select Package (Amount)" || k.FieldName == "Select Package" || k.FieldName == "Product"){
+
+                            $.each(k.ListItems, function(i,j){
+
+
+                                var checkerItem = j.ItemName+': ₦'+j.Amount+' ('+j.ItemDesc+')';
+
+                                if(checkerItem == selectedOption){
+
+                                    if(currencySymbol != "₦"){
+
+                                        // convert Amount to other currency and pass to price amount
+
+                                        var currency = "{{ $data['currencyCode']->currencyCode }}";
+                                        var localcurrency = "NGN";
+                                        var route = "{{ URL('Ajax/getconversion') }}";
+                                        var thisdata = {currency: currency, amount: j.Amount, val: "send", localcurrency: localcurrency};
+
+                                            setHeaders();
+                                            jQuery.ajax({
+                                            url: route,
+                                            method: 'post',
+                                            data: thisdata,
+                                            dataType: 'JSON',
+                                            success: function(result){
+                                                
+                                                var newAmount = result.data*1.02*numberOfMonths;
+
+                                                getAmount = newAmount.toFixed(2);
+
+
+                                                if(checkerItem == "AIRTIME: ₦0 (-)"){
+                                                    getAmount = $("#amount").val();
+                                                }
+                                                else{
+
+                                                    getAmount = getAmount;
+                                                }
+
+
+                                                if(payInput == "amount"){
+                                                    $("#"+payInput).val(getAmount);
+
+                                                }
+                                                else{
+                                                    $("#amount").val(getAmount);
+                                                }
+
+
+                                                $('#typedAmount').text(getAmount);
+                                                currencyConvert(getAmount);
+
+                                                runCommission();
+
+                                            }
+
+                                        });
+
+                                    }
+                                    else{
+
+                                        if(checkerItem == "AIRTIME: ₦0 (-)"){
+
+                                            
+
+                                            var myAmount = $("#amount").val();
+
+                                            getAmount =  myAmount * numberOfMonths;
+
+                                            if(payInput == "amount"){
+                                                $("#"+payInput).val(getAmount);
+                                            }
+                                            else{
+                                                $("#amount").val(getAmount);
+                                            }
+
+                                        }
+                                        else{
+
+                                           getAmount =  j.Amount * numberOfMonths;
+
+                                            if(payInput == "amount"){
+                                                $("#"+payInput).val(getAmount);
+                                            }
+                                            else{
+                                                $("#amount").val(getAmount);
+                                            }
+                                        }
+
+                                        
+
+                                    }
+
+                                    
+                                }
+                                
+
+                            });
+                        }
+
+                    });
+
+
+                    if(payInput == "amount"){
+
+                        if(getAmount != 0){
+                            $("#"+payInput).val(getAmount);
+                            $("#"+payInput).attr('readonly', true);
+
+                            
+                        }
+                        else{
+                            $("#"+payInput).attr('readonly', false);
+                        }
+                        
+                    }
+                    else{
+                        $("#amount").val(getAmount);
+                        $("#amount").attr('readonly', true);
+
+                    }
+
+
+                    runCommission();
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+            },
+            error: function(err) {
+                
+                swal("Oops", err.responseJSON.message, "error");
+
+            } 
+
+        });
+    });
+
+       
+    }
+});
 
 function goBack() {
   window.history.back();

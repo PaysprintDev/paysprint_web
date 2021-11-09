@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'E-billing'),
+    'name' => env('APP_NAME', 'PaySprint'),
 
     /*
     |--------------------------------------------------------------------------
@@ -148,6 +148,8 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+        Erdemkeren\Otp\OtpServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -163,6 +165,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         Biscolab\ReCaptcha\ReCaptchaServiceProvider::class,
+
+        Spatie\Newsletter\NewsletterServiceProvider::class,
 
     ],
 
@@ -214,6 +218,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         'ReCaptcha' => Biscolab\ReCaptcha\Facades\ReCaptcha::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Newsletter' => Spatie\Newsletter\NewsletterFacade::class,
 
     ],
 

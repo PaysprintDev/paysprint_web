@@ -3,6 +3,7 @@
 
 <?php use \App\Http\Controllers\TransactionCost; ?>
 
+
 @section('dashContent')
 
   <!-- Content Wrapper. Contains page content -->
