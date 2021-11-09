@@ -532,6 +532,8 @@ Route::prefix('Admin/overview/report')->group(function () {
 // Api documentation
 Route::get('api/documentation', ['uses' => 'AdminController@apiDocumentation', 'as' => 'api integration']);
 Route::get('earnedpoints', ['uses' => 'AdminController@earnedPoints', 'as' => 'earned points']);
+
+
 Route::prefix('Admin/')->group(function () {
 
 	Route::get('invoicetypes', ['uses' => 'AdminController@createServiceTypes', 'as' => 'create service types']);
@@ -567,6 +569,11 @@ Route::prefix('Admin/')->group(function () {
 
 	Route::get('invoicelinkcomment/{id}', ['uses' => 'AdminController@invoiceLinkComment', 'as' => 'invoice link comment']);
 	Route::post('myinvoicelinkcomment/{id}', ['uses' => 'MonerisController@myInvoiceLinkComment', 'as' => 'my invoice link comment']);
+
+
+	//Routes for image upload
+
+	Route::post('uploaduserdoc', ['uses' => 'ImageController@imageUploadPost', 'as' => 'upload user doc']);
 
 
 	// KYB List
@@ -672,6 +679,7 @@ Route::post('updateinvoicelink', ['uses' => 'AdminController@updateinvoicelink',
 
 
 Route::post('increasetranslimit', ['uses' => 'AdminController@increaseTransLimit', 'as' => 'increase trans limit']);
+
 
 
 
