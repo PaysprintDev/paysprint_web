@@ -5,7 +5,7 @@ import Header from '../includes/Header';
 
 const apiToken = document.getElementById('user_api_token').value;
 
-class MyOrders extends Component {
+class RecentBids extends Component {
 	_isMounted = false;
 
 	constructor(props) {
@@ -21,7 +21,7 @@ class MyOrders extends Component {
 	async componentDidMount() {
 		this._isMounted = true;
 
-		const res = await axios.get(`/api/v1/myorders`, {
+		const res = await axios.get(`/api/v1/getrecentbids`, {
 			headers: { Authorization: `Bearer ${apiToken}` }
 		});
 
@@ -51,13 +51,15 @@ class MyOrders extends Component {
 	}
 
 	render() {
+		console.log(this.state.data);
+
 		var data_HTML_ACTIVE_ORDERS = '';
 		var status_HTML = '';
 
 		if (this.state.loading) {
 			data_HTML_ACTIVE_ORDERS = (
 				<tr>
-					<td colSpan="6" align="center">
+					<td colSpan="7" align="center">
 						<span className="font-weight-semibold text-gray-700 text-center">
 							<img
 								src="https://img.icons8.com/ios/35/000000/spinner-frame-4.png"
@@ -71,41 +73,52 @@ class MyOrders extends Component {
 			if (this.state.message != 'success') {
 				data_HTML_ACTIVE_ORDERS = (
 					<tr>
-						<td colSpan="6" align="center">
+						<td colSpan="4" align="center">
 							<span className="font-weight-semibold text-gray-700 text-center">{this.state.message}</span>
 						</td>
 					</tr>
 				);
 			} else {
 				data_HTML_ACTIVE_ORDERS = this.state.data.map((activeOrders) => {
+					if (activeOrders.status == 1) {
+						status_HTML = (
+							<a type="button" href="#" className="btn btn-success btn-block" disabled>
+								Bid closed
+							</a>
+						);
+					} else {
+						status_HTML = (
+							<a
+								type="button"
+								href={`/currencyfx/acceptbid?orderId=${activeOrders.order_id}&buyer_id=${activeOrders.buyer_id}`}
+								className="btn btn-primary btn-block"
+							>
+								Accept bid
+							</a>
+						);
+					}
+
 					return (
 						<tr key={activeOrders.id}>
 							<td>
 								<span className="font-weight-semibold text-gray-700">{activeOrders.order_id}</span>
 							</td>
+
 							<td>
 								<span className="font-weight-semibold text-gray-500">
-									{parseFloat(activeOrders.sell).toFixed(2) + ' ' + activeOrders.sell_currencyCode}
+									{activeOrders.sell_currencyCode + ' ' + activeOrders.bid_rate}
 								</span>
 							</td>
 							<td>
 								<span className="font-weight-semibold text-gray-500">
-									{parseFloat(activeOrders.buy).toFixed(2) + ' ' + activeOrders.buy_currencyCode}
+									{activeOrders.buy_currencyCode +
+										' ' +
+										parseFloat(activeOrders.offer_amount).toFixed(4)}
 								</span>
 							</td>
+
 							<td>
-								<span className="font-weight-semibold text-gray-500">{activeOrders.rate}</span>
-							</td>
-							<td>
-								<span className="font-weight-semibold text-gray-500">{activeOrders.expiry}</span>
-							</td>
-							<td>
-								<span
-									className="font-weight-semibold text-gray-500"
-									style={{ color: `${activeOrders.color}` }}
-								>
-									{activeOrders.status}
-								</span>
+								<span className="font-weight-semibold text-gray-500">{status_HTML}</span>
 							</td>
 						</tr>
 					);
@@ -175,12 +188,12 @@ class MyOrders extends Component {
 										</Link>
 									</li>
 									<li className="nav-item">
-										<Link className="nav-link active" to={'/currencyfx/myorders'}>
+										<Link className="nav-link" to={'/currencyfx/myorders'}>
 											My Offers
 										</Link>
 									</li>
 									<li className="nav-item">
-										<Link className="nav-link" to={'/currencyfx/recentbids'}>
+										<Link className="nav-link active" to={'/currencyfx/recentbids'}>
 											Recent Bids
 										</Link>
 									</li>
@@ -192,7 +205,7 @@ class MyOrders extends Component {
 									<div className="card rounded-12 shadow-dark-80 border border-gray-50">
 										<div className="d-flex align-items-center px-3 px-md-4 py-3">
 											<h5 className="card-header-title mb-0 ps-md-2 font-weight-semibold">
-												My Offers
+												Recent Bids
 											</h5>
 											<div className="dropdown export-dropdown ms-auto pe-md-2">
 												<a
@@ -288,11 +301,9 @@ class MyOrders extends Component {
 												<thead>
 													<tr>
 														<th>Order ID</th>
-														<th>Selling</th>
-														<th>Buying</th>
-														<th>Rate</th>
-														<th>Expire On</th>
-														<th>Status</th>
+														<th>Bid Rate</th>
+														<th>Offer Amount</th>
+														<th>Action</th>
 													</tr>
 												</thead>
 												<tbody className="list">{data_HTML_ACTIVE_ORDERS}</tbody>
@@ -304,11 +315,9 @@ class MyOrders extends Component {
 						</div>
 					</div>
 				</div>
-
-				{/* <Footer /> */}
 			</div>
 		);
 	}
 }
 
-export default MyOrders;
+export default RecentBids;

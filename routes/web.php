@@ -44,6 +44,13 @@ Route::get('autofeestructure', 'CheckSetupController@setupFeeStructure');
 Route::get('checktelephone', 'CheckSetupController@checkTelephone');
 Route::get('userarchive', 'CheckSetupController@userAccountArchive');
 Route::get('matchedusersmove', 'CheckSetupController@matchedUsersAccount');
+Route::get('approvedusersmove', 'CheckSetupController@approvedUsersAccount');
+
+// KYB Completed and Industry
+Route::get('movekybcompleted', 'CheckSetupController@moveKYBCompleted');
+Route::get('moveindustry', 'CheckSetupController@moveIndustry');
+
+
 Route::get('existingaccounts', 'CheckSetupController@existingAccounts');
 Route::get('updatewallet', 'CheckSetupController@updateExbcAccount');
 Route::get('returnfee', 'MaintenanceFeeCharge@returnFeeCharge');
@@ -162,13 +169,26 @@ Route::prefix('currencyfx')->group(function () {
 	Route::get('/start', ['uses' => 'CurrencyFxController@start', 'as' => 'paysprint currency exchange start']);
 	Route::get('/', ['uses' => 'CurrencyFxController@index', 'as' => 'paysprint currency exchange']);
 	Route::get('marketplace', ['uses' => 'CurrencyFxController@marketPlace', 'as' => 'paysprint currency market place']);
+	Route::get('transactionhistory', ['uses' => 'CurrencyFxController@transactionHistory', 'as' => 'paysprint currency transaction history']);
+	Route::get('wallethistory', ['uses' => 'CurrencyFxController@walletHistory', 'as' => 'paysprint currency wallet history']);
+	Route::get('mywallet', ['uses' => 'CurrencyFxController@myWallet', 'as' => 'paysprint currency wallets']);
 	Route::get('ongoing', ['uses' => 'CurrencyFxController@marketPlaceOngoingTransaction', 'as' => 'paysprint currency market place ongoing']);
 	Route::get('pending', ['uses' => 'CurrencyFxController@marketPlacePendingTransaction', 'as' => 'paysprint currency market place pending']);
 	Route::get('myorders', ['uses' => 'CurrencyFxController@marketPlaceMyOrder', 'as' => 'paysprint currency market place myorders']);
+	Route::get('recentbids', ['uses' => 'CurrencyFxController@marketRecentBids', 'as' => 'paysprint currency market place recentbids']);
+
+
+	Route::get('makebid/{orderId}', ['uses' => 'CurrencyFxController@marketPlaceYourBid', 'as' => 'paysprint currency make bid']);
+	Route::get('acceptbid', ['uses' => 'CurrencyFxController@marketAcceptABid', 'as' => 'paysprint currency accept bid']);
+
+
+
+
+	Route::get('createwallet', ['uses' => 'CurrencyFxController@createWallet', 'as' => 'paysprint currency fx create wallet']);
 
 	// Fund FX Account
-	Route::prefix('fund')->group(function(){
-		Route::get('/', ['uses' => 'CurrencyFxController@fundAccount', 'as' => 'currency exhcange funding']);
+	Route::prefix('fund')->group(function () {
+		Route::get('/', ['uses' => 'CurrencyFxController@fundAccount', 'as' => 'currency exchange funding']);
 	});
 });
 
@@ -380,6 +400,10 @@ Route::prefix('Admin/wallet')->group(function () {
 
 
 	Route::get('refundmoneyrequest', ['uses' => 'AdminController@refundMoneyRequest', 'as' => 'refund money request']);
+	Route::get('escrowfundinglist', ['uses' => 'AdminController@escrowFundingList', 'as' => 'escrow funding list']);
+
+	Route::post('confirmespay', ['uses' => 'AdminController@confirmEsPay', 'as' => 'confirm es pay']);
+
 	Route::get('refundmoneyrequestbycountry', ['uses' => 'AdminController@refundMoneyRequestByCountry', 'as' => 'refund details by country']);
 	Route::get('processedrefund', ['uses' => 'AdminController@processedRefundMoneyRequest', 'as' => 'refund processed']);
 
@@ -543,6 +567,23 @@ Route::prefix('Admin/')->group(function () {
 
 	Route::get('invoicelinkcomment/{id}', ['uses' => 'AdminController@invoiceLinkComment', 'as' => 'invoice link comment']);
 	Route::post('myinvoicelinkcomment/{id}', ['uses' => 'MonerisController@myInvoiceLinkComment', 'as' => 'my invoice link comment']);
+
+
+	// KYB List
+
+	Route::get('pendingkybbycountry', ['uses' => 'AdminController@pendingKybByCountry', 'as' => 'kyb pending by country']);
+
+	Route::get('kybpending', ['uses' => 'AdminController@pendingKyb', 'as' => 'kybpending']);
+
+	Route::get('completedkybbycountry', ['uses' => 'AdminController@completedKybByCountry', 'as' => 'kyb completed by country']);
+
+	Route::get('kybcompleted', ['uses' => 'AdminController@completedKyb', 'as' => 'kybcompleted']);
+
+
+	Route::get('industrycategorybycountry', ['uses' => 'AdminController@industryCategoryByCountry', 'as' => 'industry category by country']);
+	Route::get('industrycategory', ['uses' => 'AdminController@industryCategory', 'as' => 'industrycategory']);
+
+
 
 
 

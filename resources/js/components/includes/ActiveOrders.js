@@ -77,15 +77,15 @@ class ActiveOrders extends Component {
 						status_HTML = (
 							<div className="dropdown-menu dropdown-menu-end">
 								<a href="#" className="dropdown-item">
-									Deal Closed
+									Bid closed
 								</a>
 							</div>
 						);
 					} else {
 						status_HTML = (
 							<div className="dropdown-menu dropdown-menu-end">
-								<a href="#" className="dropdown-item">
-									Accept & Transfer
+								<a href={`/currencyfx/makebid/${activeOrders.order_id}`} className="dropdown-item">
+									Make a bid
 								</a>
 							</div>
 						);
@@ -166,7 +166,7 @@ class ActiveOrders extends Component {
 					<div className="col-12 mb-4">
 						<div className="card rounded-12 shadow-dark-80 border border-gray-50">
 							<div className="d-flex align-items-center px-3 px-md-4 py-3">
-								<h5 className="card-header-title mb-0 ps-md-2 font-weight-semibold">Active Orders</h5>
+								<h5 className="card-header-title mb-0 ps-md-2 font-weight-semibold">Active Offers</h5>
 								<div className="dropdown export-dropdown ms-auto pe-md-2">
 									<a
 										href="#"

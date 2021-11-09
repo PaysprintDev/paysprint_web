@@ -128,6 +128,24 @@
             <a href="{{ route('refund money request') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
+
+
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-navy">
+            <div class="inner">
+              <h3>{{ count($data['escrowfund']) }}</h3>
+
+              <p>Funding Account</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-stats-bars"></i>
+            </div>
+            <a href="{{ route('escrow funding list') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+
+
         {{-- <div class="col-lg-3 col-xs-6">
           <!-- small box -->
           <div class="small-box bg-yellow">
@@ -181,7 +199,7 @@
             <div class="inner">
               <h3>@if($approvedusers = \App\User::where('accountLevel', 3)->where('approval', 2)->count()) {{ $approvedusers }} @else 0 @endif</h3>
 
-              <p>Approved Users</p>
+              <p>IDV Completed</p>
             </div>
             <div class="icon">
               <i class="ion ion-person-add"></i>
@@ -197,7 +215,7 @@
             <div class="inner">
               <h3>@if($matchedUsers = \App\User::where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', '>=', 1)->count()) {{ $matchedUsers }} @else 0 @endif</h3>
 
-              <p>Matched Users</p>
+              <p>IDV Passed</p>
             </div>
             <div class="icon">
               <i class="ion ion-person-add"></i>
@@ -212,7 +230,7 @@
             <div class="inner">
               <h3>@if($levelTwoUsers = \App\User::where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', 0)->count()) {{ $levelTwoUsers }}  @else 0 @endif</h3>
 
-              <p>Level 2 Account</p>
+              <p>Doc. Pending</p>
 
             </div>
             <div class="icon">
@@ -246,7 +264,7 @@
             <div class="inner">
               <h3>@if($override = \App\User::where('accountLevel', 2)->where('approval', 0)->where('archive', '!=', 1)->count()) {{ $override }}  @else 0 @endif</h3>
 
-              <p>Override Level 1</p>
+              <p>IDV Failed</p>
 
             </div>
             <div class="icon">
@@ -387,6 +405,8 @@
             {{--  <a href="{{ route('merchant banking details', 'users=Merchant') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>  --}}
           </div>
         </div>
+
+
           <div class="col-lg-3 col-xs-6">
           <!-- small box -->
           <div class="small-box bg-blue">
@@ -400,6 +420,60 @@
               <i class="ion ion-person-add"></i>
             </div>
             <a href="{{ route('merchant bank details by country', 'users=Individual') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
+            {{--  <a href="{{ route('merchant banking details', 'users=Individual') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>  --}}
+          </div>
+        </div>
+
+
+          <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-red">
+            <div class="inner">
+              <h3>&nbsp;</h3>
+
+              <p>KYB Pending</p>
+
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('kyb pending by country') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
+            {{--  <a href="{{ route('merchant banking details', 'users=Individual') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>  --}}
+          </div>
+        </div>
+
+
+          <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-green">
+            <div class="inner">
+              <h3>&nbsp;</h3>
+
+              <p>KYB Completed</p>
+
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('kyb completed by country') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
+            {{--  <a href="{{ route('merchant banking details', 'users=Individual') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>  --}}
+          </div>
+        </div>
+
+
+          <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-purple">
+            <div class="inner">
+              <h3>&nbsp;</h3>
+
+              <p>Industry</p>
+
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('industry category by country') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
             {{--  <a href="{{ route('merchant banking details', 'users=Individual') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>  --}}
           </div>
         </div>

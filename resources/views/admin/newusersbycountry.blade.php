@@ -66,12 +66,12 @@
 
                             @if (Request::get('user') == "new")
 
-                                @if($allusersdata = \App\User::where('accountType', 'Individual')->where('country', $data->country)->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->count())
+                                @if($allusersdata = \App\User::where('accountType', 'Individual')->where('archive', 0)->where('country', $data->country)->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->count())
                                     <td>{{ $allusersdata }}</td>
                                 @endif
                                 
                             @else
-                                @if($allusersdata = \App\User::where('accountType', 'Individual')->where('country', $data->country)->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->count())
+                                @if($allusersdata = \App\User::where('accountType', 'Individual')->where('archive', 0)->where('country', $data->country)->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->count())
                                 <td>{{ $allusersdata }}</td>
                                 @endif
                             @endif

@@ -12,11 +12,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         All Level Two Users By Country
+         All Doc. Pending By Country
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">All Level Two Users By Country</li>
+        <li class="active">All Doc. Pending By Country</li>
       </ol>
     </section>
 

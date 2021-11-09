@@ -108,7 +108,7 @@ class Dashboard extends Component {
 				if (item.active == 'true') {
 					walletBalance = (
 						<div className="col-auto">
-							<h2>{item.currencySymbol + '' + round(item.wallet_balance)}</h2>
+							<h2>{item.currencySymbol + '' + parseFloat(item.wallet_balance).toFixed(2)}</h2>
 						</div>
 					);
 
@@ -302,51 +302,7 @@ class Dashboard extends Component {
 					<div className="p-3 p-xxl-5">
 						<div className="container-fluid px-0">
 							<div className="row">
-								<div className="col-md-12">
-									<div
-										className="bg-blue-50 p-4 p-md-5 position-relative overflow-hidden rounded-12 mb-4 alert alert-dismissible zIndex-0"
-										role="alert"
-									>
-										<div className="row mb-0 mb-sm-5 mb-md-0 ps-xl-3">
-											<div className="col-lg-12 col-xl-12 col-xxl-12 pb-md-5 mb-md-5 mb-lg-0">
-												<span className="badge badge-lg badge-warning text-uppercase">
-													Currency Exchange
-												</span>
-												<h2 className="my-2">
-													Buy and Sell at favourable rate
-													<img
-														src="https://fabrx.co/preview/muse-dashboard/assets/svg/icons/right-arrow.svg"
-														className="ms-2 arrow-icon"
-														alt="img"
-													/>
-												</h2>
-
-												<a
-													href="/currencyfx/fund"
-													className="btn btn-lg px-3 me-2 me-md-3 badge-lg text-white badge-primary mt-5"
-												>
-													<span className="ps-1">Fund FX Wallet</span>
-												</a>
-											</div>
-
-											<div className="col-lg-8">
-												<div className="get-started-img">
-													<img
-														src="/cfx/assets/img/get-started.png"
-														className="img-fluid"
-														alt="img"
-													/>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<ActiveOrders apiToken={apiToken} />
-
-							<div className="row">
-								<div className="col-12 col-xxl-7 mb-4">
+								<div className="col-12 col-xxl-6 mb-4">
 									<div className="card rounded-12 shadow-dark-80 overflow-hidden border border-gray-50">
 										<div className="card-body px-0 pb-0">
 											<div className="list-group list-group-flush my-n3">
@@ -372,32 +328,27 @@ class Dashboard extends Component {
 														</div>
 														{walletBalance}
 													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 
+								<div className="col-12 col-xxl-6 mb-4">
+									<div className="card rounded-12 shadow-dark-80 h-100 border border-gray-50">
+										<div className="card-body px-0 pb-0">
+											<div className="list-group list-group-flush my-n3">
+												<div className="list-group-item px-3 px-md-4">
 													<div className="row align-items-center px-md-2">
-														<div className="col-8">
+														<div className="col p-0">
+															<p className="mb-1">Settlement with EASE</p>
+														</div>
+														<div className="col-auto">
 															<a
 																href="#"
-																style={{
-																	fontSize: '14px',
-																	fontWeight: 'bold',
-																	textDecoration: 'underline'
-																}}
+																className="btn btn-lg btn-outline-dark px-3 me-2 me-md-3"
 															>
-																Create Wallet
-															</a>
-														</div>
-														<div className="col-4 col-md-offset-2">
-															<a
-																href="/currencyfx/fund"
-																style={{
-																	fontSize: '14px',
-																	fontWeight: 'bold',
-																	textDecoration: 'underline',
-																	color: 'red',
-																	textAlign: 'center'
-																}}
-															>
-																Fund FX Wallet
+																<span className="ps-1">Pay Invoice</span>
 															</a>
 														</div>
 													</div>
@@ -407,27 +358,21 @@ class Dashboard extends Component {
 									</div>
 								</div>
 
-								<div className="col-12 col-xxl-5 mb-4">
+								<div className="col-12 col-xxl-6 mb-4">
 									<div className="card rounded-12 shadow-dark-80 h-100 border border-gray-50">
 										<div className="card-body px-0 pb-0">
 											<div className="list-group list-group-flush my-n3">
 												<div className="list-group-item px-3 px-md-4">
 													<div className="row align-items-center px-md-2">
 														<div className="col p-0">
-															<p className="mb-1">
-																This month we gave away
-																<span style={{ fontWeight: 'bold', fontSize: '20px' }}>
-																	$5,000
-																</span>
-																in referrals. You could earn with referrals too!
-															</p>
+															<p className="mb-1">Transfer from Wallets</p>
 														</div>
 														<div className="col-auto">
 															<a
 																href="#"
 																className="btn btn-lg btn-outline-dark px-3 me-2 me-md-3"
 															>
-																<span className="ps-1">Refer Now</span>
+																<span className="ps-1">Move Money</span>
 															</a>
 														</div>
 													</div>
@@ -437,6 +382,56 @@ class Dashboard extends Component {
 									</div>
 								</div>
 							</div>
+
+							<div className="row">
+								<div className="col-md-12">
+									<div
+										className="bg-blue-50 p-4 p-md-5 position-relative overflow-hidden rounded-12 mb-4 alert alert-dismissible zIndex-0"
+										role="alert"
+									>
+										<div className="row mb-0 mb-sm-5 mb-md-0 ps-xl-3">
+											<div className="col-lg-12 col-xl-12 col-xxl-12 pb-md-5 mb-md-5 mb-lg-0">
+												<span className="badge badge-lg badge-warning text-uppercase">
+													Currency Exchange
+												</span>
+												<h2 className="my-2">
+													Buy and Sell at favourable rate
+													<img
+														src="https://fabrx.co/preview/muse-dashboard/assets/svg/icons/right-arrow.svg"
+														className="ms-2 arrow-icon"
+														alt="img"
+													/>
+												</h2>
+
+												<a
+													href="/currencyfx/createwallet"
+													className="btn btn-lg px-3 me-2 me-md-3 badge-lg text-white badge-danger mt-5"
+												>
+													<span className="ps-1">Create Wallet</span>
+												</a>
+												<a
+													href="/currencyfx/fund"
+													className="btn btn-lg px-3 me-2 me-md-3 badge-lg text-white badge-primary mt-5"
+												>
+													<span className="ps-1">Fund FX Wallet</span>
+												</a>
+											</div>
+
+											<div className="col-lg-8">
+												<div className="get-started-img">
+													<img
+														src="/cfx/assets/img/get-started.png"
+														className="img-fluid"
+														alt="img"
+													/>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<ActiveOrders apiToken={apiToken} />
 						</div>
 					</div>
 				</div>

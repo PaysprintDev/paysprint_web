@@ -128,7 +128,7 @@ class MaintenanceFeeCharge extends Controller
 
         foreach ($users as $user) {
             // Check User where walletbalance is < 0
-            $checker = MonthlyFee::where('ref_code', $user->ref_code)->where('created_at', '>', date('2021-09-06'))->first();
+            $checker = MonthlyFee::where('ref_code', $user->ref_code)->where('created_at', '>', date('2021-10-27'))->first();
 
             if (isset($checker)) {
 
@@ -160,7 +160,7 @@ class MaintenanceFeeCharge extends Controller
 
                 $this->createNotification($user->ref_code, "Hello " . strtoupper($user->name) . ", " . $sendMsg);
 
-                MonthlyFee::where('ref_code', $user->ref_code)->where('created_at', '>', date('2021-09-06'))->delete();
+                MonthlyFee::where('ref_code', $user->ref_code)->where('created_at', '>', date('2021-10-27'))->delete();
 
 
                 echo "Done for " . $user->name . " | Wallet Balance: " . $walletBalance . "<hr>";

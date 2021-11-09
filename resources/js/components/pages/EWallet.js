@@ -6,7 +6,7 @@ import Header from '../includes/Header';
 const apiToken = document.getElementById('user_api_token').value;
 const myCurrencyCode = document.getElementById('user_currency_code').value;
 
-class TransactionHistory extends Component {
+class EWallet extends Component {
 	_isMounted = false;
 
 	constructor(props) {
@@ -106,16 +106,11 @@ class TransactionHistory extends Component {
 							</td>
 							<td>{status_HTML}</td>
 							<td>
-								<Link
-									to={{
-										pathname: `/currencyfx/wallethistory`,
-										search: `currency=${mywalletdata.escrow_id}`
-									}}
-								>
+								<a href={`/currencyfx/fund?currency=${mywalletdata.escrow_id}`}>
 									<span className="font-weight-semibold text-gray-700">
-										<small>View Statement</small>
+										<small>Fund Wallet</small>
 									</span>
-								</Link>
+								</a>
 							</td>
 						</tr>
 					);
@@ -135,10 +130,32 @@ class TransactionHistory extends Component {
 									<span className="text-uppercase tiny text-gray-600 Montserrat-font font-weight-semibold">
 										Currency Exchange
 									</span>
-									<h1 className="h2 mb-0 lh-sm">Transaction History</h1>
+									<h1 className="h2 mb-0 lh-sm">My Wallets</h1>
 								</div>
 								<div className="col-auto d-flex align-items-center my-2 my-sm-0">
-									<a href="/currencyfx/" className="btn btn-lg btn-warning">
+									<a href="#" className="btn btn-lg btn-outline-dark px-3 me-2 me-md-3 customize-btn">
+										<span className="ps-1">New Offer</span>{' '}
+										<svg
+											className="ms-4"
+											xmlns="http://www.w3.org/2000/svg"
+											width="14"
+											height="14"
+											viewBox="0 0 14 14"
+										>
+											<rect
+												data-name="Icons/Tabler/Add background"
+												width="14"
+												height="14"
+												fill="none"
+											/>
+											<path
+												d="M6.329,13.414l-.006-.091V7.677H.677A.677.677,0,0,1,.585,6.329l.092-.006H6.323V.677A.677.677,0,0,1,7.671.585l.006.092V6.323h5.646a.677.677,0,0,1,.091,1.348l-.091.006H7.677v5.646a.677.677,0,0,1-1.348.091Z"
+												fill="#1e1e1e"
+											/>
+										</svg>
+									</a>
+
+									<Link to={'/currencyfx/'} className="btn btn-lg btn-warning">
 										<svg
 											className="me-2"
 											data-name="Icons/Tabler/Paperclip Copy 2"
@@ -160,7 +177,7 @@ class TransactionHistory extends Component {
 											/>
 										</svg>
 										<span>Dashboard</span>
-									</a>
+									</Link>
 								</div>
 							</div>
 						</div>
@@ -172,96 +189,8 @@ class TransactionHistory extends Component {
 									<div className="card rounded-12 shadow-dark-80 border border-gray-50">
 										<div className="d-flex align-items-center px-3 px-md-4 py-3">
 											<h5 className="card-header-title mb-0 ps-md-2 font-weight-semibold">
-												Transaction History
+												My Wallets
 											</h5>
-											<div className="dropdown export-dropdown ms-auto pe-md-2">
-												<a
-													href="#"
-													role="button"
-													id="Sources"
-													data-bs-toggle="dropdown"
-													aria-expanded="false"
-													className="btn btn-outline-dark text-gray-700 border-gray-700 px-3"
-												>
-													<span>All Time</span>{' '}
-													<svg
-														className="ms-2"
-														xmlns="http://www.w3.org/2000/svg"
-														width="13"
-														height="13"
-														viewBox="0 0 13 13"
-													>
-														<rect
-															data-name="Icons/Tabler/Chevron Down background"
-															width="13"
-															height="13"
-															fill="none"
-														/>
-														<path
-															d="M.214.212a.738.738,0,0,1,.952-.07l.082.07L7.1,5.989a.716.716,0,0,1,.071.94L7.1,7.011l-5.85,5.778a.738.738,0,0,1-1.034,0,.716.716,0,0,1-.071-.94l.071-.081L5.547,6.5.214,1.233A.716.716,0,0,1,.143.293Z"
-															transform="translate(13 3.25) rotate(90)"
-															fill="#495057"
-														/>
-													</svg>
-												</a>
-												<ul
-													className="dropdown-menu dropdown-menu-end"
-													aria-labelledby="Sources"
-												>
-													<li>
-														<a className="dropdown-item" href="#">
-															<span>Today</span>
-														</a>
-													</li>
-													<li>
-														<a className="dropdown-item" href="#">
-															<span>Yesterday</span>
-														</a>
-													</li>
-													<li>
-														<a className="dropdown-item" href="#">
-															<span>Last 7 days</span>
-														</a>
-													</li>
-													<li>
-														<a className="dropdown-item" href="#">
-															<span>This month</span>
-														</a>
-													</li>
-													<li>
-														<a className="dropdown-item" href="#">
-															<span>Last month</span>
-														</a>
-													</li>
-													<li>
-														<hr className="dropdown-divider" />
-													</li>
-													<li>
-														<a className="dropdown-item" href="#">
-															<svg
-																data-name="icons/tabler/calendar"
-																xmlns="http://www.w3.org/2000/svg"
-																width="16"
-																height="16"
-																viewBox="0 0 16 16"
-															>
-																<rect
-																	data-name="Icons/Tabler/Calendar background"
-																	width="16"
-																	height="16"
-																	fill="none"
-																/>
-																<path
-																	d="M2.256,16A2.259,2.259,0,0,1,0,13.743V3.9A2.259,2.259,0,0,1,2.256,1.641H3.282V.616A.615.615,0,0,1,4.507.532l.005.084V1.641H9.846V.616A.615.615,0,0,1,11.071.532l.006.084V1.641H12.1A2.259,2.259,0,0,1,14.359,3.9v9.846A2.259,2.259,0,0,1,12.1,16ZM1.231,13.743a1.027,1.027,0,0,0,1.025,1.026H12.1a1.027,1.027,0,0,0,1.026-1.026V7.795H1.231Zm11.9-7.179V3.9A1.027,1.027,0,0,0,12.1,2.872H11.077V3.9a.616.616,0,0,1-1.226.084L9.846,3.9V2.872H4.513V3.9a.615.615,0,0,1-1.225.084L3.282,3.9V2.872H2.256A1.026,1.026,0,0,0,1.231,3.9V6.564Z"
-																	transform="translate(1)"
-																	fill="#495057"
-																/>
-															</svg>
-															<span className="ms-2">Custom</span>
-														</a>
-													</li>
-												</ul>
-											</div>
 										</div>
 										<div className="table-responsive mb-0">
 											<table className="table card-table table-nowrap overflow-hidden">
@@ -289,4 +218,4 @@ class TransactionHistory extends Component {
 	}
 }
 
-export default TransactionHistory;
+export default EWallet;

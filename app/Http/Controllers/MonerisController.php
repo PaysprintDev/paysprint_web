@@ -360,6 +360,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     public function payInvoice(Request $req)
     {
 
+
         if ($req->amount < 0) {
             $response = 'Please enter a positive amount to send';
 
@@ -401,13 +402,15 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $data = [];
                             $status = 400;
                             $message = $response;
-                        } elseif ($thisuser->country != $thismerchant->country && !isset($req->merchantpay)) {
-                            $response = 'Please visit the website on www.paysprint.ca to pay your international invoice';
-
-                            $data = [];
-                            $status = 400;
-                            $message = $response;
                         }
+
+                        // elseif ($thisuser->country != $thismerchant->country && !isset($req->merchantpay)) {
+                        //     $response = 'Please visit the website on www.paysprint.ca to pay your international invoice';
+
+                        //     $data = [];
+                        //     $status = 400;
+                        //     $message = $response;
+                        // }
 
                         // elseif (isset($imtCountry) && $imtCountry->imt == "false") {
                         //     $response = 'International money transfer is not yet available to ' . $imtCountry->name;
@@ -793,15 +796,15 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                         $insPay = InvoicePayment::updateOrCreate(['invoice_no' => $req->invoice_no], ['transactionid' => $transactionID, 'name' => $thisuser->name, 'email' => $thisuser->email, 'amount' => $paidinvoiceamount, 'invoice_no' => $req->invoice_no, 'service' => $purpose, 'client_id' => $req->merchant_id, 'payment_method' => $req->payment_method]);
 
 
-                                        
+
 
 
                                         /**
                                          * Get Mark up rate to sender i.e localcurrency (NGN for example = 584.33) take as X
                                          * Get Official rate to the receiver i.e currency with which payment will be made and then convert to sender's country currency take as Y
                                          * Subtract and Get Profit value in Senders local currency i.e X-Y = Z (NGN)
-                                        **/
-                                        
+                                         **/
+
 
                                         // Markup value to sender local currency i.e USD/NGN = 584.33
 
@@ -822,12 +825,12 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                         $profit_sender = $markedupRate - $getRate;
 
                                         $profit_receiver = $markedupRate / $profit_sender;
-                                        
+
 
                                         // Insert Commission Info
                                         $commissionQuery = [
-                                                'invoice_no' => $req->invoice_no, 'sender' => $getthisinvoice->merchantName, 'receiver' => $getthisinvoice->name, 'invoice_amount' => $getthisinvoice->total_amount, 'invoiced_currency' => $getthisinvoice->invoiced_currency, 'official_rate' => $getRate, 'markedup_rate' => $markedupRate, 'profit_sender' => $newProfit, 'sender_currency' => $thismerchant->currencyCode, 'profit_receiver' => $profit_receiver, 'receiver_currency' => $thisuser->currencyCode
-                                            ];
+                                            'invoice_no' => $req->invoice_no, 'sender' => $getthisinvoice->merchantName, 'receiver' => $getthisinvoice->name, 'invoice_amount' => $getthisinvoice->total_amount, 'invoiced_currency' => $getthisinvoice->invoiced_currency, 'official_rate' => $getRate, 'markedup_rate' => $markedupRate, 'profit_sender' => $newProfit, 'sender_currency' => $thismerchant->currencyCode, 'profit_receiver' => $profit_receiver, 'receiver_currency' => $thisuser->currencyCode
+                                        ];
 
 
                                         InvoiceCommission::insert($commissionQuery);
@@ -1341,7 +1344,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     } catch (\Throwable $th) {
                         $data = [];
                         $status = 400;
-                        $message = "Error: " . $th->getMessage();
+                        $message = "Error: " . $th->getMessage() . ". Kindly ask your merchant to update the invoice.";
                     }
                 } else {
 
@@ -3069,7 +3072,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                 $this->updatePoints($thisuser->id, 'Add money');
 
-                                
+
 
                                 // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
@@ -5617,7 +5620,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
         $amount = $dollaramount;
 
         if ($thisuser->country == "Canada") {
-            $amount = round($dollaramount, 2);
+            $amount = sprintf("%.2f", $dollaramount);
         } else {
             $amount = $dollaramount;
         }

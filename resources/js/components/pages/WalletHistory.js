@@ -4,8 +4,9 @@ import Aside from '../includes/Aside';
 import Header from '../includes/Header';
 
 const apiToken = document.getElementById('user_api_token').value;
+const myCurrencyCode = document.getElementById('user_currency_code').value;
 
-class MyOrders extends Component {
+class WalletHistory extends Component {
 	_isMounted = false;
 
 	constructor(props) {
@@ -14,35 +15,39 @@ class MyOrders extends Component {
 		this.state = {
 			data: [],
 			message: '',
-			loading: true
+			loading: true,
+			currency: ''
 		};
 	}
 
-	async componentDidMount() {
+	componentDidMount() {
+		const currency = this.props.location.search;
+
 		this._isMounted = true;
 
-		const res = await axios.get(`/api/v1/myorders`, {
-			headers: { Authorization: `Bearer ${apiToken}` }
-		});
-
 		try {
-			if (this._isMounted) {
-				if (res.status === 200) {
-					this.setState({
-						data: res.data.data,
-						message: res.data.message,
-						loading: false
-					});
-				} else {
-					this.setState({
-						data: res.data.data,
-						message: res.data.message,
-						loading: false
-					});
-				}
-			}
+			axios
+				.get(`/api/v1/fxtransactionhistory${currency}`, { headers: { Authorization: `Bearer ${apiToken}` } })
+				.then((res) => {
+					console.log(res);
+					if (this._isMounted) {
+						if (res.status === 200) {
+							this.setState({
+								data: res.data.data,
+								message: res.data.message,
+								loading: false
+							});
+						} else {
+							this.setState({
+								data: res.data.data,
+								message: res.data.message,
+								loading: false
+							});
+						}
+					}
+				});
 		} catch (error) {
-			console.error(error);
+			swal('Oops', `${error.message}`, 'error');
 		}
 	}
 
@@ -51,8 +56,10 @@ class MyOrders extends Component {
 	}
 
 	render() {
+		// Get Data Here
 		var data_HTML_ACTIVE_ORDERS = '';
 		var status_HTML = '';
+		var amountStatus = '';
 
 		if (this.state.loading) {
 			data_HTML_ACTIVE_ORDERS = (
@@ -77,35 +84,48 @@ class MyOrders extends Component {
 					</tr>
 				);
 			} else {
-				data_HTML_ACTIVE_ORDERS = this.state.data.map((activeOrders) => {
+				data_HTML_ACTIVE_ORDERS = this.state.data.map((transdata) => {
+					if (transdata.confirmation == 'confirmed') {
+						status_HTML = (
+							<span className="font-weight-semibold text-gray-700 text-success">CONFIRMED</span>
+						);
+					} else {
+						status_HTML = <span className="font-weight-semibold text-gray-700 text-danger">PENDING</span>;
+					}
+
+					if (transdata.credit > 0) {
+						amountStatus = (
+							<span className="font-weight-semibold text-gray-700 text-success">
+								{'+' + parseFloat(transdata.credit).toFixed(2)}
+							</span>
+						);
+					} else {
+						amountStatus = (
+							<span className="font-weight-semibold text-gray-700 text-danger">
+								{'-' + parseFloat(transdata.debit).toFixed(2)}
+							</span>
+						);
+					}
+
 					return (
-						<tr key={activeOrders.id}>
+						<tr key={transdata.id}>
 							<td>
-								<span className="font-weight-semibold text-gray-700">{activeOrders.order_id}</span>
+								<span className="font-weight-semibold text-gray-700">{transdata.trans_date}</span>
 							</td>
 							<td>
-								<span className="font-weight-semibold text-gray-500">
-									{parseFloat(activeOrders.sell).toFixed(2) + ' ' + activeOrders.sell_currencyCode}
-								</span>
+								<span className="font-weight-semibold text-gray-700">{transdata.reference_code}</span>
 							</td>
 							<td>
-								<span className="font-weight-semibold text-gray-500">
-									{parseFloat(activeOrders.buy).toFixed(2) + ' ' + activeOrders.buy_currencyCode}
-								</span>
+								<span className="font-weight-semibold text-gray-700">{transdata.activity}</span>
 							</td>
+							<td>{amountStatus}</td>
+							<td>{status_HTML}</td>
 							<td>
-								<span className="font-weight-semibold text-gray-500">{activeOrders.rate}</span>
-							</td>
-							<td>
-								<span className="font-weight-semibold text-gray-500">{activeOrders.expiry}</span>
-							</td>
-							<td>
-								<span
-									className="font-weight-semibold text-gray-500"
-									style={{ color: `${activeOrders.color}` }}
-								>
-									{activeOrders.status}
-								</span>
+								<a href="#">
+									<span className="font-weight-semibold text-gray-700">
+										<small>View details</small>
+									</span>
+								</a>
 							</td>
 						</tr>
 					);
@@ -115,7 +135,7 @@ class MyOrders extends Component {
 
 		return (
 			<div>
-				<Aside apiToken={apiToken} />
+				<Aside apiToken={apiToken} currencycode={myCurrencyCode} />
 				<Header apiToken={apiToken} />
 				<div className="main-content">
 					<div className="px-3 px-xxl-5 py-3 py-lg-4 border-bottom border-gray-200 after-header">
@@ -125,10 +145,10 @@ class MyOrders extends Component {
 									<span className="text-uppercase tiny text-gray-600 Montserrat-font font-weight-semibold">
 										Currency Exchange
 									</span>
-									<h1 className="h2 mb-0 lh-sm">Market Place</h1>
+									<h1 className="h2 mb-0 lh-sm">Transaction History</h1>
 								</div>
 								<div className="col-auto d-flex align-items-center my-2 my-sm-0">
-									<Link to={'/currencyfx/'} className="btn btn-lg btn-warning">
+									<Link to={'/currencyfx/transactionhistory'} className="btn btn-lg btn-warning">
 										<svg
 											className="me-2"
 											data-name="Icons/Tabler/Paperclip Copy 2"
@@ -149,7 +169,7 @@ class MyOrders extends Component {
 												fill="#1E1E1E"
 											/>
 										</svg>
-										<span>Dashboard</span>
+										<span>Go back</span>
 									</Link>
 								</div>
 							</div>
@@ -157,42 +177,12 @@ class MyOrders extends Component {
 					</div>
 					<div className="p-3 p-xxl-5">
 						<div className="container-fluid px-0">
-							<div className="mb-2 mb-md-3 mb-xl-4 pb-2">
-								<ul className="nav nav-tabs nav-tabs-md nav-tabs-line position-relative zIndex-0">
-									<li className="nav-item">
-										<Link className="nav-link" to={'/currencyfx/marketplace'}>
-											All Offers
-										</Link>
-									</li>
-									<li className="nav-item">
-										<Link className="nav-link" to={'/currencyfx/ongoing'}>
-											Closed Offers
-										</Link>
-									</li>
-									<li className="nav-item">
-										<Link className="nav-link" to={'/currencyfx/pending'}>
-											Pending Offers
-										</Link>
-									</li>
-									<li className="nav-item">
-										<Link className="nav-link active" to={'/currencyfx/myorders'}>
-											My Offers
-										</Link>
-									</li>
-									<li className="nav-item">
-										<Link className="nav-link" to={'/currencyfx/recentbids'}>
-											Recent Bids
-										</Link>
-									</li>
-								</ul>
-							</div>
-
 							<div className="row group-cards pt-2">
 								<div className="col-12 mb-4">
 									<div className="card rounded-12 shadow-dark-80 border border-gray-50">
 										<div className="d-flex align-items-center px-3 px-md-4 py-3">
 											<h5 className="card-header-title mb-0 ps-md-2 font-weight-semibold">
-												My Offers
+												Transaction History
 											</h5>
 											<div className="dropdown export-dropdown ms-auto pe-md-2">
 												<a
@@ -203,7 +193,7 @@ class MyOrders extends Component {
 													aria-expanded="false"
 													className="btn btn-outline-dark text-gray-700 border-gray-700 px-3"
 												>
-													<span>Today</span>{' '}
+													<span>All Time</span>{' '}
 													<svg
 														className="ms-2"
 														xmlns="http://www.w3.org/2000/svg"
@@ -287,12 +277,12 @@ class MyOrders extends Component {
 											<table className="table card-table table-nowrap overflow-hidden">
 												<thead>
 													<tr>
-														<th>Order ID</th>
-														<th>Selling</th>
-														<th>Buying</th>
-														<th>Rate</th>
-														<th>Expire On</th>
+														<th>Date</th>
+														<th>Reference ID</th>
+														<th>Description</th>
+														<th>Amount</th>
 														<th>Status</th>
+														<th>View</th>
 													</tr>
 												</thead>
 												<tbody className="list">{data_HTML_ACTIVE_ORDERS}</tbody>
@@ -304,11 +294,9 @@ class MyOrders extends Component {
 						</div>
 					</div>
 				</div>
-
-				{/* <Footer /> */}
 			</div>
 		);
 	}
 }
 
-export default MyOrders;
+export default WalletHistory;

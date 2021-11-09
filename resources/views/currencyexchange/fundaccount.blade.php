@@ -122,7 +122,7 @@
                                                 </span> </div>
                                             <select name="fx_wallet" id="fx_wallet" class="form-control" required>
                                                 @foreach ($data['mywallet'] as $mywallet)
-                                                    <option value="{{ $mywallet->escrow_id }}">
+                                                    <option value="{{ $mywallet->escrow_id }}" {{ (Request::get('currency') == $mywallet->escrow_id) ? "selected" : "" }}>
                                                         {{ 'Wallet Balance: ' . $mywallet->currencySymbol . $mywallet->wallet_balance . ' | Currency ' . $mywallet->currencyCode }}
                                                     </option>
                                                 @endforeach
@@ -142,7 +142,7 @@
                                             <select name="fx_payment_method" id="fx_payment_method"
                                                 class="form-control" required>
                                                 <option value="">-- Select Payment Method --</option>
-                                                <option value="Wallet Transfer">Wallet Transfer</option>
+                                                {{-- <option value="Move Money">Move Money</option> --}}
                                                 <option value="Wire Transfer">Wire Transfer</option>
                                             </select>
 
@@ -218,7 +218,7 @@
 
                                             <div class="input-group">
                                                 <h5><img src="https://img.icons8.com/fluency/25/000000/check-all.png"/>
-                                                    Transaction details</h5>
+                                                    Your Transaction details</h5>
                                                 
 
                                             </div>
@@ -226,6 +226,7 @@
 
                                         <div class="form-group"> <label for="fx_payment_bank_name">
                                             <h6>Bank Name</h6>
+                                            <small><em>This is the bank name where you made the transaction from</em></small>
                                         </label>
                                         <div class="input-group">
                                             <div class="input-group-append"> <span class="input-group-text text-muted">
@@ -239,6 +240,7 @@
 
                                         <div class="form-group"> <label for="fx_account_number">
                                             <h6>Account Number</h6>
+                                            <small><em>Your bank account number</em></small>
                                         </label>
                                         <div class="input-group">
                                             <div class="input-group-append"> <span class="input-group-text text-muted">
@@ -252,6 +254,7 @@
 
                                     <div class="form-group"> <label for="fx_account_name">
                                             <h6>Account Name</h6>
+                                            <small><em>Account name where the transaction was processed</em></small>
                                         </label>
                                         <div class="input-group">
                                             <div class="input-group-append"> <span class="input-group-text text-muted">
@@ -300,7 +303,7 @@
                                         <div class="row">
                                             
                                             <div class="col-md-12 mb-3">
-                                                <button type="button" onclick="handShake('fundfx')" class="btn btn-primary btn-block">Submit</button>
+                                                <button type="button" onclick="handShake('fundfx')" class="btn btn-primary btn-block cardSubmit">I have transferred the fund</button>
                                             </div>
                                             
                                         </div>
@@ -357,6 +360,72 @@
                     $('.btnPay').addClass('disp-0');
                 }
             });
+
+
+            // RUN Ajax
+
+
+            function handShake(val){
+
+var route;
+
+var formData;
+
+if(val == 'fundfx'){
+    formData = new FormData(formElem);
+    route = "{{ URL('/api/v1/fundfx') }}";
+
+        Pace.restart();
+    Pace.track(function(){
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType: 'JSON',
+        beforeSend: function(){
+            $('.cardSubmit').text('Please wait...');
+        },
+        success: function(result){
+            console.log(result);
+
+            $('.cardSubmit').text('I have transferred the fund');
+
+            if(result.status == 200){
+                    swal("Success", result.message, "success");
+                    setTimeout(function(){ location.href="{{ route('paysprint currency exchange') }}"; }, 2000);
+                }
+                else{
+                    swal("Oops", result.message, "error");
+                }
+
+        },
+        error: function(err) {
+            $('.cardSubmit').text('I have transferred the fund');
+            swal("Oops", err.responseJSON.message, "error");
+
+        } 
+
+    });
+    });
+
+}
+}
+
+
+function setHeaders(){
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': "{{csrf_token()}}",
+            'Authorization': "Bearer "+"{{ Auth::user()->api_token }}"
+        }
+        });
+
+}
 
 
         </script>

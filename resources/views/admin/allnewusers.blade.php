@@ -82,13 +82,13 @@
                     @if (Request::get('user') == "new")
 
                         @php
-                            $allusersdata = \App\User::where('accountType', 'Individual')->where('country', Request::get('country'))->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->get();
+                            $allusersdata = \App\User::where('accountType', 'Individual')->where('archive', 0)->where('country', Request::get('country'))->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->get();
                         @endphp
                         
                     @else
 
                         @php
-                            $allusersdata = \App\User::where('accountType', 'Individual')->where('country', Request::get('country'))->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->get()
+                            $allusersdata = \App\User::where('accountType', 'Individual')->where('archive', 0)->where('country', Request::get('country'))->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->get()
                         @endphp
                     @endif
                     

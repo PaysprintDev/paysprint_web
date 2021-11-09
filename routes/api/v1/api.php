@@ -225,6 +225,23 @@ Route::prefix('/v1')->group(function () {
         // CurrencyFX Active Order
         Route::get('/activeorders', ['uses' => 'CurrencyFxController@getActiveOrders', 'as' => 'currency fx active orders']);
 
+
+
+
+        // CurrencyFX Sold Orders
+        Route::get('/ongoingorders', ['uses' => 'CurrencyFxController@getSoldOrders', 'as' => 'currency fx ongoing orders']);
+
+        // CurrencyFX Pending Orders
+        Route::get('/pendingorders', ['uses' => 'CurrencyFxController@getPendingOrders', 'as' => 'currency fx pending orders']);
+
+
+        // CurrencyFX Pending Orders
+        Route::get('/myorders', ['uses' => 'CurrencyFxController@getMyOrders', 'as' => 'currency fx my orders']);
+
+        // CurrencyFX Recent Bids
+        Route::get('/getrecentbids', ['uses' => 'CurrencyFxController@getMyRecentBids', 'as' => 'currency fx my recent bids']);
+
+
         // Create Orders
         Route::post('/createoffer', ['uses' => 'api\v1\MoneyTransferController@createNewOrder', 'as' => 'currency fx create orders']);
 
@@ -232,6 +249,33 @@ Route::prefix('/v1')->group(function () {
         // Get My Escrow account
         Route::get('/getescrow', ['uses' => 'CurrencyFxController@getEscrow', 'as' => 'get escrow account']);
 
+
+        // Fund FX Wallet
+
+        Route::post('/fundfx', ['uses' => 'CurrencyFxController@fundFXWallet', 'as' => 'fund fx wallet']);
+
+        // Create FX Wallet
+
+        Route::post('/createfxwallet', ['uses' => 'CurrencyFxController@createNewWallet', 'as' => 'currency fx create wallet']);
+
+        // GEt Wallets
+
+        Route::get('/fxwallets', ['uses' => 'CurrencyFxController@fxWallets', 'as' => 'get my wallets']);
+
+
+
+
+        // Make a Bid
+        Route::post('/makeabid', ['uses' => 'CurrencyFxController@makeABid', 'as' => 'currency fx make a bid']);
+        
+        
+        // Accept a bid
+        Route::post('/acceptbid', ['uses' => 'CurrencyFxController@acceptABid', 'as' => 'currency fx accept a bid']);
+
+
+        // Get Transaction History
+
+        Route::get('/fxtransactionhistory', ['uses' => 'CurrencyFxController@fxTransactionHistory', 'as' => 'get transaction history']);
     });
 
 

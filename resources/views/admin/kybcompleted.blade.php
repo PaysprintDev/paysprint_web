@@ -4,18 +4,19 @@
 
 
 <?php use \App\Http\Controllers\User; ?>
-<?php use \App\Http\Controllers\BankWithdrawal; ?>
+<?php use \App\Http\Controllers\OrganizationPay; ?>
+<?php use \App\Http\Controllers\ClientInfo; ?>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         Withdrawal to Bank Account
+         All KYB Completed By Country
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Withdrawal to Bank Account</li>
+        <li class="active">All KYB Completed By Country</li>
       </ol>
     </section>
 
@@ -49,46 +50,35 @@
                 <tr>
                   <th>S/N</th>
                   <th>Country</th>
-                  <th>Total Amount</th>
+                  <th>Total Count</th>
                   <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                    @if (count($data['bankRequestWithdrawal']) > 0)
+                    @if (count($data['merchantByCountry']) > 0)
                     <?php $i = 1;?>
-                        @foreach ($data['bankRequestWithdrawal'] as $data)
+                        @foreach ($data['merchantByCountry'] as $data)
                         <tr>
                             <td>{{ $i++ }}</td>
-
+                            
                             <td>{{ $data->country }}</td>
 
-                            @if($user = \App\User::where('ref_code', $data->ref_code)->first())
-
-                              @php
-                                  $currencyCode = $user->currencyCode;
-                                  $currencySymbol = $user->currencySymbol;
-                              @endphp
-
-                              @else
-
-                                @php
-                                  $currencyCode = "-";
-                                  $currencySymbol = "-";
-                              @endphp
-
+                            @if($allusersdata = \App\User::where('accountType', 'Merchant')->where('country', $data->country)->where('accountLevel', 3)->where('approval', 2)->count())
+                                <td>{{ $allusersdata }}</td>
                             @endif
-
-                            @if($amount = \App\BankWithdrawal::where('country', $data->country)->where('status', 'PENDING')->sum('amountToSend'))
-                                <td style="font-weight: 700;">{{ $currencySymbol.' '.number_format($amount, 2) }}</td>
-                            @endif
-
-
+                            
                             <td>
-                                <a type="button" href="{{ route('bank withdrawal by country', 'country='.$data->country) }}" class="btn btn-primary btn-block">View details</a>
+
+                              <a href="{{ route('kybcompleted', 'country='.$data->country) }}" type="button" class="btn btn-primary">View details</a>
+
+                              
                             </td>
+
 
                         </tr>
                         @endforeach
+
+                        
 
                     @else
                     <tr>

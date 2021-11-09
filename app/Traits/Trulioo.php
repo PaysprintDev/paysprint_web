@@ -9,14 +9,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 
-trait Trulioo{
+trait Trulioo
+{
 
 
 
-    public function identificationAPI($url, $firstname, $lastname, $dayofbirth, $monthofbirth, $yearofbirth, $minimuAge, $streetname, $city, $country, $zipcode, $telephone, $email, $countryCode){
+    public function identificationAPI($url, $firstname, $lastname, $dayofbirth, $monthofbirth, $yearofbirth, $minimuAge, $streetname, $city, $country, $zipcode, $telephone, $email, $countryCode)
+    {
 
 
-        $name = $firstname.' '.$lastname;
+        $name = $firstname . ' ' . $lastname;
 
         $gender = null;
 
@@ -26,39 +28,39 @@ trait Trulioo{
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => $url,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS =>'{
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '{
             "DataFields": {
                 "PersonInfo": {
                     "AdditionalFields": {
-                        "FullName": "'.$name.'"
+                        "FullName": "' . $name . '"
                     },
-                    "FirstGivenName": "'.$firstname.'",
-                    "SecondSurname": "'.$lastname.'",
-                    "FirstSurName": "'.$lastname.'",
-                    "DayOfBirth": "'.$dayofbirth.'",
-                    "MonthOfBirth": "'.$monthofbirth.'",
-                    "YearOfBirth": "'.$yearofbirth.'",
-                    "MinimumAge": "'.$minimuAge.'"
+                    "FirstGivenName": "' . $firstname . '",
+                    "SecondSurname": "' . $lastname . '",
+                    "FirstSurName": "' . $lastname . '",
+                    "DayOfBirth": "' . $dayofbirth . '",
+                    "MonthOfBirth": "' . $monthofbirth . '",
+                    "YearOfBirth": "' . $yearofbirth . '",
+                    "MinimumAge": "' . $minimuAge . '"
                 },
                 "Location": {
-                    "BuildingNumber": "'.$streetNo[0].'",
-                    "StreetName": "'.$streetname.'",
-                    "City": "'.$city.'",
-                    "Country": "'.$country.'",
+                    "BuildingNumber": "' . $streetNo[0] . '",
+                    "StreetName": "' . $streetname . '",
+                    "City": "' . $city . '",
+                    "Country": "' . $country . '",
                     "StateProvinceCode": "ON",
-                    "PostalCode": "'.$zipcode.'",
+                    "PostalCode": "' . $zipcode . '",
                 },
                 "Communication":{
-                    "MobileNumber":"'.$telephone.'",
-                    "EmailAddress":"'.$email.'"
+                    "MobileNumber":"' . $telephone . '",
+                    "EmailAddress":"' . $email . '"
                 },
 
             },
@@ -66,21 +68,21 @@ trait Trulioo{
             "CallBackUrl": "https://api.globaldatacompany.com/connection/v1/async-callback",
             "CleansedAddress": true,
             "ConfigurationName": "Identity Verification",
-            "CountryCode": "'.$countryCode.'",
+            "CountryCode": "' . $countryCode . '",
             "VerboseMode": true
         }',
 
-        
-        CURLOPT_HTTPHEADER => array(
-            'Authorization: Basic '.env('TRULLIO_BASIC'),
-            'Content-Type: application/json',
-            'Cookie: secure; incap_ses_1043_2454110=1ymffNN0lAblUYeASHt5DnSbjGAAAAAA1OvOPjB/O9ngfion/4/o4g==; visid_incap_2454110=Hr+h4VOQRvyVmLwrlcpvTZvRimAAAAAAQUIPAAAAAAC2sDXypQFS5aEhZuG2ZRte'
-        ),
+
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: Basic ' . env('TRULLIO_BASIC'),
+                'Content-Type: application/json',
+                'Cookie: secure; incap_ses_1043_2454110=1ymffNN0lAblUYeASHt5DnSbjGAAAAAA1OvOPjB/O9ngfion/4/o4g==; visid_incap_2454110=Hr+h4VOQRvyVmLwrlcpvTZvRimAAAAAAQUIPAAAAAAC2sDXypQFS5aEhZuG2ZRte'
+            ),
         ));
 
         $response = curl_exec($curl);
-        
-        
+
+
 
         curl_close($curl);
 
@@ -90,27 +92,28 @@ trait Trulioo{
 
 
 
-    public function transStatus($transId){
+    public function transStatus($transId)
+    {
 
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://api.globaldatacompany.com/verifications/v1/transaction/'.$transId.'/status',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'GET',
-        CURLOPT_HTTPHEADER => array(
-            'Authorization: Basic '.env('TRULLIO_BASIC'),
-            'Cookie: secure; secure; incap_ses_1043_2454110=8C7aEUgfLgwzt4iASHt5DkqwjGAAAAAAxg0MovwEfBmOwOQ0rUWiBw==; visid_incap_2454110=Hr+h4VOQRvyVmLwrlcpvTZvRimAAAAAAQUIPAAAAAAC2sDXypQFS5aEhZuG2ZRte'
-        ),
+            CURLOPT_URL => 'https://api.globaldatacompany.com/verifications/v1/transaction/' . $transId . '/status',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: Basic ' . env('TRULLIO_BASIC'),
+                'Cookie: secure; secure; incap_ses_1043_2454110=8C7aEUgfLgwzt4iASHt5DkqwjGAAAAAAxg0MovwEfBmOwOQ0rUWiBw==; visid_incap_2454110=Hr+h4VOQRvyVmLwrlcpvTZvRimAAAAAAQUIPAAAAAAC2sDXypQFS5aEhZuG2ZRte'
+            ),
         ));
 
         $response = curl_exec($curl);
-        
-        
+
+
 
         curl_close($curl);
 
@@ -118,41 +121,33 @@ trait Trulioo{
     }
 
 
-    public function getTransRec($transRecordId){
-        
-        Log::info($transRecordId);
+    public function getTransRec($transRecordId)
+    {
 
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://api.globaldatacompany.com/verifications/v1/transactionrecord/'.$transRecordId,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'GET',
-        CURLOPT_HTTPHEADER => array(
-            'Authorization: Basic '.env('TRULLIO_BASIC'),
-            'Cookie: secure; secure; incap_ses_1043_2454110=8C7aEUgfLgwzt4iASHt5DkqwjGAAAAAAxg0MovwEfBmOwOQ0rUWiBw==; visid_incap_2454110=Hr+h4VOQRvyVmLwrlcpvTZvRimAAAAAAQUIPAAAAAAC2sDXypQFS5aEhZuG2ZRte'
-        ),
+            CURLOPT_URL => 'https://api.globaldatacompany.com/verifications/v1/transactionrecord/' . $transRecordId,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: Basic ' . env('TRULLIO_BASIC'),
+                'Cookie: secure; secure; incap_ses_1043_2454110=8C7aEUgfLgwzt4iASHt5DkqwjGAAAAAAxg0MovwEfBmOwOQ0rUWiBw==; visid_incap_2454110=Hr+h4VOQRvyVmLwrlcpvTZvRimAAAAAAQUIPAAAAAAC2sDXypQFS5aEhZuG2ZRte'
+            ),
         ));
 
         $response = curl_exec($curl);
-        
+
         // dd($response);
-        
+
         curl_close($curl);
 
         // Send Response back to User
         return json_decode($response);
-
     }
-
-
-
-
-
-
 }
