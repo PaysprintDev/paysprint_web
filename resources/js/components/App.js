@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import OngoingOrders from './constraints/OngoingOrders';
 import PendingOrders from './constraints/PendingOrders';
 import MyOrders from './constraints/MyOrders';
+import RecentBids from './constraints/RecentBids';
 import Dashboard from './pages/Dashboard';
 import MarketPlace from './pages/MarketPlace';
 import Start from './pages/Start';
@@ -21,6 +22,7 @@ function App() {
 				<Route path="/currencyfx/ongoing" component={OngoingOrders} />
 				<Route path="/currencyfx/pending" component={PendingOrders} />
 				<Route path="/currencyfx/myorders" component={MyOrders} />
+				<Route path="/currencyfx/recentbids" component={RecentBids} />
 				<Route path="/currencyfx/transactionhistory" component={TransactionHistory} />
 				<Route path="/currencyfx/wallethistory" component={WalletHistory} />
 				<Route path="/currencyfx/mywallet" component={EWallet} />

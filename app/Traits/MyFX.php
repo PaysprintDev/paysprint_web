@@ -8,6 +8,7 @@ use App\MarketPlace;
 use App\EscrowAccount;
 use App\FxPayment;
 use App\FxStatement;
+use App\MakeBid;
 
 trait MyFX
 {
@@ -30,6 +31,28 @@ trait MyFX
     public function getEscrowFunding()
     {
         $data = FxStatement::where('confirmation', 'pending')->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
+
+    public function getMarketBidding($orderId)
+    {
+        $data = MarketPlace::where('order_id', $orderId)->first();
+
+        return $data;
+    }
+
+    public function getMakeABid($orderId, $buyerId)
+    {
+        $newData = [];
+
+        $data = MakeBid::where('order_id', $orderId)->where('buyer_id', $buyerId)->first();
+
+        $marketPlace = MarketPlace::where('order_id', $data->order_id)->first();
+
+        $data['sell_currencyCode'] = $marketPlace->sell_currencyCode;
+        $data['buy_currencyCode'] = $marketPlace->buy_currencyCode;
+
 
         return $data;
     }

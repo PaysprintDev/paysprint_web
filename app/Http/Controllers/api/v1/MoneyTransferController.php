@@ -1283,7 +1283,7 @@ class MoneyTransferController extends Controller
                         'default_currencyCode' => $thisuser->currencyCode,
                         'sell_currencyCode' => $req->sellCurrency,
                         'buy_currencyCode' => $req->buyCurrency,
-                        'rate' => $req->desiredSellRate . ' ' . $req->desiredSellCurrency . ' - ' . $req->desiredBuyRate . ' ' . $req->desiredBuyCurrency,
+                        'rate' => $req->rateVal,
                         'expiry' => date('d M Y', strtotime($req->expiryDate)),
                         'bid_amount' => $req->sellAmount,
                         'status' => "Bid Pending",

@@ -15,7 +15,8 @@ class Aside extends Component {
 			desiredBuyCurrency: 'USD',
 			desiredBuyRate: '',
 			expiryDate: '',
-			selloption: ''
+			selloption: '',
+			rateVal: ''
 		};
 
 		this.handleChange = this.handleChange.bind(this);
@@ -78,7 +79,8 @@ class Aside extends Component {
 			buyAmount: '',
 			desiredBuyRate: '',
 			desiredBuyCurrency: '',
-			desiredSellCurrency: ''
+			desiredSellCurrency: '',
+			rateVal: ''
 		});
 
 		// Do Axios
@@ -99,9 +101,6 @@ class Aside extends Component {
 				`/api/v1/conversionrate/${this.state.buyCurrency}/${this.state.sellCurrency}`,
 				{ headers: headers }
 			);
-
-			console.log(resultA);
-			console.log(resultB);
 
 			if (resultA.status === 200 && resultB.status === 200) {
 				// var buying = this.state.sellAmount / resultB.data;
@@ -125,7 +124,10 @@ class Aside extends Component {
 					buyAmount: `${buying}`,
 					desiredBuyRate: parseFloat(resultA.data).toFixed(4),
 					desiredBuyCurrency: `${this.state.buyCurrency}`,
-					desiredSellCurrency: `${this.state.sellCurrency}`
+					desiredSellCurrency: `${this.state.sellCurrency}`,
+					rateVal:
+						document.getElementById('sellCurrencyCode').innerHTML +
+						document.getElementById('buyCurrencyRateResult').innerHTML
 				});
 			} else {
 				document.getElementById('buyCurrencyCode').innerHTML = `1 ${this.state.sellCurrency} - `;
@@ -157,7 +159,7 @@ class Aside extends Component {
 			// Response Data
 			const res = await axios({ method: 'POST', url: '/api/v1/createoffer', data: this.state, headers: headers });
 
-			document.getElementById('submitOffer').innerHTML = 'Please wait...';
+			document.getElementById('submitOffer').value = 'Please wait...';
 
 			if (res.status === 200) {
 				this.setState({
@@ -179,11 +181,11 @@ class Aside extends Component {
 			} else {
 				this.setState({ [event.target.name]: event.target.value });
 
+				document.getElementById('submitOffer').value = 'Submit Offer';
+				document.getElementById('submitOffer').disabled = false;
+
 				swal('Oops!', res.data.message, 'error');
 			}
-
-			document.getElementById('submitOffer').innerHTML = 'Submit Offer';
-			document.getElementById('submitOffer').disabled = false;
 		} catch (error) {
 			// Catch Error
 			swal('Oops!', `${error.message}`, 'error');
@@ -346,6 +348,8 @@ class Aside extends Component {
 										>
 											{this.state.selloption}
 										</select>
+
+										<input type="hidden" value={this.state.rateVal} name="rateVal" />
 									</div>
 								</div>
 

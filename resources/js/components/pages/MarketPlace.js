@@ -89,7 +89,7 @@ class MarketPlace extends Component {
 					} else {
 						status_HTML = (
 							<div className="dropdown-menu dropdown-menu-end">
-								<a href="#" className="dropdown-item">
+								<a href={`/currencyfx/makebid/${activeOrders.order_id}`} className="dropdown-item">
 									Make a bid
 								</a>
 							</div>
@@ -229,6 +229,11 @@ class MarketPlace extends Component {
 									<li className="nav-item">
 										<Link className="nav-link" to={'/currencyfx/myorders'}>
 											My Offers
+										</Link>
+									</li>
+									<li className="nav-item">
+										<Link className="nav-link" to={'/currencyfx/recentbids'}>
+											Recent Bids
 										</Link>
 									</li>
 								</ul>

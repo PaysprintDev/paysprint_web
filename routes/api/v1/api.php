@@ -238,6 +238,9 @@ Route::prefix('/v1')->group(function () {
         // CurrencyFX Pending Orders
         Route::get('/myorders', ['uses' => 'CurrencyFxController@getMyOrders', 'as' => 'currency fx my orders']);
 
+        // CurrencyFX Recent Bids
+        Route::get('/getrecentbids', ['uses' => 'CurrencyFxController@getMyRecentBids', 'as' => 'currency fx my recent bids']);
+
 
         // Create Orders
         Route::post('/createoffer', ['uses' => 'api\v1\MoneyTransferController@createNewOrder', 'as' => 'currency fx create orders']);
@@ -255,15 +258,24 @@ Route::prefix('/v1')->group(function () {
 
         Route::post('/createfxwallet', ['uses' => 'CurrencyFxController@createNewWallet', 'as' => 'currency fx create wallet']);
 
+        // GEt Wallets
+
+        Route::get('/fxwallets', ['uses' => 'CurrencyFxController@fxWallets', 'as' => 'get my wallets']);
+
+
+
+
+        // Make a Bid
+        Route::post('/makeabid', ['uses' => 'CurrencyFxController@makeABid', 'as' => 'currency fx make a bid']);
+        
+        
+        // Accept a bid
+        Route::post('/acceptbid', ['uses' => 'CurrencyFxController@acceptABid', 'as' => 'currency fx accept a bid']);
+
 
         // Get Transaction History
 
         Route::get('/fxtransactionhistory', ['uses' => 'CurrencyFxController@fxTransactionHistory', 'as' => 'get transaction history']);
-
-        // GEt Wallets
-
-
-        Route::get('/fxwallets', ['uses' => 'CurrencyFxController@fxWallets', 'as' => 'get my wallets']);
     });
 
 

@@ -84,7 +84,7 @@ class ActiveOrders extends Component {
 					} else {
 						status_HTML = (
 							<div className="dropdown-menu dropdown-menu-end">
-								<a href="#" className="dropdown-item">
+								<a href={`/currencyfx/makebid/${activeOrders.order_id}`} className="dropdown-item">
 									Make a bid
 								</a>
 							</div>

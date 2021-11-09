@@ -12,7 +12,7 @@ use App\User;
 use App\EscrowAccount;
 use App\FxPayment;
 use App\FxStatement;
-
+use App\MakeBid;
 use App\Traits\Xwireless;
 use App\Traits\MyFX;
 
@@ -254,6 +254,74 @@ class CurrencyFxController extends Controller
         return view('currencyexchange.marketplacemyorder');
     }
 
+    public function marketRecentBids(Request $req)
+    {
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == false) {
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+        }
+
+
+
+        return view('currencyexchange.marketplacerecentbids');
+    }
+
+
+    // Make Bid
+    public function marketPlaceYourBid(Request $req, $orderId)
+    {
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == false) {
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+        }
+
+        $data = array(
+            'allcountry' => $this->getCountryAndCurrency(),
+            'mycountry' => $this->personalCountry(Auth::user()->country),
+            'mywallet' => Auth::user()->forexAccount,
+            'marketplace' => $this->getMarketBidding($orderId)
+        );
+
+        return view('currencyexchange.placebid')->with(['pages' => 'Accept Bid', 'data' => $data]);
+    }
+
+    // Accept a bid
+    public function marketAcceptABid(Request $req)
+    {
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == false) {
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+        }
+
+        $data = array(
+            'allcountry' => $this->getCountryAndCurrency(),
+            'mycountry' => $this->personalCountry(Auth::user()->country),
+            'mywallet' => Auth::user()->forexAccount,
+            'marketplace' => $this->getMakeABid($req->get('orderId'), $req->get('buyer_id'))
+        );
+
+        return view('currencyexchange.acceptbid')->with(['pages' => 'Make Bid', 'data' => $data]);
+    }
+
 
     public function getUserData(Request $req)
     {
@@ -401,11 +469,22 @@ class CurrencyFxController extends Controller
                         $status = 400;
                     } else {
 
+                        // Check if ID exists
+                        $checkExists = EscrowAccount::where('escrow_id', $req->escrow_id)->first();
+
+                        if (isset($checkExists)) {
+                            $escrowID = 'ES_' . uniqid() . '_' . strtoupper(date('D'));
+                        } else {
+                            $escrowID = $req->escrow_id;
+                        }
+
+
+
 
                         // Create New Wallet
                         $query = [
                             'user_id' => $thisuser->id,
-                            'escrow_id' => $req->escrow_id,
+                            'escrow_id' => $escrowID,
                             'currencyCode' => $allcountry->currencyCode,
                             'currencySymbol' => $allcountry->currencySymbol,
                             'wallet_balance' => "0.00",
@@ -450,6 +529,338 @@ class CurrencyFxController extends Controller
         return $this->returnJSON($resData, $status);
     }
 
+    // FX Make A Bid
+    public function makeABid(Request $req)
+    {
+
+
+        try {
+            // Check who is in
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            if (isset($thisuser)) {
+
+                // Check if this offer doesnt belong to you
+
+                $checkOffer = MarketPlace::where('order_id', $req->order_id)->where('user_id', $thisuser->id)->first();
+
+                if (isset($checkOffer)) {
+                    $data = [];
+                    $message = 'You cannot make bid to yourself';
+                    $status = 400;
+                } else {
+
+                    $market = MarketPlace::where('order_id', $req->order_id)->first();
+
+                    // Check my wallet with this bid by checking my account against the MarketPlace
+
+                    $mywallet = EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $market->sell_currencyCode)->first();
+
+
+                    if (isset($mywallet)) {
+
+
+                        // Check if already created bid
+                        $getBidder = MakeBid::where('order_id', $req->order_id)->where('buyer_id', $thisuser->id)->first();
+
+                        if (isset($getBidder)) {
+
+                            $data = [];
+                            $message = 'You have already made a bid on this transaction';
+                            $status = 400;
+                        } else {
+
+                            $mywalletCheck = EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $market->buy_currencyCode)->first();
+
+                            if (isset($mywalletCheck)) {
+
+
+                                if ($mywalletCheck->wallet_balance >= $req->offer_amount) {
+
+                                    // Add Record to Make a Bid
+                                    $query = [
+                                        'order_id' => $req->order_id,
+                                        'owner_id' => $market->user_id,
+                                        'buyer_id' => $thisuser->id,
+                                        'bid_rate' => $req->bid_rate,
+                                        'bid_amount' => $req->bid_amount,
+                                        'offer_amount' => $req->offer_amount
+                                    ];
+
+                                    MakeBid::insert($query);
+
+
+                                    // Debit User Account of the Offer Amount
+                                    $walletBal = $mywalletCheck->wallet_balance - $req->offer_amount;
+
+                                    EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $market->buy_currencyCode)->update(['wallet_balance' => $walletBal]);
+
+
+
+
+                                    $transaction_id = "es-wallet-" . date('dmY') . time();
+
+                                    $activity = "Debit of " . $mywalletCheck->currencyCode . '' . number_format($req->offer_amount, 2) . " from your FX Wallet.";
+                                    $credit = 0;
+                                    $debit = $req->offer_amount;
+                                    $reference_code = $transaction_id;
+                                    $balance = 0;
+                                    $trans_date = date('Y-m-d');
+                                    $status = "Delivered";
+                                    $action = "Escrow Wallet debit";
+                                    $regards = $thisuser->ref_code;
+                                    $statement_route = "escrow wallet";
+
+
+                                    $this->insFXStatement($mywalletCheck->escrow_id, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $thisuser->country, 'confirmed');
+
+
+                                    $sendMsg = "Hi " . $thisuser->name . ", You have a " . $activity . " Your current FX wallet balance is " . $mywalletCheck->currencyCode . ' ' . number_format($walletBal, 2) . ".";
+
+                                    $usergetPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                    if (isset($usergetPhone)) {
+
+                                        $sendPhone = $thisuser->telephone;
+                                    } else {
+                                        $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                                    }
+
+                                    if ($thisuser->country == "Nigeria") {
+
+                                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                        $this->sendSms($sendMsg, $correctPhone);
+                                    } else {
+                                        $this->sendMessage($sendMsg, $sendPhone);
+                                    }
+
+
+
+                                    $data = true;
+                                    $message = 'Submitted successfully';
+                                    $status = 200;
+                                } else {
+                                    $data = [];
+                                    $message = 'Insufficient wallet balance!';
+                                    $status = 400;
+                                }
+                            } else {
+                                $data = [];
+                                $message = 'Please create a ' . $market->buy_currencyCode . ' wallet to be able to make this bid';
+                                $status = 400;
+                            }
+                        }
+                    } else {
+                        $data = [];
+                        $message = 'Please create a ' . $market->sell_currencyCode . ' wallet to be able to make this bid';
+                        $status = 400;
+                    }
+                }
+            } else {
+                $data = [];
+                $message = 'Invalid authorization token!';
+                $status = 400;
+            }
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+
+    // FX Accept A bid
+    public function acceptABid(Request $req)
+    {
+        try {
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            if (isset($thisuser)) {
+                // Get Order Item
+                $getOrderItem = MarketPlace::where('order_id', $req->order_id)->first();
+
+                if (isset($getOrderItem)) {
+
+                    // Get the bidding information
+                    $biddingInfo = MakeBid::where('order_id', $req->order_id)->where('buyer_id', $req->buyer_id)->first();
+
+                    if (isset($biddingInfo)) {
+
+
+                        // Transfer Funds to their wallet and update state.
+                        $myaccount = EscrowAccount::where('user_id', $req->owner_id)->where('currencyCode', $getOrderItem->buy_currencyCode)->first();
+                        $buyeraccount = EscrowAccount::where('user_id', $req->buyer_id)->where('currencyCode', $getOrderItem->sell_currencyCode)->first();
+
+
+                        $mywalletBalance = $myaccount->wallet_balance + $biddingInfo->offer_amount;
+                        $buyerwalletBalance = $buyeraccount->wallet_balance + $biddingInfo->bid_amount;
+
+                        // Update Wallet Balance
+                        EscrowAccount::where('user_id', $req->owner_id)->where('currencyCode', $getOrderItem->buy_currencyCode)->update(['wallet_balance' => $mywalletBalance]);
+                        EscrowAccount::where('user_id', $req->buyer_id)->where('currencyCode', $getOrderItem->sell_currencyCode)->update(['wallet_balance' => $buyerwalletBalance]);
+
+
+
+                        // Return fee
+                        MakeBid::where('order_id', $req->order_id)->where('buyer_id', $req->buyer_id)->update(['status' => 1]);
+
+                        // Get Other account where not accepted
+                        $getBids = MakeBid::where('order_id', $req->order_id)->where('status', 0)->get();
+
+                        if (count($getBids) > 0) {
+
+                            foreach ($getBids as $value) {
+
+                                // Return Bidding Fee
+
+                                $bidderAccount = EscrowAccount::where('user_id', $value->buyer_id)->where('currencyCode', $getOrderItem->buy_currencyCode)->first();
+
+                                $offeramount = $bidderAccount->wallet_balance + $value->offer_amount;
+
+                                EscrowAccount::where('user_id', $value->buyer_id)->where('currencyCode', $getOrderItem->buy_currencyCode)->update(['wallet_balance' => $offeramount]);
+
+                                $getbidders = User::where('id', $value->buyer_id)->first();
+
+                                // Do notification
+                                $transaction_id = "es-wallet-" . date('dmY') . time();
+
+                                $activity = "Reversal of " . $getOrderItem->buy_currencyCode . '' . number_format($value->offer_amount, 2) . " to your FX Wallet.";
+                                $credit = $value->offer_amount;
+                                $debit = 0;
+                                $reference_code = $transaction_id;
+                                $balance = 0;
+                                $trans_date = date('Y-m-d');
+                                $status = "Delivered";
+                                $action = "Escrow Wallet credit";
+                                $regards = $getbidders->ref_code;
+                                $statement_route = "escrow wallet";
+
+
+                                $this->insFXStatement($bidderAccount->escrow_id, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $myaccount->country, 'confirmed');
+                            }
+                        }
+
+                        MakeBid::where('order_id', $req->order_id)->where('buyer_id', '!=', $req->buyer_id)->delete();
+
+                        MarketPlace::where('order_id', $req->order_id)->update(['status' => 'Sold', 'color' => 'green']);
+
+
+                        $transaction_id = "es-wallet-" . date('dmY') . time();
+
+                        $activity1 = "Received " . $myaccount->currencyCode . '' . number_format($biddingInfo->offer_amount, 2) . " to your FX Wallet.";
+                        $credit = $biddingInfo->offer_amount;
+                        $debit = 0;
+                        $reference_code = $transaction_id;
+                        $balance = 0;
+                        $trans_date = date('Y-m-d');
+                        $status = "Delivered";
+                        $action = "Escrow Wallet credit";
+                        $regards = $thisuser->ref_code;
+                        $statement_route = "escrow wallet";
+
+
+                        $this->insFXStatement($myaccount->escrow_id, $reference_code, $activity1, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $myaccount->country, 'confirmed');
+
+
+
+                        $getthisbidders = User::where('id', $req->buyer_id)->first();
+
+                        $transaction_id2 = "es-wallet-" . date('dmY') . time();
+                        $activity2 = "Received " . $buyeraccount->currencyCode . '' . number_format($biddingInfo->bid_amount, 2) . " to your FX Wallet.";
+                        $credit2 = $biddingInfo->bid_amount;
+                        $debit2 = 0;
+                        $reference_code2 = $transaction_id2;
+                        $balance2 = 0;
+                        $trans_date2 = date('Y-m-d');
+                        $status2 = "Delivered";
+                        $action2 = "Escrow Wallet credit";
+                        $regards2 = $getthisbidders->ref_code;
+                        $statement_route2 = "escrow wallet";
+
+
+                        $this->insFXStatement($myaccount->escrow_id, $reference_code, $activity1, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $myaccount->country, 'confirmed');
+
+                        $this->insFXStatement($buyeraccount->escrow_id, $reference_code2, $activity2, $credit2, $debit2, $balance2, $trans_date2, $status2, $action2, $regards2, 1, $statement_route2, 'on', $buyeraccount->country, 'confirmed');
+
+
+                        $sendMsg1 = "Hi " . $thisuser->name . ", You have a " . $activity1 . " Your current FX wallet balance is " . $myaccount->currencyCode . ' ' . number_format($mywalletBalance, 2) . ".";
+
+                        $sendMsg2 = "Hi " . $getthisbidders->name . ", You have a " . $activity2 . " Your current FX wallet balance is " . $buyeraccount->currencyCode . ' ' . number_format($buyerwalletBalance, 2) . ".";
+
+                        $usergetPhone = User::where('email', $thisuser->email)->where(
+                            'telephone',
+                            'LIKE',
+                            '%+%'
+                        )->first();
+
+                        $usergetPhone2 = User::where('email', $getthisbidders->email)->where(
+                            'telephone',
+                            'LIKE',
+                            '%+%'
+                        )->first();
+
+                        if (isset($usergetPhone) && isset($usergetPhone2)) {
+
+                            $sendPhone = $thisuser->telephone;
+                            $sendPhone2 = $getthisbidders->telephone;
+                        } else {
+                            $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                            $sendPhone2 = "+" . $getthisbidders->code . $getthisbidders->telephone;
+                        }
+
+                        if ($thisuser->country == "Nigeria") {
+
+                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                            $this->sendSms($sendMsg1, $correctPhone);
+                        } else {
+                            $this->sendMessage($sendMsg1, $sendPhone);
+                        }
+
+
+                        if ($getthisbidders->country == "Nigeria") {
+
+                            $correctPhone2 = preg_replace("/[^0-9]/", "", $sendPhone2);
+                            $this->sendSms($sendMsg2, $correctPhone2);
+                        } else {
+                            $this->sendMessage($sendMsg2, $sendPhone2);
+                        }
+
+
+                        // Send Response
+                        $data = true;
+                        $message = 'Transaction successfull';
+                        $status = 200;
+                    } else {
+                        $data = [];
+                        $message = 'No record found for ORDER ID: ' . $req->order_id;
+                        $status = 400;
+                    }
+                } else {
+                    $data = [];
+                    $message = 'No record found for ORDER ID: ' . $req->order_id;
+                    $status = 400;
+                }
+            } else {
+                $data = [];
+                $message = 'Invalid Authorization token. Kindly login and try again';
+                $status = 400;
+            }
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
 
     // Fund FX Wallet
     public function fundFXWallet(Request $req)
@@ -468,11 +879,13 @@ class CurrencyFxController extends Controller
                 // Add Money Here and put on pending if Wired Transfer
                 $myaccount = EscrowAccount::where('escrow_id', $req->fx_wallet)->first();
 
+
+
                 if (isset($myaccount)) {
 
                     $transaction_id = "es-wallet-" . date('dmY') . time();
 
-                    $activity = "Added " . $myaccount->currencyCode . '' . number_format($req->fx_amount, 2) . " to Escrow Wallet.";
+                    $activity = "Added " . $myaccount->currencyCode . '' . number_format($req->fx_amount, 2) . " to FX Wallet.";
                     $credit = $req->fx_amount;
                     $debit = 0;
                     $reference_code = $transaction_id;
@@ -488,7 +901,7 @@ class CurrencyFxController extends Controller
 
                         $this->insFXStatement($req->fx_wallet, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $myaccount->country, 'pending');
 
-                        $sendMsg = "Hi " . $thisuser->name . ", You have " . $activity . " Your transaction status is PENDING. Your current escrow balance is " . $myaccount->currencyCode . ' ' . number_format($myaccount->wallet_balance, 2) . ".";
+                        $sendMsg = "Hi " . $thisuser->name . ", You have " . $activity . " Your transaction status is PENDING. Your current fx wallet balance is " . $myaccount->currencyCode . ' ' . number_format($myaccount->wallet_balance, 2) . ".";
                     } else {
 
                         $newBalance = $myaccount->wallet_balance + $req->fx_amount;
@@ -499,7 +912,7 @@ class CurrencyFxController extends Controller
 
                         $this->insFXStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $thisuser->country, 'confirmed');
 
-                        $sendMsg = "Hi " . $thisuser->name . ", You have " . $activity . " Your current escrow balance is " . $myaccount->currencyCode . ' ' . number_format($myBalance, 2) . ".";
+                        $sendMsg = "Hi " . $thisuser->name . ", You have " . $activity . " Your current fx wallet balance is " . $myaccount->currencyCode . ' ' . number_format($myBalance, 2) . ".";
 
                         $usergetPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -588,15 +1001,13 @@ class CurrencyFxController extends Controller
         return $this->returnJSON($resData, $status);
     }
 
-
-    //TODO:: All Orders
-
     public function getAllOrders(Request $req)
     {
-        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
 
 
         try {
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
             if (isset($thisuser)) {
                 $market = MarketPlace::orderBy('created_at', 'DESC')->get();
 
@@ -627,10 +1038,13 @@ class CurrencyFxController extends Controller
 
     public function getSoldOrders(Request $req)
     {
-        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
 
 
         try {
+
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
             if (isset($thisuser)) {
                 $market = MarketPlace::where('status', 'Sold')->orderBy('created_at', 'DESC')->get();
 
@@ -640,7 +1054,7 @@ class CurrencyFxController extends Controller
                     $status = 200;
                 } else {
                     $data = [];
-                    $message = 'No active order available';
+                    $message = 'No closed orders yet';
                     $status = 200;
                 }
             } else {
@@ -662,10 +1076,12 @@ class CurrencyFxController extends Controller
 
     public function getPendingOrders(Request $req)
     {
-        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
 
 
         try {
+
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
             if (isset($thisuser)) {
                 $market = MarketPlace::where('status', 'Bid Pending')->where('expiry', '>=', date('d F Y'))->orderBy('created_at', 'DESC')->get();
 
@@ -696,10 +1112,13 @@ class CurrencyFxController extends Controller
 
     public function getMyOrders(Request $req)
     {
-        $thisuser = User::where('api_token', $req->bearerToken())->first();
+
 
 
         try {
+
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
             if (isset($thisuser)) {
                 $market = MarketPlace::where('user_id', $thisuser->id)->orderBy('created_at', 'DESC')->get();
 
@@ -729,8 +1148,56 @@ class CurrencyFxController extends Controller
     }
 
 
+    public function getMyRecentBids(Request $req)
+    {
+        try {
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            $newData = [];
+
+            if (isset($thisuser)) {
+
+                // Get Bids
+                $data = MakeBid::where('owner_id', $thisuser->id)->get();
+
+                foreach ($data as $value) {
+                    $marketPlace = MarketPlace::where('order_id', $value->order_id)->first();
+
+                    $value['sell_currencyCode'] = $marketPlace->sell_currencyCode;
+                    $value['buy_currencyCode'] = $marketPlace->buy_currencyCode;
+
+                    $newData[] = $value;
+                }
+
+
+                if (count($newData) > 0) {
+                    $data = $newData;
+                    $message = 'success';
+                    $status = 200;
+                } else {
+                    $data = [];
+                    $message = 'No record';
+                    $status = 200;
+                }
+            } else {
+                $data = [];
+                $message = 'Session expired. Please re-login';
+                $status = 201;
+            }
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 201;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
     public function insFXStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $auto_deposit, $country = null, $confirmation)
     {
-        FxStatement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route, 'auto_deposit' => $auto_deposit, 'country' => $country, 'confirmation' => 'pending']);
+        FxStatement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route, 'auto_deposit' => $auto_deposit, 'country' => $country, 'confirmation' => $confirmation]);
     }
 }

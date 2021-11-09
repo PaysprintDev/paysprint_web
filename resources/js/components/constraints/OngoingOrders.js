@@ -89,7 +89,7 @@ class OngoingOrders extends Component {
 					} else {
 						status_HTML = (
 							<div className="dropdown-menu dropdown-menu-end">
-								<a href="#" className="dropdown-item">
+								<a href={`/currencyfx/makebid/${activeOrders.order_id}`} className="dropdown-item">
 									Make a bid
 								</a>
 							</div>
@@ -167,7 +167,7 @@ class OngoingOrders extends Component {
 
 		return (
 			<div>
-				<Aside />
+				<Aside apiToken={apiToken} />
 				<Header apiToken={apiToken} />
 				<div className="main-content">
 					<div className="px-3 px-xxl-5 py-3 py-lg-4 border-bottom border-gray-200 after-header">
@@ -231,6 +231,11 @@ class OngoingOrders extends Component {
 											My Offers
 										</Link>
 									</li>
+									<li className="nav-item">
+										<Link className="nav-link" to={'/currencyfx/recentbids'}>
+											Recent Bids
+										</Link>
+									</li>
 								</ul>
 							</div>
 
@@ -250,7 +255,7 @@ class OngoingOrders extends Component {
 													aria-expanded="false"
 													className="btn btn-outline-dark text-gray-700 border-gray-700 px-3"
 												>
-													<span>Today</span>{' '}
+													<span>Today</span>
 													<svg
 														className="ms-2"
 														xmlns="http://www.w3.org/2000/svg"

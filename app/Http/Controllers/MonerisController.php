@@ -5620,7 +5620,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
         $amount = $dollaramount;
 
         if ($thisuser->country == "Canada") {
-            $amount = round($dollaramount, 2);
+            $amount = sprintf("%.2f", $dollaramount);
         } else {
             $amount = $dollaramount;
         }
