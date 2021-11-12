@@ -218,6 +218,7 @@ Route::prefix('mywallet')->group(function () {
 
 Route::get('merchantcategory', ['uses' => 'HomeController@merchantCategory', 'as' => 'merchant category']);
 Route::get('allmerchantcategory', ['uses' => 'HomeController@allMerchantCategory', 'as' => 'all merchant']);
+
 Route::get('selectcountryutilitybills', ['uses' => 'HomeController@selectCountryUtilityBills', 'as' => 'select utility bills country']);
 Route::get('payutilitybills', ['uses' => 'HomeController@expressUtilities', 'as' => 'utility bills']);
 Route::get('buyutilitybills/{id}', ['uses' => 'HomeController@expressBuyUtilities', 'as' => 'buy utility bills']);
@@ -536,6 +537,10 @@ Route::prefix('Admin/overview/report')->group(function () {
 
 // Api documentation
 Route::get('api/documentation', ['uses' => 'AdminController@apiDocumentation', 'as' => 'api integration']);
+Route::get('earnedpoints', ['uses' => 'AdminController@earnedPoints', 'as' => 'earned points']);
+
+
+
 
 Route::prefix('Admin/')->group(function () {
 
@@ -573,6 +578,14 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('invoicelinkcomment/{id}', ['uses' => 'AdminController@invoiceLinkComment', 'as' => 'invoice link comment']);
 	Route::post('myinvoicelinkcomment/{id}', ['uses' => 'MonerisController@myInvoiceLinkComment', 'as' => 'my invoice link comment']);
 
+
+	//Routes for image upload
+
+	Route::post('uploaduserdoc', ['uses' => 'ImageController@imageUploadPost', 'as' => 'upload user doc']);
+
+	// Routes for claiming points
+
+	Route::post('claimpoints', ['uses' => 'HomeController@claimedPoints', 'as' => 'claim point']);
 
 	// KYB List
 
@@ -618,6 +631,8 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('activity', ['uses' => 'AdminController@platformActivity', 'as' => 'platform activity']);
 	Route::get('activity-report', ['uses' => 'AdminController@activityReport', 'as' => 'activity report']);
 	Route::get('paysprintpoint', ['uses' => 'AdminController@paysprintPoint', 'as' => 'paysprint point']);
+	Route::get('claimreward', ['uses' => 'AdminController@claimReward', 'as' => 'claim reward']);
+
 	Route::get('userspoint', ['uses' => 'AdminController@usersPoint', 'as' => 'users points']);
 
 	Route::get('gatewayactivity', ['uses' => 'AdminController@gatewayActivity', 'as' => 'gateway activity']);
@@ -677,6 +692,7 @@ Route::post('updateinvoicelink', ['uses' => 'AdminController@updateinvoicelink',
 
 
 Route::post('increasetranslimit', ['uses' => 'AdminController@increaseTransLimit', 'as' => 'increase trans limit']);
+
 
 
 

@@ -45,11 +45,6 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="/blog" role="button" aria-expanded="false">BLOG</a>
-                    </li>
-
-
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('contact') }}" role="button" aria-expanded="false">CONTACT</a>
                     </li>
 
@@ -61,13 +56,9 @@
                         <a class="nav-link" href="{{ route('AdminRegister') }}" role="button" aria-expanded="false">SIGN UP FOR FREE</a>
                     </li>
 
-                    {{-- <li class="nav-item">
-                        <a class="nav-link" href="{{ route('haiti donation') }}" style="color: red !important;">DONATE TO HAITI <img src="https://img.icons8.com/color/24/000000/the-republic-of-haiti.png"/></a>
-                    </li> --}}
-
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('home') }}" style="color: #000000 !important; text-decoration: underline; background-color: #e8aa07; border-radius: 10px; font-size: 17px; padding: 5px;">{{ "Are you a CONSUMER? ".strtoupper(" CLICK HERE") }}</a>
+                        <a class="nav-link" href="{{ route('home') }}" style="color: #000000 !important; text-decoration: underline; background-color: #e8aa07; border-radius: 10px; font-size: 17px; padding: 5px;">{{ "Are you a USER? ".strtoupper(" CLICK HERE") }}</a>
                     </li>
 
                 @endguest
@@ -83,11 +74,6 @@
 
 
                     <li class="nav-item">
-                        <a class="nav-link" href="/blog" role="button" aria-expanded="false">BLOG</a>
-                    </li>
-
-
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('create single invoice') }}" role="button" aria-expanded="false">INVOICE</a>
                     </li>
 
@@ -99,6 +85,12 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('api integration') }}" role="button" aria-expanded="false">API INTEGRATION</a>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('earned points') }}" role="button" aria-expanded="false">EARNED POINTS</a>
+                    </li>
+
+                    
 
 
                     <li class="nav-item dropdown">
@@ -322,80 +314,6 @@
     <!-- navbar- -->
 
        
-   @elseif ($pages == "Supporting HAITI")
-
-    <div class="d-flex">
-      <span class="border-3 border-blue d-flex w-100"></span>
-      <span class="border-3 border-red d-flex w-100"></span>
-      <span class="border-3 border-green d-flex w-100"></span>
-    </div>
-    <!-- Header Area -->
-    
-    
-    <header class="site-header site-header--menu-left pt-5 pb-5 site-header--absolute">
-      <div class="container-fluid pr-lg-9 pl-lg-9">
-        <nav class="navbar site-navbar offcanvas-active navbar-expand-lg  px-0 fixed-top" style="background-color: #fbfbfb;">
-          <!-- Brand Logo-->
-          <div class="brand-logo">
-              
-            <a @guest href="{{ route('home') }}" @endguest  @auth href="{{ route('user home') }}" @endauth><img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png" class="light-version-logo " style="width: 300px; height: inherit;"> 
-            </a> 
-            <span class="mx-20 text-danger" style="font-weight: 900; font-size: 18px;">Supporting HAITI <img src="https://img.icons8.com/emoji/30/000000/haiti-emoji.png"/></span> 
-            
-        
-        
-        </div>
-          <div class="collapse navbar-collapse" id="mobile-menu">
-            <div class="navbar-nav-wrapper">
-              <ul class="navbar-nav main-menu">
-
-                <li class="nav-item">
-                  <a class="nav-link" @guest href="{{ route('home') }}" @endguest  @auth href="{{ route('user home') }}" @endauth role="button" aria-expanded="false">HOME</a>
-                </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('my account') }}" role="button" aria-expanded="false">MONEY TRANSFER</a>
-                    </li>
-
-                    @isset($data['pauline'])
-                        <li class="nav-item">
-                          <a class="nav-link" href="{{ url('payment/sendmoney/'.$data['pauline']->ref_code.'?country=Canada') }}"  style="color: #000000 !important; text-decoration: none; background-color: #e8aa07; border-radius: 10px; font-size: 17px; padding: 5px;">{{ "DONATE TODAY " }}</a>
-                      </li>
-                    @endisset
-                    
-
-                    
-
-
-
-
-                
-              </ul>
-            </div>
-            <button class="d-block d-lg-none offcanvas-btn-close" type="button" data-toggle="collapse" data-target="#mobile-menu" aria-controls="mobile-menu" aria-expanded="true" aria-label="Toggle navigation">
-              <i class="gr-cross-icon"></i>
-            </button>
-          </div>
-
-          
-
-          
-          <!-- Mobile Menu Hamburger-->
-          <button class="navbar-toggler btn-close-off-canvas  hamburger-icon border-0" type="button" data-toggle="collapse" data-target="#mobile-menu" aria-controls="mobile-menu" aria-expanded="false" aria-label="Toggle navigation">
-            <!-- <i class="icon icon-simple-remove icon-close"></i> -->
-            <span class="hamburger hamburger--squeeze js-hamburger">
-          <span class="hamburger-box">
-            <span class="hamburger-inner"></span>
-            </span>
-            </span>
-          </button>
-          <!--/.Mobile Menu Hamburger Ends-->
-        </nav>
-      </div>
-    </header>
-
-    <!-- navbar- -->
-
    @else
 
 
@@ -438,11 +356,6 @@
                         <a class="nav-link" href="{{ route('about') }}" role="button" aria-expanded="false">ABOUT US</a>
                     </li>
 
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="/blog" role="button" aria-expanded="false">BLOG</a>
-                    </li>
-
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('contact') }}" role="button" aria-expanded="false">CONTACT</a>
                     </li>
@@ -455,16 +368,10 @@
                         <a class="nav-link" href="{{ route('register') }}" role="button" aria-expanded="false">SIGN UP FOR FREE</a>
                     </li>
 
-                    {{-- <li class="nav-item">
-                        <a class="nav-link" href="{{ route('haiti donation') }}" style="color: red !important;">DONATE TO HAITI <img src="https://img.icons8.com/color/24/000000/the-republic-of-haiti.png"/></a>
-                    </li> --}}
-
 
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('merchant home') }}"  style="color: #000000 !important; text-decoration: underline; background-color: #e8aa07; border-radius: 10px; font-size: 17px; padding: 5px;">{{ "Are you a Merchant? ".strtoupper(" CLICK HERE") }}</a>
                     </li>
-
-                    
 
 
                 @endguest
@@ -474,7 +381,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('my account') }}" role="button" aria-expanded="false">MY WALLET</a>
                     </li>
-                    
 
                     <li class="nav-item">
                         <a class="nav-link" href="javascript:void()" onclick="$('#sendMoney').click()" role="button" aria-expanded="false">MONEY TRANSFER</a>
@@ -486,10 +392,6 @@
 
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('statement') }}" role="button" aria-expanded="false">TRANSACTION HISTORY</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="/blog" role="button" aria-expanded="false">BLOG</a>
                     </li>
 
 

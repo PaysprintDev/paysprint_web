@@ -27,6 +27,8 @@ use Illuminate\Support\Facades\Log;
 
 use Maatwebsite\Excel\Facades\Excel;
 
+
+
 use App\User as User;
 
 use App\UserClosed as UserClosed;
@@ -77,6 +79,12 @@ use App\AllCountries as AllCountries;
 use App\ImportExcelLink;
 use App\PricingSetup as PricingSetup;
 
+use App\Points;
+
+use App\ClaimedPoints;
+
+use App\Traits\PaysprintPoint;
+
 use App\Traits\RpmApp;
 
 use App\Traits\Trulioo;
@@ -113,7 +121,7 @@ class HomeController extends Controller
     public $country;
     public $timezone;
 
-    use RpmApp, Trulioo, AccountNotify, PaystackPayment, ExpressPayment, SpecialInfo, Xwireless, PaymentGateway, MailChimpNewsLetter;
+    use RpmApp, Trulioo, AccountNotify, PaystackPayment, ExpressPayment, SpecialInfo, Xwireless, PaymentGateway, MailChimpNewsLetter, PaysprintPoint;
     /**
      * Create a new controller instance.
      *
@@ -121,7 +129,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink']]);
+        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints']]);
 
         $location = $this->myLocation();
 
@@ -209,7 +217,9 @@ class HomeController extends Controller
                 'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                 'getmerchantsByCategory' => $this->getMerchantsByCategory(),
                 'specialInfo' => $this->getthisInfo(Auth::user()->country),
-                'continent' => $this->timezone[0]
+                'continent' => $this->timezone[0],
+                'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+                
             );
 
             $view = 'home';
@@ -250,7 +260,10 @@ class HomeController extends Controller
                 'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                 'getmerchantsByCategory' => $this->getMerchantsByCategory(),
                 'specialInfo' => $this->getthisInfo(Auth::user()->country),
-                'continent' => $this->timezone[0]
+                'continent' => $this->timezone[0],
+                'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+                
+
             );
         } else {
             $this->page = 'Home';
@@ -1365,6 +1378,8 @@ class HomeController extends Controller
 
         return view('main.merchantcategory')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
+
+
 
     public function allMerchantCategory(Request $req)
     {
@@ -3899,6 +3914,77 @@ class HomeController extends Controller
 
 
         return $this->returnJSON($resData, 200);
+    }
+
+    public function claimedPoints(Request $req)
+    {
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Claim Point';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            } else {
+
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+
+            $this->page = 'Claim Point';
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+        }
+
+        // Get Bill
+        $getPoint = Points::where('user_id', Auth::user()->id)->first();
+
+
+
+        if (isset($getPoint)) {
+
+            $max = 10000;
+
+            $totPointLeft = $getPoint->points_acquired - $max;
+
+            $pointtoget = $max - $getPoint->points_acquired;
+
+            // Process claims and update user
+
+            if ($getPoint->points_acquired >= $max) {
+
+
+
+                // This is when you can claim points...
+                Points::where('user_id', Auth::user()->id)->update(['add_money' => 0, 'send_money' => 0, 'receive_money' => 0, 'pay_invoice' => 0, 'pay_bills' => 0, 'create_and_send_invoice' => 0, 'active_rental_property' => 0, 'quick_set_up' => 0, 'identity_verification' => 0, 'business_verification' => 0, 'promote_business' => 0, 'activate_ordering_system' => 0, 'identify_verification' => 0, 'activate_rpm' => 0, 'activate_currency_exchange' => 0, 'activate_cash_advance' => 0, 'activate_crypto_currency_account' => 0, 'approved_customers' => 0, 'approved_merchants' => 0, 'points_acquired' => $totPointLeft]);
+
+                ClaimedPoints::updateOrCreate(['user_id' => Auth::user()->id], [
+                    'user_id' => Auth::user()->id,
+                    'points_acquired' => $getPoint->points_acquired,
+                    'points_left' => $totPointLeft,
+                    'status' => 'pending'
+                ]);
+
+                $resData = 'Points are claimed and reward will be processed within 24hrs';
+                $resp = "success";
+            } else {
+
+                $resData = 'You need to have ' . $pointtoget . ' to be able to claim reward';
+                $resp = "error";
+            }
+        } else {
+
+            $resData = 'You do not have any acquired points';
+            $resp = "error";
+        }
+
+
+
+
+        return redirect()->back()->with($resp, $resData);
     }
 
 
