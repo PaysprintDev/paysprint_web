@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 use App\Points as Points;
+use App\ClaimedPoints as ClaimedPoints;
 use App\User;
 
 trait PaysprintPoint
@@ -69,11 +70,10 @@ trait PaysprintPoint
 
                 $add_money = $add_money + 1;
 
-                if($add_money>=5){
+                if ($add_money >= 5) {
 
-                   $sumPoints =  $myAcquiredPoint + 1000;
-
-                }else {
+                    $sumPoints =  $myAcquiredPoint + 1000;
+                } else {
 
                     $sumPoints =  $myAcquiredPoint + 200;
                 }
@@ -87,12 +87,11 @@ trait PaysprintPoint
 
                 $send_money = $send_money + 1;
 
-                if($send_money>=5){
+                if ($send_money >= 5) {
 
                     $sumPoints =  $myAcquiredPoint + 700;
+                } else {
 
-                }else {
-                    
                     $sumPoints =  $myAcquiredPoint + 140;
                 }
 
@@ -104,12 +103,11 @@ trait PaysprintPoint
 
                 $receive_money = $receive_money + 1;
 
-                if($receive_money>=5){
+                if ($receive_money >= 5) {
 
                     $sumPoints =  $myAcquiredPoint + 600;
+                } else {
 
-                }else {
-                    
                     $sumPoints =  $myAcquiredPoint + 120;
                 }
 
@@ -121,13 +119,12 @@ trait PaysprintPoint
 
                 $pay_invoice = $pay_invoice + 1;
 
-                if($pay_invoice>=10){
+                if ($pay_invoice >= 10) {
 
-                   $sumPoints =  $myAcquiredPoint + 500;
+                    $sumPoints =  $myAcquiredPoint + 500;
+                } else {
 
-                }else {
-                    
-                   $sumPoints =  $myAcquiredPoint + 50;
+                    $sumPoints =  $myAcquiredPoint + 50;
                 }
 
                 $addedPoint = $sumPoints;
@@ -138,11 +135,10 @@ trait PaysprintPoint
 
                 $pay_bills = $pay_bills + 1;
 
-                if($pay_bills>=10){
+                if ($pay_bills >= 10) {
 
                     $sumPoints = $myAcquiredPoint + 500;
-
-                }else {
+                } else {
 
                     $sumPoints = $myAcquiredPoint + 50;
                 }
@@ -155,11 +151,10 @@ trait PaysprintPoint
 
                 $create_and_send_invoice = $create_and_send_invoice + 1;
 
-                if($create_and_send_invoice>=10){
+                if ($create_and_send_invoice >= 10) {
 
                     $sumPoints = $myAcquiredPoint + 800;
-
-                }else {
+                } else {
 
                     $sumPoints = $myAcquiredPoint + 80;
                 }
@@ -172,11 +167,10 @@ trait PaysprintPoint
 
                 $active_rental_property = $active_rental_property + 1;
 
-                if($create_and_send_invoice>=1){
+                if ($create_and_send_invoice >= 1) {
 
                     $sumPoints = $myAcquiredPoint + 500;
-
-                }else {
+                } else {
 
                     $sumPoints = $myAcquiredPoint + 500;
                 }
@@ -186,15 +180,14 @@ trait PaysprintPoint
 
                 break;
 
-             case 'Quick Set Up':
+            case 'Quick Set Up':
 
                 $quick_set_up = $quick_set_up + 1;
 
-                if($quick_set_up>=1){
+                if ($quick_set_up >= 1) {
 
                     $sumPoints = $myAcquiredPoint + 200;
-
-                }else {
+                } else {
 
                     $sumPoints = $myAcquiredPoint + 200;
                 }
@@ -208,11 +201,10 @@ trait PaysprintPoint
                 $approved_customers = $approved_customers + 1;
 
 
-                if($approved_customers>=1){
+                if ($approved_customers >= 1) {
 
                     $sumPoints = $myAcquiredPoint + 500;
-
-                }else {
+                } else {
 
                     $sumPoints = $myAcquiredPoint + 500;
                 }
@@ -224,11 +216,10 @@ trait PaysprintPoint
 
                 $approved_merchants = $approved_merchants + 1;
 
-                if($approved_merchants>=1){
+                if ($approved_merchants >= 1) {
 
                     $sumPoints = $myAcquiredPoint + 700;
-
-                }else {
+                } else {
 
                     $sumPoints = $myAcquiredPoint + 700;
                 }
@@ -236,21 +227,20 @@ trait PaysprintPoint
                 $addedPoint = $sumPoints;
 
                 break;
-            // case 'Business verification':
+                // case 'Business verification':
 
-            //     $business_verification = $business_verification + 1;
+                //     $business_verification = $business_verification + 1;
 
 
-            //     break;
+                //     break;
             case 'Promote business':
 
                 $promote_business = $promote_business + 1;
 
-                if($promote_business>=2){
+                if ($promote_business >= 2) {
 
                     $sumPoints = $myAcquiredPoint + 300;
-
-                }else {
+                } else {
 
                     $sumPoints = $myAcquiredPoint + 150;
                 }
@@ -306,29 +296,33 @@ trait PaysprintPoint
         $totalPoint = $addedPoint;
 
         Points::updateOrCreate(['user_id' => $user_id], [
-            'user_id' => $user_id, 'add_money' => $add_money, 'send_money' => $send_money, 'receive_money' => $receive_money, 'pay_invoice' => $pay_invoice, 'pay_bills' => $pay_bills, 'create_and_send_invoice' => $create_and_send_invoice, 'active_rental_property' => $active_rental_property, 'quick_set_up' => $quick_set_up, 'approved_customers' => $approved_customers, 'approved_merchants' => $approved_merchants,  'promote_business' => $promote_business, 'activate_ordering_system' => $activate_ordering_system, 'identify_verification' => $identify_verification, 'activate_rpm' => $activate_rpm, 'activate_currency_exchange' => $activate_currency_exchange, 'activate_cash_advance' => $activate_cash_advance, 'activate_crypto_currency_account' => $activate_crypto_currency_account, 'points_acquired'=> $totalPoint 
+            'user_id' => $user_id, 'add_money' => $add_money, 'send_money' => $send_money, 'receive_money' => $receive_money, 'pay_invoice' => $pay_invoice, 'pay_bills' => $pay_bills, 'create_and_send_invoice' => $create_and_send_invoice, 'active_rental_property' => $active_rental_property, 'quick_set_up' => $quick_set_up, 'approved_customers' => $approved_customers, 'approved_merchants' => $approved_merchants,  'promote_business' => $promote_business, 'activate_ordering_system' => $activate_ordering_system, 'identify_verification' => $identify_verification, 'activate_rpm' => $activate_rpm, 'activate_currency_exchange' => $activate_currency_exchange, 'activate_cash_advance' => $activate_cash_advance, 'activate_crypto_currency_account' => $activate_crypto_currency_account, 'points_acquired' => $totalPoint
         ]);
     }
 
-    public function getMainPoint($country){
+    public function getMainPoint($country)
+    {
         $array = [];
 
         $data = Points::all();
 
-        if(count($data) > 0){
+        if (count($data) > 0) {
             foreach ($data as $value) {
-                $checkuser = User::select('users.id', 'users.name', 'users.businessname', 'users.accountType', 'paysprint_point.add_money', 'paysprint_point.send_money', 'paysprint_point.receive_money', 'paysprint_point.pay_invoice', 'paysprint_point.pay_bills', 'paysprint_point.create_and_send_invoice', 'paysprint_point.active_rental_property', 'paysprint_point.approved_customers', 'paysprint_point.approved_merchants',  'paysprint_point.promote_business', 'paysprint_point.activate_ordering_system', 'paysprint_point.identify_verification', 'paysprint_point.activate_rpm', 'paysprint_point.activate_currency_exchange', 'paysprint_point.activate_cash_advance', 'paysprint_point.activate_crypto_currency_account' )->join('paysprint_point', 'paysprint_point.user_id', '=', 'users.id')->where('users.country', $country)->where('users.id', $value->user_id)->first();
+                $checkuser = User::select('users.id', 'users.name', 'users.businessname', 'users.accountType', 'paysprint_point.add_money', 'paysprint_point.send_money', 'paysprint_point.receive_money', 'paysprint_point.pay_invoice', 'paysprint_point.pay_bills', 'paysprint_point.create_and_send_invoice', 'paysprint_point.active_rental_property', 'paysprint_point.approved_customers', 'paysprint_point.approved_merchants',  'paysprint_point.promote_business', 'paysprint_point.activate_ordering_system', 'paysprint_point.identify_verification', 'paysprint_point.activate_rpm', 'paysprint_point.activate_currency_exchange', 'paysprint_point.activate_cash_advance', 'paysprint_point.activate_crypto_currency_account')->join('paysprint_point', 'paysprint_point.user_id', '=', 'users.id')->where('users.country', $country)->where('users.id', $value->user_id)->first();
 
-                $array[]=$checkuser;
+                $array[] = $checkuser;
             }
 
             return $array;
-        }
-        else{
+        } else {
             return $array;
         }
+    }
 
-        
+    public function getAcquiredPoints($id)
+    {
+        $data = Points::where('user_id', $id)->first();
 
+        return $data;
     }
 }

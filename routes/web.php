@@ -534,6 +534,8 @@ Route::get('api/documentation', ['uses' => 'AdminController@apiDocumentation', '
 Route::get('earnedpoints', ['uses' => 'AdminController@earnedPoints', 'as' => 'earned points']);
 
 
+
+
 Route::prefix('Admin/')->group(function () {
 
 	Route::get('invoicetypes', ['uses' => 'AdminController@createServiceTypes', 'as' => 'create service types']);
@@ -575,6 +577,9 @@ Route::prefix('Admin/')->group(function () {
 
 	Route::post('uploaduserdoc', ['uses' => 'ImageController@imageUploadPost', 'as' => 'upload user doc']);
 
+	// Routes for claiming points
+
+	Route::post('claimpoints', ['uses' => 'HomeController@claimedPoints', 'as' => 'claim point']);
 
 	// KYB List
 
@@ -620,6 +625,8 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('activity', ['uses' => 'AdminController@platformActivity', 'as' => 'platform activity']);
 	Route::get('activity-report', ['uses' => 'AdminController@activityReport', 'as' => 'activity report']);
 	Route::get('paysprintpoint', ['uses' => 'AdminController@paysprintPoint', 'as' => 'paysprint point']);
+	Route::get('claimreward', ['uses' => 'AdminController@claimReward', 'as' => 'claim reward']);
+
 	Route::get('userspoint', ['uses' => 'AdminController@usersPoint', 'as' => 'users points']);
 
 	Route::get('gatewayactivity', ['uses' => 'AdminController@gatewayActivity', 'as' => 'gateway activity']);

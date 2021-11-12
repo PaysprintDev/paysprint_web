@@ -123,8 +123,7 @@
                                          class="fa fa-circle-o text-red"></i> Activity Report</a></li>
                              <li title="Support"><a href="{{ route('support activity') }}"><i
                                          class="fa fa-circle-o text-red"></i> Support</a></li>
-                            <li title="Paysprint Point"><a
-                                     href="{{ route('paysprint point') }}"><i
+                             <li title="Paysprint Point"><a href="{{ route('paysprint point') }}"><i
                                          class="fa fa-circle-o text-red"></i> Paysprint Point</a></li>
                              <li title="Activity Statistics"><a
                                      href="{{ route('activity per day', 'start=' . date('Y-m-01') . '&end=' . date('Y-m-d', strtotime('+1 day'))) }}"><i
@@ -214,7 +213,7 @@
 
                  @endif
 
-                 
+
                  @if (session('role') == 'Super')
 
 
@@ -229,10 +228,10 @@
                          <ul class="treeview-menu">
                              <li title="Invoice Commission"><a href="{{ route('invoice commission') }}"><i
                                          class="fa fa-circle-o text-red"></i> Invoice</a></li>
-                             <li title="Currency FX Commission"><a href="#"><i
-                                         class="fa fa-circle-o text-red"></i> Currency FX</a></li>
-                             <li title="Move Money Commission"><a href="#"><i
-                                         class="fa fa-circle-o text-red"></i> Move Money</a></li>
+                             <li title="Currency FX Commission"><a href="#"><i class="fa fa-circle-o text-red"></i>
+                                     Currency FX</a></li>
+                             <li title="Move Money Commission"><a href="#"><i class="fa fa-circle-o text-red"></i> Move
+                                     Money</a></li>
                          </ul>
                      </li>
                      <li>
@@ -695,6 +694,56 @@
                  @if ($pages == 'My Dashboard')
                      <li class="quicksetup">
 
+                         <div class="card" style="width: 100%;">
+                             {{-- <div class="card-header"
+                        style="background-color:#00fd77; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
+                        Earned Points
+
+                    </div> --}}
+                             <ul class="list-group list-group-flush">
+
+                                 <li class="list-group-item" title="total points">
+                                     <div class="row">
+
+                                         <div class="col-md-12">
+                                             <p class="text-center">
+                                                 Total Points
+                                             </p>
+
+                                             <p style=" text-align: center; font-size: 30px;">
+                                                 <img src="https://img.icons8.com/external-tulpahn-outline-color-tulpahn/20/000000/external-celebration-chinese-new-year-tulpahn-outline-color-tulpahn.png"
+                                                     class="fa-blink" />
+                                                 {{ isset($data['mypoints']) ? $data['mypoints']->points_acquired : 0 }}
+                                                 <img src="https://img.icons8.com/external-tulpahn-outline-color-tulpahn/20/000000/external-celebration-chinese-new-year-tulpahn-outline-color-tulpahn.png"
+                                                     class="fa-blink" />
+                                             </p>
+                                         </div>
+
+
+                                     </div>
+
+                                     <br>
+
+                                     <div class="row">
+                                         <form action="{{ route('claim point') }}" method="POST"
+                                             enctype="multipart/form-data">
+                                             @csrf
+                                             <div class="col-md-12">
+                                                 {{-- <button href="#">Claim Points</button> --}}
+
+                                                 <button type="submit" class="btn btn-default btn-block">Claim
+                                                     Points</button>
+
+
+                                             </div>
+                                         </form>
+                                     </div>
+
+                                 </li>
+
+                             </ul>
+                         </div>
+
                          <div class="card propertyManagement" style="width: 100%;">
                              <div class="card-header"
                                  style="background-color: #5ed998; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
@@ -722,30 +771,30 @@
                          </div>
 
                          <div class="card propertyManagement" style="width: 100%;">
-                            <div class="card-header"
-                                style="background-color: #5ed998; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
-                                Property Management
+                             <div class="card-header"
+                                 style="background-color: #5ed998; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
+                                 Property Management
 
-                            </div>
-                            <ul class="list-group list-group-flush">
+                             </div>
+                             <ul class="list-group list-group-flush">
 
 
-                                <li class="list-group-item" title="Rental Property Management">
-                                    <div class="row">
-                                        <div class="col-md-12">
+                                 <li class="list-group-item" title="Rental Property Management">
+                                     <div class="row">
+                                         <div class="col-md-12">
 
-                                            <a href="javascript:void()"
-                                                onclick="viewConsultant('{{ session('email') }}')"
-                                                style="color: navy; font-weight: 700;">View as Consultant</a>
+                                             <a href="javascript:void()"
+                                                 onclick="viewConsultant('{{ session('email') }}')"
+                                                 style="color: navy; font-weight: 700;">View as Consultant</a>
 
-                                            {{-- <a href="{{ route('rentalManagementAdmin') }}" style="color: navy; font-weight: 700;">Rental Property Management</a> --}}
-                                        </div>
-                                    </div>
+                                             {{-- <a href="{{ route('rentalManagementAdmin') }}" style="color: navy; font-weight: 700;">Rental Property Management</a> --}}
+                                         </div>
+                                     </div>
 
-                                </li>
+                                 </li>
 
-                            </ul>
-                        </div>
+                             </ul>
+                         </div>
 
                          <div class="card" style="width: auto;">
                              <div class="card-header"

@@ -215,14 +215,14 @@
 
                                         @foreach (json_decode($data['payInvoice']) as $payInv)
 
-                                        {{-- {{ dd($payInv) }} --}}
+                                            {{-- {{ dd($payInv) }} --}}
 
 
                                             {{-- Get Merchant Currency --}}
 
                                             @if ($merchant = \App\User::where('ref_code', $payInv->uploaded_by)->first())
 
-                                                
+
 
                                                 @if ($payInv->invoiced_currency != null)
                                                     @php
@@ -546,29 +546,48 @@
                 </div>
 
                 <div class="card" style="width: 100%;">
-                    <div class="card-header"
+                    {{-- <div class="card-header"
                         style="background-color:#00fd77; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
                         Earned Points
 
-                    </div>
+                    </div> --}}
                     <ul class="list-group list-group-flush">
 
                         <li class="list-group-item" title="total points">
-                           <div class="row">
-                                <div class="col-md-12">
-                                    <a>Total Points = 200</a>
-                                </div>
-                            </div> 
-
-                        </li>
-
-                        <li class="list-group-item" title="Claim Points">
                             <div class="row">
+
                                 <div class="col-md-12">
-                                    {{-- <button href="#">Claim Points</button> --}}
-                                    <button type="button"  href="#" class="btn btn-primary btn-lg btn-block">Claim Points</button>
-                                    
+                                    <p class="text-center">
+                                        Total Points
+                                    </p>
+
+                                    <p style=" text-align: center; font-size: 30px;">
+                                        <img src="https://img.icons8.com/external-tulpahn-outline-color-tulpahn/20/000000/external-celebration-chinese-new-year-tulpahn-outline-color-tulpahn.png"
+                                            class="fa-blink" />
+                                        {{ isset($data['mypoints']) ? $data['mypoints']->points_acquired : 0 }}
+                                        <img src="https://img.icons8.com/external-tulpahn-outline-color-tulpahn/20/000000/external-celebration-chinese-new-year-tulpahn-outline-color-tulpahn.png"
+                                            class="fa-blink" />
+                                    </p>
                                 </div>
+
+
+                            </div>
+
+                            <br>
+
+                            <div class="row">
+                                <form action="{{ route('claim point') }}" method="POST"
+                                    enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="col-md-12">
+                                        {{-- <button href="#">Claim Points</button> --}}
+
+                                        <button type="submit" class="btn btn-default btn-block">Claim
+                                            Points</button>
+
+
+                                    </div>
+                                </form>
                             </div>
 
                         </li>
@@ -629,7 +648,7 @@
                     </ul>
                 </div>
 
-                
+
 
 
 
