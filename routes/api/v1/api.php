@@ -267,12 +267,32 @@ Route::prefix('/v1')->group(function () {
 
         // Make a Bid
         Route::post('/makeabid', ['uses' => 'CurrencyFxController@makeABid', 'as' => 'currency fx make a bid']);
-        
-        
+
+
         // Accept a bid
         Route::post('/acceptbid', ['uses' => 'CurrencyFxController@acceptABid', 'as' => 'currency fx accept a bid']);
 
 
+        //Get wallets
+
+        Route::post('/getotherwallets', ['uses' => 'CurrencyFxController@getOtherWallets', 'as' => 'currency fx get other wallets']);
+
+
+
+        // Get all invoice to fx
+        Route::get('/getallinvoicetofx', ['uses' => 'CurrencyFxController@getAllInvoiceToFx', 'as' => 'currency fx get all invoice to fx']);
+        Route::get('/getpaidinvoicetofx', ['uses' => 'CurrencyFxController@getPaidInvoiceToFx', 'as' => 'currency fx get paid invoice to fx']);
+        Route::get('/getpendinginvoicetofx', ['uses' => 'CurrencyFxController@getPendingInvoiceToFx', 'as' => 'currency fx get pending invoice to fx']);
+
+
+        // Convert Money to Send
+
+        Route::post('/convertmoneytosend', ['uses' => 'CurrencyFxController@convertMoneyToTransfer', 'as' => 'currency fx convert money to transfer']);
+
+
+        // Transfer money
+
+        Route::post('/transferfxfund', ['uses' => 'CurrencyFxController@transferFXFund', 'as' => 'currency transfer fx fund']);
         // Get Transaction History
 
         Route::get('/fxtransactionhistory', ['uses' => 'CurrencyFxController@fxTransactionHistory', 'as' => 'get transaction history']);

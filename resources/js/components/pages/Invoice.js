@@ -6,7 +6,7 @@ import Header from '../includes/Header';
 const apiToken = document.getElementById('user_api_token').value;
 const myCurrencyCode = document.getElementById('user_currency_code').value;
 
-class TransactionHistory extends Component {
+class Invoice extends Component {
 	_isMounted = false;
 
 	constructor(props) {
@@ -24,9 +24,10 @@ class TransactionHistory extends Component {
 		this._isMounted = true;
 
 		try {
-			axios.get(`/api/v1/fxwallets`, { headers: { Authorization: `Bearer ${apiToken}` } }).then((res) => {
+			axios.get(`/api/v1/getallinvoicetofx`, { headers: { Authorization: `Bearer ${apiToken}` } }).then((res) => {
 				if (this._isMounted) {
 					if (res.status === 200) {
+						console.log(res.data.data);
 						this.setState({
 							data: res.data.data,
 							message: res.data.message,
@@ -51,10 +52,9 @@ class TransactionHistory extends Component {
 	}
 
 	render() {
-		// Get Data Here
 		var data_HTML_ACTIVE_ORDERS = '';
 		var status_HTML = '';
-		var i = 0;
+		var status_Action = '';
 
 		if (this.state.loading) {
 			data_HTML_ACTIVE_ORDERS = (
@@ -73,50 +73,75 @@ class TransactionHistory extends Component {
 			if (this.state.message != 'success') {
 				data_HTML_ACTIVE_ORDERS = (
 					<tr>
-						<td colSpan="6" align="center">
+						<td colSpan="7" align="center">
 							<span className="font-weight-semibold text-gray-700 text-center">{this.state.message}</span>
 						</td>
 					</tr>
 				);
 			} else {
-				data_HTML_ACTIVE_ORDERS = this.state.data.map((mywalletdata) => {
-					i++;
-					if (mywalletdata.active == 'true') {
-						status_HTML = <span className="font-weight-semibold text-success">default</span>;
+				data_HTML_ACTIVE_ORDERS = this.state.data.map((activeOrders) => {
+					if (activeOrders.payment_status == 2) {
+						status_HTML = (
+							<a
+								href={`/payment/${activeOrders.invoice_no}?account=fx`}
+								type="button"
+								className="btn btn-info"
+							>
+								Pay balance
+							</a>
+						);
+						status_Action = (
+							<span className="font-weight-semibold text-gray-500 text-info">Partially paid</span>
+						);
+					} else if (activeOrders.payment_status == 0) {
+						status_HTML = (
+							<a
+								href={`/payment/${activeOrders.invoice_no}?account=fx`}
+								type="button"
+								className="btn btn-danger"
+							>
+								Pay Invoice
+							</a>
+						);
+						status_Action = (
+							<span className="font-weight-semibold text-gray-500 text-danger">Not paid</span>
+						);
 					} else {
-						status_HTML = <span className="font-weight-semibold text-warning">secondary</span>;
+						status_HTML = (
+							<a href="#" type="button" className="btn btn-success">
+								Paid
+							</a>
+						);
+						status_Action = <span className="font-weight-semibold text-gray-500 text-success">Paid</span>;
 					}
 
 					return (
-						<tr key={mywalletdata.id}>
-							<td>{i}</td>
-
+						<tr key={activeOrders.id}>
 							<td>
-								<span className="font-weight-semibold text-gray-700">{mywalletdata.escrow_id}</span>
+								<span className="font-weight-semibold text-gray-700">{activeOrders.invoice_no}</span>
 							</td>
 							<td>
-								<span className="font-weight-semibold text-gray-700">{mywalletdata.currencyCode}</span>
-							</td>
-							<td>
-								<span className="font-weight-semibold text-gray-700">
-									{mywalletdata.currencySymbol +
-										' ' +
-										parseFloat(mywalletdata.wallet_balance).toFixed(2)}
+								<span className="font-weight-semibold text-gray-500">
+									{activeOrders.transaction_date}
 								</span>
 							</td>
-							<td>{status_HTML}</td>
 							<td>
-								<Link
-									to={{
-										pathname: `/currencyfx/wallethistory`,
-										search: `currency=${mywalletdata.escrow_id}`
-									}}
-								>
-									<span className="font-weight-semibold text-gray-700">
-										<small>View history</small>
-									</span>
-								</Link>
+								<span className="font-weight-semibold text-gray-500">
+									Invoice for {activeOrders.service + ' to ' + activeOrders.merchantName}
+								</span>
 							</td>
+							<td>
+								<span className="font-weight-semibold text-gray-500">
+									{(activeOrders.invoiced_currency_symbol == null
+										? activeOrders.merchantcurrencySymbol
+										: activeOrders.invoiced_currency_symbol) +
+										'' +
+										parseFloat(activeOrders.total_amount).toFixed(2)}
+								</span>
+							</td>
+							<td>{status_Action}</td>
+
+							<td>{status_HTML}</td>
 						</tr>
 					);
 				});
@@ -135,10 +160,10 @@ class TransactionHistory extends Component {
 									<span className="text-uppercase tiny text-gray-600 Montserrat-font font-weight-semibold">
 										Currency Exchange
 									</span>
-									<h1 className="h2 mb-0 lh-sm">Transaction History</h1>
+									<h1 className="h2 mb-0 lh-sm">Invoices</h1>
 								</div>
 								<div className="col-auto d-flex align-items-center my-2 my-sm-0">
-									<a href="/currencyfx/" className="btn btn-lg btn-warning">
+									<Link to={'/currencyfx/'} className="btn btn-lg btn-warning">
 										<svg
 											className="me-2"
 											data-name="Icons/Tabler/Paperclip Copy 2"
@@ -160,19 +185,39 @@ class TransactionHistory extends Component {
 											/>
 										</svg>
 										<span>Dashboard</span>
-									</a>
+									</Link>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div className="p-3 p-xxl-5">
 						<div className="container-fluid px-0">
+							<div className="mb-2 mb-md-3 mb-xl-4 pb-2">
+								<ul className="nav nav-tabs nav-tabs-md nav-tabs-line position-relative zIndex-0">
+									<li className="nav-item">
+										<Link className="nav-link active" to={'/currencyfx/invoice'}>
+											All Invoice
+										</Link>
+									</li>
+									<li className="nav-item">
+										<Link className="nav-link" to={'/currencyfx/paidinvoices'}>
+											Paid Invoice
+										</Link>
+									</li>
+									<li className="nav-item">
+										<Link className="nav-link" to={'/currencyfx/pendinginvoices'}>
+											Pending Invoice
+										</Link>
+									</li>
+								</ul>
+							</div>
+
 							<div className="row group-cards pt-2">
 								<div className="col-12 mb-4">
 									<div className="card rounded-12 shadow-dark-80 border border-gray-50">
 										<div className="d-flex align-items-center px-3 px-md-4 py-3">
 											<h5 className="card-header-title mb-0 ps-md-2 font-weight-semibold">
-												Transaction History
+												All Invoice
 											</h5>
 											<div className="dropdown export-dropdown ms-auto pe-md-2">
 												<a
@@ -183,7 +228,7 @@ class TransactionHistory extends Component {
 													aria-expanded="false"
 													className="btn btn-outline-dark text-gray-700 border-gray-700 px-3"
 												>
-													<span>All Time</span>{' '}
+													<span>Today</span>{' '}
 													<svg
 														className="ms-2"
 														xmlns="http://www.w3.org/2000/svg"
@@ -267,12 +312,12 @@ class TransactionHistory extends Component {
 											<table className="table card-table table-nowrap overflow-hidden">
 												<thead>
 													<tr>
-														<th>#</th>
-														<th>Wallet ID</th>
-														<th>Wallet Currency</th>
-														<th>Wallet Balance</th>
+														<th>Inovice ID</th>
+														<th>Date & Time</th>
+														<th>Description</th>
+														<th>Amount</th>
 														<th>Status</th>
-														<th>Action</th>
+														<th>&nbsp;</th>
 													</tr>
 												</thead>
 												<tbody className="list">{data_HTML_ACTIVE_ORDERS}</tbody>
@@ -289,4 +334,4 @@ class TransactionHistory extends Component {
 	}
 }
 
-export default TransactionHistory;
+export default Invoice;

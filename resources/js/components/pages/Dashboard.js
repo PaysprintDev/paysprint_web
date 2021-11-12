@@ -16,7 +16,8 @@ class Dashboard extends Component {
 		this.state = {
 			data: [],
 			message: '',
-			loading: true
+			loading: true,
+			activeCurrency: ''
 		};
 
 		this.handleChange = this.handleChange.bind(this);
@@ -32,7 +33,8 @@ class Dashboard extends Component {
 						this.setState({
 							data: res.data.data,
 							message: res.data.message,
-							loading: false
+							loading: false,
+							activeCurrency: res.data.activeCurrency
 						});
 					} else {
 						this.setState({
@@ -51,8 +53,6 @@ class Dashboard extends Component {
 	async handleChange(event) {
 		this.setState({ [event.target.name]: event.target.value });
 
-		console.log(event.target.value);
-
 		const headers = {
 			Authorization: `Bearer ${apiToken}`,
 			'Content-Type': 'application/json'
@@ -67,7 +67,8 @@ class Dashboard extends Component {
 				this.setState({
 					data: result.data.data,
 					message: result.data.message,
-					loading: false
+					loading: false,
+					activeCurrency: result.data.activeCurrency
 				});
 			} else {
 				this.setState({
@@ -78,6 +79,7 @@ class Dashboard extends Component {
 			}
 		} catch (error) {
 			console.log(error);
+			swal('Oops!', error.message, 'error');
 		}
 	}
 
@@ -369,7 +371,8 @@ class Dashboard extends Component {
 														</div>
 														<div className="col-auto">
 															<a
-																href="#"
+																href={`/currencyfx/fund/transfer?currency=${this.state
+																	.activeCurrency}`}
 																className="btn btn-lg btn-outline-dark px-3 me-2 me-md-3"
 															>
 																<span className="ps-1">Move Money</span>

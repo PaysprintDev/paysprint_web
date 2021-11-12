@@ -235,7 +235,7 @@
                                                     <h6>Currency Conversion <br><small
                                                             class="text-info"><b>Exchange rate </b> <br> <span
                                                                 id="rateToday"></span> </small></h6>
-                                                    
+
 
                                                     <table class="table table-bordered table-striped" width="100%">
                                                         <tbody>
@@ -740,10 +740,10 @@
                         }
 
                         if (localcurrency != currency) {
-                            $('#convertedAmount').text(parseInt(mainAmount).toFixed(2));
+                            $('#convertedAmount').text(parseInt(mainAmount).toFixed(4));
 
                         } else {
-                            $('#convertedAmount').text((result.data).toFixed(2));
+                            $('#convertedAmount').text((result.data).toFixed(4));
 
                         }
 
@@ -754,7 +754,7 @@
 
                         // Put Exchange rate
                         $('#rateToday').html("<span class='text-danger'><strong>1" + localcurrency + " == " +
-                            todayRate.toFixed(2) + '' + currency + '<br>Today: ' + today +
+                            todayRate.toFixed(4) + '' + currency + '<br>Today: ' + today +
                             "</strong></span>");
 
 

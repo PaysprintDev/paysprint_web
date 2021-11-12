@@ -44,7 +44,6 @@ trait MyFX
 
     public function getMakeABid($orderId, $buyerId)
     {
-        $newData = [];
 
         $data = MakeBid::where('order_id', $orderId)->where('buyer_id', $buyerId)->first();
 
@@ -53,6 +52,22 @@ trait MyFX
         $data['sell_currencyCode'] = $marketPlace->sell_currencyCode;
         $data['buy_currencyCode'] = $marketPlace->buy_currencyCode;
 
+
+        return $data;
+    }
+
+
+    public function getMyWallet($escrow_id)
+    {
+        $data =  EscrowAccount::where('escrow_id', $escrow_id)->first();
+
+        return $data;
+    }
+
+    public function getMyOtherWallets($escrow_id, $id)
+    {
+
+        $data =  EscrowAccount::where('escrow_id', '!=', $escrow_id)->where('user_id', $id)->get();
 
         return $data;
     }

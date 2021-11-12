@@ -12,9 +12,12 @@ use App\User;
 use App\EscrowAccount;
 use App\FxPayment;
 use App\FxStatement;
+use App\ImportExcel;
+use App\InvoiceCommission;
 use App\MakeBid;
 use App\Traits\Xwireless;
 use App\Traits\MyFX;
+use Illuminate\Support\Facades\Hash;
 
 class CurrencyFxController extends Controller
 {
@@ -121,6 +124,29 @@ class CurrencyFxController extends Controller
         return view('currencyexchange.fundaccount')->with(['pages' => 'Fund FX Wallet', 'data' => $data]);
     }
 
+    // TRansfer Funds
+    public function transferfundAccount(Request $req)
+    {
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == false) {
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+        }
+
+        $data = array(
+            'allcountry' => $this->getCountryAndCurrency(),
+            'mycountry' => $this->personalCountry(Auth::user()->country),
+            'mywallet' => Auth::user()->forexAccount
+        );
+
+        return view('currencyexchange.fundtransfer')->with(['pages' => 'Transfer between FX Wallet', 'data' => $data]);
+    }
+
     public function marketPlace(Request $req)
     {
         if ($req->session()->has('email') == false) {
@@ -138,6 +164,62 @@ class CurrencyFxController extends Controller
 
         return view('currencyexchange.marketplace');
     }
+
+
+    public function myInvoices(Request $req)
+    {
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == false) {
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+        }
+
+
+
+        return view('currencyexchange.invoices');
+    }
+
+
+    public function paidInvoices(Request $req)
+    {
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == false) {
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+        }
+
+
+
+        return view('currencyexchange.paidinvoices');
+    }
+    public function pendingInvoices(Request $req)
+    {
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == false) {
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+        }
+
+
+
+        return view('currencyexchange.pendinginvoices');
+    }
+
 
 
 
@@ -294,7 +376,7 @@ class CurrencyFxController extends Controller
             'marketplace' => $this->getMarketBidding($orderId)
         );
 
-        return view('currencyexchange.placebid')->with(['pages' => 'Accept Bid', 'data' => $data]);
+        return view('currencyexchange.placebid')->with(['pages' => 'Make Bid', 'data' => $data]);
     }
 
     // Accept a bid
@@ -365,21 +447,27 @@ class CurrencyFxController extends Controller
                 }
 
 
+                $getactive = EscrowAccount::where('user_id', $thisuser->id)->where('active', 'true')->first();
+
+
                 $data = $myaccount;
                 $message = 'success';
                 $status = 200;
+                $activeCurrency = $getactive->escrow_id;
             } else {
                 $data = [];
                 $message = 'Session expired. Please re-login';
                 $status = 201;
+                $activeCurrency = '';
             }
         } catch (\Throwable $th) {
             $data = [];
             $message = $th->getMessage();
             $status = 400;
+            $activeCurrency = '';
         }
 
-        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'activeCurrency' => $activeCurrency];
 
         return $this->returnJSON($resData, $status);
     }
@@ -635,6 +723,10 @@ class CurrencyFxController extends Controller
                                     }
 
 
+                                    // Log Activities here
+                                    $this->createNotification($thisuser->ref_code, $sendMsg);
+
+
 
                                     $data = true;
                                     $message = 'Submitted successfully';
@@ -830,6 +922,10 @@ class CurrencyFxController extends Controller
                             $this->sendMessage($sendMsg2, $sendPhone2);
                         }
 
+                        // Log Activities here
+                        $this->createNotification($thisuser->ref_code, $sendMsg1);
+                        $this->createNotification($getthisbidders->ref_code, $sendMsg2);
+
 
                         // Send Response
                         $data = true;
@@ -843,6 +939,390 @@ class CurrencyFxController extends Controller
                 } else {
                     $data = [];
                     $message = 'No record found for ORDER ID: ' . $req->order_id;
+                    $status = 400;
+                }
+            } else {
+                $data = [];
+                $message = 'Invalid Authorization token. Kindly login and try again';
+                $status = 400;
+            }
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+    public function getOtherWallets(Request $req)
+    {
+
+
+        try {
+
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            if (isset($thisuser)) {
+
+                // Get escrow wallet
+                $mywallets = $this->getMyOtherWallets($req->fromWallet, $thisuser->id);
+
+                $thiswallet = EscrowAccount::where('escrow_id', $req->fromWallet)->where('user_id', $thisuser->id)->first();
+
+                if (count($mywallets) > 0) {
+
+                    $data = $mywallets;
+                    $message = 'success';
+                    $status = 200;
+                    $thiswallet = $thiswallet->currencyCode;
+                } else {
+                    $data = [];
+                    $message = 'Kindly add other wallets';
+                    $status = 400;
+                    $thiswallet = '';
+                }
+            } else {
+
+                $data = [];
+                $message = 'Invalid Authorization token. Kindly login and try again';
+                $status = 400;
+                $thiswallet = '';
+            }
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+            $thiswallet = '';
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'thiswallet' => $thiswallet];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+    public function getAllInvoiceToFx(Request $req)
+    {
+
+        try {
+
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            $mydata = ImportExcel::select('import_excel.*', 'invoice_payment.*')->join('invoice_payment', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')->where('import_excel.payee_email', $thisuser->email)->orderBy('import_excel.created_at', 'DESC')->get();
+
+            if (count($mydata) > 0) {
+                $newdata = ImportExcel::where('payee_email', $thisuser->email)->where('payment_status', 0)->orderBy('created_at', 'DESC')->get();
+                $data = array_merge($mydata->toArray(), $newdata->toArray());
+            } else {
+                $data = ImportExcel::where('payee_email', $thisuser->email)->orderBy('created_at', 'DESC')->get();
+            }
+
+            $data = $data;
+            $message = 'success';
+            $status = 200;
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+    public function getPaidInvoiceToFx(Request $req)
+    {
+
+        try {
+
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            $data = ImportExcel::where('payee_email', $thisuser->email)->where('payment_status', 1)->orderBy('created_at', 'DESC')->get();
+
+
+            if (count($data) > 0) {
+                $data = $data;
+                $message = 'success';
+                $status = 200;
+            } else {
+
+                $data = [];
+                $message = 'No paid invoice';
+                $status = 201;
+            }
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+    public function getPendingInvoiceToFx(Request $req)
+    {
+
+        try {
+
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            $data = ImportExcel::where('payee_email', $thisuser->email)->where('payment_status', "!=", 1)->orderBy('created_at', 'DESC')->get();
+
+
+            if (count($data) > 0) {
+                $data = $data;
+                $message = 'success';
+                $status = 200;
+            } else {
+
+                $data = [];
+                $message = 'No pending invoice';
+                $status = 201;
+            }
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+    // Calculate currency to send
+    public function convertMoneyToTransfer(Request $req)
+    {
+
+
+        try {
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            if (isset($thisuser)) {
+
+                // Check balance in the fromWallet
+
+                $fromWallet = EscrowAccount::where('escrow_id', $req->fromWallet)->where('user_id', $thisuser->id)->first();
+
+                $toWallet = EscrowAccount::where('escrow_id', $req->toWallet)->where('user_id', $thisuser->id)->first();
+
+                if (isset($fromWallet)) {
+
+                    if ($fromWallet->wallet_balance < $req->amount) {
+
+                        $data = [];
+                        $message = 'Insufficient wallet balance';
+                        $status = 400;
+
+                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                        return $this->returnJSON($resData, $status);
+                    }
+
+
+                    if ($toWallet->currencyCode == 'USD' || $toWallet->currencyCode == 'EUR' || $toWallet->currencyCode == 'GBP') {
+                        //Convert Money
+                        $getconvertion = $this->getConversionRate($toWallet->currencyCode, $fromWallet->currencyCode);
+
+                        $convInfo = $req->amount / $getconvertion;
+                    } else {
+                        //Convert Money
+                        $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
+
+                        $convInfo = $getconvertion * $req->amount;
+                    }
+
+
+
+                    $respData = [
+                        'convamount' => $convInfo,
+                        'toCurrency' => $toWallet->currencyCode,
+                        'rate' => $getconvertion
+                    ];
+
+                    $data = $respData;
+                    $message = 'success';
+                    $status = 200;
+                } else {
+                    $data = [];
+                    $message = 'This wallet is not associated with your account';
+                    $status = 400;
+                }
+            } else {
+                $data = [];
+                $message = 'Invalid Authorization token. Kindly login and try again';
+                $status = 400;
+            }
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+    // Transfer your fx fund
+    public function transferFXFund(Request $req)
+    {
+        try {
+
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            if (isset($thisuser)) {
+
+                // check transaction pin
+
+
+
+                if (Hash::check($req->transaction_pin, $thisuser->transaction_pin)) {
+
+                    // Check balance in the fromWallet
+
+                    $fromWallet = EscrowAccount::where('escrow_id', $req->fx_wallet_from)->where('user_id', $thisuser->id)->first();
+
+                    $toWallet = EscrowAccount::where('escrow_id', $req->fx_wallet_to)->where('user_id', $thisuser->id)->first();
+
+
+
+                    if (isset($fromWallet)) {
+
+                        if ($fromWallet->wallet_balance < $req->amount) {
+
+                            $data = [];
+                            $message = 'Insufficient wallet balance';
+                            $status = 400;
+
+                            $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                            return $this->returnJSON($resData, $status);
+                        }
+
+
+                        //Convert Money
+                        $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
+
+                        $convamount = $getconvertion * $req->amount;
+
+                        // Update Wallet Statements
+                        $fromwalletBalance = $fromWallet->wallet_balance - $req->amount;
+                        $towalletBalance = $toWallet->wallet_balance + $convamount;
+
+
+                        EscrowAccount::where('escrow_id', $req->fx_wallet_from)->where('user_id', $thisuser->id)->update(['wallet_balance' => $fromwalletBalance]);
+                        EscrowAccount::where('escrow_id', $req->fx_wallet_to)->where('user_id', $thisuser->id)->update(['wallet_balance' => $towalletBalance]);
+
+                        // Generate Statement and Notification
+
+
+                        $transaction_id = "es-wallet-" . date('dmY') . time();
+
+                        $activity = "Added " . $toWallet->currencyCode . '' . number_format($convamount, 2) . " from " . $fromWallet->currencyCode . " wallet to your " . $toWallet->currencyCode . " wallet";
+                        $credit = $convamount;
+                        $debit = 0;
+                        $reference_code = $transaction_id;
+                        $balance = 0;
+                        $trans_date = date('Y-m-d');
+                        $status = "Delivered";
+                        $action = "Escrow Wallet credit";
+                        $regards = $thisuser->ref_code;
+                        $statement_route = "escrow wallet";
+
+
+                        $this->insFXStatement($toWallet->escrow_id, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $thisuser->country, 'confirmed');
+
+
+
+                        $transaction_id2 = "es-wallet-" . date('dmY') . time();
+
+                        $activity2 = "Transferred " . $fromWallet->currencyCode . '' . number_format($req->amount, 2) . " from " . $fromWallet->currencyCode . " wallet to your " . $toWallet->currencyCode . " wallet";
+                        $credit2 = 0;
+                        $debit2 = $req->amount;
+                        $reference_code2 = $transaction_id2;
+                        $balance2 = 0;
+                        $trans_date2 = date('Y-m-d');
+                        $status2 = "Delivered";
+                        $action2 = "Escrow Wallet credit";
+                        $regards = $thisuser->ref_code;
+                        $statement_route2 = "escrow wallet";
+
+
+                        $this->insFXStatement($fromWallet->escrow_id, $reference_code2, $activity2, $credit2, $debit2, $balance2, $trans_date2, $status2, $action2, $regards, 1, $statement_route2, 'on', $thisuser->country, 'confirmed');
+
+                        $sendMsg = "Hi " . $thisuser->name . ", You have " . $activity . " Your current fx wallet balance is " . $toWallet->currencyCode . ' ' . number_format($towalletBalance, 2) . ".";
+
+                        $usergetPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                        if (isset($usergetPhone)) {
+
+                            $sendPhone = $thisuser->telephone;
+                        } else {
+                            $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                        }
+
+                        if ($thisuser->country == "Nigeria") {
+
+                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                            $this->sendSms($sendMsg, $correctPhone);
+                        } else {
+                            $this->sendMessage($sendMsg, $sendPhone);
+                        }
+
+                        $this->createNotification($thisuser->ref_code, $sendMsg);
+
+
+                        // Markup value to sender local currency i.e USD/NGN = 584.33
+
+                        $markedupRate = $this->getConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
+
+                        // Customer Official rate i.e USD/CAD = 1.22
+                        $officialRate = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
+
+
+                        // Get Rate to Merchant currency
+                        $convertedRate = $markedupRate / $officialRate;
+
+
+                        $newProfit = $markedupRate - $convertedRate;
+
+
+
+                        $profit_sender = $markedupRate - $getconvertion;
+
+                        $profit_receiver = $markedupRate / $profit_sender;
+
+
+                        // Insert Commission Info
+                        $commissionQuery = [
+                            'invoice_no' => $fromWallet->escrow_id, 'sender' => $thisuser->name, 'receiver' => $thisuser->name, 'invoice_amount' => $req->amount, 'invoiced_currency' => $fromWallet->currencyCode, 'official_rate' => $getconvertion, 'markedup_rate' => $markedupRate, 'profit_sender' => $newProfit, 'sender_currency' => $thisuser->currencyCode, 'profit_receiver' => $profit_receiver, 'receiver_currency' => $thisuser->currencyCode, 'holder' => 'currency fx'
+                        ];
+
+
+                        InvoiceCommission::insert($commissionQuery);
+
+
+                        $data = true;
+                        $message = 'Transaction successful';
+                        $status = 200;
+                    } else {
+                        $data = [];
+                        $message = 'Wallet information not found. Please try again.';
+                        $status = 400;
+                    }
+                } else {
+                    $data = [];
+                    $message = 'Incorrect transaction pin';
                     $status = 400;
                 }
             } else {
@@ -910,7 +1390,7 @@ class CurrencyFxController extends Controller
 
                         $myBalance = EscrowAccount::where('escrow_id', $req->fx_wallet)->first();
 
-                        $this->insFXStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $thisuser->country, 'confirmed');
+                        $this->insFXStatement($req->fx_wallet, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $thisuser->country, 'confirmed');
 
                         $sendMsg = "Hi " . $thisuser->name . ", You have " . $activity . " Your current fx wallet balance is " . $myaccount->currencyCode . ' ' . number_format($myBalance, 2) . ".";
 
@@ -931,6 +1411,9 @@ class CurrencyFxController extends Controller
                             $this->sendMessage($sendMsg, $sendPhone);
                         }
                     }
+
+
+                    $this->createNotification($thisuser->ref_code, $sendMsg);
 
                     // Insert Money Payment
                     $queryRec = [

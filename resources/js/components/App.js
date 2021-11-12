@@ -11,6 +11,9 @@ import Start from './pages/Start';
 import TransactionHistory from './pages/TransactionHistory';
 import WalletHistory from './pages/WalletHistory';
 import EWallet from './pages/EWallet';
+import Invoice from './pages/Invoice';
+import PaidInvoice from './constraints/PaidInvoice';
+import PendingInvoice from './constraints/PendingInvoice';
 
 function App() {
 	return (
@@ -26,6 +29,9 @@ function App() {
 				<Route path="/currencyfx/transactionhistory" component={TransactionHistory} />
 				<Route path="/currencyfx/wallethistory" component={WalletHistory} />
 				<Route path="/currencyfx/mywallet" component={EWallet} />
+				<Route path="/currencyfx/invoice" component={Invoice} />
+				<Route path="/currencyfx/paidinvoices" component={PaidInvoice} />
+				<Route path="/currencyfx/pendinginvoices" component={PendingInvoice} />
 			</Switch>
 		</Router>
 	);
