@@ -3266,13 +3266,13 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                         $this->slack($thisuser->name . " wants to withdraw " . $req->currencyCode . " " . $req->amount . " from their wallet. This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
-                        $minBal = $this->minimumWithdrawal($thisuser->country);
 
                         if ($thisuser->accountType == "Individual") {
                             $subminType = "Consumer Minimum Withdrawal";
                         } else {
                             $subminType = "Merchant Minimum Withdrawal";
                         }
+                        $minBal = $this->maintenanceBalanceWithdrawal($subminType, $thisuser->country);
 
                         $minWithdrawalBal = $this->minimumAmountToWithdrawal($subminType, $thisuser->country);
 
@@ -4092,13 +4092,15 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                             $this->slack($thisuser->name . " wants to withdraw " . $req->currencyCode . " " . $req->amount . " from their wallet.", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
-                            $minBal = $this->minimumWithdrawal($thisuser->country);
+                            // $minBal = $this->minimumWithdrawal($thisuser->country);
 
                             if ($thisuser->accountType == "Individual") {
                                 $subminType = "Consumer Minimum Withdrawal";
                             } else {
                                 $subminType = "Merchant Minimum Withdrawal";
                             }
+
+                            $minBal = $this->maintenanceBalanceWithdrawal($subminType, $thisuser->country);
 
                             $minWithdrawalBal = $this->minimumAmountToWithdrawal($subminType, $thisuser->country);
 
@@ -5101,7 +5103,14 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                 $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                $minBal = $this->minimumWithdrawal($thisuser->country);
+                // $minBal = $this->minimumWithdrawal($thisuser->country);
+
+                if ($thisuser->accountType == "Individual") {
+                    $subminType = "Consumer Minimum Withdrawal";
+                } else {
+                    $subminType = "Merchant Minimum Withdrawal";
+                }
+                $minBal = $this->maintenanceBalanceWithdrawal($subminType, $thisuser->country);
 
                 $vendorNames = EPSVendor::where('billerCode', $req->billerCode)->first();
 

@@ -422,7 +422,7 @@ class Controller extends BaseController
 
         try {
             // Get Monthly Maintenance Fee
-            $minimumBalance = TransactionCost::where('method', $subType)->where('country', $country)->first();
+            $minimumBalance = TransactionCost::where('structure', $subType)->where('country', $country)->first();
 
             if (isset($minimumBalance) == true) {
                 $data = $minimumBalance->fixed;

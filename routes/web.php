@@ -169,6 +169,11 @@ Route::prefix('currencyfx')->group(function () {
 	Route::get('/start', ['uses' => 'CurrencyFxController@start', 'as' => 'paysprint currency exchange start']);
 	Route::get('/', ['uses' => 'CurrencyFxController@index', 'as' => 'paysprint currency exchange']);
 	Route::get('marketplace', ['uses' => 'CurrencyFxController@marketPlace', 'as' => 'paysprint currency market place']);
+	Route::get('invoice', ['uses' => 'CurrencyFxController@myInvoices', 'as' => 'paysprint currency invoices']);
+
+	Route::get('paidinvoices', ['uses' => 'CurrencyFxController@paidInvoices', 'as' => 'paysprint currency paid invoices']);
+	Route::get('pendinginvoices', ['uses' => 'CurrencyFxController@pendingInvoices', 'as' => 'paysprint currency pending invoices']);
+
 	Route::get('transactionhistory', ['uses' => 'CurrencyFxController@transactionHistory', 'as' => 'paysprint currency transaction history']);
 	Route::get('wallethistory', ['uses' => 'CurrencyFxController@walletHistory', 'as' => 'paysprint currency wallet history']);
 	Route::get('mywallet', ['uses' => 'CurrencyFxController@myWallet', 'as' => 'paysprint currency wallets']);
@@ -189,6 +194,7 @@ Route::prefix('currencyfx')->group(function () {
 	// Fund FX Account
 	Route::prefix('fund')->group(function () {
 		Route::get('/', ['uses' => 'CurrencyFxController@fundAccount', 'as' => 'currency exchange funding']);
+		Route::get('/transfer', ['uses' => 'CurrencyFxController@transferfundAccount', 'as' => 'currency exchange transfer funding']);
 	});
 });
 
@@ -840,6 +846,7 @@ Route::group(['prefix' => 'Ajax'], function () {
 	Route::post('charges', ['uses' => 'ApplePayController@ajaxcharges', 'as' => 'charges']);
 
 	Route::post('getconversion', ['uses' => 'CurrencyConverterApiController@currencyConverter', 'as' => 'getconversion']);
+	Route::post('getfxconversion', ['uses' => 'CurrencyConverterApiController@currencyFxConverter', 'as' => 'getfxconversion']);
 });
 
 

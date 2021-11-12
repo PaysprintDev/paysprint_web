@@ -415,7 +415,7 @@ class Header extends Component {
 												<li className="nav-item">
 													<a
 														className="nav-link collapsed"
-														href="#sidebarPayInvoice"
+														href="/currencyfx/invoice"
 														data-bs-toggle="collapse"
 														role="button"
 														aria-expanded="false"

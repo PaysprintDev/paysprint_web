@@ -509,7 +509,7 @@ class Aside extends Component {
 							<li className="nav-item">
 								<a
 									className="nav-link collapsed"
-									href="#"
+									href="/currencyfx/invoice"
 									data-bs-toggle="collapse"
 									role="button"
 									aria-expanded="false"

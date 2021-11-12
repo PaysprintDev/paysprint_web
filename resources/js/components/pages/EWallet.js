@@ -73,7 +73,7 @@ class EWallet extends Component {
 			if (this.state.message != 'success') {
 				data_HTML_ACTIVE_ORDERS = (
 					<tr>
-						<td colSpan="6" align="center">
+						<td colSpan="7" align="center">
 							<span className="font-weight-semibold text-gray-700 text-center">{this.state.message}</span>
 						</td>
 					</tr>
@@ -106,9 +106,24 @@ class EWallet extends Component {
 							</td>
 							<td>{status_HTML}</td>
 							<td>
-								<a href={`/currencyfx/fund?currency=${mywalletdata.escrow_id}`}>
-									<span className="font-weight-semibold text-gray-700">
+								<a
+									type="button"
+									className="btn btn-warning"
+									href={`/currencyfx/fund?currency=${mywalletdata.escrow_id}`}
+								>
+									<span className="font-weight-semibold text-black">
 										<small>Fund Wallet</small>
+									</span>
+								</a>
+							</td>
+							<td>
+								<a
+									type="button"
+									className="btn btn-primary"
+									href={`/currencyfx/fund/transfer?currency=${mywalletdata.escrow_id}`}
+								>
+									<span className="font-weight-semibold text-white">
+										<small>Move Money</small>
 									</span>
 								</a>
 							</td>
@@ -201,7 +216,8 @@ class EWallet extends Component {
 														<th>Wallet Currency</th>
 														<th>Wallet Balance</th>
 														<th>Status</th>
-														<th>Action</th>
+														<th>Funding</th>
+														<th>Move money</th>
 													</tr>
 												</thead>
 												<tbody className="list">{data_HTML_ACTIVE_ORDERS}</tbody>
