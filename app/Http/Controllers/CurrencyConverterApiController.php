@@ -102,15 +102,9 @@ class CurrencyConverterApiController extends Controller
     public function currencyFxConverter(Request $req)
     {
 
+        // dd($req->all());
 
-        // Get Markup
-        $markuppercent = $this->markupPercentage();
-
-        $markValue = (1 + ($markuppercent[0]->percentage / 100));
-
-        $currency = 'USD' . $req->currency;
-
-        $localCurrency = 'USD' . $req->localcurrency;
+        $convertThis = $this->getOfficialConversionRate($req->currency, $req->localcurrency);
 
         if ($req->amount == null) {
             $amount = 1;
@@ -118,66 +112,74 @@ class CurrencyConverterApiController extends Controller
             $amount = $req->amount;
         }
 
-        $access_key = '6173fa628b16d8ce1e0db5cfa25092ac';
+        // // Get Markup
+        // $markuppercent = $this->markupPercentage();
 
-        $curl = curl_init();
+        // $markValue = (1 + ($markuppercent[0]->percentage / 100));
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://api.currencylayer.com/live?access_key=' . $access_key,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => array(
-                'Cookie: __cfduid=d430682460804be329186d07b6e90ef2f1616160177'
-            ),
-        ));
+        // $currency = 'USD' . $req->currency;
 
-        $response = curl_exec($curl);
+        // $localCurrency = 'USD' . $req->localcurrency;
 
-        curl_close($curl);
+        // if ($req->amount == null) {
+        //     $amount = 1;
+        // } else {
+        //     $amount = $req->amount;
+        // }
 
-        $result = json_decode($response);
+        // $access_key = '6173fa628b16d8ce1e0db5cfa25092ac';
 
+        // $curl = curl_init();
 
+        // curl_setopt_array($curl, array(
+        //     CURLOPT_URL => 'http://api.currencylayer.com/live?access_key=' . $access_key,
+        //     CURLOPT_RETURNTRANSFER => true,
+        //     CURLOPT_ENCODING => '',
+        //     CURLOPT_MAXREDIRS => 10,
+        //     CURLOPT_TIMEOUT => 0,
+        //     CURLOPT_FOLLOWLOCATION => true,
+        //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        //     CURLOPT_CUSTOMREQUEST => 'GET',
+        //     CURLOPT_HTTPHEADER => array(
+        //         'Cookie: __cfduid=d430682460804be329186d07b6e90ef2f1616160177'
+        //     ),
+        // ));
 
+        // $response = curl_exec($curl);
 
+        // curl_close($curl);
 
-
-
-        if ($result->success == true) {
-
-
-
-            if ($req->localcurrency != $req->currency) {
-                // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
-                // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
-                $convertLocal = $amount / $result->quotes->$currency;
-            } else {
-                // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
-                $convertLocal = $amount / $result->quotes->$currency;
-            }
-
-            // Converting your USD value to other currency ie CAD * Y 
-            $convRate = $result->quotes->$localCurrency * $convertLocal;
-
-
-            $message = 'success';
-        } else {
-            $convRate = "Sorry we can not process your transaction this time, try again later!.";
-            $message = 'failed';
-        }
-
-
-        $amountConvert = $convRate;
+        // $result = json_decode($response);
 
 
 
+        // if ($result->success == true) {
 
 
+
+        //     if ($req->localcurrency != $req->currency) {
+        //         // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
+        //         // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
+        //         $convertLocal = $amount / $result->quotes->$currency;
+        //     } else {
+        //         // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
+        //         $convertLocal = $amount / $result->quotes->$currency;
+        //     }
+
+        //     // Converting your USD value to other currency ie CAD * Y 
+        //     $convRate = $result->quotes->$localCurrency * $convertLocal;
+
+
+        //     $message = 'success';
+        // } else {
+        //     $convRate = "Sorry we can not process your transaction this time, try again later!.";
+        //     $message = 'failed';
+        // }
+
+
+        $message = "success";
+
+        $amountConvert = $amount / $convertThis;
 
 
 

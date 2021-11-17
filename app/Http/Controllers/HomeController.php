@@ -168,7 +168,8 @@ class HomeController extends Controller
                 'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                 'getmerchantsByCategory' => $this->getMerchantsByCategory(),
                 'specialInfo' => $this->getthisInfo(Auth::user()->country),
-                'continent' => $this->timezone[0]
+                'continent' => $this->timezone[0],
+                'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
             );
 
             $view = 'home';
@@ -219,7 +220,7 @@ class HomeController extends Controller
                 'specialInfo' => $this->getthisInfo(Auth::user()->country),
                 'continent' => $this->timezone[0],
                 'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
-                
+
             );
 
             $view = 'home';
@@ -232,7 +233,6 @@ class HomeController extends Controller
             ];
         }
 
-        // dd($data);
 
 
 
@@ -242,6 +242,7 @@ class HomeController extends Controller
 
     public function authIndex()
     {
+
 
 
         // dd($req->session());
@@ -262,7 +263,7 @@ class HomeController extends Controller
                 'specialInfo' => $this->getthisInfo(Auth::user()->country),
                 'continent' => $this->timezone[0],
                 'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
-                
+
 
             );
         } else {

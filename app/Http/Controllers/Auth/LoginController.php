@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Session;
 use Illuminate\Http\Request;
 
@@ -52,13 +52,13 @@ class LoginController extends Controller
     //     $email = request()->input('email');
 
     //     User::where()->update(['api_token' => uniqid().time().md5($email)]);
-        
+
     // }
 
 
-    // public function logout(Request $request) {
-    //     Auth::logout();
-    //     Session::flush();
-    //     return redirect()->away('https://exbc.ca');
-    //   }
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        return redirect('/');
+    }
 }

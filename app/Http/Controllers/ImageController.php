@@ -17,7 +17,6 @@ class ImageController extends Controller
 
 
 
-
         if ($request->file('image')) {
             //Get filename with extension
             $filenameWithExt = $request->file('image')->getClientOriginalName();
