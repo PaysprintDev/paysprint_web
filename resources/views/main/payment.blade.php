@@ -180,8 +180,42 @@
 
                                             {{-- Add FX Walllet Selection Here... --}}
 
+                                            <div class="form-group"> <label for="make_select_wallet">
+                                                    <h6>Select Preferred Wallet</h6>
+                                                </label>
+                                                <div class="input-group">
+                                                    <select name="make_select_wallet" id="make_select_wallet"
+                                                        class="form-control" required>
+                                                        <option value="">Select wallet</option>
+                                                        <option value="Wallet">Wallet</option>
+                                                        <option value="FX Wallet">FX Wallet</option>
+                                                    </select>
 
-                                            <div class="alert alert-warning">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group walletList disp-0"> <label
+                                                    for="select_currency_list">
+                                                    <h6>Choose Currency</h6>
+                                                </label>
+                                                <div class="input-group">
+                                                    <select name="select_currency_list" id="select_currency_list"
+                                                        class="form-control">
+                                                    </select>
+
+                                                </div>
+                                            </div>
+
+
+                                            {{-- End Add FX Wallet --}}
+
+
+                                            <div class="alert alert-warning fxuserWallet disp-0">
+
+                                            </div>
+
+
+                                            <div class="alert alert-warning userWallet disp-0">
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <h4>
@@ -195,6 +229,8 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+
 
 
                                         </div>
@@ -664,7 +700,101 @@
                 currencyConvert();
 
 
-            })
+            });
+
+            $("#make_select_wallet").change(function() {
+                if ($("#make_select_wallet").val() == "FX Wallet") {
+                    $('.fxuserWallet').removeClass('disp-0');
+                    $('.walletList').removeClass('disp-0');
+                    $('.userWallet').addClass('disp-0');
+                    // Do Ajax and Render Selected Wallet Balance
+
+                    var route = "{{ URL('/api/v1/fxwallets') }}";
+
+
+                    setHeaders();
+                    jQuery.ajax({
+                        url: route,
+                        method: 'get',
+                        dataType: 'JSON',
+                        beforeSend: function() {
+                            $('#select_currency_list').html(`<option value="">Please wait...</option>`);
+                        },
+                        success: function(result) {
+                            $('#select_currency_list').html(``);
+                            // Get Result and render value
+                            if (result.status == 200) {
+                                // Loop Value
+                                $.each(result.data, (v, k) => {
+                                    $('#select_currency_list').append(
+                                        `<option value="${k.escrow_id}">Country: ${k.country} | Currency: ${k.currencyCode}</option>`
+                                    );
+
+                                });
+                            } else {
+                                $('#select_currency_list').append(
+                                    `<option value="">${result.message}</option>`);
+                            }
+                        },
+                        error: function(error) {
+                            $('#select_currency_list').html(``);
+                            $('#select_currency_list').append(
+                                `<option value="">${error.responseJSON.message}</option>`);
+                        }
+
+                    });
+
+                } else {
+                    // Return Primary wallet Balance
+                    $('.userWallet').removeClass('disp-0');
+                    $('.walletList').addClass('disp-0');
+                    $('.fxuserWallet').addClass('disp-0');
+                }
+            });
+
+
+            $("#select_currency_list").change(function() {
+
+
+                // Do Ajax and Render Selected Wallet Balance
+
+                var route = "{{ URL('/api/v1/fxwallets') }}";
+
+
+                setHeaders();
+                jQuery.ajax({
+                    url: route,
+                    method: 'get',
+                    dataType: 'JSON',
+                    beforeSend: function() {
+                        $('#select_currency_list').html(`<option value="">Please wait...</option>`);
+                    },
+                    success: function(result) {
+                        $('#select_currency_list').html(``);
+                        // Get Result and render value
+                        if (result.status == 200) {
+                            // Loop Value
+                            $.each(result.data, (v, k) => {
+                                $('#select_currency_list').append(
+                                    `<option value="${k.escrow_id}">Country: ${k.country} | Currency: ${k.currencyCode}</option>`
+                                );
+
+                            });
+                        } else {
+                            $('#select_currency_list').append(
+                                `<option value="">${result.message}</option>`);
+                        }
+                    },
+                    error: function(error) {
+                        $('#select_currency_list').html(``);
+                        $('#select_currency_list').append(
+                            `<option value="">${error.responseJSON.message}</option>`);
+                    }
+
+                });
+
+
+            });
 
 
 
