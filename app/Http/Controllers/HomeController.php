@@ -233,7 +233,6 @@ class HomeController extends Controller
             ];
         }
 
-        // dd($data);
 
 
 
@@ -243,6 +242,7 @@ class HomeController extends Controller
 
     public function authIndex()
     {
+
 
 
         // dd($req->session());

@@ -5,7 +5,7 @@ import Header from '../includes/Header';
 
 const apiToken = document.getElementById('user_api_token').value;
 
-class RecentBids extends Component {
+class ViewMyBids extends Component {
 	_isMounted = false;
 
 	constructor(props) {
@@ -21,7 +21,7 @@ class RecentBids extends Component {
 	async componentDidMount() {
 		this._isMounted = true;
 
-		const res = await axios.get(`/api/v1/getrecentbids`, {
+		const res = await axios.get(`/api/v1/getthisbids${this.props.location.search}`, {
 			headers: { Authorization: `Bearer ${apiToken}` }
 		});
 
@@ -53,11 +53,12 @@ class RecentBids extends Component {
 	render() {
 		var data_HTML_ACTIVE_ORDERS = '';
 		var status_HTML = '';
+		// var bidding_HTML = '';
 
 		if (this.state.loading) {
 			data_HTML_ACTIVE_ORDERS = (
 				<tr>
-					<td colSpan="3" align="center">
+					<td colSpan="7" align="center">
 						<span className="font-weight-semibold text-gray-700 text-center">
 							<img
 								src="https://img.icons8.com/ios/35/000000/spinner-frame-4.png"
@@ -78,43 +79,58 @@ class RecentBids extends Component {
 				);
 			} else {
 				data_HTML_ACTIVE_ORDERS = this.state.data.map((activeOrders) => {
+					if (activeOrders.status == 1) {
+						status_HTML = (
+							<a type="button" href="#" className="btn btn-success btn-block" disabled>
+								Bid closed
+							</a>
+						);
+					} else {
+						status_HTML = (
+							<a
+								type="button"
+								href={`/currencyfx/acceptbid?orderId=${activeOrders.order_id}&buyer_id=${activeOrders.buyer_id}`}
+								className="btn btn-primary btn-block"
+							>
+								Accept bid
+							</a>
+						);
+					}
+
 					return (
 						<tr key={activeOrders.id}>
 							<td>
-								<span className="font-weight-semibold text-gray-700">{activeOrders.order_id}</span>
-							</td>
-
-							<td>
-								<span className="font-weight-bold text-danger">
-									{activeOrders.sell_currencyCode +
-										' ' +
-										parseFloat(activeOrders.bid_amount).toFixed(4)}
-								</span>
-							</td>
-							<td>
-								<span className="font-weight-bold text-success">
-									{activeOrders.buy_currencyCode + ' ' + parseFloat(activeOrders.buying).toFixed(4)}
-								</span>
-							</td>
-
-							<td>
-								<span className="font-weight-semibold text-gray-500">{activeOrders.count}</span>
-							</td>
-
-							<td>
 								<span className="font-weight-semibold text-gray-500">
-									<Link
-										type="button"
-										to={`/currencyfx/viewmybids?orderId=${activeOrders.order_id}`}
-										className="btn btn-primary btn-block"
-									>
-										View
-									</Link>
+									{activeOrders.sell_currencyCode + ' ' + activeOrders.bid_rate}
 								</span>
+							</td>
+							<td>
+								<span className="font-weight-bold text-primary">
+									{activeOrders.buy_currencyCode +
+										' ' +
+										parseFloat(activeOrders.offer_amount).toFixed(4)}
+								</span>
+							</td>
+
+							<td>
+								<span className="font-weight-semibold text-gray-500">{status_HTML}</span>
 							</td>
 						</tr>
 					);
 				});
+
+				// bidding_HTML = (
+				// 	<span className="font-weight-bold text-success">
+				// 		{'Selling: ' +
+				// 			activeOrders.buy_currencyCode +
+				// 			' ' +
+				// 			parseFloat(activeOrders.buying).toFixed(4) +
+				// 			' - Buying: ' +
+				// 			activeOrders.sell_currencyCode +
+				// 			' ' +
+				// 			activeOrders.bid_rate}
+				// 	</span>
+				// );
 			}
 		}
 
@@ -165,28 +181,14 @@ class RecentBids extends Component {
 							<div className="mb-2 mb-md-3 mb-xl-4 pb-2">
 								<ul className="nav nav-tabs nav-tabs-md nav-tabs-line position-relative zIndex-0">
 									<li className="nav-item">
-										<Link className="nav-link" to={'/currencyfx/marketplace'}>
-											All Offers
-										</Link>
+										<a className="nav-link active" href="#">
+											View Bids
+										</a>
 									</li>
+
 									<li className="nav-item">
-										<Link className="nav-link" to={'/currencyfx/ongoing'}>
-											Closed Offers
-										</Link>
-									</li>
-									<li className="nav-item">
-										<Link className="nav-link" to={'/currencyfx/pending'}>
-											Pending Offers
-										</Link>
-									</li>
-									<li className="nav-item">
-										<Link className="nav-link" to={'/currencyfx/myorders'}>
-											My Offers
-										</Link>
-									</li>
-									<li className="nav-item">
-										<Link className="nav-link active" to={'/currencyfx/recentbids'}>
-											Recent Bids
+										<Link className="nav-link" to={'/currencyfx/recentbids'}>
+											Goto Recent Bids
 										</Link>
 									</li>
 								</ul>
@@ -197,7 +199,10 @@ class RecentBids extends Component {
 									<div className="card rounded-12 shadow-dark-80 border border-gray-50">
 										<div className="d-flex align-items-center px-3 px-md-4 py-3">
 											<h5 className="card-header-title mb-0 ps-md-2 font-weight-semibold">
-												Recent Bids
+												View Bids -
+												<span className="text-primary">
+													{this.props.location.search.split('?orderId=')}
+												</span>
 											</h5>
 											<div className="dropdown export-dropdown ms-auto pe-md-2">
 												<a
@@ -208,7 +213,7 @@ class RecentBids extends Component {
 													aria-expanded="false"
 													className="btn btn-outline-dark text-gray-700 border-gray-700 px-3"
 												>
-													<span>Today</span>{' '}
+													<span>Today</span>
 													<svg
 														className="ms-2"
 														xmlns="http://www.w3.org/2000/svg"
@@ -292,10 +297,8 @@ class RecentBids extends Component {
 											<table className="table card-table table-nowrap overflow-hidden">
 												<thead>
 													<tr>
-														<th>Order ID</th>
-														<th>Selling</th>
-														<th>Buying</th>
-														<th>Number of Bids</th>
+														<th>Bid Rate</th>
+														<th>Offer Amount</th>
 														<th>Action</th>
 													</tr>
 												</thead>
@@ -313,4 +316,4 @@ class RecentBids extends Component {
 	}
 }
 
-export default RecentBids;
+export default ViewMyBids;

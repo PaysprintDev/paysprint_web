@@ -78,7 +78,7 @@ class WalletHistory extends Component {
 			if (this.state.message != 'success') {
 				data_HTML_ACTIVE_ORDERS = (
 					<tr>
-						<td colSpan="6" align="center">
+						<td colSpan="5" align="center">
 							<span className="font-weight-semibold text-gray-700 text-center">{this.state.message}</span>
 						</td>
 					</tr>
@@ -120,13 +120,6 @@ class WalletHistory extends Component {
 							</td>
 							<td>{amountStatus}</td>
 							<td>{status_HTML}</td>
-							<td>
-								<a href="#">
-									<span className="font-weight-semibold text-gray-700">
-										<small>View details</small>
-									</span>
-								</a>
-							</td>
 						</tr>
 					);
 				});
@@ -282,7 +275,6 @@ class WalletHistory extends Component {
 														<th>Description</th>
 														<th>Amount</th>
 														<th>Status</th>
-														<th>View</th>
 													</tr>
 												</thead>
 												<tbody className="list">{data_HTML_ACTIVE_ORDERS}</tbody>
