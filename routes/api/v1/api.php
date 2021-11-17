@@ -269,6 +269,8 @@ Route::prefix('/v1')->group(function () {
 
         Route::get('/fxwallets', ['uses' => 'CurrencyFxController@fxWallets', 'as' => 'get my wallets']);
 
+        Route::get('/getthisfxwallets', ['uses' => 'CurrencyFxController@getThisFxWallets', 'as' => 'get this fx wallets']);
+
 
 
 

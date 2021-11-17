@@ -194,13 +194,11 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group walletList disp-0"> <label
-                                                    for="select_currency_list">
+                                            <div class="form-group walletList disp-0"> <label for="escrow_id">
                                                     <h6>Choose Currency</h6>
                                                 </label>
                                                 <div class="input-group">
-                                                    <select name="select_currency_list" id="select_currency_list"
-                                                        class="form-control">
+                                                    <select name="escrow_id" id="escrow_id" class="form-control">
                                                     </select>
 
                                                 </div>
@@ -718,27 +716,27 @@
                         method: 'get',
                         dataType: 'JSON',
                         beforeSend: function() {
-                            $('#select_currency_list').html(`<option value="">Please wait...</option>`);
+                            $('#escrow_id').html(`<option value="">Please wait...</option>`);
                         },
                         success: function(result) {
-                            $('#select_currency_list').html(``);
+                            $('#escrow_id').html(`<option value="">Select Currency</option>`);
                             // Get Result and render value
                             if (result.status == 200) {
                                 // Loop Value
                                 $.each(result.data, (v, k) => {
-                                    $('#select_currency_list').append(
+                                    $('#escrow_id').append(
                                         `<option value="${k.escrow_id}">Country: ${k.country} | Currency: ${k.currencyCode}</option>`
                                     );
 
                                 });
                             } else {
-                                $('#select_currency_list').append(
+                                $('#escrow_id').append(
                                     `<option value="">${result.message}</option>`);
                             }
                         },
                         error: function(error) {
-                            $('#select_currency_list').html(``);
-                            $('#select_currency_list').append(
+                            $('#escrow_id').html(``);
+                            $('#escrow_id').append(
                                 `<option value="">${error.responseJSON.message}</option>`);
                         }
 
@@ -753,49 +751,54 @@
             });
 
 
-            $("#select_currency_list").change(function() {
-
+            $("#escrow_id").change(function() {
 
                 // Do Ajax and Render Selected Wallet Balance
 
-                var route = "{{ URL('/api/v1/fxwallets') }}";
-
+                var route = "{{ URL('/api/v1/getthisfxwallets') }}";
 
                 setHeaders();
                 jQuery.ajax({
                     url: route,
                     method: 'get',
+                    data: {
+                        escrow_id: $("#escrow_id").val()
+                    },
                     dataType: 'JSON',
                     beforeSend: function() {
-                        $('#select_currency_list').html(`<option value="">Please wait...</option>`);
+                        $('.fxuserWallet').html(
+                            `<div class="row"><div class="col-md-12"><h4>Please wait...</h4></div><div class="col-md-12"><h4>-</h4></div></div>`
+                        );
                     },
                     success: function(result) {
-                        $('#select_currency_list').html(``);
+
+                        $('.fxuserWallet').html(
+                            `<div class="row"><div class="col-md-12"><h4>Please wait...</h4></div><div class="col-md-12"><h4>-</h4></div></div>`
+                        );
                         // Get Result and render value
                         if (result.status == 200) {
-                            // Loop Value
-                            $.each(result.data, (v, k) => {
-                                $('#select_currency_list').append(
-                                    `<option value="${k.escrow_id}">Country: ${k.country} | Currency: ${k.currencyCode}</option>`
-                                );
-
-                            });
+                            $('.fxuserWallet').html(
+                                `<div class="row"><div class="col-md-12"><h4>Wallet Balance</h4></div><div class="col-md-12"><h4>${result.data.currencySymbol+' '+parseFloat(result.data.wallet_balance).toFixed(4)}</h4></div></div>`
+                            );
                         } else {
-                            $('#select_currency_list').append(
-                                `<option value="">${result.message}</option>`);
+                            $('.fxuserWallet').html(
+                                `<div class="row"><div class="col-md-12"><h4>Wallet Balance</h4></div><div class="col-md-12"><h4>${result.message}</h4></div></div>`
+                            );
                         }
                     },
                     error: function(error) {
-                        $('#select_currency_list').html(``);
-                        $('#select_currency_list').append(
-                            `<option value="">${error.responseJSON.message}</option>`);
+                        $('#escrow_id').html(``);
+
+
+                        $('.fxuserWallet').html(
+                            `<div class="row"><div class="col-md-12"><h4></h4></div><div class="col-md-12"><h4>${error.responseJSON.message}</h4></div></div>`
+                        );
                     }
 
                 });
 
 
             });
-
 
 
 
@@ -900,11 +903,6 @@
 
 
 
-
-
-
-
-
             function handShake(val) {
 
                 var route;
@@ -930,7 +928,6 @@
                                 $('.sendmoneyBtn').text('Please wait...');
                             },
                             success: function(result) {
-                                console.log(result);
 
                                 $('.sendmoneyBtn').text('Pay Invoice');
 
