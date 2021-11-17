@@ -168,7 +168,8 @@ class HomeController extends Controller
                 'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
                 'getmerchantsByCategory' => $this->getMerchantsByCategory(),
                 'specialInfo' => $this->getthisInfo(Auth::user()->country),
-                'continent' => $this->timezone[0]
+                'continent' => $this->timezone[0],
+                'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
             );
 
             $view = 'home';
@@ -219,7 +220,7 @@ class HomeController extends Controller
                 'specialInfo' => $this->getthisInfo(Auth::user()->country),
                 'continent' => $this->timezone[0],
                 'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
-                
+
             );
 
             $view = 'home';
@@ -262,7 +263,7 @@ class HomeController extends Controller
                 'specialInfo' => $this->getthisInfo(Auth::user()->country),
                 'continent' => $this->timezone[0],
                 'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
-                
+
 
             );
         } else {
@@ -3946,7 +3947,7 @@ class HomeController extends Controller
 
         if (isset($getPoint)) {
 
-            $max = 10000;
+            $max = 5000;
 
             $totPointLeft = $getPoint->points_acquired - $max;
 
@@ -3987,6 +3988,46 @@ class HomeController extends Controller
         return redirect()->back()->with($resp, $resData);
     }
 
+    public function consumerPoints(Request $req)
+    {
+
+
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Payment Gateway';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            } else {
+                $this->page = 'Payment Gateway';
+                $this->name = '';
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+
+            $this->page = 'Payment Gateway';
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+        }
+
+        // Get Bill
+        $getAllPoint = Points::where('user_id', Auth::user()->id)->first();
+
+
+
+        $data = array(
+            'getallpoint' => $getAllPoint,
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+
+        );
+
+
+
+        return view('main.consumerpoints')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email,  'data' => $data]);
+    }
 
 
     public function getmystatement(Request $req)
