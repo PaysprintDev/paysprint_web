@@ -16,7 +16,7 @@
         <br>
         <br>
         <div class="row builder_all">
-            <div class="col-md-6 col-sm-6 builder walletInformation">
+            <div class="col-md-4 col-sm-6 builder walletInformation">
                 <div class="alert alert-warning">
                     <div class="row">
                         <div class="col-md-12">
@@ -33,7 +33,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-sm-6 builder walletInformation">
+            <div class="col-md-4 col-sm-6 builder walletInformation">
                 <div class="alert alert-info">
                     <div class="row">
                         <div class="col-md-12">
@@ -45,6 +45,27 @@
                             <h3>
                                 {{ number_format(Auth::user()->number_of_withdrawals) }}
                             </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 builder walletInformation">
+                <div class="alert alert-success">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4 class="font-sm">
+                                Total Points
+                            </h4>
+                        </div>
+                        <div class="col-md-6">
+                            <h3>
+                                {{ isset($data['mypoints']) ? $data['mypoints']->points_acquired : 0 }}
+                            </h3>
+                        </div>
+                        <div class="col-md-6">
+                            <a type="button" href="{{ route('consumer points') }}">
+                                View Earned Points
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -545,12 +566,8 @@
                     </ul>
                 </div>
 
-                <div class="card" style="width: 100%;">
-                    {{-- <div class="card-header"
-                        style="background-color:#00fd77; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
-                        Earned Points
-
-                    </div> --}}
+                {{-- <div class="card" style="width: 100%;">
+                    
                     <ul class="list-group list-group-flush">
 
                         <li class="list-group-item" title="total points">
@@ -580,7 +597,7 @@
                                     enctype="multipart/form-data">
                                     @csrf
                                     <div class="col-md-12">
-                                        {{-- <button href="#">Claim Points</button> --}}
+                                        
 
                                         <button type="submit" class="btn btn-default btn-block">Claim
                                             Points</button>
@@ -593,7 +610,7 @@
                         </li>
 
                     </ul>
-                </div>
+                </div> --}}
 
 
 
