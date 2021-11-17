@@ -588,6 +588,8 @@ Route::prefix('Admin/')->group(function () {
 
 	Route::post('claimpoints', ['uses' => 'HomeController@claimedPoints', 'as' => 'claim point']);
 
+	Route::get('consumerpoints', ['uses' => 'HomeController@consumerPoints', 'as' => 'consumer points']);
+
 	// KYB List
 
 	Route::get('pendingkybbycountry', ['uses' => 'AdminController@pendingKybByCountry', 'as' => 'kyb pending by country']);
@@ -635,6 +637,8 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('claimreward', ['uses' => 'AdminController@claimReward', 'as' => 'claim reward']);
 
 	Route::get('userspoint', ['uses' => 'AdminController@usersPoint', 'as' => 'users points']);
+
+
 
 	Route::get('gatewayactivity', ['uses' => 'AdminController@gatewayActivity', 'as' => 'gateway activity']);
 	Route::get('checktransaction/{id}', ['uses' => 'AdminController@checkTransaction', 'as' => 'check transaction']);
