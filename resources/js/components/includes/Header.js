@@ -144,9 +144,6 @@ class Header extends Component {
 							</li>
 
 							<li>
-								<hr className="dropdown-divider" />
-							</li>
-							<li>
 								<a className="dropdown-item" href="/profile">
 									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
 										<path
@@ -156,6 +153,15 @@ class Header extends Component {
 										/>
 									</svg>
 									<span className="ms-2">Settings</span>
+								</a>
+							</li>
+							<li>
+								<hr className="dropdown-divider" />
+							</li>
+							<li>
+								<a className="dropdown-item" href="/logout">
+									<img src="https://img.icons8.com/ios/20/000000/export.png" />
+									<span className="ms-2">Logout</span>
 								</a>
 							</li>
 						</ul>

@@ -51,6 +51,10 @@ Route::prefix('/v1')->group(function () {
     });
 
 
+    // Get Currency value
+    Route::get('/fetchcurrency', ['uses' => 'CurrencyFxController@fetchCurrency', 'as' => 'currency fetcher']);
+
+
     Route::group(['middleware' => ['apitoken']], function () {
 
         Route::post('profile',  ['uses' => 'api\v1\UserController@updateProfile'])->name('update profile');
@@ -241,6 +245,9 @@ Route::prefix('/v1')->group(function () {
         // CurrencyFX Recent Bids
         Route::get('/getrecentbids', ['uses' => 'CurrencyFxController@getMyRecentBids', 'as' => 'currency fx my recent bids']);
 
+        // Get a particular bid 
+        Route::get('/getthisbids', ['uses' => 'CurrencyFxController@getThisParticularBids', 'as' => 'currency fx this particular bids']);
+
 
         // Create Orders
         Route::post('/createoffer', ['uses' => 'api\v1\MoneyTransferController@createNewOrder', 'as' => 'currency fx create orders']);
@@ -288,6 +295,9 @@ Route::prefix('/v1')->group(function () {
         // Convert Money to Send
 
         Route::post('/convertmoneytosend', ['uses' => 'CurrencyFxController@convertMoneyToTransfer', 'as' => 'currency fx convert money to transfer']);
+
+
+
 
 
         // Transfer money

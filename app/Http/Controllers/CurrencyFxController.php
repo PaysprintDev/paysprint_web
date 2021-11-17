@@ -355,6 +355,25 @@ class CurrencyFxController extends Controller
     }
 
 
+    public function marketViewMyBids(Request $req)
+    {
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == false) {
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+        }
+
+
+
+        return view('currencyexchange.marketplaceviewmybids');
+    }
+
+
     // Make Bid
     public function marketPlaceYourBid(Request $req, $orderId)
     {
@@ -729,7 +748,7 @@ class CurrencyFxController extends Controller
 
 
                                     $data = true;
-                                    $message = 'Submitted successfully';
+                                    $message = 'Bid successfully completed';
                                     $status = 200;
                                 } else {
                                     $data = [];
@@ -929,7 +948,7 @@ class CurrencyFxController extends Controller
 
                         // Send Response
                         $data = true;
-                        $message = 'Transaction successfull';
+                        $message = 'Transaction successfull. Funds transferred to your ' . strtoupper($getOrderItem->buy_currencyCode) . ' wallet account';
                         $status = 200;
                     } else {
                         $data = [];
@@ -1115,6 +1134,10 @@ class CurrencyFxController extends Controller
 
                 $toWallet = EscrowAccount::where('escrow_id', $req->toWallet)->where('user_id', $thisuser->id)->first();
 
+                $markuppercent = $this->markupPercentage();
+
+                $markValue = (1 + ($markuppercent[0]->percentage / 100));
+
                 if (isset($fromWallet)) {
 
                     if ($fromWallet->wallet_balance < $req->amount) {
@@ -1131,14 +1154,18 @@ class CurrencyFxController extends Controller
 
                     if ($toWallet->currencyCode == 'USD' || $toWallet->currencyCode == 'EUR' || $toWallet->currencyCode == 'GBP') {
                         //Convert Money
-                        $getconvertion = $this->getConversionRate($toWallet->currencyCode, $fromWallet->currencyCode);
+                        $getconvertion = $this->getOfficialConversionRate($toWallet->currencyCode, $fromWallet->currencyCode);
 
-                        $convInfo = $req->amount / $getconvertion;
+                        // Mark up here ...
+
+                        $convInfo = $markValue * ($req->amount / $getconvertion);
                     } else {
                         //Convert Money
                         $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
 
-                        $convInfo = $getconvertion * $req->amount;
+                        // Mark down here ...
+
+                        $convInfo = ($getconvertion * $req->amount) / $markValue;
                     }
 
 
@@ -1171,6 +1198,46 @@ class CurrencyFxController extends Controller
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
+    }
+
+
+    // Fetch currency
+    public function fetchCurrency()
+    {
+
+        // Get Markup
+        $markuppercent = $this->markupPercentage();
+
+        $markValue = (1 + ($markuppercent[0]->percentage / 100));
+
+        $access_key = '6173fa628b16d8ce1e0db5cfa25092ac';
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'http://api.currencylayer.com/live?access_key=' . $access_key,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'Cookie: __cfduid=d430682460804be329186d07b6e90ef2f1616160177'
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        $result = json_decode($response);
+
+        // dd(response()->json($result->quotes));
+
+
+        return response()->json($result->quotes);
     }
 
     // Transfer your fx fund
@@ -1209,11 +1276,33 @@ class CurrencyFxController extends Controller
                             return $this->returnJSON($resData, $status);
                         }
 
+                        $markuppercent = $this->markupPercentage();
+
+                        $markValue = (1 + ($markuppercent[0]->percentage / 100));
+
+
+                        if ($toWallet->currencyCode == 'USD' || $toWallet->currencyCode == 'EUR' || $toWallet->currencyCode == 'GBP') {
+                            //Convert Money
+                            $getconvertion = $this->getOfficialConversionRate($toWallet->currencyCode, $fromWallet->currencyCode);
+
+                            // Mark up here ...
+
+                            $convamount = $markValue * ($req->amount / $getconvertion);
+                        } else {
+                            //Convert Money
+                            $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
+
+                            // Mark down here ...
+
+                            $convamount = ($getconvertion * $req->amount) / $markValue;
+                        }
+
+
 
                         //Convert Money
-                        $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
+                        // $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
 
-                        $convamount = $getconvertion * $req->amount;
+                        // $convamount = $getconvertion * $req->amount;
 
                         // Update Wallet Statements
                         $fromwalletBalance = $fromWallet->wallet_balance - $req->amount;
@@ -1631,6 +1720,8 @@ class CurrencyFxController extends Controller
     }
 
 
+
+
     public function getMyRecentBids(Request $req)
     {
         try {
@@ -1641,13 +1732,16 @@ class CurrencyFxController extends Controller
             if (isset($thisuser)) {
 
                 // Get Bids
-                $data = MakeBid::where('owner_id', $thisuser->id)->get();
+                $data = MakeBid::where('owner_id', $thisuser->id)->groupBy('order_id')->get();
 
                 foreach ($data as $value) {
                     $marketPlace = MarketPlace::where('order_id', $value->order_id)->first();
+                    $thisbids = MakeBid::where('owner_id', $thisuser->id)->where('order_id', $value->order_id)->count();
 
                     $value['sell_currencyCode'] = $marketPlace->sell_currencyCode;
                     $value['buy_currencyCode'] = $marketPlace->buy_currencyCode;
+                    $value['count'] = $thisbids;
+                    $value['buying'] = $marketPlace->buy;
 
                     $newData[] = $value;
                 }
@@ -1677,6 +1771,58 @@ class CurrencyFxController extends Controller
 
         return $this->returnJSON($resData, $status);
     }
+
+
+    public function getThisParticularBids(Request $req)
+    {
+        try {
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            $newData = [];
+
+            if (isset($thisuser)) {
+
+                // Get Bids
+                $data = MakeBid::where('owner_id', $thisuser->id)->where('order_id', $req->get('orderId'))->get();
+
+                foreach ($data as $value) {
+                    $marketPlace = MarketPlace::where('order_id', $value->order_id)->first();
+
+                    $value['sell_currencyCode'] = $marketPlace->sell_currencyCode;
+                    $value['buy_currencyCode'] = $marketPlace->buy_currencyCode;
+                    $value['buying'] = $marketPlace->buy;
+
+                    $newData[] = $value;
+                }
+
+
+                if (count($newData) > 0) {
+                    $data = $newData;
+                    $message = 'success';
+                    $status = 200;
+                } else {
+                    $data = [];
+                    $message = 'No record';
+                    $status = 200;
+                }
+            } else {
+                $data = [];
+                $message = 'Session expired. Please re-login';
+                $status = 201;
+            }
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 201;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+
 
 
     public function insFXStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $auto_deposit, $country = null, $confirmation)

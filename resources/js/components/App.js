@@ -14,6 +14,7 @@ import EWallet from './pages/EWallet';
 import Invoice from './pages/Invoice';
 import PaidInvoice from './constraints/PaidInvoice';
 import PendingInvoice from './constraints/PendingInvoice';
+import ViewMyBids from './constraints/ViewMyBids';
 
 function App() {
 	return (
@@ -32,6 +33,7 @@ function App() {
 				<Route path="/currencyfx/invoice" component={Invoice} />
 				<Route path="/currencyfx/paidinvoices" component={PaidInvoice} />
 				<Route path="/currencyfx/pendinginvoices" component={PendingInvoice} />
+				<Route path="/currencyfx/viewmybids" component={ViewMyBids} />
 			</Switch>
 		</Router>
 	);

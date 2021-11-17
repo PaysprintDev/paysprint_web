@@ -512,8 +512,8 @@
                 $('#fromCurrency').text(localfrom[1]);
 
                 var someCurr = $('#fx_wallet_to option:selected').text();
-                var localcode = someCurr.split("| Currency ");
-                $('#toCurrency').text(localcode[1]);
+                var localto = someCurr.split("| Currency ");
+                $('#toCurrency').text(localto[1]);
 
 
                 var today = new Date();
@@ -523,25 +523,30 @@
 
                 today = dd + '/' + mm + '/' + yyyy;
 
+                var route = "{{ URL('/api/v1/convertmoneytosend') }}";
+
                 var amount = $('#amount').val();
-                var localcurrency = localfrom[1];
-                var route = "{{ URL('Ajax/getfxconversion') }}";
-                var thisdata = {
-                    currency: localcode[1],
-                    amount: amount,
-                    localcurrency: localcurrency
-                };
+                const fromWallet = $('#fx_wallet_from').val();
+                const toWallet = $('#fx_wallet_to').val();
+
+                var formData = new FormData();
+
+                formData.append('fromWallet', fromWallet);
+                formData.append('toWallet', toWallet);
+                formData.append('amount', amount);
 
 
                 setHeaders();
                 jQuery.ajax({
                     url: route,
                     method: 'post',
-                    data: thisdata,
+                    // data: thisdata,
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
                     dataType: 'JSON',
                     success: function(result) {
-
-
 
                         if (amount == "") {
                             $('#typedAmount').text("0.0000");
@@ -553,24 +558,26 @@
 
 
 
-                        var todayRate = result.data / amount;
+                        var todayRate = result.data.convamount;
                         var newConv;
 
                         if (!todayRate) {
                             todayRate = 0;
-                            newConv = result.data;
+                            newConv = result.data.convamount;
 
                         } else {
                             todayRate = todayRate;
-                            newConv = amount / todayRate;
+                            newConv = todayRate;
                         }
+
+                        // console.log("New Conversion: " + newConv);
 
                         $('#convertedAmount').text((newConv).toFixed(4));
 
 
                         // Put Exchange rate
-                        $('#rateToday').html("<span class='text-danger'><strong>1" + localcode[1] + " = " +
-                            todayRate.toFixed(4) + '' + localcurrency + "</strong></span>");
+                        $('#rateToday').html("<span class='text-danger'><strong>1" + localfrom[1] + " = " +
+                            todayRate.toFixed(4) + '' + localto[1] + "</strong></span>");
 
 
                     }
