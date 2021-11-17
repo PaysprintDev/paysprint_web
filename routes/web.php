@@ -181,6 +181,7 @@ Route::prefix('currencyfx')->group(function () {
 	Route::get('pending', ['uses' => 'CurrencyFxController@marketPlacePendingTransaction', 'as' => 'paysprint currency market place pending']);
 	Route::get('myorders', ['uses' => 'CurrencyFxController@marketPlaceMyOrder', 'as' => 'paysprint currency market place myorders']);
 	Route::get('recentbids', ['uses' => 'CurrencyFxController@marketRecentBids', 'as' => 'paysprint currency market place recentbids']);
+	Route::get('viewmybids', ['uses' => 'CurrencyFxController@marketViewMyBids', 'as' => 'paysprint currency market place viewmybids']);
 
 
 	Route::get('makebid/{orderId}', ['uses' => 'CurrencyFxController@marketPlaceYourBid', 'as' => 'paysprint currency make bid']);
@@ -733,6 +734,9 @@ Route::post('exporttoPdf', ['uses' => 'HomeController@exportToPdf', 'as' => 'exp
 
 
 
+// Logout manually
+
+Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
 
 Auth::routes();

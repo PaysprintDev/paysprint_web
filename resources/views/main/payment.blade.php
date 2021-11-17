@@ -177,6 +177,10 @@
 
                                             @endif
 
+
+                                            {{-- Add FX Walllet Selection Here... --}}
+
+
                                             <div class="alert alert-warning">
                                                 <div class="row">
                                                     <div class="col-md-12">
@@ -350,6 +354,7 @@
 
                                                 </div>
                                             </div>
+
 
                                             @if ($data['getinvoice'][0]->installpay == 'Yes')
 
