@@ -180,8 +180,40 @@
 
                                             {{-- Add FX Walllet Selection Here... --}}
 
+                                            <div class="form-group"> <label for="make_select_wallet">
+                                                    <h6>Select Preferred Wallet</h6>
+                                                </label>
+                                                <div class="input-group">
+                                                    <select name="make_select_wallet" id="make_select_wallet"
+                                                        class="form-control" required>
+                                                        <option value="">Select wallet</option>
+                                                        <option value="Wallet">Wallet</option>
+                                                        <option value="FX Wallet">FX Wallet</option>
+                                                    </select>
 
-                                            <div class="alert alert-warning">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group walletList disp-0"> <label for="escrow_id">
+                                                    <h6>Choose Currency</h6>
+                                                </label>
+                                                <div class="input-group">
+                                                    <select name="escrow_id" id="escrow_id" class="form-control">
+                                                    </select>
+
+                                                </div>
+                                            </div>
+
+
+                                            {{-- End Add FX Wallet --}}
+
+
+                                            <div class="alert alert-warning fxuserWallet disp-0">
+
+                                            </div>
+
+
+                                            <div class="alert alert-warning userWallet disp-0">
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <h4>
@@ -195,6 +227,8 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+
 
 
                                         </div>
@@ -664,8 +698,107 @@
                 currencyConvert();
 
 
-            })
+            });
 
+            $("#make_select_wallet").change(function() {
+                if ($("#make_select_wallet").val() == "FX Wallet") {
+                    $('.fxuserWallet').removeClass('disp-0');
+                    $('.walletList').removeClass('disp-0');
+                    $('.userWallet').addClass('disp-0');
+                    // Do Ajax and Render Selected Wallet Balance
+
+                    var route = "{{ URL('/api/v1/fxwallets') }}";
+
+
+                    setHeaders();
+                    jQuery.ajax({
+                        url: route,
+                        method: 'get',
+                        dataType: 'JSON',
+                        beforeSend: function() {
+                            $('#escrow_id').html(`<option value="">Please wait...</option>`);
+                        },
+                        success: function(result) {
+                            $('#escrow_id').html(`<option value="">Select Currency</option>`);
+                            // Get Result and render value
+                            if (result.status == 200) {
+                                // Loop Value
+                                $.each(result.data, (v, k) => {
+                                    $('#escrow_id').append(
+                                        `<option value="${k.escrow_id}">Country: ${k.country} | Currency: ${k.currencyCode}</option>`
+                                    );
+
+                                });
+                            } else {
+                                $('#escrow_id').append(
+                                    `<option value="">${result.message}</option>`);
+                            }
+                        },
+                        error: function(error) {
+                            $('#escrow_id').html(``);
+                            $('#escrow_id').append(
+                                `<option value="">${error.responseJSON.message}</option>`);
+                        }
+
+                    });
+
+                } else {
+                    // Return Primary wallet Balance
+                    $('.userWallet').removeClass('disp-0');
+                    $('.walletList').addClass('disp-0');
+                    $('.fxuserWallet').addClass('disp-0');
+                }
+            });
+
+
+            $("#escrow_id").change(function() {
+
+                // Do Ajax and Render Selected Wallet Balance
+
+                var route = "{{ URL('/api/v1/getthisfxwallets') }}";
+
+                setHeaders();
+                jQuery.ajax({
+                    url: route,
+                    method: 'get',
+                    data: {
+                        escrow_id: $("#escrow_id").val()
+                    },
+                    dataType: 'JSON',
+                    beforeSend: function() {
+                        $('.fxuserWallet').html(
+                            `<div class="row"><div class="col-md-12"><h4>Please wait...</h4></div><div class="col-md-12"><h4>-</h4></div></div>`
+                        );
+                    },
+                    success: function(result) {
+
+                        $('.fxuserWallet').html(
+                            `<div class="row"><div class="col-md-12"><h4>Please wait...</h4></div><div class="col-md-12"><h4>-</h4></div></div>`
+                        );
+                        // Get Result and render value
+                        if (result.status == 200) {
+                            $('.fxuserWallet').html(
+                                `<div class="row"><div class="col-md-12"><h4>Wallet Balance</h4></div><div class="col-md-12"><h4>${result.data.currencySymbol+' '+parseFloat(result.data.wallet_balance).toFixed(4)}</h4></div></div>`
+                            );
+                        } else {
+                            $('.fxuserWallet').html(
+                                `<div class="row"><div class="col-md-12"><h4>Wallet Balance</h4></div><div class="col-md-12"><h4>${result.message}</h4></div></div>`
+                            );
+                        }
+                    },
+                    error: function(error) {
+                        $('#escrow_id').html(``);
+
+
+                        $('.fxuserWallet').html(
+                            `<div class="row"><div class="col-md-12"><h4></h4></div><div class="col-md-12"><h4>${error.responseJSON.message}</h4></div></div>`
+                        );
+                    }
+
+                });
+
+
+            });
 
 
 
@@ -770,11 +903,6 @@
 
 
 
-
-
-
-
-
             function handShake(val) {
 
                 var route;
@@ -800,7 +928,6 @@
                                 $('.sendmoneyBtn').text('Please wait...');
                             },
                             success: function(result) {
-                                console.log(result);
 
                                 $('.sendmoneyBtn').text('Pay Invoice');
 
