@@ -862,6 +862,7 @@ Route::group(['prefix' => 'Ajax'], function () {
 
 	Route::post('getconversion', ['uses' => 'CurrencyConverterApiController@currencyConverter', 'as' => 'getconversion']);
 	Route::post('getfxconversion', ['uses' => 'CurrencyConverterApiController@currencyFxConverter', 'as' => 'getfxconversion']);
+	Route::post('getmyfxwallet', ['uses' => 'CurrencyFxController@getMyFxWallet', 'as' => 'getmyfxwallet']);
 });
 
 

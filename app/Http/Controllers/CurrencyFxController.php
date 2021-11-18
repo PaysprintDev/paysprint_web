@@ -550,6 +550,34 @@ class CurrencyFxController extends Controller
         return $this->returnJSON($resData, $status);
     }
 
+
+    public function getThisFxWallets(Request $req)
+    {
+        try {
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            $getmywallet = EscrowAccount::where('user_id', $thisuser->id)->where('escrow_id', $req->escrow_id)->first();
+
+            if (isset($getmywallet)) {
+                $data = $getmywallet;
+                $message = 'success';
+                $status = 200;
+            } else {
+                $data = [];
+                $message = 'No record';
+                $status = 201;
+            }
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
     // Create New Wallet
     public function createNewWallet(Request $req)
     {
