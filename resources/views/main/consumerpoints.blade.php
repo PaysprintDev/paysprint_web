@@ -82,17 +82,37 @@
 
                                 <!-- Credit card form tabs -->
                                 <ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
-                                    <li class="nav-item"> <a data-toggle="pill" href="{{ route('home') }}"
-                                            class="nav-link active "> <i class="fas fa-home"></i> Go Back </a> </li>
-                                    {{-- <li class="nav-item"> <a data-toggle="pill" href="#paypal" class="nav-link "> <i class="fab fa-paypal mr-2"></i> Debit Card </a> </li>
-                                <li class="nav-item"> <a data-toggle="pill" href="#net-banking" class="nav-link "> <i class="fas fa-mobile-alt mr-2"></i> EXBC Card </a> </li> --}}
-                                </ul>
+                                    @if (Auth::user()->accountType == 'Merchant')
+                                        <li class="nav-item"> <a data-toggle="pill" href="{{ route('Admin') }}"
+                                                class="nav-link active "> <i class="fas fa-home"></i> Go Back </a>
+                                        </li>
 
-                                <h5 align='right' class="text-success">Total Points:
-                                    {{ $data['getallpoint']->add_money + $data['getallpoint']->send_money + $data['getallpoint']->receive_money + $data['getallpoint']->pay_invoice + $data['getallpoint']->pay_bills + $data['getallpoint']->create_and_send_invoice + $data['getallpoint']->active_rental_property + $data['getallpoint']->approved_customers + $data['getallpoint']->approved_merchants + $data['getallpoint']->promote_business + $data['getallpoint']->activate_ordering_system + $data['getallpoint']->identify_verification + $data['getallpoint']->activate_rpm + $data['getallpoint']->activate_currency_exchange + $data['getallpoint']->activate_cash_advance + $data['getallpoint']->activate_crypto_currency_account }}
-                                </h5>
+                                    @else
+                                        <li class="nav-item"> <a data-toggle="pill" href="{{ route('home') }}"
+                                                class="nav-link active "> <i class="fas fa-home"></i> Go Back </a>
+                                        </li>
+
+                                    @endif
+
+
+                                </ul>
                                 <h5 align='right' class="text-success">Point Balance
                                     {{ isset($data['mypoints']) ? $data['mypoints']->points_acquired : 0 }}</h5>
+                                <h5 align='right' class="text-success">Claimed Point:
+                                    {{ isset($data['mypoints']) ? $data['mypoints']->current_point : 0 }}</h5>
+                                <h5 align='right' class="text-success">Total Points:
+                                    <?php
+                                    
+                                    $first_number = $data['mypoints']->points_acquired;
+                                    $second_number = $data['mypoints']->current_point;
+                                    
+                                    $sum_total = $second_number + $first_number;
+                                    
+                                    print $sum_total;
+                                    
+                                    ?></td>
+                                </h5>
+
                             </div> <!-- End -->
                             <!-- Credit card form content -->
                             <div class="tab-content">
@@ -417,7 +437,6 @@
                                                     </td>
                                                 </tr>
 
-
                                             </tbody>
 
                                             </tbody>
@@ -429,18 +448,29 @@
 
 
 
-                                    <form action="{{ route('claim point') }}" method="POST"
-                                        enctype="multipart/form-data">
-                                        @csrf
-                                        <div class="col-md-12">
-                                            {{-- <button href="#">Claim Points</button> --}}
 
-                                            <button type="submit" class="btn btn-primary btn-block">Claim
-                                                Points</button>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            {{-- <button href="#">Claim Points</button> --}}
+                                            <form action="{{ route('claim point') }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="btn btn-primary btn-block">Claim
+                                                    Points</button>
+
+                                            </form>
+                                        </div>
+                                        <div class="col-md-6">
+
+
+                                            <a href="{{ route('claim history') }}"
+                                                class="btn btn-success btn-block">View
+                                                Claim
+                                                History</a>
 
 
                                         </div>
-                                    </form>
+                                    </div>
+
 
                                 </div> <!-- End -->
 

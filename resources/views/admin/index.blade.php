@@ -106,7 +106,7 @@
 
 
 
-                    <div class="col-lg-6 col-xs-6 walletBal">
+                    <div class="col-lg-4 col-xs-6 walletBal">
                         <!-- small box -->
                         <div class="small-box bg-warning">
                             <div class="inner">
@@ -122,9 +122,34 @@
                         </div>
                     </div>
                     <!-- ./col -->
+                    <div class="col-lg-4 col-xs-6 walletBal">
+                        <!-- small box -->
+                        <div class="small-box bg-success">
 
+                            <div class="inner">
+                                <h3>{{ isset($data['mypoints']) ? $data['mypoints']->points_acquired : 0 }}
+                                </h3>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 inner">
+                                    <p>Total Points</p>
+
+                                </div>
+
+                                <div class="col-md-6">
+                                    <a type="button" href="{{ route('consumer points') }}">
+                                        View Earned Points
+                                    </a>
+                                </div>
+                                {{-- <div class="col-md-4 icon">
+                                    <i class="ion ion-pricetag"></i>
+                                </div> --}}
+                            </div>
+                            {{-- <a href="#" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a> --}}
+                        </div>
+                    </div>
                     <!-- ./col -->
-                    <div class="col-lg-6 col-xs-6 walletWithdrawal">
+                    <div class="col-lg-4 col-xs-6 walletWithdrawal">
                         <!-- small box -->
                         <div class="small-box bg-info">
                             <div class="inner">
