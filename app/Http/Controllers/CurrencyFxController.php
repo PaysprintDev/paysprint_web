@@ -1463,9 +1463,9 @@ class CurrencyFxController extends Controller
     public function fundFXWallet(Request $req)
     {
 
-
         try {
             $thisuser = User::where('api_token', $req->bearerToken())->first();
+
 
             // Check if amount is not negative
             if ($req->fx_amount < 0) {
@@ -1477,81 +1477,233 @@ class CurrencyFxController extends Controller
                 $myaccount = EscrowAccount::where('escrow_id', $req->fx_wallet)->first();
 
 
+                /*
+                        1. Check FX wallet account currency type
+                        2. If same with primary wallet currency, check (wallet balance - minimum balance) > amount to add, then proceed to debit wallet and credit fx wallet
+                        3. If foreign currency, convert the amount in official rate, then deduct from the (wallet balance - minimum balance) > amount conversion, then proceed to debit wallet and credit fx wallet
+                        4. Send success of failed
+                        5. Send notification.
+                    */
 
-                if (isset($myaccount)) {
-
-                    $transaction_id = "es-wallet-" . date('dmY') . time();
-
-                    $activity = "Added " . $myaccount->currencyCode . '' . number_format($req->fx_amount, 2) . " to FX Wallet.";
-                    $credit = $req->fx_amount;
-                    $debit = 0;
-                    $reference_code = $transaction_id;
-                    $balance = 0;
-                    $trans_date = date('Y-m-d');
-                    $status = "Delivered";
-                    $action = "Escrow Wallet credit";
-                    $regards = $thisuser->ref_code;
-                    $statement_route = "escrow wallet";
+                if ($req->fx_payment_method == "PaySprint Wallet") {
 
 
-                    if ($req->fx_payment_method == "Wire Transfer") {
-
-                        $this->insFXStatement($req->fx_wallet, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $myaccount->country, 'pending');
-
-                        $sendMsg = "Hi " . $thisuser->name . ", You have " . $activity . " Your transaction status is PENDING. Your current fx wallet balance is " . $myaccount->currencyCode . ' ' . number_format($myaccount->wallet_balance, 2) . ".";
+                    if ($thisuser->accountType == "Individual") {
+                        $subminType = "Consumer Minimum Withdrawal";
                     } else {
-
-                        $newBalance = $myaccount->wallet_balance + $req->fx_amount;
-
-                        EscrowAccount::where('escrow_id', $req->fx_wallet)->update(['wallet_balance' => $newBalance]);
-
-                        $myBalance = EscrowAccount::where('escrow_id', $req->fx_wallet)->first();
-
-                        $this->insFXStatement($req->fx_wallet, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $thisuser->country, 'confirmed');
-
-                        $sendMsg = "Hi " . $thisuser->name . ", You have " . $activity . " Your current fx wallet balance is " . $myaccount->currencyCode . ' ' . number_format($myBalance, 2) . ".";
-
-                        $usergetPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                        if (isset($usergetPhone)) {
-
-                            $sendPhone = $thisuser->telephone;
-                        } else {
-                            $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                        }
-
-                        if ($thisuser->country == "Nigeria") {
-
-                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                            $this->sendSms($sendMsg, $correctPhone);
-                        } else {
-                            $this->sendMessage($sendMsg, $sendPhone);
-                        }
+                        $subminType = "Merchant Minimum Withdrawal";
                     }
 
 
-                    $this->createNotification($thisuser->ref_code, $sendMsg);
+                    $minBal = $this->maintenanceBalanceWithdrawal($subminType, $thisuser->country);
 
-                    // Insert Money Payment
-                    $queryRec = [
-                        'user_id' => $thisuser->id, 'escrow_id' => $req->fx_wallet, 'amount' => $req->fx_amount, 'currencyCode' => $myaccount->currencyCode, 'currencySymbol' => $myaccount->currencySymbol, 'reference_number' => $transaction_id, 'payment_method' => $req->fx_payment_method, 'bank_name' => $req->fx_payment_bank_name, 'account_number'  => $req->fx_account_number, 'account_name'  => $req->fx_account_name
-                    ];
-                    FxPayment::insert($queryRec);
 
-                    // Log Activities here
-                    $this->createNotification($thisuser->ref_code, $sendMsg);
+                    if ($thisuser->currencyCode == $myaccount->currencyCode) {
 
-                    $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                        $walletBal = $thisuser->wallet_balance - $minBal;
 
-                    $getAccount = EscrowAccount::where('escrow_id', $req->fx_wallet)->first();
+                        if ($walletBal < $req->fx_amount) {
+                            $data = [];
+                            $message = "Insufficient wallet balance";
+                            $status = 400;
+                        } else {
 
-                    $data = $getAccount;
-                    $message = "Success | Your wallet will be updated within 24hrs";
-                    $status = 200;
+                            $amount = $walletBal - $req->fx_amount;
+
+                            User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $amount]);
+
+                            $transaction_id = "es-wallet-" . date('dmY') . time();
+
+                            $activity = "Added " . $myaccount->currencyCode . '' . number_format($req->fx_amount, 2) . " from PaySprint wallet to your FX Wallet.";
+                            $credit = $req->fx_amount;
+                            $debit = 0;
+                            $reference_code = $transaction_id;
+                            $balance = 0;
+                            $trans_date = date('Y-m-d');
+                            $status = "Delivered";
+                            $action = "Escrow Wallet credit";
+                            $regards = $thisuser->ref_code;
+                            $statement_route = "escrow wallet";
+
+                            $fxBalance = $myaccount->wallet_balance + $req->fx_amount;
+
+                            EscrowAccount::where('escrow_id', $req->fx_wallet)->update(['wallet_balance' => $fxBalance]);
+
+                            $this->insFXStatement($req->fx_wallet, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $myaccount->country, 'confirmed');
+
+                            $sendMsg = "Hi " . $thisuser->name . ", You have " . $activity . " Your current fx wallet balance is " . $myaccount->currencyCode . ' ' . number_format($fxBalance, 2) . ".";
+
+                            $usergetPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                            if (isset($usergetPhone)) {
+
+                                $sendPhone = $thisuser->telephone;
+                            } else {
+                                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                            }
+
+                            if ($thisuser->country == "Nigeria") {
+
+                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                $this->sendSms($sendMsg, $correctPhone);
+                            } else {
+                                $this->sendMessage($sendMsg, $sendPhone);
+                            }
+
+                            // Log Activities here
+                            $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                            $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                            $getAccount = EscrowAccount::where('escrow_id', $req->fx_wallet)->first();
+
+                            $data = $getAccount;
+                            $message = "Success | Your " . $myaccount->currencyCode . " wallet was successfully credited";
+                            $status = 200;
+                        }
+                    } else {
+                        // Do conversion...
+                        $getRate = $this->getOfficialConversionRate($myaccount->currencyCode, $thisuser->currencyCode);
+
+                        $fxAmount = $getRate * $req->fx_amount;
+
+                        $walletBal = $thisuser->wallet_balance - $minBal;
+
+
+                        if ($walletBal < $fxAmount) {
+                            $data = [];
+                            $message = "Insufficient wallet balance";
+                            $status = 400;
+                        } else {
+
+                            $amount = $walletBal - $fxAmount;
+
+                            User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $amount]);
+
+                            $transaction_id = "es-wallet-" . date('dmY') . time();
+
+                            $activity = "Added " . $myaccount->currencyCode . '' . number_format($req->fx_amount, 2) . " from PaySprint wallet to your FX Wallet.";
+                            $credit = $req->fx_amount;
+                            $debit = 0;
+                            $reference_code = $transaction_id;
+                            $balance = 0;
+                            $trans_date = date('Y-m-d');
+                            $status = "Delivered";
+                            $action = "Escrow Wallet credit";
+                            $regards = $thisuser->ref_code;
+                            $statement_route = "escrow wallet";
+
+                            $fxBalance = $myaccount->wallet_balance + $req->fx_amount;
+
+                            EscrowAccount::where('escrow_id', $req->fx_wallet)->update(['wallet_balance' => $fxBalance]);
+
+                            $this->insFXStatement($req->fx_wallet, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $myaccount->country, 'confirmed');
+
+                            $sendMsg = "Hi " . $thisuser->name . ", You have " . $activity . " Your current fx wallet balance is " . $myaccount->currencyCode . ' ' . number_format($fxBalance, 2) . ".";
+
+                            $usergetPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                            if (isset($usergetPhone)) {
+
+                                $sendPhone = $thisuser->telephone;
+                            } else {
+                                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                            }
+
+                            if ($thisuser->country == "Nigeria") {
+
+                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                $this->sendSms($sendMsg, $correctPhone);
+                            } else {
+                                $this->sendMessage($sendMsg, $sendPhone);
+                            }
+
+                            // Log Activities here
+                            $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                            $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                            $getAccount = EscrowAccount::where('escrow_id', $req->fx_wallet)->first();
+
+                            $data = $getAccount;
+                            $message = "Success | Your " . $myaccount->currencyCode . " wallet was successfully credited";
+                            $status = 200;
+                        }
+                    }
                 } else {
-                    $data = [];
-                    $message = "Wallet not found!";
-                    $status = 400;
+                    if (isset($myaccount)) {
+
+                        $transaction_id = "es-wallet-" . date('dmY') . time();
+
+                        $activity = "Added " . $myaccount->currencyCode . '' . number_format($req->fx_amount, 2) . " to FX Wallet.";
+                        $credit = $req->fx_amount;
+                        $debit = 0;
+                        $reference_code = $transaction_id;
+                        $balance = 0;
+                        $trans_date = date('Y-m-d');
+                        $status = "Delivered";
+                        $action = "Escrow Wallet credit";
+                        $regards = $thisuser->ref_code;
+                        $statement_route = "escrow wallet";
+
+
+                        if ($req->fx_payment_method == "Wire Transfer") {
+
+                            $this->insFXStatement($req->fx_wallet, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $myaccount->country, 'pending');
+
+                            $sendMsg = "Hi " . $thisuser->name . ", You have " . $activity . " Your transaction status is PENDING. Your current fx wallet balance is " . $myaccount->currencyCode . ' ' . number_format($myaccount->wallet_balance, 2) . ".";
+                        } else {
+
+                            $newBalance = $myaccount->wallet_balance + $req->fx_amount;
+
+                            EscrowAccount::where('escrow_id', $req->fx_wallet)->update(['wallet_balance' => $newBalance]);
+
+                            $myBalance = EscrowAccount::where('escrow_id', $req->fx_wallet)->first();
+
+                            $this->insFXStatement($req->fx_wallet, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $thisuser->country, 'confirmed');
+
+                            $sendMsg = "Hi " . $thisuser->name . ", You have " . $activity . " Your current fx wallet balance is " . $myaccount->currencyCode . ' ' . number_format($myBalance, 2) . ".";
+
+                            $usergetPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                            if (isset($usergetPhone)) {
+
+                                $sendPhone = $thisuser->telephone;
+                            } else {
+                                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                            }
+
+                            if ($thisuser->country == "Nigeria") {
+
+                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                $this->sendSms($sendMsg, $correctPhone);
+                            } else {
+                                $this->sendMessage($sendMsg, $sendPhone);
+                            }
+                        }
+
+
+                        // Insert Money Payment
+                        $queryRec = [
+                            'user_id' => $thisuser->id, 'escrow_id' => $req->fx_wallet, 'amount' => $req->fx_amount, 'currencyCode' => $myaccount->currencyCode, 'currencySymbol' => $myaccount->currencySymbol, 'reference_number' => $transaction_id, 'payment_method' => $req->fx_payment_method, 'bank_name' => $req->fx_payment_bank_name, 'account_number'  => $req->fx_account_number, 'account_name'  => $req->fx_account_name
+                        ];
+                        FxPayment::insert($queryRec);
+
+                        // Log Activities here
+                        $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                        $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                        $getAccount = EscrowAccount::where('escrow_id', $req->fx_wallet)->first();
+
+                        $data = $getAccount;
+                        $message = "Success | Your wallet will be updated within 24hrs";
+                        $status = 200;
+                    } else {
+                        $data = [];
+                        $message = "Wallet not found!";
+                        $status = 400;
+                    }
                 }
             }
         } catch (\Throwable $th) {
@@ -1561,6 +1713,7 @@ class CurrencyFxController extends Controller
         }
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
 
         return $this->returnJSON($resData, $status);
     }
