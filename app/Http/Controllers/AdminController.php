@@ -73,6 +73,9 @@ use App\Tax as Tax;
 use App\AllCountries as AllCountries;
 use App\EscrowAccount;
 use App\FxStatement;
+use App\Points;
+use App\ClaimedPoints;
+use App\HistoryReport;
 use App\InAppMessage as InAppMessage;
 
 use App\ImportExcelLink as ImportExcelLink;
@@ -106,6 +109,10 @@ use App\Traits\MailChimpNewsLetter;
 
 use App\Traits\PaysprintPoint;
 
+
+
+use App\Traits\PointsHistory;
+
 use App\Traits\PointsClaim;
 
 use App\Traits\MyFX;
@@ -137,7 +144,7 @@ class AdminController extends Controller
     public $infomessage;
     public $customer_id;
 
-    use Trulioo, AccountNotify, SpecialInfo, PaystackPayment, FlagPayment, PaymentGateway, Xwireless, MailChimpNewsLetter, PaysprintPoint, PointsClaim, MyFX;
+    use Trulioo, AccountNotify, SpecialInfo, PaystackPayment, FlagPayment, PaymentGateway, Xwireless, MailChimpNewsLetter, PaysprintPoint, PointsClaim, PointsHistory,  MyFX;
 
 
 
@@ -218,7 +225,8 @@ class AdminController extends Controller
                 'getTax' => $this->getTax(session('myID')),
                 'listbank' => $this->getBankList(),
                 'escrowfund' => $this->getEscrowFunding(),
-                'pointsclaim' => $this->getClaimedPoints()
+                'pointsclaim' => $this->getClaimedPoints(),
+                'mypoints' => $this->getAcquiredPoints(session('myID'))
             );
 
 
@@ -4961,6 +4969,133 @@ class AdminController extends Controller
         } else {
             return redirect()->route('AdminLogin');
         }
+    }
+
+    public function claimedPointsAdmin(Request $req)
+    {
+
+
+        if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+            $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+            $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+            $payInvoice = DB::table('client_info')
+                ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                ->orderBy('invoice_payment.created_at', 'DESC')
+                ->get();
+
+            $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+        } else {
+            $adminUser = Admin::where('username', session('username'))->get();
+            $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+            $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+            $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+        }
+
+        // Get Bill
+        $getPoint = Points::where('user_id', session('myID'))->first();
+
+
+
+        if (isset($getPoint)) {
+
+            $max = 7000;
+
+            $totPointLeft = $getPoint->points_acquired - $max;
+
+            $pointtoget = $max - $getPoint->points_acquired;
+
+            // Process claims and update user
+
+            if ($getPoint->points_acquired >= $max) {
+
+
+
+                // This is when you can claim points...
+                Points::where('user_id', session('myID'))->update(['add_money' => 0, 'send_money' => 0, 'receive_money' => 0, 'pay_invoice' => 0, 'pay_bills' => 0, 'create_and_send_invoice' => 0, 'active_rental_property' => 0, 'quick_set_up' => 0, 'identity_verification' => 0, 'business_verification' => 0, 'promote_business' => 0, 'activate_ordering_system' => 0, 'identify_verification' => 0, 'activate_rpm' => 0, 'activate_currency_exchange' => 0, 'activate_cash_advance' => 0, 'activate_crypto_currency_account' => 0, 'approved_customers' => 0, 'approved_merchants' => 0, 'points_acquired' => $totPointLeft, 'current_point' => $getPoint->points_acquired]);
+
+
+
+                ClaimedPoints::updateOrCreate(['user_id' => session('myID')], [
+                    'user_id' => session('myID'),
+                    'points_acquired' => $getPoint->points_acquired,
+                    'points_left' => $totPointLeft,
+                    'status' => 'pending'
+                ]);
+
+                HistoryReport::insert([
+                    'user_id' => session('myID'),
+                    'points' => $getPoint->points_acquired,
+                    'point_activity' => "You have claimed " . $getPoint->points_acquired . " points today " . date('d/m/y')
+
+                ]);
+
+                $resData = 'Your points claimed has been submitted successfully. The reward will be processed within the next 24hrs';
+                $resp = "success";
+            } else {
+
+                $resData = 'You need to have ' . $pointtoget . ' to be able to claim reward';
+                $resp = "error";
+            }
+        } else {
+
+            $resData = 'You do not have any acquired points';
+            $resp = "error";
+        }
+
+
+
+
+        return redirect()->back()->with($resp, $resData);
+    }
+
+    public function claimedHistoryAdmin(Request $req)
+    {
+
+        if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+            $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+            $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+            $payInvoice = DB::table('client_info')
+                ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                ->orderBy('invoice_payment.created_at', 'DESC')
+                ->get();
+
+            $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+        } else {
+            $adminUser = Admin::where('username', session('username'))->get();
+            $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+            $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+            $otherPays = DB::table('organization_pay')
+                ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                ->where('organization_pay.coy_id', session('user_id'))
+                ->orderBy('organization_pay.created_at', 'DESC')
+                ->get();
+        }
+
+        // Get Bill
+        $getPoint = Points::where('user_id', session('myID'))->first();
+
+
+
+        $data = array(
+            'gethistory' => $getPoint->points_acquired,
+            'mypoints' => $this->getAcquiredPoints(session('myID')),
+            'pointsclaim' => $this->getClaimedHistory(session('myID')),
+
+        );
+
+
+
+        return view('main.claimpointhistoryadmin')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email,  'data' => $data]);
     }
 
 

@@ -541,6 +541,7 @@ Route::get('api/documentation', ['uses' => 'AdminController@apiDocumentation', '
 Route::get('earnedpoints', ['uses' => 'AdminController@earnedPoints', 'as' => 'earned points']);
 
 
+Route::get('paysprintpointspage', ['uses' => 'HomeController@consumerPoints', 'as' => 'consumer points']);
 
 
 Route::prefix('Admin/')->group(function () {
@@ -588,7 +589,13 @@ Route::prefix('Admin/')->group(function () {
 
 	Route::post('claimpoints', ['uses' => 'HomeController@claimedPoints', 'as' => 'claim point']);
 
-	Route::get('consumerpoints', ['uses' => 'HomeController@consumerPoints', 'as' => 'consumer points']);
+	Route::post('claimpointsadmin', ['uses' => 'AdminController@claimedPointsAdmin', 'as' => 'claim point admin']);
+
+	Route::get('claimpointhistory', ['uses' => 'HomeController@claimedHistory', 'as' => 'claim history']);
+
+	Route::get('claimpointhistoryadmin', ['uses' => 'HomeController@claimedHistoryAdmin', 'as' => 'claim history admin']);
+
+
 
 	// KYB List
 
