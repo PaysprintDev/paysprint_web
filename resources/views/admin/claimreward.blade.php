@@ -15,7 +15,7 @@
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li class="active">Withdrawal to Bank Account</li>
+                <li class="active">Claim Reward</li>
             </ol>
         </section>
 

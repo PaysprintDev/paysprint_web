@@ -83,7 +83,12 @@ use App\Points;
 
 use App\ClaimedPoints;
 
+use App\HistoryReport;
+
 use App\Traits\PaysprintPoint;
+
+use App\Traits\PointsHistory;
+
 
 use App\Traits\RpmApp;
 
@@ -121,7 +126,7 @@ class HomeController extends Controller
     public $country;
     public $timezone;
 
-    use RpmApp, Trulioo, AccountNotify, PaystackPayment, ExpressPayment, SpecialInfo, Xwireless, PaymentGateway, MailChimpNewsLetter, PaysprintPoint;
+    use RpmApp, Trulioo, AccountNotify, PaystackPayment, ExpressPayment, SpecialInfo, Xwireless, PaymentGateway, MailChimpNewsLetter, PaysprintPoint, PointsHistory;
     /**
      * Create a new controller instance.
      *
@@ -169,7 +174,8 @@ class HomeController extends Controller
                 'getmerchantsByCategory' => $this->getMerchantsByCategory(),
                 'specialInfo' => $this->getthisInfo(Auth::user()->country),
                 'continent' => $this->timezone[0],
-                'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+                'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+                'pointsclaim' => $this->getClaimedHistory(Auth::user()->id),
             );
 
             $view = 'home';
@@ -220,7 +226,7 @@ class HomeController extends Controller
                 'specialInfo' => $this->getthisInfo(Auth::user()->country),
                 'continent' => $this->timezone[0],
                 'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
-
+                'pointsclaim' => $this->getClaimedHistory(Auth::user()->user_id),
             );
 
             $view = 'home';
@@ -263,7 +269,7 @@ class HomeController extends Controller
                 'specialInfo' => $this->getthisInfo(Auth::user()->country),
                 'continent' => $this->timezone[0],
                 'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
-
+                'pointsclaim' => $this->getClaimedHistory(Auth::user()->user_id),
 
             );
         } else {
@@ -1667,6 +1673,13 @@ class HomeController extends Controller
 
         return $data;
     }
+
+    // public function getClaimedHistory($user_id)
+    // {
+    //     $data = HistoryReport::where('user_id', $user_id)->get();
+
+    //     return $data;
+    // }
 
 
     public function getthisLinkInvoice($invoice, $country)
@@ -3947,7 +3960,14 @@ class HomeController extends Controller
 
         if (isset($getPoint)) {
 
-            $max = 5000;
+            if (Auth::user()->accountType == "Merchant") {
+
+                $max = 7000;
+            } else {
+
+                $max = 5000;
+            }
+
 
             $totPointLeft = $getPoint->points_acquired - $max;
 
@@ -3960,7 +3980,9 @@ class HomeController extends Controller
 
 
                 // This is when you can claim points...
-                Points::where('user_id', Auth::user()->id)->update(['add_money' => 0, 'send_money' => 0, 'receive_money' => 0, 'pay_invoice' => 0, 'pay_bills' => 0, 'create_and_send_invoice' => 0, 'active_rental_property' => 0, 'quick_set_up' => 0, 'identity_verification' => 0, 'business_verification' => 0, 'promote_business' => 0, 'activate_ordering_system' => 0, 'identify_verification' => 0, 'activate_rpm' => 0, 'activate_currency_exchange' => 0, 'activate_cash_advance' => 0, 'activate_crypto_currency_account' => 0, 'approved_customers' => 0, 'approved_merchants' => 0, 'points_acquired' => $totPointLeft]);
+                Points::where('user_id', Auth::user()->id)->update(['add_money' => 0, 'send_money' => 0, 'receive_money' => 0, 'pay_invoice' => 0, 'pay_bills' => 0, 'create_and_send_invoice' => 0, 'active_rental_property' => 0, 'quick_set_up' => 0, 'identity_verification' => 0, 'business_verification' => 0, 'promote_business' => 0, 'activate_ordering_system' => 0, 'identify_verification' => 0, 'activate_rpm' => 0, 'activate_currency_exchange' => 0, 'activate_cash_advance' => 0, 'activate_crypto_currency_account' => 0, 'approved_customers' => 0, 'approved_merchants' => 0, 'points_acquired' => $totPointLeft, 'current_point' => $getPoint->points_acquired]);
+
+
 
                 ClaimedPoints::updateOrCreate(['user_id' => Auth::user()->id], [
                     'user_id' => Auth::user()->id,
@@ -3969,7 +3991,14 @@ class HomeController extends Controller
                     'status' => 'pending'
                 ]);
 
-                $resData = 'Points are claimed and reward will be processed within 24hrs';
+                HistoryReport::insert([
+                    'user_id' => Auth::user()->id,
+                    'points' => $getPoint->points_acquired,
+                    'point_activity' => "You have claimed " . $getPoint->points_acquired . " points today " . date('d/m/y')
+
+                ]);
+
+                $resData = 'Your points claimed has been submitted successfully. The reward will be processed within the next 24hrs';
                 $resp = "success";
             } else {
 
@@ -3986,6 +4015,46 @@ class HomeController extends Controller
 
 
         return redirect()->back()->with($resp, $resData);
+    }
+
+    public function claimedHistory(Request $req)
+    {
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Claim History';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            } else {
+
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+
+            $this->page = 'Claim History';
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+        }
+
+        // Get Bill
+        $getPoint = Points::where('user_id', Auth::user()->id)->first();
+
+
+
+        $data = array(
+            'gethistory' => $getPoint->points_acquired,
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'pointsclaim' => $this->getClaimedHistory(Auth::user()->id),
+
+        );
+
+
+
+        return view('main.claimpointhistory')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email,  'data' => $data]);
     }
 
     public function consumerPoints(Request $req)

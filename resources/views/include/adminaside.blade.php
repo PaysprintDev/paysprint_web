@@ -694,12 +694,8 @@
                  @if ($pages == 'My Dashboard')
                      <li class="quicksetup">
 
-                         <div class="card" style="width: 100%;">
-                             {{-- <div class="card-header"
-                        style="background-color:#00fd77; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
-                        Earned Points
-
-                    </div> --}}
+                         {{-- <div class="card" style="width: 100%;">
+                             
                              <ul class="list-group list-group-flush">
 
                                  <li class="list-group-item" title="total points">
@@ -725,11 +721,11 @@
                                      <br>
 
                                      <div class="row">
-                                         <form action="{{ route('claim point') }}" method="POST"
+                                         <form action="{{ route('claim point admin') }}" method="POST"
                                              enctype="multipart/form-data">
                                              @csrf
                                              <div class="col-md-12">
-                                                 {{-- <button href="#">Claim Points</button> --}}
+                                                 
 
                                                  <button type="submit" class="btn btn-default btn-block">Claim
                                                      Points</button>
@@ -742,7 +738,7 @@
                                  </li>
 
                              </ul>
-                         </div>
+                         </div> --}}
 
                          <div class="card propertyManagement" style="width: 100%;">
                              <div class="card-header"
