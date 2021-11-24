@@ -15,6 +15,7 @@ use App\FxStatement;
 use App\ImportExcel;
 use App\InvoiceCommission;
 use App\MakeBid;
+use App\Statement;
 use App\Traits\Xwireless;
 use App\Traits\MyFX;
 use Illuminate\Support\Facades\Hash;
@@ -727,8 +728,9 @@ class CurrencyFxController extends Controller
 
                                     // Debit User Account of the Offer Amount
                                     $walletBal = $mywalletCheck->wallet_balance - $req->offer_amount;
+                                    $escrowBal = $mywalletCheck->escrow_balance + $req->offer_amount;
 
-                                    EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $market->buy_currencyCode)->update(['wallet_balance' => $walletBal]);
+                                    EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $market->buy_currencyCode)->update(['wallet_balance' => $walletBal, 'escrow_balance' => $escrowBal]);
 
 
 
@@ -838,10 +840,11 @@ class CurrencyFxController extends Controller
 
                         $mywalletBalance = $myaccount->wallet_balance + $biddingInfo->offer_amount;
                         $buyerwalletBalance = $buyeraccount->wallet_balance + $biddingInfo->bid_amount;
+                        $buyerescrowBalance = $buyeraccount->escrow_balance - $biddingInfo->bid_amount;
 
                         // Update Wallet Balance
                         EscrowAccount::where('user_id', $req->owner_id)->where('currencyCode', $getOrderItem->buy_currencyCode)->update(['wallet_balance' => $mywalletBalance]);
-                        EscrowAccount::where('user_id', $req->buyer_id)->where('currencyCode', $getOrderItem->sell_currencyCode)->update(['wallet_balance' => $buyerwalletBalance]);
+                        EscrowAccount::where('user_id', $req->buyer_id)->where('currencyCode', $getOrderItem->sell_currencyCode)->update(['wallet_balance' => $buyerwalletBalance, 'escrow_balance' => $buyerescrowBalance]);
 
 
 
@@ -860,8 +863,9 @@ class CurrencyFxController extends Controller
                                 $bidderAccount = EscrowAccount::where('user_id', $value->buyer_id)->where('currencyCode', $getOrderItem->buy_currencyCode)->first();
 
                                 $offeramount = $bidderAccount->wallet_balance + $value->offer_amount;
+                                $escrowBal = $bidderAccount->escrow_balance - $value->offer_amount;
 
-                                EscrowAccount::where('user_id', $value->buyer_id)->where('currencyCode', $getOrderItem->buy_currencyCode)->update(['wallet_balance' => $offeramount]);
+                                EscrowAccount::where('user_id', $value->buyer_id)->where('currencyCode', $getOrderItem->buy_currencyCode)->update(['wallet_balance' => $offeramount, 'escrow_balance' => $escrowBal]);
 
                                 $getbidders = User::where('id', $value->buyer_id)->first();
 
@@ -1522,14 +1526,19 @@ class CurrencyFxController extends Controller
                             $trans_date = date('Y-m-d');
                             $status = "Delivered";
                             $action = "Escrow Wallet credit";
+                            $action2 = "Wallet debit";
                             $regards = $thisuser->ref_code;
                             $statement_route = "escrow wallet";
+                            $statement_route2 = "wallet";
 
                             $fxBalance = $myaccount->wallet_balance + $req->fx_amount;
 
                             EscrowAccount::where('escrow_id', $req->fx_wallet)->update(['wallet_balance' => $fxBalance]);
 
                             $this->insFXStatement($req->fx_wallet, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $myaccount->country, 'confirmed');
+
+
+                            $this->insStatement($thisuser->email, $reference_code, $activity, $debit, $credit, $balance, $trans_date, $status, $action2, $regards, 1, $statement_route2, 'on', $thisuser->country);
 
                             $sendMsg = "Hi " . $thisuser->name . ", You have " . $activity . " Your current fx wallet balance is " . $myaccount->currencyCode . ' ' . number_format($fxBalance, 2) . ".";
 
@@ -2003,7 +2012,10 @@ class CurrencyFxController extends Controller
     }
 
 
-
+    public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $country)
+    {
+        Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route, 'country' => $country]);
+    }
 
 
     public function insFXStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $auto_deposit, $country = null, $confirmation)

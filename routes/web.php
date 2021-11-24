@@ -151,6 +151,11 @@ Route::get('new/payment/createuser', ['uses' => 'HomeController@createnewPayment
 Route::get('payment/receivemoney/{id}', ['uses' => 'HomeController@receiveMoney', 'as' => 'receivemoney payment']);
 
 
+// Cash Advance Pages
+
+Route::get('/cashadvance', ['uses' => 'HomeController@cashAdvance', 'as' => 'cash advance']);
+
+
 
 // Stripe Route
 Route::post('create-payment-intent', ['uses' => 'MonerisController@paymentIntent', 'as' => 'stripe payment intent']);
@@ -642,6 +647,7 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('activity-report', ['uses' => 'AdminController@activityReport', 'as' => 'activity report']);
 	Route::get('paysprintpoint', ['uses' => 'AdminController@paysprintPoint', 'as' => 'paysprint point']);
 	Route::get('claimreward', ['uses' => 'AdminController@claimReward', 'as' => 'claim reward']);
+	Route::get('cashadvancelist', ['uses' => 'AdminController@cashAdvanceList', 'as' => 'cash advance list']);
 
 	Route::get('userspoint', ['uses' => 'AdminController@usersPoint', 'as' => 'users points']);
 
@@ -751,6 +757,7 @@ Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
 
 Auth::routes();
+
 
 // Ajax Route
 Route::group(['prefix' => 'Ajax'], function () {
