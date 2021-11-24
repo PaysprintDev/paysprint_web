@@ -3983,8 +3983,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         if ($req->amount > ($thisuser->wallet_balance - $minBal)) {
                             // Insufficient amount for withdrawal
 
+                            $minWalBal = $thisuser->wallet_balance - $minBal;
+
                             $data = [];
-                            $message = "Your minimum wallet balance is " . $req->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
+                            $message = "Your minimum wallet balance should be more than " . $req->currencyCode . ' ' . number_format($minWalBal, 2) . ". Please add money to continue transaction";
                             $status = 400;
 
                             // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
@@ -4004,8 +4006,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         } elseif (($thisuser->wallet_balance - $minBal) <= $req->amount) {
                             // Cannot withdraw minimum balance
 
+                            $minWalBal = $thisuser->wallet_balance - $minBal;
+
                             $data = [];
-                            $message = "Your minimum wallet balance is " . $req->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
+                            $message = "Your minimum wallet balance should be more than " . $req->currencyCode . ' ' . number_format($minWalBal, 2) . ". Please add money to continue transaction";
                             $status = 400;
 
                             // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
@@ -4814,8 +4818,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             if ($req->amount > ($thisuser->wallet_balance - $minBal)) {
                                 // Insufficient amount for withdrawal
 
+                                $minWalBal = $thisuser->wallet_balance - $minBal;
+
                                 $data = [];
-                                $message = "Your minimum wallet balance is " . $req->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
+                                $message = "Your minimum wallet balance should be more than " . $req->currencyCode . ' ' . number_format($minWalBal, 2) . ". Please add money to continue transaction";
                                 $status = 400;
 
                                 // Log::info('Oops!, '.$thisuser->name.' has '.$message);
@@ -4834,8 +4840,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             } elseif (($thisuser->wallet_balance - $minBal) <= $req->amount) {
                                 // Cannot withdraw minimum balance
 
+                                $minWalBal = $thisuser->wallet_balance - $minBal;
+
                                 $data = [];
-                                $message = "Your minimum wallet balance is " . $req->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
+                                $message = "Your minimum wallet balance should be more than " . $req->currencyCode . ' ' . number_format($minWalBal, 2) . ". Please add money to continue transaction";
                                 $status = 400;
 
                                 // Log::info('Oops!, '.$thisuser->name.' has '.$message);
@@ -5841,8 +5849,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 } elseif (($thisuser->wallet_balance - $minBal) <= $req->totalcharge) {
                     // Cannot withdraw minimum balance
 
+                    $minWalBal = $thisuser->wallet_balance - $minBal;
+
                     $data = [];
-                    $message = "Your minimum wallet balance is " . $thisuser->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
+                    $message = "Your minimum wallet balance should be more than " . $thisuser->currencyCode . ' ' . number_format($minWalBal, 2) . ". Please add money to continue transaction";
                     $status = 400;
 
                     // Log::info('Oops!, '.$thisuser->name.' has '.$message);

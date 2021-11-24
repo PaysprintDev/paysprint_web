@@ -124,6 +124,24 @@
 
         @endif
 
+
+
+        @if (Auth::user()->country == 'Canada' && Auth::user()->accountType == 'Merchant')
+
+            <div class="row">
+                <div class="alert alert-info" role="alert">
+
+                    <p>
+                        <strong>Hey {{ Auth::user()->businessname }}!</strong> <br> You are eligible for a cash
+                        advance. <a href="{{ route('cash advance') }}"
+                            style="font-weight: bold; text-decoration: underline">Click here to continue</a>
+                    </p>
+
+                </div>
+            </div>
+
+        @endif
+
         <div class="row">
             <div class="col-md-9">
                 <div class="row builder_all">

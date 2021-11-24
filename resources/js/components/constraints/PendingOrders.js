@@ -4,6 +4,7 @@ import Aside from '../includes/Aside';
 import Header from '../includes/Header';
 
 const apiToken = document.getElementById('user_api_token').value;
+const ownerId = document.getElementById('user_id').value;
 
 class PendingOrders extends Component {
 	_isMounted = false;
@@ -78,22 +79,24 @@ class PendingOrders extends Component {
 				);
 			} else {
 				data_HTML_ACTIVE_ORDERS = this.state.data.map((activeOrders) => {
-					if (activeOrders.status == 'Sold') {
-						status_HTML = (
-							<div className="dropdown-menu dropdown-menu-end">
-								<a href="#" className="dropdown-item">
-									Bid closed
-								</a>
-							</div>
-						);
-					} else {
-						status_HTML = (
-							<div className="dropdown-menu dropdown-menu-end">
-								<a href={`/currencyfx/makebid/${activeOrders.order_id}`} className="dropdown-item">
-									Make a bid
-								</a>
-							</div>
-						);
+					if (activeOrders.user_id != ownerId) {
+						if (activeOrders.status == 'Sold') {
+							status_HTML = (
+								<div className="dropdown-menu dropdown-menu-end">
+									<a href="#" className="dropdown-item">
+										Bid closed
+									</a>
+								</div>
+							);
+						} else {
+							status_HTML = (
+								<div className="dropdown-menu dropdown-menu-end">
+									<a href={`/currencyfx/makebid/${activeOrders.order_id}`} className="dropdown-item">
+										Make a bid
+									</a>
+								</div>
+							);
+						}
 					}
 
 					return (

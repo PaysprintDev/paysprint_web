@@ -59,7 +59,7 @@ class EWallet extends Component {
 		if (this.state.loading) {
 			data_HTML_ACTIVE_ORDERS = (
 				<tr>
-					<td colSpan="6" align="center">
+					<td colSpan="8" align="center">
 						<span className="font-weight-semibold text-gray-700 text-center">
 							<img
 								src="https://img.icons8.com/ios/35/000000/spinner-frame-4.png"
@@ -73,7 +73,7 @@ class EWallet extends Component {
 			if (this.state.message != 'success') {
 				data_HTML_ACTIVE_ORDERS = (
 					<tr>
-						<td colSpan="7" align="center">
+						<td colSpan="8" align="center">
 							<span className="font-weight-semibold text-gray-700 text-center">{this.state.message}</span>
 						</td>
 					</tr>
@@ -102,6 +102,13 @@ class EWallet extends Component {
 									{mywalletdata.currencySymbol +
 										' ' +
 										parseFloat(mywalletdata.wallet_balance).toFixed(2)}
+								</span>
+							</td>
+							<td>
+								<span className="font-weight-semibold text-gray-700">
+									{mywalletdata.currencySymbol +
+										' ' +
+										parseFloat(mywalletdata.escrow_balance).toFixed(2)}
 								</span>
 							</td>
 							<td>{status_HTML}</td>
@@ -215,6 +222,7 @@ class EWallet extends Component {
 														<th>Wallet ID</th>
 														<th>Wallet Currency</th>
 														<th>Wallet Balance</th>
+														<th>Escrow</th>
 														<th>Status</th>
 														<th>Funding</th>
 														<th>Move money</th>
