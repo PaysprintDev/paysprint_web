@@ -759,6 +759,63 @@ Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 Auth::routes();
 
 
+// AML Page Route
+Route::prefix('Admin/aml')->group(function () {
+    Route::get('/dashboard', ['uses' => 'AmlController@index', 'as' => 'aml dashboard']);
+    Route::get('/activitylog', ['uses' => 'AmlController@activityLog', 'as' => 'aml activity log']);
+    Route::get('/transactionreview', ['uses' => 'AmlController@transactionReview', 'as' => 'aml transaction review']);
+    Route::get('/transactionanalysis', ['uses' => 'AmlController@transactionAnalysis', 'as' => 'aml transaction analysis']);
+    Route::get('/compliancedeskreview', ['uses' => 'AmlController@complianceDeskReview', 'as' => 'aml compliance desk review']);
+    Route::get('/reports', ['uses' => 'AmlController@reports', 'as' => 'aml reports']);
+    Route::get('/creditcardholdreturn', ['uses' => 'AmlController@creditCardHoldReturn', 'as' => 'credit card hold return']);
+    Route::get('/platform', ['uses' => 'AmlController@platForm', 'as' => 'platform']);
+    Route::get('/customerservice', ['uses' => 'AmlController@customerService', 'as' => 'customer service']);
+    Route::get('/technology', ['uses' => 'AmlController@technology', 'as' => 'technology']);
+    Route::get('/bankrequestamlwithdrawalbycountry', ['uses' => 'AmlController@requestForWithdrawalToBank', 'as' => 'Request aml for Withdrawal to bank']);
+
+    Route::get('/view', ['uses' => 'AmlController@view', 'as' => 'View']);
+    Route::get('/upload', ['uses' => 'AmlController@upload', 'as' => 'Upload']);
+
+    Route::get('/purchaserefundrequestaml', ['uses' => 'AmlController@purchaseRefundRequestAml', 'as' => 'Purchase aml Refund Request']);
+    Route::get('refunddetail/{transid}', ['uses' => 'AmlController@getRefundDetailAml', 'as' => 'refund detail']);
+
+    Route::get('/creditcardwithdrawalrequest', ['uses' => 'AmlController@creditCardWithdrawalRequest', 'as' => 'Credit Card withdrawal Request']);
+
+    Route::get('/pendingtransferaml', ['uses' => 'AmlController@pendingTransfer', 'as' => 'Pending aml Transfer']);
+
+    Route::get('/prepaidcardwithdrawalrequest', ['uses' => 'AmlController@prepaidCardWithdrawalRequest', 'as' => 'Prepaid Card withdrawal Request']);
+    Route::get('/requestforremittancetoclient', ['uses' => 'AmlController@requestForRemittanceToClient', 'as' => 'Request for Remittance to Client']);
+    Route::get('/requestforrefund', ['uses' => 'AmlController@requestRefund', 'as' => 'Request for Refund']);
+    Route::get('/bankinginformation', ['uses' => 'AmlController@bankingInformation', 'as' => 'Banking Information']);
+    Route::get('/topupredflagged', ['uses' => 'AmlController@topUpRedFlagged', 'as' => 'Top-Up Red Flagged']);
+    Route::get('/transactionanalysis', ['uses' => 'AmlController@transactionAnalysis', 'as' => 'Transaction Analysis']);
+    Route::get('/compliancedeskreview', ['uses' => 'AmlController@complianceDeskReview', 'as' => 'Compliance Desk Review']);
+    Route::get('/compliance', ['uses' => 'AmlController@compliance', 'as' => 'Compliance']);
+    Route::get('/suspicioustransaction', ['uses' => 'AmlController@suspiciousTransaction', 'as' => 'Suspicious Transaction']);
+    Route::get('pendingtransferbycountryaml', ['uses' => 'AmlController@textsToTransferByCountry', 'as' => 'texts to transfer by country']);
+
+    Route::get('bankrequestwithdrawalbycountry', ['uses' => 'AmlController@bankRequestWithdrawalByCountry', 'as' => 'bank aml withdrawal by country']);
+
+    Route::get('bankrequestwithdrawal', ['uses' => 'AmlController@bankRequestWithdrawal', 'as' => 'bank aml request withdrawal']);
+
+    Route::get('refundmoneyrequestbycountryaml', ['uses' => 'AmlController@refundMoneyRequestByCountryAml', 'as' => 'refund aml details by country']);
+
+    Route::get('merchantbankdetail', ['uses' => 'AmlController@merchantBanksDetails', 'as' => 'merchant banking details']);
+
+    Route::get('merchantbankdetailbycountry', ['uses' => 'AmlController@merchantBankDetailByCountryAml', 'as' => 'merchant bank detail by country']);
+
+
+    Route::get('bankrequestwithdrawal', ['uses' => 'AmlController@merchantBanksDetailsAml', 'as' => 'merchant banking detail aml']);
+    Route::get('activitylogaml', ['uses' => 'AmlController@activityLogAml', 'as' => 'log aml']);
+    Route::get('purchaserefundrequest', ['uses' => 'AmlController@purchaseRefundRequest', 'as' => 'purchase refund request']);
+
+
+
+
+
+});
+
+
 // Ajax Route
 Route::group(['prefix' => 'Ajax'], function () {
 
