@@ -210,26 +210,34 @@
                             </div>
 
 
-                            @if ($data['paymentgateway']->gateway == 'PayStack')
-                                <div class="form-group">
-                                    <button type="button" class="btn btn-primary btn-block cardSubmit"
-                                        onclick="payWithPaystack('{{ session('email') }}')">Confirm</button>
-                                </div>
-                            @elseif($data['paymentgateway']->gateway == "Stripe")
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-primary btn-block cardSubmit"> Pay Now</button>
-                                </div>
+                            @if ($data['getuserDetail']->approval == 2 && $data['getuserDetail']->accountLevel == 3)
+                                @if ($data['paymentgateway']->gateway == 'PayStack')
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-primary btn-block cardSubmit"
+                                            onclick="payWithPaystack('{{ session('email') }}')">Confirm</button>
+                                    </div>
+                                @elseif($data['paymentgateway']->gateway == "Stripe")
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary btn-block cardSubmit"> Pay Now</button>
+                                    </div>
 
-                            @elseif($data['paymentgateway']->gateway == "PayPal")
-                                {{-- PayPal --}}
-                                <div class="form-group text-center" id="paypal-button-container"></div>
+                                @elseif($data['paymentgateway']->gateway == "PayPal")
+                                    {{-- PayPal --}}
+                                    <div class="form-group text-center" id="paypal-button-container"></div>
 
+                                @else
+
+                                    <div class="form-group"> <button type="button" onclick="handShake('addmoney')"
+                                            class="btn btn-primary btn-block cardSubmit"> Confirm </button></div>
+
+                                @endif
                             @else
-
-                                <div class="form-group"> <button type="button" onclick="handShake('addmoney')"
+                                <div class="form-group"> <button type="button"
+                                        onclick="restriction('addmoney', '{{ $data['getuserDetail']->name }}')"
                                         class="btn btn-primary btn-block cardSubmit"> Confirm </button></div>
-
                             @endif
+
+
 
 
 
