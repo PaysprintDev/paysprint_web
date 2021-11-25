@@ -351,6 +351,13 @@
                             error: function(err) {
                                 swal("Oops", err.responseJSON.message, "error");
 
+                                $('.sendingInfo').addClass('alert-danger');
+                                $('.sendingInfo').removeClass('alert-info');
+
+                                $('.sendingInfo').html(
+                                    `<strong>${err.responseJSON.message}</strong>`
+                                );
+
                             }
 
                         });
@@ -424,6 +431,13 @@
                         error: function(err) {
                             swal("Oops", err.responseJSON.message, "error");
 
+                            $('.sendingInfo').addClass('alert-danger');
+                            $('.sendingInfo').removeClass('alert-info');
+
+                            $('.sendingInfo').html(
+                                `<strong>${err.responseJSON.message}</strong>`
+                            );
+
                         }
 
                     });
@@ -494,6 +508,13 @@
                             console.error(err.statusText);
                             // swal("Oops", err.responseJSON.message, "error");
 
+                            $('.sendingInfo').addClass('alert-danger');
+                            $('.sendingInfo').removeClass('alert-info');
+
+                            $('.sendingInfo').html(
+                                `<strong>${result.message}</strong>`
+                            );
+
                         }
 
                     });
@@ -548,36 +569,45 @@
                     dataType: 'JSON',
                     success: function(result) {
 
-                        if (amount == "") {
-                            $('#typedAmount').text("0.0000");
-                        } else {
-                            $('#typedAmount').text(parseFloat(amount).toFixed(4));
+                        if (result.status == 200) {
+                            if (amount == "") {
+                                $('#typedAmount').text("0.0000");
+                            } else {
+                                $('#typedAmount').text(parseFloat(amount).toFixed(4));
 
+                            }
+
+                            var todayRate = result.data.convamount;
+                            var newConv;
+
+                            if (!todayRate) {
+                                todayRate = 0;
+                                newConv = result.data.convamount;
+
+                            } else {
+                                todayRate = todayRate;
+                                newConv = todayRate;
+                            }
+
+                            // console.log("New Conversion: " + newConv);
+
+                            $('#convertedAmount').text((newConv).toFixed(4));
+
+
+                            // Put Exchange rate
+                            $('#rateToday').html("<span class='text-danger'><strong>1" + localfrom[1] + " = " +
+                                todayRate.toFixed(4) + '' + localto[1] + "</strong></span>");
+                        } else {
+
+                            $('.sendingInfo').addClass('alert-danger');
+                            $('.sendingInfo').removeClass('alert-info');
+
+                            $('.sendingInfo').html(
+                                `<strong>${result.message}</strong>`
+                            );
                         }
 
 
-
-
-                        var todayRate = result.data.convamount;
-                        var newConv;
-
-                        if (!todayRate) {
-                            todayRate = 0;
-                            newConv = result.data.convamount;
-
-                        } else {
-                            todayRate = todayRate;
-                            newConv = todayRate;
-                        }
-
-                        // console.log("New Conversion: " + newConv);
-
-                        $('#convertedAmount').text((newConv).toFixed(4));
-
-
-                        // Put Exchange rate
-                        $('#rateToday').html("<span class='text-danger'><strong>1" + localfrom[1] + " = " +
-                            todayRate.toFixed(4) + '' + localto[1] + "</strong></span>");
 
 
                     }
