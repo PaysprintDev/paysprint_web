@@ -18,12 +18,19 @@
 
                 @if (session('role') != 'Super' && session('role') != 'Access to Level 1 and 2 only' && session('role') != 'Access to Level 1 only')
 
+
+
+
                     @if ($userInfo = \App\User::where('ref_code', session('user_id'))->first())
 
                         @if (isset($userInfo))
 
                             <h4 class="welcome" style="color: green; font-weight: bold;">Account Number:
                                 {{ $userInfo->ref_code }}</h4>
+
+
+
+
 
                             <a href="{{ route('merchant profile') }}" type="btutton" class="btn btn-danger">Promote your
                                 business</a>
@@ -55,6 +62,8 @@
                                 </div>
 
                             @endif
+
+
 
                         @else
                             <small>Control panel</small>
@@ -104,6 +113,40 @@
 
                 @else
 
+                    <div class="col-lg-12 col-xs-12">
+                        <!-- small box -->
+                        <div class="small-box bg-info paidInvoices">
+                            <div class="inner">
+
+                                @if ($getUserDetail->country == 'Canada' && $getUserDetail->accountType == 'Merchant')
+
+                                    <p style="font-weight: 20px">
+                                        <strong>
+                                            <h4>Hey {{ $getUserDetail->businessname }}!</h4>
+                                        </strong> You are eligible
+                                        for
+                                        a cash
+                                        advance. <a href="{{ route('cash advance') }}"
+                                            style="font-weight: bold; text-decoration: underline">Click here to
+                                            continue</a>
+                                    </p>
+
+
+                                @endif
+
+                            </div>
+
+                        </div>
+
+
+
+
+
+
+
+
+                    </div>
+
 
 
                     <div class="col-lg-4 col-xs-6 walletBal">
@@ -124,7 +167,7 @@
                     <!-- ./col -->
                     <div class="col-lg-4 col-xs-6 walletBal">
                         <!-- small box -->
-                        <div class="small-box bg-success">
+                        <div class="small-box bg-danger">
 
                             <div class="inner">
                                 <h3>{{ isset($data['mypoints']) ? $data['mypoints']->points_acquired : 0 }}
@@ -221,9 +264,14 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            {!! $cardImage !!}
+                                            {!! $cardImage !!} <a style="text-decoration: underline;"
+                                                href="{{ route('merchant payment gateway', 'gateway=PaySprint') }}">Add a
+                                                new
+                                                card</a>
                                         </div>
                                     </div>
+
+
 
                                 @else
                                     <h3>&nbsp;</h3>
@@ -308,14 +356,11 @@
 
 
 
+
+
+
                         <div class="col-md-4 mb-3 withdrawMoney">
                             @if ($getUserDetail->approval == 2 && $getUserDetail->accountLevel == 3)
-
-                                {{-- @if (isset($withdraws['specialInfo']))
-                    <a style="font-size: 14px; font-weight: bold;" type="button" href="javascript:void(0)" class="btn btn-success btn-block" onclick="restriction('specialinfo', '{{ $getUserDetail->name }}')">Withdraw Money <i class="fa fa-credit-card"></i></a>
-                @else
-                    <a style="font-size: 14px; font-weight: bold;" type="button" href="{{ route('merchant withdrawal') }}" class="btn btn-success btn-block">Withdraw Money <i class="fas fa-credit-card"></i></a>
-                @endif --}}
 
                                 <a style="font-size: 14px; font-weight: bold;" type="button"
                                     href="{{ route('merchant withdrawal') }}" class="btn btn-success btn-block">Withdraw
@@ -411,6 +456,8 @@
 
 
                     </div>
+
+
 
 
 

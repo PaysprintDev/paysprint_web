@@ -58,6 +58,7 @@
                             <option value="Access to Level 1 only">Access to Level 1 only</option>
                             <option value="Access to Level 1 and 2 only">Access to Level 1 and 2 only</option>
                             <option value="Customer Marketing">Customer Marketing</option>
+                            <option value="Aml compliance">Aml compliance</option>
                         </select>
 
                     </div>

@@ -2915,6 +2915,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 var apiToken = document.getElementById('user_api_token').value;
+var ownerId = document.getElementById('user_id').value;
 
 var OngoingOrders = /*#__PURE__*/function (_Component) {
   _inherits(OngoingOrders, _Component);
@@ -3031,24 +3032,26 @@ var OngoingOrders = /*#__PURE__*/function (_Component) {
           });
         } else {
           data_HTML_ACTIVE_ORDERS = this.state.data.map(function (activeOrders) {
-            if (activeOrders.status == 'Sold') {
-              status_HTML = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
-                className: "dropdown-menu dropdown-menu-end",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("a", {
-                  href: "#",
-                  className: "dropdown-item",
-                  children: "Bid closed"
-                })
-              });
-            } else {
-              status_HTML = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
-                className: "dropdown-menu dropdown-menu-end",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("a", {
-                  href: "/currencyfx/makebid/".concat(activeOrders.order_id),
-                  className: "dropdown-item",
-                  children: "Make a bid"
-                })
-              });
+            if (activeOrders.user_id != ownerId) {
+              if (activeOrders.status == 'Sold') {
+                status_HTML = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+                  className: "dropdown-menu dropdown-menu-end",
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("a", {
+                    href: "#",
+                    className: "dropdown-item",
+                    children: "Bid closed"
+                  })
+                });
+              } else {
+                status_HTML = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+                  className: "dropdown-menu dropdown-menu-end",
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("a", {
+                    href: "/currencyfx/makebid/".concat(activeOrders.order_id),
+                    className: "dropdown-item",
+                    children: "Make a bid"
+                  })
+                });
+              }
             }
 
             return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("tr", {
@@ -4336,6 +4339,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 var apiToken = document.getElementById('user_api_token').value;
+var ownerId = document.getElementById('user_id').value;
 
 var PendingOrders = /*#__PURE__*/function (_Component) {
   _inherits(PendingOrders, _Component);
@@ -4452,24 +4456,26 @@ var PendingOrders = /*#__PURE__*/function (_Component) {
           });
         } else {
           data_HTML_ACTIVE_ORDERS = this.state.data.map(function (activeOrders) {
-            if (activeOrders.status == 'Sold') {
-              status_HTML = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
-                className: "dropdown-menu dropdown-menu-end",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("a", {
-                  href: "#",
-                  className: "dropdown-item",
-                  children: "Bid closed"
-                })
-              });
-            } else {
-              status_HTML = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
-                className: "dropdown-menu dropdown-menu-end",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("a", {
-                  href: "/currencyfx/makebid/".concat(activeOrders.order_id),
-                  className: "dropdown-item",
-                  children: "Make a bid"
-                })
-              });
+            if (activeOrders.user_id != ownerId) {
+              if (activeOrders.status == 'Sold') {
+                status_HTML = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+                  className: "dropdown-menu dropdown-menu-end",
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("a", {
+                    href: "#",
+                    className: "dropdown-item",
+                    children: "Bid closed"
+                  })
+                });
+              } else {
+                status_HTML = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+                  className: "dropdown-menu dropdown-menu-end",
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("a", {
+                    href: "/currencyfx/makebid/".concat(activeOrders.order_id),
+                    className: "dropdown-item",
+                    children: "Make a bid"
+                  })
+                });
+              }
             }
 
             return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("tr", {
@@ -5838,6 +5844,8 @@ var ActiveOrders = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       var data_HTML_ACTIVE_ORDERS = '';
       var status_HTML = '';
 
@@ -5869,24 +5877,26 @@ var ActiveOrders = /*#__PURE__*/function (_Component) {
           });
         } else {
           data_HTML_ACTIVE_ORDERS = this.state.data.map(function (activeOrders) {
-            if (activeOrders.status == 'Sold') {
-              status_HTML = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
-                className: "dropdown-menu dropdown-menu-end",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
-                  href: "#",
-                  className: "dropdown-item",
-                  children: "Bid closed"
-                })
-              });
-            } else {
-              status_HTML = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
-                className: "dropdown-menu dropdown-menu-end",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
-                  href: "/currencyfx/makebid/".concat(activeOrders.order_id),
-                  className: "dropdown-item",
-                  children: "Make a bid"
-                })
-              });
+            if (activeOrders.user_id != _this2.props.ownerId) {
+              if (activeOrders.status == 'Sold') {
+                status_HTML = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+                  className: "dropdown-menu dropdown-menu-end",
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
+                    href: "#",
+                    className: "dropdown-item",
+                    children: "Bid closed"
+                  })
+                });
+              } else {
+                status_HTML = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+                  className: "dropdown-menu dropdown-menu-end",
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
+                    href: "/currencyfx/makebid/".concat(activeOrders.order_id),
+                    className: "dropdown-item",
+                    children: "Make a bid"
+                  })
+                });
+              }
             }
 
             return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("tr", {
@@ -8092,6 +8102,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var apiToken = document.getElementById('user_api_token').value;
 var myCurrencyCode = document.getElementById('user_currency_code').value;
+var ownerId = document.getElementById('user_id').value;
 
 var Dashboard = /*#__PURE__*/function (_Component) {
   _inherits(Dashboard, _Component);
@@ -8616,7 +8627,8 @@ var Dashboard = /*#__PURE__*/function (_Component) {
                   })
                 })
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_includes_ActiveOrders__WEBPACK_IMPORTED_MODULE_3__["default"], {
-                apiToken: apiToken
+                apiToken: apiToken,
+                ownerId: ownerId
               })]
             })
           })]
@@ -8753,7 +8765,7 @@ var EWallet = /*#__PURE__*/function (_Component) {
       if (this.state.loading) {
         data_HTML_ACTIVE_ORDERS = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("tr", {
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
-            colSpan: "6",
+            colSpan: "8",
             align: "center",
             children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
               className: "font-weight-semibold text-gray-700 text-center",
@@ -8768,7 +8780,7 @@ var EWallet = /*#__PURE__*/function (_Component) {
         if (this.state.message != 'success') {
           data_HTML_ACTIVE_ORDERS = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("tr", {
             children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
-              colSpan: "7",
+              colSpan: "8",
               align: "center",
               children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
                 className: "font-weight-semibold text-gray-700 text-center",
@@ -8809,6 +8821,11 @@ var EWallet = /*#__PURE__*/function (_Component) {
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
                   className: "font-weight-semibold text-gray-700",
                   children: mywalletdata.currencySymbol + ' ' + parseFloat(mywalletdata.wallet_balance).toFixed(2)
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                  className: "font-weight-semibold text-gray-700",
+                  children: mywalletdata.currencySymbol + ' ' + parseFloat(mywalletdata.escrow_balance).toFixed(2)
                 })
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
                 children: status_HTML
@@ -8946,6 +8963,8 @@ var EWallet = /*#__PURE__*/function (_Component) {
                               children: "Wallet Currency"
                             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
                               children: "Wallet Balance"
+                            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+                              children: "Escrow"
                             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
                               children: "Status"
                             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
@@ -9478,6 +9497,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var apiToken = document.getElementById('user_api_token').value;
 var myCurrencyCode = document.getElementById('user_currency_code').value;
+var ownerId = document.getElementById('user_id').value;
 
 var MarketPlace = /*#__PURE__*/function (_Component) {
   _inherits(MarketPlace, _Component);
@@ -9574,24 +9594,26 @@ var MarketPlace = /*#__PURE__*/function (_Component) {
           });
         } else {
           data_HTML_ACTIVE_ORDERS = this.state.data.map(function (activeOrders) {
-            if (activeOrders.status == 'Sold') {
-              status_HTML = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
-                className: "dropdown-menu dropdown-menu-end",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("a", {
-                  href: "#",
-                  className: "dropdown-item",
-                  children: "Bid closed"
-                })
-              });
-            } else {
-              status_HTML = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
-                className: "dropdown-menu dropdown-menu-end",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("a", {
-                  href: "/currencyfx/makebid/".concat(activeOrders.order_id),
-                  className: "dropdown-item",
-                  children: "Make a bid"
-                })
-              });
+            if (activeOrders.user_id != ownerId) {
+              if (activeOrders.status == 'Sold') {
+                status_HTML = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+                  className: "dropdown-menu dropdown-menu-end",
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("a", {
+                    href: "#",
+                    className: "dropdown-item",
+                    children: "Bid closed"
+                  })
+                });
+              } else {
+                status_HTML = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+                  className: "dropdown-menu dropdown-menu-end",
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("a", {
+                    href: "/currencyfx/makebid/".concat(activeOrders.order_id),
+                    className: "dropdown-item",
+                    children: "Make a bid"
+                  })
+                });
+              }
             }
 
             return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("tr", {

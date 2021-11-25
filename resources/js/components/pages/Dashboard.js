@@ -6,6 +6,7 @@ import Header from '../includes/Header';
 
 const apiToken = document.getElementById('user_api_token').value;
 const myCurrencyCode = document.getElementById('user_currency_code').value;
+const ownerId = document.getElementById('user_id').value;
 
 class Dashboard extends Component {
 	_isMounted = false;
@@ -434,7 +435,7 @@ class Dashboard extends Component {
 								</div>
 							</div>
 
-							<ActiveOrders apiToken={apiToken} />
+							<ActiveOrders apiToken={apiToken} ownerId={ownerId} />
 						</div>
 					</div>
 				</div>
