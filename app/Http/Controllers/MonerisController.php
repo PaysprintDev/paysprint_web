@@ -3996,7 +3996,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             // Cannot withdraw minimum balance
 
                             $data = [];
-                            $message = "You cannot send money at the moment because your account is still on review.";
+                            $message = "You cannot withdraw money at the moment because your account is still on review.";
                             $status = 400;
 
                             // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
@@ -4831,7 +4831,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 // Cannot withdraw minimum balance
 
                                 $data = [];
-                                $message = "You cannot send money at the moment because your account is still on review.";
+                                $message = "You cannot withdraw money at the moment because your account is still on review.";
                                 $status = 400;
 
                                 // Log::info('Oops!, '.$thisuser->name.' has '.$message);
