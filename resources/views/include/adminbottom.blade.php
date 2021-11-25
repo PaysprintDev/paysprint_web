@@ -4002,6 +4002,10 @@ function payOrg(user_id){
 
     if(val == "withdrawal")
         swal('Hello '+name, 'Your account need to be verified before you can make withdrawal', 'info');
+
+
+    if(val == "addmoney")
+        swal('Hello '+name, 'Your account need to be verified before you can add money', 'info');
     
     if(val == "invoice")
         swal('Hello '+name, 'Your account need to be verified before you can pay for invoice', 'info');
