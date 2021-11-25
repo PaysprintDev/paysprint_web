@@ -267,31 +267,44 @@
                                         <div class="commissionInfo"></div>
                                     </div>
 
-
-                                    @if ($data['paymentgateway']->gateway == 'PayStack')
-
-                                        {{-- <div class="card-footer"> <a type="button" id="epsButton" href="" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </a></div> --}}
+                                    @if (Auth::user()->approval == 2 && Auth::user()->accountLevel == 3)
 
 
-                                        <div class="card-footer"> <button type="button"
-                                                onclick="payWithPaystack('{{ Auth::user()->email }}')"
-                                                class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm
-                                            </button></div>
+                                        @if ($data['paymentgateway']->gateway == 'PayStack')
 
-                                    @elseif($data['paymentgateway']->gateway == "Stripe")
+                                            {{-- <div class="card-footer"> <a type="button" id="epsButton" href="" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </a></div> --}}
 
-                                        <div class="card-footer"> <button type="submit"
-                                                class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Pay
-                                                Now</button></div>
 
-                                    @elseif($data['paymentgateway']->gateway == "PayPal")
-                                        {{-- PayPal --}}
-                                        <div class="card-footer" id="paypal-button-container"></div>
+                                            <div class="card-footer"> <button type="button"
+                                                    onclick="payWithPaystack('{{ Auth::user()->email }}')"
+                                                    class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
+                                                    Confirm
+                                                </button></div>
+
+                                        @elseif($data['paymentgateway']->gateway == "Stripe")
+
+                                            <div class="card-footer"> <button type="submit"
+                                                    class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Pay
+                                                    Now</button></div>
+
+                                        @elseif($data['paymentgateway']->gateway == "PayPal")
+                                            {{-- PayPal --}}
+                                            <div class="card-footer" id="paypal-button-container"></div>
+                                        @else
+                                            <div class="card-footer"> <button type="button"
+                                                    onclick="handShake('addmoney')"
+                                                    class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
+                                                    Confirm
+                                                </button></div>
+                                        @endif
+
                                     @else
                                         <div class="card-footer"> <button type="button"
-                                                onclick="handShake('addmoney')"
-                                                class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm
+                                                onclick="restriction('addmoney', '{{ Auth::user()->name }}')"
+                                                class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
+                                                Confirm
                                             </button></div>
+
                                     @endif
 
 
@@ -399,7 +412,7 @@
                                 $.each(res, function(v, k) {
                                     $('#card_id').append(
                                         `<option value="${k.id}">${k.card_number} - ${k.card_type}</option>`
-                                        );
+                                    );
                                 });
 
                             } else {
@@ -690,6 +703,12 @@
             }
 
 
+            function restriction(val, name) {
+                if (val == "addmoney")
+                    swal('Hello ' + name, 'Your account need to be verified before you can add money', 'info');
+            }
+
+
             // PayStack Integration
             function payWithPaystack(email) {
                 var netamount = $('#amounttosend').val();
@@ -705,7 +724,8 @@
                     amount: amount * 100,
                     currency: "NGN",
                     ref: '' + Math.floor((Math.random() * 1000000000) +
-                    1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+                        1
+                    ), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
                     metadata: {
                         custom_fields: [{
                                 display_name: "Full Name",
