@@ -98,7 +98,7 @@
                                 </ul>
                                 <h5 align='right' class="text-success">Point Balance
                                     {{ isset($data['mypoints']) ? $data['mypoints']->points_acquired : 0 }}</h5>
-                                <h5 align='right' class="text-success">Claimed Point:
+                                <h5 align='right' class="text-success">Redeemed Point:
                                     {{ isset($data['mypoints']) ? $data['mypoints']->current_point : 0 }}</h5>
                                 <h5 align='right' class="text-success">Total Points:
                                     <?php
@@ -112,6 +112,26 @@
                                     
                                     ?></td>
                                 </h5>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        {{-- <button href="#">Claim Points</button> --}}
+                                        <form action="{{ route('claim point') }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-primary btn-block">Redeem
+                                                Points</button>
+
+                                        </form>
+                                    </div>
+                                    <div class="col-md-3">
+
+
+                                        <a href="{{ route('claim history') }}" class="btn btn-success btn-block">View
+                                            Claim
+                                            History</a>
+
+
+                                    </div>
+                                </div>
 
                             </div> <!-- End -->
                             <!-- Credit card form content -->
@@ -454,7 +474,7 @@
                                             {{-- <button href="#">Claim Points</button> --}}
                                             <form action="{{ route('claim point') }}" method="POST">
                                                 @csrf
-                                                <button type="submit" class="btn btn-primary btn-block">Claim
+                                                <button type="submit" class="btn btn-primary btn-block">Redeem
                                                     Points</button>
 
                                             </form>
