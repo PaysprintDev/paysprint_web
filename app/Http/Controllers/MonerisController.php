@@ -362,6 +362,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     public function payInvoice(Request $req)
     {
 
+        $routing = null;
 
         if ($req->amount < 0) {
             $response = 'Please enter a positive amount to send';
@@ -708,7 +709,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             if (Hash::check($req->transaction_pin, $thisuser->transaction_pin)) {
                                 $thismerchant = User::where('ref_code', $req->merchant_id)->first();
 
-                                $imtCountry = AllCountries::where('name', $thismerchant->country)->first();
+                                // $imtCountry = AllCountries::where('name', $thismerchant->country)->first();
 
                                 if ($thisuser->approval < 1 && $thisuser->accountLevel < 1) {
 
@@ -746,6 +747,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     // Check Wallet Balance if up to amount
 
                                     if (isset($req->make_select_wallet) && $req->make_select_wallet == "FX Wallet") {
+
+                                        $routing = 'fx';
 
                                         $wallet = EscrowAccount::where('escrow_id', $req->escrow_id)->first();
 
@@ -1010,13 +1013,13 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 PaycaWithdraw::insert(['withdraw_id' => $transactionID, 'client_id' => $req->merchant_id, 'client_name' => $req->name, 'card_method' => $req->payment_method, 'client_email' => $req->email, 'amount_to_withdraw' => $paidinvoiceamount, 'remittance' => 0]);
 
 
-                                                                $activity = "Payment for " . $purpose . " from " . $req->payment_method;
+                                                                $activity = "Payment of " . $thisuser->currencyCode . ' ' . $req->amount . " for " . $purpose . " from FX Wallet";
                                                                 $credit = 0;
                                                                 $debit = $req->amount;
                                                                 $balance = $newAmount;
                                                                 $status = "Delivered";
                                                                 $action = "Escrow Wallet debit";
-                                                                $regards = $req->merchant_id;
+                                                                $regards = $thisuser->ref_code;
                                                                 $reference_code = $transactionID;
                                                                 $trans_date = date('Y-m-d');
                                                                 $statement_route = "escrow wallet";
@@ -1025,6 +1028,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 // My FX Statement
 
                                                                 $this->insFXStatement($wallet->escrow_id, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $thisuser->country, 'confirmed');
+
+
+                                                                // Senders statement
+                                                                // $this->insStatement($thisuser->email, $reference_code, $activity, $debit, $credit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
 
 
 
@@ -1241,13 +1248,13 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 PaycaWithdraw::insert(['withdraw_id' => $transactionID, 'client_id' => $req->merchant_id, 'client_name' => $req->name, 'card_method' => $req->payment_method, 'client_email' => $req->email, 'amount_to_withdraw' => $req->amount, 'remittance' => 0]);
 
 
-                                                                $activity = "Payment for " . $purpose . " from " . $req->payment_method;
+                                                                $activity = "Payment " . $thisuser->currencyCode . ' ' . $req->amount . " for " . $purpose . " from FX Wallet";
                                                                 $credit = 0;
                                                                 $debit = $req->amount;
                                                                 $balance = $newAmount;
                                                                 $status = "Delivered";
                                                                 $action = "Wallet debit";
-                                                                $regards = $req->merchant_id;
+                                                                $regards = $thisuser->ref_code;
                                                                 $reference_code = $transactionID;
                                                                 $trans_date = date('Y-m-d');
                                                                 $statement_route = "wallet";
@@ -1390,6 +1397,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                             }
                                         }
                                     } else {
+
+
                                         if ($req->amount > ($thisuser->wallet_balance - $minBal)) {
                                             // Insufficient amount for withdrawal
 
@@ -1651,13 +1660,13 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 PaycaWithdraw::insert(['withdraw_id' => $transactionID, 'client_id' => $req->merchant_id, 'client_name' => $req->name, 'card_method' => $req->payment_method, 'client_email' => $req->email, 'amount_to_withdraw' => $paidinvoiceamount, 'remittance' => 0]);
 
 
-                                                                $activity = "Payment for " . $purpose . " from " . $req->payment_method;
+                                                                $activity = "Payment of " . $thisuser->currencyCode . ' ' . $req->amount . " for " . $purpose . " from " . $req->payment_method;
                                                                 $credit = 0;
                                                                 $debit = $req->amount;
                                                                 $balance = $newAmount;
                                                                 $status = "Delivered";
                                                                 $action = "Wallet debit";
-                                                                $regards = $req->merchant_id;
+                                                                $regards = $thisuser->ref_code;
                                                                 $reference_code = $transactionID;
                                                                 $trans_date = date('Y-m-d');
                                                                 $statement_route = "wallet";
@@ -1880,7 +1889,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 PaycaWithdraw::insert(['withdraw_id' => $transactionID, 'client_id' => $req->merchant_id, 'client_name' => $req->name, 'card_method' => $req->payment_method, 'client_email' => $req->email, 'amount_to_withdraw' => $req->amount, 'remittance' => 0]);
 
 
-                                                                $activity = "Payment for " . $purpose . " from " . $req->payment_method;
+                                                                $activity = "Payment of " . $thisuser->currencyCode . ' ' . $req->amount . " for " . $purpose . " from " . $req->payment_method;
                                                                 $credit = 0;
                                                                 $debit = $req->amount;
                                                                 $balance = $newAmount;
@@ -2060,7 +2069,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
 
-            $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+            $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'route' => $routing];
         }
 
 

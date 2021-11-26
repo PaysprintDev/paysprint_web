@@ -933,9 +933,19 @@
 
                                 if (result.status == 200) {
                                     swal("Success", result.message, "success");
-                                    setTimeout(function() {
-                                        location.href = "{{ route('my account') }}";
-                                    }, 2000);
+
+                                    if (result.route == "fx") {
+                                        setTimeout(function() {
+                                            location.href =
+                                                "{{ route('paysprint currency exchange') }}";
+                                        }, 2000);
+                                    } else {
+                                        setTimeout(function() {
+                                            location.href = "{{ route('my account') }}";
+                                        }, 2000);
+                                    }
+
+
                                 } else {
                                     swal("Oops", result.message, "error");
                                 }

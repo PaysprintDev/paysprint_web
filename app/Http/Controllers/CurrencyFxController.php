@@ -503,6 +503,7 @@ class CurrencyFxController extends Controller
             // Get Transaction History for this user...
             $transData = FxStatement::where('regards', $thisuser->ref_code)->where('user_id', $req->currency)->orderBy('created_at', 'DESC')->get();
 
+
             if (count($transData) > 0) {
                 $data = $transData;
                 $message = 'success';

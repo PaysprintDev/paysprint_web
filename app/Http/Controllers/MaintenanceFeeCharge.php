@@ -20,91 +20,108 @@ use App\Mail\sendEmail;
 
 class MaintenanceFeeCharge extends Controller
 {
-    public function monthlyMaintenaceFee(Request $req)
+    public function monthlyMaintenaceFee()
     {
 
-
-        $getUser = User::where('disableAccount', 'off')->get();
-
-        foreach ($getUser as $key => $value) {
-
-            if ($value->accountType == "Individual") {
-                $subType = "Consumer Monthly Subscription";
-            } else {
-                $subType = "Merchant Monthly Subscription";
-            }
+        try {
+            $getUser = User::where('wallet_balance', '>', 0)->where('disableAccount', 'off')->get();
 
 
-            $minBal = $this->maintenanceBalanceWithdrawal($subType, $value->country);
-
-
-            // Get wallet balnace for users
-            if ($value->wallet_balance >= $minBal) {
-
-                $getTranscost = TransactionCost::where('structure', $subType)->where('country', $value->country)->first();
-
-                if (isset($getTranscost)) {
-
-                    $walletBalance = $value->wallet_balance - $getTranscost->fixed;
-
-                    User::where('id', $value->id)->where('wallet_balance', '>=', $minBal)->update(['wallet_balance' => $walletBalance]);
-
-                    // Send Mail
-                    $transaction_id = "wallet-" . date('dmY') . time();
-
-                    $activity = "Monthly Subscription of " . $value->currencyCode . '' . number_format($getTranscost->fixed, 2) . " for " . date('F/Y') . " was deducted from Wallet";
-                    $credit = 0;
-                    $debit = $getTranscost->fixed;
-                    $reference_code = $transaction_id;
-                    $balance = 0;
-                    $trans_date = date('Y-m-d');
-                    $status = "Delivered";
-                    $action = "Wallet debit";
-                    $regards = $value->ref_code;
-                    $statement_route = "wallet";
-
-
-                    $sendMsg = 'Hello ' . strtoupper($value->name) . ', ' . $activity . '. You now have ' . $value->currencyCode . ' ' . number_format($walletBalance, 2) . ' balance in your account';
-                    $sendPhone = "+" . $value->code . $value->telephone;
-
-
-                    // Senders statement
-                    $this->insStatement($value->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
-
-                    $this->createNotification($value->ref_code, "Hello " . strtoupper($value->name) . ", " . $sendMsg);
-
-                    $this->name = $value->name;
-                    $this->email = $value->email;
-                    $this->subject = $activity;
-
-                    $this->message = '<p>' . $activity . '</p><p>You now have <strong>' . $value->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> balance in your account</p>';
-
-                    $this->monthlyChargeInsert($value->ref_code, $value->country, $getTranscost->fixed, $value->currencyCode);
+            $i = 1;
+            foreach ($getUser as $value) {
 
 
 
-                    // Log::info($sendMsg);
-
-                    // $this->slack($sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-
-                    // $this->sendMessage($sendMsg, $sendPhone);
-
-                    // $this->sendEmail($this->email, "Fund remittance");
-
-
-
-                    echo "Sent to " . $this->name . "<hr>";
+                if ($value->accountType == "Individual") {
+                    $subType = "Consumer Monthly Subscription";
                 } else {
-                    // Log::info($value->name." was not charged because they are in ".$value->country." and the fee charge is not yet available");
-
-                    $this->slack($value->name . " was not charged because they are in " . $value->country . " and the fee charge is not yet available", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                    $subType = "Merchant Monthly Subscription";
                 }
-            } else {
-                // This is a new user account
-                // Log::info($value->name." was not charged because account has ".$value->wallet_balance." in their wallet");
 
-                $this->slack($value->name . " was not charged because account has " . $value->wallet_balance . " in their wallet", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                $minBal = $this->maintenanceBalanceWithdrawal($subType, $value->country);
+
+
+                // Get wallet balnace for users
+                if ($value->wallet_balance >= $minBal) {
+
+                    $getTranscost = TransactionCost::where('structure', $subType)->where('country', $value->country)->first();
+
+                    if (isset($getTranscost)) {
+
+
+
+
+
+                        $getUpdate = User::where('id', $value->id)->where('wallet_balance', '>=', $minBal)->first();
+
+                        if (isset($getUpdate)) {
+
+                            $walletBalance = $getUpdate->wallet_balance - $getTranscost->fixed;
+
+
+                            User::where('id', $getUpdate->id)->where('wallet_balance', '>=', $minBal)->update(['wallet_balance' => $walletBalance]);
+
+                            // Send Mail
+                            $transaction_id = "wallet-" . date('dmY') . time();
+
+                            $activity = $subType . " of " . $getUpdate->currencyCode . '' . number_format($getTranscost->fixed, 2) . " for " . date('F/Y') . " was deducted from Wallet";
+                            $credit = 0;
+                            $debit = $getTranscost->fixed;
+                            $reference_code = $transaction_id;
+                            $balance = 0;
+                            $trans_date = date('Y-m-d');
+                            $status = "Delivered";
+                            $action = "Wallet debit";
+                            $regards = $getUpdate->ref_code;
+                            $statement_route = "wallet";
+
+
+                            $sendMsg = 'Hello ' . strtoupper($getUpdate->name) . ', ' . $activity . '. You now have ' . $getUpdate->currencyCode . ' ' . number_format($walletBalance, 2) . ' balance in your account';
+                            $sendPhone = "+" . $getUpdate->code . $getUpdate->telephone;
+
+
+                            // Senders statement
+                            $this->insStatement($getUpdate->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
+
+                            $this->createNotification($getUpdate->ref_code, "Hello " . strtoupper($getUpdate->name) . ", " . $sendMsg);
+
+                            $this->name = $getUpdate->name;
+                            $this->email = $getUpdate->email;
+                            $this->subject = $activity;
+
+                            $this->message = '<p>' . $activity . '</p><p>You now have <strong>' . $getUpdate->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> balance in your account</p>';
+
+                            $this->monthlyChargeInsert($getUpdate->ref_code, $getUpdate->country, $getTranscost->fixed, $getUpdate->currencyCode);
+
+
+
+                            // Log::info($sendMsg);
+
+                            // $this->slack($sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                            // $this->sendMessage($sendMsg, $sendPhone);
+
+                            // $this->sendEmail($this->email, "Fund remittance");
+
+
+
+                            // echo "Sent to " . $i++ . " | " . $this->name . ' - ' . $getUpdate->ref_code . " | " . $activity . " | " . $sendMsg . "<hr>";
+                        }
+                    } else {
+                        // Log::info($value->name." was not charged because they are in ".$value->country." and the fee charge is not yet available");
+
+                        // $this->slack($value->name . " was not charged because they are in " . $value->country . " and the fee charge is not yet available", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                    }
+                } else {
+                    // This is a new user account
+                    // Log::info($value->name." was not charged because account has ".$value->wallet_balance." in their wallet");
+
+                    // $this->slack($value->name . " was not charged because account has " . $value->wallet_balance . " in their wallet", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                }
             }
+        } catch (\Throwable $th) {
+            $this->slack("Error on Maintenance Fee Charge: " . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
     }
 
