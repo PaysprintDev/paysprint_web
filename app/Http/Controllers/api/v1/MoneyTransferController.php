@@ -1277,7 +1277,7 @@ class MoneyTransferController extends Controller
                     // Continue insert here
                     $query = [
                         'user_id' => $thisuser->id,
-                        'order_id' => 'PS-' . mt_rand(000000000, 999999999) . '-' . strtoupper(date('D')),
+                        'order_id' => 'PS-' . mt_rand(000000000, 999999999) . '-' . strtoupper(date('dm')),
                         'sell' => $req->sellAmount,
                         'buy' => $req->buyAmount,
                         'default_currencyCode' => $thisuser->currencyCode,
