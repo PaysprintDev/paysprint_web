@@ -786,7 +786,7 @@ Route::prefix('Admin/aml')->group(function () {
     Route::get('/prepaidcardwithdrawalrequest', ['uses' => 'AmlController@prepaidCardWithdrawalRequest', 'as' => 'Prepaid Card withdrawal Request']);
     Route::get('/requestforremittancetoclient', ['uses' => 'AmlController@requestForRemittanceToClient', 'as' => 'Request for Remittance to Client']);
     Route::get('/requestforrefund', ['uses' => 'AmlController@requestRefund', 'as' => 'Request for Refund']);
-    Route::get('/requestforrefundbycountryaml', ['uses' => 'AmlController@requestForRefundByCountryAml', 'as' => 'Request for Refund by country aml']);
+    Route::get('/requestforrefundbycountryaml', ['uses' => 'AmlController@requestForRefundByCountryAml', 'as' => 'refund details by country aml']);
     Route::get('/bankinginformation', ['uses' => 'AmlController@bankingInformation', 'as' => 'Banking Information']);
     Route::get('/topupredflagged', ['uses' => 'AmlController@topUpRedFlagged', 'as' => 'Top-Up Red Flagged']);
     Route::get('/transactionanalysis', ['uses' => 'AmlController@transactionAnalysis', 'as' => 'Transaction Analysis']);
