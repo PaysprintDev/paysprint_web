@@ -324,11 +324,27 @@
                             <br>
                         </div>
 
+
+
+
                         <div class="col-md-4 mb-3 addMoney">
 
-                            <a style="font-size: 14px; font-weight: bold;" type="button"
-                                href="{{ route('merchant add money') }}" class="btn btn-info btn-block">Add Money <i
-                                    class="fas fa-plus"></i></a>
+                            @if ($getUserDetail->approval == 2 && $getUserDetail->accountLevel == 3)
+
+                                <a style="font-size: 14px; font-weight: bold;" type="button"
+                                    href="{{ route('merchant add money') }}" class="btn btn-info btn-block">Add Money <i
+                                        class="fas fa-plus"></i></a>
+
+
+                            @else
+                                <a style="font-size: 14px; font-weight: bold;" type="button" href="javascript:void(0)"
+                                    class="btn btn-success btn-block"
+                                    onclick="restriction('addmoney', '{{ $getUserDetail->name }}')">Add Money <i
+                                        class="fa fa-credit-card"></i></a>
+
+                            @endif
+
+
                         </div>
 
 

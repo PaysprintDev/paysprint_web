@@ -348,7 +348,7 @@ class Dashboard extends Component {
 														</div>
 														<div className="col-auto">
 															<a
-																href="#"
+																href="/currencyfx/invoice"
 																className="btn btn-lg btn-outline-dark px-3 me-2 me-md-3"
 															>
 																<span className="ps-1">Pay Invoice</span>
