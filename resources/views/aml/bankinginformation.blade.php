@@ -14,7 +14,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Transaction Review
+                Banking Information
 
                 @if (session('role') != 'Super' && session('role') != 'Access to Level 1 and 2 only' && session('role') != 'Access to Level 1 only')
 
@@ -87,12 +87,12 @@
             <h3>&nbsp;</h3>
 
 
-            <p>Withdrawal to Bank</p>
+            <p>Merchant Bank Details</p>
         </div>
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="{{ route('Request aml for Withdrawal to bank') }}" class="small-box-footer">View details <i
+        <a href="{{ route('merchant banking detail aml', 'users=Merchant') }}" class="small-box-footer">View details <i
                 class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
@@ -103,158 +103,15 @@
         <div class="inner">
             <h3>{{ count($withdraws['bank']) }}</h3>
 
-            <p>purchase Refund Request</p>
+            <p>Consumer Bank Details</p>
         </div>
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="{{ route('Purchase aml Refund Request') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('merchant banking detail aml', 'users=Consumer') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
-<div class="col-lg-3 col-xs-6">
-    <!-- small box -->
-    <div class="small-box bg-black">
-        <div class="inner">
-            <h3>{{ count($withdraws['purchase']) }}</h3>
-
-            <p>C C Withdrawal Request</p>
-        </div>
-        <div class="icon">
-            <i class="ion ion-stats-bars"></i>
-        </div>
-        <a href="{{ route('Credit Card withdrawal Request') }}" class="small-box-footer">View details <i
-                class="fa fa-arrow-circle-right"></i></a>
-    </div>
-</div>
-
-
-<div class="col-lg-3 col-xs-6">
-    <!-- small box -->
-    <div class="small-box bg-blue">
-        <div class="inner">
-            <h3>{{ count($withdraws['credit']) }}</h3>
-
-            <p>Pending Transfer</p>
-        </div>
-        <div class="icon">
-            <i class="ion ion-stats-bars"></i>
-        </div>
-        <a href="{{ route('Pending aml Transfer') }} " class="small-box-footer">View details <i
-                class="fa fa-arrow-circle-right"></i></a>
-    </div>
-</div>
-
-
-<div class="col-lg-3 col-xs-6">
-    <!-- small box -->
-    <div class="small-box bg-purple">
-        <div class="inner">
-
-            @if (isset($withdraws['prepaid']))
-                <h3>{{ count($withdraws['prepaid']->data) }}</h3>
-
-            @else
-                <h3>0</h3>
-            @endif
-
-
-            <p>Prepaid Card Withdrawal</p>
-        </div>
-        <div class="icon">
-            <i class="ion ion-stats-bars"></i>
-        </div>
-        <a href="{{ route('Prepaid Card withdrawal Request') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
-    </div>
-</div>
-
-<div class="col-lg-3 col-xs-6">
-    <!-- small box -->
-    <div class="small-box bg-purple">
-        <div class="inner">
-
-            @if (isset($withdraws['prepaid']))
-                <h3>{{ count($withdraws['prepaid']->data) }}</h3>
-
-            @else
-                <h3>0</h3>
-            @endif
-
-
-            <p>Remitance to Client </p>
-        </div>
-        <div class="icon">
-            <i class="ion ion-stats-bars"></i>
-        </div>
-        <a href="{{ route('Request for Remittance to Client') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
-    </div>
-</div>
-
-<div class="col-lg-3 col-xs-6">
-    <!-- small box -->
-    <div class="small-box bg-purple">
-        <div class="inner">
-
-            @if (isset($withdraws['prepaid']))
-                <h3>{{ count($withdraws['prepaid']->data) }}</h3>
-
-            @else
-                <h3>0</h3>
-            @endif
-
-
-            <p>Request for Refund </p>
-        </div>
-        <div class="icon">
-            <i class="ion ion-stats-bars"></i>
-        </div>
-        <a href="{{ route('Request for Refund') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
-    </div>
-</div>
-
-<div class="col-lg-3 col-xs-6">
-    <!-- small box -->
-    <div class="small-box bg-purple">
-        <div class="inner">
-
-            @if (isset($withdraws['prepaid']))
-                <h3>{{ count($withdraws['prepaid']->data) }}</h3>
-
-            @else
-                <h3>0</h3>
-            @endif
-
-
-            <p>Banking Information </p>
-        </div>
-        <div class="icon">
-            <i class="ion ion-stats-bars"></i>
-        </div>
-        <a href="{{ route('Banking Information') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
-    </div>
-</div>
-
-<div class="col-lg-3 col-xs-6">
-    <!-- small box -->
-    <div class="small-box bg-blue">
-        <div class="inner">
-
-            @if (isset($withdraws['prepaid']))
-                <h3>{{ count($withdraws['prepaid']->data) }}</h3>
-
-            @else
-                <h3>0</h3>
-            @endif
-
-
-            <p>Top-up Red Flagged </p>
-        </div>
-        <div class="icon">
-            <i class="ion ion-stats-bars"></i>
-        </div>
-        <a href="{{ route('Top-Up Red Flagged') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
-    </div>
-</div>
 
 
 

@@ -7292,6 +7292,8 @@ class AdminController extends Controller
     }
 
 
+
+
     public function processedRefundMoneyRequest(Request $req)
     {
 
@@ -13650,7 +13652,7 @@ class AdminController extends Controller
         if ($thisuser->flagged == 0) {
             $user->where('id', $req->id)->update(['flagged' => 1, 'accountLevel' => 2]);
             $subject = "Your PaySprint Account is Temporarily Suspended. Take These Steps to Resolve it!!!";
-            $message = "<p>Your PaySprint Account is temporarily suspended as our system is unable to match the details on your profile with the details on the Bank Card added which 
+            $message = "<p>Your PaySprint Account is temporarily suspended as our system is unable to match the details on your profile with the details on the Bank Card added which
 is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the temporary suspension on your account, kindly take the following steps:</p><p>a.  Delete and desist from using a Bank Card with details that are different from your PaySprint profile and Government issued photo ID</p><p>b. Send us a copy of a Utility Bill with address that matches the address on your profile. Please send the copy of utility bill to: info@paysprint.ca</p><p>c. Upload a selfie of yourself (if you are yet to do so)</p><p>Kindly login to www.paysprint.ca and upload Items B and C above when the suspension on your PaySprint Account is removed.</p><p>We thank you for your understanding</p><p>Compliance Team at paysprint.ca</p>";
         } else {
             $user->where('id', $req->id)->update(['flagged' => 0, 'accountLevel' => 3]);

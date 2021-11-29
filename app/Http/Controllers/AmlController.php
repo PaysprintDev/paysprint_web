@@ -351,6 +351,60 @@ class AmlController extends Controller
     }
 
 
+
+    public function reports()
+    {
+        $data = array(
+            'activity' => $this->userActivity()
+        );
+
+        $transCost = $this->transactionCost();
+        $allusers = $this->allUsers();
+
+        $withdraws = [
+            'bank' => $this->requestFromBankWithdrawal(),
+            'purchase' => $this->purchaseRefundSentback(),
+            'credit' => $this->requestFromCardWithdrawal(),
+            'prepaid' => $this->pendingRequestFromPrepaidWithdrawal(),
+            // 'specialInfo' => $this->getthisInfo(session('country')),
+        ];
+
+        $pending = [
+            'transfer' => $this->pendingTransferTransactions(),
+            'texttotransfer' => $this->textToTransferUsers(),
+        ];
+
+        $refund = [
+            'requestforrefund' => $this->requestForAllRefund(),
+        ];
+
+        $allcountries = $this->getAllCountries();
+
+        $received = [
+            'payInvoice' => $this->payInvoice(session('email')),
+        ];
+
+        $data = array(
+            'getuserDetail' => $this->getmyPersonalDetail(session('user_id')),
+            'getbusinessDetail' => $this->getmyBusinessDetail(session('user_id')),
+            'merchantservice' => $this->_merchantServices(),
+            'getCard' => $this->getUserCard(session('myID')),
+            'getBank' => $this->getUserBank(session('myID')),
+            'getTax' => $this->getTax(session('myID')),
+            'listbank' => $this->getBankList(),
+            'escrowfund' => $this->getEscrowFunding(),
+        );
+
+
+        return view('aml.reports')->with(['pages' => 'AML Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'transCost' => $transCost, 'data' => $data]);
+    }
+
+
+
+
+
+
+
     public function platform(Request $req)
     {
 
@@ -775,14 +829,73 @@ class AmlController extends Controller
     }
 
 
-
-    public function requestForRefundByCountryAml($country)
+    public function requestForRefundByCountryAml(Request $req)
     {
 
-        $data = RequestRefund::where('status', '!=', 'PROCESSED')->where('country', $country)->orderBy('created_at', 'DESC')->get();
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
 
-        return $data;
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'requestforrefund' => $this->requestForRefundByCountry($req->get('country')),
+            );
+
+
+
+            return view('admin.wallet.refundrequestwithdrawalbycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
     }
+
+
+
+    // public function requestForRefundByCountryAml($country)
+    // {
+
+    //     $data = RequestRefund::where('status', '!=', 'PROCESSED')->where('country', $country)->orderBy('created_at', 'DESC')->get();
+
+    //     return $data;
+    // }
 
 
 
@@ -1218,6 +1331,8 @@ class AmlController extends Controller
         }
     }
 
+
+
     public function allMyArchivedUserList($country, $usertype)
     {
 
@@ -1436,9 +1551,56 @@ class AmlController extends Controller
             'activity' => $this->userActivity()
         );
 
+        $transCost = $this->transactionCost();
+        $allusers = $this->allUsers();
 
-        return view('aml.amlsuplinkfolder.bankinginformation')->with(['data' => $data]);
+        $withdraws = [
+            'bank' => $this->requestFromBankWithdrawal(),
+            'purchase' => $this->purchaseRefundSentback(),
+            'credit' => $this->requestFromCardWithdrawal(),
+            'prepaid' => $this->pendingRequestFromPrepaidWithdrawal(),
+            // 'specialInfo' => $this->getthisInfo(session('country')),
+        ];
+
+        $pending = [
+            'transfer' => $this->pendingTransferTransactions(),
+            'texttotransfer' => $this->textToTransferUsers(),
+        ];
+
+        $refund = [
+            'requestforrefund' => $this->requestForAllRefund(),
+        ];
+
+        $allcountries = $this->getAllCountries();
+
+        $received = [
+            'payInvoice' => $this->payInvoice(session('email')),
+        ];
+
+        $data = array(
+            'getuserDetail' => $this->getmyPersonalDetail(session('user_id')),
+            'getbusinessDetail' => $this->getmyBusinessDetail(session('user_id')),
+            'merchantservice' => $this->_merchantServices(),
+            'getCard' => $this->getUserCard(session('myID')),
+            'getBank' => $this->getUserBank(session('myID')),
+            'getTax' => $this->getTax(session('myID')),
+            'listbank' => $this->getBankList(),
+            'escrowfund' => $this->getEscrowFunding(),
+        );
+
+
+        return view('aml.bankinginformation')->with(['pages' => 'AML Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'transCost' => $transCost, 'data' => $data]);
     }
+
+    // public function bankingInformation()
+    // {
+    //     $data = array(
+    //         'activity' => $this->userActivity()
+    //     );
+
+
+    //     return view('aml.amlsuplinkfolder.bankinginformation')->with(['data' => $data]);
+    // }
 
     public function transactionAnalysis()
     {
