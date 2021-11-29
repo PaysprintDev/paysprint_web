@@ -131,6 +131,13 @@ Route::get('Ticket', ['uses' => 'HomeController@ticket', 'as' => 'ticket']);
 
 Route::get('profile', ['uses' => 'HomeController@profile', 'as' => 'profile']);
 
+
+Route::get('verification', ['uses' => 'HomeController@verifyAuthentication', 'as' => 'verification page']);
+Route::post('verifyotp', ['uses' => 'HomeController@verifyOtp', 'as' => 'verifyotp']);
+Route::get('regenerateotp', ['uses' => 'HomeController@regenerateOtp', 'as' => 'regenerate otp']);
+
+
+
 // Terms or USE
 Route::get('terms-of-service', ['uses' => 'HomeController@termsOfUse', 'as' => 'terms of use']);
 
@@ -329,6 +336,7 @@ Route::get('leveltwousers', ['uses' => 'AdminController@allLevelTwoUsers', 'as' 
 Route::get('pendingusers', ['uses' => 'AdminController@allPendingUsers', 'as' => 'pendingusers']);
 Route::get('overrideusers', ['uses' => 'AdminController@allOverrideUsers', 'as' => 'overrideusers']);
 Route::get('closedusers', ['uses' => 'AdminController@allClosedUsers', 'as' => 'closedusers']);
+Route::get('suspendedusers', ['uses' => 'AdminController@allSuspendedUsers', 'as' => 'suspendedusers']);
 Route::get('newusers', ['uses' => 'AdminController@allNewusers', 'as' => 'newusers']);
 Route::get('newmerchants', ['uses' => 'AdminController@allNewMerchants', 'as' => 'newmerchants']);
 Route::get('archiveduserslist', ['uses' => 'AdminController@archivedUsersList', 'as' => 'archiveduserslist']);
@@ -356,6 +364,7 @@ Route::get('matchedusersbycountry', ['uses' => 'AdminController@allMatchedUsersB
 Route::get('pendingusersbycountry', ['uses' => 'AdminController@allPendingUsersByCountry', 'as' => 'pending users by country']);
 Route::get('overrideusersbycountry', ['uses' => 'AdminController@allOverrideUsersByCountry', 'as' => 'override users by country']);
 Route::get('closedusersbycountry', ['uses' => 'AdminController@allClosedUsersByCountry', 'as' => 'closed users by country']);
+Route::get('suspendedusersbycountry', ['uses' => 'AdminController@allSuspendedUsersByCountry', 'as' => 'suspended users by country']);
 
 
 Route::get('newusersbycountry', ['uses' => 'AdminController@newUsersByCountry', 'as' => 'new users by country']);
@@ -761,6 +770,7 @@ Auth::routes();
 
 // AML Page Route
 Route::prefix('Admin/aml')->group(function () {
+<<<<<<< HEAD
     Route::get('/dashboard', ['uses' => 'AmlController@index', 'as' => 'aml dashboard']);
     Route::get('/activitylog', ['uses' => 'AmlController@activityLog', 'as' => 'aml activity log']);
     Route::get('/transactionreview', ['uses' => 'AmlController@transactionReview', 'as' => 'Transaction Review']);
@@ -794,26 +804,55 @@ Route::prefix('Admin/aml')->group(function () {
     Route::get('/compliance', ['uses' => 'AmlController@compliance', 'as' => 'Compliance']);
     Route::get('/suspicioustransaction', ['uses' => 'AmlController@suspiciousTransaction', 'as' => 'Suspicious Transaction']);
     Route::get('pendingtransferbycountryaml', ['uses' => 'AmlController@textsToTransferByCountry', 'as' => 'texts to transfer by country']);
+=======
+	Route::get('/dashboard', ['uses' => 'AmlController@index', 'as' => 'aml dashboard']);
+	Route::get('/activitylog', ['uses' => 'AmlController@activityLog', 'as' => 'aml activity log']);
+	Route::get('/transactionreview', ['uses' => 'AmlController@transactionReview', 'as' => 'aml transaction review']);
+	Route::get('/transactionanalysis', ['uses' => 'AmlController@transactionAnalysis', 'as' => 'aml transaction analysis']);
+	Route::get('/compliancedeskreview', ['uses' => 'AmlController@complianceDeskReview', 'as' => 'aml compliance desk review']);
+	Route::get('/reports', ['uses' => 'AmlController@reports', 'as' => 'aml reports']);
+	Route::get('/creditcardholdreturn', ['uses' => 'AmlController@creditCardHoldReturn', 'as' => 'credit card hold return']);
+	Route::get('/platform', ['uses' => 'AmlController@platForm', 'as' => 'platform']);
+	Route::get('/customerservice', ['uses' => 'AmlController@customerService', 'as' => 'customer service']);
+	Route::get('/technology', ['uses' => 'AmlController@technology', 'as' => 'technology']);
+	Route::get('/bankrequestamlwithdrawalbycountry', ['uses' => 'AmlController@requestForWithdrawalToBank', 'as' => 'Request aml for Withdrawal to bank']);
+>>>>>>> a7abab8d21677f12cb375771eefa4918d7f0b987
 
-    Route::get('bankrequestwithdrawalbycountry', ['uses' => 'AmlController@bankRequestWithdrawalByCountry', 'as' => 'bank aml withdrawal by country']);
+	Route::get('/view', ['uses' => 'AmlController@view', 'as' => 'View']);
+	Route::get('/upload', ['uses' => 'AmlController@upload', 'as' => 'Upload']);
 
-    Route::get('bankrequestwithdrawal', ['uses' => 'AmlController@bankRequestWithdrawal', 'as' => 'bank aml request withdrawal']);
+	Route::get('/purchaserefundrequestaml', ['uses' => 'AmlController@purchaseRefundRequestAml', 'as' => 'Purchase aml Refund Request']);
+	Route::get('refunddetail/{transid}', ['uses' => 'AmlController@getRefundDetailAml', 'as' => 'refund detail']);
 
-    Route::get('refundmoneyrequestbycountryaml', ['uses' => 'AmlController@refundMoneyRequestByCountryAml', 'as' => 'refund aml details by country']);
+	Route::get('/creditcardwithdrawalrequest', ['uses' => 'AmlController@creditCardWithdrawalRequest', 'as' => 'Credit Card withdrawal Request']);
 
-    Route::get('merchantbankdetail', ['uses' => 'AmlController@merchantBanksDetails', 'as' => 'merchant banking details']);
+	Route::get('/pendingtransferaml', ['uses' => 'AmlController@pendingTransfer', 'as' => 'Pending aml Transfer']);
 
-    Route::get('merchantbankdetailbycountry', ['uses' => 'AmlController@merchantBankDetailByCountryAml', 'as' => 'merchant bank detail by country']);
+	Route::get('/prepaidcardwithdrawalrequest', ['uses' => 'AmlController@prepaidCardWithdrawalRequest', 'as' => 'Prepaid Card withdrawal Request']);
+	Route::get('/requestforremittancetoclient', ['uses' => 'AmlController@requestForRemittanceToClient', 'as' => 'Request for Remittance to Client']);
+	Route::get('/requestforrefund', ['uses' => 'AmlController@requestRefund', 'as' => 'Request for Refund']);
+	Route::get('/bankinginformation', ['uses' => 'AmlController@bankingInformation', 'as' => 'Banking Information']);
+	Route::get('/topupredflagged', ['uses' => 'AmlController@topUpRedFlagged', 'as' => 'Top-Up Red Flagged']);
+	Route::get('/transactionanalysis', ['uses' => 'AmlController@transactionAnalysis', 'as' => 'Transaction Analysis']);
+	Route::get('/compliancedeskreview', ['uses' => 'AmlController@complianceDeskReview', 'as' => 'Compliance Desk Review']);
+	Route::get('/compliance', ['uses' => 'AmlController@compliance', 'as' => 'Compliance']);
+	Route::get('/suspicioustransaction', ['uses' => 'AmlController@suspiciousTransaction', 'as' => 'Suspicious Transaction']);
+	Route::get('pendingtransferbycountryaml', ['uses' => 'AmlController@textsToTransferByCountry', 'as' => 'texts to transfer by country']);
+
+	Route::get('bankrequestwithdrawalbycountry', ['uses' => 'AmlController@bankRequestWithdrawalByCountry', 'as' => 'bank aml withdrawal by country']);
+
+	Route::get('bankrequestwithdrawal', ['uses' => 'AmlController@bankRequestWithdrawal', 'as' => 'bank aml request withdrawal']);
+
+	Route::get('refundmoneyrequestbycountryaml', ['uses' => 'AmlController@refundMoneyRequestByCountryAml', 'as' => 'refund aml details by country']);
+
+	Route::get('merchantbankdetail', ['uses' => 'AmlController@merchantBanksDetails', 'as' => 'merchant banking details']);
+
+	Route::get('merchantbankdetailbycountry', ['uses' => 'AmlController@merchantBankDetailByCountryAml', 'as' => 'merchant bank detail by country']);
 
 
-    Route::get('bankrequestwithdrawal', ['uses' => 'AmlController@merchantBanksDetailsAml', 'as' => 'merchant banking detail aml']);
-    Route::get('activitylogaml', ['uses' => 'AmlController@activityLogAml', 'as' => 'log aml']);
-    Route::get('purchaserefundrequest', ['uses' => 'AmlController@purchaseRefundRequest', 'as' => 'purchase refund request']);
-
-
-
-
-
+	Route::get('bankrequestwithdrawal', ['uses' => 'AmlController@merchantBanksDetailsAml', 'as' => 'merchant banking detail aml']);
+	Route::get('activitylogaml', ['uses' => 'AmlController@activityLogAml', 'as' => 'log aml']);
+	Route::get('purchaserefundrequest', ['uses' => 'AmlController@purchaseRefundRequest', 'as' => 'purchase refund request']);
 });
 
 

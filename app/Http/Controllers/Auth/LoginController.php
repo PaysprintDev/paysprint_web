@@ -9,10 +9,15 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
+
 use App\User as User;
+
 
 class LoginController extends Controller
 {
+
+
+
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -31,7 +36,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/verification';
 
     /**
      * Create a new controller instance.
@@ -41,19 +46,8 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-
-        // $this->updateToken();
-
     }
 
-    // Update Token
-    // public function updateToken(){
-
-    //     $email = request()->input('email');
-
-    //     User::where()->update(['api_token' => uniqid().time().md5($email)]);
-
-    // }
 
 
     public function logout(Request $request)
