@@ -261,8 +261,93 @@ class AmlController extends Controller
             'activity' => $this->userActivity()
         );
 
+        $transCost = $this->transactionCost();
+        $allusers = $this->allUsers();
 
-        return view('aml.activitylog')->with(['data' => $data]);
+        $withdraws = [
+            'bank' => $this->requestFromBankWithdrawal(),
+            'purchase' => $this->purchaseRefundSentback(),
+            'credit' => $this->requestFromCardWithdrawal(),
+            'prepaid' => $this->pendingRequestFromPrepaidWithdrawal(),
+            // 'specialInfo' => $this->getthisInfo(session('country')),
+        ];
+
+        $pending = [
+            'transfer' => $this->pendingTransferTransactions(),
+            'texttotransfer' => $this->textToTransferUsers(),
+        ];
+
+        $refund = [
+            'requestforrefund' => $this->requestForAllRefund(),
+        ];
+
+        $allcountries = $this->getAllCountries();
+
+        $received = [
+            'payInvoice' => $this->payInvoice(session('email')),
+        ];
+
+        $data = array(
+            'getuserDetail' => $this->getmyPersonalDetail(session('user_id')),
+            'getbusinessDetail' => $this->getmyBusinessDetail(session('user_id')),
+            'merchantservice' => $this->_merchantServices(),
+            'getCard' => $this->getUserCard(session('myID')),
+            'getBank' => $this->getUserBank(session('myID')),
+            'getTax' => $this->getTax(session('myID')),
+            'listbank' => $this->getBankList(),
+            'escrowfund' => $this->getEscrowFunding(),
+        );
+
+
+        return view('aml.activitylog')->with(['pages' => 'AML Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'transCost' => $transCost, 'data' => $data]);
+    }
+
+
+    public function transactionReview()
+    {
+        $data = array(
+            'activity' => $this->userActivity()
+        );
+
+        $transCost = $this->transactionCost();
+        $allusers = $this->allUsers();
+
+        $withdraws = [
+            'bank' => $this->requestFromBankWithdrawal(),
+            'purchase' => $this->purchaseRefundSentback(),
+            'credit' => $this->requestFromCardWithdrawal(),
+            'prepaid' => $this->pendingRequestFromPrepaidWithdrawal(),
+            // 'specialInfo' => $this->getthisInfo(session('country')),
+        ];
+
+        $pending = [
+            'transfer' => $this->pendingTransferTransactions(),
+            'texttotransfer' => $this->textToTransferUsers(),
+        ];
+
+        $refund = [
+            'requestforrefund' => $this->requestForAllRefund(),
+        ];
+
+        $allcountries = $this->getAllCountries();
+
+        $received = [
+            'payInvoice' => $this->payInvoice(session('email')),
+        ];
+
+        $data = array(
+            'getuserDetail' => $this->getmyPersonalDetail(session('user_id')),
+            'getbusinessDetail' => $this->getmyBusinessDetail(session('user_id')),
+            'merchantservice' => $this->_merchantServices(),
+            'getCard' => $this->getUserCard(session('myID')),
+            'getBank' => $this->getUserBank(session('myID')),
+            'getTax' => $this->getTax(session('myID')),
+            'listbank' => $this->getBankList(),
+            'escrowfund' => $this->getEscrowFunding(),
+        );
+
+
+        return view('aml.transactionreview')->with(['pages' => 'AML Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'transCost' => $transCost, 'data' => $data]);
     }
 
 
@@ -691,7 +776,7 @@ class AmlController extends Controller
 
 
 
-    public function requestForRefundByCountryaml($country)
+    public function requestForRefundByCountryAml($country)
     {
 
         $data = RequestRefund::where('status', '!=', 'PROCESSED')->where('country', $country)->orderBy('created_at', 'DESC')->get();

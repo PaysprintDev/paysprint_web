@@ -26,7 +26,7 @@
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="#" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('Transaction Review') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -82,7 +82,7 @@
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="#" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('aml reports') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 <!-- ./col -->
