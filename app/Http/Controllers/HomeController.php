@@ -109,7 +109,8 @@ use App\Traits\PaymentGateway;
 
 use App\Traits\MailChimpNewsLetter;
 
-
+use App\Traits\GenerateOtp;
+use App\VerificationCode;
 
 class HomeController extends Controller
 {
@@ -127,7 +128,7 @@ class HomeController extends Controller
     public $country;
     public $timezone;
 
-    use RpmApp, Trulioo, AccountNotify, PaystackPayment, ExpressPayment, SpecialInfo, Xwireless, PaymentGateway, MailChimpNewsLetter, PaysprintPoint, PointsHistory;
+    use RpmApp, Trulioo, AccountNotify, PaystackPayment, ExpressPayment, SpecialInfo, Xwireless, PaymentGateway, MailChimpNewsLetter, PaysprintPoint, PointsHistory, GenerateOtp;
     /**
      * Create a new controller instance.
      *
@@ -3491,6 +3492,58 @@ class HomeController extends Controller
     }
 
 
+    public function verifyAuthentication(Request $req)
+    {
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Create a Ticket';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'continent' => $this->timezone[0]
+                );
+
+                $this->getTickets = CreateEvent::where('user_id', $this->email)->orderBy('created_at', 'DESC')->get();
+            } else {
+                $this->page = 'Verification Code';
+                $this->name = '';
+            }
+        } else {
+            $this->page = 'Verification Code';
+            $this->name = session('name');
+            $this->email = session('email');
+        }
+
+        return view('auth.verification')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email]);
+    }
+
+    public function verifyOtp(Request $req)
+    {
+        // Check OTP exists and verify USER...
+        $getCode = VerificationCode::where('user_id', Auth::id())->where('code', $req->code)->first();
+
+        if (!isset($getCode)) {
+            $resData = 'Invalid verification OTP';
+            $resp = "error";
+            return redirect()->back()->with($resp, $resData);
+        }
+
+        VerificationCode::where('user_id', Auth::id())->where('code', $req->code)->delete();
+        return redirect()->route('home');
+    }
+
+    public function regenerateOtp()
+    {
+        $this->generateOTP(Auth::id());
+
+        $resData = 'Successfully sent';
+        $resp = "success";
+
+        return redirect()->back()->with($resp, $resData);;
+    }
+
+
     public function ticket(Request $req)
     {
 
@@ -3525,6 +3578,7 @@ class HomeController extends Controller
 
         return view('main.ticket')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'getTickets' => $this->getTickets, 'data' => $data]);
     }
+
 
 
 
@@ -3886,6 +3940,8 @@ class HomeController extends Controller
                             $this->checkLoginInfo($userExists[0]['ref_code'], $city, $country, $ip);
 
                             $resData = ['res' => 'Welcome back ' . $userExists[0]['name'], 'message' => 'success'];
+
+                            $this->generateOTP($userExists[0]['id']);
 
                             $this->createNotification($userExists[0]['ref_code'], 'Welcome back ' . $userExists[0]['name']);
                         }
