@@ -26,7 +26,7 @@
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="{{ route('Transaction Review') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('aml transaction review') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -41,7 +41,7 @@
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="{{ route('Transaction Analysis') }}" class="small-box-footer">View details <i
+        <a href="{{ route('aml transaction analysis') }}" class="small-box-footer">View details <i
                 class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
@@ -58,7 +58,7 @@
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="{{ route('Compliance Desk Review') }} " class="small-box-footer">View details <i
+        <a href="{{ route('aml compliance desk review') }} " class="small-box-footer">View details <i
                 class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>

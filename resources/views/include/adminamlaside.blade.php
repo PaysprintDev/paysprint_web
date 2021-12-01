@@ -154,10 +154,10 @@ echo $output; ?></a></li>
                 </ul>
 
             </li>
-            <li title="Transaction Analysis"><a href="{{ route('Transaction Analysis') }}"><i
+            <li title="Transaction Analysis"><a href="{{ route('aml transaction analysis') }}"><i
                         class="fa fa-circle-o text-red"></i> Transaction Analysis</a></li>
 
-            <li title="Compliance Desk Review"><a href="{{ route('Compliance Desk Review') }}"><i
+            <li title="Compliance Desk Review"><a href="{{ route('aml compliance desk review') }}"><i
                         class="fa fa-circle-o text-red"></i> Compliance Desk Review</a></li>
 
 
