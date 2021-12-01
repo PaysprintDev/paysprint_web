@@ -595,7 +595,8 @@
 
 
                             // Put Exchange rate
-                            $('#rateToday').html("<span class='text-danger'><strong>1" + localfrom[1] + " = " +
+                            $('#rateToday').html("<span class='text-danger'><strong>" + parseFloat(amount).toFixed(
+                                    2) + "" + localfrom[1] + " = " +
                                 todayRate.toFixed(4) + '' + localto[1] + "</strong></span>");
                         } else {
 
