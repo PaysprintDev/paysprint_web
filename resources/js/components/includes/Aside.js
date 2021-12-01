@@ -105,7 +105,7 @@ class Aside extends Component {
 			if (resultA.status === 200 && resultB.status === 200) {
 				// var buying = this.state.sellAmount / resultB.data;
 
-				var buying = this.state.sellAmount / resultB.data;
+				var buying = this.state.sellAmount * resultA.data;
 
 				document.getElementById('buyCurrencyCode').innerHTML = `1 ${this.state.sellCurrency} - `;
 				document.getElementById('sellCurrencyCode').innerHTML = `1 ${this.state.buyCurrency} - `;
