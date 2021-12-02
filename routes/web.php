@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+
+use App\Http\Controllers\MerchantPageController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -45,6 +47,10 @@ Route::get('checktelephone', 'CheckSetupController@checkTelephone');
 Route::get('userarchive', 'CheckSetupController@userAccountArchive');
 Route::get('matchedusersmove', 'CheckSetupController@matchedUsersAccount');
 Route::get('approvedusersmove', 'CheckSetupController@approvedUsersAccount');
+
+
+// Happy New Month From PaySpirnt
+Route::get('happynewmonth', 'CheckSetupController@happyNewMonth');
 
 // KYB Completed and Industry
 Route::get('movekybcompleted', 'CheckSetupController@moveKYBCompleted');
@@ -240,6 +246,28 @@ Route::get('signout/{id}',  ['uses' => 'api\v1\UserController@logout'])->name('s
 
 
 
+// New Merchant Page Route
+Route::prefix('merchant')->group(function () {
+
+    Route::get('/dashboard', [MerchantPageController::class, 'index'])->name('dashboard');
+    Route::get('/invoice', [MerchantPageController::class, 'invoiceSingle'])->name('invoice single');
+    Route::get('/forms', [MerchantPageController::class, 'invoiceForm'])->name('invoice form');
+    Route::get('/createinvoicetypes', [MerchantPageController::class, 'invoiceTypes'])->name('invoice types');
+    Route::get('/setuptax', [MerchantPageController::class, 'setUpTax'])->name('set up tax');
+    Route::get('/invoicestatement', [MerchantPageController::class, 'invoiceStatement'])->name('invoice statement');
+    Route::get('/walletstatement', [MerchantPageController::class, 'walletStatement'])->name('wallet statement');
+    Route::get('/sentinvoice', [MerchantPageController::class, 'sentInvoice'])->name('sent invoice');
+    Route::get('/paidinvoice', [MerchantPageController::class, 'paidInvoice'])->name('paid invoice');
+    Route::get('/pendinginvoice', [MerchantPageController::class, 'pendingInvoice'])->name('pending invoice');
+    Route::get('/customerbalancereport', [MerchantPageController::class, 'balanceReport'])->name('balance report');
+    Route::get('/taxesreport', [MerchantPageController::class, 'taxesReport'])->name('taxes report');
+    Route::get('/invoicetypereport', [MerchantPageController::class, 'invoiceTypeReport'])->name('invoice type report');
+    Route::get('/reccuringreport', [MerchantPageController::class, 'recurringType'])->name('recurring type');
+    Route::get('/profile', [MerchantPageController::class, 'profile'])->name('profile');
+    Route::get('/invoicepage', [MerchantPageController::class, 'invoicePage'])->name('invoice page');
+    Route::get('/paymentgateway', [MerchantPageController::class, 'paymentGateway'])->name('payment gateway');
+    Route::get('/orderingsystem', [MerchantPageController::class, 'orderingSystem'])->name('ordering system');
+});
 
 
 
@@ -770,6 +798,19 @@ Auth::routes();
 
 // AML Page Route
 Route::prefix('Admin/aml')->group(function () {
+	Route::get('/dashboard', ['uses' => 'AmlController@index', 'as' => 'aml dashboard']);
+	Route::get('/activitylog', ['uses' => 'AmlController@activityLog', 'as' => 'aml activity log']);
+	Route::get('/transactionreview', ['uses' => 'AmlController@transactionReview', 'as' => 'aml transaction review']);
+	Route::get('/transactionanalysis', ['uses' => 'AmlController@transactionAnalysis', 'as' => 'aml transaction analysis']);
+	Route::get('/compliancedeskreview', ['uses' => 'AmlController@complianceDeskReview', 'as' => 'aml compliance desk review']);
+	Route::get('/reports', ['uses' => 'AmlController@reports', 'as' => 'aml reports']);
+	Route::get('/creditcardholdreturn', ['uses' => 'AmlController@creditCardHoldReturn', 'as' => 'credit card hold return']);
+	Route::get('/platform', ['uses' => 'AmlController@platForm', 'as' => 'platform']);
+	Route::get('/customerservice', ['uses' => 'AmlController@customerService', 'as' => 'customer service']);
+	Route::get('/technology', ['uses' => 'AmlController@technology', 'as' => 'technology']);
+	Route::get('/bankrequestamlwithdrawalbycountry', ['uses' => 'AmlController@requestForWithdrawalToBank', 'as' => 'Request aml for Withdrawal to bank']);
+
+	Route::get('/view', ['uses' => 'AmlController@view', 'as' => 'View']);
 	Route::get('/upload', ['uses' => 'AmlController@upload', 'as' => 'Upload']);
 
 	Route::get('/purchaserefundrequestaml', ['uses' => 'AmlController@purchaseRefundRequestAml', 'as' => 'Purchase aml Refund Request']);
@@ -783,8 +824,6 @@ Route::prefix('Admin/aml')->group(function () {
 	Route::get('/requestforremittancetoclient', ['uses' => 'AmlController@requestForRemittanceToClient', 'as' => 'Request for Remittance to Client']);
 	Route::get('/bankinginformation', ['uses' => 'AmlController@bankingInformation', 'as' => 'Banking Information']);
 	Route::get('/topupredflagged', ['uses' => 'AmlController@topUpRedFlagged', 'as' => 'Top-Up Red Flagged']);
-	Route::get('/transactionanalysis', ['uses' => 'AmlController@transactionAnalysis', 'as' => 'Transaction Analysis']);
-	Route::get('/compliancedeskreview', ['uses' => 'AmlController@complianceDeskReview', 'as' => 'Compliance Desk Review']);
 	Route::get('/compliance', ['uses' => 'AmlController@compliance', 'as' => 'Compliance']);
 	Route::get('/suspicioustransaction', ['uses' => 'AmlController@suspiciousTransaction', 'as' => 'Suspicious Transaction']);
 	Route::get('pendingtransferbycountryaml', ['uses' => 'AmlController@textsToTransferByCountry', 'as' => 'texts to transfer by country']);
