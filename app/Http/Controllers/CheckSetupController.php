@@ -218,6 +218,29 @@ class CheckSetupController extends Controller
     }
 
 
+    // Happy New Month From PaySprint
+    public function happyNewMonth()
+    {
+
+        try {
+            $thisuser = User::all();
+
+            foreach ($thisuser as $value) {
+
+                $firstname = explode(' ', $value->name);
+
+                $sendMsg = 'We wish you great moments as we approach the new year. Happy new month ' . ucfirst($firstname[0]) . '. From all of us at PaySprint';
+
+                $this->createNotification($value->ref_code, $sendMsg);
+            }
+
+            echo "Done";
+        } catch (\Throwable $th) {
+            $this->slack('Error HNM: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+        }
+    }
+
+
     // Move KYB Completed
     public function moveKYBCompleted()
     {
