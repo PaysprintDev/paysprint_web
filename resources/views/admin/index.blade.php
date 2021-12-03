@@ -737,15 +737,15 @@ echo $output; ?></td>
 
                                                     {{-- @if ($leftOver = \App\InvoicePayment::where('invoice_no', $invoiceImports->invoice_no)->get())
                         
-                        @if (count($leftOver) > 0)
-                        <td align="center" style="font-weight: bold; color: green;">Paid</td>
+                                                        @if (count($leftOver) > 0)
+                                                        <td align="center" style="font-weight: bold; color: green;">Paid</td>
 
-                        @else
-                        <td align="center" style="font-weight: bold; color: red;">Pending</td>
+                                                        @else
+                                                        <td align="center" style="font-weight: bold; color: red;">Pending</td>
 
-                        @endif
+                                                        @endif
 
-                      @endif --}}
+                                                    @endif --}}
                                                     <td>{{ date('d/M/Y', strtotime($invoiceImports->payment_due_date)) }}
                                                     </td>
 
@@ -940,7 +940,7 @@ echo $output; ?>
 
                                             @else
                                                 <tr>
-                                                    <td colspan="8" align="center">No payment made to client yet</td>
+                                                    <td colspan="9" align="center">No payment made to client yet</td>
                                                 </tr>
 
                                             @endif

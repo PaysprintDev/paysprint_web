@@ -49,14 +49,25 @@
 <!-- Plugins JS Ends-->
 
 <!-- Plugins JS start-->
-<script src="../merchantassets/assets/js/datatable/datatables/jquery.dataTables.min.js"></script>
-<script src="../merchantassets/assets/js/datatable/datatables/datatable.custom.js"></script>
+<script src="{{ asset('merchantassets/assets/js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('merchantassets/assets/js/datatable/datatables/datatable.custom.js') }}"></script>
 <!-- Plugins JS Ends-->
 
 <!-- Theme js-->
 <script src="{{ asset('merchantassets/assets/js/script.js') }}"></script>
 <script src="{{ asset('merchantassets/assets/js/theme-customizer/customizer.js') }}"></script>
 <!-- Plugin used-->
+
+
+<script>
+    $(document).ready(function() {
+        $('.invoicetable').DataTable({
+            'pageLength': 20,
+        });
+
+    });
+</script>
+
 </body>
 
 <!-- Mirrored from laravel.pixelstrap.com/viho/dashboard by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 03 Nov 2021 16:20:40 GMT -->

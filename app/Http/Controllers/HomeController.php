@@ -161,26 +161,32 @@ class HomeController extends Controller
         // $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
         if (Auth::check() == true) {
-            $this->page = 'Landing';
-            $this->name = Auth::user()->name;
-            $this->email = Auth::user()->email;
-            $data = array(
-                'sendReceive' => $this->sendAndReceive(Auth::user()->email),
-                'payInvoice' => $this->payInvoice(Auth::user()->email),
-                'walletTrans' => $this->sendAndReceive(Auth::user()->email),
-                'urgentnotification' => $this->urgentNotification(Auth::user()->email),
-                'currencyCode' => $this->getCountryCode(Auth::user()->country),
-                'getCard' => $this->getUserCard(),
-                'getBank' => $this->getUserBank(),
-                'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
-                'getmerchantsByCategory' => $this->getMerchantsByCategory(),
-                'specialInfo' => $this->getthisInfo(Auth::user()->country),
-                'continent' => $this->timezone[0],
-                'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
-                'pointsclaim' => $this->getClaimedHistory(Auth::user()->id),
-            );
 
-            $view = 'home';
+            if (Auth::user()->accountType == "Individual") {
+                $this->page = 'Landing';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'sendReceive' => $this->sendAndReceive(Auth::user()->email),
+                    'payInvoice' => $this->payInvoice(Auth::user()->email),
+                    'walletTrans' => $this->sendAndReceive(Auth::user()->email),
+                    'urgentnotification' => $this->urgentNotification(Auth::user()->email),
+                    'currencyCode' => $this->getCountryCode(Auth::user()->country),
+                    'getCard' => $this->getUserCard(),
+                    'getBank' => $this->getUserBank(),
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'getmerchantsByCategory' => $this->getMerchantsByCategory(),
+                    'specialInfo' => $this->getthisInfo(Auth::user()->country),
+                    'continent' => $this->timezone[0],
+                    'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+                    'pointsclaim' => $this->getClaimedHistory(Auth::user()->id),
+                );
+
+                $view = 'home';
+            } else {
+
+                return redirect()->route('dashboard');
+            }
         } else {
             $this->page = 'Homepage';
             $this->name = '';
@@ -212,26 +218,31 @@ class HomeController extends Controller
         // dd($req->session());
 
         if (Auth::check() == true) {
-            $this->page = 'Landing';
-            $this->name = Auth::user()->name;
-            $this->email = Auth::user()->email;
-            $data = array(
-                'sendReceive' => $this->sendAndReceive(Auth::user()->email),
-                'payInvoice' => $this->payInvoice(Auth::user()->email),
-                'walletTrans' => $this->sendAndReceive(Auth::user()->email),
-                'urgentnotification' => $this->urgentNotification(Auth::user()->email),
-                'currencyCode' => $this->getCountryCode(Auth::user()->country),
-                'getCard' => $this->getUserCard(),
-                'getBank' => $this->getUserBank(),
-                'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
-                'getmerchantsByCategory' => $this->getMerchantsByCategory(),
-                'specialInfo' => $this->getthisInfo(Auth::user()->country),
-                'continent' => $this->timezone[0],
-                'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
-                'pointsclaim' => $this->getClaimedHistory(Auth::user()->user_id),
-            );
 
-            $view = 'home';
+            if (Auth::user()->accountType == "Individual") {
+                $this->page = 'Landing';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'sendReceive' => $this->sendAndReceive(Auth::user()->email),
+                    'payInvoice' => $this->payInvoice(Auth::user()->email),
+                    'walletTrans' => $this->sendAndReceive(Auth::user()->email),
+                    'urgentnotification' => $this->urgentNotification(Auth::user()->email),
+                    'currencyCode' => $this->getCountryCode(Auth::user()->country),
+                    'getCard' => $this->getUserCard(),
+                    'getBank' => $this->getUserBank(),
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'getmerchantsByCategory' => $this->getMerchantsByCategory(),
+                    'specialInfo' => $this->getthisInfo(Auth::user()->country),
+                    'continent' => $this->timezone[0],
+                    'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+                    'pointsclaim' => $this->getClaimedHistory(Auth::user()->user_id),
+                );
+
+                $view = 'home';
+            } else {
+                return redirect()->route('dashboard');
+            }
         } else {
             $this->page = 'Home';
             $this->name = '';
@@ -255,25 +266,30 @@ class HomeController extends Controller
 
         // dd($req->session());
         if (Auth::check() == true) {
-            $this->page = 'Landing';
-            $this->name = Auth::user()->name;
-            $this->email = Auth::user()->email;
-            $data = array(
-                'sendReceive' => $this->sendAndReceive(Auth::user()->email),
-                'payInvoice' => $this->payInvoice(Auth::user()->email),
-                'walletTrans' => $this->sendAndReceive(Auth::user()->email),
-                'urgentnotification' => $this->urgentNotification(Auth::user()->email),
-                'currencyCode' => $this->getCountryCode(Auth::user()->country),
-                'getCard' => $this->getUserCard(),
-                'getBank' => $this->getUserBank(),
-                'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
-                'getmerchantsByCategory' => $this->getMerchantsByCategory(),
-                'specialInfo' => $this->getthisInfo(Auth::user()->country),
-                'continent' => $this->timezone[0],
-                'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
-                'pointsclaim' => $this->getClaimedHistory(Auth::user()->user_id),
 
-            );
+            if (Auth::user()->accountType == "Individual") {
+                $this->page = 'Landing';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'sendReceive' => $this->sendAndReceive(Auth::user()->email),
+                    'payInvoice' => $this->payInvoice(Auth::user()->email),
+                    'walletTrans' => $this->sendAndReceive(Auth::user()->email),
+                    'urgentnotification' => $this->urgentNotification(Auth::user()->email),
+                    'currencyCode' => $this->getCountryCode(Auth::user()->country),
+                    'getCard' => $this->getUserCard(),
+                    'getBank' => $this->getUserBank(),
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'getmerchantsByCategory' => $this->getMerchantsByCategory(),
+                    'specialInfo' => $this->getthisInfo(Auth::user()->country),
+                    'continent' => $this->timezone[0],
+                    'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+                    'pointsclaim' => $this->getClaimedHistory(Auth::user()->user_id),
+
+                );
+            } else {
+                return redirect()->route('dashboard');
+            }
         } else {
             $this->page = 'Home';
             $this->name = '';
