@@ -19,7 +19,7 @@
     <!-- small box -->
     <div class="small-box bg-green">
         <div class="inner">
-            <h3>{{ count($withdraws['bank']) }}</h3>
+            <h3>&nbsp;</h3>
 
             <p>Transaction Review</p>
         </div>
@@ -70,7 +70,7 @@
         <div class="inner">
 
             @if (isset($withdraws['prepaid']))
-                <h3>{{ count($withdraws['prepaid']->data) }}</h3>
+            <h3>&nbsp;</h3>
 
             @else
                 <h3>0</h3>

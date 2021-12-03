@@ -84,7 +84,7 @@
     <!-- small box -->
     <div class="small-box bg-aqua">
         <div class="inner">
-            <h3>&nbsp;</h3>
+            <h3>{{ count($withdraws['bank']) }}</h3>
 
 
             <p>Withdrawal to Bank</p>
@@ -101,7 +101,7 @@
     <!-- small box -->
     <div class="small-box bg-green">
         <div class="inner">
-            <h3>{{ count($withdraws['bank']) }}</h3>
+            <h3>{{ count($withdraws['purchase']) }}</h3>
 
             <p>purchase Refund Request</p>
         </div>
@@ -116,7 +116,7 @@
     <!-- small box -->
     <div class="small-box bg-black">
         <div class="inner">
-            <h3>{{ count($withdraws['purchase']) }}</h3>
+            <h3>{{ count($withdraws['credit']) }}</h3>
 
             <p>C C Withdrawal Request</p>
         </div>
@@ -133,7 +133,7 @@
     <!-- small box -->
     <div class="small-box bg-blue">
         <div class="inner">
-            <h3>{{ count($withdraws['credit']) }}</h3>
+            <h3>{{ count($pending['texttotransfer']) }}</h3>
 
             <p>Pending Transfer</p>
         </div>
@@ -152,11 +152,11 @@
         <div class="inner">
 
             @if (isset($withdraws['prepaid']))
-                <h3>{{ count($withdraws['prepaid']->data) }}</h3>
-
-            @else
-                <h3>0</h3>
-            @endif
+            <h3>{{ count($withdraws['prepaid']->data) }}</h3>
+              
+          @else
+              <h3>0</h3>
+          @endif
 
 
             <p>Prepaid Card Withdrawal</p>
@@ -195,12 +195,7 @@
     <div class="small-box bg-purple">
         <div class="inner">
 
-            @if (isset($withdraws['prepaid']))
-                <h3>{{ count($withdraws['prepaid']->data) }}</h3>
-
-            @else
-                <h3>0</h3>
-            @endif
+            <h3>{{ count($refund['requestforrefund']) }}</h3>
 
 
             <p>Request for Refund </p>
@@ -216,13 +211,8 @@
     <!-- small box -->
     <div class="small-box bg-purple">
         <div class="inner">
-
-            @if (isset($withdraws['prepaid']))
-                <h3>{{ count($withdraws['prepaid']->data) }}</h3>
-
-            @else
-                <h3>0</h3>
-            @endif
+            <h3>&nbsp;</h3>
+           
 
 
             <p>Banking Information </p>
