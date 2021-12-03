@@ -2,27 +2,27 @@
         <header class="main-nav">
             <div class="sidebar-user text-center">
                 <a class="setting-primary" href="javascript:void(0)"><i data-feather="settings"></i></a><img
-                    class="img-90 rounded-circle" src=" {{ asset('merchantassets/assets/images/dashboard/01.jpg') }}" alt="" />
+                    class="img-90 rounded-circle" src="{{ Auth::user()->avatar }}" alt="" />
                 <div class="badge-bottom"><span class="badge badge-primary"></span></div>
                 <a href="{{ route('profile') }}">
-                    <h6 class="mt-3 f-14 f-w-600">Double Major</h6>
+                    <h6 class="mt-3 f-14 f-w-600">{{ Auth::user()->businessname }}</h6>
                 </a>
-                <p class="mb-0 font-roboto">Music Producer, Web Developer</p>
+                <p class="mb-0 font-roboto">{{ 'Account Number: ' . Auth::user()->ref_code }}</p>
 
-                {{-- <ul>
+                <ul>
                     <li>
-                        <span><span class="counter">19.8</span>k</span>
-                        <p>Follow</p>
+                        <span><span class="counter">{{ Auth::user()->loginCount }}</span></span>
+                        <p>Logins</p>
                     </li>
                     <li>
-                        <span>2 year</span>
-                        <p>Experince</p>
+                        <span>{!! Auth::user()->bvn_verification > 0 ? '<img src="https://img.icons8.com/external-tal-revivo-green-tal-revivo/20/000000/external-verification-tick-mark-for-digital-certification-document-basic-green-tal-revivo.png"/>' : '<img src="https://img.icons8.com/fluency/20/000000/cancel.png"/>' !!}</span>
+                        <p>&nbsp;</p>
                     </li>
                     <li>
-                        <span><span class="counter">95.2</span>k</span>
-                        <p>Follower</p>
+                        <span><span class="counter">{{ Auth::user()->referral_points }}</span></span>
+                        <p>Ref. Points</p>
                     </li>
-                </ul> --}}
+                </ul>
             </div>
             <nav>
                 <div class="main-navbar">

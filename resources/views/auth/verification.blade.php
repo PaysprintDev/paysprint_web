@@ -185,7 +185,7 @@
     <!-- All contact Info -->
     <section class="all_contact_info">
 
-        @include('include.message')
+        @include('include.verifymessage')
 
         <div class="container">
             <div class="row contact_row">
