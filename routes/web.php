@@ -249,24 +249,24 @@ Route::get('signout/{id}',  ['uses' => 'api\v1\UserController@logout'])->name('s
 // New Merchant Page Route
 Route::prefix('merchant')->group(function () {
 
-    Route::get('/dashboard', [MerchantPageController::class, 'index'])->name('dashboard');
-    Route::get('/invoice', [MerchantPageController::class, 'invoiceSingle'])->name('invoice single');
-    Route::get('/forms', [MerchantPageController::class, 'invoiceForm'])->name('invoice form');
-    Route::get('/createinvoicetypes', [MerchantPageController::class, 'invoiceTypes'])->name('invoice types');
-    Route::get('/setuptax', [MerchantPageController::class, 'setUpTax'])->name('set up tax');
-    Route::get('/invoicestatement', [MerchantPageController::class, 'invoiceStatement'])->name('invoice statement');
-    Route::get('/walletstatement', [MerchantPageController::class, 'walletStatement'])->name('wallet statement');
-    Route::get('/sentinvoice', [MerchantPageController::class, 'sentInvoice'])->name('sent invoice');
-    Route::get('/paidinvoice', [MerchantPageController::class, 'paidInvoice'])->name('paid invoice');
-    Route::get('/pendinginvoice', [MerchantPageController::class, 'pendingInvoice'])->name('pending invoice');
-    Route::get('/customerbalancereport', [MerchantPageController::class, 'balanceReport'])->name('balance report');
-    Route::get('/taxesreport', [MerchantPageController::class, 'taxesReport'])->name('taxes report');
-    Route::get('/invoicetypereport', [MerchantPageController::class, 'invoiceTypeReport'])->name('invoice type report');
-    Route::get('/reccuringreport', [MerchantPageController::class, 'recurringType'])->name('recurring type');
-    Route::get('/profile', [MerchantPageController::class, 'profile'])->name('profile');
-    Route::get('/invoicepage', [MerchantPageController::class, 'invoicePage'])->name('invoice page');
-    Route::get('/paymentgateway', [MerchantPageController::class, 'paymentGateway'])->name('payment gateway');
-    Route::get('/orderingsystem', [MerchantPageController::class, 'orderingSystem'])->name('ordering system');
+	Route::get('/dashboard', [MerchantPageController::class, 'index'])->name('dashboard');
+	Route::get('/invoice', [MerchantPageController::class, 'invoiceSingle'])->name('invoice single');
+	Route::get('/forms', [MerchantPageController::class, 'invoiceForm'])->name('invoice form');
+	Route::get('/createinvoicetypes', [MerchantPageController::class, 'invoiceTypes'])->name('invoice types');
+	Route::get('/setuptax', [MerchantPageController::class, 'setUpTax'])->name('set up tax');
+	Route::get('/invoicestatement', [MerchantPageController::class, 'invoiceStatement'])->name('invoice statement');
+	Route::get('/walletstatement', [MerchantPageController::class, 'walletStatement'])->name('wallet statement');
+	Route::get('/sentinvoice', [MerchantPageController::class, 'sentInvoice'])->name('sent invoice');
+	Route::get('/paidinvoice', [MerchantPageController::class, 'paidInvoice'])->name('paid invoice');
+	Route::get('/pendinginvoice', [MerchantPageController::class, 'pendingInvoice'])->name('pending invoice');
+	Route::get('/customerbalancereport', [MerchantPageController::class, 'balanceReport'])->name('balance report');
+	Route::get('/taxesreport', [MerchantPageController::class, 'taxesReport'])->name('taxes report');
+	Route::get('/invoicetypereport', [MerchantPageController::class, 'invoiceTypeReport'])->name('invoice type report');
+	Route::get('/reccuringreport', [MerchantPageController::class, 'recurringType'])->name('recurring type');
+	Route::get('/profile', [MerchantPageController::class, 'profile'])->name('profile');
+	Route::get('/invoicepage', [MerchantPageController::class, 'invoicePage'])->name('invoice page');
+	Route::get('/paymentgateway', [MerchantPageController::class, 'paymentGateway'])->name('new merchant payment gateway');
+	Route::get('/orderingsystem', [MerchantPageController::class, 'orderingSystem'])->name('ordering system');
 });
 
 

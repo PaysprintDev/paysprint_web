@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 use Rap2hpoutre\FastExcel\FastExcel;
 use App\Exports\WalletStatementExport;
+use Illuminate\Support\Facades\Auth;
 //Session
 use Session;
 
@@ -111,7 +112,7 @@ use App\Traits\MailChimpNewsLetter;
 
 use App\Traits\PaysprintPoint;
 
-
+use App\Traits\GenerateOtp;
 
 use App\Traits\PointsHistory;
 
@@ -146,7 +147,7 @@ class AdminController extends Controller
     public $infomessage;
     public $customer_id;
 
-    use Trulioo, AccountNotify, SpecialInfo, PaystackPayment, FlagPayment, PaymentGateway, Xwireless, MailChimpNewsLetter, PaysprintPoint, PointsClaim, PointsHistory,  MyFX;
+    use Trulioo, AccountNotify, SpecialInfo, PaystackPayment, FlagPayment, PaymentGateway, Xwireless, MailChimpNewsLetter, PaysprintPoint, PointsClaim, PointsHistory,  MyFX, GenerateOtp;
 
 
 
@@ -11847,7 +11848,13 @@ class AdminController extends Controller
 
                         $this->checkLoginInfo($getMerchant->refCode, $usercity, $usercountry, $userip);
 
-                        $resData = ['res' => 'Logging in...', 'message' => 'success', 'link' => 'Admin'];
+                        $user = User::where('email', $getMerchant->email)->first();
+
+                        Auth::login($user);
+
+                        $this->generateOTP($getMerchant->id);
+
+                        $resData = ['res' => 'Logging in...', 'message' => 'success', 'link' => 'verification'];
 
                         $this->createNotification($checkApikey->user_id, 'Welcome back ' . $adminCheck[0]['firstname']);
                     }

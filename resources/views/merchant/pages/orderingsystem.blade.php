@@ -52,7 +52,7 @@
                                                 <tr>
                                                     <td>
                                                         <a href="#"><img
-                                                                src="../assets/images/ecommerce/product-table-1.png"
+                                                                src="{{ asset('merchantassets/assets/images/ecommerce/product-table-1.png') }}"
                                                                 alt="" /></a>
                                                     </td>
                                                     <td>
@@ -76,7 +76,7 @@
                                                 <tr>
                                                     <td>
                                                         <a href="#"><img
-                                                                src="../assets/images/ecommerce/product-table-2.png"
+                                                                src="{{ asset('merchantassets/assets/images/ecommerce/product-table-2.png') }}"
                                                                 alt="" /></a>
                                                     </td>
                                                     <td>
@@ -101,7 +101,7 @@
                                                 <tr>
                                                     <td>
                                                         <a href="#"><img
-                                                                src="../assets/images/ecommerce/product-table-3.png"
+                                                                src="{{ asset('merchantassets/assets/images/ecommerce/product-table-3.png') }}"
                                                                 alt="" /></a>
                                                     </td>
                                                     <td>
@@ -126,7 +126,7 @@
                                                 <tr>
                                                     <td>
                                                         <a href="#"><img
-                                                                src="../assets/images/ecommerce/product-table-4.png"
+                                                                src="{{ asset('merchantassets/assets/images/ecommerce/product-table-4.png') }}"
                                                                 alt="" /></a>
                                                     </td>
                                                     <td>
@@ -151,7 +151,7 @@
                                                 <tr>
                                                     <td>
                                                         <a href="#"><img
-                                                                src="../assets/images/ecommerce/product-table-5.png"
+                                                                src="{{ asset('merchantassets/assets/images/ecommerce/product-table-5.png') }}"
                                                                 alt="" /></a>
                                                     </td>
                                                     <td>
@@ -176,7 +176,7 @@
                                                 <tr>
                                                     <td>
                                                         <a href="#"><img
-                                                                src="../assets/images/ecommerce/product-table-6.png"
+                                                                src="{{ asset('merchantassets/assets/images/ecommerce/product-table-6.png') }}"
                                                                 alt="" /></a>
                                                     </td>
                                                     <td>
@@ -201,7 +201,7 @@
                                                 <tr>
                                                     <td>
                                                         <a href="#"><img
-                                                                src="../assets/images/ecommerce/product-table-1.png"
+                                                                src="{{ asset('merchantassets/assets/images/ecommerce/product-table-1.png') }}"
                                                                 alt="" /></a>
                                                     </td>
                                                     <td>
@@ -226,7 +226,7 @@
                                                 <tr>
                                                     <td>
                                                         <a href="#"><img
-                                                                src="../assets/images/ecommerce/product-table-2.png"
+                                                                src="{{ asset('merchantassets/assets/images/ecommerce/product-table-2.png') }}"
                                                                 alt="" /></a>
                                                     </td>
                                                     <td>
@@ -251,7 +251,7 @@
                                                 <tr>
                                                     <td>
                                                         <a href="#"><img
-                                                                src="../assets/images/ecommerce/product-table-3.png"
+                                                                src="{{ asset('merchantassets/assets/images/ecommerce/product-table-3.png') }}"
                                                                 alt="" /></a>
                                                     </td>
                                                     <td>
@@ -276,7 +276,7 @@
                                                 <tr>
                                                     <td>
                                                         <a href="#"><img
-                                                                src="../assets/images/ecommerce/product-table-4.png"
+                                                                src="{{ asset('merchantassets/assets/images/ecommerce/product-table-4.png') }}"
                                                                 alt="" /></a>
                                                     </td>
                                                     <td>
@@ -334,7 +334,8 @@
                                                     <tr>
                                                         <td>
                                                             <a href="#"><img class="img-fluid img-30"
-                                                                    src="../assets/images/product/1.png" alt="#" /></a>
+                                                                    src="{{ asset('merchantassets/assets/images/product/1.png') }}"
+                                                                    alt="#" /></a>
                                                         </td>
                                                         <td>
                                                             <div class="product-name">
@@ -353,7 +354,8 @@
                                                     <tr>
                                                         <td>
                                                             <a href="#"><img class="img-fluid img-30"
-                                                                    src="../assets/images/product/13.png" alt="#" /></a>
+                                                                    src="{{ asset('merchantassets/assets/images/product/13.png') }}"
+                                                                    alt="#" /></a>
                                                         </td>
                                                         <td>
                                                             <div class="product-name">
@@ -371,7 +373,9 @@
                                                     </tr>
                                                     <tr>
                                                         <td><img class="img-fluid img-30"
-                                                                src="../assets/images/product/4.png" alt="#" /></td>
+                                                                src="{{ asset('merchantassets/assets/images/product/4.png') }}"
+                                                                alt="#" />
+                                                        </td>
                                                         <td>
                                                             <div class="product-name">
                                                                 <a href="#">Man shoes</a>
@@ -389,7 +393,8 @@
                                                     <tr>
                                                         <td>
                                                             <a href="#"><img class="img-fluid img-30"
-                                                                    src="../assets/images/product/10.png" alt="#" /></a>
+                                                                    src="{{ asset('merchantassets/assets/images/product/10.png') }}"
+                                                                    alt="#" /></a>
                                                         </td>
                                                         <td>
                                                             <div class="product-name">
@@ -409,7 +414,8 @@
                                                     <tr>
                                                         <td>
                                                             <a href="#"><img class="img-fluid img-30"
-                                                                    src="../assets/images/product/12.png" alt="#" /></a>
+                                                                    src="{{ asset('merchantassets/assets/images/product/12.png') }}"
+                                                                    alt="#" /></a>
                                                         </td>
                                                         <td>
                                                             <div class="product-name">
@@ -429,7 +435,8 @@
                                                     <tr>
                                                         <td>
                                                             <a href="#"><img class="img-fluid img-30"
-                                                                    src="../assets/images/product/3.png" alt="#" /></a>
+                                                                    src="{{ asset('merchantassets/assets/images/product/3.png') }}"
+                                                                    alt="#" /></a>
                                                         </td>
                                                         <td>
                                                             <div class="product-name">
@@ -449,7 +456,8 @@
                                                     <tr>
                                                         <td>
                                                             <a href="#"><img class="img-fluid img-30"
-                                                                    src="../assets/images/product/2.png" alt="#" /></a>
+                                                                    src="{{ asset('merchantassets/assets/images/product/2.png') }}"
+                                                                    alt="#" /></a>
                                                         </td>
                                                         <td>
                                                             <div class="product-name">
@@ -469,7 +477,8 @@
                                                     <tr>
                                                         <td>
                                                             <a href="#"><img class="img-fluid img-30"
-                                                                    src="../assets/images/product/15.png" alt="#" /></a>
+                                                                    src="{{ asset('merchantassets/assets/images/product/15.png') }}"
+                                                                    alt="#" /></a>
                                                         </td>
                                                         <td>
                                                             <div class="product-name">
@@ -489,7 +498,8 @@
                                                     <tr>
                                                         <td>
                                                             <a href="#"><img class="img-fluid img-30"
-                                                                    src="../assets/images/product/14.png" alt="#" /></a>
+                                                                    src="{{ asset('merchantassets/assets/images/product/14.png') }}"
+                                                                    alt="#" /></a>
                                                         </td>
                                                         <td>
                                                             <div class="product-name">
@@ -509,7 +519,8 @@
                                                     <tr>
                                                         <td>
                                                             <a href="#"><img class="img-fluid img-30"
-                                                                    src="../assets/images/product/11.png" alt="#" /></a>
+                                                                    src="{{ asset('merchantassets/assets/images/product/11.png') }}"
+                                                                    alt="#" /></a>
                                                         </td>
                                                         <td>
                                                             <div class="product-name">
@@ -714,7 +725,7 @@
                                                                                 <div class="media">
                                                                                     <div class="product-img me-3"><img
                                                                                             class="img-fluid"
-                                                                                            src="../assets/images/ecommerce/01.jpg"
+                                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/01.jpg') }}"
                                                                                             alt="" data-original-title=""
                                                                                             title="" /></div>
                                                                                     <div class="media-body">
@@ -752,7 +763,7 @@
                                                                                 <div class="media">
                                                                                     <div class="product-img me-3"><img
                                                                                             class="img-fluid"
-                                                                                            src="../assets/images/ecommerce/02.jpg"
+                                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/02.jpg') }}"
                                                                                             alt="" data-original-title=""
                                                                                             title="" /></div>
                                                                                     <div class="media-body">
@@ -790,7 +801,7 @@
                                                                                 <div class="media">
                                                                                     <div class="product-img me-3"><img
                                                                                             class="img-fluid"
-                                                                                            src="../assets/images/ecommerce/03.jpg"
+                                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/03.jpg') }}"
                                                                                             alt="" data-original-title=""
                                                                                             title="" /></div>
                                                                                     <div class="media-body">
@@ -830,7 +841,7 @@
                                                                                 <div class="media">
                                                                                     <div class="product-img me-3"><img
                                                                                             class="img-fluid"
-                                                                                            src="../assets/images/ecommerce/01.jpg"
+                                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/01.jpg') }}"
                                                                                             alt="" data-original-title=""
                                                                                             title="" /></div>
                                                                                     <div class="media-body">
@@ -868,7 +879,7 @@
                                                                                 <div class="media">
                                                                                     <div class="product-img me-3"><img
                                                                                             class="img-fluid"
-                                                                                            src="../assets/images/ecommerce/02.jpg"
+                                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/02.jpg') }}"
                                                                                             alt="" data-original-title=""
                                                                                             title="" /></div>
                                                                                     <div class="media-body">
@@ -906,7 +917,7 @@
                                                                                 <div class="media">
                                                                                     <div class="product-img me-3"><img
                                                                                             class="img-fluid"
-                                                                                            src="../assets/images/ecommerce/03.jpg"
+                                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/03.jpg') }}"
                                                                                             alt="" data-original-title=""
                                                                                             title="" /></div>
                                                                                     <div class="media-body">
@@ -945,8 +956,8 @@
                                                                 </div>
                                                                 <div class="product-filter text-center"><img
                                                                         class="img-fluid banner-product"
-                                                                        src="../assets/images/ecommerce/banner.jpg" alt=""
-                                                                        data-original-title="" title="" /></div>
+                                                                        src="{{ asset('merchantassets/assets/images/ecommerce/banner.jpg') }}"
+                                                                        alt="" data-original-title="" title="" /></div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -969,7 +980,8 @@
                                         <div class="card">
                                             <div class="product-box">
                                                 <div class="product-img">
-                                                    <img class="img-fluid" src="../assets/images/ecommerce/01.jpg"
+                                                    <img class="img-fluid"
+                                                        src="{{ asset('merchantassets/assets/images/ecommerce/01.jpg') }}"
                                                         alt="" />
                                                     <div class="product-hover">
                                                         <ul>
@@ -991,7 +1003,7 @@
                                                                 <div class="product-box row">
                                                                     <div class="product-img col-lg-6"><img
                                                                             class="img-fluid"
-                                                                            src="../assets/images/ecommerce/01.jpg"
+                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/01.jpg') }}"
                                                                             alt="" /></div>
                                                                     <div class="product-details col-lg-6 text-start">
                                                                         <a href="product-page.html">
@@ -1068,7 +1080,8 @@
                                             <div class="product-box">
                                                 <div class="product-img">
                                                     <div class="ribbon ribbon-danger">Sale</div>
-                                                    <img class="img-fluid" src="../assets/images/ecommerce/02.jpg"
+                                                    <img class="img-fluid"
+                                                        src="{{ asset('merchantassets/assets/images/ecommerce/02.jpg') }}"
                                                         alt="" />
                                                     <div class="product-hover">
                                                         <ul>
@@ -1091,7 +1104,7 @@
                                                                 <div class="product-box row">
                                                                     <div class="product-img col-lg-6"><img
                                                                             class="img-fluid"
-                                                                            src="../assets/images/ecommerce/02.jpg"
+                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/02.jpg') }}"
                                                                             alt="" /></div>
                                                                     <div class="product-details col-lg-6 text-start">
                                                                         <a href="product-page.html">
@@ -1167,7 +1180,8 @@
                                         <div class="card">
                                             <div class="product-box">
                                                 <div class="product-img">
-                                                    <img class="img-fluid" src="../assets/images/ecommerce/03.jpg"
+                                                    <img class="img-fluid"
+                                                        src="{{ asset('merchantassets/assets/images/ecommerce/03.jpg') }}"
                                                         alt="" />
                                                     <div class="product-hover">
                                                         <ul>
@@ -1190,7 +1204,7 @@
                                                                 <div class="product-box row">
                                                                     <div class="product-img col-lg-6"><img
                                                                             class="img-fluid"
-                                                                            src="../assets/images/ecommerce/03.jpg"
+                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/03.jpg') }}"
                                                                             alt="" /></div>
                                                                     <div class="product-details col-lg-6 text-start">
                                                                         <a href="product-page.html">
@@ -1267,7 +1281,8 @@
                                             <div class="product-box">
                                                 <div class="product-img">
                                                     <div class="ribbon ribbon-success ribbon-right">50%</div>
-                                                    <img class="img-fluid" src="../assets/images/ecommerce/04.jpg"
+                                                    <img class="img-fluid"
+                                                        src="{{ asset('merchantassets/assets/images/ecommerce/04.jpg') }}"
                                                         alt="" />
                                                     <div class="product-hover">
                                                         <ul>
@@ -1290,7 +1305,7 @@
                                                                 <div class="product-box row">
                                                                     <div class="product-img col-lg-6"><img
                                                                             class="img-fluid"
-                                                                            src="../assets/images/ecommerce/04.jpg"
+                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/04.jpg') }}"
                                                                             alt="" /></div>
                                                                     <div class="product-details col-lg-6 text-start">
                                                                         <a href="product-page.html">
@@ -1367,7 +1382,8 @@
                                             <div class="product-box">
                                                 <div class="product-img">
                                                     <div class="ribbon ribbon-success ribbon-right">50%</div>
-                                                    <img class="img-fluid" src="../assets/images/ecommerce/04.jpg"
+                                                    <img class="img-fluid"
+                                                        src="{{ asset('merchantassets/assets/images/ecommerce/04.jpg') }}"
                                                         alt="" />
                                                     <div class="product-hover">
                                                         <ul>
@@ -1390,7 +1406,7 @@
                                                                 <div class="product-box row">
                                                                     <div class="product-img col-lg-6"><img
                                                                             class="img-fluid"
-                                                                            src="../assets/images/ecommerce/04.jpg"
+                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/04.jpg') }}"
                                                                             alt="" /></div>
                                                                     <div class="product-details col-lg-6 text-start">
                                                                         <a href="product-page.html">
@@ -1466,7 +1482,8 @@
                                         <div class="card">
                                             <div class="product-box">
                                                 <div class="product-img">
-                                                    <img class="img-fluid" src="../assets/images/ecommerce/01.jpg"
+                                                    <img class="img-fluid"
+                                                        src="{{ asset('merchantassets/assets/images/ecommerce/01.jpg') }}"
                                                         alt="" />
                                                     <div class="product-hover">
                                                         <ul>
@@ -1489,7 +1506,7 @@
                                                                 <div class="product-box row">
                                                                     <div class="product-img col-lg-6"><img
                                                                             class="img-fluid"
-                                                                            src="../assets/images/ecommerce/01.jpg"
+                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/01.jpg') }}"
                                                                             alt="" /></div>
                                                                     <div class="product-details col-lg-6 text-start">
                                                                         <a href="product-page.html">
@@ -1566,7 +1583,8 @@
                                             <div class="product-box">
                                                 <div class="product-img">
                                                     <div class="ribbon ribbon-danger">Sale</div>
-                                                    <img class="img-fluid" src="../assets/images/ecommerce/02.jpg"
+                                                    <img class="img-fluid"
+                                                        src="{{ asset('merchantassets/assets/images/ecommerce/02.jpg') }}"
                                                         alt="" />
                                                     <div class="product-hover">
                                                         <ul>
@@ -1590,7 +1608,7 @@
                                                                 <div class="product-box row">
                                                                     <div class="product-img col-lg-6"><img
                                                                             class="img-fluid"
-                                                                            src="../assets/images/ecommerce/02.jpg"
+                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/02.jpg') }}"
                                                                             alt="" /></div>
                                                                     <div class="product-details col-lg-6 text-start">
                                                                         <a href="product-page.html">
@@ -1666,7 +1684,8 @@
                                         <div class="card">
                                             <div class="product-box">
                                                 <div class="product-img">
-                                                    <img class="img-fluid" src="../assets/images/ecommerce/03.jpg"
+                                                    <img class="img-fluid"
+                                                        src="{{ asset('merchantassets/assets/images/ecommerce/03.jpg') }}"
                                                         alt="" />
                                                     <div class="product-hover">
                                                         <ul>
@@ -1690,7 +1709,7 @@
                                                                 <div class="product-box row">
                                                                     <div class="product-img col-lg-6"><img
                                                                             class="img-fluid"
-                                                                            src="../assets/images/ecommerce/03.jpg"
+                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/03.jpg') }}"
                                                                             alt="" /></div>
                                                                     <div class="product-details col-lg-6 text-start">
                                                                         <a href="product-page.html">
@@ -1766,7 +1785,8 @@
                                         <div class="card">
                                             <div class="product-box">
                                                 <div class="product-img">
-                                                    <img class="img-fluid" src="../assets/images/ecommerce/03.jpg"
+                                                    <img class="img-fluid"
+                                                        src="{{ asset('merchantassets/assets/images/ecommerce/03.jpg') }}"
                                                         alt="" />
                                                     <div class="product-hover">
                                                         <ul>
@@ -1790,7 +1810,7 @@
                                                                 <div class="product-box row">
                                                                     <div class="product-img col-lg-6"><img
                                                                             class="img-fluid"
-                                                                            src="../assets/images/ecommerce/03.jpg"
+                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/03.jpg') }}"
                                                                             alt="" /></div>
                                                                     <div class="product-details col-lg-6 text-start">
                                                                         <a href="product-page.html">
@@ -1867,7 +1887,8 @@
                                             <div class="product-box">
                                                 <div class="product-img">
                                                     <div class="ribbon ribbon-success ribbon-right">50%</div>
-                                                    <img class="img-fluid" src="../assets/images/ecommerce/04.jpg"
+                                                    <img class="img-fluid"
+                                                        src="{{ asset('merchantassets/assets/images/ecommerce/04.jpg') }}"
                                                         alt="" />
                                                     <div class="product-hover">
                                                         <ul>
@@ -1891,7 +1912,7 @@
                                                                 <div class="product-box row">
                                                                     <div class="product-img col-lg-6"><img
                                                                             class="img-fluid"
-                                                                            src="../assets/images/ecommerce/04.jpg"
+                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/04.jpg') }}"
                                                                             alt="" /></div>
                                                                     <div class="product-details col-lg-6 text-start">
                                                                         <a href="product-page.html">
@@ -1967,7 +1988,8 @@
                                         <div class="card">
                                             <div class="product-box">
                                                 <div class="product-img">
-                                                    <img class="img-fluid" src="../assets/images/ecommerce/01.jpg"
+                                                    <img class="img-fluid"
+                                                        src="{{ asset('merchantassets/assets/images/ecommerce/01.jpg') }}"
                                                         alt="" />
                                                     <div class="product-hover">
                                                         <ul>
@@ -1990,7 +2012,7 @@
                                                                 <div class="product-box row">
                                                                     <div class="product-img col-lg-6"><img
                                                                             class="img-fluid"
-                                                                            src="../assets/images/ecommerce/01.jpg"
+                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/01.jpg') }}"
                                                                             alt="" /></div>
                                                                     <div class="product-details col-lg-6 text-start">
                                                                         <a href="product-page.html">
@@ -2067,7 +2089,8 @@
                                             <div class="product-box">
                                                 <div class="product-img">
                                                     <div class="ribbon ribbon-danger">Sale</div>
-                                                    <img class="img-fluid" src="../assets/images/ecommerce/02.jpg"
+                                                    <img class="img-fluid"
+                                                        src="{{ asset('merchantassets/assets/images/ecommerce/02.jpg') }}"
                                                         alt="" />
                                                     <div class="product-hover">
                                                         <ul>
@@ -2091,7 +2114,7 @@
                                                                 <div class="product-box row">
                                                                     <div class="product-img col-lg-6"><img
                                                                             class="img-fluid"
-                                                                            src="../assets/images/ecommerce/02.jpg"
+                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/02.jpg') }}"
                                                                             alt="" /></div>
                                                                     <div class="product-details col-lg-6 text-start">
                                                                         <a href="product-page.html">
@@ -2168,7 +2191,8 @@
                                             <div class="product-box">
                                                 <div class="product-img">
                                                     <div class="ribbon ribbon-danger">Sale</div>
-                                                    <img class="img-fluid" src="../assets/images/ecommerce/02.jpg"
+                                                    <img class="img-fluid"
+                                                        src="{{ asset('merchantassets/assets/images/ecommerce/02.jpg') }}"
                                                         alt="" />
                                                     <div class="product-hover">
                                                         <ul>
@@ -2192,7 +2216,7 @@
                                                                 <div class="product-box row">
                                                                     <div class="product-img col-lg-6"><img
                                                                             class="img-fluid"
-                                                                            src="../assets/images/ecommerce/02.jpg"
+                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/02.jpg') }}"
                                                                             alt="" /></div>
                                                                     <div class="product-details col-lg-6 text-start">
                                                                         <a href="product-page.html">
@@ -2268,7 +2292,8 @@
                                         <div class="card">
                                             <div class="product-box">
                                                 <div class="product-img">
-                                                    <img class="img-fluid" src="../assets/images/ecommerce/03.jpg"
+                                                    <img class="img-fluid"
+                                                        src="{{ asset('merchantassets/assets/images/ecommerce/03.jpg') }}"
                                                         alt="" />
                                                     <div class="product-hover">
                                                         <ul>
@@ -2292,7 +2317,7 @@
                                                                 <div class="product-box row">
                                                                     <div class="product-img col-lg-6"><img
                                                                             class="img-fluid"
-                                                                            src="../assets/images/ecommerce/03.jpg"
+                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/03.jpg') }}"
                                                                             alt="" /></div>
                                                                     <div class="product-details col-lg-6 text-start">
                                                                         <a href="product-page.html">
@@ -2369,7 +2394,8 @@
                                             <div class="product-box">
                                                 <div class="product-img">
                                                     <div class="ribbon ribbon-success ribbon-right">50%</div>
-                                                    <img class="img-fluid" src="../assets/images/ecommerce/04.jpg"
+                                                    <img class="img-fluid"
+                                                        src="{{ asset('merchantassets/assets/images/ecommerce/04.jpg') }}"
                                                         alt="" />
                                                     <div class="product-hover">
                                                         <ul>
@@ -2393,7 +2419,7 @@
                                                                 <div class="product-box row">
                                                                     <div class="product-img col-lg-6"><img
                                                                             class="img-fluid"
-                                                                            src="../assets/images/ecommerce/04.jpg"
+                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/04.jpg') }}"
                                                                             alt="" /></div>
                                                                     <div class="product-details col-lg-6 text-start">
                                                                         <a href="product-page.html">
@@ -2469,7 +2495,8 @@
                                         <div class="card">
                                             <div class="product-box">
                                                 <div class="product-img">
-                                                    <img class="img-fluid" src="../assets/images/ecommerce/01.jpg"
+                                                    <img class="img-fluid"
+                                                        src="{{ asset('merchantassets/assets/images/ecommerce/01.jpg') }}"
                                                         alt="" />
                                                     <div class="product-hover">
                                                         <ul>
@@ -2492,7 +2519,7 @@
                                                                 <div class="product-box row">
                                                                     <div class="product-img col-lg-6"><img
                                                                             class="img-fluid"
-                                                                            src="../assets/images/ecommerce/01.jpg"
+                                                                            src="{{ asset('merchantassets/assets/images/ecommerce/01.jpg') }}"
                                                                             alt="" /></div>
                                                                     <div class="product-details col-lg-6 text-start">
                                                                         <a href="product-page.html">
