@@ -69,12 +69,7 @@
     <div class="small-box bg-purple">
         <div class="inner">
 
-            @if (isset($withdraws['prepaid']))
             <h3>&nbsp;</h3>
-
-            @else
-                <h3>0</h3>
-            @endif
 
 
             <p>Reports</p>
