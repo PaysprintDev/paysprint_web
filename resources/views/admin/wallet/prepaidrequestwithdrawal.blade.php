@@ -56,7 +56,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                    @if (count($data['prepaidRequestWithdrawal']->data) > 0 && $data['prepaidRequestWithdrawal']->status == 200)
+                    @if (isset($data['prepaidRequestWithdrawal']) && count($data['prepaidRequestWithdrawal']->data) > 0 && $data['prepaidRequestWithdrawal']->status == 200)
                     <?php $i = 1;?>
                         @foreach ($data['prepaidRequestWithdrawal']->data as $items)
 

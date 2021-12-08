@@ -335,6 +335,7 @@ class Aside extends Component {
 											onChange={this.handleChange}
 											id="desiredBuyRate"
 											className="form-control form-control-xl"
+											readOnly
 										/>
 									</div>
 									<div className="mb-4 mb-xl-2" style={{ width: '25%' }}>
@@ -345,6 +346,7 @@ class Aside extends Component {
 											onChange={this.handleChange}
 											className="form-control form-control-xl"
 											onChange={this.handleChange}
+											readOnly
 										>
 											{this.state.selloption}
 										</select>
@@ -509,10 +511,10 @@ class Aside extends Component {
 							<li className="nav-item">
 								<a
 									className="nav-link collapsed"
-									href="/currencyfx/invoice"
+									href="#sidebarPayInvoice"
 									data-bs-toggle="collapse"
 									role="button"
-									aria-expanded="false"
+									aria-expanded="true"
 									aria-controls="sidebarPayInvoice"
 								>
 									<svg
@@ -536,6 +538,24 @@ class Aside extends Component {
 									</svg>
 									&nbsp;<span className="ms-2">Pay Invoice</span>
 								</a>
+								<div
+									className="collapse collapse-box show"
+									id="sidebarPayInvoice"
+									data-bs-parent="#accordionExample"
+								>
+									<ul className="nav nav-sm flex-column">
+										<li className="nav-item">
+											<a href="/currencyfx/invoice" className="nav-link">
+												PaySprint Invoice
+											</a>
+										</li>
+										<li className="nav-item">
+											<a href="/currencyfx/crossborder" className="nav-link active">
+												Cross Border Payment
+											</a>
+										</li>
+									</ul>
+								</div>
 							</li>
 
 							<li className="nav-item">

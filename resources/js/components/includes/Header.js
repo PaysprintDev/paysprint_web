@@ -421,33 +421,52 @@ class Header extends Component {
 												<li className="nav-item">
 													<a
 														className="nav-link collapsed"
-														href="/currencyfx/invoice"
+														href="#sidebarPayInvoice1"
 														data-bs-toggle="collapse"
 														role="button"
 														aria-expanded="false"
-														aria-controls="sidebarPayInvoice"
+														aria-controls="sidebarPayInvoice1"
 													>
 														<svg
-															data-name="Icons/Tabler/Bolt"
 															xmlns="http://www.w3.org/2000/svg"
 															width="16"
 															height="16"
 															viewBox="0 0 16 16"
 														>
-															<rect
-																data-name="Icons/Tabler/Page background"
-																width="16"
-																height="16"
-																fill="none"
-															/>
-															<path
-																d="M1.975,14A1.977,1.977,0,0,1,0,12.026V1.975A1.977,1.977,0,0,1,1.975,0h5.04a.535.535,0,0,1,.249.069l.007,0h0a.534.534,0,0,1,.109.084l3.574,3.575a.536.536,0,0,1,.163.289h0l0,.013h0l0,.013v0l0,.011v.053s0,.009,0,.014v7.9A1.977,1.977,0,0,1,9.154,14Zm-.9-12.026V12.026a.9.9,0,0,0,.9.9H9.154a.9.9,0,0,0,.9-.9V4.667H7.718a1.255,1.255,0,0,1-1.248-1.12L6.461,3.41V1.077H1.975A.9.9,0,0,0,1.077,1.975ZM7.538,3.41a.179.179,0,0,0,.122.17l.057.01H9.29L7.538,1.838Z"
-																transform="translate(2 1)"
-																fill="#1e1e1e"
-															/>
+															<g data-name="icons/tabler/chart" transform="translate(0)">
+																<rect
+																	data-name="Icons/Tabler/Chart background"
+																	width="16"
+																	height="16"
+																	fill="none"
+																/>
+																<path
+																	d="M.686,13.257a.686.686,0,0,1-.093-1.365l.093-.006H15.314a.686.686,0,0,1,.093,1.365l-.093.006ZM.394,9.535l-.089-.05a.688.688,0,0,1-.24-.863l.05-.088L3.773,3.048a.684.684,0,0,1,.782-.272l.095.039L7.811,4.4,11.121.257a.687.687,0,0,1,.945-.122L12.142.2,15.8,3.858a.686.686,0,0,1-.893,1.036l-.077-.067L11.713,1.712,8.536,5.685a.684.684,0,0,1-.743.225l-.1-.04L4.578,4.313,1.256,9.294a.684.684,0,0,1-.862.24Z"
+																	transform="translate(0 1)"
+																	fill="#1e1e1e"
+																/>
+															</g>
 														</svg>{' '}
 														&nbsp;<span className="ms-2">Pay Invoice</span>
 													</a>
+													<div
+														className="collapse collapse-box"
+														id="sidebarPayInvoice1"
+														data-bs-parent="#accordionExample2"
+													>
+														<ul className="nav nav-sm flex-column">
+															<li className="nav-item">
+																<a href="/currencyfx/invoice" className="nav-link">
+																	PaySprint Invoice
+																</a>
+															</li>
+															<li className="nav-item">
+																<a href="/currencyfx/crossborder" className="nav-link">
+																	Cross Border Payment
+																</a>
+															</li>
+														</ul>
+													</div>
 												</li>
 
 												<li className="nav-item">
@@ -652,6 +671,56 @@ class Header extends Component {
 															className="nav-link"
 														>
 															International
+														</a>
+													</li>
+												</ul>
+											</div>
+										</li>
+
+										<li className="nav-item">
+											<a
+												className="nav-link collapsed"
+												href="#sidebarPayInvoice2"
+												data-bs-toggle="collapse"
+												role="button"
+												aria-expanded="false"
+												aria-controls="sidebarPayInvoice2"
+											>
+												<svg
+													data-name="Icons/Tabler/Bolt"
+													xmlns="http://www.w3.org/2000/svg"
+													width="16"
+													height="16"
+													viewBox="0 0 16 16"
+												>
+													<rect
+														data-name="Icons/Tabler/Page background"
+														width="16"
+														height="16"
+														fill="none"
+													/>
+													<path
+														d="M1.975,14A1.977,1.977,0,0,1,0,12.026V1.975A1.977,1.977,0,0,1,1.975,0h5.04a.535.535,0,0,1,.249.069l.007,0h0a.534.534,0,0,1,.109.084l3.574,3.575a.536.536,0,0,1,.163.289h0l0,.013h0l0,.013v0l0,.011v.053s0,.009,0,.014v7.9A1.977,1.977,0,0,1,9.154,14Zm-.9-12.026V12.026a.9.9,0,0,0,.9.9H9.154a.9.9,0,0,0,.9-.9V4.667H7.718a1.255,1.255,0,0,1-1.248-1.12L6.461,3.41V1.077H1.975A.9.9,0,0,0,1.077,1.975ZM7.538,3.41a.179.179,0,0,0,.122.17l.057.01H9.29L7.538,1.838Z"
+														transform="translate(2 1)"
+														fill="#1e1e1e"
+													/>
+												</svg>{' '}
+												&nbsp;<span className="ms-2">Pay Invoice</span>
+											</a>
+											<div
+												className="collapse collapse-box"
+												id="sidebarPayInvoice2"
+												data-bs-parent="#accordionExample3"
+											>
+												<ul className="nav nav-sm flex-column" id="submenu6">
+													<li className="nav-item">
+														<a href="/currencyfx/invoice" className="nav-link">
+															PaySprint Invoice
+														</a>
+													</li>
+													<li className="nav-item">
+														<a href="/currencyfx/crossborder" className="nav-link">
+															Cross Border Payment
 														</a>
 													</li>
 												</ul>

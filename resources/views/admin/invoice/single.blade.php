@@ -69,7 +69,7 @@
                                                 <input type="text" name="single_businessname" id="single_businessname"
                                                     class="form-control" placeholder="Business Name">
                                             </div>
-                                            
+
                                         </div>
                                     </div>
                                 </div>
@@ -125,6 +125,7 @@
                                     </div>
                                 </div>
                             </div>
+
 
                             <div class="row disp-0 specific">
                                 <div class="col-md-12">

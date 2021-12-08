@@ -287,11 +287,11 @@
                                 </td>
                                 <td>
                                     <p class="gr-text-6 font-weight-bold mb-9">Basic</p>
-                                    <small class="text-danger">$5 Monthly/$50 Anually</small>
+                                    <small class="text-danger">$5 Monthly/$50 Annually</small>
                                 </td>
                                 <td>
                                     <p class="gr-text-6 font-weight-bold mb-9">Classic</p>
-                                    <small class="text-danger">$8 Monthly/$80 Anually</small>
+                                    <small class="text-danger">$8 Monthly/$80 Annually</small>
                                 </td>
                             </tr>
                             <tr>
@@ -387,11 +387,11 @@
                                 </td>
                                 <td>
                                     <p class="gr-text-6 font-weight-bold mb-9">Basic</p>
-                                    <small class="text-danger">$20 Monthly/$200 Anually</small>
+                                    <small class="text-danger">$20 Monthly/$200 Annually</small>
                                 </td>
                                 <td>
                                     <p class="gr-text-6 font-weight-bold mb-9">Classic</p>
-                                    <small class="text-danger">$30 Monthly/$300 Anually</small>
+                                    <small class="text-danger">$30 Monthly/$300 Annually</small>
                                 </td>
                             </tr>
 

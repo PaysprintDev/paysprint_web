@@ -424,6 +424,30 @@ class CurrencyFxController extends Controller
         return view('currencyexchange.acceptbid')->with(['pages' => 'Make Bid', 'data' => $data]);
     }
 
+    // Cross Border Payment
+    public function crossBorder(Request $req)
+    {
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == false) {
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+        }
+
+        $data = array(
+            'allcountry' => $this->getCountryAndCurrency(),
+            'mycountry' => $this->personalCountry(Auth::user()->country),
+            'mywallet' => Auth::user()->forexAccount,
+        );
+
+        return view('currencyexchange.crossborder')->with(['pages' => 'Cross Border Payment', 'data' => $data]);
+    }
+
 
     public function getUserData(Request $req)
     {
@@ -527,18 +551,30 @@ class CurrencyFxController extends Controller
 
     public function fxWallets(Request $req)
     {
+
         try {
             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-            $getmywallet = EscrowAccount::where('user_id', $thisuser->id)->get();
+            if (isset($req->country)) {
+                $getmywallet = EscrowAccount::where('user_id', $thisuser->id)->where('country', $req->country)->get();
+            } else {
+                $getmywallet = EscrowAccount::where('user_id', $thisuser->id)->get();
+            }
+
 
             if (count($getmywallet) > 0) {
                 $data = $getmywallet;
                 $message = 'success';
                 $status = 200;
             } else {
+
+                if (isset($req->country)) {
+                    $message = 'Please create a new wallet for ' . $req->country . ' currency';
+                } else {
+                    $message = 'Please create a wallet';
+                }
+
                 $data = [];
-                $message = 'No record';
                 $status = 201;
             }
         } catch (\Throwable $th) {
