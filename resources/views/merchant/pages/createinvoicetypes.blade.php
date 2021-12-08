@@ -95,51 +95,24 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>System Architect</td>
+                                            @if (count($data['getServiceType']) > 0)
+                                                @php
+                                                    $i = 1;
+                                                @endphp
+                                                @foreach ($data['getServiceType'] as $item)
 
-                                            </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>Accountant</td>
+                                                    <tr>
+                                                        <td>{{ $i++ }}</td>
+                                                        <td>{{ $item->name }}</td>
 
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>Junior Technical Author</td>
+                                                    </tr>
 
-                                            </tr>
-                                            <tr>
-                                                <td>4</td>
-                                                <td>Senior Javascript Developer</td>
-
-                                            </tr>
-                                            <tr>
-                                                <td>5</td>
-                                                <td>Accountant</td>
-
-                                            </tr>
-                                            <tr>
-                                                <td>6</td>
-                                                <td>Integration Specialist</td>
-
-                                            </tr>
-                                            <tr>
-                                                <td>7</td>
-                                                <td>Sales Assistant</td>
-
-                                            </tr>
-                                            <tr>
-                                                <td>8</td>
-                                                <td>Integration Specialist</td>
-
-                                            </tr>
-                                            <tr>
-                                                <td>9</td>
-                                                <td>Javascript Developer</td>
-
-                                            </tr>
+                                                @endforeach
+                                            @else
+                                                <tr>
+                                                    <td colspan="2" align="center">No record</td>
+                                                </tr>
+                                            @endif
 
                                         </tbody>
                                         <tfoot>

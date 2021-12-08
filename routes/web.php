@@ -206,6 +206,10 @@ Route::prefix('currencyfx')->group(function () {
 	Route::get('acceptbid', ['uses' => 'CurrencyFxController@marketAcceptABid', 'as' => 'paysprint currency accept bid']);
 
 
+	// Cross Border Payment
+
+	Route::get('crossborder', ['uses' => 'CurrencyFxController@crossBorder', 'as' => 'paysprint cross border payment']);
+
 
 
 	Route::get('createwallet', ['uses' => 'CurrencyFxController@createWallet', 'as' => 'paysprint currency fx create wallet']);
@@ -251,7 +255,7 @@ Route::prefix('merchant')->group(function () {
 
 	Route::get('/dashboard', [MerchantPageController::class, 'index'])->name('dashboard');
 	Route::get('/invoice', [MerchantPageController::class, 'invoiceSingle'])->name('invoice single');
-	Route::get('/forms', [MerchantPageController::class, 'invoiceForm'])->name('invoice form');
+	Route::get('/invoice/single-invoice', [MerchantPageController::class, 'invoiceForm'])->name('invoice form');
 	Route::get('/createinvoicetypes', [MerchantPageController::class, 'invoiceTypes'])->name('invoice types');
 	Route::get('/setuptax', [MerchantPageController::class, 'setUpTax'])->name('set up tax');
 	Route::get('/invoicestatement', [MerchantPageController::class, 'invoiceStatement'])->name('invoice statement');
@@ -685,6 +689,7 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('paysprintpoint', ['uses' => 'AdminController@paysprintPoint', 'as' => 'paysprint point']);
 	Route::get('claimreward', ['uses' => 'AdminController@claimReward', 'as' => 'claim reward']);
 	Route::get('cashadvancelist', ['uses' => 'AdminController@cashAdvanceList', 'as' => 'cash advance list']);
+	Route::get('crossborderlist', ['uses' => 'AdminController@crossBorderList', 'as' => 'cross border list']);
 
 	Route::get('userspoint', ['uses' => 'AdminController@usersPoint', 'as' => 'users points']);
 
@@ -843,7 +848,7 @@ Route::prefix('Admin/aml')->group(function () {
 
 	Route::get('bankrequestwithdrawal', ['uses' => 'AmlController@merchantBanksDetailsAml', 'as' => 'merchant banking detail aml']);
 	Route::get('activitylogaml', ['uses' => 'AmlController@activityLogAml', 'as' => 'log aml']);
-	// Route::get('purchaserefundrequest', ['uses' => 'AdminController@purchaseRefundRequest', 'as' => 'purchase refund request']);
+	Route::get('purchaserefundrequest', ['uses' => 'AmlController@purchaseRefundRequest', 'as' => 'aml purchase refund request']);
 });
 
 
@@ -947,6 +952,8 @@ Route::group(['prefix' => 'Ajax'], function () {
 	Route::post('notifyupdate', ['uses' => 'HomeController@ajaxnotifyupdate', 'as' => 'Ajaxnotifyupdate']);
 
 	Route::post('promotionaction', ['uses' => 'AdminController@ajaxpromotionaction', 'as' => 'Ajaxpromotionaction']);
+
+	Route::post('acceptcrossborderpayment', ['uses' => 'AdminController@ajaxacceptcrossborderpayment', 'as' => 'Ajaxacceptcrossborderpayment']);
 
 
 	// Get Commision and payment

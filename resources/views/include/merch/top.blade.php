@@ -56,6 +56,7 @@
     <link id="color" rel="stylesheet" href="{{ asset('merchantassets/assets/css/color-1.css') }}" media="screen">
     <!-- Responsive css-->
     <link rel="stylesheet" type="text/css" href="{{ asset('merchantassets/assets/css/responsive.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
 </head>
 
 <body>
