@@ -91,12 +91,14 @@
                                         data-feather="layers"></i><span>Payment Gateway</span></a>
                                 <ul class="nav-submenu menu-content" style="display: none;">
                                     <li>
-                                        <a class="submenu-title  " href="{{ route('payment gateway') }}">
+                                        <a class="submenu-title  "
+                                            href="{{ route('new merchant payment gateway') }}">
                                             Payment Method<span class="sub-arrow"><i
                                                     class="fa fa-chevron-right"></i></span>
                                         </a>
 
                                     </li>
+
 
 
 

@@ -35,7 +35,7 @@ trait GenerateOtp
 
         $userPhone = User::where('id', $userid)->where('telephone', 'LIKE', '%+%')->first();
 
-        $sendMsg = 'Here is your verification OTP: ' . $code;
+        $sendMsg = 'PaySprint Security Verification: ' . $code;
 
         if (isset($userPhone)) {
 
