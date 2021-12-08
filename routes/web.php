@@ -806,6 +806,7 @@ Route::prefix('Admin/aml')->group(function () {
 	Route::get('/dashboard', ['uses' => 'AmlController@index', 'as' => 'aml dashboard']);
 	Route::get('/activitylog', ['uses' => 'AmlController@activityLog', 'as' => 'aml activity log']);
 	Route::get('/transactionreview', ['uses' => 'AmlController@transactionReview', 'as' => 'aml transaction review']);
+	Route::get('refundmoneyrequestbycountry', ['uses' => 'AdminController@refundMoneyRequestByCountry', 'as' => 'refund details by country aml']);
 	Route::get('/transactionanalysis', ['uses' => 'AmlController@transactionAnalysis', 'as' => 'aml transaction analysis']);
 	Route::get('/compliancedeskreview', ['uses' => 'AmlController@complianceDeskReview', 'as' => 'aml compliance desk review']);
 	Route::get('/reports', ['uses' => 'AmlController@reports', 'as' => 'aml reports']);

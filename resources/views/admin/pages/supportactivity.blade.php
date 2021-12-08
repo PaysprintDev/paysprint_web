@@ -52,9 +52,9 @@
                 </tr>
                 </thead>
                 <tbody>
-                    @if (count($data['activity']) > 0)
+                    @if (count($data['supportactivity']) > 0)
                     <?php $i = 1;?>
-                        @foreach ($data['activity'] as $data)
+                        @foreach ($data['supportactivity'] as $data)
                         <tr>
                             <td>{{ $i++ }}</td>
 

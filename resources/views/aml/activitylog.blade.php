@@ -84,8 +84,7 @@
     <!-- small box -->
     <div class="small-box bg-aqua">
         <div class="inner">
-            <h3>&nbsp;</h3>
-
+            <h3>{{ count($data['activity']) }}</h3>
 
             <p>Platform</p>
         </div>
@@ -101,9 +100,9 @@
     <!-- small box -->
     <div class="small-box bg-green">
         <div class="inner">
-            <h3>{{ count($withdraws['bank']) }}</h3>
+            <h3>{{ count($data['supportactivity']) }}</h3>
 
-            <p>Custosmer Service</p>
+            <p>Custumer Service</p>
         </div>
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
