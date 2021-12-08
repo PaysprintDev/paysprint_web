@@ -174,7 +174,6 @@
 
 
 
-
                                     <div class="form-group"> <label for="amount">
                                             <h6>Amount</h6>
                                         </label>

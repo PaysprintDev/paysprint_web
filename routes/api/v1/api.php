@@ -216,6 +216,9 @@ Route::prefix('/v1')->group(function () {
         // pay Invoice
         Route::post('payinvoice',  ['uses' => 'MonerisController@payInvoice'])->name('pay invoice from wallet');
 
+        // Cross Border Payment
+        Route::post('crossborder',  ['uses' => 'MonerisController@crossBorder'])->name('pay cross border invoice from wallet');
+
         // Create Single Invoice
         Route::post('singleinvoice',  ['uses' => 'api\v1\InvoiceController@singleInvoice'])->name('create single invoice');
         Route::post('singleinvoicelink',  ['uses' => 'api\v1\InvoiceController@singleInvoiceLink'])->name('create link invoice');

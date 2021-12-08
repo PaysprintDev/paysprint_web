@@ -228,7 +228,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
 
-                                            <a href="javascript:void()" onclick="viewConsultant('{{ session('email') }}')"
+                                            <a href="javascript:void()" onclick="whatyouOffer('{{ Auth::user()->email }}')"
                                                 style="color: navy; font-weight: 700;">Rental Property
                                                 Management</a>
 
@@ -270,7 +270,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
 
-                                            <a href="javascript:void()" onclick="#"
+                                            <a href="javascript:void()" onclick="viewConsultant('{{ Auth::user()->email }}')"
                                                 style="color: navy; font-weight: 700;">View as Consultant</a>
 
                                             {{-- <a href="{{ route('rentalManagementAdmin') }}" style="color: navy; font-weight: 700;">Rental Property Management</a> --}}

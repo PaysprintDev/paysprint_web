@@ -37,10 +37,32 @@
                           <div class="row">
                               <div class="col-md-12">
                                   <button class="btn btn-success " type="button"><i data-feather="bar-chart"></i> Total
-                                      Points: 1000 </button>
+                                      Points: {{ isset($data['mypoints']) ? $data['mypoints']->points_acquired : 0 }}
+                                  </button>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-6">
+                                  <small>
+                                      <a style="font-weight: 700; font-size: 10px; color: navy;"
+                                          href="{{ route('consumer points') }}">
+                                          Earned Points
+                                      </a>
+                                  </small>
+                              </div>
+                              <div class="col-md-6">
+                                  <form action="{{ route('claim point') }}" method="POST" id="claimmypoint">
+                                      @csrf
+                                      <small><a type='button' href="javascript:void()"
+                                              onclick="$('#claimmypoint').submit()"
+                                              style="font-weight: 700; font-size: 10px; color: navy;">Redeem
+                                              Points</a></small>
+
+                                  </form>
                               </div>
                           </div>
                       </li>
+
 
 
 

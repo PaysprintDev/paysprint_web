@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AllCountries;
 use App\Statement;
 use Illuminate\Http\Request;
 
@@ -11,9 +12,21 @@ use App\User as User;
 use App\ImportExcel as ImportExcel;
 use App\ImportExcelLink as ImportExcelLink;
 use App\InvoicePayment as InvoicePayment;
+use App\Points;
+
+use App\ClaimedPoints;
+
+use App\HistoryReport;
+use App\ServiceType;
+use App\Tax;
+use App\Traits\PaysprintPoint;
+
+use App\Traits\PointsHistory;
 
 class MerchantPageController extends Controller
 {
+
+    use PaysprintPoint, PointsHistory;
 
     public function __construct()
     {
@@ -30,6 +43,7 @@ class MerchantPageController extends Controller
             'invoiceList' => $this->invoiceList(),
             'statementCount' => $this->statementCount(),
             'paidInvoiceCount' => $this->paidInvoiceCount(),
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
         ];
 
 
@@ -39,102 +53,177 @@ class MerchantPageController extends Controller
     public function invoiceSingle()
     {
 
-        return view('merchant.pages.invoice')->with(['pages' => 'invoice single']);
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+        ];
+
+
+        return view('merchant.pages.invoice')->with(['pages' => 'invoice single', 'data' => $data]);
     }
 
     public function invoiceForm()
     {
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getServiceType' => $this->getServiceTypes(),
+            'getTax' => $this->getTax(Auth::user()->id),
+            'getpersonalData' => $this->getmyPersonalDetail(Auth::user()->ref_code),
+            'getimt' => $this->getActiveCountries()
+        ];
 
-        return view('merchant.pages.forms')->with(['pages' => 'invoice form']);
+
+
+        return view('merchant.pages.singleinvoice')->with(['pages' => 'invoice form', 'data' => $data]);
     }
 
     public function invoiceTypes()
     {
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getServiceType' => $this->getServiceTypes()
+        ];
 
-        return view('merchant.pages.createinvoicetypes')->with(['pages' => 'invoice types']);
+        return view('merchant.pages.createinvoicetypes')->with(['pages' => 'invoice types', 'data' => $data]);
     }
 
     public function setUpTax()
     {
 
-        return view('merchant.pages.setuptax')->with(['pages' => 'set up tax']);
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getTax' => $this->getTax(Auth::user()->id)
+        ];
+
+        return view('merchant.pages.setuptax')->with(['pages' => 'set up tax', 'data' => $data]);
     }
 
     public function invoiceStatement()
     {
 
-        return view('merchant.pages.invoicestatement')->with(['pages' => 'invoice statement']);
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+        ];
+
+        return view('merchant.pages.invoicestatement')->with(['pages' => 'invoice statement', 'data' => $data]);
     }
 
     public function walletStatement()
     {
 
-        return view('merchant.pages.walletstatement')->with(['pages' => 'wallet statement']);
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+        ];
+
+        return view('merchant.pages.walletstatement')->with(['pages' => 'wallet statement', 'data' => $data]);
     }
 
     public function sentInvoice()
     {
 
-        return view('merchant.pages.sentinvoice')->with(['pages' => 'sent invoice']);
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+        ];
+
+        return view('merchant.pages.sentinvoice')->with(['pages' => 'sent invoice', 'data' => $data]);
     }
 
     public function paidInvoice()
     {
 
-        return view('merchant.pages.paidinvoice')->with(['pages' => 'paid invoice']);
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+        ];
+
+        return view('merchant.pages.paidinvoice')->with(['pages' => 'paid invoice', 'data' => $data]);
     }
 
     public function pendingInvoice()
     {
 
-        return view('merchant.pages.pendinginvoice')->with(['pages' => 'pending invoice']);
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+        ];
+
+        return view('merchant.pages.pendinginvoice')->with(['pages' => 'pending invoice', 'data' => $data]);
     }
 
     public function balanceReport()
     {
 
-        return view('merchant.pages.customerbalancereport')->with(['pages' => 'balance report']);
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+        ];
+
+        return view('merchant.pages.customerbalancereport')->with(['pages' => 'balance report', 'data' => $data]);
     }
 
     public function taxesReport()
     {
 
-        return view('merchant.pages.taxesreport')->with(['pages' => 'taxes report']);
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+        ];
+
+        return view('merchant.pages.taxesreport')->with(['pages' => 'taxes report', 'data' => $data]);
     }
 
     public function invoiceTypeReport()
     {
 
-        return view('merchant.pages.invoicetypereport')->with(['pages' => 'invoice type report']);
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+        ];
+
+        return view('merchant.pages.invoicetypereport')->with(['pages' => 'invoice type report', 'data' => $data]);
     }
 
     public function recurringType()
     {
 
-        return view('merchant.pages.recurringtype')->with(['pages' => 'recurring type']);
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+        ];
+
+        return view('merchant.pages.recurringtype')->with(['pages' => 'recurring type', 'data' => $data]);
     }
 
     public function profile()
     {
 
-        return view('merchant.pages.profile')->with(['pages' => 'profile']);
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+        ];
+
+        return view('merchant.pages.profile')->with(['pages' => 'profile', 'data' => $data]);
     }
     public function invoicePage()
     {
 
-        return view('merchant.pages.invoicepage')->with(['pages' => 'invoice page']);
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+        ];
+
+        return view('merchant.pages.invoicepage')->with(['pages' => 'invoice page', 'data' => $data]);
     }
 
     public function paymentGateway()
     {
 
-        return view('merchant.pages.paymentmethod')->with(['pages' => 'invoice page']);
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+        ];
+
+        return view('merchant.pages.paymentmethod')->with(['pages' => 'invoice page', 'data' => $data]);
     }
 
     public function orderingSystem()
     {
 
-        return view('merchant.pages.orderingsystem')->with(['pages' => 'invoice page']);
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+        ];
+
+        return view('merchant.pages.orderingsystem')->with(['pages' => 'invoice page', 'data' => $data]);
     }
 
 
@@ -196,5 +285,40 @@ class MerchantPageController extends Controller
 
         // dd($data);
         return json_encode($data);
+    }
+
+    // Get Personal Data
+    public function getmyPersonalDetail($ref_code)
+    {
+        $data = User::where('ref_code', $ref_code)->first();
+
+        return $data;
+    }
+
+    // Get Service Types
+    public function getServiceTypes()
+    {
+        $data = ServiceType::orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
+
+    // Get Taxes
+
+    public function getTax($id)
+    {
+        $data = Tax::where('user_id', $id)->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
+
+
+    // Get Active Countries
+    public function getActiveCountries()
+    {
+
+        $data = AllCountries::where('approval', 1)->get();
+
+        return $data;
     }
 }
