@@ -305,9 +305,6 @@ class AmlController extends Controller
 
     public function transactionReview()
     {
-        $data = array(
-            'activity' => $this->userActivity()
-        );
 
         $transCost = $this->transactionCost();
         $allusers = $this->allUsers();
@@ -344,6 +341,8 @@ class AmlController extends Controller
             'getTax' => $this->getTax(session('myID')),
             'listbank' => $this->getBankList(),
             'escrowfund' => $this->getEscrowFunding(),
+            'activity' => $this->userActivity(),
+            'flaggedUsers' => $this->getFlaggedUsers()
             
         );
 
@@ -652,8 +651,10 @@ class AmlController extends Controller
         return $data;
     }
 
-    public function purchaseRefundRequestAml(Request $req)
+
+    public function purchaseRequestReturnAml(Request $req)
     {
+
         if ($req->session()->has('username') == true) {
             // dd(Session::all());
 
@@ -698,14 +699,78 @@ class AmlController extends Controller
             $allusers = $this->allUsers();
 
             $data = array(
-                'requestforrefund' => $this->requestForRefund(),
+                'processList' => $this->purchaseRefundSentback(),
             );
 
 
 
-            return view('aml.amlsuplinkfolder.purchaserefundrequestaml')->with(['pages' => 'AML Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+            return view('aml.amlsuplinkfolder.purchaserequestreturnaml')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
         }
     }
+    // public function purchaseRefundRequestAml(Request $req)
+    // {
+    //     if ($req->session()->has('username') == true) {
+    //         // dd(Session::all());
+
+    //         if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+    //             $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+    //             $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+    //             $payInvoice = DB::table('client_info')
+    //                 ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+    //                 ->orderBy('invoice_payment.created_at', 'DESC')
+    //                 ->get();
+
+    //             $otherPays = DB::table('organization_pay')
+    //                 ->join('users', 'organization_pay.user_id', '=', 'users.email')
+    //                 ->orderBy('organization_pay.created_at', 'DESC')
+    //                 ->get();
+    //         } else {
+    //             $adminUser = Admin::where('username', session('username'))->get();
+    //             $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+    //             $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+    //             $otherPays = DB::table('organization_pay')
+    //                 ->join('users', 'organization_pay.user_id', '=', 'users.email')
+    //                 ->where('organization_pay.coy_id', session('user_id'))
+    //                 ->orderBy('organization_pay.created_at', 'DESC')
+    //                 ->get();
+    //         }
+
+    //         // dd($payInvoice);
+
+    //          $withdraws = [
+    //             'bank' => $this->requestFromBankWithdrawal(),
+    //             'purchase' => $this->purchaseRefundSentback(),
+    //             'credit' => $this->requestFromCardWithdrawal(),
+    //             'prepaid' => $this->pendingRequestFromPrepaidWithdrawal(),
+    //             // 'specialInfo' => $this->getthisInfo(session('country')),
+    //         ];
+
+    //         $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+    //         $transCost = $this->transactionCost();
+
+    //         $getwithdraw = $this->withdrawRemittance();
+    //         $collectfee = $this->allcollectionFee();
+    //         $getClient = $this->getallClient();
+    //         $getCustomer = $this->getCustomer($req->route('id'));
+
+
+    //         // Get all xpaytransactions where state = 1;
+
+    //         $getxPay = $this->getxpayTrans();
+    //         $allusers = $this->allUsers();
+
+    //         $data = array(
+    //             'requestforrefund' => $this->requestForRefund(),
+    //         );
+
+
+
+    //         return view('aml.amlsuplinkfolder.purchaserefundrequestaml')->with(['pages' => 'AML Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'withdraws' => $withdraws, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+    //     }
+    // }
 
     public function getRefundDetailAml(Request $req, $transid)
     {
@@ -1727,7 +1792,7 @@ class AmlController extends Controller
 
 
 
-            return view('admin.card.redflagged')->with(['pages' => 'AML Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'data' => $data]);
+            return view('aml.amlsuplinkfolder.topupredflagged')->with(['pages' => 'AML Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'data' => $data]);
         } else {
             return view('aml.amlsuplinkfolder.topupredflagged');
         }

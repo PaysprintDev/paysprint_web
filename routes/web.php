@@ -814,7 +814,7 @@ Route::prefix('Admin/aml')->group(function () {
 	Route::get('/view', ['uses' => 'AmlController@view', 'as' => 'View']);
 	Route::get('/upload', ['uses' => 'AmlController@upload', 'as' => 'Upload']);
 
-	Route::get('/purchaserefundrequestaml', ['uses' => 'AmlController@purchaseRefundRequestAml', 'as' => 'Purchase aml Refund Request']);
+	Route::get('/purchaserequestreturnaml', ['uses' => 'AmlController@purchaseRequestReturnAml', 'as' => 'Purchase aml Refund Request']);
 	Route::get('refunddetail/{transid}', ['uses' => 'AmlController@getRefundDetailAml', 'as' => 'refund detail']);
 
 	Route::get('/creditcardwithdrawalrequest', ['uses' => 'AmlController@creditCardWithdrawalRequest', 'as' => 'Credit Card withdrawal Request']);
@@ -843,7 +843,7 @@ Route::prefix('Admin/aml')->group(function () {
 
 	Route::get('bankrequestwithdrawal', ['uses' => 'AmlController@merchantBanksDetailsAml', 'as' => 'merchant banking detail aml']);
 	Route::get('activitylogaml', ['uses' => 'AmlController@activityLogAml', 'as' => 'log aml']);
-	Route::get('purchaserefundrequest', ['uses' => 'AmlController@purchaseRefundRequest', 'as' => 'purchase refund request']);
+	// Route::get('purchaserefundrequest', ['uses' => 'AdminController@purchaseRefundRequest', 'as' => 'purchase refund request']);
 });
 
 
