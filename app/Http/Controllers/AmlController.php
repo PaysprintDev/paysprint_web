@@ -257,9 +257,7 @@ class AmlController extends Controller
 
     public function activityLog()
     {
-        $data = array(
-            'activity' => $this->userActivity()
-        );
+      
 
         $transCost = $this->transactionCost();
         $allusers = $this->allUsers();
@@ -296,6 +294,8 @@ class AmlController extends Controller
             'getTax' => $this->getTax(session('myID')),
             'listbank' => $this->getBankList(),
             'escrowfund' => $this->getEscrowFunding(),
+            'activity' => $this->userActivity(),
+            'supportactivity' => $this->userSupportActivities()
         );
 
 
@@ -344,6 +344,7 @@ class AmlController extends Controller
             'getTax' => $this->getTax(session('myID')),
             'listbank' => $this->getBankList(),
             'escrowfund' => $this->getEscrowFunding(),
+            
         );
 
 

@@ -101,7 +101,7 @@
     <!-- small box -->
     <div class="small-box bg-green">
         <div class="inner">
-            <h3>{{ count($withdraws['bank']) }}</h3>
+            <h3>&nbsp;</h3>
 
             <p>Consumer Bank Details</p>
         </div>
