@@ -2147,8 +2147,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
 /* harmony import */ var _constraints_OngoingOrders__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./constraints/OngoingOrders */ "./resources/js/components/constraints/OngoingOrders.js");
 /* harmony import */ var _constraints_PendingOrders__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./constraints/PendingOrders */ "./resources/js/components/constraints/PendingOrders.js");
 /* harmony import */ var _constraints_MyOrders__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./constraints/MyOrders */ "./resources/js/components/constraints/MyOrders.js");
@@ -2160,10 +2160,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pages_WalletHistory__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./pages/WalletHistory */ "./resources/js/components/pages/WalletHistory.js");
 /* harmony import */ var _pages_EWallet__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./pages/EWallet */ "./resources/js/components/pages/EWallet.js");
 /* harmony import */ var _pages_Invoice__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./pages/Invoice */ "./resources/js/components/pages/Invoice.js");
-/* harmony import */ var _constraints_PaidInvoice__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./constraints/PaidInvoice */ "./resources/js/components/constraints/PaidInvoice.js");
-/* harmony import */ var _constraints_PendingInvoice__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./constraints/PendingInvoice */ "./resources/js/components/constraints/PendingInvoice.js");
-/* harmony import */ var _constraints_ViewMyBids__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./constraints/ViewMyBids */ "./resources/js/components/constraints/ViewMyBids.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var _pages_CrossBorderPlatform__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./pages/CrossBorderPlatform */ "./resources/js/components/pages/CrossBorderPlatform.js");
+/* harmony import */ var _pages_PendingCrossBorderPayment__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./pages/PendingCrossBorderPayment */ "./resources/js/components/pages/PendingCrossBorderPayment.js");
+/* harmony import */ var _constraints_PaidInvoice__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./constraints/PaidInvoice */ "./resources/js/components/constraints/PaidInvoice.js");
+/* harmony import */ var _constraints_PendingInvoice__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./constraints/PendingInvoice */ "./resources/js/components/constraints/PendingInvoice.js");
+/* harmony import */ var _constraints_ViewMyBids__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./constraints/ViewMyBids */ "./resources/js/components/constraints/ViewMyBids.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+
+
 
 
 
@@ -2185,51 +2189,57 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function App() {
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_17__.BrowserRouter, {
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsxs)(react_router_dom__WEBPACK_IMPORTED_MODULE_18__.Switch, {
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_18__.Route, {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_19__.BrowserRouter, {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)(react_router_dom__WEBPACK_IMPORTED_MODULE_20__.Switch, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_20__.Route, {
         exact: true,
         path: "/currencyfx",
         component: _pages_Dashboard__WEBPACK_IMPORTED_MODULE_6__["default"]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_18__.Route, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_20__.Route, {
         path: "/currencyfx/start",
         component: _pages_Start__WEBPACK_IMPORTED_MODULE_8__["default"]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_18__.Route, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_20__.Route, {
         path: "/currencyfx/marketplace",
         component: _pages_MarketPlace__WEBPACK_IMPORTED_MODULE_7__["default"]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_18__.Route, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_20__.Route, {
         path: "/currencyfx/ongoing",
         component: _constraints_OngoingOrders__WEBPACK_IMPORTED_MODULE_2__["default"]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_18__.Route, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_20__.Route, {
         path: "/currencyfx/pending",
         component: _constraints_PendingOrders__WEBPACK_IMPORTED_MODULE_3__["default"]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_18__.Route, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_20__.Route, {
         path: "/currencyfx/myorders",
         component: _constraints_MyOrders__WEBPACK_IMPORTED_MODULE_4__["default"]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_18__.Route, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_20__.Route, {
         path: "/currencyfx/recentbids",
         component: _constraints_RecentBids__WEBPACK_IMPORTED_MODULE_5__["default"]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_18__.Route, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_20__.Route, {
         path: "/currencyfx/transactionhistory",
         component: _pages_TransactionHistory__WEBPACK_IMPORTED_MODULE_9__["default"]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_18__.Route, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_20__.Route, {
         path: "/currencyfx/wallethistory",
         component: _pages_WalletHistory__WEBPACK_IMPORTED_MODULE_10__["default"]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_18__.Route, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_20__.Route, {
         path: "/currencyfx/mywallet",
         component: _pages_EWallet__WEBPACK_IMPORTED_MODULE_11__["default"]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_18__.Route, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_20__.Route, {
         path: "/currencyfx/invoice",
         component: _pages_Invoice__WEBPACK_IMPORTED_MODULE_12__["default"]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_18__.Route, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_20__.Route, {
+        path: "/currencyfx/crossborderplatform",
+        component: _pages_CrossBorderPlatform__WEBPACK_IMPORTED_MODULE_13__["default"]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_20__.Route, {
+        path: "/currencyfx/pendingcrossborderpayment",
+        component: _pages_PendingCrossBorderPayment__WEBPACK_IMPORTED_MODULE_14__["default"]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_20__.Route, {
         path: "/currencyfx/paidinvoices",
-        component: _constraints_PaidInvoice__WEBPACK_IMPORTED_MODULE_13__["default"]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_18__.Route, {
+        component: _constraints_PaidInvoice__WEBPACK_IMPORTED_MODULE_15__["default"]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_20__.Route, {
         path: "/currencyfx/pendinginvoices",
-        component: _constraints_PendingInvoice__WEBPACK_IMPORTED_MODULE_14__["default"]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_18__.Route, {
+        component: _constraints_PendingInvoice__WEBPACK_IMPORTED_MODULE_16__["default"]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_20__.Route, {
         path: "/currencyfx/viewmybids",
-        component: _constraints_ViewMyBids__WEBPACK_IMPORTED_MODULE_15__["default"]
+        component: _constraints_ViewMyBids__WEBPACK_IMPORTED_MODULE_17__["default"]
       })]
     })
   });
@@ -2238,7 +2248,7 @@ function App() {
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);
 
 if (document.getElementById('app')) {
-  react_dom__WEBPACK_IMPORTED_MODULE_1__.render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_16__.jsx)(App, {}), document.getElementById('app'));
+  react_dom__WEBPACK_IMPORTED_MODULE_1__.render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(App, {}), document.getElementById('app'));
 }
 
 /***/ }),
@@ -6857,7 +6867,7 @@ var Aside = /*#__PURE__*/function (_Component) {
                     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("li", {
                       className: "nav-item",
                       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("a", {
-                        href: "/currencyfx/crossborder",
+                        href: "/currencyfx/crossborderplatform",
                         className: "nav-link active",
                         children: "Cross Border Payment"
                       })
@@ -7524,7 +7534,7 @@ var Header = /*#__PURE__*/function (_Component) {
                               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("li", {
                                 className: "nav-item",
                                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("a", {
-                                  href: "/currencyfx/crossborder",
+                                  href: "/currencyfx/crossborderplatform",
                                   className: "nav-link",
                                   children: "Cross Border Payment"
                                 })
@@ -7780,7 +7790,7 @@ var Header = /*#__PURE__*/function (_Component) {
                           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("li", {
                             className: "nav-item",
                             children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("a", {
-                              href: "/currencyfx/crossborder",
+                              href: "/currencyfx/crossborderplatform",
                               className: "nav-link",
                               children: "Cross Border Payment"
                             })
@@ -8141,6 +8151,374 @@ var Notify = /*#__PURE__*/function (_Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0__.Component);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Notify);
+
+/***/ }),
+
+/***/ "./resources/js/components/pages/CrossBorderPlatform.js":
+/*!**************************************************************!*\
+  !*** ./resources/js/components/pages/CrossBorderPlatform.js ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _includes_Aside__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../includes/Aside */ "./resources/js/components/includes/Aside.js");
+/* harmony import */ var _includes_Header__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../includes/Header */ "./resources/js/components/includes/Header.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+
+
+var apiToken = document.getElementById('user_api_token').value;
+var myCurrencyCode = document.getElementById('user_currency_code').value;
+
+var CrossBorderPlatform = /*#__PURE__*/function (_Component) {
+  _inherits(CrossBorderPlatform, _Component);
+
+  var _super = _createSuper(CrossBorderPlatform);
+
+  function CrossBorderPlatform(props) {
+    var _this;
+
+    _classCallCheck(this, CrossBorderPlatform);
+
+    _this = _super.call(this, props);
+
+    _defineProperty(_assertThisInitialized(_this), "_isMounted", false);
+
+    _this.state = {
+      data: [],
+      message: '',
+      loading: true,
+      currency: ''
+    };
+    return _this;
+  }
+
+  _createClass(CrossBorderPlatform, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      this._isMounted = true;
+
+      try {
+        axios.get("/api/v1/getallcrossborderpayment", {
+          headers: {
+            Authorization: "Bearer ".concat(apiToken)
+          }
+        }).then(function (res) {
+          if (_this2._isMounted) {
+            if (res.status === 200) {
+              console.log(res.data.data);
+
+              _this2.setState({
+                data: res.data.data,
+                message: res.data.message,
+                loading: false
+              });
+            } else {
+              _this2.setState({
+                data: res.data.data,
+                message: res.data.message,
+                loading: false
+              });
+            }
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      this._isMounted = false;
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var data_HTML_ACTIVE_ORDERS = '';
+      var status_HTML = '';
+      var status_Action = '';
+
+      if (this.state.loading) {
+        data_HTML_ACTIVE_ORDERS = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("tr", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+            colSpan: "8",
+            align: "center",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+              className: "font-weight-semibold text-gray-700 text-center",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("img", {
+                src: "https://img.icons8.com/ios/35/000000/spinner-frame-4.png",
+                className: "fa fa-spin"
+              })
+            })
+          })
+        });
+      } else {
+        if (this.state.message != 'success') {
+          data_HTML_ACTIVE_ORDERS = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("tr", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+              colSpan: "8",
+              align: "center",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                className: "font-weight-semibold text-gray-700 text-center",
+                children: this.state.message
+              })
+            })
+          });
+        } else {
+          data_HTML_ACTIVE_ORDERS = this.state.data.map(function (activeOrders) {
+            if (activeOrders.status == false) {
+              status_HTML = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                className: "text-danger font-weight-semibold",
+                children: "Pending"
+              });
+            } else {
+              status_HTML = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                className: "text-success font-weight-semibold",
+                children: "Processed"
+              });
+            }
+
+            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("tr", {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                  className: "font-weight-semibold text-gray-700",
+                  children: activeOrders.transaction_id
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                  className: "font-weight-semibold text-gray-500",
+                  children: activeOrders.created_at
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                  className: "font-weight-semibold text-gray-500",
+                  children: activeOrders.receivers_name
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                  className: "font-weight-semibold text-gray-500",
+                  children: activeOrders.currencySymbol + ' ' + parseFloat(activeOrders.amount).toFixed(2)
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                  className: "font-weight-semibold text-gray-500",
+                  children: activeOrders.select_wallet
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                  className: "font-weight-semibold text-gray-500",
+                  children: activeOrders.purpose
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+                align: "center",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                  className: "font-weight-semibold text-gray-500",
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("a", {
+                    href: "".concat(activeOrders.file),
+                    target: "_blank",
+                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("img", {
+                      src: "https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/20/000000/external-invoice-advertising-kiranshastry-lineal-color-kiranshastry.png"
+                    })
+                  })
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+                children: status_HTML
+              })]
+            }, activeOrders.id);
+          });
+        }
+      }
+
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_includes_Aside__WEBPACK_IMPORTED_MODULE_1__["default"], {
+          apiToken: apiToken,
+          currencycode: myCurrencyCode
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_includes_Header__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          apiToken: apiToken
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+          className: "main-content",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+            className: "px-3 px-xxl-5 py-3 py-lg-4 border-bottom border-gray-200 after-header",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+              className: "container-fluid px-0",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+                className: "row align-items-center",
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+                  className: "col",
+                  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                    className: "text-uppercase tiny text-gray-600 Montserrat-font font-weight-semibold",
+                    children: "Currency Exchange"
+                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h1", {
+                    className: "h2 mb-0 lh-sm",
+                    children: "Cross Border Payments"
+                  })]
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+                  className: "col-auto d-flex align-items-center my-2 my-sm-0",
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Link, {
+                    to: '/currencyfx/',
+                    className: "btn btn-lg btn-warning",
+                    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("svg", {
+                      className: "me-2",
+                      "data-name": "Icons/Tabler/Paperclip Copy 2",
+                      xmlns: "http://www.w3.org/2000/svg",
+                      width: "14",
+                      height: "14",
+                      viewBox: "0 0 18 18",
+                      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("rect", {
+                        "data-name": "Icons/Tabler/Bolt background",
+                        width: "18",
+                        height: "18",
+                        fill: "none"
+                      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("path", {
+                        d: "M6.377,18a.7.7,0,0,1-.709-.6l-.006-.1V11.537H.709A.7.7,0,0,1,.1,11.193a.673.673,0,0,1-.014-.672l.054-.083L7.693.274,7.755.2,7.828.141,7.913.087,7.981.055l.087-.03L8.16.006,8.256,0h.037l.059.005.04.007.052.011.045.014.043.016.052.023.089.055.016.011A.765.765,0,0,1,8.756.2L8.82.273l.055.083.033.067.03.085L8.957.6l.007.094V6.461h4.952a.7.7,0,0,1,.613.345.672.672,0,0,1,.013.672l-.053.082L6.942,17.714A.691.691,0,0,1,6.377,18ZM7.548,2.821,2.1,10.153H6.369a.7.7,0,0,1,.7.6l.006.093v4.331l5.449-7.331H8.256a.7.7,0,0,1-.7-.6l-.007-.094Z",
+                        transform: "translate(2.25 0)",
+                        fill: "#1E1E1E"
+                      })]
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                      children: "Dashboard"
+                    })]
+                  })
+                })]
+              })
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+            className: "p-3 p-xxl-5",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+              className: "container-fluid px-0",
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+                className: "mb-2 mb-md-3 mb-xl-4 pb-2",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("ul", {
+                  className: "nav nav-tabs nav-tabs-md nav-tabs-line position-relative zIndex-0",
+                  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("li", {
+                    className: "nav-item",
+                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Link, {
+                      className: "nav-link active",
+                      to: '/currencyfx/crossborderplatform',
+                      children: "Processed Invoice Payment"
+                    })
+                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("li", {
+                    className: "nav-item",
+                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Link, {
+                      className: "nav-link",
+                      to: '/currencyfx/pendingcrossborderpayment',
+                      children: "Pending Invoice Pay"
+                    })
+                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("li", {
+                    className: "nav-item",
+                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("a", {
+                      className: "nav-link",
+                      href: "/currencyfx/crossborder",
+                      children: "Create New Payment"
+                    })
+                  })]
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+                className: "row group-cards pt-2",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+                  className: "col-12 mb-4",
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+                    className: "card rounded-12 shadow-dark-80 border border-gray-50",
+                    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+                      className: "d-flex align-items-center px-3 px-md-4 py-3",
+                      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h5", {
+                        className: "card-header-title mb-0 ps-md-2 font-weight-semibold",
+                        children: "Process Invoicese Payments"
+                      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+                        className: "dropdown export-dropdown ms-auto pe-md-2",
+                        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("a", {
+                          href: "/currencyfx/crossborder",
+                          role: "button",
+                          id: "Sources",
+                          "data-bs-toggle": "dropdown",
+                          "aria-expanded": "false",
+                          className: "btn btn-outline-dark text-gray-700 border-gray-700 px-3",
+                          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("span", {
+                            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("img", {
+                              src: "https://img.icons8.com/external-becris-lineal-becris/18/000000/external-add-mintab-for-ios-becris-lineal-becris-2.png",
+                              alt: "Tio Tune"
+                            }), "Create New Payment"]
+                          })
+                        })
+                      })]
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+                      className: "table-responsive mb-0",
+                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("table", {
+                        className: "table card-table table-nowrap overflow-hidden",
+                        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("thead", {
+                          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("tr", {
+                            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+                              children: "Transaction ID"
+                            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+                              children: "Date & Time"
+                            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+                              children: "Receiver"
+                            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+                              children: "Amount"
+                            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+                              children: "Payment Method"
+                            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+                              children: "Purpose"
+                            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+                              children: "Invoice File"
+                            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+                              children: "Status"
+                            })]
+                          })
+                        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("tbody", {
+                          className: "list",
+                          children: data_HTML_ACTIVE_ORDERS
+                        })]
+                      })
+                    })]
+                  })
+                })
+              })]
+            })
+          })]
+        })]
+      });
+    }
+  }]);
+
+  return CrossBorderPlatform;
+}(react__WEBPACK_IMPORTED_MODULE_0__.Component);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CrossBorderPlatform);
 
 /***/ }),
 
@@ -9514,7 +9892,7 @@ var Invoice = /*#__PURE__*/function (_Component) {
                         children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("thead", {
                           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("tr", {
                             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
-                              children: "Inovice ID"
+                              children: "Invoice ID"
                             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
                               children: "Date & Time"
                             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
@@ -10039,6 +10417,374 @@ var MarketPlace = /*#__PURE__*/function (_Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0__.Component);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MarketPlace);
+
+/***/ }),
+
+/***/ "./resources/js/components/pages/PendingCrossBorderPayment.js":
+/*!********************************************************************!*\
+  !*** ./resources/js/components/pages/PendingCrossBorderPayment.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _includes_Aside__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../includes/Aside */ "./resources/js/components/includes/Aside.js");
+/* harmony import */ var _includes_Header__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../includes/Header */ "./resources/js/components/includes/Header.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+
+
+var apiToken = document.getElementById('user_api_token').value;
+var myCurrencyCode = document.getElementById('user_currency_code').value;
+
+var PendingCrossBorderPayment = /*#__PURE__*/function (_Component) {
+  _inherits(PendingCrossBorderPayment, _Component);
+
+  var _super = _createSuper(PendingCrossBorderPayment);
+
+  function PendingCrossBorderPayment(props) {
+    var _this;
+
+    _classCallCheck(this, PendingCrossBorderPayment);
+
+    _this = _super.call(this, props);
+
+    _defineProperty(_assertThisInitialized(_this), "_isMounted", false);
+
+    _this.state = {
+      data: [],
+      message: '',
+      loading: true,
+      currency: ''
+    };
+    return _this;
+  }
+
+  _createClass(PendingCrossBorderPayment, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      this._isMounted = true;
+
+      try {
+        axios.get("/api/v1/getpendingcrossborderpayment", {
+          headers: {
+            Authorization: "Bearer ".concat(apiToken)
+          }
+        }).then(function (res) {
+          if (_this2._isMounted) {
+            if (res.status === 200) {
+              console.log(res.data.data);
+
+              _this2.setState({
+                data: res.data.data,
+                message: res.data.message,
+                loading: false
+              });
+            } else {
+              _this2.setState({
+                data: res.data.data,
+                message: res.data.message,
+                loading: false
+              });
+            }
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      this._isMounted = false;
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var data_HTML_ACTIVE_ORDERS = '';
+      var status_HTML = '';
+      var status_Action = '';
+
+      if (this.state.loading) {
+        data_HTML_ACTIVE_ORDERS = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("tr", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+            colSpan: "8",
+            align: "center",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+              className: "font-weight-semibold text-gray-700 text-center",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("img", {
+                src: "https://img.icons8.com/ios/35/000000/spinner-frame-4.png",
+                className: "fa fa-spin"
+              })
+            })
+          })
+        });
+      } else {
+        if (this.state.message != 'success') {
+          data_HTML_ACTIVE_ORDERS = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("tr", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+              colSpan: "8",
+              align: "center",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                className: "font-weight-semibold text-gray-700 text-center",
+                children: this.state.message
+              })
+            })
+          });
+        } else {
+          data_HTML_ACTIVE_ORDERS = this.state.data.map(function (activeOrders) {
+            if (activeOrders.status == false) {
+              status_HTML = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                className: "text-danger font-weight-semibold",
+                children: "Pending"
+              });
+            } else {
+              status_HTML = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                className: "text-success font-weight-semibold",
+                children: "Processed"
+              });
+            }
+
+            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("tr", {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                  className: "font-weight-semibold text-gray-700",
+                  children: activeOrders.transaction_id
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                  className: "font-weight-semibold text-gray-500",
+                  children: activeOrders.created_at
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                  className: "font-weight-semibold text-gray-500",
+                  children: activeOrders.receivers_name
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                  className: "font-weight-semibold text-gray-500",
+                  children: activeOrders.currencySymbol + ' ' + parseFloat(activeOrders.amount).toFixed(2)
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                  className: "font-weight-semibold text-gray-500",
+                  children: activeOrders.select_wallet
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                  className: "font-weight-semibold text-gray-500",
+                  children: activeOrders.purpose
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+                align: "center",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                  className: "font-weight-semibold text-gray-500",
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("a", {
+                    href: "".concat(activeOrders.file),
+                    target: "_blank",
+                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("img", {
+                      src: "https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/20/000000/external-invoice-advertising-kiranshastry-lineal-color-kiranshastry.png"
+                    })
+                  })
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+                children: status_HTML
+              })]
+            }, activeOrders.id);
+          });
+        }
+      }
+
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_includes_Aside__WEBPACK_IMPORTED_MODULE_1__["default"], {
+          apiToken: apiToken,
+          currencycode: myCurrencyCode
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_includes_Header__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          apiToken: apiToken
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+          className: "main-content",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+            className: "px-3 px-xxl-5 py-3 py-lg-4 border-bottom border-gray-200 after-header",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+              className: "container-fluid px-0",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+                className: "row align-items-center",
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+                  className: "col",
+                  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                    className: "text-uppercase tiny text-gray-600 Montserrat-font font-weight-semibold",
+                    children: "Currency Exchange"
+                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h1", {
+                    className: "h2 mb-0 lh-sm",
+                    children: "Cross Border Payments"
+                  })]
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+                  className: "col-auto d-flex align-items-center my-2 my-sm-0",
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Link, {
+                    to: '/currencyfx/',
+                    className: "btn btn-lg btn-warning",
+                    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("svg", {
+                      className: "me-2",
+                      "data-name": "Icons/Tabler/Paperclip Copy 2",
+                      xmlns: "http://www.w3.org/2000/svg",
+                      width: "14",
+                      height: "14",
+                      viewBox: "0 0 18 18",
+                      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("rect", {
+                        "data-name": "Icons/Tabler/Bolt background",
+                        width: "18",
+                        height: "18",
+                        fill: "none"
+                      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("path", {
+                        d: "M6.377,18a.7.7,0,0,1-.709-.6l-.006-.1V11.537H.709A.7.7,0,0,1,.1,11.193a.673.673,0,0,1-.014-.672l.054-.083L7.693.274,7.755.2,7.828.141,7.913.087,7.981.055l.087-.03L8.16.006,8.256,0h.037l.059.005.04.007.052.011.045.014.043.016.052.023.089.055.016.011A.765.765,0,0,1,8.756.2L8.82.273l.055.083.033.067.03.085L8.957.6l.007.094V6.461h4.952a.7.7,0,0,1,.613.345.672.672,0,0,1,.013.672l-.053.082L6.942,17.714A.691.691,0,0,1,6.377,18ZM7.548,2.821,2.1,10.153H6.369a.7.7,0,0,1,.7.6l.006.093v4.331l5.449-7.331H8.256a.7.7,0,0,1-.7-.6l-.007-.094Z",
+                        transform: "translate(2.25 0)",
+                        fill: "#1E1E1E"
+                      })]
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                      children: "Dashboard"
+                    })]
+                  })
+                })]
+              })
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+            className: "p-3 p-xxl-5",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+              className: "container-fluid px-0",
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+                className: "mb-2 mb-md-3 mb-xl-4 pb-2",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("ul", {
+                  className: "nav nav-tabs nav-tabs-md nav-tabs-line position-relative zIndex-0",
+                  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("li", {
+                    className: "nav-item",
+                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Link, {
+                      className: "nav-link ",
+                      to: '/currencyfx/crossborderplatform',
+                      children: "Processed Invoice Payment"
+                    })
+                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("li", {
+                    className: "nav-item",
+                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Link, {
+                      className: "nav-link active",
+                      to: '/currencyfx/pendingcrossborderpayment',
+                      children: "Pending Invoice Payment"
+                    })
+                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("li", {
+                    className: "nav-item",
+                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("a", {
+                      className: "nav-link",
+                      href: "/currencyfx/crossborder",
+                      children: "Create New Payment"
+                    })
+                  })]
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+                className: "row group-cards pt-2",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+                  className: "col-12 mb-4",
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+                    className: "card rounded-12 shadow-dark-80 border border-gray-50",
+                    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+                      className: "d-flex align-items-center px-3 px-md-4 py-3",
+                      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h5", {
+                        className: "card-header-title mb-0 ps-md-2 font-weight-semibold",
+                        children: "Pending Invoice Payments"
+                      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+                        className: "dropdown export-dropdown ms-auto pe-md-2",
+                        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("a", {
+                          href: "/currencyfx/crossborder",
+                          role: "button",
+                          id: "Sources",
+                          "data-bs-toggle": "dropdown",
+                          "aria-expanded": "false",
+                          className: "btn btn-outline-dark text-gray-700 border-gray-700 px-3",
+                          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("span", {
+                            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("img", {
+                              src: "https://img.icons8.com/external-becris-lineal-becris/18/000000/external-add-mintab-for-ios-becris-lineal-becris-2.png",
+                              alt: "Tio Tune"
+                            }), "Create New Payment"]
+                          })
+                        })
+                      })]
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+                      className: "table-responsive mb-0",
+                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("table", {
+                        className: "table card-table table-nowrap overflow-hidden",
+                        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("thead", {
+                          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("tr", {
+                            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+                              children: "Transaction ID"
+                            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+                              children: "Date & Time"
+                            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+                              children: "Receiver"
+                            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+                              children: "Amount"
+                            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+                              children: "Payment Method"
+                            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+                              children: "Purpose"
+                            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+                              children: "Invoice File"
+                            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+                              children: "Status"
+                            })]
+                          })
+                        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("tbody", {
+                          className: "list",
+                          children: data_HTML_ACTIVE_ORDERS
+                        })]
+                      })
+                    })]
+                  })
+                })
+              })]
+            })
+          })]
+        })]
+      });
+    }
+  }]);
+
+  return PendingCrossBorderPayment;
+}(react__WEBPACK_IMPORTED_MODULE_0__.Component);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (PendingCrossBorderPayment);
 
 /***/ }),
 

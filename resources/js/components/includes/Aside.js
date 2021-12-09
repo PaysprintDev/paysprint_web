@@ -550,7 +550,7 @@ class Aside extends Component {
 											</a>
 										</li>
 										<li className="nav-item">
-											<a href="/currencyfx/crossborder" className="nav-link active">
+											<a href="/currencyfx/crossborderplatform" className="nav-link active">
 												Cross Border Payment
 											</a>
 										</li>

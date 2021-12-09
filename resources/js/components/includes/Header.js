@@ -461,7 +461,10 @@ class Header extends Component {
 																</a>
 															</li>
 															<li className="nav-item">
-																<a href="/currencyfx/crossborder" className="nav-link">
+																<a
+																	href="/currencyfx/crossborderplatform"
+																	className="nav-link"
+																>
 																	Cross Border Payment
 																</a>
 															</li>
@@ -719,7 +722,7 @@ class Header extends Component {
 														</a>
 													</li>
 													<li className="nav-item">
-														<a href="/currencyfx/crossborder" className="nav-link">
+														<a href="/currencyfx/crossborderplatform" className="nav-link">
 															Cross Border Payment
 														</a>
 													</li>
