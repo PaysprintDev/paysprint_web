@@ -103,7 +103,7 @@
         <div class="inner">
             <h3>{{ count($withdraws['purchase']) }}</h3>
 
-            <p>purchase Refund Request</p>
+            <p>Purchase Refund Request</p>
         </div>
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
@@ -118,7 +118,7 @@
         <div class="inner">
             <h3>{{ count($withdraws['credit']) }}</h3>
 
-            <p>C C Withdrawal Request</p>
+            <p>CC Withdrawal Request</p>
         </div>
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
@@ -229,12 +229,7 @@
     <div class="small-box bg-blue">
         <div class="inner">
 
-            @if (isset($withdraws['prepaid']))
-                <h3>{{ count($withdraws['prepaid']->data) }}</h3>
-
-            @else
-                <h3>0</h3>
-            @endif
+            <h3>{{ count($data['flaggedUsers']) }}</h3>
 
 
             <p>Top-up Red Flagged </p>
