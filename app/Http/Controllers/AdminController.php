@@ -12059,6 +12059,8 @@ class AdminController extends Controller
     // Client Register
     public function ajaxadminregister(Request $req)
     {
+
+    
         // Check client record
         $checkClient = ClientInfo::where('email', $req->email)->get();
         if (count($checkClient) > 0) {
@@ -12104,6 +12106,19 @@ class AdminController extends Controller
                 $resData = ['res' => 'Your account has already been created but currently not active on PaySprint. Contact the Admin for more information', 'message' => 'error'];
             } else {
 
+            if($req->how_your_heard_about_us == "Others"){
+                $specifyHeardAbout = $req->specify_how_your_heard_about_us;
+            }else{
+                $specifyHeardAbout = $req->how_your_heard_about_us;
+            }
+
+
+            if($req->source_of_funds == "Others"){
+                $source_of_funds = $req->specify_source;
+            }else{
+                $source_of_funds = $req->source_of_funds;
+            }
+
 
                 if ($req->ref_code != null) {
 
@@ -12135,7 +12150,7 @@ class AdminController extends Controller
                     $api_token = uniqid() . md5($req->email) . time();
 
 
-                    $data = ['code' => $mycode->callingCode, 'ref_code' => $req->ref_code, 'businessname' => $req->business_name, 'name' => $getanonuser->name, 'email' => $getanonuser->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'telephone' => $getanonuser->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $getanonuser->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'wallet_balance' => $getanonuser->wallet_balance, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by];
+                    $data = ['code' => $mycode->callingCode, 'ref_code' => $req->ref_code, 'businessname' => $req->business_name, 'name' => $getanonuser->name, 'email' => $getanonuser->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'telephone' => $getanonuser->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $getanonuser->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'wallet_balance' => $getanonuser->wallet_balance, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by, 'knowAboutUs' => $specifyHeardAbout, 'accountPurpose' => $req->describe_purpose, 'transactionSize' => $req->size_of_transaction, 'sourceOfFunding' => $source_of_funds];
 
 
                     User::updateOrCreate(['email' => $getanonuser->email], $data);
@@ -12328,7 +12343,7 @@ class AdminController extends Controller
                     }
 
 
-                    $data = ['code' => $phoneCode, 'ref_code' => $newRefcode, 'businessname' => $req->business_name, 'name' => $req->firstname . ' ' . $req->lastname, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'telephone' => $req->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by];
+                    $data = ['code' => $phoneCode, 'ref_code' => $newRefcode, 'businessname' => $req->business_name, 'name' => $req->firstname . ' ' . $req->lastname, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'telephone' => $req->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by, 'knowAboutUs' => $specifyHeardAbout, 'accountPurpose' => $req->describe_purpose, 'transactionSize' => $req->size_of_transaction, 'sourceOfFunding' => $source_of_funds];
 
 
                     User::updateOrCreate(['email' => $req->email], $data);

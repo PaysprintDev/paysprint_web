@@ -375,10 +375,72 @@ body::-webkit-scrollbar-thumb:hover {
                                         <label for="password-confirm"><span class="reqField">*</span> Confirm Password</label>
                                         <input type="password" name="confirmpassword" id="password-confirm" class="form-control input_box" placeholder="Confirm Password *" required>
                                     </div>
-
-                                    
                                 </div>
                             </div>
+
+                                <label for="how_your_heard_about_us"><span class="reqField">*</span> How do you know about us?</label>
+                                <select name="how_your_heard_about_us" id="how_your_heard_about_us" class="form-control input_box">
+                                  <option value="">Select option </option>
+                                  <option value="Google Ads">Google Ads</option>
+                                  <option value="Facebook">Facebook </option>
+                                  <option value="Youtube">Youtube </option>
+                                  <option value="Twitter">Twitter</option>
+                                  <option value="Search Engine">Search Engine</option>
+                                  <option value="Instagram">Instagram</option>
+                                  <option value="Email">Email</option>
+                                  <option value="Radio">Radio</option>
+                                  <option value="TV">TV</option>
+                                  <option value="Newspaper">Newspaper</option>
+                                  <option value="Word of mouth">Word of mouth</option>
+                                  <option value="Others">Others</option>
+                              </select>
+                        
+                              <div class="specify_know_about disp-0">
+                                <label for="specify_how_your_heard_about_us">Specify how your heard about us</label>
+                                <input type="text" name="specify_how_your_heard_about_us" id="specify_how_your_heard_about_us" class="form-control input_box">
+                                
+                              </div>
+                        
+                        
+                                <label for=" describe_purpose">Purpose of opening the Account (please describe the purpose)</label>
+                              <div class="row">
+                                <div class="col-xs-12">
+                                    <textarea type="text" name="describe_purpose" id="describe_purpose" class="form-control input_box" placeholder=""></textarea>
+                                </div>
+                              </div>
+                         
+                        
+                        
+                              
+                                <label for="size_of_transaction"><span class="reqField">*</span> Size of Trancation to be expected</label>
+                                <select name="size_of_transaction" id="size_of_transaction" class="form-control input_box">
+                                  <option value="">Select Transaction size</option>
+                                  <option value="0 - 10,000">0 - 10,000</option>
+                                  <option value="10,001 - 50,000">10,001 - 50,000</option>
+                                  <option value="50,000 - 500,000">50,000 - 500,000</option>
+                                  <option value="Above 500,001">Above 500,001</option>
+                              </select>
+                              </div>
+                        
+                          
+                                <label for="source_of_funds"><span class="reqField">*</span> Source of Funds</label>
+                                <select name="source_of_funds" id="source_of_funds" class="form-control input_box">
+                                  <option value="">Select Source of Funds</option>
+                                  <option value="Salary, Pension, Social benefits">Salary, Pension, Social benefits</option>
+                                  <option value="Directors Remuneration Share of profits">Directors Remuneration Share of profits</option>
+                                  <option value="Dividend, interest on loan etc">Dividend, interest on loan etc</option>
+                                  <option value="Families and Friends">Families and Friends</option>
+                                  <option value="Others">Other (Please describe)</option>
+                              </select>
+                              
+                        
+                        
+                              <div class="specifySourceOfFunds disp-0">
+                                <label for="specify_source">Specify Source of Funds</label>
+                                <input type="text" name="specify_source" id="specify_source" class="form-control input_box ">
+                               
+                              </div>
+
                             <label for="referred_by">Referred By <small class="reqField">(Optional)</small> </label>
                                         <input type="text" name="referred_by" id="referred_by" class="form-control input_box" placeholder="E.g 69212">
                             <div class="row">
@@ -595,6 +657,34 @@ body::-webkit-scrollbar-thumb:hover {
     });
 
 
+    $('#source_of_funds').change(function(){
+
+if($('#source_of_funds').val() == "Others"){
+    // Show a specify input field
+    $('.specifySourceOfFunds').removeClass('disp-0');
+}
+else{
+  // Remove the specified input field
+  $('.specifySourceOfFunds').addClass('disp-0');
+}
+
+});
+
+
+$('#how_your_heard_about_us').change(function(){
+
+if($('#how_your_heard_about_us').val() == "Others"){
+    // Show a specify input field
+    $('.specify_know_about').removeClass('disp-0');
+}
+else{
+  // Remove the specified input field
+  $('.specify_know_about').addClass('disp-0');
+}
+
+});
+
+
     function gotoMerchant(){
 
         swal({
@@ -632,6 +722,14 @@ var yearOfBirth;
 var street_number;
 var street_name;
 var referred_by;
+var how_your_heard_about_us;
+var specify_how_your_heard_about_us;
+var describe_purpose;
+var size_of_transaction;
+var source_of_funds;
+var specify_source;
+
+
     if(accountType == "Individual"){
         ref_code = $('#ref_code').val();
         fname = $('#fname').val();
@@ -651,6 +749,12 @@ var referred_by;
         zipcode = $('#postal_code').val();
         referred_by = $('#referred_by').val();
         cpassword = $('#password-confirm').val();
+        how_your_heard_about_us = $('#how_your_heard_about_us').val();
+        specify_how_your_heard_about_us = $('#specify_how_your_heard_about_us').val();
+        describe_purpose = $('#describe_purpose').val();
+        size_of_transaction = $('#size_of_transaction').val();
+        source_of_funds = $('#source_of_funds').val();
+        specify_source = $('#specify_source').val();
 
 
         if (grecaptcha.getResponse() == ""){
@@ -713,6 +817,18 @@ var referred_by;
             swal('Oops!', 'You have to accept terms and conditions', 'warning');
             return false;
         }
+        if(how_your_heard_about_us == ""){
+            swal('Oops', 'Please tell us how you know about us.', 'info');
+            return false;
+        }
+        if(size_of_transaction == ""){
+            swal('Oops', 'Please select size of transaction', 'info');
+            return false;
+        }
+        if(source_of_funds == ""){
+            swal('Oops', 'Please select the source of funds.', 'info');
+            return false;
+        }
 
 
         thisdata = {
@@ -720,8 +836,11 @@ var referred_by;
             country: country, state: state, city: city,
             address: address, password: password, zipcode: zipcode,
             street_number: street_number, street_name: street_name,
-            accountType: accountType, ref_code: ref_code, dayOfBirth: dayOfBirth, monthOfBirth: monthOfBirth, yearOfBirth: yearOfBirth, referred_by: referred_by
+            accountType: accountType, ref_code: ref_code, dayOfBirth: dayOfBirth, monthOfBirth: monthOfBirth, yearOfBirth: yearOfBirth, referred_by: referred_by, how_your_heard_about_us: how_your_heard_about_us,
+specify_how_your_heard_about_us: specify_how_your_heard_about_us, describe_purpose: describe_purpose, size_of_transaction: size_of_transaction, source_of_funds: source_of_funds, specify_source: specify_source
         };
+
+
     }
     else if(accountType == "Business"){
         ref_code = $('#ref_code').val();
