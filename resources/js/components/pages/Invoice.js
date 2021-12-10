@@ -312,7 +312,7 @@ class Invoice extends Component {
 											<table className="table card-table table-nowrap overflow-hidden">
 												<thead>
 													<tr>
-														<th>Inovice ID</th>
+														<th>Invoice ID</th>
 														<th>Date & Time</th>
 														<th>Description</th>
 														<th>Amount</th>

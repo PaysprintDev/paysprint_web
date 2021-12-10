@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AllCountries;
+use App\CrossBorder;
 use App\MarketPlace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -183,6 +184,44 @@ class CurrencyFxController extends Controller
 
 
         return view('currencyexchange.invoices');
+    }
+
+
+    public function myCrossBorderPlatform(Request $req)
+    {
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == false) {
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+        }
+
+
+
+        return view('currencyexchange.crossborderplatform');
+    }
+
+
+    public function myPendingCrossBorderPayment(Request $req)
+    {
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == false) {
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+        }
+
+
+
+        return view('currencyexchange.pendingcrossborderpayment');
     }
 
 
@@ -1174,6 +1213,73 @@ class CurrencyFxController extends Controller
 
                 $data = [];
                 $message = 'No pending invoice';
+                $status = 201;
+            }
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+
+    public function getAllCrossBorderPayment(Request $req)
+    {
+
+        try {
+
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+
+            $data = CrossBorder::where('ref_code', $thisuser->ref_code)->where('status', true)->orderBy('created_at', 'DESC')->get();
+
+
+            if (count($data) > 0) {
+                $data = $data;
+                $message = 'success';
+                $status = 200;
+            } else {
+
+                $data = [];
+                $message = 'No payment made yet';
+                $status = 201;
+            }
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+    public function getPendingCrossBorderPayment(Request $req)
+    {
+
+        try {
+
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+
+            $data = CrossBorder::where('ref_code', $thisuser->ref_code)->where('status', false)->orderBy('created_at', 'DESC')->get();
+
+
+            if (count($data) > 0) {
+                $data = $data;
+                $message = 'success';
+                $status = 200;
+            } else {
+
+                $data = [];
+                $message = 'No pending payment';
                 $status = 201;
             }
         } catch (\Throwable $th) {

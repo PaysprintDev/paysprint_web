@@ -297,6 +297,10 @@ Route::prefix('/v1')->group(function () {
         Route::get('/getpendinginvoicetofx', ['uses' => 'CurrencyFxController@getPendingInvoiceToFx', 'as' => 'currency fx get pending invoice to fx']);
 
 
+        // Get all Cross Border  Information
+        Route::get('/getallcrossborderpayment', ['uses' => 'CurrencyFxController@getAllCrossBorderPayment', 'as' => 'currency fx get all cross border payment']);
+        Route::get('/getpendingcrossborderpayment', ['uses' => 'CurrencyFxController@getPendingCrossBorderPayment', 'as' => 'currency fx get pending cross border payment']);
+
         // Convert Money to Send
 
         Route::post('/convertmoneytosend', ['uses' => 'CurrencyFxController@convertMoneyToTransfer', 'as' => 'currency fx convert money to transfer']);

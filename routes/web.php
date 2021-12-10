@@ -188,6 +188,8 @@ Route::prefix('currencyfx')->group(function () {
 	Route::get('/', ['uses' => 'CurrencyFxController@index', 'as' => 'paysprint currency exchange']);
 	Route::get('marketplace', ['uses' => 'CurrencyFxController@marketPlace', 'as' => 'paysprint currency market place']);
 	Route::get('invoice', ['uses' => 'CurrencyFxController@myInvoices', 'as' => 'paysprint currency invoices']);
+	Route::get('crossborderplatform', ['uses' => 'CurrencyFxController@myCrossBorderPlatform', 'as' => 'paysprint currency cross border platform']);
+	Route::get('pendingcrossborderpayment', ['uses' => 'CurrencyFxController@myPendingCrossBorderPayment', 'as' => 'paysprint currency pending cross border payment']);
 
 	Route::get('paidinvoices', ['uses' => 'CurrencyFxController@paidInvoices', 'as' => 'paysprint currency paid invoices']);
 	Route::get('pendinginvoices', ['uses' => 'CurrencyFxController@pendingInvoices', 'as' => 'paysprint currency pending invoices']);
