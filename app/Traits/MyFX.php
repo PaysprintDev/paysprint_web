@@ -9,6 +9,7 @@ use App\EscrowAccount;
 use App\FxPayment;
 use App\FxStatement;
 use App\MakeBid;
+use App\CrossBorderBeneficiary;
 
 trait MyFX
 {
@@ -68,6 +69,21 @@ trait MyFX
     {
 
         $data =  EscrowAccount::where('escrow_id', '!=', $escrow_id)->where('user_id', $id)->get();
+
+        return $data;
+    }
+
+
+    public function getBeneficiaries()
+    {
+        $data = CrossBorderBeneficiary::orderBy('account_name', 'ASC')->get();
+
+        return $data;
+    }
+
+    public function getThisBeneficiary($id)
+    {
+        $data = CrossBorderBeneficiary::where('id', $id)->first();
 
         return $data;
     }

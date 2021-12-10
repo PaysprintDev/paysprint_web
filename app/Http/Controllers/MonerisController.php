@@ -66,6 +66,8 @@ use App\AllCountries as AllCountries;
 
 use App\SpecialInformation as SpecialInformation;
 
+use App\CrossBorderBeneficiary as CrossBorderBeneficiary;
+
 
 use App\CcWithdrawal as CcWithdrawal;
 
@@ -736,9 +738,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 else {
 
                                     if ($thisuser->accountType == "Individual") {
-                                        $subminType = "Consumer Minimum Withdrawal";
+                                        $subminType = "Consumer Monthly Subscription";
                                     } else {
-                                        $subminType = "Merchant Minimum Withdrawal";
+                                        $subminType = "Merchant Monthly Subscription";
                                     }
 
 
@@ -2446,9 +2448,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 } else {
 
                                     if ($thisuser->accountType == "Individual") {
-                                        $subminType = "Consumer Minimum Withdrawal";
+                                        $subminType = "Consumer Monthly Subscription";
                                     } else {
-                                        $subminType = "Merchant Minimum Withdrawal";
+                                        $subminType = "Merchant Monthly Subscription";
                                     }
 
                                     $invoice_no = "PS_" . date('Ymd') . time();
@@ -2484,6 +2486,20 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                         $path = route('home') . '/crossborderinvoices/' . $fileNameToStore;
                                     }
 
+
+                                    // Get beneficiary details or create new beneficiary
+
+                                    if ($req->beneficiary_id == "create_new") {
+
+                                        // Create Beneficiary
+                                        $beneficiary = CrossBorderBeneficiary::create([
+                                            'account_name' => $req->account_name,
+                                            'account_number' => $req->account_number,
+                                            'bank_name' => $req->bank_name
+                                        ]);
+                                    } else {
+                                        $beneficiary = CrossBorderBeneficiary::where('id', $req->beneficiary_id)->first();
+                                    }
 
 
 
@@ -2553,7 +2569,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     'amount' => $req->amount,
                                                     'country' => $req->country,
                                                     'select_wallet' => $req->select_wallet,
-                                                    'file' => $path
+                                                    'file' => $path,
+                                                    'currencySymbol' => $wallet->currencySymbol,
+                                                    'beneficiary_id' => $beneficiary->id
                                                 ]);
 
 
@@ -2687,7 +2705,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                         'amount' => $req->amount,
                                                         'country' => $req->country,
                                                         'select_wallet' => $req->select_wallet,
-                                                        'file' => $path
+                                                        'file' => $path,
+                                                        'currencySymbol' => $thisuser->currencySymbol,
+                                                        'beneficiary_id' => $beneficiary->id
                                                     ]);
 
 
@@ -4723,9 +4743,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                         if ($thisuser->accountType == "Individual") {
-                            $subminType = "Consumer Minimum Withdrawal";
+                            $subminType = "Consumer Monthly Subscription";
                         } else {
-                            $subminType = "Merchant Minimum Withdrawal";
+                            $subminType = "Merchant Monthly Subscription";
                         }
                         $minBal = $this->maintenanceBalanceWithdrawal($subminType, $thisuser->country);
 
@@ -5554,9 +5574,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             // $minBal = $this->minimumWithdrawal($thisuser->country);
 
                             if ($thisuser->accountType == "Individual") {
-                                $subminType = "Consumer Minimum Withdrawal";
+                                $subminType = "Consumer Monthly Subscription";
                             } else {
-                                $subminType = "Merchant Minimum Withdrawal";
+                                $subminType = "Merchant Monthly Subscription";
                             }
 
                             $minBal = $this->maintenanceBalanceWithdrawal($subminType, $thisuser->country);
@@ -6569,9 +6589,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 // $minBal = $this->minimumWithdrawal($thisuser->country);
 
                 if ($thisuser->accountType == "Individual") {
-                    $subminType = "Consumer Minimum Withdrawal";
+                    $subminType = "Consumer Monthly Subscription";
                 } else {
-                    $subminType = "Merchant Minimum Withdrawal";
+                    $subminType = "Merchant Monthly Subscription";
                 }
                 $minBal = $this->maintenanceBalanceWithdrawal($subminType, $thisuser->country);
 

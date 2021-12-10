@@ -385,6 +385,30 @@ class Dashboard extends Component {
 										</div>
 									</div>
 								</div>
+
+								<div className="col-12 col-xxl-6 mb-4">
+									<div className="card rounded-12 shadow-dark-80 h-100 border border-gray-50">
+										<div className="card-body px-0 pb-0">
+											<div className="list-group list-group-flush my-n3">
+												<div className="list-group-item px-3 px-md-4">
+													<div className="row align-items-center px-md-2">
+														<div className="col p-0">
+															<p className="mb-1">Payment across the Globe</p>
+														</div>
+														<div className="col-auto">
+															<a
+																href={`/currencyfx/crossborderplatform`}
+																className="btn btn-lg btn-outline-dark px-3 me-2 me-md-3"
+															>
+																<span className="ps-1">Cross Border</span>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 
 							<div className="row">

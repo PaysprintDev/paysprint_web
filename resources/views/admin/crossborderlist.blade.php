@@ -88,7 +88,15 @@
                                                 <td>{{ $i++ }}</td>
 
                                                 <td>{{ $crossborder->transaction_id }}</td>
-                                                <td>{{ $crossborder->receivers_name }}</td>
+                                                <td>{{ $crossborder->receivers_name }} <br>
+
+                                                    <small>
+                                                        <a href="{{ route('view beneficiary detail', $crossborder->beneficiary_id) }}"
+                                                            target="_blank"
+                                                            style="font-weight: bold; color: red; text-decoration: underline;">View
+                                                            beneficiary details</a>
+                                                    </small>
+                                                </td>
                                                 <td>{{ $crossborder->senders_name }}</td>
                                                 <td>{{ $crossborder->purpose }}</td>
                                                 <td>{{ $currencySymbol . '' . number_format($crossborder->amount, 2) }}
@@ -103,7 +111,8 @@
                                                     {{ $crossborder->status == false ? 'Pending' : 'Processed' }}
                                                 </td>
                                                 <td>
-                                                    <button class="btn btn-primary btn-block spin{{ $crossborder->transaction_id }}"
+                                                    <button
+                                                        class="btn btn-primary btn-block spin{{ $crossborder->transaction_id }}"
                                                         onclick="acceptCrossBorder('{{ $crossborder->transaction_id }}')">Process
                                                         payment</button>
                                                 </td>

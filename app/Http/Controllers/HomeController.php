@@ -136,7 +136,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints']]);
+        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints']]);
 
         $location = $this->myLocation();
 
@@ -365,7 +365,8 @@ class HomeController extends Controller
                 $data = array(
                     'country' => $country,
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
-                    'continent' => $this->timezone[0]
+                    'continent' => $this->timezone[0],
+                    'activecountries' => $this->getActiveCountries()
                 );
             } else {
                 $country = $this->myLocation()->country;
@@ -373,7 +374,8 @@ class HomeController extends Controller
                 $this->name = '';
                 $data = [
                     'country' => $country,
-                    'continent' => $this->timezone[0]
+                    'continent' => $this->timezone[0],
+                    'activecountries' => $this->getActiveCountries()
                 ];
             }
         } else {
@@ -383,7 +385,8 @@ class HomeController extends Controller
             $this->email = session('email');
             $data = [
                 'country' => $country,
-                'continent' => $this->timezone[0]
+                'continent' => $this->timezone[0],
+                'activecountries' => $this->getActiveCountries()
             ];
         }
 
@@ -413,11 +416,84 @@ class HomeController extends Controller
 
         $data['pricing'] = $pricings;
         $data['currency'] = $myCurrency;
-
-
+        $data['maintenance'] = $this->maintenanceBalanceWithdrawal('Consumer Monthly Subscription', $countrys);
 
 
         return view('main.newpage.shade-pro.pricing')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function feeStructure2(Request $req)
+    {
+
+
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Pricing';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $country = Auth::user()->country;
+                $data = array(
+                    'country' => $country,
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0],
+                    'activecountries' => $this->getActiveCountries()
+                );
+            } else {
+                $country = $this->myLocation()->country;
+                $this->page = 'Pricing';
+                $this->name = '';
+                $data = [
+                    'country' => $country,
+                    'continent' => $this->timezone[0],
+                    'activecountries' => $this->getActiveCountries()
+                ];
+            }
+        } else {
+            $country = $this->myLocation()->country;
+            $this->page = 'Pricing';
+            $this->name = session('name');
+            $this->email = session('email');
+            $data = [
+                'country' => $country,
+                'continent' => $this->timezone[0],
+                'activecountries' => $this->getActiveCountries()
+            ];
+        }
+
+        if ($req->get('country') != null) {
+            $countrys = $req->get('country');
+        } else {
+            $countrys = $country;
+        }
+
+
+        $prices = $this->pricingFees($countrys);
+
+        if (isset($prices)) {
+            $pricings = $prices;
+        } else {
+            $pricings = $this->pricingFees('Canada');
+        }
+
+        $currency = $this->getCountryCode($countrys);
+
+
+        if (isset($currency)) {
+            $myCurrency = $currency->currencySymbol;
+        } else {
+            $myCurrency = "$";
+        }
+
+        $data['pricing'] = $pricings;
+        $data['currency'] = $myCurrency;
+        $data['maintenance'] = $this->maintenanceBalanceWithdrawal('Merchant Monthly Subscription', $countrys);
+
+
+
+
+        return view('main.newpage.shade-pro.pricing2')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -851,6 +927,13 @@ class HomeController extends Controller
     {
 
         $data = AllCountries::where('name', $country)->first();
+
+        return $data;
+    }
+
+    public function getActiveCountries()
+    {
+        $data = AllCountries::where('approval', 1)->orderBy('name', 'ASC')->get();
 
         return $data;
     }
