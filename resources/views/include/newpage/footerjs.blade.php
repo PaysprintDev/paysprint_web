@@ -3,7 +3,7 @@
 <script src="{{ asset('newpage/js/vendor.min.js') }}"></script>
 <!-- Plugin's Scripts -->
 <script src="{{ asset('newpage/plugins/fancybox/jquery.fancybox.min.js') }}"></script>
-{{-- <script src="{{ asset('newpage/plugins/nice-select/jquery.nice-select.min.js') }}"></script> --}}
+<script src="{{ asset('newpage/plugins/nice-select/jquery.nice-select.min.js') }}"></script>
 <script src="{{ asset('newpage/plugins/aos/aos.min.js') }}"></script>
 <script src="{{ asset('newpage/plugins/slick/slick.min.js') }}"></script>
 <script src="{{ asset('newpage/plugins/date-picker/js/gijgo.min.js') }}"></script>
