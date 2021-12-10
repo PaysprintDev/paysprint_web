@@ -505,7 +505,8 @@
                                 $('.commissionInfo').removeClass('alert alert-danger');
 
                                 $('.commissionInfo').html(
-                                    "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ Auth::user()->currencySymbol }}" +
+                                    "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: " +
+                                    $('.currencySymb').text() + "" +
                                     $("#amount").val() + " will be deducted from your " + $(
                                         '#select_wallet').val() + ".</span></li></li></ul>");
 
@@ -577,11 +578,11 @@
                                         setTimeout(function() {
                                             location.href =
                                                 "{{ route('paysprint currency exchange') }}";
-                                        }, 2000);
+                                        }, 7000);
                                     } else {
                                         setTimeout(function() {
                                             location.href = "{{ route('my account') }}";
-                                        }, 2000);
+                                        }, 7000);
                                     }
 
 

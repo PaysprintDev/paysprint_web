@@ -2531,7 +2531,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                 PaycaWithdraw::insert(['withdraw_id' => $transactionID, 'client_id' => $thisuser->ref_code, 'client_name' => $thisuser->name, 'card_method' => $req->select_wallet, 'client_email' => $thisuser->email, 'amount_to_withdraw' => $req->amount, 'remittance' => 0]);
 
 
-                                                $activity = "Payment of " . $thisuser->currencyCode . ' ' . $req->amount . " for " . $purpose . " debited from FX Wallet";
+                                                $activity = "Payment of " . $wallet->currencyCode . ' ' . $req->amount . " for " . $purpose . " debited from FX Wallet";
                                                 $credit = 0;
                                                 $debit = $req->amount;
                                                 $balance = 0;
@@ -2577,13 +2577,13 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                                 $this->name = $thisuser->name;
                                                 $this->email = $thisuser->email;
-                                                $this->subject = "Your Invoice # [" . $invoice_no . "] of " . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . ' for ' . $purpose .  " is Paid";
+                                                $this->subject = "Your Invoice # [" . $invoice_no . "] of " . $wallet->currencyCode . ' ' . number_format($req->amount, 2) . ' for ' . $purpose .  " is Paid";
 
-                                                $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> for ' . $purpose . '. You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint FX Wallet account.</p><p>Thanks PaySprint Team.</p>';
+                                                $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $wallet->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> for ' . $purpose . '. The Direct deposit into receivers Bank account would be done within the next 72 hours. You now have <strong>' . $wallet->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint FX Wallet account.</p><p>Thanks PaySprint Team.</p>';
 
                                                 $this->sendEmail($this->email, "Fund remittance");
 
-                                                $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . ' for ' . $purpose . '. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint FX Wallet account. Thanks PaySprint Team.';
+                                                $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $wallet->currencyCode . ' ' . number_format($req->amount, 2) . ' for ' . $purpose . '. The Direct deposit into receivers Bank account would be done within the next 72 hours. You now have ' . $wallet->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint FX Wallet account. Thanks PaySprint Team.';
 
                                                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -2610,7 +2610,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                                 $data = $userInfo;
                                                 $status = 200;
-                                                $message = 'You have successfully paid invoice of ' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2);
+                                                $message = 'You have successfully paid invoice of ' . $wallet->currencyCode . ' ' . number_format($req->amount, 2) . " | The Direct deposit into receivers Bank account would be done within the next 72 hours. Thanks";
 
                                                 $this->createNotification($thisuser->ref_code, $sendMsg);
                                             } else {
@@ -2707,11 +2707,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     $this->email = $thisuser->email;
                                                     $this->subject = "Your Invoice # [" . $invoice_no . "] of " . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . ' for ' . $purpose .  " is Paid";
 
-                                                    $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> for ' . $purpose . '. You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
+                                                    $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> for ' . $purpose . '. The Direct deposit into receivers Bank account would be done within the next 72 hours. You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
 
                                                     $this->sendEmail($this->email, "Fund remittance");
 
-                                                    $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . ' for ' . $purpose . '. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
+                                                    $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . ' for ' . $purpose . '. The Direct deposit into receivers Bank account would be done within the next 72 hours. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
 
                                                     $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -2767,7 +2767,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                                     $data = $userInfo;
                                                     $status = 200;
-                                                    $message = 'You have successfully paid invoice of ' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2);
+                                                    $message = 'You have successfully paid invoice of ' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " | The Direct deposit into receivers Bank account would be done within the next 72 hours. Thanks";
 
                                                     $this->createNotification($thisuser->ref_code, $sendMsg);
                                                 } else {

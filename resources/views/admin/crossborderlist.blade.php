@@ -91,7 +91,8 @@
                                                 <td>{{ $crossborder->receivers_name }}</td>
                                                 <td>{{ $crossborder->senders_name }}</td>
                                                 <td>{{ $crossborder->purpose }}</td>
-                                                <td>{{ $currencySymbol . '' . number_format($crossborder->amount, 2) }}</td>
+                                                <td>{{ $currencySymbol . '' . number_format($crossborder->amount, 2) }}
+                                                </td>
                                                 <td>{{ $crossborder->country }}</td>
                                                 <td>{{ $crossborder->select_wallet }}</td>
                                                 <td align="center">
@@ -102,7 +103,9 @@
                                                     {{ $crossborder->status == false ? 'Pending' : 'Processed' }}
                                                 </td>
                                                 <td>
-                                                    <button class="btn btn-primary btn-block spin{{ $crossborder->transaction_id }}" onclick="acceptCrossBorder('{{ $crossborder->transaction_id }}')">Accept payment</button>
+                                                    <button class="btn btn-primary btn-block spin{{ $crossborder->transaction_id }}"
+                                                        onclick="acceptCrossBorder('{{ $crossborder->transaction_id }}')">Process
+                                                        payment</button>
                                                 </td>
                                             </tr>
 
