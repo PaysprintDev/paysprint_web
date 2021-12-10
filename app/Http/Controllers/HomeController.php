@@ -3662,7 +3662,6 @@ class HomeController extends Controller
     public function ajaxregister(Request $req)
     {
 
-
         // Check table if user already exist
         $checkUser = User::where('email', $req->email)->get();
         $checkClosedUser = UserClosed::where('email', $req->email)->get();
@@ -3727,17 +3726,31 @@ class HomeController extends Controller
                 $phoneCode = "1";
             }
 
+            if($req->how_your_heard_about_us == "Others"){
+                $specifyHeardAbout = $req->specify_how_your_heard_about_us;
+            }else{
+                $specifyHeardAbout = $req->how_your_heard_about_us;
+            }
+
+
+            if($req->source_of_funds == "Others"){
+                $source_of_funds = $req->specify_source;
+            }else{
+                $source_of_funds = $req->source_of_funds;
+            }
+
             if ($req->ref_code != null) {
 
                 $getanonuser = AnonUsers::where('ref_code', $req->ref_code)->first();
+                
 
                 // Insert User record
                 if ($req->accountType == "Individual") {
                     // Insert Information for Individual user
-                    $insInd = User::insert(['ref_code' => $req->ref_code, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by]);
+                    $insInd = User::insert(['ref_code' => $req->ref_code, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by, 'knowAboutUs' => $specifyHeardAbout, 'accountPurpose' => $req->describe_purpose, 'transactionSize' => $req->size_of_transaction, 'sourceOfFunding' => $source_of_funds ]);
                 } elseif ($req->accountType == "Business") {
                     // Insert Information for Business user
-                    $insBus = User::insert(['ref_code' => $req->ref_code, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by]);
+                    $insBus = User::insert(['ref_code' => $req->ref_code, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by, 'knowAboutUs' => $specifyHeardAbout, 'accountPurpose' => $req->describe_purpose, 'transactionSize' => $req->size_of_transaction, 'sourceOfFunding' => $source_of_funds ]);
                 }
 
                 $getMoney = Statement::where('user_id', $req->email)->get();
@@ -3757,12 +3770,12 @@ class HomeController extends Controller
                 // Insert User record
                 if ($req->accountType == "Individual") {
                     // Insert Information for Individual user
-                    $insInd = User::insert(['ref_code' => $newRefcode, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by]);
+                    $insInd = User::insert(['ref_code' => $newRefcode, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by, 'knowAboutUs' => $specifyHeardAbout, 'accountPurpose' => $req->describe_purpose, 'transactionSize' => $req->size_of_transaction, 'sourceOfFunding' => $source_of_funds ]);
 
                     // $req->session()->put(['name' => $name, 'email' => $req->email, 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType]);
                 } elseif ($req->accountType == "Business") {
                     // Insert Information for Business user
-                    $insBus = User::insert(['ref_code' => $newRefcode, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by]);
+                    $insBus = User::insert(['ref_code' => $newRefcode, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by, 'knowAboutUs' => $specifyHeardAbout, 'accountPurpose' => $req->describe_purpose, 'transactionSize' => $req->size_of_transaction, 'sourceOfFunding' => $source_of_funds ]);
 
                     // $req->session()->put(['businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype]);
 
@@ -3850,12 +3863,12 @@ class HomeController extends Controller
                     $this->email = Auth::user()->email;
                     $this->subject = "Welcome to PaySprint";
 
-                    $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You can also withdraw funds from your wallet FREE of Costs. <br> Thank you for your interest in PaySprint. <br><br> Customer Success Team <br> info@paysprint.ca";
+                    // $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You can also withdraw funds from your wallet FREE of Costs. <br> Thank you for your interest in PaySprint. <br><br> Customer Success Team <br> info@paysprint.ca";
 
-                    $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca <br> b. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents <br> All other features would be enabled for you as soon as Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
+                    $infomessage = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca <br> b. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents <br> All other features would be enabled for you as soon as Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
 
 
-                    $this->message = '<p>' . $message . '</p>';
+                    $this->message = '<p>' . $infomessage . '</p>';
 
 
                     $this->sendEmail($this->email, "Fund remittance");
