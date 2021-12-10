@@ -482,6 +482,7 @@ class CurrencyFxController extends Controller
             'allcountry' => $this->getCountryAndCurrency(),
             'mycountry' => $this->personalCountry(Auth::user()->country),
             'mywallet' => Auth::user()->forexAccount,
+            'allbeneficiary' => $this->getBeneficiaries()
         );
 
         return view('currencyexchange.crossborder')->with(['pages' => 'Cross Border Payment', 'data' => $data]);
@@ -1636,9 +1637,9 @@ class CurrencyFxController extends Controller
 
 
                     if ($thisuser->accountType == "Individual") {
-                        $subminType = "Consumer Minimum Withdrawal";
+                        $subminType = "Consumer Monthly Subscription";
                     } else {
-                        $subminType = "Merchant Minimum Withdrawal";
+                        $subminType = "Merchant Monthly Subscription";
                     }
 
 

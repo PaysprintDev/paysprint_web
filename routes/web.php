@@ -150,6 +150,9 @@ Route::get('terms-of-service', ['uses' => 'HomeController@termsOfUse', 'as' => '
 // Pricing
 Route::get('pricing', ['uses' => 'HomeController@feeStructure', 'as' => 'pricing structure']);
 
+// Merchant Pricing
+Route::get('merchant-pricing', ['uses' => 'HomeController@feeStructure2', 'as' => 'pricing structure merchant']);
+
 // Privacy Policy
 Route::get('privacy-policy', ['uses' => 'HomeController@privacyPolicy', 'as' => 'privacy policy']);
 
@@ -692,6 +695,7 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('claimreward', ['uses' => 'AdminController@claimReward', 'as' => 'claim reward']);
 	Route::get('cashadvancelist', ['uses' => 'AdminController@cashAdvanceList', 'as' => 'cash advance list']);
 	Route::get('crossborderlist', ['uses' => 'AdminController@crossBorderList', 'as' => 'cross border list']);
+	Route::get('viewbeneficiarydetail/{id}', ['uses' => 'AdminController@crossBorderBeneficiaryDetail', 'as' => 'view beneficiary detail']);
 
 	Route::get('userspoint', ['uses' => 'AdminController@usersPoint', 'as' => 'users points']);
 

@@ -57,6 +57,11 @@
                                    </li>
 
                                    <li class="nav-item">
+                                       <a class="nav-link" href="{{ route('pricing structure merchant') }}"
+                                           role="button" aria-expanded="false">PRICING</a>
+                                   </li>
+
+                                   <li class="nav-item">
                                        <a class="nav-link" href="{{ route('AdminLogin') }}" role="button"
                                            aria-expanded="false">LOGIN</a>
                                    </li>
@@ -434,6 +439,11 @@
                        <li class="nav-item">
                            <a class="nav-link" href="{{ route('contact') }}" role="button"
                                aria-expanded="false">CONTACT</a>
+                       </li>
+
+                       <li class="nav-item">
+                           <a class="nav-link" href="{{ route('pricing structure') }}" role="button"
+                               aria-expanded="false">PRICING</a>
                        </li>
 
                        <li class="nav-item">

@@ -19,6 +19,11 @@
 
     <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
 
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+
+
     <title>PaySprint | {{ $pages }}</title>
 
     <style>
@@ -214,6 +219,88 @@
                                     </div>
 
 
+                                    {{-- Add Beneficiary --}}
+
+
+                                    <div class="form-group"> <label for="beneficiary_id">
+                                            <h6>Receiver's Account Details</h6>
+                                        </label>
+                                        <div class="input-group">
+                                            <select name="beneficiary_id" id="beneficiary_id" class="form-control"
+                                                required data-live-search="true">
+                                                <option value="">Receiver's Account Details</option>
+
+                                                @if (count($data['allbeneficiary']) > 0)
+                                                    <option value="create_new">Create new receiver</option>
+                                                    @foreach ($data['allbeneficiary'] as $beneficiary)
+                                                        <option value="{{ $beneficiary->id }}">
+                                                            {{ $beneficiary->account_name . ' (' . $beneficiary->bank_name . ' - ' . $beneficiary->account_number . ')' }}
+                                                        </option>
+
+                                                    @endforeach
+
+
+                                                @else
+                                                    <option value="create_new">Create new receiver</option>
+                                                @endif
+
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="beneficiary_details disp-0">
+                                        <div class="form-group"> <label for="account_name">
+                                                <h6>Beneficiary Account Name</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <div class="input-group-append"> <span
+                                                        class="input-group-text text-muted">
+                                                        <img
+                                                            src="https://img.icons8.com/material-outlined/20/000000/guest-male.png" />
+                                                    </span> </div> <input type="text" name="account_name"
+                                                    id="account_name" class="form-control" value="">
+
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group"> <label for="account_number">
+                                                <h6>Beneficiary Account Number</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <div class="input-group-append"> <span
+                                                        class="input-group-text text-muted currencySymb">
+                                                        <img
+                                                            src="https://img.icons8.com/ios/20/000000/dialing-phone.png" />
+                                                    </span> </div> <input type="text" name="account_number"
+                                                    id="account_number" class="form-control" value="">
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group"> <label for="bank_name">
+                                                <h6>Beneficiary Bank Name</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <div class="input-group-append"> <span
+                                                        class="input-group-text text-muted currencySymb">
+                                                        <img
+                                                            src="https://img.icons8.com/external-prettycons-lineal-prettycons/20/000000/external-bank-essentials-prettycons-lineal-prettycons.png" />
+                                                    </span> </div> <input type="text" name="bank_name" id="bank_name"
+                                                    class="form-control" value="">
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+                                    {{-- End Beneficiary --}}
+
 
                                     <div class="form-group"> <label for="transaction_pin">
                                             <h6>Transaction Pin</h6>
@@ -259,6 +346,7 @@
 
         <script src="{{ asset('js/jquery-1.12.0.min.js') }}"></script>
 
+
         @include('include.message')
 
         {{-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> --}}
@@ -266,8 +354,11 @@
                 integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
         </script>
 
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
         <script src="{{ asset('pace/pace.min.js') }}"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 
         <script>
             $(function() {
@@ -277,7 +368,19 @@
                     runCommission();
                 });
 
+
+                $('#beneficiary_id').selectpicker();
+
             });
+
+
+            $('#beneficiary_id').change(function() {
+                if ($('#beneficiary_id').val() == "create_new") {
+                    $('.beneficiary_details').removeClass('disp-0');
+                } else {
+                    $('.beneficiary_details').addClass('disp-0');
+                }
+            })
 
 
             $('#country').change(function() {
@@ -415,6 +518,8 @@
 
                 var route = "{{ URL('/api/v1/getthisfxwallets') }}";
 
+                $('.currencySymb').text("");
+
                 setHeaders();
                 jQuery.ajax({
                     url: route,
@@ -506,7 +611,7 @@
 
                                 $('.commissionInfo').html(
                                     "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: " +
-                                    $('.currencySymb').text() + "" +
+                                    $('.currencySymb').text()[0] + "" +
                                     $("#amount").val() + " will be deducted from your " + $(
                                         '#select_wallet').val() + ".</span></li></li></ul>");
 

@@ -6350,7 +6350,7 @@ class AdminController extends Controller
             return redirect()->route('AdminLogin');
         }
     }
-    
+
 
 
     public function returnWithdrawal(Request $req, $id)
@@ -7119,7 +7119,7 @@ class AdminController extends Controller
 
 
 
-        return view('admin.wallet.prepaidrequestwithdrawal')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+            return view('admin.wallet.prepaidrequestwithdrawal')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
         } else {
             return redirect()->route('AdminLogin');
         }
@@ -9524,6 +9524,67 @@ class AdminController extends Controller
         }
     }
 
+
+
+    public function crossBorderBeneficiaryDetail(Request $req, $id)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'allthecountries' => $this->getAllCountries(),
+                'beneficiary' => $this->getThisBeneficiary($id)
+            );
+
+
+
+            return view('admin.crossborderbeneficiarydetail')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
     public function getCashAdvanceList()
     {
         $data = CashAdvance::orderBy('created_at', 'DESC')->get();
@@ -9547,7 +9608,8 @@ class AdminController extends Controller
         return $data;
     }
 
-    public function getCrossBorderCount(){
+    public function getCrossBorderCount()
+    {
         $data = CrossBorder::where('status', false)->count();
 
         return $data;
@@ -12511,17 +12573,14 @@ class AdminController extends Controller
     public function ajaxacceptcrossborderpayment(Request $req, CrossBorder $crossborder)
     {
 
-        try{
+        try {
             $data = $crossborder->where('transaction_id', $req->transactionid)->update(['status' => true]);
 
 
-        $res = 'Payment accepted';
-        $message = "success";
-        $title = "Good";
-
-
-        }
-        catch (\Throwable $th){
+            $res = 'Payment processed';
+            $message = "success";
+            $title = "Good";
+        } catch (\Throwable $th) {
             $res = $th->getMessage();
             $message = "error";
             $title = "Oops";
