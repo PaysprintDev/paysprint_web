@@ -23,6 +23,11 @@
 
         location.href = "/pricing?country=" + country;
     });
+    $('#pricing_country2').change(function() {
+        var country = $('#pricing_country2').val();
+
+        location.href = "/merchant-pricing?country=" + country;
+    });
 </script>
 
 

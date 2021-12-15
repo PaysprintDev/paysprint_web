@@ -21,7 +21,7 @@
 
     <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
 
-    <title>PaySprint | {{ Request::get('service') . ' Merchants' }}</title>
+    <title>PaySprint | {{ Request::get('service') . ' PaySprint Point' }}</title>
 
     <style>
         body {
@@ -96,6 +96,7 @@
 
 
                                 </ul>
+
                                 <h5 align='right' class="text-success">Point Balance
                                     {{ isset($data['mypoints']) ? $data['mypoints']->points_acquired : 0 }}</h5>
                                 <h5 align='right' class="text-success">Redeemed Point:
