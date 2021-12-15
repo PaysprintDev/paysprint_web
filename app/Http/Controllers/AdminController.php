@@ -95,6 +95,8 @@ use App\PricingSetup as PricingSetup;
 
 use App\MailCampaign as MailCampaign;
 use App\MarkUp;
+use App\ReferralGenerate;
+use App\ReferredUsers;
 use App\Traits\Trulioo;
 
 use App\Traits\AccountNotify;
@@ -5619,6 +5621,35 @@ class AdminController extends Controller
     }
 
 
+
+    public function generateReferrerAgent(Request $req)
+    {
+
+        try {
+            $this->userReferrerAgent($req->all());
+
+            $link = route('home') . '/register?ref_code=' . $req->ref_code;
+
+            // Send Mail to the support agent
+            $this->name = $req->firstname . ' ' . $req->lastname;
+            $this->email = $req->email;
+            $this->info = "Fund remittance";
+
+            $this->message = '<p>Hello ' . $this->name . ', </p><p>PaySprint is glad to have you as an affiliate. Below is your referral link and code to be shared with family and friends.</p><p style="font-weight: bold;">Referral link: ' . $link . '</p><p style="font-weight: bold;">Referral Code: ' . $req->ref_code . '</p><p style="font-weight: bold;">Use this link to check your referred users: ' . route('referrals list of users', $req->ref_code) . '</p>';
+
+            Log::info("Hello  " . $this->name . ', PaySprint is glad to have you as an affiliate. Below is your referral link and code to be shared with family and friends.  Referral link: ' . $link . " \n Referral Code: " . $req->ref_code." Use this link to check your referred users: ". route('referrals list of users', $req->ref_code));
+
+            $this->slack("Hello  " . $this->name . ', PaySprint is glad to have you as an affiliate. Below is your referral link and code to be shared with family and friends.  Referral link: ' . $link . " \n Referral Code: " . $req->ref_code." Use this link to check your referred users: ". route('referrals list of users', $req->ref_code), $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+            $this->sendEmail($this->email, "Fund remittance");
+
+            return redirect()->route('view referrer agent')->with('success', 'Successfully created!');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', $th->getMessage());
+        }
+    }
+
+
     public function editThisSupportAgent(Request $req)
     {
 
@@ -5641,11 +5672,47 @@ class AdminController extends Controller
         return redirect()->route('view user support agent')->with('success', 'Successfully created!');
     }
 
+
+    public function editThisReferrerAgent(Request $req)
+    {
+
+        try {
+            $this->editcurrentReferrerAgent($req->all());
+
+            $link = route('home') . '/register?ref_code=' . $req->ref_code;
+
+            // Send Mail to the support agent
+            $this->name = $req->name;
+            $this->email = $req->email;
+            $this->info = "Fund remittance";
+
+            $this->message = '<p>Hello ' . $this->name . ', </p><p>PaySprint is glad to have you as an affiliate. Below is your referral link and code to be shared with family and friends.</p><p style="font-weight: bold;">Referral link: ' . $link . '</p><p style="font-weight: bold;">Referral Code: ' . $req->ref_code . '</p><p style="font-weight: bold;">Use this link to check your referred users: ' . route('referrals list of users', $req->ref_code) . '</p>';
+
+            Log::info("Hello  " . $this->name . ', PaySprint is glad to have you as an affiliate. Below is your referral link and code to be shared with family and friends.  Referral link: ' . $link . " \n Referral Code: " . $req->ref_code." Use this link to check your referred users: ". route('referrals list of users', $req->ref_code));
+
+            $this->slack("Hello  " . $this->name . ', PaySprint is glad to have you as an affiliate. Below is your referral link and code to be shared with family and friends.  Referral link: ' . $link . " \n Referral Code: " . $req->ref_code . " Use this link to check your referred users: " . route('referrals list of users', $req->ref_code), $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+            $this->sendEmail($this->email, "Fund remittance");
+
+            return redirect()->route('view referrer agent')->with('success', 'Successfully created!');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', $th->getMessage());
+        }
+    }
+
     public function deleteSupportAgent($id)
     {
         $data = $this->deletecurrentSupportAgent($id);
 
         return redirect()->route('view user support agent')->with('success', 'Successfully deleted!');
+    }
+
+
+    public function deleteReferrerAgent($id)
+    {
+        $data = $this->deletecurrentReferrerAgent($id);
+
+        return redirect()->route('view referrer agent')->with('success', 'Successfully deleted!');
     }
 
 
@@ -5788,6 +5855,67 @@ class AdminController extends Controller
     }
 
 
+
+    public function createReferrerAgent(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'activity' => $this->specialInformationData(),
+                'allthecountries' => $this->getAllCountries()
+            );
+
+
+
+            return view('admin.pages.createreferrer')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
     public function editSupportAgent(Request $req, $id)
     {
 
@@ -5848,6 +5976,65 @@ class AdminController extends Controller
     }
 
 
+    public function editReferrerAgent(Request $req, $id)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'user' => $this->getthisreferrerinfo($id),
+                'allthecountries' => $this->getAllCountries()
+            );
+
+
+            return view('admin.pages.editreferrer')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
 
     public function viewSupportAgent(Request $req)
     {
@@ -5902,6 +6089,65 @@ class AdminController extends Controller
 
 
             return view('admin.pages.viewsupport')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
+    public function viewReferrerAgent(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'activity' => $this->getReferrerAgent()
+            );
+
+
+
+            return view('admin.pages.viewreferrer')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
         } else {
             return redirect()->route('AdminLogin');
         }
@@ -12060,7 +12306,7 @@ class AdminController extends Controller
     public function ajaxadminregister(Request $req)
     {
 
-    
+
         // Check client record
         $checkClient = ClientInfo::where('email', $req->email)->get();
         if (count($checkClient) > 0) {
@@ -12084,17 +12330,51 @@ class AdminController extends Controller
                 $transactionLimit = 0;
             }
 
-            // Check Referal
+
             $getRef = User::where('ref_code', $req->referred_by)->first();
 
             if (isset($getRef)) {
 
-                $referral_points = $getRef->referral_points + 1;
+                $referral_points = $getRef->referral_points + 100;
 
                 User::where('id', $getRef->id)->update([
                     'referral_points' => $referral_points
                 ]);
+
+                // Add to generate link
+                $refGen = ReferralGenerate::where('ref_code', $req->referred_by)->first();
+
+                if (isset($refGen)) {
+                    $ref_count = $refGen->referred_count + 1;
+
+                    ReferralGenerate::where('ref_code', $req->referred_by)->update(['referred_count' => $ref_count]);
+                } else {
+                    ReferralGenerate::insert([
+                        'ref_code' => $req->referred_by,
+                        'name' => $getRef->name,
+                        'email' => $getRef->email,
+                        'ref_link' => route('home') . '/register?ref_code=' . $req->referred_by,
+                        'referred_count' => '1',
+                        'country' => $getRef->country,
+                        'is_admin' => false
+                    ]);
+                }
+
+
+                ReferredUsers::insert(['ref_code' => $req->referred_by, 'referred_user' => $req->email, 'referral_points' => 100]);
+            } else {
+                $getRef = ReferralGenerate::where('ref_code', $req->referred_by)->first();
+
+                if (isset($getRef)) {
+
+                    ReferredUsers::insert(['ref_code' => $req->referred_by, 'referred_user' => $req->email, 'referral_points' => 100]);
+
+                    $ref_count = $getRef->referred_count + 1;
+
+                    ReferralGenerate::where('ref_code', $req->referred_by)->update(['referred_count' => $ref_count]);
+                }
             }
+
 
             $userClosedExist = UserClosed::where('email', $req->email)->first();
 
@@ -12106,18 +12386,18 @@ class AdminController extends Controller
                 $resData = ['res' => 'Your account has already been created but currently not active on PaySprint. Contact the Admin for more information', 'message' => 'error'];
             } else {
 
-            if($req->how_your_heard_about_us == "Others"){
-                $specifyHeardAbout = $req->specify_how_your_heard_about_us;
-            }else{
-                $specifyHeardAbout = $req->how_your_heard_about_us;
-            }
+                if ($req->how_your_heard_about_us == "Others") {
+                    $specifyHeardAbout = $req->specify_how_your_heard_about_us;
+                } else {
+                    $specifyHeardAbout = $req->how_your_heard_about_us;
+                }
 
 
-            if($req->source_of_funds == "Others"){
-                $source_of_funds = $req->specify_source;
-            }else{
-                $source_of_funds = $req->source_of_funds;
-            }
+                if ($req->source_of_funds == "Others") {
+                    $source_of_funds = $req->specify_source;
+                } else {
+                    $source_of_funds = $req->source_of_funds;
+                }
 
 
                 if ($req->ref_code != null) {

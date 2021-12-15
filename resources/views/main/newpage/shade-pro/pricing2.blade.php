@@ -21,7 +21,7 @@
                                     <td>
                                         <p class="gr-text-7 font-weight-bold mb-9">Select Country</p>
 
-                                        <select name="country" id="pricing_country" class="form-control"
+                                        <select name="country" id="pricing_country2" class="form-control"
                                             style="overflow-y: auto">
                                             <option value="">Select Country</option>
                                             @foreach ($data['activecountries'] as $country)
@@ -57,13 +57,12 @@
                                     </td>
                                     <td align="center">
                                         <p class="gr-text-6 font-weight-bold mb-9">Basic</p>
-                                        <p class="text-danger">{{ $data['currency'] . $data['maintenance'] }}
-                                            Monthly/{{ $data['currency'] . $data['maintenance'] * 12 }} Annually</p>
+                                        <p class="text-danger">{{ $data['currency'] . '0.00' }} Fee</p>
                                     </td>
                                     <td align="center">
                                         <p class="gr-text-6 font-weight-bold mb-9">Classic</p>
-                                        <p class="text-danger">{{ $data['currency'] . $data['maintenance'] * 1.42 }}
-                                            Monthly/{{ $data['currency'] . $data['maintenance'] * 1.42 * 12 }} Annually
+                                        <p class="text-danger">{{ $data['currency'] . $data['maintenance'] * 4.0 }}
+                                            Monthly/{{ $data['currency'] . $data['maintenance'] * 4.0 * 10 }} Annually
                                         </p>
                                     </td>
                                 </tr>
@@ -104,7 +103,7 @@
                                     </td>
                                 </tr>
 
-                                @if (Request::get('country') != 'Nigeria')
+                                @if (Request::get('country') == 'Canada' || Request::get('country') == 'United States')
 
                                     <tr>
                                         <td>
@@ -139,7 +138,7 @@
                                 </tr>
 
 
-                                @if (Request::get('country') != 'Nigeria')
+                                @if (Request::get('country') == 'Canada' || Request::get('country') == 'United States')
 
                                     <tr>
                                         <td>

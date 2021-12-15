@@ -73,6 +73,8 @@
 
                          @if (session('role') == 'Super')
 
+
+
                              <li class="treeview">
                                  <a href="#">
                                      <i class="fa fa-book"></i>
@@ -105,6 +107,24 @@
                                              Create</a></li>
                                      <li><a href="{{ route('view user support agent') }}"><i
                                                  class="fa fa-circle-o"></i>
+                                             View All</a></li>
+
+                                 </ul>
+                             </li>
+
+                             <li class="treeview">
+                                 <a href="#">
+                                     <i class="fa fa-book"></i>
+                                     <span>Referrer</span>
+                                     <span class="pull-right-container">
+                                         <i class="fa fa-angle-left pull-right"></i>
+                                     </span>
+                                 </a>
+                                 <ul class="treeview-menu">
+                                     <li><a href="{{ route('create referrer agent') }}"><i
+                                                 class="fa fa-circle-o"></i>
+                                             Create</a></li>
+                                     <li><a href="{{ route('view referrer agent') }}"><i class="fa fa-circle-o"></i>
                                              View All</a></li>
 
                                  </ul>

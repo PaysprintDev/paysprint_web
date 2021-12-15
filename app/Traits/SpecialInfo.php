@@ -3,12 +3,16 @@
 namespace App\Traits;
 
 use App\AllCountries;
+use App\ReferralGenerate;
+use App\ReferredUsers;
 use Illuminate\Support\Facades\Hash;
 
 use App\SpecialInformation as SpecialInformation;
 use App\SupportActivity as SupportActivity;
+use App\ClientInfo as ClientInfo;
 
 use App\SuperAdmin as SuperAdmin;
+use App\User;
 
 trait SpecialInfo
 {
@@ -83,6 +87,9 @@ trait SpecialInfo
         return $data;
     }
 
+
+
+
     public function getSupportAgent()
     {
 
@@ -90,6 +97,17 @@ trait SpecialInfo
 
         return $data;
     }
+
+
+    public function getReferrerAgent()
+    {
+
+        $data = ReferralGenerate::where('is_admin', true)->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
+
+
     public function getthisuserinfo($id)
     {
 
@@ -97,10 +115,25 @@ trait SpecialInfo
 
         return $data;
     }
+
+    public function getthisreferrerinfo($id)
+    {
+
+        $data = ReferralGenerate::where('id', $id)->first();
+
+        return $data;
+    }
     public function deletecurrentSupportAgent($id)
     {
 
         $data = SuperAdmin::where('id', $id)->delete();
+
+        return $data;
+    }
+    public function deletecurrentReferrerAgent($id)
+    {
+
+        $data = ReferralGenerate::where('id', $id)->delete();
 
         return $data;
     }
@@ -116,6 +149,54 @@ trait SpecialInfo
     public function getCountryData($country)
     {
         $data = AllCountries::where('name', $country)->first();
+
+        return $data;
+    }
+
+
+
+    // Create Referrer
+    public function userReferrerAgent($query)
+    {
+        $query['name'] = $query['firstname'] . ' ' . $query['lastname'];
+        $query['is_admin'] = true;
+        $query['ref_link'] = route('home') . '/register?ref_code=' . $query['ref_code'];
+
+
+        $data = ReferralGenerate::updateOrCreate(['ref_code' => $query['ref_code']], ['name' => $query['name'], 'email' => $query['email'], 'ref_link' => $query['ref_link'], 'country' => $query['country']]);
+
+        return $data;
+    }
+
+    public function editcurrentReferrerAgent($query)
+    {
+
+        $query['is_admin'] = true;
+        $query['ref_link'] = route('home') . '/register?ref_code=' . $query['ref_code'];
+
+        $data = ReferralGenerate::updateOrCreate(['ref_code' => $query['ref_code']], ['name' => $query['name'], 'email' => $query['email'], 'ref_link' => $query['ref_link'], 'country' => $query['country']]);
+
+        return $data;
+    }
+
+
+    public function getListofReferred($ref_code)
+    {
+        $data = ReferredUsers::where('ref_code', $ref_code)->orderBy('created_at', 'desc')->paginate(20);
+
+        return $data;
+    }
+
+    public function getBusinessProfileData($id)
+    {
+        $data = User::where('ref_code', $id)->first();
+
+        return $data;
+    }
+
+    public function getThisMerchantBusiness($id)
+    {
+        $data = ClientInfo::where('user_id', $id)->first();
 
         return $data;
     }

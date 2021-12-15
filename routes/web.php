@@ -49,6 +49,21 @@ Route::get('matchedusersmove', 'CheckSetupController@matchedUsersAccount');
 Route::get('approvedusersmove', 'CheckSetupController@approvedUsersAccount');
 
 
+// IDV Mail Chimp
+Route::get('idvcompletedlist', 'CheckSetupController@idvCompletedList');
+Route::get('idvpassedlist', 'CheckSetupController@idvPassedList');
+Route::get('idvfailedlist', 'CheckSetupController@idvFailedList');
+Route::get('docpendinglist', 'CheckSetupController@docPendingList');
+Route::get('suspendedaccountlist', 'CheckSetupController@suspendedAccountList');
+
+// Update BVN List
+Route::get('bvnlistupdate', 'CheckSetupController@bvnListUpdate');
+
+
+Route::get('updatepricinglist', 'CheckSetupController@updatePricingUnits');
+
+
+
 // Happy New Month From PaySpirnt
 Route::get('happynewmonth', 'CheckSetupController@happyNewMonth');
 
@@ -71,8 +86,8 @@ Route::get('numberofwithdrawalsformerchant', 'CheckSetupController@updateMerchan
 Route::get('reversal', 'CheckSetupController@reverseFund');
 
 
-
-
+// Vie List of Referred
+Route::get('/myreferredlist/{ref_code}', ['uses' => 'ReferralsController@index', 'as' => 'referrals list of users']);
 
 // Get Path Address
 Route::get('pathaddress', 'CheckSetupController@getPathAddress');
@@ -255,6 +270,8 @@ Route::get('signout/{id}',  ['uses' => 'api\v1\UserController@logout'])->name('s
 
 
 
+
+
 // New Merchant Page Route
 Route::prefix('merchant')->group(function () {
 
@@ -276,6 +293,8 @@ Route::prefix('merchant')->group(function () {
 	Route::get('/invoicepage', [MerchantPageController::class, 'invoicePage'])->name('invoice page');
 	Route::get('/paymentgateway', [MerchantPageController::class, 'paymentGateway'])->name('new merchant payment gateway');
 	Route::get('/orderingsystem', [MerchantPageController::class, 'orderingSystem'])->name('ordering system');
+
+	Route::get('businessprofile/{id}', [MerchantPageController::class, 'businessProfile'])->name('merchant business profile');
 });
 
 
@@ -708,6 +727,8 @@ Route::prefix('Admin/')->group(function () {
 
 	Route::get('generatespecialinfoactivity', ['uses' => 'AdminController@generateSpecialInfoActivity', 'as' => 'generate special information activity']);
 
+
+	// Create support agents
 	Route::get('createusersupportagent', ['uses' => 'AdminController@createSupportAgent', 'as' => 'create user support agent']);
 	Route::get('editusersupportagent/{id}', ['uses' => 'AdminController@editSupportAgent', 'as' => 'edit support agent']);
 	Route::get('viewusersupportagent', ['uses' => 'AdminController@viewSupportAgent', 'as' => 'view user support agent']);
@@ -715,6 +736,14 @@ Route::prefix('Admin/')->group(function () {
 	Route::post('editthisusersupportagent', ['uses' => 'AdminController@editThisSupportAgent', 'as' => 'edit account for support']);
 	Route::post('deletesupport/{id}', ['uses' => 'AdminController@deleteSupportAgent', 'as' => 'delete support agent']);
 
+
+	// Create referrers
+	Route::get('createreferrer', ['uses' => 'AdminController@createReferrerAgent', 'as' => 'create referrer agent']);
+	Route::get('viewreferrer', ['uses' => 'AdminController@viewReferrerAgent', 'as' => 'view referrer agent']);
+	Route::post('generatereferreragent', ['uses' => 'AdminController@generateReferrerAgent', 'as' => 'generate account for referrer']);
+	Route::get('editreferreragent/{id}', ['uses' => 'AdminController@editReferrerAgent', 'as' => 'edit referrer agent']);
+	Route::post('editthisreferreragent', ['uses' => 'AdminController@editThisReferrerAgent', 'as' => 'edit account for referrer']);
+	Route::post('deletereferrer/{id}', ['uses' => 'AdminController@deleteReferrerAgent', 'as' => 'delete referrer agent']);
 
 
 	Route::post('flagthismoney', ['uses' => 'AdminController@flagThisMoney', 'as' => 'flag this money']);
