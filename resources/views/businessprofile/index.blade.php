@@ -242,6 +242,16 @@
                                     <br><br>
 
 
+
+                                    <div class="col-md-6">
+                                        <span class="title-infos"><i class="fas fa-globe-europe"></i> Website</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <b>{!! $data['merchantbusiness']->website !!}</b>
+                                    </div>
+                                    <br><br>
+
+
                                 </div>
                                 <br><br>
 

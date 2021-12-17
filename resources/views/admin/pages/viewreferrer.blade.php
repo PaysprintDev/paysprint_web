@@ -48,6 +48,7 @@
                                         <th>S/N</th>
                                         <th>Ref Code</th>
                                         <th>Name</th>
+                                        <th>Telephone</th>
                                         <th>Ref Link</th>
                                         <th>Referred Count</th>
                                         <th>Country</th>
@@ -64,6 +65,7 @@
 
                                                 <td>{{ $data->ref_code }}</td>
                                                 <td>{{ $data->name }}</td>
+                                                <td>{{ $data->telephone }}</td>
                                                 <td>{{ $data->ref_link }}</td>
                                                 <td>{{ $data->referred_count }}</td>
                                                 <td>{{ $data->country }}</td>

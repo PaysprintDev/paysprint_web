@@ -94,12 +94,9 @@
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Company</th>
-                                                <th>Address</th>
-                                                <th>Phone</th>
+                                                <th>Company Name</th>
                                                 <th>Website</th>
                                                 <th>Location</th>
-                                                <th>Description</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -119,21 +116,14 @@
                                                         <td>
                                                             {{ $merchantData->business_name }}
                                                         </td>
-                                                        <td>
-                                                            {{ $merchantData->address }}
-                                                        </td>
-                                                        <td>
-                                                            {{ $merchantData->telephone != null ? $merchantData->telephone : 'N/A' }}
-                                                        </td>
+
                                                         <td>
                                                             {{ $merchantData->website != null ? $merchantData->website : 'N/A' }}
                                                         </td>
                                                         <td>
                                                             {{ $merchantData->city . ', ' . $merchantData->state }}
                                                         </td>
-                                                        <td>
-                                                            {{ $merchantData->description != null ? $merchantData->description : 'N/A' }}
-                                                        </td>
+
                                                         <td>
                                                             <a
                                                                 href="{{ route('merchant business profile', $merchantData->user_id) }}">View
@@ -148,7 +138,7 @@
                                             @else
 
                                                 <tr>
-                                                    <td align="center" colspan="8">
+                                                    <td align="center" colspan="5">
                                                         No record in your country
                                                     </td>
                                                 </tr>

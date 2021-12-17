@@ -61,6 +61,17 @@
                                         </tr>
 
 
+                                        <tr>
+                                            <td>Sort Code:</td>
+                                            <td style="font-weight: bold;">{{ $data['beneficiary']->sort_code }}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Currency:</td>
+                                            <td style="font-weight: bold;">{{ $data['beneficiary']->currencyCode }}</td>
+                                        </tr>
+
+
                                     @else
                                         <tr>
                                             <td align="center">Not found</td>

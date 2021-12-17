@@ -5628,20 +5628,43 @@ class AdminController extends Controller
         try {
             $this->userReferrerAgent($req->all());
 
-            $link = route('home') . '/register?ref_code=' . $req->ref_code;
-
             // Send Mail to the support agent
             $this->name = $req->firstname . ' ' . $req->lastname;
             $this->email = $req->email;
-            $this->info = "Fund remittance";
+            $this->info = "Your PaySprint Referral Account Actiavted";
 
-            $this->message = '<p>Hello ' . $this->name . ', </p><p>PaySprint is glad to have you as an affiliate. Below is your referral link and code to be shared with family and friends.</p><p style="font-weight: bold;">Referral link: ' . $link . '</p><p style="font-weight: bold;">Referral Code: ' . $req->ref_code . '</p><p style="font-weight: bold;">Use this link to check your referred users: ' . route('referrals list of users', $req->ref_code) . '</p>';
 
-            Log::info("Hello  " . $this->name . ', PaySprint is glad to have you as an affiliate. Below is your referral link and code to be shared with family and friends.  Referral link: ' . $link . " \n Referral Code: " . $req->ref_code." Use this link to check your referred users: ". route('referrals list of users', $req->ref_code));
+            $this->message = '<p>Hello ' . $this->name . ', </p><p>Thanks for joining our affiliate program. Your Business Referral code is:</p><p style="font-weight: bold;"> ' . $req->ref_code . '</p><p> and must be used by the leads when signing up in order to tag the users to your referral account.</p><p style="font-weight: bold;">Kindly use this link to  track your achievements and Referral commission earned and paid: ' . route('referrals list of users', $req->ref_code) . '</p><p>PaySprint Inc.</p>';
 
-            $this->slack("Hello  " . $this->name . ', PaySprint is glad to have you as an affiliate. Below is your referral link and code to be shared with family and friends.  Referral link: ' . $link . " \n Referral Code: " . $req->ref_code." Use this link to check your referred users: ". route('referrals list of users', $req->ref_code), $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+            Log::info("Hello  " . $this->name . ', Thanks for joining our affiliate program. Your Business Referral code is: ' . $req->ref_code . " and must be used by the leads when signing up in order to tag the users to your referral account. Kindly use this link to  track your achievements and Referral commission earned and paid: " . route('referrals list of users', $req->ref_code));
 
-            $this->sendEmail($this->email, "Fund remittance");
+            $this->slack("Hello  " . $this->name . ', Thanks for joining our affiliate program. Your Business Referral code is: ' . $req->ref_code . " and must be used by the leads when signing up in order to tag the users to your referral account. Kindly use this link to  track your achievements and Referral commission earned and paid: " . route('referrals list of users', $req->ref_code), $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+            // Send Send
+            $sendMsg = "Hello  " . $this->name . ', Thanks for joining our affiliate program. Your Business Referral code is: ' . $req->ref_code . " and must be used by the leads when signing up in order to tag the users to your referral account. Kindly use this link to  track your achievements and Referral commission earned and paid: " . route('referrals list of users', $req->ref_code);
+
+            $usergetPhone = User::where('country', $req->country)->where('telephone', 'LIKE', '%+%')->first();
+
+            if (isset($usergetPhone)) {
+
+                $countryCode = $usergetPhone->code;
+            } else {
+                $countryCode = "+" . $usergetPhone->code;
+            }
+
+            if ($req->country == "Nigeria") {
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $countryCode . $req->telephone);
+                $this->sendSms($sendMsg, $correctPhone);
+            } else {
+                $this->sendMessage($sendMsg, $countryCode . $req->telephone);
+            }
+
+
+            $this->sendEmail($this->email, "Your PaySprint Referral Account Actiavted");
+
+
+            // Send SMS
 
             return redirect()->route('view referrer agent')->with('success', 'Successfully created!');
         } catch (\Throwable $th) {
@@ -5667,6 +5690,7 @@ class AdminController extends Controller
 
         $this->slack("Hello  " . $this->name . ', You have been assigned a role on PaySprint. Below are your login details; Username: ' . $req->user_id . " \n Password: " . $req->firstname, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
+
         $this->sendEmail($this->email, "Fund remittance");
 
         return redirect()->route('view user support agent')->with('success', 'Successfully created!');
@@ -5679,20 +5703,41 @@ class AdminController extends Controller
         try {
             $this->editcurrentReferrerAgent($req->all());
 
-            $link = route('home') . '/register?ref_code=' . $req->ref_code;
-
             // Send Mail to the support agent
             $this->name = $req->name;
             $this->email = $req->email;
-            $this->info = "Fund remittance";
+            $this->info = "Your PaySprint Referral Account Actiavted";
 
-            $this->message = '<p>Hello ' . $this->name . ', </p><p>PaySprint is glad to have you as an affiliate. Below is your referral link and code to be shared with family and friends.</p><p style="font-weight: bold;">Referral link: ' . $link . '</p><p style="font-weight: bold;">Referral Code: ' . $req->ref_code . '</p><p style="font-weight: bold;">Use this link to check your referred users: ' . route('referrals list of users', $req->ref_code) . '</p>';
 
-            Log::info("Hello  " . $this->name . ', PaySprint is glad to have you as an affiliate. Below is your referral link and code to be shared with family and friends.  Referral link: ' . $link . " \n Referral Code: " . $req->ref_code." Use this link to check your referred users: ". route('referrals list of users', $req->ref_code));
+            $this->message = '<p>Hello ' . $this->name . ', </p><p>Thanks for joining our affiliate program. Your Business Referral code is:</p><p style="font-weight: bold;"> ' . $req->ref_code . '</p><p> and must be used by the leads when signing up in order to tag the users to your referral account.</p><p style="font-weight: bold;">Kindly use this link to  track your achievements and Referral commission earned and paid: ' . route('referrals list of users', $req->ref_code) . '</p><p>PaySprint Inc.</p>';
 
-            $this->slack("Hello  " . $this->name . ', PaySprint is glad to have you as an affiliate. Below is your referral link and code to be shared with family and friends.  Referral link: ' . $link . " \n Referral Code: " . $req->ref_code . " Use this link to check your referred users: " . route('referrals list of users', $req->ref_code), $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+            Log::info("Hello  " . $this->name . ', Thanks for joining our affiliate program. Your Business Referral code is: ' . $req->ref_code . " and must be used by the leads when signing up in order to tag the users to your referral account. Kindly use this link to  track your achievements and Referral commission earned and paid: " . route('referrals list of users', $req->ref_code));
 
-            $this->sendEmail($this->email, "Fund remittance");
+            $this->slack("Hello  " . $this->name . ', Thanks for joining our affiliate program. Your Business Referral code is: ' . $req->ref_code . " and must be used by the leads when signing up in order to tag the users to your referral account. Kindly use this link to  track your achievements and Referral commission earned and paid: " . route('referrals list of users', $req->ref_code), $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+            // Send Send
+            $sendMsg = "Hello  " . $this->name . ', Thanks for joining our affiliate program. Your Business Referral code is: ' . $req->ref_code . " and must be used by the leads when signing up in order to tag the users to your referral account. Kindly use this link to  track your achievements and Referral commission earned and paid: " . route('referrals list of users', $req->ref_code);
+
+            $usergetPhone = User::where('country', $req->country)->where('code', '!=', NULL)->first();
+
+
+            if (isset($usergetPhone)) {
+
+                $countryCode = "+" . $usergetPhone->code;
+
+                if ($req->country == "Nigeria") {
+
+                    $correctPhone = preg_replace("/[^0-9]/", "", $countryCode . $req->telephone);
+                    $this->sendSms($sendMsg, $correctPhone);
+                } else {
+                    $this->sendMessage($sendMsg, $countryCode . $req->telephone);
+                }
+            }
+
+
+
+
+            $this->sendEmail($this->email, "Your PaySprint Referral Account Actiavted");
 
             return redirect()->route('view referrer agent')->with('success', 'Successfully created!');
         } catch (\Throwable $th) {
@@ -15441,7 +15486,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
             $objDemo->name = $this->name;
             $objDemo->subject = $this->subject;
             $objDemo->message = $this->message;
-        } elseif ($purpose == 'Fund remittance') {
+        } elseif ($purpose == 'Fund remittance' || $purpose == 'Your PaySprint Referral Account Actiavted') {
             $objDemo->name = $this->name;
             $objDemo->email = $this->email;
             $objDemo->subject = $this->info;

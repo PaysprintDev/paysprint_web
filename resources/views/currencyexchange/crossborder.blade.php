@@ -266,7 +266,7 @@
                                         </div>
 
                                         <div class="form-group"> <label for="account_number">
-                                                <h6>Beneficiary Account Number</h6>
+                                                <h6>Beneficiary Bank Account Number</h6>
                                             </label>
                                             <div class="input-group">
                                                 <div class="input-group-append"> <span
@@ -289,6 +289,21 @@
                                                         <img
                                                             src="https://img.icons8.com/external-prettycons-lineal-prettycons/20/000000/external-bank-essentials-prettycons-lineal-prettycons.png" />
                                                     </span> </div> <input type="text" name="bank_name" id="bank_name"
+                                                    class="form-control" value="">
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group"> <label for="sort_code">
+                                                <h6>Beneficiary Bank Sort Code</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <div class="input-group-append"> <span
+                                                        class="input-group-text text-muted currencySymb">
+                                                        <img
+                                                            src="https://img.icons8.com/external-prettycons-lineal-prettycons/20/000000/external-bank-essentials-prettycons-lineal-prettycons.png" />
+                                                    </span> </div> <input type="text" name="sort_code" id="sort_code"
                                                     class="form-control" value="">
 
                                             </div>

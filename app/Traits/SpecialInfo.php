@@ -163,7 +163,7 @@ trait SpecialInfo
         $query['ref_link'] = route('home') . '/register?ref_code=' . $query['ref_code'];
 
 
-        $data = ReferralGenerate::updateOrCreate(['ref_code' => $query['ref_code']], ['name' => $query['name'], 'email' => $query['email'], 'ref_link' => $query['ref_link'], 'country' => $query['country']]);
+        $data = ReferralGenerate::updateOrCreate(['ref_code' => $query['ref_code']], ['name' => $query['name'], 'email' => $query['email'], 'telephone' => $query['telephone'], 'ref_link' => $query['ref_link'], 'country' => $query['country']]);
 
         return $data;
     }
@@ -174,7 +174,7 @@ trait SpecialInfo
         $query['is_admin'] = true;
         $query['ref_link'] = route('home') . '/register?ref_code=' . $query['ref_code'];
 
-        $data = ReferralGenerate::updateOrCreate(['ref_code' => $query['ref_code']], ['name' => $query['name'], 'email' => $query['email'], 'ref_link' => $query['ref_link'], 'country' => $query['country']]);
+        $data = ReferralGenerate::updateOrCreate(['ref_code' => $query['ref_code']], ['name' => $query['name'], 'email' => $query['email'], 'telephone' => $query['telephone'], 'ref_link' => $query['ref_link'], 'country' => $query['country']]);
 
         return $data;
     }
