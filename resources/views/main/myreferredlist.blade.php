@@ -115,9 +115,7 @@
                                                 <td>
                                                     Date Added
                                                 </td>
-                                                <td>
-                                                    Points
-                                                </td>
+
 
                                             </tr>
                                         </thead>
@@ -138,7 +136,6 @@
                                                             <td>{{ $user->telephone }}</td>
                                                             <td>{{ $user->country }}</td>
                                                             <td>{{ date('d/M/Y', strtotime($user->created_at)) }}</td>
-                                                            <td>{{ $refList->referral_points }}</td>
                                                         </tr>
 
                                                     @endif

@@ -457,6 +457,32 @@ class UserController extends Controller
         return $this->returnJSON($resData, $status);
     }
 
+    public function changePlan(Request $request)
+    {
+        try {
+            $thisuser = User::where('api_token', $request->bearerToken())->first();
+
+            // Check my plan
+            if ($thisuser->plan == "basic") {
+                User::where('api_token', $request->bearerToken())->update(['plan' => 'classic']);
+            } else {
+                User::where('api_token', $request->bearerToken())->update(['plan' => 'basic']);
+            }
+
+            $data = User::where('api_token', $request->bearerToken())->first();;
+            $status = 200;
+            $message = 'Account successfully updated.';
+        } catch (\Throwable $th) {
+            $data = [];
+            $status = 400;
+            $message = $th->getMessage();
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
     public function updateMerchantProfile(Request $request, Admin $admin, ClientInfo $clientinfo)
     {
 

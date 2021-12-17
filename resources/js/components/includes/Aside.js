@@ -295,7 +295,8 @@ class Aside extends Component {
 							</div>
 
 							<div className="p-4 px-lg-12 border-bottom border-gray-200">
-								<h6 className="font-weight-semibold mb-3">Your Desired Rate</h6>
+								{/* <h6 className="font-weight-semibold mb-3">Your Desired Rate</h6> */}
+								<h6 className="font-weight-semibold mb-3">PaySprint Rate</h6>
 
 								<div className="d-flex muze-skins customizer-controls">
 									<div className="mb-4 mb-xl-10" style={{ width: '75%' }}>

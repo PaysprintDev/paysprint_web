@@ -45,10 +45,22 @@
                             </div>
 
 
-                            <div class="form-group has-success">
-                                <label class="control-label" for="inputSuccess"> Email</label>
-                                <input type="email" class="form-control" name="email" id="inputSuccess">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group has-success">
+                                        <label class="control-label" for="inputSuccess"> Email</label>
+                                        <input type="email" class="form-control" name="email" id="inputSuccess">
 
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group has-success">
+                                        <label class="control-label" for="inputSuccess"> Telephone</label>
+                                        <input type="text" class="form-control" name="telephone" id="inputSuccess">
+
+                                    </div>
+                                </div>
                             </div>
 
 

@@ -186,7 +186,8 @@ class HomeController extends Controller
                 $view = 'home';
             } else {
 
-                return redirect()->route('dashboard');
+                return redirect()->route('Admin');
+                // return redirect()->route('dashboard');
             }
         } else {
             $this->page = 'Homepage';
@@ -242,7 +243,8 @@ class HomeController extends Controller
 
                 $view = 'home';
             } else {
-                return redirect()->route('dashboard');
+                return redirect()->route('Admin');
+                // return redirect()->route('dashboard');
             }
         } else {
             $this->page = 'Home';
@@ -289,7 +291,8 @@ class HomeController extends Controller
 
                 );
             } else {
-                return redirect()->route('dashboard');
+                return redirect()->route('Admin');
+                // return redirect()->route('dashboard');
             }
         } else {
             $this->page = 'Home';

@@ -2489,13 +2489,17 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                     // Get beneficiary details or create new beneficiary
 
+                                    $getCurrencyCode = AllCountries::where('name', $req->country)->first();
+
                                     if ($req->beneficiary_id == "create_new") {
 
                                         // Create Beneficiary
                                         $beneficiary = CrossBorderBeneficiary::create([
                                             'account_name' => $req->account_name,
                                             'account_number' => $req->account_number,
-                                            'bank_name' => $req->bank_name
+                                            'bank_name' => $req->bank_name,
+                                            'sort_code' => $req->sort_code,
+                                            'currencyCode' => $getCurrencyCode->currencyCode
                                         ]);
                                     } else {
                                         $beneficiary = CrossBorderBeneficiary::where('id', $req->beneficiary_id)->first();
