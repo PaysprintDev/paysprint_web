@@ -289,7 +289,7 @@ Route::prefix('merchant')->group(function () {
 	Route::get('/taxesreport', [MerchantPageController::class, 'taxesReport'])->name('taxes report');
 	Route::get('/invoicetypereport', [MerchantPageController::class, 'invoiceTypeReport'])->name('invoice type report');
 	Route::get('/reccuringreport', [MerchantPageController::class, 'recurringType'])->name('recurring type');
-	Route::get('/profile', [MerchantPageController::class, 'profile'])->name('profile');
+	Route::get('/profile', [MerchantPageController::class, 'profile'])->name('merchants profile');
 	Route::get('/invoicepage', [MerchantPageController::class, 'invoicePage'])->name('invoice page');
 	Route::get('/paymentgateway', [MerchantPageController::class, 'paymentGateway'])->name('new merchant payment gateway');
 	Route::get('/orderingsystem', [MerchantPageController::class, 'orderingSystem'])->name('ordering system');

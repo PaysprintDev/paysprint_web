@@ -547,12 +547,16 @@ class Aside extends Component {
 									<ul className="nav nav-sm flex-column">
 										<li className="nav-item">
 											<a href="/currencyfx/invoice" className="nav-link">
-												PaySprint Invoice
+												PaySprint Merchant
 											</a>
 										</li>
 										<li className="nav-item">
-											<a href="/currencyfx/crossborderplatform" className="nav-link active">
-												Cross Border Payment
+											<a
+												href="/currencyfx/crossborderplatform"
+												className="nav-link active"
+												style={{ fontSize: '12px', fontWeight: 'bold' }}
+											>
+												Non-PaySprint Merchant
 											</a>
 										</li>
 									</ul>
@@ -587,7 +591,7 @@ class Aside extends Component {
 											fill="#1e1e1e"
 										/>
 									</svg>
-									&nbsp;<span className="ms-2">Market Place</span>
+									&nbsp;<span className="ms-2">Buy & Sell Currency</span>
 								</a>
 							</li>
 							<li className="nav-item">
