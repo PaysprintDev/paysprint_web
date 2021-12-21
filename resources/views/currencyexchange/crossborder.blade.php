@@ -626,7 +626,7 @@
 
                                 $('.commissionInfo').html(
                                     "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: " +
-                                    $('.currencySymb').text()[0] + "" +
+                                    $.trim($('.currencySymb').text().replace(/[\t\n]+/g, ' ')) + "" +
                                     $("#amount").val() + " will be deducted from your " + $(
                                         '#select_wallet').val() + ".</span></li></li></ul>");
 

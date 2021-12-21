@@ -2719,7 +2719,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country);
 
 
-                                                    $remainingBalance = ($thisuser->wallet_balance - $minBal);
+                                                    $remainingBalance = $thisuser->wallet_balance;
 
                                                     // Get My Wallet Balance
                                                     $walletBalance = $remainingBalance - $req->amount;
