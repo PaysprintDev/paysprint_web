@@ -1656,7 +1656,7 @@ class CurrencyFxController extends Controller
                             $status = 400;
                         } else {
 
-                            $amount = $walletBal - $req->fx_amount;
+                            $amount = $thisuser->wallet_balance - $req->fx_amount;
 
                             User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $amount]);
 

@@ -156,94 +156,98 @@ class AdminController extends Controller
 
     public function index(Request $req)
     {
-        // dd(Session::all());
 
-        if ($req->session()->has('username') == true) {
+        if (session('role') == 'Merchant') {
 
-
-            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
-                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
-                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
-                $invoiceLinkImport = ImportExcelLink::orderBy('created_at', 'DESC')->get();
-                $payInvoice = DB::table('client_info')
-                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
-                    ->orderBy('invoice_payment.created_at', 'DESC')
-                    ->get();
-
-                $otherPays = OrganizationPay::orderBy('created_at', 'DESC')->get();
-            } else {
-                $adminUser = Admin::where('username', session('username'))->get();
-                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
-                $invoiceLinkImport = ImportExcelLink::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
-                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
-                $otherPays = OrganizationPay::where('coy_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
-
-                $this->recurBills(session('user_id'));
-            }
-
-
-            // dd(Session::all());
-
-
-            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
-            $transCost = $this->transactionCost();
-            $allusers = $this->allUsers();
-
-            $getUserDetail = $this->getmyPersonalDetail(session('user_id'));
-
-            $getCard = $this->getUserCard(session('myID'));
-            $getBank = $this->getUserBank(session('myID'));
-
-            $getTax = $this->getTax(session('myID'));
-
-
-            $withdraws = [
-                'bank' => $this->requestFromBankWithdrawal(),
-                'purchase' => $this->purchaseRefundSentback(),
-                'credit' => $this->requestFromCardWithdrawal(),
-                'prepaid' => $this->pendingRequestFromPrepaidWithdrawal(),
-                'specialInfo' => $this->getthisInfo(session('country')),
-            ];
-
-            // dd($withdraws);
-
-            $pending = [
-                'transfer' => $this->pendingTransferTransactions(),
-                'texttotransfer' => $this->textToTransferUsers(),
-            ];
-
-            $refund = [
-                'requestforrefund' => $this->requestForAllRefund(),
-            ];
-
-            $allcountries = $this->getAllCountries();
-
-            $received = [
-                'payInvoice' => $this->payInvoice(session('email')),
-            ];
-
-            $data = array(
-                'getuserDetail' => $this->getmyPersonalDetail(session('user_id')),
-                'getbusinessDetail' => $this->getmyBusinessDetail(session('user_id')),
-                'merchantservice' => $this->_merchantServices(),
-                'getCard' => $this->getUserCard(session('myID')),
-                'getBank' => $this->getUserBank(session('myID')),
-                'getTax' => $this->getTax(session('myID')),
-                'listbank' => $this->getBankList(),
-                'escrowfund' => $this->getEscrowFunding(),
-                'pointsclaim' => $this->getClaimedPoints(),
-                'mypoints' => $this->getAcquiredPoints(session('myID')),
-                'cashadvance' => $this->getCashAdvanceCount(),
-                'crossborder' => $this->getCrossBorderCount(),
-            );
-
-
-
-
-
-            return view('admin.index')->with(['pages' => 'My Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'invoiceLinkImport' => $invoiceLinkImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'allusers' => $allusers, 'getUserDetail' => $getUserDetail, 'getCard' => $getCard, 'getBank' => $getBank, 'getTax' => $getTax, 'withdraws' => $withdraws, 'pending' => $pending, 'allcountries' => $allcountries, 'refund' => $refund, 'received' => $received, 'data' => $data]);
+            return redirect()->route('dashboard');
         } else {
-            return redirect()->route('AdminLogin');
+            if ($req->session()->has('username') == true) {
+
+
+                if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                    $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                    $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                    $invoiceLinkImport = ImportExcelLink::orderBy('created_at', 'DESC')->get();
+                    $payInvoice = DB::table('client_info')
+                        ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                        ->orderBy('invoice_payment.created_at', 'DESC')
+                        ->get();
+
+                    $otherPays = OrganizationPay::orderBy('created_at', 'DESC')->get();
+                } else {
+                    $adminUser = Admin::where('username', session('username'))->get();
+                    $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                    $invoiceLinkImport = ImportExcelLink::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                    $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                    $otherPays = OrganizationPay::where('coy_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                    $this->recurBills(session('user_id'));
+                }
+
+
+                // dd(Session::all());
+
+
+                $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+                $transCost = $this->transactionCost();
+                $allusers = $this->allUsers();
+
+                $getUserDetail = $this->getmyPersonalDetail(session('user_id'));
+
+                $getCard = $this->getUserCard(session('myID'));
+                $getBank = $this->getUserBank(session('myID'));
+
+                $getTax = $this->getTax(session('myID'));
+
+
+                $withdraws = [
+                    'bank' => $this->requestFromBankWithdrawal(),
+                    'purchase' => $this->purchaseRefundSentback(),
+                    'credit' => $this->requestFromCardWithdrawal(),
+                    'prepaid' => $this->pendingRequestFromPrepaidWithdrawal(),
+                    'specialInfo' => $this->getthisInfo(session('country')),
+                ];
+
+                // dd($withdraws);
+
+                $pending = [
+                    'transfer' => $this->pendingTransferTransactions(),
+                    'texttotransfer' => $this->textToTransferUsers(),
+                ];
+
+                $refund = [
+                    'requestforrefund' => $this->requestForAllRefund(),
+                ];
+
+                $allcountries = $this->getAllCountries();
+
+                $received = [
+                    'payInvoice' => $this->payInvoice(session('email')),
+                ];
+
+                $data = array(
+                    'getuserDetail' => $this->getmyPersonalDetail(session('user_id')),
+                    'getbusinessDetail' => $this->getmyBusinessDetail(session('user_id')),
+                    'merchantservice' => $this->_merchantServices(),
+                    'getCard' => $this->getUserCard(session('myID')),
+                    'getBank' => $this->getUserBank(session('myID')),
+                    'getTax' => $this->getTax(session('myID')),
+                    'listbank' => $this->getBankList(),
+                    'escrowfund' => $this->getEscrowFunding(),
+                    'pointsclaim' => $this->getClaimedPoints(),
+                    'mypoints' => $this->getAcquiredPoints(session('myID')),
+                    'cashadvance' => $this->getCashAdvanceCount(),
+                    'crossborder' => $this->getCrossBorderCount(),
+                );
+
+
+
+
+
+                return view('admin.index')->with(['pages' => 'My Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'invoiceLinkImport' => $invoiceLinkImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'allusers' => $allusers, 'getUserDetail' => $getUserDetail, 'getCard' => $getCard, 'getBank' => $getBank, 'getTax' => $getTax, 'withdraws' => $withdraws, 'pending' => $pending, 'allcountries' => $allcountries, 'refund' => $refund, 'received' => $received, 'data' => $data]);
+            } else {
+                return redirect()->route('AdminLogin');
+            }
         }
     }
 
@@ -5643,7 +5647,8 @@ class AdminController extends Controller
             // Send Send
             $sendMsg = "Hello  " . $this->name . ', Thanks for joining our affiliate program. Your Business Referral code is: ' . $req->ref_code . " and must be used by the leads when signing up in order to tag the users to your referral account. Kindly use this link to  track your achievements and Referral commission earned and paid: " . route('referrals list of users', $req->ref_code);
 
-            $usergetPhone = User::where('country', $req->country)->where('telephone', 'LIKE', '%+%')->first();
+            $usergetPhone =
+                User::where('country', $req->country)->where('code', '!=', NULL)->first();
 
             if (isset($usergetPhone)) {
 

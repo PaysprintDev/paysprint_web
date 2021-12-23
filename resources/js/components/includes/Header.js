@@ -81,6 +81,7 @@ class Header extends Component {
 
 	render() {
 		var data_HTML_HEADER_CONTENT = '';
+		var imageAvatar = '';
 
 		if (this.state.loading) {
 			data_HTML_HEADER_CONTENT = (
@@ -89,6 +90,13 @@ class Header extends Component {
 				</div>
 			);
 		} else {
+			if (this.state.data.avatar != null) {
+				imageAvatar = this.state.data.avatar;
+			} else {
+				imageAvatar =
+					'https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_2_w4hzub.jpg';
+			}
+
 			if (this.state.data.accountType == 'Individual') {
 				data_HTML_HEADER_CONTENT = (
 					<div className="dropdown profile-dropdown">
@@ -99,11 +107,7 @@ class Header extends Component {
 							aria-expanded="false"
 							id="dropdownMenuButton"
 						>
-							<img
-								className="avatar-img"
-								src={`${this.state.data.avatar}`}
-								alt={`${this.state.data.name}`}
-							/>
+							<img className="avatar-img" src={`${imageAvatar}`} alt={`${this.state.data.name}`} />
 							<span className="avatar-status avatar-sm-status avatar-success">&nbsp;</span>
 						</a>
 						<ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
@@ -179,7 +183,7 @@ class Header extends Component {
 						>
 							<img
 								className="avatar-img"
-								src={`${this.state.data.avatar}`}
+								src={`${imageAvatar}`}
 								alt={`${this.state.data.businessname}`}
 							/>
 							<span className="avatar-status avatar-sm-status avatar-success">&nbsp;</span>
@@ -234,6 +238,12 @@ class Header extends Component {
 										/>
 									</svg>
 									<span className="ms-2">Settings</span>
+								</a>
+							</li>
+							<li>
+								<a className="dropdown-item" href="/logout">
+									<img src="https://img.icons8.com/ios/20/000000/export.png" />
+									<span className="ms-2">Logout</span>
 								</a>
 							</li>
 						</ul>
