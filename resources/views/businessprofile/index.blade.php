@@ -96,7 +96,7 @@
                             <div class="photo-profile">
 
                                 <img id="my_image"
-                                    src="{{ $data['businessprofile']->avatar != null ? $data['businessprofile']->avatar : 'https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg' }}"
+                                    src="https://res.cloudinary.com/pilstech/image/upload/v1640257431/paysprint_asset/weacceptps_yiyjsl.jpg"
                                     alt="Business Image">
 
 

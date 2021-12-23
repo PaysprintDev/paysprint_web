@@ -143,6 +143,8 @@ class Aside extends Component {
 		}
 
 		// if (event.target.name === 'desiredBuyRate') return console.log(event.target.name, event.target.value);
+
+		console.log(this.state);
 	}
 
 	async handleSubmit(event) {

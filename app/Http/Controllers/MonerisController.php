@@ -2823,7 +2823,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     } catch (\Throwable $th) {
                         $data = [];
                         $status = 400;
-                        $message = "Error: " . $th->getMessage() . ". Kindly ask your merchant to update the invoice.";
+                        $message = "Error: " . $th->getMessage() . ". Kindly ensure you have provided receivers account details";
                     }
                 } else {
 
