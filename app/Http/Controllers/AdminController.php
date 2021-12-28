@@ -12551,14 +12551,17 @@ class AdminController extends Controller
 
                                     $message = "success";
                                     $title = "Great";
-                                    $link = "Admin";
+                                    // $link = "Admin";
+                                    $link = "merchant/dashboard";
+
 
                                     $resInfo = strtoupper($info->Record->RecordStatus) . ", Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.ca";
                                     User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'countryapproval' => 1, 'transactionRecordId' => $info->TransactionID]);
                                 } else {
                                     $message = "success";
                                     $title = "Great";
-                                    $link = "Admin";
+                                    // $link = "Admin";
+                                    $link = "merchant/dashboard";
                                     $resInfo = strtoupper($info->Record->RecordStatus) . ", Congratulations!!!. Your account has been approved. Kindly complete the Quick Set up to enjoy the full benefits of  PaySprint.";
 
                                     // Udpate User Info
@@ -12567,7 +12570,8 @@ class AdminController extends Controller
                             } else {
                                 $message = "success";
                                 $title = "Great";
-                                $link = "Admin";
+                                // $link = "Admin";
+                                $link = "merchant/dashboard";
                                 $resInfo = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.ca";
 
                                 User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'countryapproval' => 1, 'transactionRecordId' => NULL]);
@@ -12609,6 +12613,7 @@ class AdminController extends Controller
                         // $message = "success";
                         // $title = "Great";
                         // $link = "Admin";
+                        // $link = "merchant/dashboard";
                         // $resInfo = "Hello ".$req->firstname.", Welcome to PaySprint...";
 
 
@@ -12729,14 +12734,16 @@ class AdminController extends Controller
 
                                     $message = "success";
                                     $title = "Great";
-                                    $link = "Admin";
+                                    // $link = "Admin";
+                                    $link = "merchant/dashboard";
 
                                     $resInfo = strtoupper($info->Record->RecordStatus) . ", Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance. Thank You";
                                     User::where('id', $getMerchant->id)->update(['accountLevel' => 0, 'countryapproval' => 1, 'transactionRecordId' => $info->TransactionID]);
                                 } else {
                                     $message = "success";
                                     $title = "Great";
-                                    $link = "Admin";
+                                    // $link = "Admin";
+                                    $link = "merchant/dashboard";
                                     $resInfo = strtoupper($info->Record->RecordStatus) . ", Congratulations!!!. Your account has been approved. Kindly complete the Quick Set up to enjoy the full benefits of PaySprint.";
 
                                     // Udpate User Info
@@ -12745,7 +12752,8 @@ class AdminController extends Controller
                             } else {
                                 $message = "success";
                                 $title = "Great";
-                                $link = "Admin";
+                                // $link = "Admin";
+                                $link = "merchant/dashboard";
                                 $resInfo = "Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance. Thank You";
 
                                 User::where('id', $getMerchant->id)->update(['accountLevel' => 0, 'countryapproval' => 1, 'transactionRecordId' => NULL]);
@@ -12772,6 +12780,7 @@ class AdminController extends Controller
                         // $message = "success";
                         // $title = "Great";
                         // $link = "Admin";
+                        // $link = "merchant/dashboard";
                         // $resInfo = "Hello ".$req->firstname.", Welcome to PaySprint!";
 
 

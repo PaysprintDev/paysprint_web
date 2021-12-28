@@ -60,7 +60,7 @@ class MaintenanceFeeCharge extends Controller
                             $walletBalance = $getUpdate->wallet_balance - $getTranscost->fixed;
 
 
-                            User::where('id', $getUpdate->id)->where('wallet_balance', '>=', $minBal)->update(['wallet_balance' => $walletBalance]);
+                            // User::where('id', $getUpdate->id)->where('wallet_balance', '>=', $minBal)->update(['wallet_balance' => $walletBalance]);
 
                             // Send Mail
                             $transaction_id = "wallet-" . date('dmY') . time();
@@ -82,9 +82,9 @@ class MaintenanceFeeCharge extends Controller
 
 
                             // Senders statement
-                            $this->insStatement($getUpdate->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
+                            // $this->insStatement($getUpdate->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
 
-                            $this->createNotification($getUpdate->ref_code, "Hello " . strtoupper($getUpdate->name) . ", " . $sendMsg);
+                            // $this->createNotification($getUpdate->ref_code, "Hello " . strtoupper($getUpdate->name) . ", " . $sendMsg);
 
                             $this->name = $getUpdate->name;
                             $this->email = $getUpdate->email;
@@ -92,7 +92,7 @@ class MaintenanceFeeCharge extends Controller
 
                             $this->message = '<p>' . $activity . '</p><p>You now have <strong>' . $getUpdate->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> balance in your account</p>';
 
-                            $this->monthlyChargeInsert($getUpdate->ref_code, $getUpdate->country, $getTranscost->fixed, $getUpdate->currencyCode);
+                            // $this->monthlyChargeInsert($getUpdate->ref_code, $getUpdate->country, $getTranscost->fixed, $getUpdate->currencyCode);
 
 
 
