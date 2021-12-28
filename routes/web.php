@@ -23,7 +23,7 @@ use App\Http\Controllers\MerchantPageController;
 // App Logger
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
-Route::get('feecharge', 'MaintenanceFeeCharge@monthlyMaintenaceFee');
+// Route::get('feecharge', 'MaintenanceFeeCharge@monthlyMaintenaceFee');
 
 Route::get('quicksetup', 'CheckSetupController@updateQuickSetup');
 Route::get('autodepositoff', 'CheckSetupController@autoDepositOff');

@@ -84,14 +84,18 @@
                                 </ul>
                             </li>
 
-                            <li>
-                                <a class="nav-link" href="{{ route('paysprint currency exchange') }}"><i
-                                        data-feather="shopping-bag"></i><span>Currency Exchange</span></a>
-                            </li>
-                            <li>
-                                <a class="nav-link" href="{{ route('paysprint cross border payment') }}"><i
-                                        data-feather="shopping-bag"></i><span>Cross Border Payment</span></a>
-                            </li>
+                            @if (Auth::user()->plan != 'basic')
+                                <li>
+                                    <a class="nav-link" href="{{ route('paysprint currency exchange') }}"><i
+                                            data-feather="shopping-bag"></i><span>Currency Exchange</span></a>
+                                </li>
+                                <li>
+                                    <a class="nav-link" href="{{ route('paysprint cross border payment') }}"><i
+                                            data-feather="shopping-bag"></i><span>Cross Border Payment</span></a>
+                                </li>
+                            @endif
+
+
                             <li>
                                 <a class="nav-link" href="{{ route('invoice') }}"><i
                                         data-feather="shopping-bag"></i><span>Pay Invoice</span></a>
