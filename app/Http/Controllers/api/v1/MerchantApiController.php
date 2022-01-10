@@ -892,6 +892,42 @@ class MerchantApiController extends Controller
     }
 
 
+    // Get Wallet balance
+    public function getMyWalletBalance(Request $req)
+    {
+
+        try {
+
+            $validator = Validator::make($req->all(), [
+                'accountNumber' => 'required'
+            ]);
+
+            if ($validator->passes()) {
+                $thisuser = User::select('id', 'ref_code', 'wallet_balance', 'currencySymbol', 'currencyCode')->where('ref_code', $req->accountNumber)->first();
+
+                if (isset($thisuser)) {
+                    // Get Account Balance
+                    $status = 200;
+                    $resData = ['data' => $thisuser, 'message' => 'Success', 'status' => $status];
+                } else {
+                    $status = 400;
+                    $resData = ['data' => [], 'message' => 'Your account number is not registered on PaySprint', 'status' => $status];
+                }
+            } else {
+                $error = implode(",", $validator->messages()->all());
+
+                $status = 400;
+                $resData = ['data' => [], 'message' => $error, 'status' => $status];
+            }
+        } catch (\Throwable $th) {
+            $status = 400;
+            $resData = ['data' => [], 'message' => $th->getMessage(), 'status' => $status];
+        }
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
     public function monerisWalletProcess($ref_code, $cardType, $dollaramount, $description, $mode, $country, $month, $pan, $year)
     {
 
