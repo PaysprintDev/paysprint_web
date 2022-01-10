@@ -327,16 +327,16 @@ Route::prefix('/v1')->group(function () {
         // Receive Money To PaySprint
         Route::post('customers',  ['uses' => 'api\v1\MerchantApiController@receiveMoneyFromPaysprintCustomer']);
         Route::post('visitors',  ['uses' => 'api\v1\MerchantApiController@receiveMoneyFromVisitors']);
-        Route::post('walletbalance',  ['uses' => 'api\v1\MerchantApiController@getMyWalletBalance']);
-
 
         // Checkout Routes
-
 
         Route::prefix('transaction')->group(function () {
             Route::post('/initialize', ['uses' => 'api\v1\CheckoutController@initialize', 'as' => 'initialize transaction']);
         });
     });
+
+    Route::post('walletbalance',  ['uses' => 'api\v1\MerchantApiController@getMyWalletBalance']);
+
 
 
     Route::get('/userdata', ['uses' => 'CurrencyFxController@getUserData', 'as' => 'currency user data']);
