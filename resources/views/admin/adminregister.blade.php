@@ -588,16 +588,8 @@
     </div>
 
 
-      <div class="form-group has-feedback">
-        <label for="size_of_transaction"><span class="reqField">*</span> Size of Trancation to be expected</label>
-        <select name="size_of_transaction" id="size_of_transaction" class="form-control">
-          <option value="">Select Transaction size</option>
-          <option value="0 - 10,000">0 - 10,000</option>
-          <option value="10,001 - 50,000">10,001 - 50,000</option>
-          <option value="50,000 - 500,000">50,000 - 500,000</option>
-          <option value="Above 500,001">Above 500,001</option>
-      </select>
-      </div>
+      
+    
 
       <div class="form-group has-feedback">
         <label for="source_of_funds"><span class="reqField">*</span> Source of Funds</label>
