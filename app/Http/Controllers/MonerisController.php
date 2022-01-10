@@ -5609,7 +5609,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 // Cannot withdraw minimum balance
 
                                 $data = [];
-                                $message = "You cannot withdraw money at the moment because your account is still on review.";
+                                $message = "Sorry!, Your account must be approved before you can withdraw from wallet";
                                 $status = 400;
 
                                 // Log::info('Oops!, '.$thisuser->name.' has '.$message);
@@ -6570,6 +6570,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     public function payUtilityBills(Request $req)
     {
 
+
+
         if ($req->totalcharge < 0) {
             $data = [];
             $message = "Please enter a positive amount";
@@ -6591,6 +6593,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 $thisuser = User::where('api_token', $req->bearerToken())->first();
 
                 // $minBal = $this->minimumWithdrawal($thisuser->country);
+
+
 
                 if ($thisuser->accountType == "Individual") {
                     $subminType = "Consumer Monthly Subscription";
@@ -6614,11 +6618,13 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     // Log::info('Oops!, '.$thisuser->name.' has '.$message);
 
                     $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                } elseif ($thisuser->approval < 1 && $thisuser->accountLevel < 1) {
+                } elseif ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
+                    // If Account not approved then they cannot pay bills
+
                     // Cannot withdraw minimum balance
 
                     $data = [];
-                    $message = "You cannot pay for utility at the moment because your account is still on review.";
+                    $message = "Please upload your Utility bill with your current address for verification";
                     $status = 400;
 
                     // Log::info('Oops!, '.$thisuser->name.' has '.$message);
