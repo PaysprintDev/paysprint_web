@@ -7,11 +7,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Create Support Agent
+        Edit Support Agent
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Create Support Agent</li>
+        <li class="active">Edit Support Agent</li>
       </ol>
     </section>
 

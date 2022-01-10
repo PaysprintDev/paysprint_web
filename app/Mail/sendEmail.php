@@ -49,7 +49,7 @@ class sendEmail extends Mailable implements ShouldQueue
             } elseif ($this->mail->purpose == "Account is credited" || $this->mail->purpose == "Password Reset") {
                 return $this->subject($this->mail->subject)->view('mails.cardupdate')
                     ->with('maildata', $this->mail)->delay(Carbon::now()->addMinutes(5));
-            } elseif ($this->mail->purpose == "Fund remittance" || $this->mail->purpose == "Incomplete Setup" || $this->mail->purpose == "Refund Request" || $this->mail->purpose == "Verify OTP") {
+            } elseif ($this->mail->purpose == "Fund remittance" || $this->mail->purpose == "Your PaySprint Referral Account Actiavted" || $this->mail->purpose == "Incomplete Setup" || $this->mail->purpose == "Refund Request" || $this->mail->purpose == "Verify OTP") {
                 return $this->subject($this->mail->subject)->view('mails.epay')
                     ->with('maildata', $this->mail)->delay(Carbon::now()->addMinutes(5));
             } elseif ($this->mail->purpose == "Cash withdrawal request") {
@@ -77,7 +77,7 @@ class sendEmail extends Mailable implements ShouldQueue
                     ->with('maildata', $this->mail)->delay(Carbon::now()->addMinutes(5));
             }
         } catch (\Throwable $th) {
-            Log::error($th->getMessage());
+            Log::error('Error: ' . $th->getMessage() . ' | ' . $this->mail->purpose);
         }
     }
 }

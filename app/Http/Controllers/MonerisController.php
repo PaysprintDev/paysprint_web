@@ -66,6 +66,8 @@ use App\AllCountries as AllCountries;
 
 use App\SpecialInformation as SpecialInformation;
 
+use App\CrossBorderBeneficiary as CrossBorderBeneficiary;
+
 
 use App\CcWithdrawal as CcWithdrawal;
 
@@ -736,9 +738,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 else {
 
                                     if ($thisuser->accountType == "Individual") {
-                                        $subminType = "Consumer Minimum Withdrawal";
+                                        $subminType = "Consumer Monthly Subscription";
                                     } else {
-                                        $subminType = "Merchant Minimum Withdrawal";
+                                        $subminType = "Merchant Monthly Subscription";
                                     }
 
 
@@ -2446,9 +2448,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 } else {
 
                                     if ($thisuser->accountType == "Individual") {
-                                        $subminType = "Consumer Minimum Withdrawal";
+                                        $subminType = "Consumer Monthly Subscription";
                                     } else {
-                                        $subminType = "Merchant Minimum Withdrawal";
+                                        $subminType = "Merchant Monthly Subscription";
                                     }
 
                                     $invoice_no = "PS_" . date('Ymd') . time();
@@ -2484,6 +2486,24 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                         $path = route('home') . '/crossborderinvoices/' . $fileNameToStore;
                                     }
 
+
+                                    // Get beneficiary details or create new beneficiary
+
+                                    $getCurrencyCode = AllCountries::where('name', $req->country)->first();
+
+                                    if ($req->beneficiary_id == "create_new") {
+
+                                        // Create Beneficiary
+                                        $beneficiary = CrossBorderBeneficiary::create([
+                                            'account_name' => $req->account_name,
+                                            'account_number' => $req->account_number,
+                                            'bank_name' => $req->bank_name,
+                                            'sort_code' => $req->sort_code,
+                                            'currencyCode' => $getCurrencyCode->currencyCode
+                                        ]);
+                                    } else {
+                                        $beneficiary = CrossBorderBeneficiary::where('id', $req->beneficiary_id)->first();
+                                    }
 
 
 
@@ -2553,7 +2573,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     'amount' => $req->amount,
                                                     'country' => $req->country,
                                                     'select_wallet' => $req->select_wallet,
-                                                    'file' => $path
+                                                    'file' => $path,
+                                                    'currencySymbol' => $wallet->currencySymbol,
+                                                    'beneficiary_id' => $beneficiary->id
                                                 ]);
 
 
@@ -2687,7 +2709,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                         'amount' => $req->amount,
                                                         'country' => $req->country,
                                                         'select_wallet' => $req->select_wallet,
-                                                        'file' => $path
+                                                        'file' => $path,
+                                                        'currencySymbol' => $thisuser->currencySymbol,
+                                                        'beneficiary_id' => $beneficiary->id
                                                     ]);
 
 
@@ -2695,7 +2719,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country);
 
 
-                                                    $remainingBalance = ($thisuser->wallet_balance - $minBal);
+                                                    $remainingBalance = $thisuser->wallet_balance;
 
                                                     // Get My Wallet Balance
                                                     $walletBalance = $remainingBalance - $req->amount;
@@ -2799,7 +2823,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     } catch (\Throwable $th) {
                         $data = [];
                         $status = 400;
-                        $message = "Error: " . $th->getMessage() . ". Kindly ask your merchant to update the invoice.";
+                        $message = "Error: " . $th->getMessage() . ". Kindly ensure you have provided receivers account details";
                     }
                 } else {
 
@@ -4723,9 +4747,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                         if ($thisuser->accountType == "Individual") {
-                            $subminType = "Consumer Minimum Withdrawal";
+                            $subminType = "Consumer Monthly Subscription";
                         } else {
-                            $subminType = "Merchant Minimum Withdrawal";
+                            $subminType = "Merchant Monthly Subscription";
                         }
                         $minBal = $this->maintenanceBalanceWithdrawal($subminType, $thisuser->country);
 
@@ -4740,7 +4764,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $minWalBal = $thisuser->wallet_balance - $minBal;
 
                             $data = [];
-                            $message = "Your minimum wallet balance should be more than " . $req->currencyCode . ' ' . number_format($minWalBal, 2) . ". Please add money to continue transaction";
+                            $message = "Your available wallet balance is " . $req->currencyCode . ' ' . number_format($minWalBal, 2) . ". Please add money to continue transaction";
                             $status = 400;
 
                             // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
@@ -4763,7 +4787,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $minWalBal = $thisuser->wallet_balance - $minBal;
 
                             $data = [];
-                            $message = "Your minimum wallet balance should be more than " . $req->currencyCode . ' ' . number_format($minWalBal, 2) . ". Please add money to continue transaction";
+                            $message = "Your available wallet balance is " . $req->currencyCode . ' ' . number_format($minWalBal, 2) . ". Please add money to continue transaction";
                             $status = 400;
 
                             // Log::info('Oops!, Though this is a test, but '.$thisuser->name.' has '.$message);
@@ -5554,9 +5578,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             // $minBal = $this->minimumWithdrawal($thisuser->country);
 
                             if ($thisuser->accountType == "Individual") {
-                                $subminType = "Consumer Minimum Withdrawal";
+                                $subminType = "Consumer Monthly Subscription";
                             } else {
-                                $subminType = "Merchant Minimum Withdrawal";
+                                $subminType = "Merchant Monthly Subscription";
                             }
 
                             $minBal = $this->maintenanceBalanceWithdrawal($subminType, $thisuser->country);
@@ -5575,7 +5599,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $minWalBal = $thisuser->wallet_balance - $minBal;
 
                                 $data = [];
-                                $message = "Your minimum wallet balance should be more than " . $req->currencyCode . ' ' . number_format($minWalBal, 2) . ". Please add money to continue transaction";
+                                $message = "Your available wallet balance is " . $req->currencyCode . ' ' . number_format($minWalBal, 2) . ". Please add money to continue transaction";
                                 $status = 400;
 
                                 // Log::info('Oops!, '.$thisuser->name.' has '.$message);
@@ -5597,7 +5621,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $minWalBal = $thisuser->wallet_balance - $minBal;
 
                                 $data = [];
-                                $message = "Your minimum wallet balance should be more than " . $req->currencyCode . ' ' . number_format($minWalBal, 2) . ". Please add money to continue transaction";
+                                $message = "Your available wallet balance is " . $req->currencyCode . ' ' . number_format($minWalBal, 2) . ". Please add money to continue transaction";
                                 $status = 400;
 
                                 // Log::info('Oops!, '.$thisuser->name.' has '.$message);
@@ -6569,9 +6593,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 // $minBal = $this->minimumWithdrawal($thisuser->country);
 
                 if ($thisuser->accountType == "Individual") {
-                    $subminType = "Consumer Minimum Withdrawal";
+                    $subminType = "Consumer Monthly Subscription";
                 } else {
-                    $subminType = "Merchant Minimum Withdrawal";
+                    $subminType = "Merchant Monthly Subscription";
                 }
                 $minBal = $this->maintenanceBalanceWithdrawal($subminType, $thisuser->country);
 
@@ -6606,7 +6630,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     $minWalBal = $thisuser->wallet_balance - $minBal;
 
                     $data = [];
-                    $message = "Your minimum wallet balance should be more than " . $thisuser->currencyCode . ' ' . number_format($minWalBal, 2) . ". Please add money to continue transaction";
+                    $message = "Your available wallet balance is " . $thisuser->currencyCode . ' ' . number_format($minWalBal, 2) . ". Please add money to continue transaction";
                     $status = 400;
 
                     // Log::info('Oops!, '.$thisuser->name.' has '.$message);

@@ -159,9 +159,16 @@
           </ul>
         </li> --}}
                       <li class="onhover-dropdown p-0">
-                          <button class="btn btn-primary-light" type="button"><i data-feather="log-out"></i>Log
-                              out</button>
+
+                          <a type="button" href="{{ route('logout') }}"
+                              onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                              class="btn btn-primary-light"><i data-feather="log-out"></i> {{ __('Logout') }}</a>
                       </li>
+
+                      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                          @csrf
+                      </form>
+
                   </ul>
               </div>
               <div class="d-lg-none mobile-toggle pull-right w-auto"><i data-feather="more-horizontal"></i></div>

@@ -204,8 +204,6 @@ class CrossBorderPlatform extends Component {
 												<a
 													href="/currencyfx/crossborder"
 													role="button"
-													id="Sources"
-													data-bs-toggle="dropdown"
 													aria-expanded="false"
 													className="btn btn-outline-dark text-gray-700 border-gray-700 px-3"
 												>

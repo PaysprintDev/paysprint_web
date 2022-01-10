@@ -59,6 +59,8 @@ Route::prefix('/v1')->group(function () {
 
         Route::post('profile',  ['uses' => 'api\v1\UserController@updateProfile'])->name('update profile');
 
+        Route::post('changeplan',  ['uses' => 'api\v1\UserController@changePlan'])->name('change plan');
+
 
         Route::post('linkaccount',  ['uses' => 'api\v1\UserController@linkAccount'])->name('link account');
 
@@ -184,6 +186,8 @@ Route::prefix('/v1')->group(function () {
         Route::get('getbeneficiary',  ['uses' => 'api\v1\CardController@getBeneficiary'])->name('get beneficiary');
 
         Route::post('addnewcard',  ['uses' => 'api\v1\CardController@addNewCard'])->name('add new card');
+
+
 
         Route::post('editcard',  ['uses' => 'api\v1\CardController@editCard'])->name('edit card');
 
@@ -323,6 +327,7 @@ Route::prefix('/v1')->group(function () {
         // Receive Money To PaySprint
         Route::post('customers',  ['uses' => 'api\v1\MerchantApiController@receiveMoneyFromPaysprintCustomer']);
         Route::post('visitors',  ['uses' => 'api\v1\MerchantApiController@receiveMoneyFromVisitors']);
+        Route::post('walletbalance',  ['uses' => 'api\v1\MerchantApiController@getMyWalletBalance']);
 
 
         // Checkout Routes

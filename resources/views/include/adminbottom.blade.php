@@ -245,12 +245,12 @@
                     $(".emailcheck").removeClass("disp-0");
                     $(".emailcheck").text(
                         "Email Address is not available. (Customer does not need to create a PaySprint Account to Pay Invoice)"
-                        );
+                    );
                 } else if (result.message == "error" && result.title == "telephone") {
                     $(".phonecheck").removeClass("disp-0");
                     $(".phonecheck").text(
                         "Telephone is not available. (Customer does not need to create a PaySprint Account to Pay Invoice)"
-                        );
+                    );
                 }
 
 
@@ -861,7 +861,7 @@
                             "</tr><tr><td colspan='3'></td><td colspan='3'></td><td colspan='3' style='color:green; font-weight:bold;'>Total: <br> Less collection fee: <hr> Net Remittance: </td><td colspan='2' style='color:green; font-weight:bold;' align='center'>$" +
                             total.toFixed(2) + " <br>$" + collection.toFixed(2) + "<hr>$" + net.toFixed(
                                 2) + "<br><br><input type='hidden' id='amount' value='" + net.toFixed(
-                            2) +
+                                2) +
                             "'><input type='hidden' id='action' value='payca'><button class='btn btn-success btn-block' onclick=remittance('" +
                             result.withdraw_id +
                             "')>Remit <img src='https://i.ya-webdesign.com/images/loading-gif-png-5.gif' class='spin" +
@@ -1032,7 +1032,7 @@
                             "</tr><tr><td colspan='3'></td><td colspan='2' style='color:green; font-weight:bold;'>Total: <br> Less collection fee: <hr> Net Remittance: </td><td colspan='2' style='color:green; font-weight:bold;' align='center'>$" +
                             total.toFixed(2) + " <br>$" + collection.toFixed(2) + "<hr>$" + net.toFixed(
                                 2) + "<br><br><input type='hidden' id='amount' value='" + net.toFixed(
-                            2) +
+                                2) +
                             "'><input type='hidden' id='action' value='epayca'><button class='btn btn-success btn-block' onclick=remittance('" +
                             result.withdraw_id +
                             "')>Remit <img src='https://i.ya-webdesign.com/images/loading-gif-png-5.gif' class='spin" +
@@ -3892,7 +3892,7 @@
                             $('.sendmoneyBtn').text('Send Money');
                             swal("User already exist",
                                 "You'll be redirected in 3sec to continue your transfer", "info"
-                                );
+                            );
 
                             setTimeout(function() {
                                 location.href = err.responseJSON.link;
@@ -4032,7 +4032,7 @@
         var route = "{{ URL('Ajax/acceptcrossborderpayment') }}";
 
         var thisdata;
-        var button = $(".spin"+transactionid);
+        var button = $(".spin" + transactionid);
 
 
         swal({
@@ -4057,7 +4057,7 @@
                             button.text("Please wait...");
                         },
                         success: function(result) {
-                            button.text('Accept Payment');
+                            button.text('Process Payment');
 
                             if (result.message == "success") {
                                 // Route to another page
@@ -4073,7 +4073,7 @@
                         },
                         error: function(err) {
 
-                            button.text('Accept Payment');
+                            button.text('Process Payment');
                             swal("Oops", err.responseJSON.message, "error");
 
 

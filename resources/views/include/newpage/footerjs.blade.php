@@ -10,17 +10,23 @@
 <script src="{{ asset('newpage/plugins/counter-up/jquery.waypoints.min.js') }}"></script>
 <script src="{{ asset('newpage/plugins/counter-up/jquery.counterup.min.js') }}"></script>
 <script src="{{ asset('newpage/plugins/theme-mode-switcher/gr-theme-mode-switcher.js') }}"></script>
-<script src="{{ asset('newpage/plugins/tilt/tilt.jquery.js') }}"></script> <!-- Load Tilt.js library -->
+<script src="{{ asset('newpage/plugins/tilt/tilt.jquery.js') }}"></script>
+<!-- Load Tilt.js library -->
 <!-- Activation Script -->
 <script src="{{ asset('newpage/js/custom.js') }}"></script>
 
 
 
 <script>
-    $('#pricing_country').change(function(){
+    $('#pricing_country').change(function() {
         var country = $('#pricing_country').val();
-        
-        location.href = "/pricing?country="+country;
+
+        location.href = "/pricing?country=" + country;
+    });
+    $('#pricing_country2').change(function() {
+        var country = $('#pricing_country2').val();
+
+        location.href = "/merchant-pricing?country=" + country;
     });
 </script>
 

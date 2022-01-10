@@ -318,7 +318,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group has-success">
-                                <label class="control-label" for="inputSuccess"> Variable</label>
+                                <label class="control-label" for="inputSuccess"> Variable %</label>
                                 <input type="number" min="0.00" step="0.01" class="form-control" name="variable" id="variable" placeholder="0.98%" value="{{ $getTransfee->variable }}">
                             </div>
                         </div>
