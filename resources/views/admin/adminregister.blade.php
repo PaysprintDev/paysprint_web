@@ -616,12 +616,40 @@
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                 </div>
 
-<<<<<<< HEAD
+                <div class="form-group has-feedback">
+                    <label for="how_your_heard_about_us"><span class="reqField">*</span> How do you know about
+                        us?</label>
+                    <select name="how_your_heard_about_us" id="how_your_heard_about_us" class="form-control">
+                        <option value="">Select option </option>
+                        <option value="Google Ads">Google Ads</option>
+                        <option value="Facebook">Facebook </option>
+                        <option value="Youtube">Youtube </option>
+                        <option value="Twitter">Twitter</option>
+                        <option value="Search Engine">Search Engine</option>
+                        <option value="Instagram">Instagram</option>
+                        <option value="Email">Email</option>
+                        <option value="Radio">Radio</option>
+                        <option value="TV">TV</option>
+                        <option value="Newspaper">Newspaper</option>
+                        <option value="Word of mouth">Word of mouth</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div>
 
-<<<<<<< HEAD
+
+                <div class="form-group has-feedback specify_know_about disp-0">
+                    <label for="specify_how_your_heard_about_us">Specify how your heard about us</label>
+                    <input type="text" name="specify_how_your_heard_about_us" id="specify_how_your_heard_about_us"
+                        class="form-control">
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                </div>
+
+
+
+
       
     
-=======
+
                 <div class="form-group has-feedback">
                     <label for=" describe_purpose">Purpose of opening the Account (please describe the purpose)</label>
                     <div class="row">
@@ -631,7 +659,7 @@
                         </div>
                     </div>
                 </div>
->>>>>>> 5035a6707c0f6d371c7d038aa26339cccfb513a4
+
 
 
                 <div class="form-group has-feedback">
@@ -644,35 +672,7 @@
                         <option value="50,000 - 500,000">50,000 - 500,000</option>
                         <option value="Above 500,001">Above 500,001</option>
                     </select>
-                </div>
 
-                <div class="form-group has-feedback">
-                    <label for="source_of_funds"><span class="reqField">*</span> Source of Funds</label>
-                    <select name="source_of_funds" id="source_of_funds" class="form-control">
-                        <option value="">Select Source of Funds</option>
-                        <option value="Salary, Pension, Social benefits">Salary, Pension, Social benefits</option>
-                        <option value="Directors Remuneration Share of profits">Directors Remuneration Share of profits
-                        </option>
-                        <option value="Dividend, interest on loan etc">Dividend, interest on loan etc</option>
-                        <option value="Families and Friends">Families and Friends</option>
-                        <option value="Others">Other (Please describe)</option>
-                    </select>
-                </div>
-
-
-                <div class="form-group has-feedback specifySourceOfFunds disp-0">
-                    <label for="specify_source">Specify Source of Funds</label>
-                    <input type="text" name="specify_source" id="specify_source" class="form-control">
-                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                </div>
-
-                <div class="form-group has-feedback">
-                    <label for="referred_by">Referred By <small class="reqField">(Optional)</small></label>
-                    <input type="text" name="referred_by" id="referred_by" class="form-control"
-                        @if ($referred_by != '') value="{{ $referred_by }}" readonly @else placeholder="E.g 69212" @endif>
-                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                </div>
-=======
                 <div class="form-group has-feedback">
                     <label for=" describe_purpose">Purpose of opening the Account (please describe the purpose)</label>
                     <div class="row">
@@ -721,10 +721,86 @@
                     <input type="text" name="referred_by" id="referred_by" class="form-control"
                         @if ($referred_by != '') value="{{ $referred_by }}" readonly @else placeholder="E.g 69212" @endif>
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+
+                </div>
+
+                <div class="form-group has-feedback">
+                    <label for="source_of_funds"><span class="reqField">*</span> Source of Funds</label>
+                    <select name="source_of_funds" id="source_of_funds" class="form-control">
+                        <option value="">Select Source of Funds</option>
+                        <option value="Salary, Pension, Social benefits">Salary, Pension, Social benefits</option>
+                        <option value="Directors Remuneration Share of profits">Directors Remuneration Share of profits
+                        </option>
+                        <option value="Dividend, interest on loan etc">Dividend, interest on loan etc</option>
+                        <option value="Families and Friends">Families and Friends</option>
+                        <option value="Others">Other (Please describe)</option>
+                    </select>
                 </div>
 
 
->>>>>>> 5035a6707c0f6d371c7d038aa26339cccfb513a4
+                <div class="form-group has-feedback specifySourceOfFunds disp-0">
+                    <label for="specify_source">Specify Source of Funds</label>
+                    <input type="text" name="specify_source" id="specify_source" class="form-control">
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                </div>
+
+                <div class="form-group has-feedback">
+                    <label for="referred_by">Referred By <small class="reqField">(Optional)</small></label>
+                    <input type="text" name="referred_by" id="referred_by" class="form-control"
+                        @if ($referred_by != '') value="{{ $referred_by }}" readonly @else placeholder="E.g 69212" @endif>
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                </div>
+
+                <div class="form-group has-feedback">
+                    <label for=" describe_purpose">Purpose of opening the Account (please describe the purpose)</label>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <textarea type="text" name="describe_purpose" id="describe_purpose" class="form-control"
+                                placeholder=""></textarea>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group has-feedback">
+                    <label for="size_of_transaction"><span class="reqField">*</span> Size of Trancation to be
+                        expected</label>
+                    <select name="size_of_transaction" id="size_of_transaction" class="form-control">
+                        <option value="">Select Transaction size</option>
+                        <option value="0 - 10,000">0 - 10,000</option>
+                        <option value="10,001 - 50,000">10,001 - 50,000</option>
+                        <option value="50,000 - 500,000">50,000 - 500,000</option>
+                        <option value="Above 500,001">Above 500,001</option>
+                    </select>
+                </div>
+
+                <div class="form-group has-feedback">
+                    <label for="source_of_funds"><span class="reqField">*</span> Source of Funds</label>
+                    <select name="source_of_funds" id="source_of_funds" class="form-control">
+                        <option value="">Select Source of Funds</option>
+                        <option value="Salary, Pension, Social benefits">Salary, Pension, Social benefits</option>
+                        <option value="Directors Remuneration Share of profits">Directors Remuneration Share of profits
+                        </option>
+                        <option value="Dividend, interest on loan etc">Dividend, interest on loan etc</option>
+                        <option value="Families and Friends">Families and Friends</option>
+                        <option value="Others">Other (Please describe)</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group has-feedback specifySourceOfFunds disp-0">
+                    <label for="specify_source">Specify Source of Funds</label>
+                    <input type="text" name="specify_source" id="specify_source" class="form-control">
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                </div>
+
+                <div class="form-group has-feedback">
+                    <label for="referred_by">Referred By <small class="reqField">(Optional)</small></label>
+                    <input type="text" name="referred_by" id="referred_by" class="form-control"
+                        @if ($referred_by != '') value="{{ $referred_by }}" readonly @else placeholder="E.g 69212" @endif>
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                </div>
 
 
 
@@ -733,11 +809,11 @@
 
 
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> 5035a6707c0f6d371c7d038aa26339cccfb513a4
+
+
+
                 <div class="row">
                     <div class="col-xs-8">
                         <div class="checkbox icheck">
@@ -780,6 +856,55 @@
 
             <strong><small>Already have an account? <a
                         href="{{ route('AdminLogin') }}">Login</a></small></strong><br>
+
+
+
+
+
+
+                <div class="row">
+                    <div class="col-xs-8">
+                        <div class="checkbox icheck">
+                            <label>
+                                <input type="checkbox" name="checkbox" id="checkBox">
+                            </label>
+                            <a href="{{ route('terms of use') }}" target="_blank" lass="text-primary"><strong>Accept
+                                    Terms and Conditions</strong></a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group has-feedback">
+                    {!! htmlFormSnippet() !!}
+                </div>
+
+
+
+
+                <div class="row">
+                    <div class="col-xs-8">
+                        <img src="https://cdn.dribbble.com/users/608059/screenshots/2032455/spinner.gif"
+                            class="spinner disp-0" style="width: auto; height: 40px;">
+                        <div class="checkbox icheck disp-0">
+                            <label>
+                                <input type="checkbox"> Accept Terms & Conditions
+                            </label>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-success btn-block btn-flat"
+                            onclick="signUp()">Register</button>
+
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </form>
+
+            <strong><small>Already have an account? <a
+                        href="{{ route('AdminLogin') }}">Login</a></small></strong><br>
+
 
         </div>
         <!-- /.login-box-body -->
@@ -885,7 +1010,8 @@
             } else {
                 // Remove the specified input field
                 $('.specifySourceOfFunds').addClass('disp-0');
-<<<<<<< HEAD
+
+
             }
 
         });
@@ -996,10 +1122,17 @@
 
 
 
-=======
+
             }
 
         });
+
+
+
+            }
+
+        });
+
 
 
         $('#how_your_heard_about_us').change(function() {
@@ -1107,7 +1240,8 @@
 
 
 
->>>>>>> 5035a6707c0f6d371c7d038aa26339cccfb513a4
+
+
 
             var thisdata = {
                 user_id: $('#user_id').val(),
