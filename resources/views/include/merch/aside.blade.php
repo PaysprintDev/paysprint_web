@@ -2,7 +2,9 @@
         <header class="main-nav">
             <div class="sidebar-user text-center">
                 <a class="setting-primary" href="javascript:void(0)"><i data-feather="settings"></i></a><img
-                    class="img-90 rounded-circle" src="{{ Auth::user()->avatar }}" alt="" />
+                    class="img-90 rounded-circle"
+                    src="{{ Auth::user()->avatar != null ? Auth::user()->avatar : 'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png' }}"
+                    alt="" />
                 <div class="badge-bottom"><span class="badge badge-primary"></span></div>
                 <a href="{{ route('profile') }}">
                     <h6 class="mt-3 f-14 f-w-600">{{ Auth::user()->businessname }}</h6>
@@ -48,27 +50,85 @@
                             </li>
 
 
-
                             <li class="sidebar-main-title">
                                 <div>
-                                    <h6>Billing Tools</h6>
+                                    <h6>Quick View</h6>
                                 </div>
                             </li>
 
                             <li class="dropdown">
                                 <a class="nav-link menu-title " href="javascript:void(0)"><i
                                         data-feather="shopping-bag"></i><span>Create & Send Invoice</span></a>
-                                <ul class="nav-submenu menu-content" style="display: none;">
+                                <ul class="nav-submenu menu-content">
                                     <li>
-                                        <a class="submenu-title  " href="javascript:void(0)">
+                                        <a class="sub-title " href="javascript:void(0)">
                                             Single<span class="sub-arrow"><i
                                                     class="fa fa-chevron-right"></i></span>
                                         </a>
-                                        <ul class="nav-sub-childmenu submenu-content" style="display: none;">
-                                            <li><a href="{{ route('invoice form') }}" class="">Customer
+                                        <ul class="nav-sub-childmenu submenu-content">
+                                            <li><a href="{{ route('create single invoice') }}"
+                                                    class="">Customer
                                                     on PS
                                                 </a></li>
-                                            <li><a href="{{ route('invoice form') }}" class="">Customer
+                                            <li><a href="{{ route('create link invoice') }}"
+                                                    class="">Customer
+                                                    not on PS</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li onclick="comingSoon()"><a href="javascript:void()"><i
+                                                class="fa fa-circle-o text-red"></i>
+                                            Batch [Coming Soon]</a></li>
+
+                                </ul>
+                            </li>
+
+                            @if (Auth::user()->plan != 'basic')
+                                <li>
+                                    <a class="nav-link" href="{{ route('paysprint currency exchange') }}"><i
+                                            data-feather="shopping-bag"></i><span>Currency Exchange</span></a>
+                                </li>
+                                <li>
+                                    <a class="nav-link" href="{{ route('paysprint cross border payment') }}"><i
+                                            data-feather="shopping-bag"></i><span>Cross Border Payment</span></a>
+                                </li>
+                            @endif
+
+
+                            <li>
+                                <a class="nav-link" href="{{ route('invoice') }}"><i
+                                        data-feather="shopping-bag"></i><span>Pay Invoice</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="{{ route('Withdraw Money') }}"><i
+                                        data-feather="shopping-bag"></i><span>Withdraw Funds</span></a>
+                            </li>
+
+
+
+                            <li class="sidebar-main-title">
+                                <div>
+                                    <h6>Generate Invoice</h6>
+                                </div>
+                            </li>
+
+                            <li class="dropdown">
+                                <a class="nav-link menu-title " href="javascript:void(0)"><i
+                                        data-feather="shopping-bag"></i><span>Create & Send Invoice</span></a>
+                                <ul class="nav-submenu menu-content">
+                                    <li>
+                                        <a class="sub-title " href="javascript:void(0)">
+                                            Single<span class="sub-arrow"><i
+                                                    class="fa fa-chevron-right"></i></span>
+                                        </a>
+                                        <ul class="nav-sub-childmenu submenu-content">
+                                            <li><a href="{{ route('create single invoice') }}"
+                                                    class="">Customer
+                                                    on PS
+                                                </a></li>
+                                            <li><a href="{{ route('create link invoice') }}"
+                                                    class="">Customer
                                                     not on PS</a>
                                             </li>
                                         </ul>
@@ -88,14 +148,20 @@
 
                             <li class="dropdown">
                                 <a class="nav-link menu-title " href="javascript:void(0)"><i
-                                        data-feather="layers"></i><span>Payment Gateway</span></a>
+                                        data-feather="layers"></i><span>Set Up</span></a>
                                 <ul class="nav-submenu menu-content" style="display: none;">
                                     <li>
-                                        <a class="submenu-title  "
-                                            href="{{ route('new merchant payment gateway') }}">
-                                            Payment Method<span class="sub-arrow"><i
+                                        <a href="{{ route('payment gateway') }}">
+                                            Payment Gateway<span class="sub-arrow"><i
                                                     class="fa fa-chevron-right"></i></span>
                                         </a>
+                                        <a href="{{ route('set up tax') }}">
+                                            Tax
+                                        </a>
+                                        {{-- <a href="{{ route('new merchant payment gateway') }}">
+                                            Payment Method<span class="sub-arrow"><i
+                                                    class="fa fa-chevron-right"></i></span>
+                                        </a> --}}
 
                                     </li>
 
@@ -103,11 +169,6 @@
 
 
                                 </ul>
-                            </li>
-
-                            <li class="dropdown">
-                                <a class="nav-link menu-title link-nav " href="{{ route('set up tax') }}"><i
-                                        data-feather="file-text"></i><span>Set Up Tax</span></a>
                             </li>
 
                             <li class="sidebar-main-title">
@@ -118,7 +179,9 @@
 
                             <li class="dropdown">
                                 <a class="nav-link menu-title link-nav " href="{{ route('ordering system') }}"><i
-                                        data-feather="database"></i><span>Ordering System</span></a>
+                                        data-feather="database"></i><span>Ordering System <br><small
+                                            class="text-danger text-center">[Coming
+                                            Soon]</small></span></a>
                             </li>
 
                             <li class="sidebar-main-title">
@@ -131,10 +194,14 @@
                                 <a class="nav-link menu-title " href="javascript:void(0)"><i
                                         data-feather="clock"></i><span>Transaction History</span></a>
                                 <ul class="nav-submenu menu-content" style="display: none;">
-                                    <li><a href="{{ route('invoice statement') }}" class="">Invoice</a>
+                                    <li><a href="{{ route('getStatement') }}" class="">Invoice</a>
                                     </li>
-                                    <li><a href="{{ route('wallet statement') }}" class="">Wallet</a>
+                                    {{-- <li><a href="{{ route('invoice statement') }}" class="">Invoice</a>
+                                    </li> --}}
+                                    <li><a href="{{ route('getwalletStatement') }}" class="">Wallet</a>
                                     </li>
+                                    {{-- <li><a href="{{ route('wallet statement') }}" class="">Wallet</a>
+                                    </li> --}}
 
                                 </ul>
                             </li>
@@ -147,17 +214,28 @@
                                     </li>
                                     <li><a href="{{ route('paid invoice') }}" class="">Paid Invoice</a>
                                     </li>
-                                    <li><a href="{{ route('pending invoice') }}" class="">Unpaid
+                                    <li><a href="{{ route('unpaid invoice') }}" class="">Unpaid
                                             Invoice</a></li>
-                                    <li><a href="{{ route('balance report') }}" class="">Customer
+                                    {{-- <li><a href="{{ route('pending invoice') }}" class="">Unpaid
+                                            Invoice</a></li> --}}
+                                    <li><a href="{{ route('customer balance report') }}"
+                                            class="">Customer
                                             Balance Report</a></li>
+                                    {{-- <li><a href="{{ route('balance report') }}" class="">Customer
+                                            Balance Report</a></li> --}}
 
-                                    <li><a href="{{ route('taxes report') }}" class="">Taxes Report</a>
+                                    <li><a href="{{ route('tax report') }}" class="">Taxes Report</a>
                                     </li>
-                                    <li><a href="{{ route('invoice type report') }}" class="">Invoice
+                                    {{-- <li><a href="{{ route('taxes report') }}" class="">Taxes Report</a>
+                                    </li> --}}
+                                    <li><a href="{{ route('invoice type') }}" class="">Invoice
                                             Type Report</a></li>
-                                    <li><a href="{{ route('recurring type') }}" class="">Recurring
+                                    {{-- <li><a href="{{ route('invoice type report') }}" class="">Invoice
+                                            Type Report</a></li> --}}
+                                    <li><a href="{{ route('recurring invoice') }}" class="">Recurring
                                             Invoice Report</a></li>
+                                    {{-- <li><a href="{{ route('recurring type') }}" class="">Recurring
+                                            Invoice Report</a></li> --}}
                                 </ul>
                             </li>
 

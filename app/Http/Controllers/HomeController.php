@@ -85,7 +85,8 @@ use App\Points;
 use App\ClaimedPoints;
 
 use App\HistoryReport;
-
+use App\ReferralGenerate;
+use App\ReferredUsers;
 use App\Traits\PaysprintPoint;
 
 use App\Traits\PointsHistory;
@@ -136,7 +137,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints']]);
+        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints']]);
 
         $location = $this->myLocation();
 
@@ -185,6 +186,7 @@ class HomeController extends Controller
                 $view = 'home';
             } else {
 
+                // return redirect()->route('Admin');
                 return redirect()->route('dashboard');
             }
         } else {
@@ -241,6 +243,7 @@ class HomeController extends Controller
 
                 $view = 'home';
             } else {
+                // return redirect()->route('Admin');
                 return redirect()->route('dashboard');
             }
         } else {
@@ -288,6 +291,7 @@ class HomeController extends Controller
 
                 );
             } else {
+                // return redirect()->route('Admin');
                 return redirect()->route('dashboard');
             }
         } else {
@@ -365,7 +369,8 @@ class HomeController extends Controller
                 $data = array(
                     'country' => $country,
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
-                    'continent' => $this->timezone[0]
+                    'continent' => $this->timezone[0],
+                    'activecountries' => $this->getActiveCountries()
                 );
             } else {
                 $country = $this->myLocation()->country;
@@ -373,7 +378,8 @@ class HomeController extends Controller
                 $this->name = '';
                 $data = [
                     'country' => $country,
-                    'continent' => $this->timezone[0]
+                    'continent' => $this->timezone[0],
+                    'activecountries' => $this->getActiveCountries()
                 ];
             }
         } else {
@@ -383,7 +389,8 @@ class HomeController extends Controller
             $this->email = session('email');
             $data = [
                 'country' => $country,
-                'continent' => $this->timezone[0]
+                'continent' => $this->timezone[0],
+                'activecountries' => $this->getActiveCountries()
             ];
         }
 
@@ -413,11 +420,84 @@ class HomeController extends Controller
 
         $data['pricing'] = $pricings;
         $data['currency'] = $myCurrency;
-
-
+        $data['maintenance'] = $this->maintenanceBalanceWithdrawal('Consumer Monthly Subscription', $countrys);
 
 
         return view('main.newpage.shade-pro.pricing')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function feeStructure2(Request $req)
+    {
+
+
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Pricing';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $country = Auth::user()->country;
+                $data = array(
+                    'country' => $country,
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0],
+                    'activecountries' => $this->getActiveCountries()
+                );
+            } else {
+                $country = $this->myLocation()->country;
+                $this->page = 'Pricing';
+                $this->name = '';
+                $data = [
+                    'country' => $country,
+                    'continent' => $this->timezone[0],
+                    'activecountries' => $this->getActiveCountries()
+                ];
+            }
+        } else {
+            $country = $this->myLocation()->country;
+            $this->page = 'Pricing';
+            $this->name = session('name');
+            $this->email = session('email');
+            $data = [
+                'country' => $country,
+                'continent' => $this->timezone[0],
+                'activecountries' => $this->getActiveCountries()
+            ];
+        }
+
+        if ($req->get('country') != null) {
+            $countrys = $req->get('country');
+        } else {
+            $countrys = $country;
+        }
+
+
+        $prices = $this->pricingFees($countrys);
+
+        if (isset($prices)) {
+            $pricings = $prices;
+        } else {
+            $pricings = $this->pricingFees('Canada');
+        }
+
+        $currency = $this->getCountryCode($countrys);
+
+
+        if (isset($currency)) {
+            $myCurrency = $currency->currencySymbol;
+        } else {
+            $myCurrency = "$";
+        }
+
+        $data['pricing'] = $pricings;
+        $data['currency'] = $myCurrency;
+        $data['maintenance'] = $this->maintenanceBalanceWithdrawal('Merchant Monthly Subscription', $countrys);
+
+
+
+
+        return view('main.newpage.shade-pro.pricing2')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -851,6 +931,13 @@ class HomeController extends Controller
     {
 
         $data = AllCountries::where('name', $country)->first();
+
+        return $data;
+    }
+
+    public function getActiveCountries()
+    {
+        $data = AllCountries::where('approval', 1)->orderBy('name', 'ASC')->get();
 
         return $data;
     }
@@ -3662,6 +3749,7 @@ class HomeController extends Controller
     public function ajaxregister(Request $req)
     {
 
+
         // Check table if user already exist
         $checkUser = User::where('email', $req->email)->get();
         $checkClosedUser = UserClosed::where('email', $req->email)->get();
@@ -3679,12 +3767,48 @@ class HomeController extends Controller
 
         if (isset($getRef)) {
 
-            $referral_points = $getRef->referral_points + 1;
+            $referral_points = $getRef->referral_points + 100;
 
             User::where('id', $getRef->id)->update([
                 'referral_points' => $referral_points
             ]);
+
+
+            // Add to generate link
+            $refGen = ReferralGenerate::where('ref_code', $req->referred_by)->first();
+
+            if (isset($refGen)) {
+                $ref_count = $refGen->referred_count + 1;
+
+                ReferralGenerate::where('ref_code', $req->referred_by)->update(['referred_count' => $ref_count]);
+            } else {
+                ReferralGenerate::insert([
+                    'ref_code' => $req->referred_by,
+                    'name' => $getRef->name,
+                    'email' => $getRef->email,
+                    'ref_link' => route('home') . '/register?ref_code=' . $req->referred_by,
+                    'referred_count' => '1',
+                    'country' => $getRef->country,
+                    'is_admin' => false
+                ]);
+            }
+
+            ReferredUsers::insert(['ref_code' => $req->referred_by, 'referred_user' => $req->email, 'referral_points' => 100]);
+        } else {
+            $getRef = ReferralGenerate::where('ref_code', $req->referred_by)->first();
+
+            if (isset($getRef)) {
+
+                ReferredUsers::insert(['ref_code' => $req->referred_by, 'referred_user' => $req->email, 'referral_points' => 100]);
+
+                $ref_count = $getRef->referred_count + 1;
+
+                ReferralGenerate::where('ref_code', $req->referred_by)->update(['referred_count' => $ref_count]);
+            }
         }
+
+
+
 
         if (count($checkUser) > 0) {
             $resData = ['res' => 'User with email: ' . $req->email . ' already exist', 'message' => 'error'];
@@ -3726,31 +3850,17 @@ class HomeController extends Controller
                 $phoneCode = "1";
             }
 
-            if($req->how_your_heard_about_us == "Others"){
-                $specifyHeardAbout = $req->specify_how_your_heard_about_us;
-            }else{
-                $specifyHeardAbout = $req->how_your_heard_about_us;
-            }
-
-
-            if($req->source_of_funds == "Others"){
-                $source_of_funds = $req->specify_source;
-            }else{
-                $source_of_funds = $req->source_of_funds;
-            }
-
             if ($req->ref_code != null) {
 
                 $getanonuser = AnonUsers::where('ref_code', $req->ref_code)->first();
-                
 
                 // Insert User record
                 if ($req->accountType == "Individual") {
                     // Insert Information for Individual user
-                    $insInd = User::insert(['ref_code' => $req->ref_code, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by, 'knowAboutUs' => $specifyHeardAbout, 'accountPurpose' => $req->describe_purpose, 'transactionSize' => $req->size_of_transaction, 'sourceOfFunding' => $source_of_funds ]);
+                    $insInd = User::insert(['ref_code' => $req->ref_code, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by]);
                 } elseif ($req->accountType == "Business") {
                     // Insert Information for Business user
-                    $insBus = User::insert(['ref_code' => $req->ref_code, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by, 'knowAboutUs' => $specifyHeardAbout, 'accountPurpose' => $req->describe_purpose, 'transactionSize' => $req->size_of_transaction, 'sourceOfFunding' => $source_of_funds ]);
+                    $insBus = User::insert(['ref_code' => $req->ref_code, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'telephone' => $getanonuser->telephone, 'wallet_balance' => $getanonuser->wallet_balance, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by]);
                 }
 
                 $getMoney = Statement::where('user_id', $req->email)->get();
@@ -3770,12 +3880,12 @@ class HomeController extends Controller
                 // Insert User record
                 if ($req->accountType == "Individual") {
                     // Insert Information for Individual user
-                    $insInd = User::insert(['ref_code' => $newRefcode, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by, 'knowAboutUs' => $specifyHeardAbout, 'accountPurpose' => $req->describe_purpose, 'transactionSize' => $req->size_of_transaction, 'sourceOfFunding' => $source_of_funds ]);
+                    $insInd = User::insert(['ref_code' => $newRefcode, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by]);
 
                     // $req->session()->put(['name' => $name, 'email' => $req->email, 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType]);
                 } elseif ($req->accountType == "Business") {
                     // Insert Information for Business user
-                    $insBus = User::insert(['ref_code' => $newRefcode, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by, 'knowAboutUs' => $specifyHeardAbout, 'accountPurpose' => $req->describe_purpose, 'transactionSize' => $req->size_of_transaction, 'sourceOfFunding' => $source_of_funds ]);
+                    $insBus = User::insert(['ref_code' => $newRefcode, 'businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype, 'code' => $phoneCode, 'api_token' => uniqid() . md5($req->email) . time(), 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by]);
 
                     // $req->session()->put(['businessname' => $req->busname, 'name' => $name, 'email' => $req->email, 'address' => $req->address, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'accountType' => $req->accountType, 'zip' => $req->zipcode, 'corporationType' => $req->corporationtype]);
 
@@ -4817,9 +4927,13 @@ class HomeController extends Controller
             $collection = 0;
         }
 
+        if ($thisuser->accountType == "Individual") {
+            $subminType = "Consumer Monthly Subscription";
+        } else {
+            $subminType = "Merchant Monthly Subscription";
+        }
 
-
-        $minimumBal = TransactionCost::where('structure', "Wallet Balance")->where('method', "Minimum Balance")->where('country', $thisuser->country)->first();
+        $minimumBal = TransactionCost::where('structure', $subminType)->where('country', $thisuser->country)->first();
 
         if (isset($minimumBal)) {
             $available = $minimumBal->fixed;

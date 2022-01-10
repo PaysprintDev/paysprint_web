@@ -64,7 +64,7 @@
                                 </td>
                                 <td>
                                     <div class="form-group has-info">
-                                        <label class="control-label" for="inputSuccess">Variable</label>
+                                        <label class="control-label" for="inputSuccess">Variable %</label>
                                     </div>
                                 </td>
                             </tr>

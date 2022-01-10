@@ -20,6 +20,7 @@ use App\Admin as Admin;
 use App\ClientInfo as ClientInfo;
 use App\AllCountries as AllCountries;
 use App\Building;
+use App\BVNVerificationList;
 use App\LinkAccount as LinkAccount;
 use App\ListOfBanks as ListOfBanks;
 use App\Mail\sendEmail;
@@ -452,6 +453,32 @@ class UserController extends Controller
 
         $resData = ['data' => $data, 'message' => 'Profile updated', 'status' => $status];
 
+
+        return $this->returnJSON($resData, $status);
+    }
+
+    public function changePlan(Request $request)
+    {
+        try {
+            $thisuser = User::where('api_token', $request->bearerToken())->first();
+
+            // Check my plan
+            if ($thisuser->plan == "basic") {
+                User::where('api_token', $request->bearerToken())->update(['plan' => 'classic']);
+            } else {
+                User::where('api_token', $request->bearerToken())->update(['plan' => 'basic']);
+            }
+
+            $data = User::where('api_token', $request->bearerToken())->first();;
+            $status = 200;
+            $message = 'Account successfully updated.';
+        } catch (\Throwable $th) {
+            $data = [];
+            $status = 400;
+            $message = $th->getMessage();
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
     }
@@ -1136,11 +1163,16 @@ class UserController extends Controller
         Log::info(json_encode($response));
 
         try {
+
+
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            $bank = ListOfBanks::where('code', $req->bank_code)->first();
+
+
+            BVNVerificationList::insert(['user_id' => $thisuser->id, 'bvn_number' => $req->bvn, 'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
+
             if ($response->status == true && $response->data->is_blacklisted == false) {
-
-                $bank = ListOfBanks::where('code', $req->bank_code)->first();
-
-                $thisuser = User::where('api_token', $req->bearerToken())->first();
 
                 if ($thisuser->approval == 2 && $thisuser->accountLevel == 3) {
                     User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 3, 'approval' => 2,  'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);

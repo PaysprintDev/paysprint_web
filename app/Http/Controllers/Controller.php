@@ -295,14 +295,10 @@ class Controller extends BaseController
 
         if ($result->success == true) {
             // This amount is in dollars
-            $convRateA = $result->quotes->$currencyA;
-            $convRateB = $result->quotes->$currencyB;
+            $convRateA = $result->quotes->$currencyA * $markValue;
+            $convRateB = $result->quotes->$currencyB * $markValue;
 
-            if ($localcountry == $foreign) {
-                $convRate = $convRateA / $convRateB;
-            } else {
-                $convRate = ($convRateA / $convRateB) * $markValue;
-            }
+            $convRate = $convRateA / $convRateB;
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }

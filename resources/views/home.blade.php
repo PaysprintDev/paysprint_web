@@ -167,6 +167,40 @@
         @endif
 
         <div class="row">
+
+            <div class="col-md-9">
+                <div class="card" style="width: 50%;">
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            Current Plan: {{ strtoupper(Auth::user()->plan) }} <br><br>
+
+                            <form action="#" method="post" id="formElemchangeplan" class="disp-0">
+                                @csrf
+                                <input value="{{ Auth::id() }}" name="user_id">
+                            </form>
+
+                            @if (Auth::user()->plan == 'basic')
+                                <button class="btn btn-primary" onclick="changeMyPlan('changeplan')"
+                                    id="cardSubmit">Upgrade
+                                    Account</button>
+                            @else
+                                <button class="btn btn-danger" onclick="changeMyPlan('changeplan')"
+                                    id="cardSubmit">Downgrade
+                                    Account</button>
+                            @endif
+
+                            <hr>
+
+                            <a href="{{ route('pricing structure') }}">Do more with PaySprint. Check our
+                                Pricing</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+
+
             <div class="col-md-9">
                 <div class="row builder_all">
                     <div class="col-md-6 col-sm-6 builder">

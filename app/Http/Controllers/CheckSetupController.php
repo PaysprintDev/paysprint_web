@@ -15,6 +15,7 @@ use App\AddBank as AddBank;
 use App\Statement as Statement;
 use App\FeeTransaction as FeeTransaction;
 use App\AllCountries as AllCountries;
+use App\BVNVerificationList;
 use App\ClientInfo;
 use App\TransactionCost as TransactionCost;
 use App\RequestRefund as RequestRefund;
@@ -214,6 +215,22 @@ class CheckSetupController extends Controller
             $this->mailListCategorize($allusers->name, $allusers->email, $allusers->address, $allusers->telephone, $category, $allusers->country, 'Subscription');
 
             echo "Moved for approved " . $allusers->name . " in " . $allusers->country . " of " . $allusers->accountType . " category" . "<hr>";
+        }
+    }
+
+
+    // Update BVN List
+    public function bvnListUpdate()
+    {
+        $users = User::where('country', 'Nigeria')->where('bvn_number', '!=', NULL)->inRandomOrder()->take(1000)->get();
+
+        if (count($users) > 0) {
+            foreach ($users as $user) {
+                // Update BVN List
+                BVNVerificationList::updateOrCreate(['user_id' => $user->id], ['user_id' => $user->id, 'bvn_number' => $user->bvn_number, 'bvn_account_number' => $user->bvn_account_number, 'bvn_account_name' => $user->bvn_account_name, 'bvn_bank' => $user->bvn_bank]);
+            }
+
+            echo "Done";
         }
     }
 
@@ -1648,6 +1665,106 @@ class CheckSetupController extends Controller
 
             $this->mailListCategorize($users->name, $users->email, $users->address, $users->telephone, $category, $users->country, 'Subscription');
         }
+    }
+
+
+
+    // IDV COmpleted
+
+    public function idvCompletedList()
+    {
+        $getUsers = User::where('accountLevel', 3)->where('approval', 2)->inRandomOrder()->take(400)->get();
+
+        foreach ($getUsers as $users) {
+            if ($users->accountType == "Individual") {
+                $category = "IDV Completed Consumers";
+            } else {
+                $category = "IDV Completed Merchants";
+            }
+
+            $this->mailListCategorize($users->name, $users->email, $users->address, $users->telephone, $category, $users->country, 'Subscription');
+        }
+
+        echo "IDV Completed";
+    }
+
+
+    public function idvPassedList()
+    {
+        $getUsers = User::where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', '>=', 1)->inRandomOrder()->take(400)->get();
+
+        foreach ($getUsers as $users) {
+            if ($users->accountType == "Individual") {
+                $category = "IDV Passed Consumers";
+            } else {
+                $category = "IDV Passed Merchants";
+            }
+
+            $this->mailListCategorize($users->name, $users->email, $users->address, $users->telephone, $category, $users->country, 'Subscription');
+        }
+
+        echo "IDV Passed";
+    }
+
+    public function idvFailedList()
+    {
+        $getUsers = User::where('accountLevel', 2)->where('approval', 0)->where('archive', '!=', 1)->inRandomOrder()->take(400)->get();
+
+        foreach ($getUsers as $users) {
+            if ($users->accountType == "Individual") {
+                $category = "IDV Failed Consumers";
+            } else {
+                $category = "IDV Failed Merchants";
+            }
+
+            $this->mailListCategorize($users->name, $users->email, $users->address, $users->telephone, $category, $users->country, 'Subscription');
+        }
+
+        echo "IDV Failed";
+    }
+
+    public function docPendingList()
+    {
+        $getUsers = User::where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', 0)->inRandomOrder()->take(400)->get();
+
+        foreach ($getUsers as $users) {
+            if ($users->accountType == "Individual") {
+                $category = "Doc Pending Consumers";
+            } else {
+                $category = "Doc Pending Merchants";
+            }
+
+            $this->mailListCategorize($users->name, $users->email, $users->address, $users->telephone, $category, $users->country, 'Subscription');
+        }
+
+        echo "Doc Pending";
+    }
+
+    // Update Pricing Units
+    public function updatePricingUnits()
+    {
+        TransactionCost::where('structure', 'Add Funds/Money')->where('variable', '3.00')->where('fixed', '0.33')->update(['variable' => '3.30', 'fixed' => '0.5']);
+
+        echo 'Done';
+    }
+
+
+    public function suspendedAccountList()
+    {
+        $getUsers = User::where('flagged', 1)->inRandomOrder()->take(400)->get();
+
+        foreach ($getUsers as $users) {
+            if ($users->accountType == "Individual") {
+                $category = "Suspended Account Consumers";
+            } else {
+                $category = "Suspended Account Merchants";
+            }
+
+            $this->mailListCategorize($users->name, $users->email, $users->address, $users->telephone, $category, $users->country, 'Subscription');
+        }
+
+
+        echo "Suspended Account";
     }
 
 

@@ -22,11 +22,12 @@ use App\Tax;
 use App\Traits\PaysprintPoint;
 
 use App\Traits\PointsHistory;
+use App\Traits\SpecialInfo;
 
 class MerchantPageController extends Controller
 {
 
-    use PaysprintPoint, PointsHistory;
+    use PaysprintPoint, PointsHistory, SpecialInfo;
 
     public function __construct()
     {
@@ -227,6 +228,19 @@ class MerchantPageController extends Controller
     }
 
 
+    // Business Profile
+    public function businessProfile(Request $req, $id)
+    {
+        $data = [
+            'businessprofile' => $this->getBusinessProfileData($id),
+            'merchantbusiness' => $this->getThisMerchantBusiness($id),
+        ];
+
+
+        return view('businessprofile.index')->with(['pages' => 'Business Profile', 'data' => $data]);
+    }
+
+
     // Statement count
     public function statementCount()
     {
@@ -270,6 +284,9 @@ class MerchantPageController extends Controller
 
         return $data;
     }
+
+
+
 
     // Received Invoice
     public function receivedInvoice($email)
