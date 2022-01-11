@@ -144,6 +144,7 @@ Route::get('Statement', ['uses' => 'HomeController@statement', 'as' => 'statemen
 Route::get('payorganization', ['uses' => 'HomeController@payOrganization', 'as' => 'payorganization']);
 
 Route::get('contact', ['uses' => 'HomeController@contact', 'as' => 'contact']);
+Route::get('developers/community', ['uses' => 'HomeController@community', 'as' => 'community']);
 
 Route::get('Service', ['uses' => 'HomeController@service', 'as' => 'service']);
 

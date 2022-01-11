@@ -128,6 +128,9 @@
                     <li class="dropdown submenu">
                         <a href="{{ route('contact') }}">Contact</a>
                     </li>
+                    <li class="dropdown submenu">
+                        <a href="{{ route('community') }}">Community</a>
+                    </li>
 
                     <li class="dropdown submenu">
                         <a href="{{ route('login') }}">Login</a>
@@ -178,6 +181,7 @@
                             {{ Auth::user()->accountType != 'Individual' ? 'href=' . route('getStatement') : 'href=' . route('statement') }}>Transaction</a>
                     </li>
 
+                   
 
 
 
