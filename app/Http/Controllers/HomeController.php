@@ -418,6 +418,7 @@ class HomeController extends Controller
             $myCurrency = "$";
         }
 
+
         $data['pricing'] = $pricings;
         $data['currency'] = $myCurrency;
         $data['maintenance'] = $this->maintenanceBalanceWithdrawal('Consumer Monthly Subscription', $countrys);
@@ -434,7 +435,7 @@ class HomeController extends Controller
 
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
-                $this->page = 'Pricing';
+                $this->page = 'Merchant Pricing';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $country = Auth::user()->country;
@@ -446,7 +447,7 @@ class HomeController extends Controller
                 );
             } else {
                 $country = $this->myLocation()->country;
-                $this->page = 'Pricing';
+                $this->page = 'Merchant Pricing';
                 $this->name = '';
                 $data = [
                     'country' => $country,
@@ -456,7 +457,7 @@ class HomeController extends Controller
             }
         } else {
             $country = $this->myLocation()->country;
-            $this->page = 'Pricing';
+            $this->page = 'Merchant Pricing';
             $this->name = session('name');
             $this->email = session('email');
             $data = [

@@ -2,6 +2,8 @@
 
 @section('content')
     <!-- navbar- -->
+    <?php use App\Http\Controllers\TransactionCost; ?>
+
 
     <div style="overflow-y: auto !important;">
 
@@ -63,19 +65,47 @@
                                         <p class="gr-text-6 font-weight-bold mb-9"></p>
                                     </td>
                                     <td align="center">
-                                        <p class="gr-text-6 font-weight-bold mb-9">Basic</p>
+                                        <p class="gr-text-6 font-weight-bold mb-9">Free Plan (Free Forever)</p>
                                         <p class="text-danger">{{ $data['currency'] . '0.00' }} Fee</p>
                                     </td>
+
+                                    @if ($thisprices = \App\TransactionCost::where('country', $data['country'])->where('structure', 'Consumer Monthly Subscription')->first())
+
+                                        @php
+                                            $monthlyBased = $thisprices->fixed;
+                                            $yearlyBased = $thisprices->fixed * 10;
+                                        @endphp
+
+                                    @else
+                                        @php
+                                            $monthlyBased = 0;
+                                            $yearlyBased = 0;
+                                        @endphp
+                                    @endif
+
                                     <td align="center">
                                         <p class="gr-text-6 font-weight-bold mb-9">Classic</p>
-                                        <p class="text-danger">{{ $data['currency'] . $data['maintenance'] * 4.0 }}
-                                            Monthly/{{ $data['currency'] . $data['maintenance'] * 4.0 * 10 }} Annually
+                                        <p class="text-danger">
+                                            {{ $data['currency'] . number_format($monthlyBased, 2) }}
+                                            Monthly/{{ $data['currency'] . number_format($yearlyBased, 2) }} Annually
                                         </p>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <p class="gr-text-9 mb-0">No Fee Money Transfer (Local/Intl)</p>
+                                        <p class="gr-text-9 mb-0">No Charge Money Transfer (Local & Intl.)</p>
+                                    </td>
+                                    <td align="center">
+                                        <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+                                    </td>
+                                    <td align="center">
+                                        <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <p class="gr-text-9 mb-0">Pay Invoice to PaySprint Merchants</p>
                                     </td>
                                     <td align="center">
                                         <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
@@ -86,18 +116,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <p class="gr-text-9 mb-0">Pay Invoice</p>
-                                    </td>
-                                    <td align="center">
-                                        <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                    </td>
-                                    <td align="center">
-                                        <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <p class="gr-text-9 mb-0">Cross Border Bill Payments</p>
+                                        <p class="gr-text-9 mb-0">Pay Invoice to Non-PaySprint Merchants (Globally)</p>
                                     </td>
                                     <td align="center">
                                         <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
@@ -109,10 +128,11 @@
                                     </td>
                                 </tr>
 
+
                                 @if (Request::get('country') == 'Canada' || Request::get('country') == 'United States')
                                     <tr>
                                         <td>
-                                            <p class="gr-text-9 mb-0">Currency Exchange</p>
+                                            <p class="gr-text-9 mb-0">Access to Currency Exchange</p>
                                         </td>
                                         <td align="center">
                                             <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
