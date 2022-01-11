@@ -177,6 +177,9 @@ Route::get('payment/{invoice}', ['uses' => 'HomeController@payment', 'as' => 'pa
 // Payment Link for Invoice
 Route::get('payment/link/{invoice}/{country}', ['uses' => 'HomeController@paymentFromLink', 'as' => 'payment from link']);
 
+// Send Money to Merchant Via Link
+Route::get('payment/link/receivemoney/{country}', ['uses' => 'HomeController@receivePaymentFromLink', 'as' => 'receive payment from link']);
+
 Route::get('payment/sendmoney/{user_id}', ['uses' => 'HomeController@paymentOrganization', 'as' => 'sendmoney payment']);
 Route::get('new/payment/createuser', ['uses' => 'HomeController@createnewPayment', 'as' => 'create new payment']);
 Route::get('payment/receivemoney/{id}', ['uses' => 'HomeController@receiveMoney', 'as' => 'receivemoney payment']);
