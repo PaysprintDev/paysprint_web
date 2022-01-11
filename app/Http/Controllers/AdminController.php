@@ -2804,6 +2804,8 @@ class AdminController extends Controller
             $getCustomer = $this->getCustomer($req->route('id'));
 
 
+
+
             // Get all xpaytransactions where state = 1;
 
             $getxPay = $this->getxpayTrans();
