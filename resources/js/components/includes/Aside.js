@@ -461,6 +461,33 @@ class Aside extends Component {
 							<li className="nav-item">
 								<a
 									className="nav-link collapsed"
+									href="/"
+									data-bs-toggle="collapse"
+									role="button"
+									aria-expanded="true"
+									aria-controls="sidebarHome"
+								>
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+										<g data-name="icons/tabler/chart" transform="translate(0)">
+											<rect
+												data-name="Icons/Tabler/Chart background"
+												width="16"
+												height="16"
+												fill="none"
+											/>
+											<path
+												d="M.686,13.257a.686.686,0,0,1-.093-1.365l.093-.006H15.314a.686.686,0,0,1,.093,1.365l-.093.006ZM.394,9.535l-.089-.05a.688.688,0,0,1-.24-.863l.05-.088L3.773,3.048a.684.684,0,0,1,.782-.272l.095.039L7.811,4.4,11.121.257a.687.687,0,0,1,.945-.122L12.142.2,15.8,3.858a.686.686,0,0,1-.893,1.036l-.077-.067L11.713,1.712,8.536,5.685a.684.684,0,0,1-.743.225l-.1-.04L4.578,4.313,1.256,9.294a.684.684,0,0,1-.862.24Z"
+												transform="translate(0 1)"
+												fill="#1e1e1e"
+											/>
+										</g>
+									</svg>
+									&nbsp;<span className="ms-2">Home</span>
+								</a>
+							</li>
+							<li className="nav-item">
+								<a
+									className="nav-link collapsed"
 									href="#sidebarSendMoney"
 									data-bs-toggle="collapse"
 									role="button"

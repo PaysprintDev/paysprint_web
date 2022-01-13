@@ -4081,7 +4081,11 @@ class HomeController extends Controller
 
                             $resData = ['res' => 'Welcome back ' . $userExists[0]['name'], 'message' => 'success'];
 
-                            $this->generateOTP($userExists[0]['id']);
+                            if (env('APP_ENV') != 'local') {
+                                $this->generateOTP($userExists[0]['id']);
+                            }
+
+
 
                             $this->createNotification($userExists[0]['ref_code'], 'Welcome back ' . $userExists[0]['name']);
                         }

@@ -7,8 +7,7 @@ const apiToken = document.getElementById('user_api_token').value;
 const myCurrencyCode = document.getElementById('user_currency_code').value;
 
 class Start extends Component {
-
-    	componentDidMount() {
+	componentDidMount() {
 		this._isMounted = true;
 
 		try {
@@ -36,7 +35,6 @@ class Start extends Component {
 		}
 	}
 
-
 	render() {
 		return (
 			<div>
@@ -49,7 +47,7 @@ class Start extends Component {
 						<div className="container-fluid px-0">
 							<div className="row">
 								<div className="col-12 text-center pt-4 pt-md-2 py-md-5">
-									<h1>Hello Grogeous 👋</h1>
+									<h1>Hello Gorgeous 👋</h1>
 									<p className="text-black-600">
 										Start by creating a foreign exchange account TODAY!
 									</p>
@@ -57,8 +55,8 @@ class Start extends Component {
 										<img src="/cfx/assets/img/placeholder17.png" alt="Placeholder" />
 									</div>
 									<div className="py-3 p-md-3">
-										<a href="#0" className="btn btn-xl btn-primary">
-											Create FX Account
+										<a href="/currencyfx" className="btn btn-xl btn-primary">
+											Get Started
 											<svg
 												className="ms-1"
 												data-name="Icons/Tabler/Chevron Down"
