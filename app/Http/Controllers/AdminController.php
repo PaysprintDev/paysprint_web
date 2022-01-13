@@ -154,6 +154,7 @@ class AdminController extends Controller
 
 
 
+
     public function index(Request $req)
     {
 
@@ -12289,9 +12290,15 @@ class AdminController extends Controller
 
                         Auth::login($user);
 
-                        $this->generateOTP($getMerchant->id);
+                        if (env('APP_ENV') != 'local') {
+                            $this->generateOTP($getMerchant->id);
+                            $userLink = 'verification';
+                        } else {
+                            $userLink = '/merchant/dashboard';
+                        }
 
-                        $resData = ['res' => 'Logging in...', 'message' => 'success', 'link' => 'verification'];
+
+                        $resData = ['res' => 'Logging in...', 'message' => 'success', 'link' => $userLink];
 
                         $this->createNotification($checkApikey->user_id, 'Welcome back ' . $adminCheck[0]['firstname']);
                     }

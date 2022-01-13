@@ -34,7 +34,7 @@ use App\Traits\Xwireless;
 use App\Traits\PaymentGateway;
 use App\Traits\MailChimpNewsLetter;
 use App\Traits\PaysprintPoint;
-
+use App\UpgradePlan;
 
 class UserController extends Controller
 {
@@ -462,16 +462,121 @@ class UserController extends Controller
         try {
             $thisuser = User::where('api_token', $request->bearerToken())->first();
 
-            // Check my plan
-            if ($thisuser->plan == "basic") {
-                User::where('api_token', $request->bearerToken())->update(['plan' => 'classic']);
-            } else {
-                User::where('api_token', $request->bearerToken())->update(['plan' => 'basic']);
-            }
 
-            $data = User::where('api_token', $request->bearerToken())->first();;
-            $status = 200;
-            $message = 'Account successfully updated.';
+            // Check if Account is verified
+            if ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
+                $data = [];
+                $status = 400;
+                $message = 'Please upload your Utility bill with your current address for verification';
+            } else {
+
+
+                if ($thisuser->accountType == 'Individual') {
+                    $subType = 'Consumer Monthly Subscription';
+                } else {
+                    $subType = 'Merchant Monthly Subscription';
+                }
+
+                $getSub = TransactionCost::where('country', $thisuser->country)->where('structure', $subType)->first();
+
+
+
+
+
+
+
+                // Check my plan
+                if ($thisuser->plan == "basic") {
+                    $plan = 'classic';
+                    $planName = 'classic';
+                    $amount = $getSub->fixed;
+                } else {
+                    $plan = 'basic';
+                    $planName = 'Free Forever';
+                    $amount = "0";
+                }
+
+                // Check wallet Balalnce
+
+
+                if ($thisuser->wallet_balance >= $amount) {
+                    $duration = "monthly";
+
+                    User::where('api_token', $request->bearerToken())->update(['plan' => $plan]);
+
+
+
+                    UpgradePlan::updateOrInsert(['userId' => $thisuser->ref_code], ['userId' => $thisuser->ref_code, 'plan' => $plan, 'amount' => $amount, 'duration' => $duration]);
+
+                    $walletBalance = $thisuser->wallet_balance - $amount;
+
+                    User::where('id', $thisuser->id)->update(['wallet_balance' => $walletBalance]);
+
+                    // Send Mail
+                    $transaction_id = "wallet-" . date('dmY') . time();
+
+                    $activity = $subType . " of " . $thisuser->currencyCode . '' . number_format($amount, 2) . " charged from your Wallet. Your current plan is " . strtoupper($planName);
+                    $credit = 0;
+                    $debit = $amount;
+                    $reference_code = $transaction_id;
+                    $balance = 0;
+                    $trans_date = date('Y-m-d');
+                    $status = "Delivered";
+                    $action = "Wallet debit";
+                    $regards = $thisuser->ref_code;
+                    $statement_route = "wallet";
+
+
+
+                    $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', ' . $activity . '. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . ' balance in your account';
+                    $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+
+
+
+                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
+
+                    $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $sendMsg);
+
+                    $this->name = $thisuser->name;
+                    $this->email = $thisuser->email;
+                    $this->subject = $activity;
+
+                    $this->message = '<p>' . $activity . '</p><p>You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> balance in your account</p>';
+
+                    $this->monthlyChargeInsert($thisuser->ref_code, $thisuser->country, $amount, $thisuser->currencyCode);
+
+                    $this->slack($sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+
+                    $this->sendEmail($this->email, "Fund remittance");
+
+                    $usergetPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                    if (isset($usergetPhone)) {
+
+                        $sendPhone = $thisuser->telephone;
+                    } else {
+                        $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                    }
+
+                    if ($thisuser->country == "Nigeria") {
+
+                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                        $this->sendSms($sendMsg, $correctPhone);
+                    } else {
+                        $this->sendMessage($sendMsg, $sendPhone);
+                    }
+
+
+                    $data = User::where('api_token', $request->bearerToken())->first();;
+                    $status = 200;
+                    $message = 'Account successfully updated.';
+                } else {
+                    $data = [];
+                    $status = 400;
+                    $message = 'Insufficient wallet balance to complete action';
+                }
+            }
         } catch (\Throwable $th) {
             $data = [];
             $status = 400;
@@ -481,6 +586,11 @@ class UserController extends Controller
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
+    }
+
+    public function monthlyChargeInsert($ref_code, $country, $amount, $currency)
+    {
+        MonthlyFee::insert(['ref_code' => $ref_code, 'country' => $country, 'amount' => $amount, 'currency' => $currency]);
     }
 
     public function updateMerchantProfile(Request $request, Admin $admin, ClientInfo $clientinfo)

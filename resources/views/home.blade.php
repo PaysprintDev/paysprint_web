@@ -168,8 +168,8 @@
 
         <div class="row">
 
-            <div class="col-md-9">
-                <div class="card" style="width: 50%;">
+            <div class="col-md-6">
+                <div class="card" style="width: 100%;">
 
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">
@@ -199,6 +199,27 @@
                     </ul>
                 </div>
             </div>
+
+            @if (Auth::user()->plan == 'classic')
+                <div class="col-md-6">
+                    <div class="card" style="width: 100%;">
+
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                Trade FX with PaySprint <br><br>
+
+                                <a type="button" class="btn btn-primary" href="{{ route('paysprint currency exchange start') }}"
+                                    id="cardSubmit">PaySprint Currency FX</a>
+
+                                <hr>
+
+                                <a href="#">Learn more about trading on PaySprint</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            @endif
 
 
             <div class="col-md-9">
