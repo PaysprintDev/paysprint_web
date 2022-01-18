@@ -25,6 +25,7 @@ use App\Traits\PaysprintPoint;
 
 use App\Traits\PointsHistory;
 use App\Traits\SpecialInfo;
+use App\TransactionCost;
 
 class MerchantPageController extends Controller
 {
@@ -50,6 +51,7 @@ class MerchantPageController extends Controller
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
             'clientInfo' => $this->getMyClientInfo(Auth::user()->ref_code),
+            'planCost' => $this->getPlanCost(),
         ];
 
 
@@ -294,6 +296,15 @@ class MerchantPageController extends Controller
     public function getMyClientInfo($ref_code)
     {
         $data = ClientInfo::where('user_id', $ref_code)->first();
+
+        return $data;
+    }
+
+
+    // Get Plan cost
+    public function getPlanCost()
+    {
+        $data = TransactionCost::where('structure', 'Merchant Monthly Subscription')->first();
 
         return $data;
     }

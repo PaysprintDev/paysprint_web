@@ -208,7 +208,7 @@
                             <li class="list-group-item">
                                 Trade FX with PaySprint <br><br>
 
-                                <a type="button" class="btn btn-primary" href="{{ route('paysprint currency exchange start') }}"
+                                <a type="button" class="btn btn-primary" href="{{ route('paysprint currency exchange') }}"
                                     id="cardSubmit">PaySprint Currency FX</a>
 
                                 <hr>

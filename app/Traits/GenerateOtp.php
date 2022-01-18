@@ -17,10 +17,10 @@ use App\Traits\Xwireless;
 trait GenerateOtp
 {
     use Xwireless;
-    private $touser;
-    private $nameuser;
-    private $subjectuser;
-    private $messageuser;
+    public $sendToUser;
+    public $nameOfUser;
+    public $mailSubjectToUser;
+    public $messageForUser;
     // Generate Verification OTP
     public function generateOTP($userid)
     {
@@ -53,12 +53,12 @@ trait GenerateOtp
         }
 
 
-        $this->nameuser = $thisuser->name;
-        $this->touser = $thisuser->email;
-        $this->subjectuser = "Verification OTP";
-        $this->messageuser = $thisuser->name . ", " . $sendMsg;
+        $this->nameOfUser = $thisuser->name;
+        $this->sendToUser = $thisuser->email;
+        $this->mailSubjectToUser = "Verification OTP";
+        $this->messageForUser = $thisuser->name . ", " . $sendMsg;
 
-        $this->sendEmail($this->touser, 'Verify OTP');
+        $this->sendEmail($this->sendToUser, 'Verify OTP');
     }
 
 
@@ -67,10 +67,10 @@ trait GenerateOtp
         $objDemo = new \stdClass();
         $objDemo->purpose = $purpose;
         if ($purpose == 'Verify OTP') {
-            $objDemo->name = $this->nameuser;
-            $objDemo->to = $this->touser;
-            $objDemo->subject = $this->subjectuser;
-            $objDemo->message = $this->messageuser;
+            $objDemo->name = $this->nameOfUser;
+            $objDemo->to = $this->sendToUser;
+            $objDemo->subject = $this->mailSubjectToUser;
+            $objDemo->message = $this->messageForUser;
         }
 
         Mail::to($objDemoa)

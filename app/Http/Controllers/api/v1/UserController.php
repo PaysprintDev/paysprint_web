@@ -35,6 +35,7 @@ use App\Traits\PaymentGateway;
 use App\Traits\MailChimpNewsLetter;
 use App\Traits\PaysprintPoint;
 use App\UpgradePlan;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -504,9 +505,9 @@ class UserController extends Controller
 
                     User::where('api_token', $request->bearerToken())->update(['plan' => $plan]);
 
+                    $expire_date = Carbon::now()->addMonth()->toDateTimeString();
 
-
-                    UpgradePlan::updateOrInsert(['userId' => $thisuser->ref_code], ['userId' => $thisuser->ref_code, 'plan' => $plan, 'amount' => $amount, 'duration' => $duration]);
+                    UpgradePlan::updateOrInsert(['userId' => $thisuser->ref_code], ['userId' => $thisuser->ref_code, 'plan' => $plan, 'amount' => $amount, 'duration' => $duration, 'expire_date' => $expire_date]);
 
                     $walletBalance = $thisuser->wallet_balance - $amount;
 

@@ -51,12 +51,13 @@ use App\RequestRefund as RequestRefund;
 use App\Traits\Xwireless;
 use App\Traits\PaymentGateway;
 use App\Traits\PaysprintPoint;
+use App\Traits\IDVCheck;
 use Twilio\Rest\Preview\Marketplace;
 
 class MoneyTransferController extends Controller
 {
 
-    use Xwireless, PaymentGateway, PaysprintPoint;
+    use Xwireless, PaymentGateway, PaysprintPoint, IDVCheck;
 
     public $to;
     public $name;
@@ -795,6 +796,8 @@ class MoneyTransferController extends Controller
                 } else {
                     // Get Sender in User
                     $sender = User::where('api_token', $req->bearerToken())->first();
+
+
 
 
                     $withdrawLimit = $this->getWithdrawalLimit($sender->country, $sender->id);

@@ -37,7 +37,8 @@
 
                 @if (Auth::user()->plan == 'basic')
                     <button class="btn btn-success" onclick="changeMyPlan('changeplan')" id="cardSubmit">Upgrade
-                        Account</button>
+                        Account for
+                        {{ Auth::user()->currencySymbol . '' . number_format($data['planCost']->fixed, 2) }}</button>
                 @else
                     <button class="btn btn-danger" onclick="changeMyPlan('changeplan')" id="cardSubmit">Downgrade
                         Account</button>
@@ -210,10 +211,22 @@
                             @endif
 
 
-                            <li>
-                                <a class="nav-link menu-title" href="{{ route('cash advance') }}"><i
-                                        data-feather="shopping-bag"></i><span>Merchant Cash Advance</span></a>
-                            </li>
+                            @if (Auth::user()->plan == 'classic')
+
+                                <li>
+                                    <a class="nav-link menu-title" href="{{ route('cash advance') }}"><i
+                                            data-feather="shopping-bag"></i><span>Merchant Cash Advance</span></a>
+                                </li>
+
+                            @else
+
+                                <li>
+                                    <a class="nav-link menu-title" href="#"><i
+                                            data-feather="shopping-bag"></i><span>Merchant Cash Advance <br><small
+                                                class="text-danger text-center">[Upgrade account]</small></span></a>
+                                </li>
+
+                            @endif
                             <li>
 
                                 <a class="nav-link menu-title link-nav " href="{{ route('ordering system') }}"><i
@@ -221,12 +234,24 @@
                                             class="text-danger text-center">[Coming
                                             Soon]</small></span></a>
                             </li>
-                            <li>
 
-                                <a class="nav-link menu-title link-nav" href="javascript:void()"
-                                    onclick="whatyouOffer('{{ Auth::user()->email }}')"><i
-                                        data-feather="database"></i><span>Manage Rental Property </span></a>
-                            </li>
+                            @if (Auth::user()->plan == 'classic')
+                                <li>
+
+                                    <a class="nav-link menu-title link-nav" href="javascript:void()"
+                                        onclick="whatyouOffer('{{ Auth::user()->email }}')"><i
+                                            data-feather="database"></i><span>Manage Rental Property </span></a>
+                                </li>
+
+                            @else
+
+                                <li>
+                                    <a class="nav-link menu-title" href="#"><i
+                                            data-feather="shopping-bag"></i><span>Manage Rental Property <br><small
+                                                class="text-danger text-center">[Upgrade account]</small></span></a>
+                                </li>
+
+                            @endif
 
 
                             <li class="sidebar-main-title">

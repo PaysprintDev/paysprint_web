@@ -289,6 +289,8 @@
                 </div>
 
                 <div class="col-xl-7 box-col-12 des-xl-100 dashboard-sec">
+
+                    @if (Auth::user()->plan == 'classic')
                     <div class="row">
                         <div class="col-xl-6 col-md-3 col-sm-6 box-col-3 des-xl-25 rate-sec">
                             <div class="card income-card card-primary">
@@ -370,6 +372,8 @@
                         </div>
                     </div>
 
+                    @endif
+
                     @if (Auth::user()->plan == 'classic')
                         <div class="row">
                             <div class="col-xl-12 col-md-6 col-sm-12 box-col-6 des-xl-25 rate-sec">
@@ -385,7 +389,7 @@
                                                 <p>Trade FX with PaySprint</p>
 
                                                 <a type="button" class="btn btn-success"
-                                                    href="{{ route('paysprint currency exchange start') }}">PaySprint
+                                                    href="{{ route('paysprint currency exchange') }}">PaySprint
                                                     Currency FX</a>
 
 
