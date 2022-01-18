@@ -481,7 +481,7 @@
 
 
                                     <label for="size_of_transaction"><span class="reqField">*</span> Size of
-                                        Trancation to be expected</label>
+                                        Transaction to be expected</label>
                                     <select name="size_of_transaction" id="size_of_transaction"
                                         class="form-control input_box">
                                         <option value="">Select Transaction size</option>

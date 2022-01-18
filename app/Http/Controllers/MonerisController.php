@@ -127,13 +127,14 @@ use App\Traits\ExpressPayment;
 use App\Traits\ElavonPayment;
 use App\Traits\Xwireless;
 use App\Traits\PaysprintPoint;
+use App\Traits\IDVCheck;
 
 use Throwable;
 
 class MonerisController extends Controller
 {
 
-    use PaymentGateway, PaystackPayment, ExpressPayment, ElavonPayment, Xwireless, PaysprintPoint;
+    use PaymentGateway, PaystackPayment, ExpressPayment, ElavonPayment, Xwireless, PaysprintPoint, IDVCheck;
 
     public $to;
     public $name;
@@ -2410,7 +2411,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     'amount' => 'required|string',
                     'country' => 'required|string',
                     'select_wallet' => 'required|string',
-                    'file' => 'required|mimes:jpg,jpeg,png,PNG,JPEG,JPG',
+                    'file' => 'required|mimes:jpg,jpeg,png,pdf,xls,xlsx,XLS, XLSX,PDF,PNG,JPEG,JPG',
                     'transaction_pin' => 'required|string',
                     'purpose' => 'required|string',
                 ]);
@@ -2499,6 +2500,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                             'account_number' => $req->account_number,
                                             'bank_name' => $req->bank_name,
                                             'sort_code' => $req->sort_code,
+                                            'beneficiary_address' => $req->beneficiary_address,
+                                            'beneficiary_city' => $req->beneficiary_city,
                                             'currencyCode' => $getCurrencyCode->currencyCode
                                         ]);
                                     } else {
@@ -3118,6 +3121,28 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     }
 
 
+    public function paymentInShop(Request $req)
+    {
+
+        try {
+            $data = true;
+            $message = "Shop payment test successfull..";
+            $status = 200;
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON(
+            $resData,
+            $status
+        );
+    }
+
+
 
     public function myInvoiceComment(Request $req, $id)
     {
@@ -3229,7 +3254,29 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
 
+    // Check IDV Verification
+    public function checkMyIdv(Request $req)
+    {
 
+        try {
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+
+            $response = $this->checkUsersPassAccount($thisuser->id);
+
+            $data = $response;
+            $message = 'Success';
+            $status = 200;
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
 
 
     // Add Money to Wallet
@@ -3996,8 +4043,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 $monerisDeductamount = $req->conversionamount;
                 // $monerisDeductamount = $this->currencyConvert($req->currencyCode, $req->amount);
 
-                $getGateway = AllCountries::where('name', $thisuser->country)->first();
 
+
+                $getGateway = AllCountries::where('name', $thisuser->country)->first();
                 if ($thisuser->country == "Canada" && $thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
 
                     // If Account not approved then they cannot pay bills

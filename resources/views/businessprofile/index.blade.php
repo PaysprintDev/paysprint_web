@@ -252,6 +252,19 @@
                                     <br><br>
 
 
+                                    <div class="col-md-6">
+                                        <span class="title-infos"><i class="far fa-credit-card"></i> Payment
+                                            Link</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <b><a class="text-primary"
+                                                href="{{ route('my shop payment', ['shop' => $data['businessprofile']->businessname, 'id' => $data['businessprofile']->ref_code]) }}"
+                                                style="text-decoration: underline;">Make
+                                                payment</a></b>
+                                    </div>
+                                    <br><br>
+
+
                                 </div>
                                 <br><br>
 
@@ -295,6 +308,14 @@
 
 
                                 </div>
+
+                                <hr>
+
+                                <a type="button"
+                                    href="{{ route('my shop payment', ['shop' => $data['businessprofile']->businessname, 'id' => $data['businessprofile']->ref_code]) }}"
+                                    class="btn btn-primary btn-block"><i class="far fa-credit-card"></i> Click to make
+                                    payment</a>
+
                                 <br><br>
 
 

@@ -266,45 +266,45 @@
                                         <div class="commissionInfo"></div>
                                     </div>
 
-                                    @if (Auth::user()->approval == 2 && Auth::user()->accountLevel == 3)
+                                    {{-- @if (Auth::user()->approval == 2 && Auth::user()->accountLevel == 3) --}}
 
 
-                                        @if ($data['paymentgateway']->gateway == 'PayStack')
+                                    @if ($data['paymentgateway']->gateway == 'PayStack')
 
-                                            {{-- <div class="card-footer"> <a type="button" id="epsButton" href="" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </a></div> --}}
+                                        {{-- <div class="card-footer"> <a type="button" id="epsButton" href="" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </a></div> --}}
 
 
-                                            <div class="card-footer"> <button type="button"
-                                                    onclick="payWithPaystack('{{ Auth::user()->email }}')"
-                                                    class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
-                                                    Confirm
-                                                </button></div>
+                                        <div class="card-footer"> <button type="button"
+                                                onclick="payWithPaystack('{{ Auth::user()->email }}')"
+                                                class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
+                                                Confirm
+                                            </button></div>
 
-                                        @elseif($data['paymentgateway']->gateway == "Stripe")
+                                    @elseif($data['paymentgateway']->gateway == 'Stripe')
 
-                                            <div class="card-footer"> <button type="submit"
-                                                    class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Pay
-                                                    Now</button></div>
+                                        <div class="card-footer"> <button type="submit"
+                                                class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Pay
+                                                Now</button></div>
 
-                                        @elseif($data['paymentgateway']->gateway == "PayPal")
-                                            {{-- PayPal --}}
-                                            <div class="card-footer" id="paypal-button-container"></div>
-                                        @else
-                                            <div class="card-footer"> <button type="button"
-                                                    onclick="handShake('addmoney')"
-                                                    class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
-                                                    Confirm
-                                                </button></div>
-                                        @endif
-
+                                    @elseif($data['paymentgateway']->gateway == 'PayPal')
+                                        {{-- PayPal --}}
+                                        <div class="card-footer" id="paypal-button-container"></div>
                                     @else
+                                        <div class="card-footer"> <button type="button"
+                                                onclick="handShake('addmoney')"
+                                                class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
+                                                Confirm
+                                            </button></div>
+                                    @endif
+
+                                    {{-- @else
                                         <div class="card-footer"> <button type="button"
                                                 onclick="restriction('addmoney', '{{ Auth::user()->name }}')"
                                                 class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
                                                 Confirm
                                             </button></div>
 
-                                    @endif
+                                    @endif --}}
 
 
 
@@ -717,8 +717,8 @@
 
                 var amount = (+netamount + +feeamount).toFixed(2);
                 var handler = PaystackPop.setup({
-                    key: '{{ env('PAYSTACK_PUBLIC_KEY') }}',
-                    //   key: '{{ env('PAYSTACK_LOCAL_PUBLIC_KEY') }}',
+                    // key: '{{ env('PAYSTACK_PUBLIC_KEY') }}',
+                    key: '{{ env('PAYSTACK_LOCAL_PUBLIC_KEY') }}',
                     email: email,
                     amount: amount * 100,
                     currency: "NGN",
