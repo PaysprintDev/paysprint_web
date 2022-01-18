@@ -260,7 +260,7 @@ class MerchantPageController extends Controller
         $data = [
             'businessprofile' => $this->getBusinessProfileData($id),
             'merchantbusiness' => $this->getThisMerchantBusiness($id),
-            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'getfiveNotifications' => $this->getfiveUserNotifications($id),
         ];
 
 
