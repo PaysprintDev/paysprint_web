@@ -33,7 +33,7 @@ class ShopController extends Controller
 
         $data = array(
             'pages' => $shop . ' Shop',
-            'currencyCode' => $this->getCountryCode(Auth::user()->country),
+            'currencyCode' => $this->getCountryCode($thisuser->country),
             'continent' => $timezone[0],
             'name' => $thisuser->businessname,
             'currencyCode' => $this->getCountryCode($getCurrencyCode->name),
