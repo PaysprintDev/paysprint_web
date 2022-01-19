@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Support\Facades\Auth;
-use Session;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
@@ -11,7 +11,6 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 
 use App\User as User;
-
 
 class LoginController extends Controller
 {
@@ -36,7 +35,9 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/verification';
+
+
+    // protected $redirectTo = '/verification';
 
     /**
      * Create a new controller instance.
@@ -49,10 +50,28 @@ class LoginController extends Controller
     }
 
 
+    public function redirectTo()
+    {
+        if (env('APP_ENV') == 'local') {
+            return '/';
+        } else {
+            return '/verification';
+        }
+    }
+
+
 
     public function logout(Request $request)
     {
+
+        if (Auth::check() == true && Auth::user()->accountType == "Individual") {
+            $home = '/';
+        } else {
+            $home = '/AdminLogin';
+        }
+
         Auth::logout();
-        return redirect('/');
+        Session::flush();
+        return redirect($home);
     }
 }

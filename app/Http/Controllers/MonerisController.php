@@ -127,13 +127,14 @@ use App\Traits\ExpressPayment;
 use App\Traits\ElavonPayment;
 use App\Traits\Xwireless;
 use App\Traits\PaysprintPoint;
+use App\Traits\IDVCheck;
 
 use Throwable;
 
 class MonerisController extends Controller
 {
 
-    use PaymentGateway, PaystackPayment, ExpressPayment, ElavonPayment, Xwireless, PaysprintPoint;
+    use PaymentGateway, PaystackPayment, ExpressPayment, ElavonPayment, Xwireless, PaysprintPoint, IDVCheck;
 
     public $to;
     public $name;
@@ -2410,7 +2411,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     'amount' => 'required|string',
                     'country' => 'required|string',
                     'select_wallet' => 'required|string',
-                    'file' => 'required|mimes:jpg,jpeg,png,PNG,JPEG,JPG',
+                    'file' => 'required|mimes:jpg,jpeg,png,pdf,xls,xlsx,XLS, XLSX,PDF,PNG,JPEG,JPG',
                     'transaction_pin' => 'required|string',
                     'purpose' => 'required|string',
                 ]);
@@ -2499,6 +2500,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                             'account_number' => $req->account_number,
                                             'bank_name' => $req->bank_name,
                                             'sort_code' => $req->sort_code,
+                                            'beneficiary_address' => $req->beneficiary_address,
+                                            'beneficiary_city' => $req->beneficiary_city,
                                             'currencyCode' => $getCurrencyCode->currencyCode
                                         ]);
                                     } else {
@@ -3118,6 +3121,28 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     }
 
 
+    public function paymentInShop(Request $req)
+    {
+
+        try {
+            $data = true;
+            $message = "Shop payment test successfull..";
+            $status = 200;
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON(
+            $resData,
+            $status
+        );
+    }
+
+
 
     public function myInvoiceComment(Request $req, $id)
     {
@@ -3229,7 +3254,29 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
 
+    // Check IDV Verification
+    public function checkMyIdv(Request $req)
+    {
 
+        try {
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+
+            $response = $this->checkUsersPassAccount($thisuser->id);
+
+            $data = $response;
+            $message = 'Success';
+            $status = 200;
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
 
 
     // Add Money to Wallet
@@ -3985,6 +4032,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     $grossAmount = $req->amount + $req->commissiondeduct;
                 }
 
+
                 $thisuser = User::where('api_token', $req->bearerToken())->first();
 
                 // Log::info($thisuser->name." wants to add ".$req->currencyCode." ".$req->amount." to their wallet.");
@@ -3995,104 +4043,70 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 $monerisDeductamount = $req->conversionamount;
                 // $monerisDeductamount = $this->currencyConvert($req->currencyCode, $req->amount);
 
+
+
                 $getGateway = AllCountries::where('name', $thisuser->country)->first();
+                if ($thisuser->country == "Canada" && $thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
 
-                if ($req->paymentToken != null) {
+                    // If Account not approved then they cannot pay bills
 
-                    $getTransactionCode = $this->verifyTransaction($req->paymentToken);
+                    // Cannot withdraw minimum balance
 
-                    $gateway = ucfirst($getGateway->gateway);
+                    $data = [];
+                    $message = "Please upload your Utility bill with your current address for verification";
+                    $status = 400;
 
-                    if ($getTransactionCode->status == true) {
+                    // Log::info('Oops!, '.$thisuser->name.' has '.$message);
 
-                        $referenced_code = $req->paymentToken;
-                    } else {
-                        $referenced_code = $req->paymentToken;
-                    }
+                    $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                } else {
+                    if ($req->paymentToken != null) {
 
+                        $getTransactionCode = $this->verifyTransaction($req->paymentToken);
 
+                        $gateway = ucfirst($getGateway->gateway);
 
-                    // Update Wallet Balance
-                    $walletBal = $thisuser->wallet_balance + $req->amounttosend;
-                    User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal]);
+                        if ($getTransactionCode->status == true) {
 
-                    $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
-
-                    $activity = "Added " . $req->currencyCode . '' . number_format($req->amounttosend, 2) . " to Wallet including a fee charge of " . $req->currencyCode . '' . number_format($req->commissiondeduct, 2) . " was deducted from your Debit Card";
-                    $credit = $req->amounttosend;
-                    $debit = 0;
-                    $reference_code = $referenced_code;
-                    $balance = 0;
-                    $trans_date = date('Y-m-d');
-                    $status = "Delivered";
-                    $action = "Wallet credit";
-                    $regards = $thisuser->ref_code;
-                    $statement_route = "wallet";
-
-                    // Senders statement
-                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
-
-                    $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
-
-                    // Notification
-
-
-                    $this->name = $thisuser->name;
-                    $this->email = $thisuser->email;
-                    $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " now added to your wallet with PaySprint";
-
-                    $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
-
-                    $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
-
-                    $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                    if (isset($userPhone)) {
-
-                        $sendPhone = $thisuser->telephone;
-                    } else {
-                        $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                    }
-
-                    if ($thisuser->country == "Nigeria") {
-
-                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                        $this->sendSms($sendMsg, $correctPhone);
-                    } else {
-                        $this->sendMessage($sendMsg, $sendPhone);
-                    }
+                            $referenced_code = $req->paymentToken;
+                        } else {
+                            $referenced_code = $req->paymentToken;
+                        }
 
 
 
-
-
-
-                    $checkBVN = $this->bvnVerificationCharge($req->bearerToken());
-
-                    if ($checkBVN == "charge") {
-
-                        $getUser = User::where('api_token', $req->bearerToken())->first();
                         // Update Wallet Balance
-                        $walletBalance = $getUser->wallet_balance - 15;
-                        User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBalance, 'bvn_verification' => 2]);
+                        $walletBal = $thisuser->wallet_balance + $req->amounttosend;
+                        User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal]);
 
-                        $activity = "Bank Verification (BVN) Charge of " . $req->currencyCode . '' . number_format(15, 2) . " was deducted from your Wallet";
-                        $credit = 0;
-                        $debit = 15;
-                        $reference_number = "wallet-" . date('dmY') . time();
+                        $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
+
+                        $activity = "Added " . $req->currencyCode . '' . number_format($req->amounttosend, 2) . " to Wallet including a fee charge of " . $req->currencyCode . '' . number_format($req->commissiondeduct, 2) . " was deducted from your Debit Card";
+                        $credit = $req->amounttosend;
+                        $debit = 0;
+                        $reference_code = $referenced_code;
                         $balance = 0;
                         $trans_date = date('Y-m-d');
                         $status = "Delivered";
-                        $action = "Wallet debit";
-                        $regards = $getUser->ref_code;
+                        $action = "Wallet credit";
+                        $regards = $thisuser->ref_code;
                         $statement_route = "wallet";
 
                         // Senders statement
-                        $this->insStatement($thisuser->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
 
-                        $this->getfeeTransaction($reference_number, $thisuser->ref_code, 15, 0, 15);
+                        $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
-                        $sendMsg = $activity . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' balance in your account';
+                        // Notification
+
+
+                        $this->name = $thisuser->name;
+                        $this->email = $thisuser->email;
+                        $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " now added to your wallet with PaySprint";
+
+                        $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+
+                        $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
                         $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -4110,368 +4124,529 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         } else {
                             $this->sendMessage($sendMsg, $sendPhone);
                         }
-                    }
-
-                    $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-
-                    $data = $userInfo;
-                    $status = 200;
-                    $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to your wallet';
-
-                    $this->createNotification($thisuser->ref_code, $sendMsg);
-
-                    $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country);
-
-                    $this->updatePoints($thisuser->id, 'Add money');
-
-                    // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
-
-                    $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-
-                    $this->sendEmail($this->email, "Fund remittance");
-                } else {
-
-
-                    if ($thisuser->country == "United States" || $thisuser->country == "USA" || $thisuser->country == "United States of America") {
-
-                        // $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $req->amounttosend, "purchase", "PaySprint/Vimfile Add Money to the Wallet of ".$thisuser->name, $req->mode);
-
-
-                        $response = $this->fortisPay($req->amounttosend, $req->card_id, $thisuser->zip, $thisuser->name, $thisuser->email, $thisuser->telephone, $thisuser->city, $thisuser->state, "live");
 
 
 
 
-                        if ($response->status != 401) {
 
 
-                            $responseCode = $response->transaction->reason_code_id;
+                        $checkBVN = $this->bvnVerificationCharge($req->bearerToken());
 
+                        if ($checkBVN == "charge") {
 
-                            switch ($responseCode) {
-                                case 1000:
-                                    $responseMessage = "Approved";
-                                    break;
-                                case 1001:
-                                    $responseMessage = "AuthCompleted";
-                                    break;
-                                case 1002:
-                                    $responseMessage = "Forced";
-                                    break;
-                                case 1003:
-                                    $responseMessage = "AuthOnly Declined";
-                                    break;
-                                case 1004:
-                                    $responseMessage = "Validation Failure (System Run Trx)";
-                                    break;
-                                case 1005:
-                                    $responseMessage = "Processor Response Invalid";
-                                    break;
-                                case 1200:
-                                    $responseMessage = "Voided";
-                                    break;
-                                case 1240:
-                                    $responseMessage = "Approved, optional fields are missing (Paya ACH only)";
-                                    break;
-                                case 1500:
-                                    $responseMessage = "Generic Decline";
-                                    break;
-                                case 1510:
-                                    $responseMessage = "Call";
-                                    break;
-                                case 1518:
-                                    $responseMessage = "Transaction Not Permitted - Terminal";
-                                    break;
-                                case 1520:
-                                    $responseMessage = "Pickup Card";
-                                    break;
-                                case 1530:
-                                    $responseMessage = "Retry Trx";
-                                    break;
-                                case 1531:
-                                    $responseMessage = "Communication Error";
-                                    break;
-                                case 1540:
-                                    $responseMessage = "Setup Issue, contact Support";
-                                    break;
-                                case 1541:
-                                    $responseMessage = "Device is not signature capable";
-                                    break;
-                                case 1588:
-                                    $responseMessage = "Data could not be de-tokenized";
-                                    break;
-                                case 1599:
-                                    $responseMessage = "Other Reason";
-                                    break;
-                                case 1601:
-                                    $responseMessage = "Generic Decline";
-                                    break;
-                                case 1602:
-                                    $responseMessage = "Call";
-                                    break;
-                                case 1603:
-                                    $responseMessage = "No Reply";
-                                    break;
-                                case 1604:
-                                    $responseMessage = "Pickup Card - No Fraud";
-                                    break;
-                                case 1605:
-                                    $responseMessage = "Pickup Card - Fraud";
-                                    break;
-                                case 1606:
-                                    $responseMessage = "Pickup Card - Lost";
-                                    break;
-                                case 1607:
-                                    $responseMessage = "Pickup Card - Stolen";
-                                    break;
-                                case 1608:
-                                    $responseMessage = "Account Error";
-                                    break;
-                                case 1609:
-                                    $responseMessage = "Already Reversed";
-                                    break;
-                                case 1610:
-                                    $responseMessage = "Bad PIN";
-                                    break;
-                                case 1611:
-                                    $responseMessage = "Cashback Exceeded";
-                                    break;
-                                case 1612:
-                                    $responseMessage = "Cashback Not Available";
-                                    break;
-                                case 1613:
-                                    $responseMessage = "CID Error";
-                                    break;
-                                case 1614:
-                                    $responseMessage = "Date Error";
-                                    break;
-                                case 1615:
-                                    $responseMessage = "Do Not Honor";
-                                    break;
-                                case 1616:
-                                    $responseMessage = "NSF";
-                                    break;
-                                case 1617:
-                                    $responseMessage = "Exceeded Withdrawal Limit";
-                                    break;
-                                case 1618:
-                                    $responseMessage = "Invalid Service Code";
-                                    break;
-                                case 1619:
-                                    $responseMessage = "Exceeded activity limit";
-                                    break;
-                                case 1620:
-                                    $responseMessage = "Violation";
-                                    break;
-                                case 1621:
-                                    $responseMessage = "Encryption Error";
-                                    break;
-                                case 1622:
-                                    $responseMessage = "Card Expired";
-                                    break;
-                                case 1623:
-                                    $responseMessage = "Renter";
-                                    break;
-                                case 1624:
-                                    $responseMessage = "Security Violation";
-                                    break;
-                                case 1625:
-                                    $responseMessage = "Card Not Permitted";
-                                    break;
-                                case 1626:
-                                    $responseMessage = "Trans Not Permitted";
-                                    break;
-                                case 1627:
-                                    $responseMessage = "System Error";
-                                    break;
-                                case 1628:
-                                    $responseMessage = "Bad Merchant ID";
-                                    break;
-                                case 1629:
-                                    $responseMessage = "Duplicate Batch (Already Closed)";
-                                    break;
-                                case 1630:
-                                    $responseMessage = "Batch Rejected";
-                                    break;
-                                case 1631:
-                                    $responseMessage = "Account Closed";
-                                    break;
-                                case 1640:
-                                    $responseMessage = "Required fields are missing (ACH only)";
-                                    break;
-                                case 1641:
-                                    $responseMessage = "Previously declined transaction (1640)";
-                                    break;
-                                case 1651:
-                                    $responseMessage = "Max Sending - Throttle Limit Hit (ACH only)";
-                                    break;
-                                case 1652:
-                                    $responseMessage = "Max Attempts Exceeded";
-                                    break;
-                                case 1653:
-                                    $responseMessage = "Contact Support";
-                                    break;
-                                case 1654:
-                                    $responseMessage = "Voided - Online Reversal Failed";
-                                    break;
-                                case 1655:
-                                    $responseMessage = "Decline (AVS Auto Reversal)";
-                                    break;
-                                case 1656:
-                                    $responseMessage = "Decline (Partial Auth Auto Reversal)";
-                                    break;
-                                case 1657:
-                                    $responseMessage = "Decline (Partial Auth Auto Reversal)";
-                                    break;
-                                case 1658:
-                                    $responseMessage = "Expired Authorization";
-                                    break;
-                                case 1659:
-                                    $responseMessage = "Declined - Partial Approval not Supported";
-                                    break;
-                                case 1660:
-                                    $responseMessage = "Bank Account Error, please delete and re-add Account Vault";
-                                    break;
-                                case 1661:
-                                    $responseMessage = "Declined AuthIncrement";
-                                    break;
-                                case 1662:
-                                    $responseMessage = "Auto Reversal - Processor can't settle";
-                                    break;
-                                case 1663:
-                                    $responseMessage = "Manager Needed (Needs override transaction)";
-                                    break;
-                                case 1664:
-                                    $responseMessage = "Account Vault Not Found: Sharing Group Unavailable";
-                                    break;
-                                case 1665:
-                                    $responseMessage = "Contact Not Found: Sharing Group Unavailable";
-                                    break;
-                                case 1701:
-                                    $responseMessage = "Chip Reject";
-                                    break;
-                                case 1800:
-                                    $responseMessage = "Incorrect CVV";
-                                    break;
-                                case 1801:
-                                    $responseMessage = "Duplicate Transaction";
-                                    break;
-                                case 1802:
-                                    $responseMessage = "MID/TID Not Registered";
-                                    break;
-                                case 1803:
-                                    $responseMessage = "Stop Recurring";
-                                    break;
-                                case 1804:
-                                    $responseMessage = "No Transactions in Batch";
-                                    break;
-                                case 1805:
-                                    $responseMessage = "Batch Does Not Exist";
-                                    break;
+                            $getUser = User::where('api_token', $req->bearerToken())->first();
+                            // Update Wallet Balance
+                            $walletBalance = $getUser->wallet_balance - 15;
+                            User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBalance, 'bvn_verification' => 2]);
 
-                                default:
-                                    $responseMessage = "N/A";
-                            }
+                            $activity = "Bank Verification (BVN) Charge of " . $req->currencyCode . '' . number_format(15, 2) . " was deducted from your Wallet";
+                            $credit = 0;
+                            $debit = 15;
+                            $reference_number = "wallet-" . date('dmY') . time();
+                            $balance = 0;
+                            $trans_date = date('Y-m-d');
+                            $status = "Delivered";
+                            $action = "Wallet debit";
+                            $regards = $getUser->ref_code;
+                            $statement_route = "wallet";
 
+                            // Senders statement
+                            $this->insStatement($thisuser->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
 
-                            if ($response->transaction->reason_code_id == 1000) {
+                            $this->getfeeTransaction($reference_number, $thisuser->ref_code, 15, 0, 15);
 
-                                $reference_code = $response->transaction->id;
+                            $sendMsg = $activity . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' balance in your account';
 
-                                $gateway = "Fortispay";
+                            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
+                            if (isset($userPhone)) {
 
-
-                                $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
-
-                                $cardNo = str_repeat("*", strlen($cardDetails->card_number) - 4) . substr($cardDetails->card_number, -4);
-
-                                // Update Wallet Balance
-                                $walletBal = $thisuser->wallet_balance + $req->amounttosend;
-                                User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal]);
-
-                                $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
-
-                                $activity = "Added " . $req->currencyCode . '' . number_format($req->amounttosend, 2) . " to Wallet including fee charge of " . $req->currencyCode . '' . number_format($req->commissiondeduct, 2) . " was deducted from Card: " . wordwrap($cardNo, 4, '-', true);
-                                $credit = $req->amounttosend;
-                                $debit = 0;
-                                $reference_code = $response->transaction->id;
-                                $balance = 0;
-                                $trans_date = date('Y-m-d');
-                                $status = "Delivered";
-                                $action = "Wallet credit";
-                                $regards = $thisuser->ref_code;
-                                $statement_route = "wallet";
-
-                                // Senders statement
-                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
-
-                                $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
-
-
-
-
-                                // Notification
-
-
-                                $this->name = $thisuser->name;
-                                $this->email = $thisuser->email;
-                                $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " now added to your wallet with PaySprint";
-
-                                $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
-
-                                $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
-
-                                $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                if (isset($userPhone)) {
-
-                                    $sendPhone = $thisuser->telephone;
-                                } else {
-                                    $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                                }
-
-                                if ($thisuser->country == "Nigeria") {
-
-                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                                    $this->sendSms($sendMsg, $correctPhone);
-                                } else {
-                                    $this->sendMessage($sendMsg, $sendPhone);
-                                }
-
-                                $this->sendEmail($this->email, "Fund remittance");
-
-                                $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-
-                                $data = $userInfo;
-                                $status = 200;
-                                $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to your wallet';
-
-                                $this->createNotification($thisuser->ref_code, $sendMsg);
-
-                                $this->updatePoints($thisuser->id, 'Add money');
-
-                                // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
-
-                                $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-
-                                $monerisactivity = $thisuser->name . ' ' . $sendMsg;
-                                $this->keepRecord($reference_code, $responseCode, $monerisactivity, $gateway, $thisuser->country);
+                                $sendPhone = $thisuser->telephone;
                             } else {
-                                $data = [];
-                                $message = $responseCode;
-                                $status = 400;
-
-                                $gateway = "Fortispay";
-
-                                // Log::critical('Oops!! '.$thisuser->name.' '.$message);
-
-                                $this->slack('Oops!, ' . $thisuser->name . ' ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-
-                                $monerisactivity = $thisuser->name . ' ' . $message;
-                                $this->keepRecord("", $responseCode, $monerisactivity, $gateway, $thisuser->country);
+                                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
                             }
+
+                            if ($thisuser->country == "Nigeria") {
+
+                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                $this->sendSms($sendMsg, $correctPhone);
+                            } else {
+                                $this->sendMessage($sendMsg, $sendPhone);
+                            }
+                        }
+
+                        $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+
+                        $data = $userInfo;
+                        $status = 200;
+                        $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to your wallet';
+
+                        $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                        $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country);
+
+                        $this->updatePoints($thisuser->id, 'Add money');
+
+                        // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
+
+                        $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                        $this->sendEmail($this->email, "Fund remittance");
+                    } else {
+
+
+                        if ($thisuser->country == "United States" || $thisuser->country == "USA" || $thisuser->country == "United States of America") {
+
+                            // $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $req->amounttosend, "purchase", "PaySprint/Vimfile Add Money to the Wallet of ".$thisuser->name, $req->mode);
+
+
+                            $response = $this->fortisPay($req->amounttosend, $req->card_id, $thisuser->zip, $thisuser->name, $thisuser->email, $thisuser->telephone, $thisuser->city, $thisuser->state, "live");
+
+
+
+
+                            if ($response->status != 401) {
+
+
+                                $responseCode = $response->transaction->reason_code_id;
+
+
+                                switch ($responseCode) {
+                                    case 1000:
+                                        $responseMessage = "Approved";
+                                        break;
+                                    case 1001:
+                                        $responseMessage = "AuthCompleted";
+                                        break;
+                                    case 1002:
+                                        $responseMessage = "Forced";
+                                        break;
+                                    case 1003:
+                                        $responseMessage = "AuthOnly Declined";
+                                        break;
+                                    case 1004:
+                                        $responseMessage = "Validation Failure (System Run Trx)";
+                                        break;
+                                    case 1005:
+                                        $responseMessage = "Processor Response Invalid";
+                                        break;
+                                    case 1200:
+                                        $responseMessage = "Voided";
+                                        break;
+                                    case 1240:
+                                        $responseMessage = "Approved, optional fields are missing (Paya ACH only)";
+                                        break;
+                                    case 1500:
+                                        $responseMessage = "Generic Decline";
+                                        break;
+                                    case 1510:
+                                        $responseMessage = "Call";
+                                        break;
+                                    case 1518:
+                                        $responseMessage = "Transaction Not Permitted - Terminal";
+                                        break;
+                                    case 1520:
+                                        $responseMessage = "Pickup Card";
+                                        break;
+                                    case 1530:
+                                        $responseMessage = "Retry Trx";
+                                        break;
+                                    case 1531:
+                                        $responseMessage = "Communication Error";
+                                        break;
+                                    case 1540:
+                                        $responseMessage = "Setup Issue, contact Support";
+                                        break;
+                                    case 1541:
+                                        $responseMessage = "Device is not signature capable";
+                                        break;
+                                    case 1588:
+                                        $responseMessage = "Data could not be de-tokenized";
+                                        break;
+                                    case 1599:
+                                        $responseMessage = "Other Reason";
+                                        break;
+                                    case 1601:
+                                        $responseMessage = "Generic Decline";
+                                        break;
+                                    case 1602:
+                                        $responseMessage = "Call";
+                                        break;
+                                    case 1603:
+                                        $responseMessage = "No Reply";
+                                        break;
+                                    case 1604:
+                                        $responseMessage = "Pickup Card - No Fraud";
+                                        break;
+                                    case 1605:
+                                        $responseMessage = "Pickup Card - Fraud";
+                                        break;
+                                    case 1606:
+                                        $responseMessage = "Pickup Card - Lost";
+                                        break;
+                                    case 1607:
+                                        $responseMessage = "Pickup Card - Stolen";
+                                        break;
+                                    case 1608:
+                                        $responseMessage = "Account Error";
+                                        break;
+                                    case 1609:
+                                        $responseMessage = "Already Reversed";
+                                        break;
+                                    case 1610:
+                                        $responseMessage = "Bad PIN";
+                                        break;
+                                    case 1611:
+                                        $responseMessage = "Cashback Exceeded";
+                                        break;
+                                    case 1612:
+                                        $responseMessage = "Cashback Not Available";
+                                        break;
+                                    case 1613:
+                                        $responseMessage = "CID Error";
+                                        break;
+                                    case 1614:
+                                        $responseMessage = "Date Error";
+                                        break;
+                                    case 1615:
+                                        $responseMessage = "Do Not Honor";
+                                        break;
+                                    case 1616:
+                                        $responseMessage = "NSF";
+                                        break;
+                                    case 1617:
+                                        $responseMessage = "Exceeded Withdrawal Limit";
+                                        break;
+                                    case 1618:
+                                        $responseMessage = "Invalid Service Code";
+                                        break;
+                                    case 1619:
+                                        $responseMessage = "Exceeded activity limit";
+                                        break;
+                                    case 1620:
+                                        $responseMessage = "Violation";
+                                        break;
+                                    case 1621:
+                                        $responseMessage = "Encryption Error";
+                                        break;
+                                    case 1622:
+                                        $responseMessage = "Card Expired";
+                                        break;
+                                    case 1623:
+                                        $responseMessage = "Renter";
+                                        break;
+                                    case 1624:
+                                        $responseMessage = "Security Violation";
+                                        break;
+                                    case 1625:
+                                        $responseMessage = "Card Not Permitted";
+                                        break;
+                                    case 1626:
+                                        $responseMessage = "Trans Not Permitted";
+                                        break;
+                                    case 1627:
+                                        $responseMessage = "System Error";
+                                        break;
+                                    case 1628:
+                                        $responseMessage = "Bad Merchant ID";
+                                        break;
+                                    case 1629:
+                                        $responseMessage = "Duplicate Batch (Already Closed)";
+                                        break;
+                                    case 1630:
+                                        $responseMessage = "Batch Rejected";
+                                        break;
+                                    case 1631:
+                                        $responseMessage = "Account Closed";
+                                        break;
+                                    case 1640:
+                                        $responseMessage = "Required fields are missing (ACH only)";
+                                        break;
+                                    case 1641:
+                                        $responseMessage = "Previously declined transaction (1640)";
+                                        break;
+                                    case 1651:
+                                        $responseMessage = "Max Sending - Throttle Limit Hit (ACH only)";
+                                        break;
+                                    case 1652:
+                                        $responseMessage = "Max Attempts Exceeded";
+                                        break;
+                                    case 1653:
+                                        $responseMessage = "Contact Support";
+                                        break;
+                                    case 1654:
+                                        $responseMessage = "Voided - Online Reversal Failed";
+                                        break;
+                                    case 1655:
+                                        $responseMessage = "Decline (AVS Auto Reversal)";
+                                        break;
+                                    case 1656:
+                                        $responseMessage = "Decline (Partial Auth Auto Reversal)";
+                                        break;
+                                    case 1657:
+                                        $responseMessage = "Decline (Partial Auth Auto Reversal)";
+                                        break;
+                                    case 1658:
+                                        $responseMessage = "Expired Authorization";
+                                        break;
+                                    case 1659:
+                                        $responseMessage = "Declined - Partial Approval not Supported";
+                                        break;
+                                    case 1660:
+                                        $responseMessage = "Bank Account Error, please delete and re-add Account Vault";
+                                        break;
+                                    case 1661:
+                                        $responseMessage = "Declined AuthIncrement";
+                                        break;
+                                    case 1662:
+                                        $responseMessage = "Auto Reversal - Processor can't settle";
+                                        break;
+                                    case 1663:
+                                        $responseMessage = "Manager Needed (Needs override transaction)";
+                                        break;
+                                    case 1664:
+                                        $responseMessage = "Account Vault Not Found: Sharing Group Unavailable";
+                                        break;
+                                    case 1665:
+                                        $responseMessage = "Contact Not Found: Sharing Group Unavailable";
+                                        break;
+                                    case 1701:
+                                        $responseMessage = "Chip Reject";
+                                        break;
+                                    case 1800:
+                                        $responseMessage = "Incorrect CVV";
+                                        break;
+                                    case 1801:
+                                        $responseMessage = "Duplicate Transaction";
+                                        break;
+                                    case 1802:
+                                        $responseMessage = "MID/TID Not Registered";
+                                        break;
+                                    case 1803:
+                                        $responseMessage = "Stop Recurring";
+                                        break;
+                                    case 1804:
+                                        $responseMessage = "No Transactions in Batch";
+                                        break;
+                                    case 1805:
+                                        $responseMessage = "Batch Does Not Exist";
+                                        break;
+
+                                    default:
+                                        $responseMessage = "N/A";
+                                }
+
+
+                                if ($response->transaction->reason_code_id == 1000) {
+
+                                    $reference_code = $response->transaction->id;
+
+                                    $gateway = "Fortispay";
+
+
+
+                                    $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
+
+                                    $cardNo = str_repeat("*", strlen($cardDetails->card_number) - 4) . substr($cardDetails->card_number, -4);
+
+                                    // Update Wallet Balance
+                                    $walletBal = $thisuser->wallet_balance + $req->amounttosend;
+                                    User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal]);
+
+                                    $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
+
+                                    $activity = "Added " . $req->currencyCode . '' . number_format($req->amounttosend, 2) . " to Wallet including fee charge of " . $req->currencyCode . '' . number_format($req->commissiondeduct, 2) . " was deducted from Card: " . wordwrap($cardNo, 4, '-', true);
+                                    $credit = $req->amounttosend;
+                                    $debit = 0;
+                                    $reference_code = $response->transaction->id;
+                                    $balance = 0;
+                                    $trans_date = date('Y-m-d');
+                                    $status = "Delivered";
+                                    $action = "Wallet credit";
+                                    $regards = $thisuser->ref_code;
+                                    $statement_route = "wallet";
+
+                                    // Senders statement
+                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+
+                                    $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+
+
+
+
+                                    // Notification
+
+
+                                    $this->name = $thisuser->name;
+                                    $this->email = $thisuser->email;
+                                    $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " now added to your wallet with PaySprint";
+
+                                    $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+
+                                    $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+
+                                    $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                    if (isset($userPhone)) {
+
+                                        $sendPhone = $thisuser->telephone;
+                                    } else {
+                                        $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                                    }
+
+                                    if ($thisuser->country == "Nigeria") {
+
+                                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                        $this->sendSms($sendMsg, $correctPhone);
+                                    } else {
+                                        $this->sendMessage($sendMsg, $sendPhone);
+                                    }
+
+                                    $this->sendEmail($this->email, "Fund remittance");
+
+                                    $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+
+                                    $data = $userInfo;
+                                    $status = 200;
+                                    $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to your wallet';
+
+                                    $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                                    $this->updatePoints($thisuser->id, 'Add money');
+
+                                    // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
+
+                                    $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                                    $monerisactivity = $thisuser->name . ' ' . $sendMsg;
+                                    $this->keepRecord($reference_code, $responseCode, $monerisactivity, $gateway, $thisuser->country);
+                                } else {
+                                    $data = [];
+                                    $message = $responseCode;
+                                    $status = 400;
+
+                                    $gateway = "Fortispay";
+
+                                    // Log::critical('Oops!! '.$thisuser->name.' '.$message);
+
+                                    $this->slack('Oops!, ' . $thisuser->name . ' ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                                    $monerisactivity = $thisuser->name . ' ' . $message;
+                                    $this->keepRecord("", $responseCode, $monerisactivity, $gateway, $thisuser->country);
+                                }
+                            } else {
+
+                                $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "purchase", "PaySprint/Vimfile Add Money to the Wallet of " . $thisuser->name, $req->mode);
+
+
+                                if ($response->responseData['ResponseCode'] == "000" || $response->responseData['ResponseCode'] == "001" || $response->responseData['ResponseCode'] == "002" || $response->responseData['ResponseCode'] == "003" || $response->responseData['ResponseCode'] == "004" || $response->responseData['ResponseCode'] == "005" || $response->responseData['ResponseCode'] == "006" || $response->responseData['ResponseCode'] == "007" || $response->responseData['ResponseCode'] == "008" || $response->responseData['ResponseCode'] == "009" || $response->responseData['ResponseCode'] == "010" || $response->responseData['ResponseCode'] == "023" || $response->responseData['ResponseCode'] == "024" || $response->responseData['ResponseCode'] == "025" || $response->responseData['ResponseCode'] == "026" || $response->responseData['ResponseCode'] == "027" || $response->responseData['ResponseCode'] == "028" || $response->responseData['ResponseCode'] == "029") {
+
+                                    $reference_code = $response->responseData['ReceiptId'];
+
+
+
+                                    $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
+
+                                    $cardNo = str_repeat("*", strlen($cardDetails->card_number) - 4) . substr($cardDetails->card_number, -4);
+
+                                    // Update Wallet Balance
+                                    $walletBal = $thisuser->wallet_balance + $req->amounttosend;
+                                    User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal]);
+
+                                    $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
+
+                                    $activity = "Added " . $req->currencyCode . '' . number_format($req->amounttosend, 2) . " to Wallet including fee charge of " . $req->currencyCode . '' . number_format($req->commissiondeduct, 2) . " was deducted from Card: " . wordwrap($cardNo, 4, '-', true);
+                                    $credit = $req->amounttosend;
+                                    $debit = 0;
+                                    $reference_code = $response->responseData['ReceiptId'];
+                                    $balance = 0;
+                                    $trans_date = date('Y-m-d');
+                                    $status = "Delivered";
+                                    $action = "Wallet credit";
+                                    $regards = $thisuser->ref_code;
+                                    $statement_route = "wallet";
+
+                                    // Senders statement
+                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+
+                                    $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+
+
+
+
+                                    // Notification
+
+
+                                    $this->name = $thisuser->name;
+                                    $this->email = $thisuser->email;
+                                    $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " now added to your wallet with PaySprint";
+
+                                    $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+
+                                    $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+
+                                    $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                    if (isset($userPhone)) {
+
+                                        $sendPhone = $thisuser->telephone;
+                                    } else {
+                                        $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                                    }
+
+                                    if ($thisuser->country == "Nigeria") {
+
+                                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                        $this->sendSms($sendMsg, $correctPhone);
+                                    } else {
+                                        $this->sendMessage($sendMsg, $sendPhone);
+                                    }
+
+                                    $this->sendEmail($this->email, "Fund remittance");
+
+                                    $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+
+                                    $data = $userInfo;
+                                    $status = 200;
+                                    $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to your wallet';
+
+                                    $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                                    $this->updatePoints($thisuser->id, 'Add money');
+
+
+
+                                    // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
+
+                                    $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                                    $monerisactivity = $thisuser->name . ' ' . $sendMsg;
+                                    $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
+                                } else {
+                                    $data = [];
+                                    $message = $response->responseData['Message'] . " If the error persists, kindly login on the web app at https://paysprint.ca to continue your transactions.";
+                                    $status = 400;
+
+                                    // Log::critical('Oops!! '.$thisuser->name.' '.$message);
+
+                                    $this->slack('Oops!, ' . $thisuser->name . ' ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                                    $monerisactivity = $thisuser->name . ' ' . $message;
+                                    $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
+                                }
+                            }
+                        } elseif ($thisuser->country == "Nigeria") {
+
+                            $data = [];
+                            $message = "We cannot process your transaction. Kindly update your app from the Play Store or App Store. Thanks";
+                            $status = 400;
+
+                            // Log::critical('Oops!! '.$thisuser->name.' '.$message);
+
+                            $this->slack('Oops!, ' . $thisuser->name . ' ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                         } else {
+
+
 
                             $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "purchase", "PaySprint/Vimfile Add Money to the Wallet of " . $thisuser->name, $req->mode);
 
@@ -4551,8 +4726,6 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                 $this->updatePoints($thisuser->id, 'Add money');
 
-
-
                                 // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
                                 $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
@@ -4571,115 +4744,6 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $monerisactivity = $thisuser->name . ' ' . $message;
                                 $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
                             }
-                        }
-                    } elseif ($thisuser->country == "Nigeria") {
-
-                        $data = [];
-                        $message = "We cannot process your transaction. Kindly update your app from the Play Store or App Store. Thanks";
-                        $status = 400;
-
-                        // Log::critical('Oops!! '.$thisuser->name.' '.$message);
-
-                        $this->slack('Oops!, ' . $thisuser->name . ' ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                    } else {
-
-
-
-                        $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "purchase", "PaySprint/Vimfile Add Money to the Wallet of " . $thisuser->name, $req->mode);
-
-
-                        if ($response->responseData['ResponseCode'] == "000" || $response->responseData['ResponseCode'] == "001" || $response->responseData['ResponseCode'] == "002" || $response->responseData['ResponseCode'] == "003" || $response->responseData['ResponseCode'] == "004" || $response->responseData['ResponseCode'] == "005" || $response->responseData['ResponseCode'] == "006" || $response->responseData['ResponseCode'] == "007" || $response->responseData['ResponseCode'] == "008" || $response->responseData['ResponseCode'] == "009" || $response->responseData['ResponseCode'] == "010" || $response->responseData['ResponseCode'] == "023" || $response->responseData['ResponseCode'] == "024" || $response->responseData['ResponseCode'] == "025" || $response->responseData['ResponseCode'] == "026" || $response->responseData['ResponseCode'] == "027" || $response->responseData['ResponseCode'] == "028" || $response->responseData['ResponseCode'] == "029") {
-
-                            $reference_code = $response->responseData['ReceiptId'];
-
-
-
-                            $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
-
-                            $cardNo = str_repeat("*", strlen($cardDetails->card_number) - 4) . substr($cardDetails->card_number, -4);
-
-                            // Update Wallet Balance
-                            $walletBal = $thisuser->wallet_balance + $req->amounttosend;
-                            User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal]);
-
-                            $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
-
-                            $activity = "Added " . $req->currencyCode . '' . number_format($req->amounttosend, 2) . " to Wallet including fee charge of " . $req->currencyCode . '' . number_format($req->commissiondeduct, 2) . " was deducted from Card: " . wordwrap($cardNo, 4, '-', true);
-                            $credit = $req->amounttosend;
-                            $debit = 0;
-                            $reference_code = $response->responseData['ReceiptId'];
-                            $balance = 0;
-                            $trans_date = date('Y-m-d');
-                            $status = "Delivered";
-                            $action = "Wallet credit";
-                            $regards = $thisuser->ref_code;
-                            $statement_route = "wallet";
-
-                            // Senders statement
-                            $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
-
-                            $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
-
-
-
-
-                            // Notification
-
-
-                            $this->name = $thisuser->name;
-                            $this->email = $thisuser->email;
-                            $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " now added to your wallet with PaySprint";
-
-                            $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
-
-                            $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
-
-                            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                            if (isset($userPhone)) {
-
-                                $sendPhone = $thisuser->telephone;
-                            } else {
-                                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                            }
-
-                            if ($thisuser->country == "Nigeria") {
-
-                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                                $this->sendSms($sendMsg, $correctPhone);
-                            } else {
-                                $this->sendMessage($sendMsg, $sendPhone);
-                            }
-
-                            $this->sendEmail($this->email, "Fund remittance");
-
-                            $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-
-                            $data = $userInfo;
-                            $status = 200;
-                            $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to your wallet';
-
-                            $this->createNotification($thisuser->ref_code, $sendMsg);
-
-                            $this->updatePoints($thisuser->id, 'Add money');
-
-                            // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
-
-                            $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-
-                            $monerisactivity = $thisuser->name . ' ' . $sendMsg;
-                            $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
-                        } else {
-                            $data = [];
-                            $message = $response->responseData['Message'] . " If the error persists, kindly login on the web app at https://paysprint.ca to continue your transactions.";
-                            $status = 400;
-
-                            // Log::critical('Oops!! '.$thisuser->name.' '.$message);
-
-                            $this->slack('Oops!, ' . $thisuser->name . ' ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-
-                            $monerisactivity = $thisuser->name . ' ' . $message;
-                            $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
                         }
                     }
                 }

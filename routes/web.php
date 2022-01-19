@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\MerchantPageController;
+use App\Http\Controllers\ShopController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,6 +25,7 @@ use App\Http\Controllers\MerchantPageController;
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
 // Route::get('feecharge', 'MaintenanceFeeCharge@monthlyMaintenaceFee');
+Route::get('renewsub', 'MaintenanceFeeCharge@renewSubscription');
 
 Route::get('quicksetup', 'CheckSetupController@updateQuickSetup');
 Route::get('autodepositoff', 'CheckSetupController@autoDepositOff');
@@ -86,6 +88,15 @@ Route::get('numberofwithdrawalsformerchant', 'CheckSetupController@updateMerchan
 Route::get('reversal', 'CheckSetupController@reverseFund');
 
 
+
+
+// Generate Shop Links...
+
+
+
+
+
+
 // Vie List of Referred
 Route::get('/myreferredlist/{ref_code}', ['uses' => 'ReferralsController@index', 'as' => 'referrals list of users']);
 
@@ -124,6 +135,7 @@ Route::get('/clear', function () {
 	// Artisan::call('view:clear');
 	return "Package Cleared!";
 });
+
 
 // Major Routes
 
@@ -180,12 +192,12 @@ Route::get('payment/{invoice}', ['uses' => 'HomeController@payment', 'as' => 'pa
 // Payment Link for Invoice
 Route::get('payment/link/{invoice}/{country}', ['uses' => 'HomeController@paymentFromLink', 'as' => 'payment from link']);
 
-// Send Money to Merchant Via Link
-Route::get('payment/link/receivemoney/{country}', ['uses' => 'HomeController@receivePaymentFromLink', 'as' => 'receive payment from link']);
-
 Route::get('payment/sendmoney/{user_id}', ['uses' => 'HomeController@paymentOrganization', 'as' => 'sendmoney payment']);
 Route::get('new/payment/createuser', ['uses' => 'HomeController@createnewPayment', 'as' => 'create new payment']);
 Route::get('payment/receivemoney/{id}', ['uses' => 'HomeController@receiveMoney', 'as' => 'receivemoney payment']);
+
+
+
 
 
 // Cash Advance Pages
@@ -301,6 +313,9 @@ Route::prefix('merchant')->group(function () {
 	Route::get('/orderingsystem', [MerchantPageController::class, 'orderingSystem'])->name('ordering system');
 
 	Route::get('businessprofile/{id}', [MerchantPageController::class, 'businessProfile'])->name('merchant business profile');
+
+
+	Route::get('/{shop}/{id}', [ShopController::class, 'index'])->name('my shop payment');
 });
 
 
@@ -882,7 +897,7 @@ Route::prefix('Admin/aml')->group(function () {
 
 	Route::get('refundmoneyrequestbycountryaml', ['uses' => 'AmlController@refundMoneyRequestByCountryAml', 'as' => 'refund aml details by country']);
 
-	Route::get('merchantbankdetail', ['uses' => 'AmlController@merchantBanksDetails', 'as' => 'merchant banking details']);
+	Route::get('merchantbankdetail', ['uses' => 'AmlController@merchantBanksDetails', 'as' => 'aml merchant banking details']);
 
 	Route::get('merchantbankdetailbycountry', ['uses' => 'AmlController@merchantBankDetailByCountryAml', 'as' => 'merchant bank detail by country']);
 

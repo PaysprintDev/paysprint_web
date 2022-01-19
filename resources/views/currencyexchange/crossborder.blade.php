@@ -308,6 +308,36 @@
 
                                             </div>
                                         </div>
+
+                                        <div class="form-group"> <label for="beneficiary_address">
+                                                <h6>Beneficiary Address</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <div class="input-group-append"> <span
+                                                        class="input-group-text text-muted currencySymb">
+                                                        <img
+                                                            src="https://img.icons8.com/ios/20/000000/address--v1.png" />
+                                                    </span> </div> <input type="text" name="beneficiary_address"
+                                                    id="beneficiary_address" class="form-control" value="">
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group"> <label for="beneficiary_city">
+                                                <h6>Beneficiary City</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <div class="input-group-append"> <span
+                                                        class="input-group-text text-muted currencySymb">
+                                                        <img
+                                                            src="https://img.icons8.com/fluency-systems-regular/20/000000/city-block.png" />
+                                                    </span> </div> <input type="text" name="beneficiary_city"
+                                                    id="beneficiary_city" class="form-control" value="">
+
+                                            </div>
+                                        </div>
+
                                     </div>
 
 
@@ -407,7 +437,8 @@
                     // Do Ajax and Render Selected Wallet Balance
                     var country = $('#country').val();
 
-                    var routeString = `/api/v1/fxwallets?country=${country}`;
+                    // var routeString = `/api/v1/fxwallets?country=${country}`;
+                    var routeString = `/api/v1/fxwallets`;
 
                     var route = routeString;
 
@@ -471,7 +502,8 @@
                     // Do Ajax and Render Selected Wallet Balance
                     var country = $('#country').val();
 
-                    var routeString = `/api/v1/fxwallets?country=${country}`;
+                    // var routeString = `/api/v1/fxwallets?country=${country}`;
+                    var routeString = `/api/v1/fxwallets`;
 
                     var route = routeString;
 

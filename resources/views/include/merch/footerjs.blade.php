@@ -1451,6 +1451,69 @@
 
     }
 
+    function changeMyPlan(val) {
+        if ('changeplan') {
+            var formData = new FormData(formElemchangeplan);
+
+            swal({
+                    title: "Are you sure?",
+                    text: "Click OK to proceed",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        route = "{{ URL('/api/v1/changeplan') }}";
+
+                        Pace.restart();
+                        Pace.track(function() {
+                            setHeaders();
+                            jQuery.ajax({
+                                url: route,
+                                method: 'post',
+                                data: formData,
+                                cache: false,
+                                processData: false,
+                                contentType: false,
+                                dataType: 'JSON',
+                                beforeSend: function() {
+                                    $('#cardSubmit').text('Please wait...');
+                                },
+                                success: function(result) {
+
+                                    $('#cardSubmit').text('Upgrade Account');
+
+
+                                    if (result.status == 200) {
+                                        swal("Success", result.message, "success");
+                                        setTimeout(function() {
+                                            location.reload();
+                                        }, 2000);
+                                    } else {
+                                        swal("Oops", result.message, "error");
+                                    }
+
+
+                                },
+                                error: function(err) {
+                                    $('#cardSubmit').text('Upgrade Account');
+                                    swal("Oops", err.responseJSON.message, "error");
+
+                                }
+
+                            });
+                        });
+                    } else {
+
+                    }
+                });
+
+
+
+        }
+    }
+
     function setHeaders() {
         $.ajaxSetup({
             headers: {

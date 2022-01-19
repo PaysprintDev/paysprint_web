@@ -69,4 +69,12 @@ trait MailChimpNewsLetter
             return $th->getMessage();
         }
     }
+
+
+
+    // Send Transactional Mail API
+
+    public function mailChimSendMessage()
+    {
+    }
 }

@@ -48,6 +48,12 @@ Route::prefix('/v1')->group(function () {
 
         // pay Invoice
         Route::post('payinvoicelink',  ['uses' => 'MonerisController@payInvoiceLink'])->name('pay invoice link from gateway');
+
+        Route::post('payinshop',  ['uses' => 'MonerisController@paymentInShop'])->name('pay in shop');
+
+
+        // Do Investors data...
+        Route::post('investordetails',  ['uses' => 'api\v1\InvestorRelationController@investorDetails'])->name('Investor details');
     });
 
 
@@ -196,6 +202,10 @@ Route::prefix('/v1')->group(function () {
         Route::post('deletecard',  ['uses' => 'api\v1\CardController@deleteCard'])->name('delete card');
 
         Route::post('deletebank',  ['uses' => 'api\v1\CardController@deleteBank'])->name('delete bank');
+
+
+        // Check users verification...
+        Route::get('checkidv', ['uses' => 'MonerisController@checkMyIdv'])->name('check my identity');
 
 
         Route::post('addmoneytowallet',  ['uses' => 'MonerisController@addMoneyToWallet'])->name('add money to wallet');

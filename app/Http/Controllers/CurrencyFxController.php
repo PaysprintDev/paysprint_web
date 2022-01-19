@@ -41,6 +41,10 @@ class CurrencyFxController extends Controller
             Auth::login($user);
         }
 
+        if (Auth::user()->plan != 'classic') {
+            return redirect()->back();
+        }
+
 
 
         return view('currencyexchange.start');
@@ -63,6 +67,10 @@ class CurrencyFxController extends Controller
             $user = User::where('email', session('email'))->first();
 
             Auth::login($user);
+        }
+
+        if (Auth::user()->plan != 'classic') {
+            return redirect()->back();
         }
 
         // Check if User has a forex account

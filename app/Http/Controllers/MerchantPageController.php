@@ -13,16 +13,19 @@ use App\ImportExcel as ImportExcel;
 use App\ImportExcelLink as ImportExcelLink;
 use App\InvoicePayment as InvoicePayment;
 use App\Points;
+use App\ClientInfo;
 
 use App\ClaimedPoints;
 
 use App\HistoryReport;
 use App\ServiceType;
+use App\Notifications;
 use App\Tax;
 use App\Traits\PaysprintPoint;
 
 use App\Traits\PointsHistory;
 use App\Traits\SpecialInfo;
+use App\TransactionCost;
 
 class MerchantPageController extends Controller
 {
@@ -40,12 +43,18 @@ class MerchantPageController extends Controller
         $data = [
             'receivedInvoice' => $this->receivedInvoice(Auth::user()->email),
             'allPaidInvoice' => $this->allPaidInvoice(),
+            'totalPaidInvoice' => $this->totalPaidInvoice(),
             'invoiceLink' => $this->invoiceLink(),
             'invoiceList' => $this->invoiceList(),
             'statementCount' => $this->statementCount(),
             'paidInvoiceCount' => $this->paidInvoiceCount(),
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'clientInfo' => $this->getMyClientInfo(Auth::user()->ref_code),
+            'planCost' => $this->getPlanCost(),
         ];
+
+
 
 
         return view('merchant.pages.dashboard')->with(['pages' => 'dashboard', 'data' => $data]);
@@ -55,7 +64,8 @@ class MerchantPageController extends Controller
     {
 
         $data = [
-            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
         ];
 
 
@@ -69,7 +79,8 @@ class MerchantPageController extends Controller
             'getServiceType' => $this->getServiceTypes(),
             'getTax' => $this->getTax(Auth::user()->id),
             'getpersonalData' => $this->getmyPersonalDetail(Auth::user()->ref_code),
-            'getimt' => $this->getActiveCountries()
+            'getimt' => $this->getActiveCountries(),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
         ];
 
 
@@ -81,7 +92,8 @@ class MerchantPageController extends Controller
     {
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
-            'getServiceType' => $this->getServiceTypes()
+            'getServiceType' => $this->getServiceTypes(),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
         ];
 
         return view('merchant.pages.createinvoicetypes')->with(['pages' => 'invoice types', 'data' => $data]);
@@ -92,7 +104,8 @@ class MerchantPageController extends Controller
 
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
-            'getTax' => $this->getTax(Auth::user()->id)
+            'getTax' => $this->getTax(Auth::user()->id),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
         ];
 
         return view('merchant.pages.setuptax')->with(['pages' => 'set up tax', 'data' => $data]);
@@ -102,7 +115,8 @@ class MerchantPageController extends Controller
     {
 
         $data = [
-            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
         ];
 
         return view('merchant.pages.invoicestatement')->with(['pages' => 'invoice statement', 'data' => $data]);
@@ -112,7 +126,8 @@ class MerchantPageController extends Controller
     {
 
         $data = [
-            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
         ];
 
         return view('merchant.pages.walletstatement')->with(['pages' => 'wallet statement', 'data' => $data]);
@@ -122,7 +137,8 @@ class MerchantPageController extends Controller
     {
 
         $data = [
-            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
         ];
 
         return view('merchant.pages.sentinvoice')->with(['pages' => 'sent invoice', 'data' => $data]);
@@ -132,7 +148,8 @@ class MerchantPageController extends Controller
     {
 
         $data = [
-            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
         ];
 
         return view('merchant.pages.paidinvoice')->with(['pages' => 'paid invoice', 'data' => $data]);
@@ -142,7 +159,8 @@ class MerchantPageController extends Controller
     {
 
         $data = [
-            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
         ];
 
         return view('merchant.pages.pendinginvoice')->with(['pages' => 'pending invoice', 'data' => $data]);
@@ -152,7 +170,8 @@ class MerchantPageController extends Controller
     {
 
         $data = [
-            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
         ];
 
         return view('merchant.pages.customerbalancereport')->with(['pages' => 'balance report', 'data' => $data]);
@@ -162,7 +181,8 @@ class MerchantPageController extends Controller
     {
 
         $data = [
-            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
         ];
 
         return view('merchant.pages.taxesreport')->with(['pages' => 'taxes report', 'data' => $data]);
@@ -172,7 +192,8 @@ class MerchantPageController extends Controller
     {
 
         $data = [
-            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
         ];
 
         return view('merchant.pages.invoicetypereport')->with(['pages' => 'invoice type report', 'data' => $data]);
@@ -182,7 +203,8 @@ class MerchantPageController extends Controller
     {
 
         $data = [
-            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
         ];
 
         return view('merchant.pages.recurringtype')->with(['pages' => 'recurring type', 'data' => $data]);
@@ -192,7 +214,8 @@ class MerchantPageController extends Controller
     {
 
         $data = [
-            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
         ];
 
         return view('merchant.pages.profile')->with(['pages' => 'profile', 'data' => $data]);
@@ -201,7 +224,8 @@ class MerchantPageController extends Controller
     {
 
         $data = [
-            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
         ];
 
         return view('merchant.pages.invoicepage')->with(['pages' => 'invoice page', 'data' => $data]);
@@ -211,7 +235,8 @@ class MerchantPageController extends Controller
     {
 
         $data = [
-            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
         ];
 
         return view('merchant.pages.paymentmethod')->with(['pages' => 'invoice page', 'data' => $data]);
@@ -221,7 +246,8 @@ class MerchantPageController extends Controller
     {
 
         $data = [
-            'mypoints' => $this->getAcquiredPoints(Auth::user()->id)
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
         ];
 
         return view('merchant.pages.orderingsystem')->with(['pages' => 'invoice page', 'data' => $data]);
@@ -234,6 +260,7 @@ class MerchantPageController extends Controller
         $data = [
             'businessprofile' => $this->getBusinessProfileData($id),
             'merchantbusiness' => $this->getThisMerchantBusiness($id),
+            'getfiveNotifications' => $this->getfiveUserNotifications($id),
         ];
 
 
@@ -257,6 +284,31 @@ class MerchantPageController extends Controller
         return $data;
     }
 
+    // Get 5 latest Notifications
+    public function getfiveUserNotifications($ref_code)
+    {
+        $data = Notifications::where('ref_code', $ref_code)->latest()->take(5)->get();
+
+        return $data;
+    }
+
+    // Get My Client Info
+    public function getMyClientInfo($ref_code)
+    {
+        $data = ClientInfo::where('user_id', $ref_code)->first();
+
+        return $data;
+    }
+
+
+    // Get Plan cost
+    public function getPlanCost()
+    {
+        $data = TransactionCost::where('structure', 'Merchant Monthly Subscription')->first();
+
+        return $data;
+    }
+
 
     // Invoice list
     public function invoiceList()
@@ -271,6 +323,16 @@ class MerchantPageController extends Controller
     public function allPaidInvoice()
     {
         $data = InvoicePayment::where('client_id', Auth::user()->ref_code)->orderBy('created_at', 'DESC')->get();
+
+
+        return $data;
+    }
+
+
+    // Get Total Paid Invoices
+    public function totalPaidInvoice()
+    {
+        $data = InvoicePayment::where('client_id', Auth::user()->ref_code)->sum('amount');
 
 
         return $data;

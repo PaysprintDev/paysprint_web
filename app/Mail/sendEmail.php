@@ -49,10 +49,10 @@ class sendEmail extends Mailable implements ShouldQueue
             } elseif ($this->mail->purpose == "Account is credited" || $this->mail->purpose == "Password Reset") {
                 return $this->subject($this->mail->subject)->view('mails.cardupdate')
                     ->with('maildata', $this->mail)->delay(Carbon::now()->addMinutes(5));
-            } elseif ($this->mail->purpose == "Fund remittance" || $this->mail->purpose == "Your PaySprint Referral Account Actiavted" || $this->mail->purpose == "Incomplete Setup" || $this->mail->purpose == "Refund Request" || $this->mail->purpose == "Verify OTP") {
+            } elseif ($this->mail->purpose == "Fund remittance" || $this->mail->purpose == "Your PaySprint Referral Account Actiavted" || $this->mail->purpose == "Incomplete Setup" || $this->mail->purpose == "Refund Request") {
                 return $this->subject($this->mail->subject)->view('mails.epay')
                     ->with('maildata', $this->mail)->delay(Carbon::now()->addMinutes(5));
-            } elseif ($this->mail->purpose == "Cash withdrawal request") {
+            } elseif ($this->mail->purpose == "Cash withdrawal request" || $this->mail->purpose == "Verify OTP" || $this->mail->purpose == "Account Verification") {
                 return $this->subject($this->mail->purpose)->view('mails.epay')
                     ->with('maildata', $this->mail)->delay(Carbon::now()->addMinutes(5));
             } elseif ($this->mail->purpose == "Flagged Account") {
