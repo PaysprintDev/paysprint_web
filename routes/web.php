@@ -145,6 +145,8 @@ Route::get('payorganization', ['uses' => 'HomeController@payOrganization', 'as' 
 
 Route::get('contact', ['uses' => 'HomeController@contact', 'as' => 'contact']);
 Route::get('developers/community', ['uses' => 'HomeController@community', 'as' => 'community']);
+Route::get('developers/askquestion', ['uses' => 'HomeController@askQuestion', 'as' => 'askquestion']);
+Route::get('developers/submessage', ['uses' => 'HomeController@subMessage', 'as' => 'submessage']);
 
 Route::get('Service', ['uses' => 'HomeController@service', 'as' => 'service']);
 

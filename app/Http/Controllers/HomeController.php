@@ -3591,7 +3591,68 @@ class HomeController extends Controller
             ];
         }
 
-        return view('main.community')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+        return view('main.developer.community')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+    public function askQuestion(Request $req)
+    {
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Contact';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
+                );
+            } else {
+                $this->page = 'community';
+                $this->name = '';
+                $data = [
+                    'continent' => $this->timezone[0]
+                ];
+            }
+        } else {
+            $this->page = 'community';
+            $this->name = session('name');
+            $this->email = session('email');
+            $data = [
+                'continent' => $this->timezone[0]
+            ];
+        }
+
+        return view('main.developer.askquestion')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+    public function subMessage(Request $req)
+    {
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Contact';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
+                );
+            } else {
+                $this->page = 'community';
+                $this->name = '';
+                $data = [
+                    'continent' => $this->timezone[0]
+                ];
+            }
+        } else {
+            $this->page = 'community';
+            $this->name = session('name');
+            $this->email = session('email');
+            $data = [
+                'continent' => $this->timezone[0]
+            ];
+        }
+
+        return view('main.developer.submessage')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
