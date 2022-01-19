@@ -58,11 +58,11 @@ trait GenerateOtp
         $this->mailSubjectToUser = "Verification OTP";
         $this->messageForUser = $thisuser->name . ", " . $sendMsg;
 
-        $this->sendEmail($this->sendToUser, 'Verify OTP');
+        $this->mailSendEmail($this->sendToUser, 'Verify OTP');
     }
 
 
-    private function sendEmail($objDemoa, $purpose)
+    public function mailSendEmail($objDemoa, $purpose)
     {
         $objDemo = new \stdClass();
         $objDemo->purpose = $purpose;
