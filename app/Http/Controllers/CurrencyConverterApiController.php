@@ -229,7 +229,8 @@ class CurrencyConverterApiController extends Controller
 
         if ($result->success == true) {
             // This amount is in dollars
-            $convRate = ($amount / $result->quotes->$currency) * $markValue;
+            // $convRate = ($amount / $result->quotes->$currency) * $markValue;
+            $convRate = ($amount / $result->quotes->$currency);
 
             $data = $convRate * $result->quotes->$cadconvert;
 

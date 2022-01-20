@@ -899,6 +899,15 @@ class CurrencyFxController extends Controller
     }
 
 
+    public function refreshBids()
+    {
+        // Get all expired bids...
+        $today = date('d F Y');
+
+        dd($today);
+    }
+
+
 
     // FX Accept A bid
     public function acceptABid(Request $req)
