@@ -311,6 +311,9 @@ class MerchantApiController extends Controller
                 }
             } elseif ($mode == strtoupper("test")) {
 
+
+                // TODO:: Return back the SMS notificaition...
+
                 $merchantInfo = ClientInfo::where('api_secrete_key', $req->bearerToken())->first();
 
                 if (isset($merchantInfo) == true) {
@@ -420,9 +423,9 @@ class MerchantApiController extends Controller
                                 if ($thisuser->country == "Nigeria") {
 
                                     $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                                    $this->sendSms($sendMsg, $correctPhone);
+                                    // $this->sendSms($sendMsg, $correctPhone);
                                 } else {
-                                    $this->sendMessage($sendMsg, $sendPhone);
+                                    // $this->sendMessage($sendMsg, $sendPhone);
                                 }
 
 
@@ -439,9 +442,9 @@ class MerchantApiController extends Controller
                                 if ($thismerchant->country == "Nigeria") {
 
                                     $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
-                                    $this->sendSms($recMsg, $correctPhone);
+                                    // $this->sendSms($recMsg, $correctPhone);
                                 } else {
-                                    $this->sendMessage($recMsg, $recPhone);
+                                    // $this->sendMessage($recMsg, $recPhone);
                                 }
 
 

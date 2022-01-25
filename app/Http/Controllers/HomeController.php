@@ -91,6 +91,8 @@ use App\Traits\PaysprintPoint;
 
 use App\Traits\PointsHistory;
 
+use App\Traits\IDVCheck;
+
 
 use App\Traits\RpmApp;
 
@@ -129,7 +131,7 @@ class HomeController extends Controller
     public $country;
     public $timezone;
 
-    use RpmApp, Trulioo, AccountNotify, PaystackPayment, ExpressPayment, SpecialInfo, Xwireless, PaymentGateway, MailChimpNewsLetter, PaysprintPoint, PointsHistory, GenerateOtp;
+    use RpmApp, Trulioo, AccountNotify, PaystackPayment, ExpressPayment, SpecialInfo, Xwireless, PaymentGateway, MailChimpNewsLetter, PaysprintPoint, PointsHistory, GenerateOtp, IDVCheck;
     /**
      * Create a new controller instance.
      *
@@ -1081,6 +1083,7 @@ class HomeController extends Controller
             'walletStatement' => $this->walletStatement(),
             'continent' => $this->timezone[0],
             'specialInfo' => $this->getthisInfo(Auth::user()->country),
+            'idvchecks' => $this->checkUsersPassAccount(Auth::user()->id),
         );
 
         // dd($data);

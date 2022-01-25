@@ -434,6 +434,8 @@
                     $('.fxuserWallet').removeClass('disp-0');
                     $('.walletList').removeClass('disp-0');
                     $('.userWallet').addClass('disp-0');
+                    $(".wallet-info").html('');
+                    $("#amount").val('');
                     // Do Ajax and Render Selected Wallet Balance
                     var country = $('#country').val();
 
@@ -499,6 +501,8 @@
                     $('.fxuserWallet').removeClass('disp-0');
                     $('.walletList').removeClass('disp-0');
                     $('.userWallet').addClass('disp-0');
+                    $(".wallet-info").html('');
+                    $("#amount").val('');
                     // Do Ajax and Render Selected Wallet Balance
                     var country = $('#country').val();
 
@@ -649,7 +653,11 @@
 
                             if (result.message == "success") {
 
-                                $(".wallet-info").html(result.walletCheck);
+                                if ($('#select_wallet').val() == "Wallet") {
+
+                                    $(".wallet-info").html(result.walletCheck);
+                                }
+
 
                                 $(".sendmoneyBtn").attr("disabled", false);
 
