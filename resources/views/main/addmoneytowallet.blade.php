@@ -269,13 +269,13 @@
                                     {{-- @if (Auth::user()->approval == 2 && Auth::user()->accountLevel == 3) --}}
 
 
-                                    @if ($data['paymentgateway']->gateway == 'PayStack')
+                                    @if ($data['paymentgateway']->gateway == 'PayStack' || $data['paymentgateway']->gateway == 'Express')
 
                                         {{-- <div class="card-footer"> <a type="button" id="epsButton" href="" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </a></div> --}}
 
 
                                         <div class="card-footer"> <button type="button"
-                                                onclick="payWithPaystack('{{ Auth::user()->email }}')"
+                                                onclick="payWithEPS('{{ Auth::user()->email }}')"
                                                 class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
                                                 Confirm
                                             </button></div>
@@ -345,7 +345,7 @@
         <script src="{{ asset('pace/pace.min.js') }}"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://js.paystack.co/v1/inline.js"></script>
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js"></script>
 
 
 
@@ -708,54 +708,148 @@
             }
 
 
-            // PayStack Integration
-            function payWithPaystack(email) {
-                var netamount = $('#amounttosend').val();
-                var feeamount = $('#commissiondeduct').val();
+
+            // EPS Integration...
+
+            async function payWithEPS(email) {
+
+                $('.cardSubmit').text('Please wait...');
+
+                try {
 
 
 
-                var amount = (+netamount + +feeamount).toFixed(2);
-                var handler = PaystackPop.setup({
-                    // key: '{{ env('PAYSTACK_PUBLIC_KEY') }}',
-                    key: '{{ env('PAYSTACK_LOCAL_PUBLIC_KEY') }}',
-                    email: email,
-                    amount: amount * 100,
-                    currency: "NGN",
-                    ref: '' + Math.floor((Math.random() * 1000000000) +
-                        1
-                    ), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
-                    metadata: {
-                        custom_fields: [{
-                                display_name: "Full Name",
-                                variable_name: "name",
-                                value: "{{ Auth::user()->name }}"
-                            },
-                            {
-                                display_name: "Description",
-                                variable_name: "description",
-                                value: "Added {{ $data['currencyCode']->currencyCode }}" + netamount +
-                                    " to PaySprint Wallet and a Fee of " + feeamount + " inclusive."
-                            }
-                        ]
-                    },
-                    callback: function(response) {
+                    var netamount = $('#amounttosend').val();
+                    var feeamount = $('#commissiondeduct').val();
+                    var amount = (+netamount + +feeamount).toFixed(2);
+                    var paymentToken = '' + Math.floor((Math.random() * 1000000000) + 1);
+                    var publicKey = "XPPUBK-19995e83ba654840be35242359b66f8c-X";
+                    var commission = $('#commission').val();
+                    var currencyCode = `{{ $data['currencyCode']->currencyCode }}`;
+                    var conversionamount = $('#conversionamount').val();
+                    var api_token = `{{ Auth::user()->api_token }}`;
+                    // var callbackUrl = `{{ env('APP_URL') }}/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
+                    var callbackUrl =
+                        `http://localhost:9090/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
+                    var productId = "{{ Auth::user()->ref_code }}";
+                    var description = "Added {{ $data['currencyCode']->currencyCode }}" + netamount +
+                        " to PaySprint Wallet and a Fee of " + feeamount + " inclusive.";
 
-                        $('#paymentToken').val(response.reference);
-                        //   $('#paymentToken').val(response.transaction);
+                    var data = JSON.stringify({
+                        "amount": amount,
+                        "transactionId": paymentToken,
+                        "email": email,
+                        "publicKey": publicKey,
+                        "currency": "NGN",
+                        "mode": "Debug",
+                        "callbackUrl": callbackUrl,
+                        "productId": productId,
+                        "applyConviniencyCharge": true,
+                        "productDescription": description,
+                        "bodyColor": "#0000",
+                        "buttonColor": "#0000",
+                        "footerText": "Powered by Pro-filr Nig. LTD",
+                        "footerLink": "https://paysprint.ca",
+                        "footerLogo": "https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png",
+                        "metadata": [{
+                            "name": "name",
+                            "value": "{{ Auth::user()->name }}"
+                        }, {
+                            "name": "description",
+                            "value": "Added {{ $data['currencyCode']->currencyCode }}" +
+                                netamount +
+                                " to PaySprint Wallet and a Fee of " + feeamount + " inclusive."
+                        }]
+                    });
 
 
-                        setTimeout(() => {
-                            handShake('addmoney');
-                        }, 1000);
+                    var config = {
+                        method: 'post',
+                        url: 'https://pgsandbox.xpresspayments.com:8090/api/Payments/Initialize',
+                        headers: {
+                            'Authorization': `bearer {{ env('EPXRESS_PAYMENT_KEY') }}`,
+                            'Content-Type': 'application/json'
+                        },
+                        data: data
+                    };
 
-                    },
-                    onClose: function() {
-                        swal('', 'window closed', 'info');
-                    }
-                });
-                handler.openIframe();
+                    const response = await axios(config);
+
+                    $('.cardSubmit').text('Confirm');
+
+                    // console.log({
+                    //     data: response.data,
+                    //     url: response.data.data.paymentUrl
+                    // });
+
+
+
+                    setTimeout(() => {
+                        location.href = response.data.data.paymentUrl;
+                    }, 1000);
+
+
+
+                } catch (error) {
+                    $('.cardSubmit').text('Confirm');
+                    swal('Oops!', error.message, 'error');
+                }
+
+
+
             }
+
+
+
+            // PayStack Integration
+            // function payWithPaystack(email) {
+            //     var netamount = $('#amounttosend').val();
+            //     var feeamount = $('#commissiondeduct').val();
+
+
+
+            //     var amount = (+netamount + +feeamount).toFixed(2);
+            //     var handler = PaystackPop.setup({
+            //         // key: '{{ env('PAYSTACK_PUBLIC_KEY') }}',
+            //         key: '{{ env('PAYSTACK_LOCAL_PUBLIC_KEY') }}',
+            //         pospost
+            //         email: email,
+            //         amount: amount * 100,
+            //         currency: "NGN",
+            //         ref: '' + Math.floor((Math.random() * 1000000000) +
+            //             1
+            //         ), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+            //         metadata: {
+            //             custom_fields: [{
+            //                     display_name: "Full Name",
+            //                     variable_name: "name",
+            //                     value: "{{ Auth::user()->name }}"
+            //                 },
+            //                 {
+            //                     display_name: "Description",
+            //                     variable_name: "description",
+            //                     value: "Added {{ $data['currencyCode']->currencyCode }}" + netamount +
+            //                         " to PaySprint Wallet and a Fee of " + feeamount + " inclusive."
+            //                 }
+            //             ]
+            //         },
+            //         callback: function(response) {
+
+            //             $('#paymentToken').val(response.reference);
+            //             //   $('#paymentToken').val(response.transaction);
+
+
+            //             setTimeout(() => {
+            //                 handShake('addmoney');
+            //             }, 1000);
+
+            //         },
+            //         onClose: function() {
+            //             swal('', 'window closed', 'info');
+            //         }
+            //     });
+            //     handler.openIframe();
+            // }
 
             function goBack() {
                 window.history.back();

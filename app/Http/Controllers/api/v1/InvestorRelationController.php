@@ -77,4 +77,26 @@ class InvestorRelationController extends Controller
 
         return $this->returnJSON($resData, $status);
     }
+
+
+    public function investorSpecificNews(Request $req, $id)
+    {
+
+        try {
+            // Get Posts
+
+            $data = InvestorPost::where('id', $id)->first();
+
+            $status = 200;
+            $message = 'Success';
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
 }

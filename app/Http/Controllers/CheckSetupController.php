@@ -1547,67 +1547,70 @@ class CheckSetupController extends Controller
     public function monthlyTransactionHistory()
     {
 
-        // Get Statement Information
-        $getusers = User::inRandomOrder()->orderBy('created_at', 'DESC')->get();
-
-
-        if (count($getusers) > 0) {
-            $from = date('Y-m-01');
-            $nextDay = date('Y-m-d');
-
-            foreach ($getusers as $key => $value) {
-
-                $email = $value->email;
+        try {
+            // Get Statement Information
+            $getusers = User::inRandomOrder()->orderBy('created_at', 'DESC')->get();
 
 
 
+            if (count($getusers) > 0) {
+                $from = date('Y-m-01');
+                $nextDay = date('Y-m-d');
 
-                $myStatement = Statement::where('user_id', $email)->whereBetween('trans_date', [$from, $nextDay])->orderBy('created_at', 'DESC')->get();
+                foreach ($getusers as $key => $value) {
 
-                if (count($myStatement) > 0) {
-                    // Send Mail
-
-                    $walletBalance = $value->wallet_balance;
-                    $currencyCode = $value->currencyCode;
-
-                    $name = $value->name;
-                    $subject = "Your monthly statement on PaySprint";
-
-                    $tabledetails = "";
-                    $table = "";
-
-                    foreach ($myStatement as $key => $valueAdded) {
+                    $email = $value->email;
 
 
-                        if ($valueAdded->credit != 0) {
-                            $color = "green";
-                            $amount = "+" . $currencyCode . number_format($valueAdded->credit, 2);
-                        } elseif ($valueAdded->debit != 0) {
-                            $color = "red";
-                            $amount = "-" . $currencyCode . number_format($valueAdded->debit, 2);
-                        }
+                    $myStatement = Statement::where('user_id', $email)->whereBetween('trans_date', [$from, $nextDay])->orderBy('created_at', 'DESC')->get();
 
-                        $tabledetails = "<tr>
+                    if (count($myStatement) > 0) {
+                        // Send Mail
+
+                        $walletBalance = $value->wallet_balance;
+                        $currencyCode = $value->currencyCode;
+
+                        $name = $value->name;
+                        $subject = "Your monthly statement on PaySprint";
+
+                        $tabledetails = "";
+                        $table = "";
+
+                        foreach ($myStatement as $key => $valueAdded) {
+
+
+                            if ($valueAdded->credit != 0) {
+                                $color = "green";
+                                $amount = "+" . $currencyCode . number_format($valueAdded->credit, 2);
+                            } elseif ($valueAdded->debit != 0) {
+                                $color = "red";
+                                $amount = "-" . $currencyCode . number_format($valueAdded->debit, 2);
+                            }
+
+                            $tabledetails = "<tr>
 		    			<td>" . date('d/F/Y', strtotime($valueAdded->trans_date)) . "</td>
 		    			<td>" . $valueAdded->activity . "</td>
 		    			<td style='color:" . $color . "; font-weight: bold;' align='center'>" . $amount . "</td>
 		    			<td>" . $valueAdded->status . "</td>
 		    			</tr>";
 
-                        $table .= $tabledetails;
+                            $table .= $tabledetails;
+                        }
+
+
+                        $message = "<p>Below is the statement of your transactions on PaySprint for this month.</p> <br> <table width='700' border='1' cellpadding='1' cellspacing='0'><thead><tr><th>Trans. Date</th><th>Desc.</th><th>Amount</th><th>Status</th></tr></thead><tbody>" . $table . "</tbody></table> <br><br> Thanks <br><br> Client Services Team <br> PaySprint <br><br>";
+
+
+                        $this->mailprocess($email, $name, $subject, $message);
                     }
-
-
-                    $message = "<p>Below is the statement of your transactions on PaySprint for this month.</p> <br> <table width='700' border='1' cellpadding='1' cellspacing='0'><thead><tr><th>Trans. Date</th><th>Desc.</th><th>Amount</th><th>Status</th></tr></thead><tbody>" . $table . "</tbody></table> <br><br> Thanks <br><br> Client Services Team <br> PaySprint <br><br>";
-
-
-
-                    $this->mailprocess($email, $name, $subject, $message);
                 }
-            }
-        } else {
+            } else {
 
-            // Do nothing
+                // Do nothing
+                echo "No user record";
+            }
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
         }
     }
 
@@ -1773,7 +1776,7 @@ class CheckSetupController extends Controller
     {
 
         $this->email = $email;
-        // $this->email = "bambo@vimfile.com";
+        // $this->email = "bambo@paysprint.ca";
         $this->name = $name;
         $this->subject = $subject;
 

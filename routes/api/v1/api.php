@@ -55,6 +55,8 @@ Route::prefix('/v1')->group(function () {
         // Get Investors News
         Route::get('investorsnews',  ['uses' => 'api\v1\InvestorRelationController@investorNews'])->name('Investor news');
 
+        Route::get('specificnews/{id}',  ['uses' => 'api\v1\InvestorRelationController@investorSpecificNews'])->name('Investor specific news');
+
         // Do Investors data...
         Route::post('investordetails',  ['uses' => 'api\v1\InvestorRelationController@investorDetails'])->name('Investor details');
     });
