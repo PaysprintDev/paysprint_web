@@ -19,7 +19,9 @@ use App\MakeBid;
 use App\Statement;
 use App\Traits\Xwireless;
 use App\Traits\MyFX;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class CurrencyFxController extends Controller
 {
@@ -896,6 +898,131 @@ class CurrencyFxController extends Controller
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
+    }
+
+
+    public function refreshBids()
+    {
+        // Get all expired bids in market place...
+        $today = Carbon::now()->subDay();
+        $getMarkets = MarketPlace::whereDate('expiry', '<=', $today)->where('status', 'Bid Pending')->get();
+
+        if (count($getMarkets) > 0) {
+
+            foreach ($getMarkets as $value) {
+
+
+                $thisuser = User::where('id', $value->user_id)->first();
+
+                $getescrow = EscrowAccount::where('currencyCode', $value->sell_currencyCode)->where('user_id', $value->user_id)->first();
+
+                $walletBal = $getescrow->wallet_balance;
+
+                // Credit Wallet 
+                $creditWallet = $walletBal + $value->sell;
+
+
+                EscrowAccount::where('user_id', $value->user_id)->where('currencyCode', $value->sell_currencyCode)->update(['wallet_balance' => $creditWallet]);
+
+
+                // Escrow Wallet Statement
+
+                $transaction_id = "es-wallet-" . date('dmY') . time();
+
+                // Insert Escrow Statement
+                $activity = "Wallet credit of " . $thisuser->currencyCode . " " . number_format($value->sell, 2) . " from PaySprint wallet to FX wallet ";
+                $credit = $value->sell;
+                $debit = 0;
+                $reference_code = $transaction_id;
+                $balance = 0;
+                $trans_date = date('Y-m-d');
+                $status = "Delivered";
+                $action = "Wallet credit";
+                $regards = $thisuser->ref_code;
+
+                $statement_route = "wallet";
+
+
+                // Senders Escrow statement
+                $this->insFXStatement($getescrow->escrow_id, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $thisuser->country, "confirmed");
+
+
+                MarketPlace::whereDate('expiry', '<=', $today)->where('user_id', $value->user_id)->where('status', 'Bid Pending')->delete();
+
+
+                // This works even if bid is accepted but still pending...
+
+                $getBids = MakeBid::where('order_id', $value->order_id)->get();
+
+                if (count($getBids) > 0) {
+
+                    foreach ($getBids as $marketItem) {
+
+                        // Return Bidding Fee
+
+                        $bidderAccount = EscrowAccount::where('user_id', $marketItem->buyer_id)->where('currencyCode', $value->buy_currencyCode)->first();
+
+                        $offeramount = $bidderAccount->wallet_balance + $marketItem->offer_amount;
+                        $escrowBal = $bidderAccount->escrow_balance - $marketItem->offer_amount;
+
+                        EscrowAccount::where('user_id', $marketItem->buyer_id)->where('currencyCode', $value->buy_currencyCode)->update(['wallet_balance' => $offeramount, 'escrow_balance' => $escrowBal]);
+
+                        $getbidders = User::where('id', $marketItem->buyer_id)->first();
+
+                        // Do notification
+                        $transaction_id2 = "es-wallet-" . date('dmY') . time();
+
+                        $activity2 = "Reversal of " . $value->buy_currencyCode . '' . number_format($marketItem->offer_amount, 2) . " to your FX Wallet ";
+                        $credit2 = $marketItem->offer_amount;
+                        $debit2 = 0;
+                        $reference_code2 = $transaction_id2;
+                        $balance2 = 0;
+                        $trans_date2 = date('Y-m-d');
+                        $status2 = "Delivered";
+                        $action2 = "Escrow Wallet credit";
+                        $regards2 = $getbidders->ref_code;
+                        $statement_route2 = "escrow wallet";
+
+
+                        $this->insFXStatement($bidderAccount->escrow_id, $reference_code2, $activity2, $credit2, $debit2, $balance2, $trans_date2, $status2, $action2, $regards2, 1, $statement_route2, 'on', $bidderAccount->country, 'confirmed');
+                    }
+                }
+
+
+                $getWallet = EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $value->sell_currencyCode)->first();
+
+
+                $sendMsg = "Hi " . $thisuser->name . ", A " . $activity . "is successfully sent. Your new wallet balance is " . $getWallet->currencyCode . ' ' . number_format($getWallet->wallet_balance, 2) . ".";
+
+                $usergetPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                if (isset($usergetPhone)) {
+
+                    $sendPhone = $thisuser->telephone;
+                } else {
+                    $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                }
+
+                if ($thisuser->country == "Nigeria") {
+
+                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                    $this->sendSms($sendMsg, $correctPhone);
+                } else {
+                    $this->sendMessage($sendMsg, $sendPhone);
+                }
+
+
+                Log::info("Currency exchange transaction of " . $getWallet->currencyCode . " " . number_format($value->sell, 2) . " by " . $thisuser->name . " returned back to wallet");
+
+                $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $sendMsg);
+
+                echo "Done";
+            }
+        } else {
+            Log::info('No expired market today: ' . $today);
+
+            echo 'No expired market today: ' . $today;
+        }
     }
 
 
