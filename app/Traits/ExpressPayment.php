@@ -176,6 +176,27 @@ trait ExpressPayment
         }
     }
 
+    public function getVerification($paymentToken)
+    {
+
+
+        try {
+
+            $this->Base_Url = env('EPXRESS_PAYMENT_URL') . 'api/Payments/VerifyPayment';
+
+
+            $this->curlPost = json_encode([
+                'transactionId' => $paymentToken,
+            ]);
+
+            $data = $this->doPayPost();
+            return $data;
+        } catch (\Throwable $th) {
+
+            return [];
+        }
+    }
+
     // Process Transaction
     public function processTransaction($postRequest, $bearerToken)
     {
@@ -488,6 +509,35 @@ trait ExpressPayment
                 'webkey: ' . env('EXPRESS_PAY_WEBKEY'),
                 'accountid: ' . env('EXPRESS_PAY_ACCOUNTID'),
                 'Authorization: Basic ' . env('EXPRESS_PAY_BASIC'),
+                'Content-Type: application/json'
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        return json_decode($response);
+    }
+
+
+    public function doPayPost()
+    {
+
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $this->Base_Url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $this->curlPost,
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: bearer ' . env('EPXRESS_PAYMENT_KEY'),
                 'Content-Type: application/json'
             ),
         ));

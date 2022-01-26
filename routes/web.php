@@ -26,6 +26,7 @@ Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
 // Route::get('feecharge', 'MaintenanceFeeCharge@monthlyMaintenaceFee');
 Route::get('renewsub', 'MaintenanceFeeCharge@renewSubscription');
+Route::get('refreshbid', 'CurrencyFxController@refreshBids');
 
 Route::get('quicksetup', 'CheckSetupController@updateQuickSetup');
 Route::get('autodepositoff', 'CheckSetupController@autoDepositOff');
@@ -670,6 +671,16 @@ Route::prefix('Admin/')->group(function () {
 
 	Route::get('invoicelinkcomment/{id}', ['uses' => 'AdminController@invoiceLinkComment', 'as' => 'invoice link comment']);
 	Route::post('myinvoicelinkcomment/{id}', ['uses' => 'MonerisController@myInvoiceLinkComment', 'as' => 'my invoice link comment']);
+
+
+
+	// Investors Relation
+	Route::prefix('investor/')->group(function () {
+
+		Route::get('newpost', ['uses' => 'AdminController@newInvestorPost', 'as' => 'new investors post']);
+		Route::get('subscribers', ['uses' => 'AdminController@investorSubscriber', 'as' => 'new investor subscriber']);
+		Route::post('createpost', ['uses' => 'AdminController@createInvestorPost', 'as' => 'create investor post']);
+	});
 
 
 	//Routes for image upload
