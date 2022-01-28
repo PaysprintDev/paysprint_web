@@ -243,6 +243,8 @@ class AdminController extends Controller
                 );
 
 
+                
+
 
 
 
@@ -15276,7 +15278,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
     public function overrideUsersByCountry()
     {
-        $data = User::where('accountLevel', 2)->where('approval', 0)->where('bvn_verification', 0)->where('archive', '!=', 1)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        $data = User::where('accountLevel', 2)->where('approval', '<=', 1)->where('bvn_verification', 0)->where('archive', '!=', 1)->orderBy('created_at', 'DESC')->groupBy('country')->get();
 
         return $data;
     }

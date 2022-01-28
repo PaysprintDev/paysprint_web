@@ -91,7 +91,7 @@
                                     <tbody>
 
 
-                                        @if ($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', 2)->where('approval', 0)->where('archive', '!=', 1)->orderBy('nin_front', 'DESC')->get())
+                                        @if ($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', 2)->where('approval', '<=', 1)->where('bvn_verification', 0)->where('archive', '!=', 1)->orderBy('nin_front', 'DESC')->get())
 
 
                                             @if (count($allusersdata) > 0)
