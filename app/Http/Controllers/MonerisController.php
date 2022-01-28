@@ -5605,7 +5605,12 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                     $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-                    // Check number of withdrawal
+
+                    $checkIdv = $this->checkUsersPassAccount($thisuser->id);
+
+
+                    if(in_array('withdraw money', $checkIdv['access'])){
+                        // Check number of withdrawal
                     if ($thisuser->number_of_withdrawals >= 1) {
 
                         if ($thisuser->accountType == "Merchant") {
@@ -6445,6 +6450,14 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             }
                         }
                     }
+                    }
+                    else{
+                        $data = [];
+                        $status = 400;
+                        $message = $checkIdv['response'];
+                    }
+
+                    
                 } else {
 
                     $error = implode(",", $validator->messages()->all());
@@ -7775,7 +7788,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
             // Verify Payment ...
             $getVerification = $this->getVerification($req->paymentToken);
 
-            dd($getVerification);
+            // dd($getVerification);
 
             if ($getVerification->responseCode == "00") {
                 // Insert Payment Record
