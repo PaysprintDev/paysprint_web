@@ -260,7 +260,7 @@
           <!-- small box -->
           <div class="small-box bg-orange">
             <div class="inner">
-              <h3>@if($matchedUsers = \App\User::where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', '>=', 1)->count()) {{ $matchedUsers }} @else 0 @endif</h3>
+              <h3>@if($matchedUsers = \App\User::where('accountLevel', '>=', 2)->where('approval', 1)->where('bvn_verification', '>=', 1)->count()) {{ $matchedUsers }} @else 0 @endif</h3>
 
               <p>IDV Passed</p>
             </div>
@@ -271,7 +271,7 @@
           </div>
         </div>
 
-        <div class="col-lg-3 col-xs-6">
+        <div class="col-lg-3 col-xs-6 disp-0">
           <!-- small box -->
           <div class="small-box bg-blue">
             <div class="inner">
@@ -309,7 +309,7 @@
           <!-- small box -->
           <div class="small-box bg-blue">
             <div class="inner">
-              <h3>@if($override = \App\User::where('accountLevel', 2)->where('approval', 0)->where('archive', '!=', 1)->count()) {{ $override }}  @else 0 @endif</h3>
+              <h3>@if($override = \App\User::where('accountLevel', 2)->where('approval', '<=', 1)->where('bvn_verification', 0)->where('archive', '!=', 1)->count()) {{ $override }}  @else 0 @endif</h3>
 
               <p>IDV Failed</p>
 
