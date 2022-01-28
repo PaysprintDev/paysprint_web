@@ -423,9 +423,9 @@ class MerchantApiController extends Controller
                                 if ($thisuser->country == "Nigeria") {
 
                                     $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                                    // $this->sendSms($sendMsg, $correctPhone);
+                                    $this->sendSms($sendMsg, $correctPhone);
                                 } else {
-                                    // $this->sendMessage($sendMsg, $sendPhone);
+                                    $this->sendMessage($sendMsg, $sendPhone);
                                 }
 
 
@@ -555,7 +555,7 @@ class MerchantApiController extends Controller
                     $response = $this->monerisWalletProcess($thismerchant->ref_code, $req->cardType, $amount, $req->purpose, $mode, $req->country, $req->expiryMonth, $req->cardNumber, $req->expiryYear);
 
 
-                    if ($response->responseData['Message'] == "APPROVED           *                    =") {
+                    if ($response->responseData['ResponseCode'] == "000" || $response->responseData['ResponseCode'] == "001" || $response->responseData['ResponseCode'] == "002" || $response->responseData['ResponseCode'] == "003" || $response->responseData['ResponseCode'] == "004" || $response->responseData['ResponseCode'] == "005" || $response->responseData['ResponseCode'] == "006" || $response->responseData['ResponseCode'] == "007" || $response->responseData['ResponseCode'] == "008" || $response->responseData['ResponseCode'] == "009" || $response->responseData['ResponseCode'] == "010" || $response->responseData['ResponseCode'] == "023" || $response->responseData['ResponseCode'] == "024" || $response->responseData['ResponseCode'] == "025" || $response->responseData['ResponseCode'] == "026" || $response->responseData['ResponseCode'] == "027" || $response->responseData['ResponseCode'] == "028" || $response->responseData['ResponseCode'] == "029") {
 
                         $reference_code = $response->responseData['ReceiptId'];
 
@@ -725,7 +725,7 @@ class MerchantApiController extends Controller
                     $response = $this->monerisWalletProcess($thismerchant->ref_code, $req->cardType, $amount, $req->purpose, $mode, $req->country, $req->expiryMonth, $req->cardNumber, $req->expiryYear);
 
 
-                    if ($response->responseData['Message'] == "APPROVED           *                    =") {
+                    if ($response->responseData['ResponseCode'] == "000" || $response->responseData['ResponseCode'] == "001" || $response->responseData['ResponseCode'] == "002" || $response->responseData['ResponseCode'] == "003" || $response->responseData['ResponseCode'] == "004" || $response->responseData['ResponseCode'] == "005" || $response->responseData['ResponseCode'] == "006" || $response->responseData['ResponseCode'] == "007" || $response->responseData['ResponseCode'] == "008" || $response->responseData['ResponseCode'] == "009" || $response->responseData['ResponseCode'] == "010" || $response->responseData['ResponseCode'] == "023" || $response->responseData['ResponseCode'] == "024" || $response->responseData['ResponseCode'] == "025" || $response->responseData['ResponseCode'] == "026" || $response->responseData['ResponseCode'] == "027" || $response->responseData['ResponseCode'] == "028" || $response->responseData['ResponseCode'] == "029") {
 
                         $reference_code = $response->responseData['ReceiptId'];
 
@@ -983,11 +983,10 @@ class MerchantApiController extends Controller
         $amount = $dollaramount;
 
         if ($country == "Canada") {
-            $amount = number_format($dollaramount, 2);
+            $amount = sprintf("%.2f", $dollaramount);
         } else {
-            $amount = number_format($dollaramount, 2);
+            $amount = sprintf("%.2f", $dollaramount);
         }
-
 
 
 
@@ -1085,7 +1084,8 @@ class MerchantApiController extends Controller
         if ($result->success == true) {
 
             // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
-            $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
+            // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
+            $convertLocal = $amount / $result->quotes->$localCurrency;
 
             // Converting your USD value to other currency ie CAD * Y 
             $convRate = $result->quotes->$currency * $convertLocal;

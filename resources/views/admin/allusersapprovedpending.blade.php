@@ -12,10 +12,10 @@
         <section class="content-header">
             <h1>
                 @if (Request::get('country') != null)
-                    All Approved In {{ Request::get('country') }}
+                    All Approved Pending In {{ Request::get('country') }}
 
                 @else
-                    All Approved
+                    All Approved Pending
 
                 @endif
             </h1>
@@ -23,10 +23,10 @@
                 <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
                 <li class="active">
                     @if (Request::get('country') != null)
-                        All Approved In {{ Request::get('country') }}
+                        All Approved Pending In {{ Request::get('country') }}
 
                     @else
-                        All Approved
+                        All Approved Pending
 
                     @endif
                 </li>
@@ -80,7 +80,7 @@
                                 <tbody>
 
 
-                                    @if ($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', 3)->where('account_check', 1)->get())
+                                    @if ($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', 3)->where('account_check', 0)->get())
 
 
                                         @if (count($allusersdata) > 0)
@@ -110,7 +110,10 @@
                                                                 Selfie : @if ($datainfo->avatar != null) <a href="{{ $datainfo->avatar }}" target="_blank">View Avatar</a> @endif
                                                             </small>
 
-
+                                                            <input type="checkbox" name="selfiecheck"
+                                                                id="selfiecheck{{ $datainfo->id }}"
+                                                                onchange="checkMyBox('selfiecheck', '{{ $datainfo->id }}')"
+                                                                @if ($datainfo->selfie_check == 1) checked @endif>
 
                                                             <hr>
 
@@ -120,6 +123,11 @@
                                                             <small style="font-weight: bold;">
                                                                 Govnt. issued photo ID : @if ($datainfo->nin_front != null) <a href="{{ $datainfo->nin_front }}" target="_blank">Front view</a> @endif | @if ($datainfo->nin_back != null) <a href="{{ $datainfo->nin_back }}" target="_blank">Back view</a> @endif
                                                             </small>
+
+                                                            <input type="checkbox" name="nincheck"
+                                                                id="nincheck{{ $datainfo->id }}"
+                                                                onchange="checkMyBox('nincheck', '{{ $datainfo->id }}')"
+                                                                @if ($datainfo->gov_check == 1) checked @endif>
 
 
                                                             <hr>
@@ -131,6 +139,11 @@
                                                                 Driver's License : @if ($datainfo->drivers_license_front != null) <a href="{{ $datainfo->drivers_license_front }}" target="_blank">Front view</a> @endif | @if ($datainfo->drivers_license_back != null) <a href="{{ $datainfo->drivers_license_back }}" target="_blank">Back view</a> @endif
                                                             </small>
 
+                                                            <input type="checkbox" name="licencecheck"
+                                                                id="licencecheck{{ $datainfo->id }}"
+                                                                onchange="checkMyBox('licencecheck', '{{ $datainfo->id }}')"
+                                                                @if ($datainfo->gov_check == 1) checked @endif>
+
 
                                                             <hr>
 
@@ -141,6 +154,11 @@
                                                             <small style="font-weight: bold;">
                                                                 International Passport : @if ($datainfo->international_passport_front != null) <a href="{{ $datainfo->international_passport_front }}" target="_blank">Front view</a> @endif | @if ($datainfo->international_passport_back != null) <a href="{{ $datainfo->international_passport_back }}" target="_blank">Back view</a> @endif
                                                             </small>
+
+                                                            <input type="checkbox" name="passportcheck"
+                                                                id="passportcheck{{ $datainfo->id }}"
+                                                                onchange="checkMyBox('passportcheck', '{{ $datainfo->id }}')"
+                                                                @if ($datainfo->gov_check == 1) checked @endif>
 
 
 
@@ -154,6 +172,11 @@
                                                                 Document : @if ($datainfo->incorporation_doc_front != null) <a href="{{ $datainfo->incorporation_doc_front }}" target="_blank">View Document</a> @endif
                                                             </small>
 
+
+                                                            <input type="checkbox" name="incorpdoccheck"
+                                                                id="incorpdoccheck{{ $datainfo->id }}"
+                                                                onchange="checkMyBox('incorpdoccheck', '{{ $datainfo->id }}')"
+                                                                @if ($datainfo->doc_check == 1) checked @endif>
 
                                                             <hr>
 

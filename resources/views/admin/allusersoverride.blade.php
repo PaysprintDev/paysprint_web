@@ -119,6 +119,8 @@
                                                                 <small style="font-weight: bold;">
                                                                     Selfie : @if ($datainfo->avatar != null) <a href="{{ $datainfo->avatar }}" target="_blank">View Avatar</a> @endif
                                                                 </small>
+
+
                                                                 <hr>
 
                                                             @endif
@@ -127,6 +129,9 @@
                                                                 <small style="font-weight: bold;">
                                                                     Govnt. issued photo ID : @if ($datainfo->nin_front != null) <a href="{{ $datainfo->nin_front }}" target="_blank">Front view</a> @endif | @if ($datainfo->nin_back != null) <a href="{{ $datainfo->nin_back }}" target="_blank">Back view</a> @endif
                                                                 </small>
+
+
+
                                                                 <hr>
 
                                                             @endif
@@ -135,6 +140,8 @@
                                                                 <small style="font-weight: bold;">
                                                                     Driver's License : @if ($datainfo->drivers_license_front != null) <a href="{{ $datainfo->drivers_license_front }}" target="_blank">Front view</a> @endif | @if ($datainfo->drivers_license_back != null) <a href="{{ $datainfo->drivers_license_back }}" target="_blank">Back view</a> @endif
                                                                 </small>
+
+
                                                                 <hr>
 
                                                             @endif
@@ -144,6 +151,8 @@
                                                                 <small style="font-weight: bold;">
                                                                     International Passport : @if ($datainfo->international_passport_front != null) <a href="{{ $datainfo->international_passport_front }}" target="_blank">Front view</a> @endif | @if ($datainfo->international_passport_back != null) <a href="{{ $datainfo->international_passport_back }}" target="_blank">Back view</a> @endif
                                                                 </small>
+
+
                                                                 <hr>
 
                                                             @endif
@@ -153,6 +162,8 @@
                                                                 <small style="font-weight: bold;">
                                                                     Document : @if ($datainfo->incorporation_doc_front != null) <a href="{{ $datainfo->incorporation_doc_front }}" target="_blank">View Document</a> @endif
                                                                 </small>
+
+
                                                                 <hr>
 
                                                             @endif
@@ -172,14 +183,12 @@
                                                             <td style="color: green; font-weight: bold;" align="center">
                                                                 Approved</td>
 
-                                                        @elseif ($datainfo->approval == 1 && $datainfo->accountLevel ==
-                                                            2)
+                                                        @elseif ($datainfo->approval == 1 && $datainfo->accountLevel == 2)
 
                                                             <td style="color: darkorange; font-weight: bold;"
                                                                 align="center">Awaiting Approval</td>
 
-                                                        @elseif ($datainfo->approval == 0 && $datainfo->accountLevel >
-                                                            0)
+                                                        @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)
                                                             <td style="color: navy; font-weight: bold;" align="center">
                                                                 Override Level 1</td>
 
@@ -223,8 +232,7 @@
 
 
 
-                                                            @elseif ($datainfo->approval == 0 && $datainfo->accountLevel
-                                                                > 0)
+                                                            @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)
 
                                                                 <a href="javascript:void(0)"
                                                                     onclick="disapproveaccount('{{ $datainfo->id }}')"

@@ -4503,6 +4503,56 @@
     }
 
 
+    function checkMyBox(val, id) {
+
+        // Show cancel icon by default
+
+        var checkProp = $(`#${val+id}`).prop('checked');
+
+        var route = "{{ URL('Ajax/checkIdvPassInfo') }}";
+        thisdata = {
+            val,
+            id,
+            checkProp
+        };
+
+        Pace.restart();
+        Pace.track(function() {
+            setHeaders();
+            jQuery.ajax({
+                url: route,
+                method: 'post',
+                data: thisdata,
+                dataType: 'JSON',
+                beforeSend: function() {
+
+                },
+                success: function(result) {
+
+                    console.log(result);
+
+                    if (result.message == "success") {
+
+                        // Show valid icon
+
+                    } else {
+                        // Show cancel icon
+                    }
+
+
+                },
+                error: function(err) {
+                    // Show cancel icon
+                }
+
+            });
+        });
+
+
+
+    }
+
+
     function cannotSend() {
         swal('International Transfer Coming Soon!',
             'We detected this is an international transaction. We\'ll notify you when it is available', 'info');
