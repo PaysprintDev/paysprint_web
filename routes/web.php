@@ -406,6 +406,7 @@ Route::get('allusers', ['uses' => 'AdminController@allPlatformUsers', 'as' => 'a
 
 
 Route::get('approvedusers', ['uses' => 'AdminController@allApprovedUsers', 'as' => 'approvedusers']);
+Route::get('approvedpendingusers', ['uses' => 'AdminController@allApprovedPendingUsers', 'as' => 'approvedpendingusers']);
 Route::get('matchedusers', ['uses' => 'AdminController@allMatchedUsers', 'as' => 'matchedusers']);
 Route::get('leveltwousers', ['uses' => 'AdminController@allLevelTwoUsers', 'as' => 'leveltwousers']);
 Route::get('pendingusers', ['uses' => 'AdminController@allPendingUsers', 'as' => 'pendingusers']);
@@ -434,6 +435,7 @@ Route::get('allusersbycountry', ['uses' => 'AdminController@allPlatformUsersByCo
 
 
 Route::get('approvedusersbycountry', ['uses' => 'AdminController@allApprovedUsersByCountry', 'as' => 'approved users by country']);
+Route::get('approvedpendingusersbycountry', ['uses' => 'AdminController@allApprovedPendingUsersByCountry', 'as' => 'approved pending users by country']);
 Route::get('leveltwousersbycountry', ['uses' => 'AdminController@levelTwoUsersByCountry', 'as' => 'level two users by country']);
 Route::get('matchedusersbycountry', ['uses' => 'AdminController@allMatchedUsersByCountry', 'as' => 'matched users by country']);
 Route::get('pendingusersbycountry', ['uses' => 'AdminController@allPendingUsersByCountry', 'as' => 'pending users by country']);
@@ -937,6 +939,9 @@ Route::group(['prefix' => 'Ajax'], function () {
 	Route::post('getmystatement', ['uses' => 'HomeController@getmystatement', 'as' => 'getmystatement']);
 
 	Route::post('getOrganization', ['uses' => 'HomeController@getOrganization', 'as' => 'getOrganization']);
+
+	// Check IDV Information
+	Route::post('checkIdvPassInfo', ['uses' => 'IdvController@checkIdvPassInfo', 'as' => 'checkIdvPassInfo']);
 
 
 

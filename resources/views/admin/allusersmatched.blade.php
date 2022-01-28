@@ -111,7 +111,9 @@
                                                             </small>
 
                                                             <input type="checkbox" name="selfiecheck"
-                                                                id="selfiecheck{{ $datainfo->id }}">
+                                                                id="selfiecheck{{ $datainfo->id }}"
+                                                                onchange="checkMyBox('selfiecheck', '{{ $datainfo->id }}')"
+                                                                @if ($datainfo->selfie_check == 1) checked @endif>
 
                                                             <hr>
 
@@ -123,7 +125,9 @@
                                                             </small>
 
                                                             <input type="checkbox" name="nincheck"
-                                                                id="nincheck{{ $datainfo->id }}">
+                                                                id="nincheck{{ $datainfo->id }}"
+                                                                onchange="checkMyBox('nincheck', '{{ $datainfo->id }}')"
+                                                                @if ($datainfo->gov_check == 1) checked @endif>
                                                             <hr>
 
                                                         @endif
@@ -134,7 +138,9 @@
                                                             </small>
 
                                                             <input type="checkbox" name="licencecheck"
-                                                                id="licencecheck{{ $datainfo->id }}">
+                                                                id="licencecheck{{ $datainfo->id }}"
+                                                                onchange="checkMyBox('licencecheck', '{{ $datainfo->id }}')"
+                                                                @if ($datainfo->gov_check == 1) checked @endif>
 
                                                             <hr>
 
@@ -147,7 +153,9 @@
                                                             </small>
 
                                                             <input type="checkbox" name="passportcheck"
-                                                                id="passportcheck{{ $datainfo->id }}">
+                                                                id="passportcheck{{ $datainfo->id }}"
+                                                                onchange="checkMyBox('passportcheck', '{{ $datainfo->id }}')"
+                                                                @if ($datainfo->gov_check == 1) checked @endif>
 
                                                             <hr>
 
@@ -160,7 +168,9 @@
                                                             </small>
 
                                                             <input type="checkbox" name="incorpdoccheck"
-                                                                id="incorpdoccheck{{ $datainfo->id }}">
+                                                                id="incorpdoccheck{{ $datainfo->id }}"
+                                                                onchange="checkMyBox('incorpdoccheck', '{{ $datainfo->id }}')"
+                                                                @if ($datainfo->doc_check == 1) checked @endif>
 
                                                             <hr>
 
