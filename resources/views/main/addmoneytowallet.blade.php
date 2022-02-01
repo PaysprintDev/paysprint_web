@@ -269,7 +269,7 @@
                                     {{-- @if (Auth::user()->approval == 2 && Auth::user()->accountLevel == 3) --}}
 
 
-                                    @if ($data['paymentgateway']->gateway == 'PayStack' || $data['paymentgateway']->gateway == 'Express')
+                                    @if ($data['paymentgateway']->gateway == 'PayStack' || $data['paymentgateway']->gateway == 'Express Payment Solution')
 
                                         {{-- <div class="card-footer"> <a type="button" id="epsButton" href="" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </a></div> --}}
 
@@ -728,9 +728,10 @@
                     var currencyCode = `{{ $data['currencyCode']->currencyCode }}`;
                     var conversionamount = $('#conversionamount').val();
                     var api_token = `{{ Auth::user()->api_token }}`;
-                    // var callbackUrl = `{{ env('APP_URL') }}/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
                     var callbackUrl =
-                        `http://localhost:9090/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
+                        `{{ env('APP_URL') }}/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
+                    // var callbackUrl =
+                    //     `http://localhost:9090/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
                     var productId = "{{ Auth::user()->ref_code }}";
                     var description = "Added {{ $data['currencyCode']->currencyCode }}" + netamount +
                         " to PaySprint Wallet and a Fee of " + feeamount + " inclusive.";
@@ -765,15 +766,20 @@
 
                     var config = {
                         method: 'post',
-                        url: 'https://pgsandbox.xpresspayments.com:8090/api/Payments/Initialize',
+                        url: `https://myxpresspay.com:6004/api/Payments/Initialize`,
+                        // url: `https://pgsandbox.xpresspayments.com:8090/api/Payments/Initialize`,
                         headers: {
-                            'Authorization': `bearer {{ env('EPXRESS_PAYMENT_KEY') }}`,
+                            'Authorization': `bearer {{ env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_KEY_DEV') : env('EPXRESS_PAYMENT_KEY_PROD') }}`,
                             'Content-Type': 'application/json'
                         },
                         data: data
                     };
 
+                    // console.log(config);
+
                     const response = await axios(config);
+
+                    // console.log(response);
 
                     $('.cardSubmit').text('Confirm');
 

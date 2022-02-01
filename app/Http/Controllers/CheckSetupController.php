@@ -1615,6 +1615,79 @@ class CheckSetupController extends Controller
     }
 
 
+    public function nonMonthlyTransactionHistory()
+    {
+
+        try {
+            // Get Statement Information
+            $getusers = User::inRandomOrder()->orderBy('created_at', 'DESC')->get();
+
+
+            if (count($getusers) > 0) {
+                $from = date('Y-m-01');
+                $nextDay = date('Y-m-d');
+
+                foreach ($getusers as $key => $value) {
+
+                    $email = $value->email;
+
+
+                    $myStatement = Statement::where('user_id', $email)->whereBetween('trans_date', [$from, $nextDay])->orderBy('created_at', 'DESC')->get();
+
+                    if (count($myStatement) > 0) {
+
+                        // Do Nothing ... 
+
+                    }
+                    else{
+                                                // Send Mail
+
+                        $walletBalance = $value->wallet_balance;
+                        $currencyCode = $value->currencyCode;
+
+                        $name = $value->name;
+                        $subject = "Your monthly statement on PaySprint";
+
+                        $tabledetails = "";
+                        $table = "";
+
+
+                        $color = "green";
+                        $amount = "+" . $currencyCode . number_format(0, 2);
+
+
+                        $tabledetails = "<tr>
+		    			<td>" . date('d/F/Y') . "</td>
+		    			<td>No transaction</td>
+		    			<td style='color:" . $color . "; font-weight: bold;' align='center'>" . $amount . "</td>
+		    			<td>Delivered</td>
+		    			</tr>";
+
+                            $table .= $tabledetails;
+
+
+                        $message = "<p>Below is the statement of your transactions on PaySprint for this month.</p> <br> <table width='700' border='1' cellpadding='1' cellspacing='0'><thead><tr><th>Trans. Date</th><th>Desc.</th><th>Amount</th><th>Status</th></tr></thead><tbody>" . $table . "</tbody></table> <br><br> Thanks <br><br> Client Services Team <br> PaySprint <br><br>";
+
+
+
+
+                        $this->mailprocess($email, $name, $subject, $message);
+                        
+                    }
+                }
+
+                echo "Done";
+            } else {
+
+                // Do nothing
+                echo "No user record";
+            }
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+    }
+
+
     public function migrateUsersToLevelOne()
     {
 

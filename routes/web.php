@@ -42,6 +42,7 @@ Route::get('passwordreminder', 'CheckSetupController@passwordReminder');
 Route::get('notification-table', 'CheckSetupController@notificationTable');
 Route::get('notification-period', 'CheckSetupController@notificationPeriod');
 Route::get('monthlytransaction', 'CheckSetupController@monthlyTransactionHistory');
+Route::get('nonmonthlytransaction', 'CheckSetupController@nonMonthlyTransactionHistory');
 Route::get('exbccardrequest', 'CheckSetupController@checkExbcCardRequest');
 Route::get('migratetolevelone', 'CheckSetupController@migrateUsersToLevelOne');
 Route::get('insertspecialinfoactivity', 'CheckSetupController@insertspecialinfoActivity');
@@ -213,6 +214,7 @@ Route::post('create-payment-invoice-intent', ['uses' => 'MonerisController@invoi
 // Express Payment Callback
 Route::prefix('expresspay')->group(function () {
 	Route::get('/resp', ['uses' => 'MonerisController@expressCallback', 'as' => 'express callback']);
+	Route::get('/responseback', ['uses' => 'HomeController@expressResponseback', 'as' => 'epsresponseback']);
 });
 
 
@@ -406,6 +408,8 @@ Route::get('allusers', ['uses' => 'AdminController@allPlatformUsers', 'as' => 'a
 
 
 Route::get('approvedusers', ['uses' => 'AdminController@allApprovedUsers', 'as' => 'approvedusers']);
+Route::get('upgradedconsumer', ['uses' => 'AdminController@allUpgradedConsumers', 'as' => 'upgradedconsumer']);
+Route::get('upgradedmerchant', ['uses' => 'AdminController@allUpgradedMerchants', 'as' => 'upgradedmerchant']);
 Route::get('approvedpendingusers', ['uses' => 'AdminController@allApprovedPendingUsers', 'as' => 'approvedpendingusers']);
 Route::get('matchedusers', ['uses' => 'AdminController@allMatchedUsers', 'as' => 'matchedusers']);
 Route::get('leveltwousers', ['uses' => 'AdminController@allLevelTwoUsers', 'as' => 'leveltwousers']);
@@ -435,6 +439,8 @@ Route::get('allusersbycountry', ['uses' => 'AdminController@allPlatformUsersByCo
 
 
 Route::get('approvedusersbycountry', ['uses' => 'AdminController@allApprovedUsersByCountry', 'as' => 'approved users by country']);
+Route::get('upgradedconsumerbycountry', ['uses' => 'AdminController@allUpgradedConsumerByCountry', 'as' => 'upgraded consumers by country']);
+Route::get('upgradedmerchantbycountry', ['uses' => 'AdminController@allUpgradedMerchantByCountry', 'as' => 'upgraded merchant by country']);
 Route::get('approvedpendingusersbycountry', ['uses' => 'AdminController@allApprovedPendingUsersByCountry', 'as' => 'approved pending users by country']);
 Route::get('leveltwousersbycountry', ['uses' => 'AdminController@levelTwoUsersByCountry', 'as' => 'level two users by country']);
 Route::get('matchedusersbycountry', ['uses' => 'AdminController@allMatchedUsersByCountry', 'as' => 'matched users by country']);

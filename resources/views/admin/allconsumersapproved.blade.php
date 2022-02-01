@@ -12,10 +12,10 @@
         <section class="content-header">
             <h1>
                 @if (Request::get('country') != null)
-                    All Approved In {{ Request::get('country') }}
+                    All Consumer Plan In {{ Request::get('country') }}
 
                 @else
-                    All Approved
+                    All Consumer Plan
 
                 @endif
             </h1>
@@ -23,10 +23,10 @@
                 <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
                 <li class="active">
                     @if (Request::get('country') != null)
-                        All Approved In {{ Request::get('country') }}
+                        All Consumer Plan In {{ Request::get('country') }}
 
                     @else
-                        All Approved
+                        All Consumer Plan
 
                     @endif
                 </li>
@@ -80,7 +80,7 @@
                                 <tbody>
 
 
-                                    @if ($allusersdata = \App\User::where('account_check', 2)->get())
+                                    @if ($allusersdata = \App\User::where('country', Request::get('country'))->where('plan', 'classic')->where('accountType', 'Individual')->get())
 
 
                                         @if (count($allusersdata) > 0)
@@ -109,8 +109,6 @@
                                                             <small style="font-weight: bold;">
                                                                 Selfie : @if ($datainfo->avatar != null) <a href="{{ $datainfo->avatar }}" target="_blank">View Avatar</a> @endif
                                                             </small>
-
-
 
                                                             <hr>
 

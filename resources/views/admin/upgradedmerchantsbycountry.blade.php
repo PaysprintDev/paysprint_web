@@ -12,11 +12,11 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                All IDV Completed By Country
+                All Upgraded Consumers By Country
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li class="active">All IDV Completed By Country</li>
+                <li class="active">All Upgraded Consumers By Country</li>
             </ol>
         </section>
 
@@ -65,7 +65,7 @@
 
                                                 <td>{{ $data->country }}</td>
 
-                                                @if ($allusersdata = \App\User::where('country', $data->country)->where('account_check', 2)->count())
+                                                @if ($allusersdata = \App\User::where('plan', 'classic')->where('accountType', 'Merchant')->where('country', $data->country)->count())
                                                     <td>{{ $allusersdata }}</td>
                                                 @endif
 
@@ -73,7 +73,7 @@
 
                                                 <td>
 
-                                                    <a href="{{ route('approvedusers', 'country=' . $data->country) }}"
+                                                    <a href="{{ route('upgradedmerchant', 'country=' . $data->country) }}"
                                                         type="button" class="btn btn-primary">View details</a>
 
 

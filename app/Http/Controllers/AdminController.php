@@ -3233,6 +3233,132 @@ class AdminController extends Controller
     }
 
 
+    public function allUpgradedConsumers(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+
+
+                $query = [
+                    'user_id' => session('user_id'),
+                    'name' => session('firstname') . ' ' . session('lastname'),
+                    'activity' => 'Access to all approved users page today: ' . date('d-M-Y h:i:a'),
+                ];
+
+                $this->createSupportActivity($query);
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allConsumerApproved();
+
+
+            return view('admin.allconsumersapproved')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
+    public function allUpgradedMerchants(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+
+
+                $query = [
+                    'user_id' => session('user_id'),
+                    'name' => session('firstname') . ' ' . session('lastname'),
+                    'activity' => 'Access to all approved users page today: ' . date('d-M-Y h:i:a'),
+                ];
+
+                $this->createSupportActivity($query);
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allMerchantApproved();
+
+
+            return view('admin.allmerchantsapproved')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
     public function allApprovedPendingUsers(Request $req)
     {
 
@@ -3977,6 +4103,131 @@ class AdminController extends Controller
 
 
             return view('admin.approvedusersbycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
+
+    public function allUpgradedConsumerByCountry(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+
+                $query = [
+                    'user_id' => session('user_id'),
+                    'name' => session('firstname') . ' ' . session('lastname'),
+                    'activity' => 'Access to all approved users page today: ' . date('d-M-Y h:i:a'),
+                ];
+
+                $this->createSupportActivity($query);
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->upgradedUsersByCountry('Individual');
+
+
+            return view('admin.upgradedconsumerbycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
+    public function allUpgradedMerchantByCountry(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+
+                $query = [
+                    'user_id' => session('user_id'),
+                    'name' => session('firstname') . ' ' . session('lastname'),
+                    'activity' => 'Access to all approved users page today: ' . date('d-M-Y h:i:a'),
+                ];
+
+                $this->createSupportActivity($query);
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->upgradedUsersByCountry('Merchant');
+
+
+            return view('admin.upgradedmerchantsbycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
         } else {
             return redirect()->route('AdminLogin');
         }
@@ -13961,7 +14212,7 @@ class AdminController extends Controller
             $resData = ['res' => 'Account information disapproved', 'message' => 'success', 'title' => 'Great'];
         } elseif ($data->approval == 1) {
 
-            $user->where('id', $req->id)->update(['approval' => 2, 'accountLevel' => 3, 'disableAccount' => 'off']);
+            $user->where('id', $req->id)->update(['approval' => 2, 'accountLevel' => 3, 'disableAccount' => 'off', 'account_check' => 2]);
 
             $subject = 'Account information approved';
 
@@ -15261,7 +15512,25 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     public function allUsersApproved()
     {
 
-        $data = User::where('accountLevel', 3)->where('approval', '>', 0)->where('account_check', 1)->orderBy('created_at', 'DESC')->get();
+        $data = User::where('account_check', 2)->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
+
+
+    public function allConsumerApproved()
+    {
+
+        $data = User::where('plan', 'classic')->where('accountType', 'Individual')->orderBy('name', 'ASC')->get();
+
+        return $data;
+    }
+
+
+    public function allMerchantApproved()
+    {
+
+        $data = User::where('plan', 'classic')->where('accountType', 'Merchant')->orderBy('name', 'ASC')->get();
 
         return $data;
     }
@@ -15270,7 +15539,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     public function allUsersApprovedPending()
     {
 
-        $data = User::where('accountLevel', 3)->where('approval', '>', 0)->where('account_check', 0)->orderBy('created_at', 'DESC')->get();
+        $data = User::where('account_check', 1)->orderBy('created_at', 'DESC')->get();
 
         return $data;
     }
@@ -15279,7 +15548,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     public function allUsersMatched()
     {
 
-        $data = User::where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', '>=', 1)->orderBy('created_at', 'DESC')->get();
+        $data = User::where('bvn_verification', '>=', 1)->where('account_check', 0)->orderBy('created_at', 'DESC')->get();
 
         return $data;
     }
@@ -15305,7 +15574,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     public function allUsersOverride()
     {
 
-        $data = User::where('accountLevel', 2)->where('approval', 0)->where('archive', '!=', 1)->orderBy('created_at', 'DESC')->get();
+        $data = User::where('accountLevel', '<=', 2)->where('approval', '<=', 1)->where('bvn_verification', 0)->where('archive', '!=', 1)->orderBy('created_at', 'DESC')->get();
 
         return $data;
     }
@@ -15382,7 +15651,15 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
     public function approvedUsersByCountry()
     {
-        $data = User::where('accountLevel', 3)->where('approval', 2)->where('account_check', 1)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        $data = User::where('account_check', 2)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+
+        return $data;
+    }
+
+
+    public function upgradedUsersByCountry($accountType)
+    {
+        $data = User::where('plan', 'classic')->where('accountType', $accountType)->groupBy('country')->get();
 
         return $data;
     }
@@ -15390,14 +15667,14 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
     public function approvedPendingUsersByCountry()
     {
-        $data = User::where('accountLevel', 3)->where('approval', 2)->where('account_check', 0)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        $data = User::where('account_check', 1)->orderBy('created_at', 'DESC')->groupBy('country')->get();
 
         return $data;
     }
 
     public function matchedUsersByCountry()
     {
-        $data = User::where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', '>=', 1)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        $data = User::where('bvn_verification', '>=', 1)->where('account_check', 0)->orderBy('created_at', 'DESC')->groupBy('country')->get();
 
         return $data;
     }
@@ -15420,7 +15697,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
     public function overrideUsersByCountry()
     {
-        $data = User::where('accountLevel', 2)->where('approval', '<=', 1)->where('bvn_verification', 0)->where('archive', '!=', 1)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        $data = User::where('accountLevel', '<=', 2)->where('approval', '<=', 1)->where('bvn_verification', 0)->where('archive', '!=', 1)->orderBy('created_at', 'DESC')->groupBy('country')->get();
 
         return $data;
     }

@@ -139,7 +139,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints']]);
+        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'expressResponseback']]);
 
         $location = $this->myLocation();
 
@@ -1060,35 +1060,51 @@ class HomeController extends Controller
     {
 
 
-        if ($req->session()->has('email') == false) {
-            if (Auth::check() == true) {
-                $this->page = 'My Wallet';
-                $this->name = Auth::user()->name;
-                $this->email = Auth::user()->email;
+        if (Auth::user()->accountType == "Individual"){
+            if ($req->session()->has('email') == false) {
+                if (Auth::check() == true) {
+                    $this->page = 'My Wallet';
+                    $this->name = Auth::user()->name;
+                    $this->email = Auth::user()->email;
+                } else {
+                    $this->page = 'My Wallet';
+                    $this->name = '';
+                }
             } else {
                 $this->page = 'My Wallet';
-                $this->name = '';
+                $this->name = session('name');
+                $this->email = session('email');
             }
-        } else {
-            $this->page = 'My Wallet';
-            $this->name = session('name');
-            $this->email = session('email');
+
+
+            $data = array(
+                'currencyCode' => $this->getCountryCode(Auth::user()->country),
+                'getCard' => $this->getUserCard(),
+                'getBank' => $this->getUserBankDetail(),
+                'walletStatement' => $this->walletStatement(),
+                'continent' => $this->timezone[0],
+                'specialInfo' => $this->getthisInfo(Auth::user()->country),
+                'idvchecks' => $this->checkUsersPassAccount(Auth::user()->id),
+            );
+
+            // dd($data);
+        }
+        else{
+            return redirect()->route('dashboard');
         }
 
-
-        $data = array(
-            'currencyCode' => $this->getCountryCode(Auth::user()->country),
-            'getCard' => $this->getUserCard(),
-            'getBank' => $this->getUserBankDetail(),
-            'walletStatement' => $this->walletStatement(),
-            'continent' => $this->timezone[0],
-            'specialInfo' => $this->getthisInfo(Auth::user()->country),
-            'idvchecks' => $this->checkUsersPassAccount(Auth::user()->id),
-        );
-
-        // dd($data);
+        
 
         return view('main.myaccount')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function expressResponseback(Request $req)
+    {
+
+        $data = [];
+
+        return view('main.messages')->with(['data' => $data]);
     }
 
 

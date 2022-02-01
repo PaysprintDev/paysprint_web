@@ -3,7 +3,7 @@
             <div class="sidebar-user text-center">
                 <a class="setting-primary" href="javascript:void(0)"><i data-feather="settings"></i></a><img
                     class="img-90 rounded-circle"
-                    src="{{ Auth::user()->avatar != null ? Auth::user()->avatar : 'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png' }}"
+                    src="{{ Auth::user()->avatar != null? Auth::user()->avatar: 'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png' }}"
                     alt="" />
                 <div class="badge-bottom"><span class="badge badge-primary"></span></div>
                 <a href="{{ route('profile') }}">
@@ -84,8 +84,22 @@
                                 <a class="nav-link menu-title " href="javascript:void(0)"><i
                                         data-feather="shopping-bag"></i><span>Create & Send Invoice</span></a>
                                 <ul class="nav-submenu menu-content">
+
                                     <li>
-                                        <a class="sub-title " href="javascript:void(0)">
+                                        <a href="{{ route('create single invoice') }}"><i
+                                                class="fa fa-circle-o text-red"></i>
+                                            Customer
+                                            on PS</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('create link invoice') }}"><i
+                                                class="fa fa-circle-o text-red"></i>
+                                            Customer
+                                            not on PS</a>
+                                    </li>
+
+                                    <li class="disp-0">
+                                        <a class="sub-title " href="{{ route('create single invoice') }}">
                                             Single<span class="sub-arrow"><i
                                                     class="fa fa-chevron-right"></i></span>
                                         </a>
