@@ -224,6 +224,39 @@
         </div>
 
 
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-purple">
+            <div class="inner">
+              <h3>@if($upgradeConsumerplans = \App\User::where('plan', 'classic')->where('accountType', 'Individual')->count()) {{ $upgradeConsumerplans }} @else 0 @endif</h3>
+
+              <p>Upgraded Plans (Consumer)</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('upgraded consumers by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+
+
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-blue">
+            <div class="inner">
+              <h3>@if($upgradeMerchantplans = \App\User::where('plan', 'classic')->where('accountType', 'Merchant')->count()) {{ $upgradeMerchantplans }} @else 0 @endif</h3>
+
+              <p>Upgraded Plans (Merchant)</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('upgraded merchant by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        
+
+
           <div class="col-lg-3 col-xs-6">
           <!-- small box -->
           <div class="small-box bg-purple">
@@ -244,7 +277,7 @@
           <!-- small box -->
           <div class="small-box bg-green">
             <div class="inner">
-              <h3>@if($approvedusers = \App\User::where('accountLevel', 3)->where('approval', 2)->where('account_check', 1)->count()) {{ $approvedusers }} @else 0 @endif</h3>
+              <h3>@if($approvedusers = \App\User::where('account_check', 2)->count()) {{ $approvedusers }} @else 0 @endif</h3>
 
               <p>IDV Completed</p>
             </div>
@@ -260,7 +293,8 @@
           <!-- small box -->
           <div class="small-box bg-purple">
             <div class="inner">
-              <h3>@if($approvedpendingusers = \App\User::where('accountLevel', 3)->where('approval', 2)->where('account_check', 0)->count()) {{ $approvedpendingusers }} @else 0 @endif</h3>
+              {{-- <h3>@if($approvedpendingusers = \App\User::where('accountLevel', '<=', 3)->where('approval', '<=', 2)->where('account_check', '<=', 1)->count()) {{ $approvedpendingusers }} @else 0 @endif</h3> --}}
+              <h3>@if($approvedpendingusers = \App\User::where('account_check', 1)->count()) {{ $approvedpendingusers }} @else 0 @endif</h3>
 
               <p>IDV Completed - Pending</p>
             </div>
@@ -276,7 +310,7 @@
           <!-- small box -->
           <div class="small-box bg-orange">
             <div class="inner">
-              <h3>@if($matchedUsers = \App\User::where('accountLevel', '>=', 2)->where('approval', 1)->where('bvn_verification', '>=', 1)->count()) {{ $matchedUsers }} @else 0 @endif</h3>
+              <h3>@if($matchedUsers = \App\User::where('bvn_verification', '>=', 1)->where('account_check', 0)->count()) {{ $matchedUsers }} @else 0 @endif</h3>
 
               <p>IDV Passed</p>
             </div>
@@ -308,7 +342,7 @@
           <!-- small box -->
           <div class="small-box bg-red">
             <div class="inner">
-              <h3>@if($approvalPending = \App\User::where('accountLevel', 0)->count()) {{ $approvalPending }} @else 0 @endif</h3>
+              <h3>@if($approvalPending = \App\User::where('accountLevel', '<=', 1)->count()) {{ $approvalPending }} @else 0 @endif</h3>
 
               <p>Unmatched Users</p>
 
@@ -325,7 +359,7 @@
           <!-- small box -->
           <div class="small-box bg-blue">
             <div class="inner">
-              <h3>@if($override = \App\User::where('accountLevel', 2)->where('approval', '<=', 1)->where('bvn_verification', 0)->where('archive', '!=', 1)->count()) {{ $override }}  @else 0 @endif</h3>
+              <h3>@if($override = \App\User::where('accountLevel', '<=', 2)->where('approval', '<=', 1)->where('bvn_verification', 0)->where('archive', '!=', 1)->count()) {{ $override }}  @else 0 @endif</h3>
 
               <p>IDV Failed</p>
 

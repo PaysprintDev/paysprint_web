@@ -80,8 +80,9 @@
                                 <tbody>
 
 
-                                    @if ($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', 3)->where('account_check', 0)->get())
+                                    @if ($allusersdata = \App\User::where([['country', '=', Request::get('country')], ['account_check', '=', 1]])->get())
 
+                                    
 
                                         @if (count($allusersdata) > 0)
                                             <?php $i = 1; ?>

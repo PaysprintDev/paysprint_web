@@ -7810,9 +7810,12 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                 $getGateway = AllCountries::where('name', $thisuser->country)->first();
 
-
-                $gateway = ucfirst($getGateway->gateway);
-
+                if($getGateway->gateway == "PayStack" || $getGateway->gateway == "Express Payment Solution"){
+                    $gateway = "Express Payment Solution";
+                }
+                else{
+                    $gateway = ucfirst($getGateway->gateway);
+                }
 
 
                 $referenced_code = $req->paymentToken;
@@ -7945,6 +7948,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 $data = $userInfo;
                 $status = 200;
                 $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to your wallet';
+                $action = 'success';
 
                 $this->createNotification($thisuser->ref_code, $sendMsg);
 
@@ -7964,20 +7968,25 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 $this->sendEmail($this->email, "Fund remittance");
             } else {
                 $data = [];
-                $message = $getVerification->responseMessage;
+                $message = "Payment not received | ".$getVerification->responseMessage;
                 $status = 400;
+                $action = 'error';
             }
         } catch (\Throwable $th) {
             $data = [];
-            $message = $th->getMessage();
+            $message = "Payment not received | ".$th->getMessage();
             $status = 400;
+            $action = 'error';
         }
 
 
         $resData = ['res' => $data, 'message' => $message, 'status' => $status];
+        
+
+        return redirect()->route('epsresponseback')->with($action, $message);
 
 
-        return $this->returnJSON($resData, $status);
+        // return $this->returnJSON($resData, $status);
     }
 
 

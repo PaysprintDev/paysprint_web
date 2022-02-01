@@ -80,7 +80,7 @@
                                 <tbody>
 
 
-                                    @if ($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', '>=', 1)->get())
+                                    @if ($allusersdata = \App\User::where('country', Request::get('country'))->where('bvn_verification', '>=', 1)->where('account_check', 0)->get())
 
 
                                         @if (count($allusersdata) > 0)

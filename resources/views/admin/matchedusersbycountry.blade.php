@@ -63,7 +63,7 @@
                             
                             <td>{{ $data->country }}</td>
 
-                            @if($allusersdata = \App\User::where('country', $data->country)->where('accountLevel', 2)->where('approval', 1)->where('bvn_verification', '>=', 1)->count())
+                            @if($allusersdata = \App\User::where('country', $data->country)->where('bvn_verification', '>=', 1)->where('account_check', 0)->count())
                                 <td>{{ $allusersdata }}</td>
                             @endif
 

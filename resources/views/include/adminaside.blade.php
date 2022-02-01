@@ -103,10 +103,9 @@
                                      </span>
                                  </a>
                                  <ul class="treeview-menu">
-                                     <li><a href="{{ route('new investors post') }}"><i
-                                                 class="fa fa-circle-o"></i> Post News</a></li>
-                                     <li><a href="#"><i
-                                                 class="fa fa-circle-o"></i> My News Posts</a></li>
+                                     <li><a href="{{ route('new investors post') }}"><i class="fa fa-circle-o"></i>
+                                             Post News</a></li>
+                                     <li><a href="#"><i class="fa fa-circle-o"></i> My News Posts</a></li>
                                      <li><a href="{{ route('new investor subscriber') }}"><i
                                                  class="fa fa-circle-o"></i> Subscribers</a></li>
 
@@ -203,6 +202,9 @@
                                          <li title="Paypal"><a
                                                  href="{{ route('gateway activity', 'gateway=PayPal') }}"><i
                                                      class="fa fa-circle-o text-red"></i> Paypal</a></li>
+                                         <li title="Paypal"><a
+                                                 href="{{ route('gateway activity', 'gateway=Express Payment Solution') }}"><i
+                                                     class="fa fa-circle-o text-red"></i> Express</a></li>
                                          <li title="Stripe"><a
                                                  href="{{ route('gateway activity', 'gateway=Stripe') }}"><i
                                                      class="fa fa-circle-o text-red"></i> Stripe</a></li>
@@ -623,9 +625,7 @@
 
 
 
-                 @elseif(session('role') != "Super" && session('role') != "Access to Level 1 only" &&
-                     session('role') !=
-                     "Access to Level 1 and 2 only" && session('role') != "Customer Marketing")
+                 @elseif(session('role') != 'Super' && session('role') != 'Access to Level 1 only' && session('role') != 'Access to Level 1 and 2 only' && session('role') != 'Customer Marketing')
 
 
 

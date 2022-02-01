@@ -182,7 +182,7 @@ trait ExpressPayment
 
         try {
 
-            $this->Base_Url = env('EPXRESS_PAYMENT_URL') . 'api/Payments/VerifyPayment';
+            $this->Base_Url = (env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_URL_DEV') : env('EPXRESS_PAYMENT_URL_PROD')) . 'api/Payments/VerifyPayment';
 
 
             $this->curlPost = json_encode([
@@ -537,7 +537,7 @@ trait ExpressPayment
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => $this->curlPost,
             CURLOPT_HTTPHEADER => array(
-                'Authorization: bearer ' . env('EPXRESS_PAYMENT_KEY'),
+                'Authorization: bearer ' . (env('APP_ENV') == "local" ? env('EPXRESS_PAYMENT_KEY_DEV') : env('EPXRESS_PAYMENT_KEY_PROD')),
                 'Content-Type: application/json'
             ),
         ));
