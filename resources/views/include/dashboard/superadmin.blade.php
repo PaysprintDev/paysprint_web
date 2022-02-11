@@ -310,7 +310,7 @@
           <!-- small box -->
           <div class="small-box bg-orange">
             <div class="inner">
-              <h3>@if($matchedUsers = \App\User::where('bvn_verification', '>=', 1)->where('account_check', 0)->count()) {{ $matchedUsers }} @else 0 @endif</h3>
+              <h3>@if($matchedUsers = \App\User::where([['accountLevel', '=', 2], ['approval', '=', 1],['bvn_verification', '>=', 1], ['account_check', '=', 0]])->count()) {{ $matchedUsers }} @else 0 @endif</h3>
 
               <p>IDV Passed</p>
             </div>
@@ -338,11 +338,11 @@
         </div>
 
 
-          <div class="col-lg-3 col-xs-6">
+          <div class="col-lg-3 col-xs-6 disp-0">
           <!-- small box -->
           <div class="small-box bg-red">
             <div class="inner">
-              <h3>@if($approvalPending = \App\User::where('accountLevel', '<=', 1)->count()) {{ $approvalPending }} @else 0 @endif</h3>
+              <h3>@if($approvalPending = \App\User::where([['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->count()) {{ $approvalPending }} @else 0 @endif</h3>
 
               <p>Unmatched Users</p>
 
@@ -355,11 +355,12 @@
         </div>
 
 
+        
           <div class="col-lg-3 col-xs-6">
           <!-- small box -->
           <div class="small-box bg-blue">
             <div class="inner">
-              <h3>@if($override = \App\User::where('accountLevel', '<=', 2)->where('approval', '<=', 1)->where('bvn_verification', 0)->where('archive', '!=', 1)->count()) {{ $override }}  @else 0 @endif</h3>
+              <h3>@if($override = \App\User::where([['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->count()) {{ $override }}  @else 0 @endif</h3>
 
               <p>IDV Failed</p>
 
@@ -368,6 +369,23 @@
               <i class="ion ion-person-add"></i>
             </div>
             <a href="{{ route('override users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+
+
+          <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-red">
+            <div class="inner">
+              <h3>@if($psnotactive = \App\User::where([['accountLevel', '=', 0], ['countryapproval', '=', 0]])->count()) {{ $psnotactive }}  @else 0 @endif</h3>
+
+              <p>PS Not Active</p>
+
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{{ route('ps not active by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
 
@@ -412,7 +430,7 @@
           <!-- small box -->
           <div class="small-box bg-purple">
             <div class="inner">
-              <h3>@if($newUsers = \App\User::where('accountType', 'Individual')->where('archive', 0)->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->count()) {{ $newUsers }}  @else 0 @endif</h3>
+              <h3>@if($newUsers = \App\User::where('accountType', 'Individual')->where('archive', 0)->where('countryapproval', 1)->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->count()) {{ $newUsers }}  @else 0 @endif</h3>
 
               <p>New Consumers</p>
 
@@ -427,7 +445,7 @@
           <!-- small box -->
           <div class="small-box bg-purple">
             <div class="inner">
-              <h3>@if($existingUsers = \App\User::where('accountType', 'Individual')->where('archive', 0)->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->count()) {{ $existingUsers }}  @else 0 @endif</h3>
+              <h3>@if($existingUsers = \App\User::where('accountType', 'Individual')->where('archive', 0)->where('countryapproval', 1)->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->count()) {{ $existingUsers }}  @else 0 @endif</h3>
 
               <p>Existing Consumers</p>
 
@@ -442,7 +460,7 @@
           <!-- small box -->
           <div class="small-box bg-blue">
             <div class="inner">
-              <h3>@if($newMerchant = \App\User::where('accountType', 'Merchant')->where('archive', 0)->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->count()) {{ $newMerchant }}  @else 0 @endif</h3>
+              <h3>@if($newMerchant = \App\User::where('accountType', 'Merchant')->where('archive', 0)->where('countryapproval', 1)->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->count()) {{ $newMerchant }}  @else 0 @endif</h3>
 
               <p>New Merchants</p>
 
@@ -457,7 +475,7 @@
           <!-- small box -->
           <div class="small-box bg-blue">
             <div class="inner">
-              <h3>@if($existingMerchant = \App\User::where('accountType', 'Merchant')->where('archive', 0)->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->count()) {{ $existingMerchant }}  @else 0 @endif</h3>
+              <h3>@if($existingMerchant = \App\User::where('accountType', 'Merchant')->where('archive', 0)->where('countryapproval', 1)->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->count()) {{ $existingMerchant }}  @else 0 @endif</h3>
 
               <p>Existing Merchants</p>
 
@@ -473,7 +491,7 @@
           <!-- small box -->
           <div class="small-box bg-red">
             <div class="inner">
-              <h3>@if($archivedUsers = \App\User::where('accountType', 'Individual')->where('archive', 1)->count()) {{ $archivedUsers }}  @else 0 @endif</h3>
+              <h3>@if($archivedUsers = \App\User::where('accountType', 'Individual')->where('countryapproval', 1)->where('archive', 1)->count()) {{ $archivedUsers }}  @else 0 @endif</h3>
 
               <p>Archived Consumers</p>
 
@@ -490,7 +508,7 @@
           <!-- small box -->
           <div class="small-box bg-black">
             <div class="inner">
-              <h3>@if($archivedMerchant = \App\User::where('accountType', 'Merchant')->where('archive', 1)->count()) {{ $archivedMerchant }}  @else 0 @endif</h3>
+              <h3>@if($archivedMerchant = \App\User::where('accountType', 'Merchant')->where('countryapproval', 1)->where('archive', 1)->count()) {{ $archivedMerchant }}  @else 0 @endif</h3>
 
               <p>Archived Merchants</p>
 

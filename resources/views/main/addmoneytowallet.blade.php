@@ -723,7 +723,8 @@
                     var feeamount = $('#commissiondeduct').val();
                     var amount = (+netamount + +feeamount).toFixed(2);
                     var paymentToken = '' + Math.floor((Math.random() * 1000000000) + 1);
-                    var publicKey = "XPPUBK-19995e83ba654840be35242359b66f8c-X";
+                    var publicKey = ;
+                    var publicKey = `{{ env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_KEY_DEV') : env('EPXRESS_PAYMENT_KEY_PROD') }}`;
                     var commission = $('#commission').val();
                     var currencyCode = `{{ $data['currencyCode']->currencyCode }}`;
                     var conversionamount = $('#conversionamount').val();
@@ -731,7 +732,8 @@
                     var callbackUrl =
                         `{{ env('APP_URL') }}/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
                     // var callbackUrl =
-                    //     `http://localhost:9090/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
+                        // `http://localhost:9090/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
+
                     var productId = "{{ Auth::user()->ref_code }}";
                     var description = "Added {{ $data['currencyCode']->currencyCode }}" + netamount +
                         " to PaySprint Wallet and a Fee of " + feeamount + " inclusive.";
@@ -766,8 +768,7 @@
 
                     var config = {
                         method: 'post',
-                        url: `https://myxpresspay.com:6004/api/Payments/Initialize`,
-                        // url: `https://pgsandbox.xpresspayments.com:8090/api/Payments/Initialize`,
+                        url: `{{ env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_URL_DEV') : env('EPXRESS_PAYMENT_URL_PROD') }}api/Payments/Initialize`,
                         headers: {
                             'Authorization': `bearer {{ env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_KEY_DEV') : env('EPXRESS_PAYMENT_KEY_PROD') }}`,
                             'Content-Type': 'application/json'
@@ -798,7 +799,7 @@
 
                 } catch (error) {
                     $('.cardSubmit').text('Confirm');
-                    swal('Oops!', error.message, 'error');
+                    swal('Oops!', error.response.data.responseMessage, 'error');
                 }
 
 

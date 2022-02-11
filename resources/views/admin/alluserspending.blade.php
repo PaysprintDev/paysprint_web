@@ -79,7 +79,7 @@
                                 </thead>
                                 <tbody>
 
-                                    @if ($allusersdata = \App\User::where('country', Request::get('country'))->where('accountLevel', 0)->get())
+                                    @if ($allusersdata = \App\User::where('country', Request::get('country'))->where([['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->get())
 
 
                                         @if (count($allusersdata) > 0)

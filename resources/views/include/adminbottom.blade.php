@@ -18,6 +18,9 @@
 <script src="https://raw.githubusercontent.com/HubSpot/pace/v1.0.0/pace.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
+crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <!-- jQuery UI 1.11.4 -->
 <script src="{{ asset('ext/bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
@@ -147,6 +150,9 @@
         $('#message').summernote({
             height: 300,
         });
+
+
+
     });
 </script>
 
@@ -4516,6 +4522,7 @@
             checkProp
         };
 
+
         Pace.restart();
         Pace.track(function() {
             setHeaders();
@@ -4525,7 +4532,12 @@
                 data: thisdata,
                 dataType: 'JSON',
                 beforeSend: function() {
-
+                    iziToast.info({
+                        title: 'Hey',
+                        message: 'Processing request...',
+                        position: 'topRight',
+                        timeout: 500,
+                    });
                 },
                 success: function(result) {
 
@@ -4533,16 +4545,28 @@
 
                     if (result.message == "success") {
 
-                        // Show valid icon
+                        iziToast.success({
+                            title: 'Great',
+                            message: 'Message sent successfully',
+                            position: 'topRight',
+                        });
 
                     } else {
-                        // Show cancel icon
+                        iziToast.error({
+                            title: 'Oops',
+                            message: 'Something went wrong!',
+                            position: 'topRight',
+                        });
                     }
 
 
                 },
                 error: function(err) {
-                    // Show cancel icon
+                    iziToast.error({
+                        title: 'Oops',
+                        message: err.message,
+                        position: 'topRight',
+                    });
                 }
 
             });

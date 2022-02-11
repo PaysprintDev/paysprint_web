@@ -28,6 +28,7 @@ use App\Traits\AccountNotify;
 use App\Traits\Xwireless;
 use App\Traits\PaymentGateway;
 use App\Traits\MailChimpNewsLetter;
+use App\Traits\Trulioo;
 
 class CheckSetupController extends Controller
 {
@@ -37,7 +38,7 @@ class CheckSetupController extends Controller
     public $subject;
     public $message;
 
-    use ExpressPayment, AccountNotify, Xwireless, PaymentGateway, MailChimpNewsLetter;
+    use ExpressPayment, AccountNotify, Xwireless, PaymentGateway, MailChimpNewsLetter, Trulioo;
     // Check user quick wallet setup
 
     public function updateQuickSetup()
@@ -1230,9 +1231,11 @@ class CheckSetupController extends Controller
     }
 
 
+
     // EXBC PREPAID CARD CHECK
     public function checkExbcCardRequest()
     {
+
 
         // RUN CRON GET
 
@@ -1245,7 +1248,10 @@ class CheckSetupController extends Controller
         //     $url = "https://exbc.ca/api/v1/paysprint/cardrequest";
         // }
 
-        $url = "https://exbc.ca/api/v1/paysprint/cardrequest";
+
+        try{
+
+            $url = "https://exbc.ca/api/v1/paysprint/cardrequest";
 
         $curl = curl_init();
 
@@ -1265,16 +1271,88 @@ class CheckSetupController extends Controller
 
         $response = curl_exec($curl);
 
+
         curl_close($curl);
 
         $result = json_decode($response);
 
 
+
         if (count($result->data)) {
             foreach ($result->data as $key => $value) {
-                $userDetail = User::where('ref_code', '!=', $value->ref_code)->update(['cardRequest' => 0]);
+                User::where('ref_code', '!=', $value->ref_code)->update(['cardRequest' => 0]);
             }
         }
+        else{
+            $result = [];
+        }
+
+        }
+        catch(\Throwable $th){
+            $this->slack('EXBC Card Request Error Module checkExbcCardRequest() line 1235: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+        }
+
+        
+    }
+
+
+    public function checkTrullioVerification(){
+        // Get Users with transactionRecordID..
+
+        try{
+            $getUsers = User::where('transactionRecordId', '!=', NULL)->inRandomOrder()->take(15)->get();
+
+
+            foreach($getUsers as $user){
+                
+                $getthis = $this->getTransRec($user->transactionRecordId);
+
+
+
+
+                if(gettype($getthis) == 'string' || gettype($getthis) == NULL){
+                    $newresponse = $this->transStatus($user->transactionRecordId);
+                    
+                    $checker = $this->getTransRec($newresponse->TransactionRecordId);
+
+
+                }
+                else{
+
+
+                $checker = $getthis;
+
+                }
+
+
+
+                    $userData = $user->name." | ".$checker->Record->RecordStatus;
+
+                if($checker->Record->RecordStatus == "match"){
+                    User::where('transactionRecordId', $user->transactionRecordId)->update(['bvn_verification' => 1]);
+                }
+                else{
+                    User::where('transactionRecordId', $user->transactionRecordId)->update(['bvn_verification' => 0]);
+                }
+
+
+            echo $userData."<hr>";
+
+
+            }
+
+
+
+        }
+        catch(\Throwable $th){
+            $this->slack('Trullio Verification Check Error Module checkTrullioVerification() line 1295: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+        }
+
+
+
+
+
+
     }
 
 

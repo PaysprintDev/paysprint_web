@@ -115,6 +115,23 @@ trait IDVCheck
             $response = "Kindly upload a Utility Bill ( Electricity, Hydro etc. Note that Bank or Credit Card Statements are not accepted) for verification.";
         }
 
+
+        if ($value == "nodocument" && $check == "true") {
+
+            User::where('id', $id)->update(['account_check' => 1, 'gov_check' => 1]);
+
+            $data = "Level 0";
+            $access = ['0' => 'receive money'];
+            $response = "Kindly Government Issued Photo ID (Drivers license or International Passport or National ID card), Utility Bill ( Electricity, Hydro etc. Note that Bank or Credit Card Statements are not accepted) for verification.";
+        } elseif ($value == "nodocument" && $check == "false") {
+
+            User::where('id', $id)->update(['account_check' => 0, 'gov_check' => 0]);
+
+            $data = "Level 0";
+            $access = ['0' => 'receive money'];
+            $response = "Kindly Government Issued Photo ID (Drivers license or International Passport or National ID card), Utility Bill ( Electricity, Hydro etc. Note that Bank or Credit Card Statements are not accepted) for verification.";
+        }
+
         $result = [
             'data' => $data,
             'response' => $response,

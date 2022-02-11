@@ -24,8 +24,24 @@
         <!-- Container-fluid starts-->
         <div class="container-fluid dashboard-default-sec">
             <div class="row">
+
+
+                {{-- Add Test Mode Here --}}
+                @if ($data['clientInfo']->accountMode == 'test')
+                    <div class="col-xl-12 box-col-12 des-xl-100">
+                        <div class="alert alert-danger" role="alert">
+                            <p class="text-center">Your account is currently in <strong>TEST</strong> mode</p>
+                        </div>
+                    </div>
+                @endif
+
+
                 <div class="col-xl-5 box-col-12 des-xl-100">
+
+
+
                     <div class="row">
+
 
                         <div class="col-xl-6 col-md-3 col-sm-6 box-col-3 des-xl-25 rate-sec">
                             <div class="card income-card card-primary">
@@ -132,7 +148,6 @@
 
 
                             @if (Auth::check() == true)
-
                                 @if ($imt = \App\AllCountries::where('name', Auth::user()->country)->where('imt', 'true')->first())
 
                                     @if (isset($imt))
@@ -151,7 +166,6 @@
                                                 class="btn btn-primary btn-block">Intl. Trans. <i class="fa fa-paper-plane"
                                                     aria-hidden="true"></i></a>
                                         </div>
-
                                     @endif
 
                                 @else
@@ -267,26 +281,26 @@
                                             data-clipboard-target="#profile-greeting" title="Copy"><i
                                                 class="icofont icofont-copy-alt" href=""></i></button>
                                         <pre><code class="language-html" id="profile-greeting">                                     &lt;div class="card profile-greeting"&gt;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      &lt;div class="card-header"&gt;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      &lt;div class="header-top"&gt;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        &lt;div class="setting-list bg-primary"&gt;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          &lt;ul class="list-unstyled setting-option"&gt;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            &lt;li&gt;&lt;div class="setting-white"&gt;&lt;i class="icon-settings"&gt;&lt;/i&gt;&lt;/div&gt;&lt;/li&gt;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            &lt;li&gt;&lt;i class="view-html fa fa-code font-white"&gt;&lt;/i&gt;&lt;/li&gt;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            &lt;li&gt;&lt;i class="icofont icofont-maximize full-card font-white"&gt;&lt;/i&gt;&lt;/li&gt;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            &lt;li&gt;&lt;i class="icofont icofont-minus minimize-card font-white"&gt;&lt;/i&gt;&lt;/li&gt;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            &lt;li&gt;&lt;i class="icofont icofont-refresh reload-card font-white"&gt;&lt;/i&gt;&lt;/li&gt;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            &lt;li&gt;&lt;i class="icofont icofont-error close-card font-white"&gt; &lt;/i&gt;&lt;/li&gt;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         &lt;/ul&gt;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        &lt;/div&gt;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      &lt;/div&gt;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      &lt;/div&gt;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      &lt;div class="card-body text-center"&gt;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      &lt;h3 class="font-light"&gt;Wellcome Back, John!!&lt;/h3&gt;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      &lt;p&gt;Lorem ipsum is simply dummy text of the printing and typesetting industry.Lorem ipsum has been&lt;/p&gt;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      &lt;button class="btn btn-light"&gt;Update &lt;/button&gt;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      &lt;/div&gt;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      &lt;/div&gt;</code></pre>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          &lt;div class="card-header"&gt;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          &lt;div class="header-top"&gt;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            &lt;div class="setting-list bg-primary"&gt;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              &lt;ul class="list-unstyled setting-option"&gt;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                &lt;li&gt;&lt;div class="setting-white"&gt;&lt;i class="icon-settings"&gt;&lt;/i&gt;&lt;/div&gt;&lt;/li&gt;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                &lt;li&gt;&lt;i class="view-html fa fa-code font-white"&gt;&lt;/i&gt;&lt;/li&gt;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                &lt;li&gt;&lt;i class="icofont icofont-maximize full-card font-white"&gt;&lt;/i&gt;&lt;/li&gt;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                &lt;li&gt;&lt;i class="icofont icofont-minus minimize-card font-white"&gt;&lt;/i&gt;&lt;/li&gt;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                &lt;li&gt;&lt;i class="icofont icofont-refresh reload-card font-white"&gt;&lt;/i&gt;&lt;/li&gt;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                &lt;li&gt;&lt;i class="icofont icofont-error close-card font-white"&gt; &lt;/i&gt;&lt;/li&gt;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             &lt;/ul&gt;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            &lt;/div&gt;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          &lt;/div&gt;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          &lt;/div&gt;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          &lt;div class="card-body text-center"&gt;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          &lt;h3 class="font-light"&gt;Wellcome Back, John!!&lt;/h3&gt;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          &lt;p&gt;Lorem ipsum is simply dummy text of the printing and typesetting industry.Lorem ipsum has been&lt;/p&gt;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          &lt;button class="btn btn-light"&gt;Update &lt;/button&gt;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          &lt;/div&gt;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          &lt;/div&gt;</code></pre>
                                     </div>
                                 </div>
                             </div>
@@ -378,7 +392,6 @@
                                 </div>
                             </div>
                         </div>
-
                     @endif
 
                     @if (Auth::user()->plan == 'classic')
@@ -471,451 +484,505 @@
 
 
 
-                <div class="col-xl-12 recent-order-sec">
-                    <div class="card">
-                        <div class="card-body">
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="profile-tab" data-bs-toggle="tab"
-                                        data-bs-target="#profile" type="button" role="tab" aria-controls="profile"
-                                        aria-selected="false">
-                                        <h6>Paid Invoice </h6>
 
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link " id="home-tab" data-bs-toggle="tab"
-                                        data-bs-target="#home" type="button" role="tab" aria-controls="home"
-                                        aria-selected="true">
-                                        <h6>Received Invoice</h6>
-                                    </button>
-                                </li>
-
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
-                                        data-bs-target="#contact" type="button" role="tab" aria-controls="contact"
-                                        aria-selected="false">
-                                        <h6>Invoice to Link Customers</h6>
-                                    </button>
-                                </li>
-
-                            </ul>
-                            <div class="tab-content" id="myTabContent">
-                                <div class="tab-pane fade show active" id="profile" role="tabpanel"
-                                    aria-labelledby="profile-tab">
-                                    <div class="table-responsive">
-
-                                        <table class="table table-bordernone table-striped invoicetable">
-                                            <thead>
-                                                <tr>
-                                                    <th>Transaction ID</th>
-                                                    <th>Pay Date</th>
-                                                    <th>Name</th>
-                                                    <th>Email</th>
-                                                    <th>Amount</th>
-                                                    <th>Invoice #</th>
-                                                    <th>Service</th>
-                                                    <th>Client</th>
-
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-
-                                                @if (count($data['allPaidInvoice']) > 0)
-
-                                                    @foreach ($data['allPaidInvoice'] as $payInvoices)
-
-                                                        <tr>
-                                                            <td>
-                                                                <div class="media"><img
-                                                                        class="img-fluid rounded-circle"
-                                                                        src=" {{ asset('merchantassets/assets/images/dashboard/icons8-invoice-30.png') }}"
-                                                                        alt="" data-original-title="" title="">
-                                                                    <div class="media-body"><a
-                                                                            href="#"><span>{{ $payInvoices->transactionid }}</span></a>
-                                                                    </div>
-                                                                </div>
-
-                                                            </td>
-                                                            <td>
-                                                                {{ date('d/M/Y', strtotime($payInvoices->created_at)) }}
-                                                            </td>
-                                                            <td>{{ $payInvoices->name }}</td>
-                                                            <td>{{ $payInvoices->email }}</td>
-                                                            <td style="font-weight: bold; color: green;">
-                                                                {{ Auth::user()->currencySymbol . '' . number_format($payInvoices->amount, 2) }}
-                                                            </td>
-                                                            <td>{{ $payInvoices->invoice_no }}</td>
-                                                            <td>{{ $payInvoices->service }}</td>
-                                                            <td>{{ $payInvoices->business_name }}</td>
-
-                                                        </tr>
-
-                                                    @endforeach
-
-                                                @else
-
-                                                    <tr>
-                                                        <td colspan="8" align="center">
-                                                            <p>No record</p>
-                                                        </td>
-                                                    </tr>
-
-                                                @endif
-
-
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                    <div class="table-responsive">
-
-                                        <table class="table table-bordernone table-striped invoicetable">
-                                            <thead>
-                                                <tr>
-
-
-                                                    <th>Description</th>
-                                                    <th>Invoice #</th>
-                                                    <th>Status</th>
-                                                    <th>Amount</th>
-                                                    <th>Created Date</th>
-
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @if (isset($data['receivedInvoice']))
-                                                    <?php $i = 1; ?>
-                                                    @foreach (json_decode($data['receivedInvoice']) as $payInv)
-
-
-                                                        {{-- Get Merchant Currency --}}
-
-                                                        @if ($merchant = \App\User::where('ref_code', $payInv->uploaded_by)->first())
-
-                                                            @if ($payInv->invoiced_currency != null)
-                                                                @php
-                                                                    $currencySymb = $payInv->invoiced_currency_symbol;
-                                                                @endphp
-                                                            @else
-                                                                @php
-                                                                    $currencySymb = $merchant->currencySymbol;
-                                                                @endphp
-                                                            @endif
-
-
-                                                            @php
-                                                                $countryBase = $merchant->country;
-                                                            @endphp
-
-
-                                                        @else
-
-                                                            @if ($payInv->invoiced_currency != null)
-                                                                @php
-                                                                    $currencySymb = $payInv->invoiced_currency_symbol;
-                                                                @endphp
-                                                            @else
-                                                                @php
-                                                                    $currencySymb = Auth::user()->currencySymbol;
-                                                                @endphp
-                                                            @endif
-
-                                                            @php
-                                                                $countryBase = Auth::user()->country;
-                                                            @endphp
-
-                                                        @endif
-
-                                                        <tr>
-
-
-                                                            <td>
-                                                                {!! 'Invoice for ' . $payInv->service . ' to ' . $payInv->merchantName !!}
-                                                            </td>
-
-                                                            <td>{{ $payInv->invoice_no }} {!! $countryBase != Auth::user()->country ? '<img src="https://img.icons8.com/color/30/000000/around-the-globe.png"/>' : '' !!}</td>
-
-
-
-                                                            @if ($payInv->payment_status == 0)
-                                                                <td>
-                                                                    <a href="{{ route('payment', $payInv->invoice_no) }}"
-                                                                        type="button" class='btn btn-danger'>Pay Invoice</a>
-                                                                </td>
-                                                            @elseif($payInv->payment_status == 2)
-                                                                <td>
-                                                                    <a href="{{ route('payment', $payInv->invoice_no) }}"
-                                                                        type="button" class='btn btn-danger'
-                                                                        style='cursor: pointer;'>Pay Balance</a>
-                                                                </td>
-                                                            @else
-                                                                <td style="font-weight: bold; color: green;">Paid</td>
-                                                            @endif
-
-                                                            <td style="font-weight: 700">
-                                                                @php
-                                                                    if ($payInv->total_amount != null || $payInv->total_amount != 0) {
-                                                                        $totalAmount = $payInv->total_amount;
-                                                                    } else {
-                                                                        $totalAmount = $payInv->amount;
-                                                                    }
-                                                                @endphp
-
-                                                                @if ($payInv->payment_status == 0)
-                                                                    {{ '+' . $currencySymb . number_format($totalAmount, 2) }}
-                                                                @elseif($payInv->payment_status == 2)
-                                                                    {{ '-' . $currencySymb . number_format($payInv->remaining_balance, 2) }}
-                                                                @else
-                                                                    {{ '-' . $currencySymb . number_format($totalAmount, 2) }}
-                                                                @endif
-
-                                                            </td>
-
-                                                            <td>{{ date('d/m/Y h:i a', strtotime($payInv->created_at)) }}
-                                                            </td>
-
-
-                                                        </tr>
-                                                    @endforeach
-
-                                                @else
-                                                    <tr>
-                                                        <td colspan="5" align="center"> No uploaded Invoice yet</td>
-                                                    </tr>
-                                                @endif
-
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                                    <div class="table-responsive">
-
-                                        <table class="table table-bordernone invoicetable">
-                                            <thead>
-                                                <tr>
-                                                    <th>Created Date</th>
-                                                    <th>Transx. Date</th>
-                                                    <th>Invoice #</th>
-                                                    <th>Name</th>
-                                                    <th>Email</th>
-                                                    <th>Service</th>
-                                                    <th>Amount</th>
-                                                    <th>Tax Amount</th>
-                                                    <th>Total Amount</th>
-                                                    <th>Status</th>
-                                                    <th>Pay Due Date</th>
-
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-
-                                                @if (count($data['invoiceLink']) > 0)
-                                                    @foreach ($data['invoiceLink'] as $invoiceLinkImports)
-                                                        <tr>
-                                                            <td>
-                                                                <div class="media"><img
-                                                                        class="img-fluid rounded-circle"
-                                                                        src=" {{ asset('merchantassets/assets/images/dashboard/icons8-invoice-30.png') }}"
-                                                                        alt="" data-original-title="" title="">
-                                                                    <div class="media-body"><a
-                                                                            href="#"><span>{{ date('d/M/Y', strtotime($invoiceLinkImports->created_at)) }}</span></a>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-
-                                                            <td>{{ date('d/M/Y', strtotime($invoiceLinkImports->transaction_date)) }}
-                                                            </td>
-                                                            <td>{{ $invoiceLinkImports->invoice_no }}</td>
-                                                            <td>{{ $invoiceLinkImports->name }}</td>
-                                                            <td title="{{ $invoiceLinkImports->payee_email }}">
-                                                                <?php $string = $invoiceLinkImports->payee_email;
-                                                                $output = strlen($string) > 10 ? substr($string, 0, 10) . '...' : $string;
-                                                                echo $output; ?></td>
-                                                            <td title="{{ $invoiceLinkImports->service }}">
-                                                                <?php $string = $invoiceLinkImports->service;
-                                                                $output = strlen($string) > 10 ? substr($string, 0, 10) . '...' : $string;
-                                                                echo $output; ?>
-                                                            </td>
-                                                            <td align="center" style="font-weight: bold; color: navy;">
-                                                                {{ Auth::user()->currencySymbol . number_format($invoiceLinkImports->amount, 2) }}
-                                                            </td>
-
-                                                            <td align="center" style="font-weight: bold; color: purple;">
-                                                                {{ Auth::user()->currencySymbol . number_format($invoiceLinkImports->tax_amount, 2) }}
-                                                            </td>
-
-                                                            <td align="center" style="font-weight: bold; color: green;">
-                                                                {{ Auth::user()->currencySymbol . number_format($invoiceLinkImports->total_amount, 2) }}
-                                                            </td>
-
-                                                            @if ($invoiceLinkImports->payment_status == 1)
-                                                                <td align="center" style="font-weight: bold; color: green;">
-                                                                    Paid
-                                                                </td>
-
-                                                            @elseif ($invoiceLinkImports->payment_status == 2)
-
-                                                                <td align="center"
-                                                                    style="font-weight: bold; color: purple;">Part
-                                                                    Pay</td>
-
-                                                            @else
-
-                                                                <td align="center" style="font-weight: bold; color: red;">
-                                                                    Unpaid
-                                                                </td>
-
-                                                            @endif
-                                                            <td>{{ date('d/M/Y', strtotime($invoiceLinkImports->payment_due_date)) }}
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                @else
-                                                    <tr>
-                                                        <td colspan="11" align="right">No record</td>
-                                                    </tr>
-                                                @endif
-
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-
-
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
-        <div class="col-xl-12 col-50 box-col-6 des-xl-50">
-            <div class="card latest-update-sec">
-                <div class="card-header">
-                    <div class="header-top d-sm-flex align-items-center">
-                        <h5>Invoice List</h5>
-                        <div class="center-content">
 
-                        </div>
-                        <div class="setting-list">
-                            <ul class="list-unstyled setting-option">
-                                <li>
-                                    <div class="setting-primary"><i class="icon-settings"></i></div>
-                                </li>
-                                <li><i class="icofont icofont-maximize full-card font-primary"></i>
-                                </li>
-                                <li><i class="icofont icofont-minus minimize-card font-primary"></i>
-                                </li>
-                                <li><i class="icofont icofont-refresh reload-card font-primary"></i>
-                                </li>
-                                <li><i class="icofont icofont-error close-card font-primary"> </i></li>
-                            </ul>
-                        </div>
-                    </div>
+
+        @if ($data['clientInfo']->accountMode == 'test')
+            {{-- Start Test Mode --}}
+
+            <div class="card mb-3" style="max-width: 100%; cursor: pointer;"
+                onclick="location.href=`{{ route('merchant profile') }}`">
+                <div class="card-body border border-danger">
+
+                    <h5 class="card-title"> <img
+                            src="https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/50/000000/external-wallet-interface-kiranshastry-lineal-kiranshastry.png" />
+                        <strong>Verify your Company</strong>
+                    </h5>
+                    <p class="card-text">Verify your company to start enjoying PaySprint full access</p>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordernone invoicetable">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Created Date</th>
-                                    <th>Trans. Date</th>
-                                    <th>Invoice #</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Service</th>
-                                    <th>Amount</th>
-                                    <th>Tax Amount</th>
-                                    <th>Total Amount</th>
-                                    <th>Status</th>
-                                    <th>Pay Due Date</th>
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (count($data['invoiceList']) > 0)
-                                    <?php $i = 1; ?>
-                                    @foreach ($data['invoiceList'] as $invoiceImports)
-
-                                        @if ($invoiceImports->invoiced_currency != null)
-                                            @php
-                                                $symbolVal = $invoiceImports->invoiced_currency_symbol;
-                                            @endphp
-                                        @else
-                                            @php
-                                                $symbolVal = Auth::user()->currencySymbol;
-                                            @endphp
-                                        @endif
-
-                                        <tr>
+            </div>
 
 
-                                            <td>{{ $i++ }}</td>
-                                            <td>{{ date('d/M/Y', strtotime($invoiceImports->created_at)) }}</td>
-                                            <td>{{ date('d/M/Y', strtotime($invoiceImports->transaction_date)) }}
-                                            </td>
-                                            <td>{{ $invoiceImports->invoice_no }}</td>
-                                            <td>{{ $invoiceImports->name }}</td>
-                                            <td title="{{ $invoiceImports->payee_email }}"><?php $string = $invoiceImports->payee_email;
-$output = strlen($string) > 10 ? substr($string, 0, 10) . '...' : $string;
-echo $output; ?>
-                                            </td>
-                                            <td title="{{ $invoiceImports->service }}"><?php $string = $invoiceImports->service;
-$output = strlen($string) > 10 ? substr($string, 0, 10) . '...' : $string;
-echo $output; ?></td>
-                                            <td align="center" style="font-weight: bold; color: navy;">
-                                                {{ $symbolVal . number_format($invoiceImports->amount, 2) }} </td>
 
-                                            <td align="center" style="font-weight: bold; color: purple;">
-                                                {{ $symbolVal . number_format($invoiceImports->tax_amount, 2) }} </td>
+            <div class="card mb-3" style="max-width: 100%; cursor: pointer;"
+                onclick="location.href=`{{ route('set up tax') }}`">
+                <div class="card-body border border-danger">
 
-                                            <td align="center" style="font-weight: bold; color: green;">
-                                                {{ $symbolVal . number_format($invoiceImports->total_amount, 2) }} </td>
+                    <h5 class="card-title"> <img
+                            src="https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/50/000000/external-file-interface-kiranshastry-lineal-color-kiranshastry-1.png" />
+                        <strong>Set Up Tax</strong>
 
-                                            @if ($invoiceImports->payment_status == 1)
-                                                <td align="center" style="font-weight: bold; color: green;">Paid
-                                                </td>
+                    </h5>
+                    <p class="card-text">Set up tax to help you easily generate invoices</p>
+                </div>
+            </div>
 
-                                            @elseif ($invoiceImports->payment_status == 2)
+            <br>
+            <br>
 
-                                                <td align="center" style="font-weight: bold; color: purple;">Part
-                                                    Pay</td>
+            {{-- End Test Mode --}}
+
+        @else
+
+            <div class="col-xl-12 recent-order-sec">
+                <div class="card">
+                    <div class="card-body">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="profile-tab" data-bs-toggle="tab"
+                                    data-bs-target="#profile" type="button" role="tab" aria-controls="profile"
+                                    aria-selected="false">
+                                    <h6>Paid Invoice </h6>
+
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link " id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
+                                    type="button" role="tab" aria-controls="home" aria-selected="true">
+                                    <h6>Received Invoice</h6>
+                                </button>
+                            </li>
+
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
+                                    data-bs-target="#contact" type="button" role="tab" aria-controls="contact"
+                                    aria-selected="false">
+                                    <h6>Invoice to Link Customers</h6>
+                                </button>
+                            </li>
+
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="profile" role="tabpanel"
+                                aria-labelledby="profile-tab">
+                                <div class="table-responsive">
+
+                                    <table class="table table-bordernone table-striped invoicetable">
+                                        <thead>
+                                            <tr>
+                                                <th>Transaction ID</th>
+                                                <th>Pay Date</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Amount</th>
+                                                <th>Invoice #</th>
+                                                <th>Service</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @if (count($data['allPaidInvoice']) > 0)
+                                                @foreach ($data['allPaidInvoice'] as $payInvoices)
+
+                                                    <tr>
+                                                        <td>
+                                                            <div class="media"><img
+                                                                    class="img-fluid rounded-circle"
+                                                                    src=" {{ asset('merchantassets/assets/images/dashboard/icons8-invoice-30.png') }}"
+                                                                    alt="" data-original-title="" title="">
+                                                                <div class="media-body"><a
+                                                                        href="#"><span>{{ $payInvoices->transactionid }}</span></a>
+                                                                </div>
+                                                            </div>
+
+                                                        </td>
+                                                        <td>
+                                                            {{ date('d/M/Y', strtotime($payInvoices->created_at)) }}
+                                                        </td>
+                                                        <td>{{ $payInvoices->name }}</td>
+                                                        <td>{{ $payInvoices->email }}</td>
+                                                        <td style="font-weight: bold; color: green;">
+                                                            {{ Auth::user()->currencySymbol . '' . number_format($payInvoices->amount, 2) }}
+                                                        </td>
+                                                        <td>{{ $payInvoices->invoice_no }}</td>
+                                                        <td>{{ $payInvoices->service }}</td>
+
+
+                                                    </tr>
+                                                @endforeach
 
                                             @else
 
-                                                <td align="center" style="font-weight: bold; color: red;">Unpaid
-                                                </td>
+                                                <tr>
+                                                    <td colspan="8" align="center">
+                                                        <p>No record</p>
+                                                    </td>
+                                                </tr>
 
                                             @endif
 
 
-                                            <td>{{ date('d/M/Y', strtotime($invoiceImports->payment_due_date)) }}
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @else
-                                    <tr>
-                                        <td colspan="10" align="center"> No uploaded Invoice yet</td>
-                                    </tr>
-                                @endif
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="table-responsive">
+
+                                    <table class="table table-bordernone table-striped invoicetable">
+                                        <thead>
+                                            <tr>
 
 
-                            </tbody>
-                        </table>
+                                                <th>Description</th>
+                                                <th>Invoice #</th>
+                                                <th>Status</th>
+                                                <th>Amount</th>
+                                                <th>Created Date</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (isset($data['receivedInvoice']))
+                                                <?php $i = 1; ?>
+                                                @foreach (json_decode($data['receivedInvoice']) as $payInv)
+
+
+                                                    {{-- Get Merchant Currency --}}
+
+                                                    @if ($merchant = \App\User::where('ref_code', $payInv->uploaded_by)->first())
+
+                                                        @if ($payInv->invoiced_currency != null)
+                                                            @php
+                                                                $currencySymb = $payInv->invoiced_currency_symbol;
+                                                            @endphp
+                                                        @else
+                                                            @php
+                                                                $currencySymb = $merchant->currencySymbol;
+                                                            @endphp
+                                                        @endif
+
+
+                                                        @php
+                                                            $countryBase = $merchant->country;
+                                                        @endphp
+
+
+                                                    @else
+
+                                                        @if ($payInv->invoiced_currency != null)
+                                                            @php
+                                                                $currencySymb = $payInv->invoiced_currency_symbol;
+                                                            @endphp
+                                                        @else
+                                                            @php
+                                                                $currencySymb = Auth::user()->currencySymbol;
+                                                            @endphp
+                                                        @endif
+
+                                                        @php
+                                                            $countryBase = Auth::user()->country;
+                                                        @endphp
+
+                                                    @endif
+
+                                                    <tr>
+
+
+                                                        <td>
+                                                            {!! 'Invoice for ' . $payInv->service . ' to ' . $payInv->merchantName !!}
+                                                        </td>
+
+                                                        <td>{{ $payInv->invoice_no }} {!! $countryBase != Auth::user()->country ? '<img src="https://img.icons8.com/color/30/000000/around-the-globe.png"/>' : '' !!}</td>
+
+
+
+                                                        @if ($payInv->payment_status == 0)
+                                                            <td>
+                                                                <a href="{{ route('payment', $payInv->invoice_no) }}"
+                                                                    type="button" class='btn btn-danger'>Pay Invoice</a>
+                                                            </td>
+                                                        @elseif($payInv->payment_status == 2)
+                                                            <td>
+                                                                <a href="{{ route('payment', $payInv->invoice_no) }}"
+                                                                    type="button" class='btn btn-danger'
+                                                                    style='cursor: pointer;'>Pay Balance</a>
+                                                            </td>
+                                                        @else
+                                                            <td style="font-weight: bold; color: green;">Paid</td>
+                                                        @endif
+
+                                                        <td style="font-weight: 700">
+                                                            @php
+                                                                if ($payInv->total_amount != null || $payInv->total_amount != 0) {
+                                                                    $totalAmount = $payInv->total_amount;
+                                                                } else {
+                                                                    $totalAmount = $payInv->amount;
+                                                                }
+                                                            @endphp
+
+                                                            @if ($payInv->payment_status == 0)
+                                                                {{ '+' . $currencySymb . number_format($totalAmount, 2) }}
+                                                            @elseif($payInv->payment_status == 2)
+                                                                {{ '-' . $currencySymb . number_format($payInv->remaining_balance, 2) }}
+                                                            @else
+                                                                {{ '-' . $currencySymb . number_format($totalAmount, 2) }}
+                                                            @endif
+
+                                                        </td>
+
+                                                        <td>{{ date('d/m/Y h:i a', strtotime($payInv->created_at)) }}
+                                                        </td>
+
+
+                                                    </tr>
+                                                @endforeach
+
+                                            @else
+                                                <tr>
+                                                    <td colspan="5" align="center"> No uploaded Invoice yet</td>
+                                                </tr>
+                                            @endif
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                                <div class="table-responsive">
+
+                                    <table class="table table-bordernone invoicetable">
+                                        <thead>
+                                            <tr>
+                                                <th>Created Date</th>
+                                                <th>Transx. Date</th>
+                                                <th>Invoice #</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Service</th>
+                                                <th>Amount</th>
+                                                <th>Tax Amount</th>
+                                                <th>Total Amount</th>
+                                                <th>Status</th>
+                                                <th>Pay Due Date</th>
+                                                <th>Action</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @if (count($data['invoiceLink']) > 0)
+                                                @foreach ($data['invoiceLink'] as $invoiceLinkImports)
+                                                    <tr>
+                                                        <td>
+                                                            <div class="media"><img
+                                                                    class="img-fluid rounded-circle"
+                                                                    src=" {{ asset('merchantassets/assets/images/dashboard/icons8-invoice-30.png') }}"
+                                                                    alt="" data-original-title="" title="">
+                                                                <div class="media-body"><a
+                                                                        href="#"><span>{{ date('d/M/Y', strtotime($invoiceLinkImports->created_at)) }}</span></a>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+
+                                                        <td>{{ date('d/M/Y', strtotime($invoiceLinkImports->transaction_date)) }}
+                                                        </td>
+                                                        <td>{{ $invoiceLinkImports->invoice_no }}</td>
+                                                        <td>{{ $invoiceLinkImports->name }}</td>
+                                                        <td title="{{ $invoiceLinkImports->payee_email }}">
+                                                            <?php $string = $invoiceLinkImports->payee_email;
+                                                            $output = strlen($string) > 10 ? substr($string, 0, 10) . '...' : $string;
+                                                            echo $output; ?></td>
+                                                        <td title="{{ $invoiceLinkImports->service }}">
+                                                            <?php $string = $invoiceLinkImports->service;
+                                                            $output = strlen($string) > 10 ? substr($string, 0, 10) . '...' : $string;
+                                                            echo $output; ?>
+                                                        </td>
+                                                        <td align="center" style="font-weight: bold; color: navy;">
+                                                            {{ Auth::user()->currencySymbol . number_format($invoiceLinkImports->amount, 2) }}
+                                                        </td>
+
+                                                        <td align="center" style="font-weight: bold; color: purple;">
+                                                            {{ Auth::user()->currencySymbol . number_format($invoiceLinkImports->tax_amount, 2) }}
+                                                        </td>
+
+                                                        <td align="center" style="font-weight: bold; color: green;">
+                                                            {{ Auth::user()->currencySymbol . number_format($invoiceLinkImports->total_amount, 2) }}
+                                                        </td>
+
+                                                        @if ($invoiceLinkImports->payment_status == 1)
+                                                            <td align="center" style="font-weight: bold; color: green;">
+                                                                Paid
+                                                            </td>
+
+                                                        @elseif ($invoiceLinkImports->payment_status == 2)
+
+                                                            <td align="center" style="font-weight: bold; color: purple;">
+                                                                Part
+                                                                Pay</td>
+
+                                                        @else
+
+                                                            <td align="center" style="font-weight: bold; color: red;">
+                                                                Unpaid
+                                                            </td>
+                                                        @endif
+                                                        <td>{{ date('d/M/Y', strtotime($invoiceLinkImports->payment_due_date)) }}
+                                                        </td>
+
+                                                        <td>
+                                                            <a href="{{ route('link customer', $invoiceLinkImports->id) }}"
+                                                                type="button"
+                                                                class="btn btn-primary text-white">details</a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @else
+                                                <tr>
+                                                    <td colspan="11" align="right">No record</td>
+                                                </tr>
+                                            @endif
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+
                     </div>
-
                 </div>
             </div>
-        </div>
+
+            <div class="col-xl-12 col-50 box-col-6 des-xl-50">
+                <div class="card latest-update-sec">
+                    <div class="card-header">
+                        <div class="header-top d-sm-flex align-items-center">
+                            <h5>Invoice List</h5>
+                            <div class="center-content">
+
+                            </div>
+                            <div class="setting-list">
+                                <ul class="list-unstyled setting-option">
+                                    <li>
+                                        <div class="setting-primary"><i class="icon-settings"></i></div>
+                                    </li>
+                                    <li><i class="icofont icofont-maximize full-card font-primary"></i>
+                                    </li>
+                                    <li><i class="icofont icofont-minus minimize-card font-primary"></i>
+                                    </li>
+                                    <li><i class="icofont icofont-refresh reload-card font-primary"></i>
+                                    </li>
+                                    <li><i class="icofont icofont-error close-card font-primary"> </i></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordernone invoicetable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Created Date</th>
+                                        <th>Trans. Date</th>
+                                        <th>Invoice #</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Service</th>
+                                        <th>Amount</th>
+                                        <th>Tax Amount</th>
+                                        <th>Total Amount</th>
+                                        <th>Status</th>
+                                        <th>Pay Due Date</th>
+                                        <th>Action</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (count($data['invoiceList']) > 0)
+                                        <?php $i = 1; ?>
+                                        @foreach ($data['invoiceList'] as $invoiceImports)
+
+                                            @if ($invoiceImports->invoiced_currency != null)
+                                                @php
+                                                    $symbolVal = $invoiceImports->invoiced_currency_symbol;
+                                                @endphp
+                                            @else
+                                                @php
+                                                    $symbolVal = Auth::user()->currencySymbol;
+                                                @endphp
+                                            @endif
+
+                                            <tr>
+
+
+                                                <td>{{ $i++ }}</td>
+                                                <td>{{ date('d/M/Y', strtotime($invoiceImports->created_at)) }}</td>
+                                                <td>{{ date('d/M/Y', strtotime($invoiceImports->transaction_date)) }}
+                                                </td>
+                                                <td>{{ $invoiceImports->invoice_no }}</td>
+                                                <td>{{ $invoiceImports->name }}</td>
+                                                <td title="{{ $invoiceImports->payee_email }}"><?php $string = $invoiceImports->payee_email;
+$output = strlen($string) > 10 ? substr($string, 0, 10) . '...' : $string;
+echo $output; ?>
+                                                </td>
+                                                <td title="{{ $invoiceImports->service }}"><?php $string = $invoiceImports->service;
+$output = strlen($string) > 10 ? substr($string, 0, 10) . '...' : $string;
+echo $output; ?></td>
+                                                <td align="center" style="font-weight: bold; color: navy;">
+                                                    {{ $symbolVal . number_format($invoiceImports->amount, 2) }} </td>
+
+                                                <td align="center" style="font-weight: bold; color: purple;">
+                                                    {{ $symbolVal . number_format($invoiceImports->tax_amount, 2) }}
+                                                </td>
+
+                                                <td align="center" style="font-weight: bold; color: green;">
+                                                    {{ $symbolVal . number_format($invoiceImports->total_amount, 2) }}
+                                                </td>
+
+                                                @if ($invoiceImports->payment_status == 1)
+                                                    <td align="center" style="font-weight: bold; color: green;">Paid
+                                                    </td>
+
+                                                @elseif ($invoiceImports->payment_status == 2)
+
+                                                    <td align="center" style="font-weight: bold; color: purple;">Part
+                                                        Pay</td>
+
+                                                @else
+
+                                                    <td align="center" style="font-weight: bold; color: red;">Unpaid
+                                                    </td>
+                                                @endif
+
+
+                                                <td>{{ date('d/M/Y', strtotime($invoiceImports->payment_due_date)) }}
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('customer', $invoiceImports->id) }}" type="button"
+                                                        class="btn btn-primary text-white">details</a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="10" align="center"> No uploaded Invoice yet</td>
+                                        </tr>
+                                    @endif
+
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        @endif
 
 
 

@@ -16,10 +16,10 @@
 
             <h1>
                 @if (Request::get('country') != null)
-                    All Override Approvals In {{ Request::get('country') }}
+                    All Not Active PaySprint Users In {{ Request::get('country') }}
 
                 @else
-                    All Override Approvals
+                    All Not Active PaySprint Users
 
                 @endif
             </h1>
@@ -27,10 +27,10 @@
                 <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
                 <li class="active">
                     @if (Request::get('country') != null)
-                        All Override Approvals In {{ Request::get('country') }}
+                        All Not Active PaySprint Users In {{ Request::get('country') }}
 
                     @else
-                        All Override Approvals
+                        All Not Active PaySprint Users
 
                     @endif
                 </li>
@@ -91,7 +91,9 @@
                                     <tbody>
 
 
-                                        @if ($allusersdata = \App\User::where('country', Request::get('country'))->where([['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->orderBy('nin_front', 'DESC')->get())
+                                        @if ($allusersdata = \App\User::where([['country', '=', Request::get('country')],['countryapproval', '=', 0], ['accountLevel', '=', 0]])->orderBy('nin_front', 'DESC')->get())
+
+                                        
 
 
                                             @if (count($allusersdata) > 0)

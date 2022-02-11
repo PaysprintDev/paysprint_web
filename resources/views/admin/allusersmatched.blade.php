@@ -80,7 +80,7 @@
                                 <tbody>
 
 
-                                    @if ($allusersdata = \App\User::where('country', Request::get('country'))->where('bvn_verification', '>=', 1)->where('account_check', 0)->get())
+                                    @if ($allusersdata = \App\User::where([['country', '=', Request::get('country')], ['accountLevel', '=', 2], ['approval', '=', 1], ['bvn_verification', '>=', 1], ['account_check', '=', 0]])->get())
 
 
                                         @if (count($allusersdata) > 0)
@@ -171,6 +171,20 @@
                                                                 id="incorpdoccheck{{ $datainfo->id }}"
                                                                 onchange="checkMyBox('incorpdoccheck', '{{ $datainfo->id }}')"
                                                                 @if ($datainfo->doc_check == 1) checked @endif>
+
+                                                            <hr>
+
+                                                        @endif
+
+
+                                                        @if ($datainfo->nin_front == null || $datainfo->nin_back == null || $datainfo->drivers_license_front == null || $datainfo->drivers_license_back == null || $datainfo->international_passport_front == null || $datainfo->international_passport_back == null || $datainfo->incorporation_doc_front == null)
+                                                            <small style="font-weight: bold;">
+                                                                No document
+                                                            </small>
+
+                                                            <input type="checkbox" name="nodocument"
+                                                                id="nodocument{{ $datainfo->id }}"
+                                                                onchange="checkMyBox('nodocument', '{{ $datainfo->id }}')">
 
                                                             <hr>
 
