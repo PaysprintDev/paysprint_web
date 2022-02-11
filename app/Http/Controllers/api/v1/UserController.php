@@ -1269,21 +1269,27 @@ class UserController extends Controller
 
     public function bvnVerification(Request $req)
     {
-        $response = $this->verifyBVN($req->bvn, $req->account_number, $req->bank_code, $req->account_name);
-
-        Log::info(json_encode($response));
+        
 
         try {
 
 
             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
+
+            $response = $this->verifyBVN($req->bvn, $req->account_number, $req->bank_code, $req->account_name, $req->bearerToken());
+
+            Log::info(json_encode($response));
+
+            // dd($response);
+
+
             $bank = ListOfBanks::where('code', $req->bank_code)->first();
 
 
             BVNVerificationList::insert(['user_id' => $thisuser->id, 'bvn_number' => $req->bvn, 'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
 
-            if ($response->status == true && $response->data->is_blacklisted == false) {
+            if ($response->responseCode == "00" && $response->verificationStatus == "VERIFIED") {
 
                 if ($thisuser->approval == 2 && $thisuser->accountLevel == 3) {
                     User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 3, 'approval' => 2,  'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
@@ -1296,12 +1302,12 @@ class UserController extends Controller
 
 
 
-                $data = $response->data;
-                $message = $response->message;
+                $data = $response->response;
+                $message = $response->description;
                 $status = 200;
             } else {
                 $data = [];
-                $message = "Bank Verification Number does not match your account";
+                $message = $response->description.". ENSURE YOU PROVIDE FULLNAME AS REGISTERED WITH BANK";
                 $status = 400;
             }
 

@@ -3673,6 +3673,68 @@ class AdminController extends Controller
     }
 
 
+    public function allNotActivePsUsers(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+
+                $query = [
+                    'user_id' => session('user_id'),
+                    'name' => session('firstname') . ' ' . session('lastname'),
+                    'activity' => 'Access to all override users page today: ' . date('d-M-Y h:i:a'),
+                ];
+
+                $this->createSupportActivity($query);
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allNotActivePsUsersAccount();
+
+
+            return view('admin.allnotactivepsusersaccount')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
 
     public function allClosedUsers(Request $req)
     {
@@ -4538,6 +4600,68 @@ class AdminController extends Controller
 
 
             return view('admin.overrideusersbycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
+    public function allPSUsersNotActiveByCountry(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+
+                $query = [
+                    'user_id' => session('user_id'),
+                    'name' => session('firstname') . ' ' . session('lastname'),
+                    'activity' => 'Access to override level 1 user by country today: ' . date('d-M-Y h:i:a'),
+                ];
+
+                $this->createSupportActivity($query);
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->psUsersNotActiveByCountry();
+
+
+            return view('admin.psusersnotactivebycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
         } else {
             return redirect()->route('AdminLogin');
         }
@@ -13036,7 +13160,7 @@ class AdminController extends Controller
 
                     User::updateOrCreate(['email' => $getanonuser->email], $data);
 
-                    if ($insAdmin == 1) {
+                    if (isset($insAdmin)) {
                         // Set session
                         $getMerchant = User::where('ref_code', $req->ref_code)->first();
 
@@ -13108,6 +13232,10 @@ class AdminController extends Controller
 
                                     $resInfo = strtoupper($info->Record->RecordStatus) . ", Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.ca";
                                     User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'countryapproval' => 1, 'transactionRecordId' => $info->TransactionID]);
+
+
+                                    Auth::login($getMerchant);
+
                                 } else {
                                     $message = "success";
                                     $title = "Great";
@@ -13117,6 +13245,8 @@ class AdminController extends Controller
 
                                     // Udpate User Info
                                     User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 1, 'countryapproval' => 1, 'bvn_verification' => 1, 'transactionRecordId' => $info->TransactionID]);
+
+                                    Auth::login($getMerchant);
                                 }
                             } else {
                                 $message = "success";
@@ -13126,6 +13256,8 @@ class AdminController extends Controller
                                 $resInfo = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.ca";
 
                                 User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'countryapproval' => 1, 'transactionRecordId' => NULL]);
+
+                                Auth::login($getMerchant);
 
                                 // $resp = $info->Message;
                             }
@@ -13234,7 +13366,7 @@ class AdminController extends Controller
 
                     User::updateOrCreate(['email' => $req->email], $data);
 
-                    if ($insAdmin == 1) {
+                    if (isset($insAdmin)) {
 
                         $getMerchant = User::where('ref_code', $newRefcode)->first();
 
@@ -13290,6 +13422,9 @@ class AdminController extends Controller
 
                                     $resInfo = strtoupper($info->Record->RecordStatus) . ", Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance. Thank You";
                                     User::where('id', $getMerchant->id)->update(['accountLevel' => 0, 'countryapproval' => 1, 'transactionRecordId' => $info->TransactionID]);
+
+                                    Auth::login($getMerchant);
+
                                 } else {
                                     $message = "success";
                                     $title = "Great";
@@ -13299,6 +13434,8 @@ class AdminController extends Controller
 
                                     // Udpate User Info
                                     User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 1, 'countryapproval' => 1, 'bvn_verification' => 1, 'transactionRecordId' => $info->TransactionID]);
+
+                                    Auth::login($getMerchant);
                                 }
                             } else {
                                 $message = "success";
@@ -13309,6 +13446,8 @@ class AdminController extends Controller
 
                                 User::where('id', $getMerchant->id)->update(['accountLevel' => 0, 'countryapproval' => 1, 'transactionRecordId' => NULL]);
                                 // $resp = $info->Message;
+
+                                Auth::login($getMerchant);
                             }
                         } else {
 
@@ -15503,7 +15642,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     }
     public function allUsers()
     {
-        $data = User::orderBy('created_at', 'DESC')->get();
+        $data = User::where('countryapproval', 1)->orderBy('created_at', 'DESC')->get();
 
         return $data;
     }
@@ -15548,7 +15687,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     public function allUsersMatched()
     {
 
-        $data = User::where('bvn_verification', '>=', 1)->where('account_check', 0)->orderBy('created_at', 'DESC')->get();
+        $data = User::where([['accountLevel', '=', 2], ['approval', '=', 1],['bvn_verification', '>=', 1], ['account_check', '=', 0]])->orderBy('created_at', 'DESC')->get();
 
         return $data;
     }
@@ -15565,7 +15704,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     public function allUsersPending()
     {
 
-        $data = User::where('accountLevel', 0)->where('approval', 0)->orderBy('created_at', 'DESC')->get();
+        $data = User::where([['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->orderBy('created_at', 'DESC')->get();
 
         return $data;
     }
@@ -15574,7 +15713,16 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     public function allUsersOverride()
     {
 
-        $data = User::where('accountLevel', '<=', 2)->where('approval', '<=', 1)->where('bvn_verification', 0)->where('archive', '!=', 1)->orderBy('created_at', 'DESC')->get();
+        $data = User::where([['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
+
+
+    public function allNotActivePsUsersAccount()
+    {
+
+        $data = User::where('countryapproval', 0)->where('accountLevel', 0)->orderBy('created_at', 'DESC')->get();
 
         return $data;
     }
@@ -15643,7 +15791,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
     public function allUsersByCountry()
     {
-        $data = User::orderBy('created_at', 'DESC')->groupBy('country')->get();
+        $data = User::where('countryapproval', 1)->orderBy('created_at', 'DESC')->groupBy('country')->get();
 
         return $data;
     }
@@ -15674,7 +15822,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
     public function matchedUsersByCountry()
     {
-        $data = User::where('bvn_verification', '>=', 1)->where('account_check', 0)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        $data = User::where([['accountLevel', '=', 2], ['approval', '=', 1],['bvn_verification', '>=', 1], ['account_check', '=', 0]])->orderBy('created_at', 'DESC')->groupBy('country')->get();
 
         return $data;
     }
@@ -15689,7 +15837,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
     public function pendingUsersByCountry()
     {
-        $data = User::where('accountLevel', 0)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        $data = User::where([['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->orderBy('created_at', 'DESC')->groupBy('country')->get();
 
         return $data;
     }
@@ -15697,7 +15845,15 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
     public function overrideUsersByCountry()
     {
-        $data = User::where('accountLevel', '<=', 2)->where('approval', '<=', 1)->where('bvn_verification', 0)->where('archive', '!=', 1)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        $data = User::where([['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->orderBy('created_at', 'DESC')->groupBy('country')->get();
+
+        return $data;
+    }
+
+
+    public function psUsersNotActiveByCountry()
+    {
+        $data = User::where([['accountLevel', '=', 0], ['countryapproval', '=', 0]])->orderBy('created_at', 'DESC')->groupBy('country')->get();
 
         return $data;
     }
@@ -15793,22 +15949,22 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
             if (session('country') == 'Canada') {
                 if ($usertype == "new") {
-                    $data = User::where('accountType', 'Merchant')->where('archive', 0)->where('country', 'Canada')->orWhere('country', 'United States')->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+                    $data = User::where('accountType', 'Merchant')->where('archive', 0)->where('countryapproval', 1)->where('country', 'Canada')->orWhere('country', 'United States')->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
                 } else {
-                    $data = User::where('accountType', 'Merchant')->where('archive', 0)->where('country', 'Canada')->orWhere('country', 'United States')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+                    $data = User::where('accountType', 'Merchant')->where('archive', 0)->where('countryapproval', 1)->where('country', 'Canada')->orWhere('country', 'United States')->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
                 }
             } else {
                 if ($usertype == "new") {
-                    $data = User::where('accountType', 'Merchant')->where('archive', 0)->where('country', session('country'))->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+                    $data = User::where('accountType', 'Merchant')->where('archive', 0)->where('countryapproval', 1)->where('country', session('country'))->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
                 } else {
-                    $data = User::where('accountType', 'Merchant')->where('archive', 0)->where('country', session('country'))->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+                    $data = User::where('accountType', 'Merchant')->where('archive', 0)->where('countryapproval', 1)->where('country', session('country'))->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
                 }
             }
         } else {
             if ($usertype == "new") {
-                $data = User::where('accountType', 'Merchant')->where('archive', 0)->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+                $data = User::where('accountType', 'Merchant')->where('archive', 0)->where('countryapproval', 1)->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
             } else {
-                $data = User::where('accountType', 'Merchant')->where('archive', 0)->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
+                $data = User::where('accountType', 'Merchant')->where('archive', 0)->where('countryapproval', 1)->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->groupBy('country')->get();
             }
         }
 

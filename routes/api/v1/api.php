@@ -59,6 +59,9 @@ Route::prefix('/v1')->group(function () {
 
         // Do Investors data...
         Route::post('investordetails',  ['uses' => 'api\v1\InvestorRelationController@investorDetails'])->name('Investor details');
+
+        // Investor login
+        Route::post('investorlogin', ['uses' => 'api\v1\InvestorRelationController@investorLogin']);
     });
 
 

@@ -189,6 +189,8 @@ trait ExpressPayment
                 'transactionId' => $paymentToken,
             ]);
 
+            
+
             $data = $this->doPayPost();
             return $data;
         } catch (\Throwable $th) {
@@ -522,6 +524,7 @@ trait ExpressPayment
 
     public function doPayPost()
     {
+        
 
 
         $curl = curl_init();
@@ -545,7 +548,10 @@ trait ExpressPayment
         $response = curl_exec($curl);
 
         curl_close($curl);
+
         return json_decode($response);
+
+
     }
 
 

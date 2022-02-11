@@ -44,6 +44,7 @@ Route::get('notification-period', 'CheckSetupController@notificationPeriod');
 Route::get('monthlytransaction', 'CheckSetupController@monthlyTransactionHistory');
 Route::get('nonmonthlytransaction', 'CheckSetupController@nonMonthlyTransactionHistory');
 Route::get('exbccardrequest', 'CheckSetupController@checkExbcCardRequest');
+Route::get('trullioverification', 'CheckSetupController@checkTrullioVerification');
 Route::get('migratetolevelone', 'CheckSetupController@migrateUsersToLevelOne');
 Route::get('insertspecialinfoactivity', 'CheckSetupController@insertspecialinfoActivity');
 Route::get('autofeestructure', 'CheckSetupController@setupFeeStructure');
@@ -214,6 +215,7 @@ Route::post('create-payment-invoice-intent', ['uses' => 'MonerisController@invoi
 // Express Payment Callback
 Route::prefix('expresspay')->group(function () {
 	Route::get('/resp', ['uses' => 'MonerisController@expressCallback', 'as' => 'express callback']);
+	Route::get('/business', ['uses' => 'MonerisController@expressBusinessCallback', 'as' => 'express business callback']);
 	Route::get('/responseback', ['uses' => 'HomeController@expressResponseback', 'as' => 'epsresponseback']);
 });
 
@@ -415,6 +417,7 @@ Route::get('matchedusers', ['uses' => 'AdminController@allMatchedUsers', 'as' =>
 Route::get('leveltwousers', ['uses' => 'AdminController@allLevelTwoUsers', 'as' => 'leveltwousers']);
 Route::get('pendingusers', ['uses' => 'AdminController@allPendingUsers', 'as' => 'pendingusers']);
 Route::get('overrideusers', ['uses' => 'AdminController@allOverrideUsers', 'as' => 'overrideusers']);
+Route::get('notactivepsusers', ['uses' => 'AdminController@allNotActivePsUsers', 'as' => 'notactivepsusers']);
 Route::get('closedusers', ['uses' => 'AdminController@allClosedUsers', 'as' => 'closedusers']);
 Route::get('suspendedusers', ['uses' => 'AdminController@allSuspendedUsers', 'as' => 'suspendedusers']);
 Route::get('newusers', ['uses' => 'AdminController@allNewusers', 'as' => 'newusers']);
@@ -446,6 +449,7 @@ Route::get('leveltwousersbycountry', ['uses' => 'AdminController@levelTwoUsersBy
 Route::get('matchedusersbycountry', ['uses' => 'AdminController@allMatchedUsersByCountry', 'as' => 'matched users by country']);
 Route::get('pendingusersbycountry', ['uses' => 'AdminController@allPendingUsersByCountry', 'as' => 'pending users by country']);
 Route::get('overrideusersbycountry', ['uses' => 'AdminController@allOverrideUsersByCountry', 'as' => 'override users by country']);
+Route::get('psusersnotactivebycountry', ['uses' => 'AdminController@allPSUsersNotActiveByCountry', 'as' => 'ps not active by country']);
 Route::get('closedusersbycountry', ['uses' => 'AdminController@allClosedUsersByCountry', 'as' => 'closed users by country']);
 Route::get('suspendedusersbycountry', ['uses' => 'AdminController@allSuspendedUsersByCountry', 'as' => 'suspended users by country']);
 

@@ -63,7 +63,7 @@
                     <div class="row">
                         <div class="col-sm-6 col-md-4">
                             <a href="{{ Auth::user()->avatar }}" target="_blank"><img
-                                    src="{{ Auth::user()->avatar != null ? Auth::user()->avatar : 'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png' }}"
+                                    src="{{ Auth::user()->avatar != null? Auth::user()->avatar: 'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png' }}"
                                     alt="" class="img-rounded img-responsive"
                                     style="height: 150px; width: 150px; border-radius: 100%;" /></a>
                         </div>

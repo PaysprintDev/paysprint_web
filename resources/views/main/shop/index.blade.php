@@ -21,18 +21,14 @@
 
 
     @if ($data['currencyCode']->gateway == 'Stripe')
-
         <script src="https://js.stripe.com/v3/"></script>
         <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
-
     @endif
 
     @if ($data['currencyCode']->gateway == 'PayPal')
-
         <script
                 src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ $data['currencyCode']->currencyCode }}">
         </script>
-
     @endif
 
     <title>PaySprint | {{ $data['pages'] }}</title>
@@ -98,14 +94,11 @@
 
 
                             @if ($merchant = \App\User::where('ref_code', Request::segment(3))->first())
-
                                 @php
                                     $currencySymb = $merchant->currencySymbol;
                                     $currencycod = $merchant->currencyCode;
                                     $countryBase = $merchant->country;
                                 @endphp
-
-
                             @endif
 
 
@@ -176,9 +169,9 @@
                                     </div>
 
 
+
+
                                     @if ($countryBase != $data['currencyCode']->name)
-
-
                                         <div class="form-group converter"> <label for="netwmount">
                                                 <h6>Currency Conversion <br><small class="text-info"><b>Exchange
                                                             rate </b> <br> <span id="rateToday"></span> </small></h6>
@@ -226,17 +219,11 @@
 
                                             </div>
                                         </div>
-
-
-
-
                                     @endif
 
 
 
                                     @if ($countryBase == $data['currencyCode']->name)
-
-
                                         <div class="form-group disp-0">
                                             <div class="input-group">
                                                 <p style="color: red; font-weight: bold;"><input type="checkbox" checked
@@ -277,12 +264,10 @@
                                                     {{ $data['currencyCode']->currencySymbol }} </span> <input
                                                     type="number" min="0.00" step="0.01" name="amount"
                                                     id="typepayamount" placeholder="50.00" class="form-control"
-                                                    value="">
+                                                    value="1.00">
                                                 <div class="input-group-append"> </div>
                                             </div>
                                         </div>
-
-
                                     @endif
 
 
@@ -293,14 +278,11 @@
                                     {{-- Pay Using Moneris --}}
 
                                     @if ($data['currencyCode']->gateway == 'Moneris')
-
-
-
                                         <div class="form-group"> <label for="paycreditcard">
                                                 <h6>Card number</h6>
                                             </label>
                                             <div class="input-group"> <input type="number" name="creditcard_no"
-                                                    id="paycreditcard" placeholder="5199 - 3924 - 2100 - 5430"
+                                                    id="paycreditcard" placeholder="5199392421005430"
                                                     class="form-control" maxlength="16" required>
                                                 <div class="input-group-append"> <span
                                                         class="input-group-text text-muted"> <i
@@ -373,7 +355,6 @@
                                     {{-- Pay Using Stripe --}}
 
                                     @if ($data['currencyCode']->gateway == 'Stripe')
-
                                         <input type="hidden" name="name" class="form-control" id="nameInput"
                                             value="{{ $data['name'] }}" readonly>
 
@@ -391,26 +372,18 @@
                                         <div class="card-footer"> <button type="submit"
                                                 class="subscribe btn btn-info btn-block shadow-sm {{ $countryBase == $data['currencyCode']->name ? 'cardSubmit' : 'sendmoneyBtn' }}">
                                                 Make Payment</button></div>
-
                                     @endif
 
 
                                     {{-- Pay Using PayPal --}}
 
                                     @if ($data['currencyCode']->gateway == 'PayPal')
-
-
-
-
                                         <div class="card-footer" id="paypal-button-container"></div>
-
-
                                     @endif
 
 
                                     {{-- Pay Using PayStack --}}
-                                    @if ($data['currencyCode']->gateway == 'PayStack')
-
+                                    @if ($data['currencyCode']->gateway == 'PayStack' || $data['currencyCode']->gateway == 'Express Payment Solution')
                                         <div class="form-group topay disp-0"> <label for="currency">
                                                 <h6>Amount to Pay</h6>
                                             </label>
@@ -426,11 +399,13 @@
                                         </div>
 
 
+                                        {{-- <div class="card-footer"> <button type="button" onclick="payWithPaystack()"
+                                                class="subscribe btn btn-info btn-block shadow-sm {{ $countryBase == $data['currencyCode']->name ? 'cardSubmit' : 'sendmoneyBtn' }}">
+                                                Make Payment </button></div> --}}
 
-                                        <div class="card-footer"> <button type="button" onclick="payWithPaystack()"
+                                        <div class="card-footer"> <button type="button" onclick="payWithEPS()"
                                                 class="subscribe btn btn-info btn-block shadow-sm {{ $countryBase == $data['currencyCode']->name ? 'cardSubmit' : 'sendmoneyBtn' }}">
                                                 Make Payment </button></div>
-
                                     @endif
 
 
@@ -461,6 +436,7 @@
         <script src="{{ asset('pace/pace.min.js') }}"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://js.paystack.co/v1/inline.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js"></script>
 
 
         @if ($data['currencyCode']->gateway == 'PayPal')
@@ -512,15 +488,11 @@
 
                 // PayPal Integration End
             </script>
-
-
-
         @endif
 
 
 
         @if ($data['currencyCode']->gateway == 'Stripe')
-
             <script>
                 // Stripe Integration Starts
 
@@ -660,7 +632,6 @@
 
                 // Stripe Integration Ends
             </script>
-
         @endif
 
         <script>
@@ -746,6 +717,8 @@
                     dataType: 'JSON',
                     success: function(result) {
 
+                        console.log(result);
+
                         $(".sendmoneyBtn").attr("disabled", true);
 
 
@@ -756,7 +729,7 @@
 
                         }
 
-                        $('#convertedAmount').text((result.data).toFixed(2));
+                        $('#convertedAmount').text((result.data).toFixed(4));
 
                         var mycurrentCurrency = $('#typedAmount').text(amount);
 
@@ -765,7 +738,7 @@
 
                         // Put Exchange rate
                         $('#rateToday').html("<span class='text-danger'><strong>1" + localcurrency + " == " +
-                            todayRate.toFixed(2) + '' + currency + '<br>Today: ' + today + "</strong></span>");
+                            todayRate.toFixed(4) + '' + currency + '<br>Today: ' + today + "</strong></span>");
 
 
                     }
@@ -831,6 +804,105 @@
 
             }
 
+            // EPS Integration...
+
+            async function payWithEPS() {
+                $('.cardSubmit').text('Please wait...');
+                $('.sendmoneyBtn').text('Please wait...');
+
+                try {
+
+
+                    var netamount = $('#typepayamount').val();
+                    var feeamount = "0.00";
+                    var amount = (+netamount + +feeamount).toFixed(2);
+                    var paymentToken = '' + Math.floor((Math.random() * 1000000000) + 1);
+                    var publicKey =
+                        `{{ env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_KEY_DEV') : env('EPXRESS_PAYMENT_KEY_PROD') }}`;
+                    var commission = $('#conversionamount').val();
+                    var currencyCode = `{{ $data['currencyCode']->currencyCode }}`;
+                    var conversionamount = $('#conversionamount').val();
+                    var ref_code = `{{ $data['refCode'] }}`;
+                    var callbackUrl =
+                        // `{{ env('APP_URL') }}/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&ref_code=${ref_code}`;
+                        // var callbackUrl =
+                        `http://localhost:9090/expresspay/business?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&ref_code=${ref_code}`;
+
+
+                    var productId = paymentToken;
+                    var description = "Paid {{ $currencySymb }}" + netamount +
+                        " to {{ $data['name'] }} for " + $('#purpose').val();
+
+                    var data = JSON.stringify({
+                        "amount": amount,
+                        "transactionId": paymentToken,
+                        "email": $('#email_address').val(),
+                        "publicKey": publicKey,
+                        "currency": "NGN",
+                        "mode": "Debug",
+                        "callbackUrl": callbackUrl,
+                        "productId": productId,
+                        "applyConviniencyCharge": true,
+                        "productDescription": description,
+                        "bodyColor": "#0000",
+                        "buttonColor": "#0000",
+                        "footerText": "Powered by Pro-filr Nig. LTD",
+                        "footerLink": "https://paysprint.ca",
+                        "footerLogo": "https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png",
+                        "metadata": [{
+                            "name": "name",
+                            "value": "{{ $data['name'] }}"
+                        }, {
+                            "name": "description",
+                            "value": "Paid {{ $currencySymb }}" + netamount +
+                                " to {{ $data['name'] }} for " + $('#purpose').val()
+                        }]
+                    });
+
+
+                    var config = {
+                        method: 'post',
+                        url: `{{ env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_URL_DEV') : env('EPXRESS_PAYMENT_URL_PROD') }}api/Payments/Initialize`,
+                        headers: {
+                            'Authorization': `bearer {{ env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_KEY_DEV') : env('EPXRESS_PAYMENT_KEY_PROD') }}`,
+                            'Content-Type': 'application/json'
+                        },
+                        data: data
+                    };
+
+                    // console.log(config);
+
+                    const response = await axios(config);
+
+                    // console.log(response);
+
+                    $('.cardSubmit').text('Make Payment');
+                    $('.sendmoneyBtn').text('Make Payment');
+
+
+                    setTimeout(() => {
+                        location.href = response.data.data.paymentUrl;
+                    }, 1000);
+
+                } catch (error) {
+                    $('.cardSubmit').text('Make Payment');
+                    $('.sendmoneyBtn').text('Make Payment');
+                    console.log(error);
+
+                    if (error.response) {
+                        swal('Oops!', error.response.data.responseMessage, 'error');
+
+                    } else {
+
+                        swal("Oops", error.responseJSON.message, "error");
+
+                    }
+
+                }
+
+
+            }
+
             // PayStack Integration
             function payWithPaystack() {
                 var netamount = $('#typepayamount').val();
@@ -882,6 +954,9 @@
                 });
                 handler.openIframe();
             }
+
+
+
 
 
             function runCommission() {

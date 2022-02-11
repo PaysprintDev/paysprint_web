@@ -71,6 +71,7 @@
                                         <th>Address</th>
                                         <th>Account Type</th>
                                         <th>Identification</th>
+                                        <th>Verification Status</th>
                                         <th>Platform</th>
                                         <th>Date Joined</th>
                                         <th>Status</th>
@@ -82,7 +83,7 @@
 
                                     @if ($allusersdata = \App\User::where([['country', '=', Request::get('country')], ['account_check', '=', 1]])->get())
 
-                                    
+
 
                                         @if (count($allusersdata) > 0)
                                             <?php $i = 1; ?>
@@ -186,6 +187,12 @@
 
 
                                                     </td>
+
+                                                    <td style="font-weight: bold;"
+                                                        class="mainText {{ $datainfo->bvn_verification >= 1 ? 'text-success' : 'text-danger' }}">
+                                                        {{ $datainfo->bvn_verification >= 1 ? 'Verified' : 'Not verified' }}
+                                                    </td>
+
 
                                                     <td>{{ $datainfo->platform }}</td>
 
