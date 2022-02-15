@@ -489,12 +489,18 @@ class UserController extends Controller
                 // Check my plan
                 if ($thisuser->plan == "basic") {
                     $plan = 'classic';
-                    $planName = 'classic';
+                    $planName = 'classic paid plan';
                     $amount = $getSub->fixed;
+                    $today = date('Y-m-d');
+
+                    $recMessage = "<p>This is a confirmation that your PaySprint Account has been upgraded to a Paid Plan. Your subscription would be renewed at the next billing cycle ".date('d-m-Y', strtotime($today. "+28 days")).".</p><p>If this was a mistake, kindly login to your PaySprint Account to downgrade the Account.</p><p>Your current plan is CLASSIC PAID PLAN and </p>";
+
                 } else {
                     $plan = 'basic';
                     $planName = 'Free Forever';
                     $amount = "0";
+
+                    $recMessage = "<p>This is a confirmation that your PaySprint Account has been downgraded to Free Plan. Your subscription would not be renewed at the next billing cycle.</p><p>If this was a mistake, kindly login to your PaySprint Account to Upgrade the Account.</p><p>Your current plan is FREE FOREVER and </p>";
                 }
 
                 // Check wallet Balalnce
@@ -542,7 +548,7 @@ class UserController extends Controller
                     $this->email = $thisuser->email;
                     $this->subject = $activity;
 
-                    $this->message = '<p>' . $activity . '</p><p>You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> balance in your account</p>';
+                    $this->message = '<p>' . $recMessage . '</p><p>You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> balance in your account</p>';
 
                     $this->monthlyChargeInsert($thisuser->ref_code, $thisuser->country, $amount, $thisuser->currencyCode);
 

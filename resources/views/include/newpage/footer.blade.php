@@ -55,20 +55,17 @@
                                         href="{{ route('privacy policy') }}">Privacy Policy
                                     </a></li>
 
-                                @if (Request::segment(1) == 'merchant-pricing')
-
+                                @if (Request::segment(1) == 'merchant-pricing' || Request::segment(1) == 'merchant-home')
                                     <li class="py-2"><a class="gr-text-9 gr-text-color"
                                             href="{{ route('pricing structure merchant') }}">Pricing</a></li>
                                 @else
                                     <li class="py-2"><a class="gr-text-9 gr-text-color"
                                             href="{{ route('pricing structure') }}">Pricing</a></li>
-
                                 @endif
 
                                 @guest
 
-                                    @if (Request::segment(1) == 'merchant-pricing')
-
+                                    @if (Request::segment(1) == 'merchant-pricing' || Request::segment(1) == 'merchant-home')
                                         <li class="py-2"><a class="gr-text-9 gr-text-color"
                                                 href="{{ route('AdminLogin') }}">Login</a></li>
                                         <li class="py-2"><a class="gr-text-9 gr-text-color"
@@ -78,7 +75,6 @@
                                                 href="{{ route('login') }}">Login</a></li>
                                         <li class="py-2"><a class="gr-text-9 gr-text-color"
                                                 href="{{ route('register') }}">Sign Up for FREE</a></li>
-
                                     @endif
 
 

@@ -15,6 +15,7 @@ use App\FxPayment;
 use App\FxStatement;
 use App\ImportExcel;
 use App\InvoiceCommission;
+use App\ClientInfo;
 use App\MakeBid;
 use App\Statement;
 use App\Traits\Xwireless;
@@ -73,6 +74,13 @@ class CurrencyFxController extends Controller
 
         if (Auth::user()->plan != 'classic') {
             return redirect()->back();
+        }
+
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
         // Check if User has a forex account
@@ -195,6 +203,16 @@ class CurrencyFxController extends Controller
 
         return view('currencyexchange.invoices');
     }
+
+    
+        // Get My Client Info
+    public function getMyClientInfo($ref_code)
+    {
+        $data = ClientInfo::where('user_id', $ref_code)->first();
+
+        return $data;
+    }
+
 
 
     public function myCrossBorderPlatform(Request $req)
@@ -486,6 +504,13 @@ class CurrencyFxController extends Controller
             $user = User::where('email', session('email'))->first();
 
             Auth::login($user);
+        }
+        
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
         $data = array(

@@ -444,6 +444,8 @@ Route::get('allusersbycountry', ['uses' => 'AdminController@allPlatformUsersByCo
 Route::get('approvedusersbycountry', ['uses' => 'AdminController@allApprovedUsersByCountry', 'as' => 'approved users by country']);
 Route::get('upgradedconsumerbycountry', ['uses' => 'AdminController@allUpgradedConsumerByCountry', 'as' => 'upgraded consumers by country']);
 Route::get('upgradedmerchantbycountry', ['uses' => 'AdminController@allUpgradedMerchantByCountry', 'as' => 'upgraded merchant by country']);
+Route::get('merchantaccountbycountry', ['uses' => 'AdminController@merchantAccountModeByCountry', 'as' => 'merchant account mode by country']);
+Route::get('merchantdetails', ['uses' => 'AdminController@merchantDetails', 'as' => 'merchant account details']);
 Route::get('approvedpendingusersbycountry', ['uses' => 'AdminController@allApprovedPendingUsersByCountry', 'as' => 'approved pending users by country']);
 Route::get('leveltwousersbycountry', ['uses' => 'AdminController@levelTwoUsersByCountry', 'as' => 'level two users by country']);
 Route::get('matchedusersbycountry', ['uses' => 'AdminController@allMatchedUsersByCountry', 'as' => 'matched users by country']);

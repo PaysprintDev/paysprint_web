@@ -37,13 +37,18 @@
 
                 @if (Auth::user()->plan == 'basic')
                     <button class="btn btn-success" onclick="changeMyPlan('changeplan')" id="cardSubmit">Upgrade
+                        Account</button>
+                    {{-- <button class="btn btn-success" onclick="changeMyPlan('changeplan')" id="cardSubmit">Upgrade
                         Account for
-                        {{ Auth::user()->currencySymbol . '' . number_format($data['planCost']->fixed, 2) }}</button>
+                        {{ Auth::user()->currencySymbol . '' . number_format($data['planCost']->fixed, 2) }}</button> --}}
                 @else
                     <button class="btn btn-danger" onclick="changeMyPlan('changeplan')" id="cardSubmit">Downgrade
                         Account</button>
                 @endif
 
+
+                <a href="{{ route('pricing structure merchant') }}" class="btn btn-info btn-block mt-3">Check out
+                    Pricing</a>
 
             </div>
             <nav>
@@ -127,11 +132,6 @@
                             <li>
                                 <a class="nav-link" href="{{ route('Withdraw Money') }}"><i
                                         data-feather="shopping-bag"></i><span>Withdraw Funds to Bank</span></a>
-                            </li>
-
-                            <li>
-                                <a class="nav-link" href="{{ route('invoice') }}"><i
-                                        data-feather="shopping-bag"></i><span>Invoice</span></a>
                             </li>
 
                             <li>
@@ -226,7 +226,6 @@
 
 
                             @if (Auth::user()->plan == 'classic')
-
                                 <li>
                                     <a class="nav-link menu-title" href="{{ route('cash advance') }}"><i
                                             data-feather="shopping-bag"></i><span>Merchant Cash Advance</span></a>
@@ -239,14 +238,17 @@
                                             data-feather="shopping-bag"></i><span>Merchant Cash Advance <br><small
                                                 class="text-danger text-center">[Upgrade account]</small></span></a>
                                 </li>
-
                             @endif
                             <li>
 
-                                <a class="nav-link menu-title link-nav " href="{{ route('ordering system') }}"><i
+                                <a class="nav-link menu-title link-nav " href="javascript:void()"><i
                                         data-feather="database"></i><span>Manage eStore <br><small
                                             class="text-danger text-center">[Coming
                                             Soon]</small></span></a>
+                                {{-- <a class="nav-link menu-title link-nav " href="{{ route('ordering system') }}"><i
+                                        data-feather="database"></i><span>Manage eStore <br><small
+                                            class="text-danger text-center">[Coming
+                                            Soon]</small></span></a> --}}
                             </li>
 
                             @if (Auth::user()->plan == 'classic')
@@ -264,7 +266,6 @@
                                             data-feather="shopping-bag"></i><span>Manage Rental Property <br><small
                                                 class="text-danger text-center">[Upgrade account]</small></span></a>
                                 </li>
-
                             @endif
 
 
@@ -354,7 +355,7 @@
                             </li>
                             <li class="dropdown">
                                 <a class="nav-link menu-title " href="{{ route('consumer points') }}"><i
-                                        data-feather="server"></i><span>Referral and Earn</span></a>
+                                        data-feather="server"></i><span>Refer and Earn</span></a>
                             </li>
 
                     </div>
