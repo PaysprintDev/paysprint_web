@@ -1042,6 +1042,13 @@ class HomeController extends Controller
             $this->email = Auth::user()->email;
         }
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         // Insert Record for cash advance and redirect to cash advance page
         CashAdvance::updateOrInsert([
             'merchantId' => Auth::user()->id
@@ -1410,6 +1417,13 @@ class HomeController extends Controller
             $this->email = session('email');
         }
 
+                $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
 
         $data = array(
             'currencyCode' => $this->getCountryCode(Auth::user()->country),
@@ -1608,6 +1622,13 @@ class HomeController extends Controller
             $this->email = Auth::user()->email;
         }
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
 
         $data = array(
             'continent' => $this->timezone[0]
@@ -1643,6 +1664,13 @@ class HomeController extends Controller
             $this->page = 'Airtime and Utility Bills';
             $this->name = Auth::user()->name;
             $this->email = Auth::user()->email;
+        }
+
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
 
@@ -2009,6 +2037,13 @@ class HomeController extends Controller
                 'continent' => $this->timezone[0],
                 'getmyfacility' => $this->getMyFacility(base64_decode($email)),
             );
+        }
+
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
         return view('main.myrentalmanagementfacility')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -4821,6 +4856,14 @@ class HomeController extends Controller
         return $this->returnJSON($resData, 200);
     }
 
+
+        // Get My Client Info
+    public function getMyClientInfo($ref_code)
+    {
+        $data = ClientInfo::where('user_id', $ref_code)->first();
+
+        return $data;
+    }
 
 
 

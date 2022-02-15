@@ -2094,6 +2094,15 @@ class AdminController extends Controller
     {
 
         if ($req->session()->has('username') == true) {
+
+            $client = $this->getMyClientInfo(session('user_id'));
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
+
             // dd(Session::all());
 
             if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
@@ -2143,6 +2152,7 @@ class AdminController extends Controller
             );
 
 
+
             return view('admin.invoice.single')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'data' => $data]);
         } else {
             return redirect()->route('AdminLogin');
@@ -2153,6 +2163,13 @@ class AdminController extends Controller
 
         if ($req->session()->has('username') == true) {
             // dd(Session::all());
+
+            $client = $this->getMyClientInfo(session('user_id'));
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
 
             if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
@@ -4290,6 +4307,127 @@ class AdminController extends Controller
 
 
             return view('admin.upgradedmerchantsbycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
+    public function merchantAccountModeByCountry(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+
+                $query = [
+                    'user_id' => session('user_id'),
+                    'name' => session('firstname') . ' ' . session('lastname'),
+                    'activity' => 'Access to all approved users page today: ' . date('d-M-Y h:i:a'),
+                ];
+
+                $this->createSupportActivity($query);
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->merchantMode($req->mode);
+
+
+            return view('admin.merchantmodebycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'mode' => $req->mode]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
+    public function merchantDetails(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+
+                $query = [
+                    'user_id' => session('user_id'),
+                    'name' => session('firstname') . ' ' . session('lastname'),
+                    'activity' => 'Access to all approved users page today: ' . date('d-M-Y h:i:a'),
+                ];
+
+                $this->createSupportActivity($query);
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->merchantAccountDetails($req->country);
+
+            // dd($allusers);
+
+            return view('admin.merchantdetails')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
         } else {
             return redirect()->route('AdminLogin');
         }
@@ -10295,6 +10433,13 @@ class AdminController extends Controller
                     ->orderBy('invoice_payment.created_at', 'DESC')->get();
             }
 
+            $client = $this->getMyClientInfo(session('user_id'));
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
 
             $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
 
@@ -10668,6 +10813,13 @@ class AdminController extends Controller
 
             $servicetypes = $this->getServiceTypes();
 
+            $client = $this->getMyClientInfo(session('user_id'));
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
             $data = [
                 'getsentInvoice' => $this->getSentInvoice(session('user_id')),
                 'userInfo' => $this->getmyPersonalDetail(session('user_id')),
@@ -10769,6 +10921,13 @@ class AdminController extends Controller
 
             $servicetypes = $this->getServiceTypes();
 
+            $client = $this->getMyClientInfo(session('user_id'));
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
             $data = [
                 'getpaidInvoice' => $this->getPaidInvoice(session('user_id')),
                 'userInfo' => $this->getmyPersonalDetail(session('user_id')),
@@ -10868,6 +11027,13 @@ class AdminController extends Controller
 
             $servicetypes = $this->getServiceTypes();
 
+            $client = $this->getMyClientInfo(session('user_id'));
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
             $data = [
                 'getunpaidInvoice' => $this->getUnpaidInvoice(session('user_id')),
                 'userInfo' => $this->getmyPersonalDetail(session('user_id')),
@@ -10966,6 +11132,13 @@ class AdminController extends Controller
             $transCost = $this->transactionCost();
 
             $servicetypes = $this->getServiceTypes();
+
+            $client = $this->getMyClientInfo(session('user_id'));
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
 
             $data = [
                 'getcustomerBalance' => $this->getcustomerBalance(session('user_id')),
@@ -11069,6 +11242,13 @@ class AdminController extends Controller
 
             $servicetypes = $this->getServiceTypes();
 
+            $client = $this->getMyClientInfo(session('user_id'));
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
             $data = [
                 'gettotalTax' => $this->getSentInvoice(session('user_id')),
                 'userInfo' => $this->getmyPersonalDetail(session('user_id')),
@@ -11120,6 +11300,13 @@ class AdminController extends Controller
 
             $servicetypes = $this->getServiceTypes();
 
+            $client = $this->getMyClientInfo(session('user_id'));
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
             $data = [
                 'getinvoiceType' => $this->getinvoiceType(session('user_id')),
                 'userInfo' => $this->getmyPersonalDetail(session('user_id')),
@@ -11169,6 +11356,13 @@ class AdminController extends Controller
             $transCost = $this->transactionCost();
 
             $servicetypes = $this->getServiceTypes();
+
+            $client = $this->getMyClientInfo(session('user_id'));
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
 
             $data = [
                 'getrecurringReport' => $this->getrecurringReport(session('user_id')),
@@ -12189,6 +12383,13 @@ class AdminController extends Controller
 
                 $otherPays = Statement::where('user_id', session('email'))->orderBy('created_at', 'DESC')->get();
             }
+
+            $client = $this->getMyClientInfo(session('user_id'));
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
 
             // dd($otherPays);
 
@@ -15813,6 +16014,38 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     }
 
 
+    public function merchantMode($mode)
+    {
+        $data = ClientInfo::where('accountMode', $mode)->groupBy('country')->get();
+
+        return $data;
+    }
+
+    public function merchantAccountDetails($country){
+
+        $data = [];
+        $client = ClientInfo::where('country', $country)->get();
+
+        
+
+        for ($i=0; $i < count($client); $i++){
+            $element = $client[$i];
+
+            // Get the Users Info
+            $users = User::where('ref_code', $element->user_id)->first();
+
+
+            $data []= [
+                'users' => $users
+            ];
+        }
+
+
+        return $data;
+        
+    }
+
+
     public function approvedPendingUsersByCountry()
     {
         $data = User::where('account_check', 1)->orderBy('created_at', 'DESC')->groupBy('country')->get();
@@ -16231,6 +16464,15 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
         } else {
             // Do nothing
         }
+    }
+
+
+        // Get My Client Info
+    public function getMyClientInfo($ref_code)
+    {
+        $data = ClientInfo::where('user_id', $ref_code)->first();
+
+        return $data;
     }
 
 
