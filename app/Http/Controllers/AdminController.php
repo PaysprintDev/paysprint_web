@@ -4423,7 +4423,7 @@ class AdminController extends Controller
             // Get all xpaytransactions where state = 1;
 
             $getxPay = $this->getxpayTrans();
-            $allusers = $this->merchantAccountDetails($req->country);
+            $allusers = $this->merchantAccountDetails($req->country, $req->mode);
 
             // dd($allusers);
 
@@ -14534,7 +14534,7 @@ class AdminController extends Controller
 
         $data = $user->where('id', $req->id)->first();
 
-        if ($data->approval == 2) {
+        if ($data->approval == 2 && $data->account_check == 2) {
 
             $user->where('id', $req->id)->update(['approval' => 0, 'accountLevel' => 0, 'disableAccount' => 'on']);
 
@@ -14550,7 +14550,7 @@ class AdminController extends Controller
             $this->createSupportActivity($query);
 
             $resData = ['res' => 'Account information disapproved', 'message' => 'success', 'title' => 'Great'];
-        } elseif ($data->approval == 1) {
+        } elseif ($data->approval >= 1 && $data->account_check <= 1) {
 
             $user->where('id', $req->id)->update(['approval' => 2, 'accountLevel' => 3, 'disableAccount' => 'off', 'account_check' => 2]);
 
@@ -15563,6 +15563,48 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
         return redirect()->back()->with($resp, $resData);
     }
 
+    public function activatemerchantaccount(Request $req){
+
+        try{
+            $thisuser = ClientInfo::where('user_id', $req->id)->first();
+
+            // Update account to live mode..
+            ClientInfo::where('user_id', $req->id)->update(['accountMode' => $req->val]);
+
+
+            // Send Mail to the support agent
+        $this->name = $thisuser->business_name;
+        $this->email = $thisuser->email;
+        $this->info = "Fund remittance";
+
+        if($req->val == "live"){
+            $this->message = '<p>Hello ' . $this->name .'!, </p><p>This is a confirmation that the merchant account has been activated.</p><p>The PaySprint Merchant Account default Subscription Plan is FREE Plan.</p><p>You will need to upgrade the subscription to access other features.</p><p>We welcome you to PaySprint for Merchant</p>';
+
+        $this->sendEmail($this->email, "Fund remittance");
+
+        }
+
+
+
+
+            $message = "success";
+            $res = "Account successfully moved to ".$req->val;
+            $status = 200;
+
+        }
+         catch (\Throwable $th) {
+            $message = 'error';
+            $res = $th->getMessage();
+            $status = 400;
+        }
+
+
+        $resData = ['res' => $res, 'message' => $message];
+
+        return $this->returnJSON($resData, $status);
+
+    }
+
     public function ajaxSingleInvoiceUserCheck(Request $req)
     {
 
@@ -15888,7 +15930,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     public function allUsersMatched()
     {
 
-        $data = User::where([['accountLevel', '=', 2], ['approval', '=', 1],['bvn_verification', '>=', 1], ['account_check', '=', 0]])->orderBy('created_at', 'DESC')->get();
+        $data = User::where([['accountLevel', '>=', 2], ['approval', '>=', 1], ['account_check', '=', 0]])->orderBy('created_at', 'DESC')->get();
 
         return $data;
     }
@@ -16021,10 +16063,10 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
         return $data;
     }
 
-    public function merchantAccountDetails($country){
+    public function merchantAccountDetails($country, $mode){
 
         $data = [];
-        $client = ClientInfo::where('country', $country)->get();
+        $client = ClientInfo::where('country', $country)->where('accountMode', $mode)->get();
 
         
 
@@ -16055,7 +16097,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
     public function matchedUsersByCountry()
     {
-        $data = User::where([['accountLevel', '=', 2], ['approval', '=', 1],['bvn_verification', '>=', 1], ['account_check', '=', 0]])->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        $data = User::where([['accountLevel', '>=', 2], ['approval', '>=', 1], ['account_check', '=', 0]])->orderBy('created_at', 'DESC')->groupBy('country')->get();
 
         return $data;
     }

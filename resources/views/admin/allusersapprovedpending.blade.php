@@ -16,7 +16,6 @@
 
                 @else
                     All Approved Pending
-
                 @endif
             </h1>
             <ol class="breadcrumb">
@@ -27,7 +26,6 @@
 
                     @else
                         All Approved Pending
-
                     @endif
                 </li>
             </ol>
@@ -109,7 +107,10 @@
 
                                                         @if ($datainfo->avatar != null)
                                                             <small style="font-weight: bold;">
-                                                                Selfie : @if ($datainfo->avatar != null) <a href="{{ $datainfo->avatar }}" target="_blank">View Avatar</a> @endif
+                                                                Selfie : @if ($datainfo->avatar != null)
+                                                                    <a href="{{ $datainfo->avatar }}"
+                                                                        target="_blank">View Avatar</a>
+                                                                @endif
                                                             </small>
 
                                                             <input type="checkbox" name="selfiecheck"
@@ -118,12 +119,17 @@
                                                                 @if ($datainfo->selfie_check == 1) checked @endif>
 
                                                             <hr>
-
                                                         @endif
 
                                                         @if ($datainfo->nin_front != null || $datainfo->nin_back != null)
                                                             <small style="font-weight: bold;">
-                                                                Govnt. issued photo ID : @if ($datainfo->nin_front != null) <a href="{{ $datainfo->nin_front }}" target="_blank">Front view</a> @endif | @if ($datainfo->nin_back != null) <a href="{{ $datainfo->nin_back }}" target="_blank">Back view</a> @endif
+                                                                Govnt. issued photo ID : @if ($datainfo->nin_front != null)
+                                                                    <a href="{{ $datainfo->nin_front }}"
+                                                                        target="_blank">Front view</a>
+                                                                    @endif | @if ($datainfo->nin_back != null)
+                                                                        <a href="{{ $datainfo->nin_back }}"
+                                                                            target="_blank">Back view</a>
+                                                                    @endif
                                                             </small>
 
                                                             <input type="checkbox" name="nincheck"
@@ -133,12 +139,17 @@
 
 
                                                             <hr>
-
                                                         @endif
 
                                                         @if ($datainfo->drivers_license_front != null || $datainfo->drivers_license_back != null)
                                                             <small style="font-weight: bold;">
-                                                                Driver's License : @if ($datainfo->drivers_license_front != null) <a href="{{ $datainfo->drivers_license_front }}" target="_blank">Front view</a> @endif | @if ($datainfo->drivers_license_back != null) <a href="{{ $datainfo->drivers_license_back }}" target="_blank">Back view</a> @endif
+                                                                Driver's License : @if ($datainfo->drivers_license_front != null)
+                                                                    <a href="{{ $datainfo->drivers_license_front }}"
+                                                                        target="_blank">Front view</a>
+                                                                    @endif | @if ($datainfo->drivers_license_back != null)
+                                                                        <a href="{{ $datainfo->drivers_license_back }}"
+                                                                            target="_blank">Back view</a>
+                                                                    @endif
                                                             </small>
 
                                                             <input type="checkbox" name="licencecheck"
@@ -148,13 +159,18 @@
 
 
                                                             <hr>
-
                                                         @endif
 
 
                                                         @if ($datainfo->international_passport_front != null || $datainfo->international_passport_back != null)
                                                             <small style="font-weight: bold;">
-                                                                International Passport : @if ($datainfo->international_passport_front != null) <a href="{{ $datainfo->international_passport_front }}" target="_blank">Front view</a> @endif | @if ($datainfo->international_passport_back != null) <a href="{{ $datainfo->international_passport_back }}" target="_blank">Back view</a> @endif
+                                                                International Passport : @if ($datainfo->international_passport_front != null)
+                                                                    <a href="{{ $datainfo->international_passport_front }}"
+                                                                        target="_blank">Front view</a>
+                                                                    @endif | @if ($datainfo->international_passport_back != null)
+                                                                        <a href="{{ $datainfo->international_passport_back }}"
+                                                                            target="_blank">Back view</a>
+                                                                    @endif
                                                             </small>
 
                                                             <input type="checkbox" name="passportcheck"
@@ -165,13 +181,15 @@
 
 
                                                             <hr>
-
                                                         @endif
 
 
                                                         @if ($datainfo->incorporation_doc_front != null)
                                                             <small style="font-weight: bold;">
-                                                                Document : @if ($datainfo->incorporation_doc_front != null) <a href="{{ $datainfo->incorporation_doc_front }}" target="_blank">View Document</a> @endif
+                                                                Document : @if ($datainfo->incorporation_doc_front != null)
+                                                                    <a href="{{ $datainfo->incorporation_doc_front }}"
+                                                                        target="_blank">View Document</a>
+                                                                @endif
                                                             </small>
 
 
@@ -181,7 +199,6 @@
                                                                 @if ($datainfo->doc_check == 1) checked @endif>
 
                                                             <hr>
-
                                                         @endif
 
 
@@ -200,10 +217,20 @@
                                                         {{ date('d/M/Y h:i:a', strtotime($datainfo->created_at)) }}
                                                     </td>
 
-                                                    @if ($datainfo->approval == 2 && $datainfo->accountLevel > 0)
-
+                                                    @if ($datainfo->approval == 2 && $datainfo->accountLevel > 0 && $datainfo->account_check == 2)
                                                         <td style="color: green; font-weight: bold;" align="center">Approved
                                                         </td>
+
+                                                    @elseif ($datainfo->approval == 2 && $datainfo->accountLevel > 0 && $datainfo->account_check == 1)
+
+                                                        <td style="color: darkorange; font-weight: bold;" align="center">
+                                                            Awaiting Approval</td>
+
+                                                    @elseif ($datainfo->approval == 2 && $datainfo->accountLevel > 0 && $datainfo->account_check == 0)
+
+                                                        <td style="color: darkorange; font-weight: bold;" align="center">
+                                                            Awaiting Approval</td>
+
 
                                                     @elseif ($datainfo->approval == 1 && $datainfo->accountLevel > 0)
 
@@ -217,7 +244,6 @@
                                                     @else
                                                         <td style="color: red; font-weight: bold;" align="center">Not
                                                             Approved</td>
-
                                                     @endif
 
                                                     <td align="center">
@@ -230,8 +256,7 @@
 
 
 
-                                                        @if ($datainfo->approval == 2 && $datainfo->accountLevel > 0)
-
+                                                        @if ($datainfo->approval == 2 && $datainfo->accountLevel > 0 && $datainfo->account_check == 2)
                                                             <a href="javascript:void()"
                                                                 onclick="downgradetoLevel1('{{ $datainfo->id }}')"
                                                                 class="text-danger"><i
@@ -239,6 +264,19 @@
                                                                     style="font-size: 20px;"
                                                                     title="Downgrade to Level 1"></i> <img
                                                                     class="spindowngrade{{ $datainfo->id }} disp-0"
+                                                                    src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
+                                                                    style="width: 20px; height: 20px;"></a>
+
+
+
+                                                        @elseif ($datainfo->approval == 2 && $datainfo->accountLevel > 0 && $datainfo->account_check == 1)
+
+                                                            <a href="javascript:void()"
+                                                                onclick="approveaccount('{{ $datainfo->id }}')"
+                                                                class="text-danger"><i
+                                                                    class="fas fa-check-square text-success"
+                                                                    style="font-size: 20px;" title="Approve Account"></i>
+                                                                <img class="spin{{ $datainfo->id }} disp-0"
                                                                     src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
                                                                     style="width: 20px; height: 20px;"></a>
 
@@ -296,8 +334,6 @@
                                                                 <img class="spin{{ $datainfo->id }} disp-0"
                                                                     src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
                                                                     style="width: 20px; height: 20px;"></a>
-
-
                                                         @endif
 
                                                         <a href="{{ route('send message', 'id=' . $datainfo->id) }}"
@@ -343,27 +379,42 @@
                                                     <td>
                                                         @if ($data->nin_front != null || $data->nin_back != null)
                                                             <small style="font-weight: bold;">
-                                                                Govnt. issued photo ID : @if ($data->nin_front != null) <a href="{{ $data->nin_front }}" target="_blank">Front view</a> @endif | @if ($data->nin_back != null) <a href="{{ $data->nin_back }}" target="_blank">Back view</a> @endif
+                                                                Govnt. issued photo ID : @if ($data->nin_front != null)
+                                                                    <a href="{{ $data->nin_front }}"
+                                                                        target="_blank">Front view</a>
+                                                                    @endif | @if ($data->nin_back != null)
+                                                                        <a href="{{ $data->nin_back }}"
+                                                                            target="_blank">Back view</a>
+                                                                    @endif
                                                             </small>
                                                             <hr>
-
                                                         @endif
 
                                                         @if ($data->drivers_license_front != null || $data->drivers_license_back != null)
                                                             <small style="font-weight: bold;">
-                                                                Driver's License : @if ($data->drivers_license_front != null) <a href="{{ $data->drivers_license_front }}" target="_blank">Front view</a> @endif | @if ($data->drivers_license_back != null) <a href="{{ $data->drivers_license_back }}" target="_blank">Back view</a> @endif
+                                                                Driver's License : @if ($data->drivers_license_front != null)
+                                                                    <a href="{{ $data->drivers_license_front }}"
+                                                                        target="_blank">Front view</a>
+                                                                    @endif | @if ($data->drivers_license_back != null)
+                                                                        <a href="{{ $data->drivers_license_back }}"
+                                                                            target="_blank">Back view</a>
+                                                                    @endif
                                                             </small>
                                                             <hr>
-
                                                         @endif
 
 
                                                         @if ($data->international_passport_front != null || $data->international_passport_back != null)
                                                             <small style="font-weight: bold;">
-                                                                International Passport : @if ($data->international_passport_front != null) <a href="{{ $data->international_passport_front }}" target="_blank">Front view</a> @endif | @if ($data->international_passport_back != null) <a href="{{ $data->international_passport_back }}" target="_blank">Back view</a> @endif
+                                                                International Passport : @if ($data->international_passport_front != null)
+                                                                    <a href="{{ $data->international_passport_front }}"
+                                                                        target="_blank">Front view</a>
+                                                                    @endif | @if ($data->international_passport_back != null)
+                                                                        <a href="{{ $data->international_passport_back }}"
+                                                                            target="_blank">Back view</a>
+                                                                    @endif
                                                             </small>
                                                             <hr>
-
                                                         @endif
 
 
@@ -390,7 +441,24 @@
                                                                 class="spinvery{{ $data->id }} disp-0"
                                                                 src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
                                                                 style="width: 20px; height: 20px;"></a>
-                                                        @if ($data->approval == 1) <a href="javascript:void()" onclick="approveaccount('{{ $data->id }}')" class="text-danger"><i class="fas fa-power-off text-danger" style="font-size: 20px;" title="Disapprove"></i> <img class="spin{{ $data->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  @else <a href="javascript:void()" onclick="approveaccount('{{ $data->id }}')" class="text-primary"><i class="far fa-lightbulb text-success" style="font-size: 20px;" title="Approve"></i> <img class="spin{{ $data->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>  @endif
+                                                        @if ($data->approval == 1)
+                                                            <a href="javascript:void()"
+                                                                onclick="approveaccount('{{ $data->id }}')"
+                                                                class="text-danger"><i
+                                                                    class="fas fa-power-off text-danger"
+                                                                    style="font-size: 20px;" title="Disapprove"></i> <img
+                                                                    class="spin{{ $data->id }} disp-0"
+                                                                    src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
+                                                                style="width: 20px; height: 20px;"></a> @else <a
+                                                                href="javascript:void()"
+                                                                onclick="approveaccount('{{ $data->id }}')"
+                                                                class="text-primary"><i
+                                                                    class="far fa-lightbulb text-success"
+                                                                    style="font-size: 20px;" title="Approve"></i> <img
+                                                                    class="spin{{ $data->id }} disp-0"
+                                                                    src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
+                                                                    style="width: 20px; height: 20px;"></a>
+                                                        @endif
 
                                                         {{-- @if ($data->approval == 1)
                                 <button class="btn btn-danger" id="processPay" onclick="approveaccount('{{ $data->id }}')">Disapprove Identification <img class="spin{{ $data->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></button>

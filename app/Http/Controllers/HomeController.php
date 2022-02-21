@@ -760,10 +760,10 @@ class HomeController extends Controller
                 // International Transaction
                 $merchant = User::where('ref_code', $invDetails[0]->uploaded_by)->first();
 
-                if ($invDetails[0]->remaining_balance > 0) {
-                    if (
-                        $merchant->country != base64_decode($country)
-                    ) {
+                if(isset($merchant)){
+
+                    if ($invDetails[0]->remaining_balance > 0) {
+                    if ($merchant->country != base64_decode($country)) {
                         $dataInfo = $this->convertCurrencyRate($getCurrencyCode->currencyCode, $merchant->currencyCode, $invDetails[0]->remaining_balance);
                         $dataTot = $this->convertCurrencyRate($getCurrencyCode->currencyCode, $merchant->currencyCode, $invDetails[0]->total_amount);
 
@@ -777,9 +777,7 @@ class HomeController extends Controller
 
                     $remBal = $invDetails[0]->total_amount + $invDetails[0]->remaining_balance;
 
-                    if (
-                        $merchant->country != base64_decode($country)
-                    ) {
+                    if ($merchant->country != base64_decode($country)) {
                         $dataInfo = $this->convertCurrencyRate($getCurrencyCode->currencyCode, $merchant->currencyCode, $remBal);
                         $dataTot = $this->convertCurrencyRate($getCurrencyCode->currencyCode, $merchant->currencyCode, $invDetails[0]->total_amount);
                         $totalInvoice = $dataInfo;
@@ -802,9 +800,18 @@ class HomeController extends Controller
 
 
                 return view('main.paymentlink')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+
+                }
+                else{
+                    // Redirect to Login
+                    return redirect()->route('epsresponseback')->with('error', 'Unable to detect your country. Invoice payment cannot be processed');
+                }
+
+
+                
             } else {
                 // Redirect to Login
-                return redirect()->route('login')->with('error', 'Unable to detect your country. Invoice payment cannot be processed');
+                return redirect()->route('epsresponseback')->with('error', 'Unable to detect your country. Invoice payment cannot be processed');
             }
         } else {
             // Redirect to Login

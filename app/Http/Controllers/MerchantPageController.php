@@ -52,7 +52,9 @@ class MerchantPageController extends Controller
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
             'clientInfo' => $this->getMyClientInfo(Auth::user()->ref_code),
             'planCost' => $this->getPlanCost(),
+            'specialInfo' => $this->getthisInfo(Auth::user()->country)
         ];
+
 
 
 

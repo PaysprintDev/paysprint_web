@@ -1015,6 +1015,7 @@ Route::group(['prefix' => 'Ajax'], function () {
 	Route::post('refundmoneybacktowallet', ['uses' => 'AdminController@ajaxRefundMoneyBackToWallet', 'as' => 'Ajaxrefundmoneybacktowallet']);
 	Route::post('accesstousepaysprint', ['uses' => 'AdminController@ajaxAccessToUsePaysprint', 'as' => 'grant country']);
 	Route::post('accesstousepaysprintimt', ['uses' => 'AdminController@ajaxAccessToUsePaysprintImt', 'as' => 'grant imt']);
+	Route::post('activatemerchantaccount', ['uses' => 'AdminController@activatemerchantaccount', 'as' => 'active merchant account']);
 
 
 	Route::post('quotedecision', ['uses' => 'ConsultantController@ajaxquotedecision', 'as' => 'Ajaxquotedecision']);
