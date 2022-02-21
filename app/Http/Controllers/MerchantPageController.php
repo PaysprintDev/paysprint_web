@@ -52,7 +52,9 @@ class MerchantPageController extends Controller
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
             'clientInfo' => $this->getMyClientInfo(Auth::user()->ref_code),
             'planCost' => $this->getPlanCost(),
+            'specialInfo' => $this->getthisInfo(Auth::user()->country)
         ];
+
 
 
 
@@ -62,6 +64,12 @@ class MerchantPageController extends Controller
 
     public function invoiceSingle()
     {
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
 
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
@@ -74,6 +82,14 @@ class MerchantPageController extends Controller
 
     public function invoiceForm()
     {
+
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getServiceType' => $this->getServiceTypes(),
@@ -90,6 +106,8 @@ class MerchantPageController extends Controller
 
     public function invoiceTypes()
     {
+        
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getServiceType' => $this->getServiceTypes(),
@@ -114,6 +132,13 @@ class MerchantPageController extends Controller
     public function invoiceStatement()
     {
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
@@ -124,6 +149,13 @@ class MerchantPageController extends Controller
 
     public function walletStatement()
     {
+
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
 
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
@@ -136,6 +168,13 @@ class MerchantPageController extends Controller
     public function sentInvoice()
     {
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
@@ -146,6 +185,13 @@ class MerchantPageController extends Controller
 
     public function paidInvoice()
     {
+
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
 
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
@@ -158,6 +204,13 @@ class MerchantPageController extends Controller
     public function pendingInvoice()
     {
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
@@ -168,6 +221,13 @@ class MerchantPageController extends Controller
 
     public function balanceReport()
     {
+
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
 
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
@@ -180,6 +240,13 @@ class MerchantPageController extends Controller
     public function taxesReport()
     {
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
@@ -191,6 +258,13 @@ class MerchantPageController extends Controller
     public function invoiceTypeReport()
     {
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
@@ -201,6 +275,13 @@ class MerchantPageController extends Controller
 
     public function recurringType()
     {
+
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
 
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
@@ -223,6 +304,13 @@ class MerchantPageController extends Controller
     public function invoicePage()
     {
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
@@ -244,6 +332,13 @@ class MerchantPageController extends Controller
 
     public function orderingSystem()
     {
+
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
 
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),

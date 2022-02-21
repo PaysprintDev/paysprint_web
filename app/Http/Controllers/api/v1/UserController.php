@@ -481,6 +481,18 @@ class UserController extends Controller
                 $getSub = TransactionCost::where('country', $thisuser->country)->where('structure', $subType)->first();
 
 
+                // Check merchant test mode
+                $client = ClientInfo::where('user_id', $thisuser->ref_code)->first();
+
+                if(isset($client) && $client->accountMode == "test"){
+                    $data = [];
+                    $status = 400;
+                    $message = 'You are in test mode';
+
+                    $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                    return $this->returnJSON($resData, $status);
+                }
 
 
 
@@ -489,12 +501,18 @@ class UserController extends Controller
                 // Check my plan
                 if ($thisuser->plan == "basic") {
                     $plan = 'classic';
-                    $planName = 'classic';
+                    $planName = 'classic paid plan';
                     $amount = $getSub->fixed;
+                    $today = date('Y-m-d');
+
+                    $recMessage = "<p>This is a confirmation that your PaySprint Account has been upgraded to a Paid Plan. Your subscription would be renewed at the next billing cycle ".date('d-m-Y', strtotime($today. "+28 days")).".</p><p>If this was a mistake, kindly login to your PaySprint Account to downgrade the Account.</p><p>Your current plan is CLASSIC PAID PLAN and </p>";
+
                 } else {
                     $plan = 'basic';
                     $planName = 'Free Forever';
                     $amount = "0";
+
+                    $recMessage = "<p>This is a confirmation that your PaySprint Account has been downgraded to Free Plan. Your subscription would not be renewed at the next billing cycle.</p><p>If this was a mistake, kindly login to your PaySprint Account to Upgrade the Account.</p><p>Your current plan is FREE FOREVER and </p>";
                 }
 
                 // Check wallet Balalnce
@@ -542,7 +560,7 @@ class UserController extends Controller
                     $this->email = $thisuser->email;
                     $this->subject = $activity;
 
-                    $this->message = '<p>' . $activity . '</p><p>You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> balance in your account</p>';
+                    $this->message = '<p>' . $recMessage . '</p><p>You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> balance in your account</p>';
 
                     $this->monthlyChargeInsert($thisuser->ref_code, $thisuser->country, $amount, $thisuser->currencyCode);
 
@@ -1269,21 +1287,28 @@ class UserController extends Controller
 
     public function bvnVerification(Request $req)
     {
-        $response = $this->verifyBVN($req->bvn, $req->account_number, $req->bank_code, $req->account_name);
-
-        Log::info(json_encode($response));
+        
 
         try {
 
 
             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
+
+            $response = $this->verifyBVN($req->bvn, $req->account_number, $req->bank_code, $req->account_name, $req->bearerToken());
+
+            Log::info(json_encode($response));
+
+            // dd($response);
+
+
             $bank = ListOfBanks::where('code', $req->bank_code)->first();
 
 
-            BVNVerificationList::insert(['user_id' => $thisuser->id, 'bvn_number' => $req->bvn, 'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
 
-            if ($response->status == true && $response->data->is_blacklisted == false) {
+            BVNVerificationList::insert(['user_id' => $thisuser->id, 'bvn_number' => $req->bvn, 'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name, 'status' => $response->verificationStatus, 'description' => $response->description]);
+
+            if ($response->responseCode == "00" && $response->verificationStatus == "VERIFIED") {
 
                 if ($thisuser->approval == 2 && $thisuser->accountLevel == 3) {
                     User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 3, 'approval' => 2,  'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
@@ -1296,12 +1321,12 @@ class UserController extends Controller
 
 
 
-                $data = $response->data;
-                $message = $response->message;
+                $data = $response->response;
+                $message = $response->description;
                 $status = 200;
             } else {
                 $data = [];
-                $message = "Bank Verification Number does not match your account";
+                $message = $response->description.". ENSURE YOU PROVIDE FULLNAME AS REGISTERED WITH BANK";
                 $status = 400;
             }
 
