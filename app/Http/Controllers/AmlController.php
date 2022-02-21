@@ -115,6 +115,8 @@ class AmlController extends Controller
     {
         // dd(Session::all());
 
+    
+
         if ($req->session()->has('username') == true) {
 
 
@@ -191,9 +193,135 @@ class AmlController extends Controller
 
 
 
-            return view('aml.index')->with(['pages' => 'AML Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'transCost' => $transCost]);
+            return view('aml.index')->with(['pages' => 'AML Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'invoiceImport' => $invoiceImport , 'payInvoice' => $payInvoice, 'invoiceLinkImport' => $invoiceLinkImport, 'transCost' => $transCost]);
         } else {
             return redirect()->route('AdminLogin');
+        }
+    }
+
+    public function recurBills($user_id)
+    {
+        // Get Statements
+
+        $today = date('Y-m-d');
+
+        $getimport = ImportExcel::where('payment_due_date', '<', $today)->where('uploaded_by', $user_id)->orderBy('created_at')->get();
+
+        // dd($getimport);
+
+        if (count($getimport) > 0) {
+            // Loop through information
+
+
+            foreach ($getimport as $key => $value) {
+                $recur = $value->recurring;
+                $trans_date = $value->transaction_date;
+                $due_date = $value->payment_due_date;
+                $email = $value->payee_email;
+
+
+
+
+                if ($recur == "One Time") {
+                    $period = null;
+                    $due_period = null;
+                } elseif ($recur == "Weekly") {
+                    $period = date('Y-m-d', strtotime($trans_date . ' + 7 days'));
+                    $due_period = date('Y-m-d', strtotime($due_date . ' + 7 days'));
+                } elseif ($recur == "Bi-Monthly") {
+                    $period = date('Y-m-d', strtotime($trans_date . ' + 14 days'));
+                    $due_period = date('Y-m-d', strtotime($due_date . ' + 14 days'));
+                } elseif ($recur == "Monthly") {
+                    $period = date('Y-m-d', strtotime($trans_date . ' + 30 days'));
+                    $due_period = date('Y-m-d', strtotime($due_date . ' + 30 days'));
+                } elseif ($recur == "Quaterly") {
+                    $period = date('Y-m-d', strtotime($trans_date . ' + 90 days'));
+                    $due_period = date('Y-m-d', strtotime($due_date . ' + 90 days'));
+                } elseif ($recur == "Half Yearly") {
+                    $period = date('Y-m-d', strtotime($trans_date . ' + 180 days'));
+                    $due_period = date('Y-m-d', strtotime($due_date . ' + 180 days'));
+                } elseif ($recur == "Yearly") {
+                    $period = date('Y-m-d', strtotime($trans_date . ' + 365 days'));
+                    $due_period = date('Y-m-d', strtotime($due_date . ' + 365 days'));
+                } elseif ($recur == null) {
+                    $period = date('Y-m-d', strtotime($trans_date . ' + 365 days'));
+                    $due_period = date('Y-m-d', strtotime($due_date . ' + 365 days'));
+                }
+
+
+
+
+
+                if ($due_period > $today) {
+
+                    $thisuser = User::where('ref_code', $user_id)->first();
+
+                    // Update
+                    $updt = ImportExcel::where('payee_email', $email)->where('uploaded_by', $user_id)->update(['transaction_date' => $period, 'payment_due_date' => $due_period, 'installcount' => 0]);
+
+                    // Send mail
+
+
+                    // Insert Statement
+                    $activity = "Invoice on " . $value->service;
+                    $credit = $value->amount;
+                    $debit = 0;
+                    $balance = 0;
+                    $reference_code = $value->invoice_no;
+                    $status = "Delivered";
+                    $action = "Invoice";
+                    $trans_date = $period;
+                    $regards = $user_id;
+
+                    $this->insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $thisuser->country);
+
+                    $getClient = ClientInfo::where('user_id', $user_id)->get();
+
+
+                    if (count($getClient) > 0) {
+                        $clientname = $getClient[0]->business_name;
+                        $clientaddress = $getClient[0]->address;
+                        $client_realname = $getClient[0]->firstname . ' ' . $getClient[0]->lastname;
+                        $city = $getClient[0]->city;
+                        $state = $getClient[0]->state;
+                        $zipcode = $getClient[0]->zip_code;
+                    } else {
+                        $clientname = "PaySprint (EXBC)";
+                        $client_realname = "PaySprint (EXBC)";
+                        $clientaddress = "PaySprint by Express Ca Corp, 10 George St. North, Brampton. ON. L6X1R2. Canada";
+                        $city = "Brampton";
+                        $state = "Ontario";
+                        $zipcode = "L6X1R2";
+                    }
+
+                    $this->to = $email;
+                    // $this->to = "adenugaadebambo41@gmail.com";
+                    $this->name = $value->name;
+                    $this->transaction_date = $period;
+                    $this->invoice_no = $value->invoice_no;
+                    $this->payee_ref_no = $value->payee_ref_no;
+                    $this->transaction_ref = $value->transaction_ref;
+                    $this->description = $value->description;
+                    $this->payment_due_date = $due_period;
+                    $this->customer_id = $value->customer_id;
+                    $this->amount = $value->amount;
+                    $this->address = $clientaddress;
+                    $this->service = $value->service;
+                    $this->clientname = $clientname;
+                    $this->client_realname = $client_realname;
+                    $this->city = $city;
+                    $this->state = $state;
+                    $this->zipcode = $zipcode;
+
+                    $this->subject = $this->clientname . ' sends you recurring invoice on PaySprint';
+
+                    $this->sendEmail($this->to, $this->subject);
+                } else {
+                    // Do nothing
+                }
+            }
+        } else {
+            // Do nothing
         }
     }
 
@@ -1674,8 +1802,23 @@ class AmlController extends Controller
             'activity' => $this->userActivity()
         );
 
+        $transCost = $this->transactionCost();
 
-        return view('aml.amlsuplinkfolder.transactionanalysis')->with(['data' => $data]);
+
+
+        return view('aml.amlsuplinkfolder.transactionanalysis')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
+    }
+    public function transactionAnalysisSubPage()
+    {
+        $data = array(
+            'activity' => $this->userActivity()
+        );
+
+        $transCost = $this->transactionCost();
+
+
+
+        return view('aml.amlsuplinkfolder.transactionanalysissubpage')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
     }
 
     public function complianceDeskReview()
@@ -1684,8 +1827,87 @@ class AmlController extends Controller
             'activity' => $this->userActivity()
         );
 
+        $transCost = $this->transactionCost();
 
-        return view('aml.amlsuplinkfolder.compliancedeskreview')->with(['data' => $data]);
+
+        return view('aml.amlsuplinkfolder.compliancedeskreview')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
+    }
+    public function complianceDeskReviewSubPage()
+    {
+        $data = array(
+            'activity' => $this->userActivity()
+        );
+
+        $transCost = $this->transactionCost();
+
+
+        return view('aml.amlsuplinkfolder.compliancedeskreviewsubpage')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
+    }
+
+    public function viewDocument()
+    {
+        $data = array(
+            'activity' => $this->userActivity()
+        );
+
+        $transCost = $this->transactionCost();
+
+        return view('aml.amlsuplinkfolder.viewdocument')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
+    }
+
+    public function viewKycKybReport()
+    {
+        $data = array(
+            'activity' => $this->userActivity()
+        );
+
+        $transCost = $this->transactionCost();
+
+        return view('aml.amlsuplinkfolder.viewkyckybreport')->with([ 'pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
+    }
+
+    public function viewComplianceInformation()
+    {
+        $data = array(
+            'activity' => $this->userActivity()
+        );
+
+        $transCost = $this->transactionCost();
+
+        return view('aml.amlsuplinkfolder.viewcomplianceinformation')->with(['pages' => 'AML Dashboard',  'transCost' => $transCost, 'data' => $data]);
+    }
+
+    public function viewIndustry()
+    {
+        $data = array(
+            'activity' => $this->userActivity()
+        );
+
+        $transCost = $this->transactionCost();
+
+        return view('aml.amlsuplinkfolder.viewindustry')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
+    }
+
+    public function linkedAccount()
+    {
+        $data = array(
+            'activity' => $this->userActivity()
+        );
+
+        $transCost = $this->transactionCost();
+
+        return view('aml.amlsuplinkfolder.linkedaccount')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
+    }
+
+    public function connectedAccounts()
+    {
+        $data = array(
+            'activity' => $this->userActivity()
+        );
+
+        $transCost = $this->transactionCost();
+
+        return view('aml.amlsuplinkfolder.connectedaccounts')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
     }
 
     public function compliance()

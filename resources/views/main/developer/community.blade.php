@@ -121,111 +121,61 @@ input[type="radio"] {
                                                         
                                                     </div>
                                                 </div>
-                                              
-                                                <div class="card">
+
+                                                @if (count($data['community']) > 0)
+
+                                                    @foreach ($data['community'] as $post)
+                                                    <div class="card">
                                                     
-                                                    <div class="card-body">
-                                                        <div class="content-title">
-                                                            <a href="{{ route('submessage') }}"><h5><strong>This is my title</strong></h5></a>
-                                                        </div>
-                                                      
-                                                        <div class="content-description">
-                                                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum
-numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium
-optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis
-obcaecati tenetur iure eius earum ut molestias architecto voluptate aliquam
-nihil, eveniet aliquid culpa officia aut! Impedit sit sunt quaerat, odit,
-tenetur error, harum nesciunt ipsum debitis quas aliquid. Reprehenderit,
-quia.
-                                                        </div>
-                                                        <hr>
-                                                        <div class="content-actions">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <p>Action</p>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <p>Usmanu Danfodio |
-                                                                        <small>
-                                                                            12hrs ago
-                                                                        </small>
-                                                                    </p>
-                                                                    
+                                                        <div class="card-body">
+                                                            <div class="content-title">
+                                                                <a href="{{ route('submessage', $post->id) }}"><h5><strong>{{ $post->question }}</strong></h5></a>
+                                                            </div>
+                                                          
+                                                            <div class="content-description" >
+                                                                {!! \Illuminate\Support\Str::limit($post->description, 200, $end='.......') !!}
+                                                            </div>
+                                                            <hr>
+                                                            <div class="content-actions">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <p>{{ $post->categories }}</p>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <p>{{ $post->name }} |
+                                                                            <small>
+                                                                                {{ $post->created_at->diffForHumans() }}
+                                                                            </small>
+                                                                        </p>
+                                                                        
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                  
+                                                    @endforeach
 
-                                            
-                                              
+                                                @else
 
                                                 <div class="card">
                                                     
                                                     <div class="card-body">
                                                         <div class="content-title">
-                                                            <h5><strong>This is my title</strong></h5>
+                                                            <h5><strong>No Post available yet</strong></h5>
                                                         </div>
                                                       
                                                         <div class="content-description">
-                                                            Here are the unneccssary uestions and ansfssdlkngksdnk
+                                                            <a href="{{ route('askquestion') }}">Click here to ask a question</a>
                                                         </div>
                                                         <hr>
-                                                        <div class="content-actions">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <p>Action</p>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <p>Usmanu Danfodio |
-                                                                        <small>
-                                                                            12hrs ago
-                                                                        </small>
-                                                                    </p>
-                                                                    
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                        
                                                     </div>
                                                 </div>
-                                                  
-
-                                                  <div class="card">
                                                     
-                                                    <div class="card-body">
-                                                        <div class="content-title">
-                                                            <h5><strong>This is my title</strong></h5>
-                                                        </div>
-                                                      
-                                                        <div class="content-description">
-                                                            Here are the unneccssary uestions and ansfssdlkngksdnk
-                                                        </div>
-                                                        <hr>
-                                                        <div class="content-actions">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <p>Action</p>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <p>Usmanu Danfodio |
-                                                                        <small>
-                                                                            12hrs ago
-                                                                        </small>
-                                                                    </p>
-                                                                    
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                  
+                                                @endif
                                               
-
-                                                <center>
-                                                    <button type="submit" class="btn btn-primary mt-3 btn-md" >Load more</button>
-                                                </center>
+                                                
+                        
 
 
                                             </div>

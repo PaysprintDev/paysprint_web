@@ -17,6 +17,10 @@
 
 <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
 
+<!-- include summernote css/js -->
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+
+
     <title>PaySprint | Developer's Community</title>
 
     <style>
@@ -105,7 +109,8 @@ input[type="radio"] {
                                     
                                     
 
-                                    <form>
+                                    <form action="{{ route ('askquestion')  }}" method="POST" enctype="multipart/form-data">
+                                        @csrf
                                         <div class="form-row">
                                             <div class="form-group col-md-12">
                                                 <label for="categories">Categories</label>
@@ -129,27 +134,27 @@ input[type="radio"] {
                                             </div>
 
                                           <div class="form-group col-md-12">
-                                            <label for="inputEmail4">Your question</label>
-                                            <input type="text" class="form-control" placeholder="What is your question">
+                                            <label for="your_question">Your question</label>
+                                            <input type="text" name="question" class="form-control" placeholder="What is your question">
                                           </div>
                                         </div>
 
                                         <div class="form-group">
-                                          <label for="inputAddress2">What's this about</label>
-                                          <input type="file" class="file-input form-control"placeholder="insert image">
+                                          <label for="about_what">What's this about</label>
+                                          <input type="file" name="file" class="file-input form-control"placeholder="insert image">
                                         </div>
                                           
                                         <div class="form-group">
-                                          <textarea type="text" class="form-control" id="inputAddress2" placeholder="Share addintional details about your question or issue to help the community provide you with the best answer possible" rows="7"></textarea>
+                                          <textarea type="text" name="description" class="form-control" id="summernote" placeholder="Share addintional details about your question or issue to help the community provide you with the best answer possible" rows="7"></textarea>
                                         </div>
                                         <div class="form-row">
                                           <div class="form-group col-md-6">
-                                            <label for="inputCity">Name</label>
-                                            <input type="text/email" class="form-control" id="inputCity">
+                                            <label for="name">Name</label>
+                                            <input type="text/email" name="name" class="form-control" id="inputCity">
                                           </div>
                                           <div class="form-group col-md-6">
-                                            <label for="inputCity">Email</label>
-                                            <input type="Email" class="form-control" id="inputCity">
+                                            <label for="email">Email</label>
+                                            <input type="Email" name="email" class="form-control" id="inputCity">
                                           </div>
                                           
                                           
@@ -160,7 +165,7 @@ input[type="radio"] {
                                             
                                           </div>
                                         </div>
-                                        <button type="submit" class="btn btn-primary col-md-12" >Submit</button>
+                                        <button type="submit" class="btn btn-primary col-md-12" href="{{ route('community') }}">Submit</button>
                                       </form>
                             
 
@@ -178,6 +183,8 @@ input[type="radio"] {
 
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js" integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
         <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 
