@@ -18,6 +18,9 @@
 <script src="https://raw.githubusercontent.com/HubSpot/pace/v1.0.0/pace.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
+crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <!-- jQuery UI 1.11.4 -->
 <script src="{{ asset('ext/bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
@@ -109,7 +112,6 @@
 
 
 @if (session('role') != 'Super')
-
     <!--Start of Tawk.to Script-->
     <script type="text/javascript">
         var Tawk_API = Tawk_API || {},
@@ -125,7 +127,6 @@
         })();
     </script>
     <!--End of Tawk.to Script-->
-
 @endif
 
 
@@ -147,6 +148,9 @@
         $('#message').summernote({
             height: 300,
         });
+
+
+
     });
 </script>
 
@@ -4500,6 +4504,156 @@
                     swal('', 'Cancelled', 'info');
                 }
             });
+    }
+
+
+    function checkMyBox(val, id) {
+
+        // Show cancel icon by default
+
+        var checkProp = $(`#${val+id}`).prop('checked');
+
+        var route = "{{ URL('Ajax/checkIdvPassInfo') }}";
+        thisdata = {
+            val,
+            id,
+            checkProp
+        };
+
+
+        Pace.restart();
+        Pace.track(function() {
+            setHeaders();
+            jQuery.ajax({
+                url: route,
+                method: 'post',
+                data: thisdata,
+                dataType: 'JSON',
+                beforeSend: function() {
+                    iziToast.info({
+                        title: 'Hey',
+                        message: 'Processing request...',
+                        position: 'topRight',
+                        timeout: 500,
+                    });
+                },
+                success: function(result) {
+
+                    console.log(result);
+
+                    if (result.message == "success") {
+
+                        iziToast.success({
+                            title: 'Great',
+                            message: 'Message sent successfully',
+                            position: 'topRight',
+                        });
+
+                    } else {
+                        iziToast.error({
+                            title: 'Oops',
+                            message: 'Something went wrong!',
+                            position: 'topRight',
+                        });
+                    }
+
+
+                },
+                error: function(err) {
+                    iziToast.error({
+                        title: 'Oops',
+                        message: err.message,
+                        position: 'topRight',
+                    });
+                }
+
+            });
+        });
+
+
+
+    }
+
+    function activateLive(val, id) {
+
+
+        swal({
+                title: "Are you sure?",
+                text: `Click OK to move account to ${val.toUpperCase()} mode`,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    var route = "{{ URL('Ajax/activatemerchantaccount') }}";
+                    thisdata = {
+                        val,
+                        id
+                    };
+
+                    Pace.restart();
+                    Pace.track(function() {
+                        setHeaders();
+                        jQuery.ajax({
+                            url: route,
+                            method: 'post',
+                            data: thisdata,
+                            dataType: 'JSON',
+                            beforeSend: function() {
+
+                                $(`#btn${id}`).text('Please wait...');
+                            },
+                            success: function(result) {
+
+                                $(`#btn${id}`).text('Activate Live');
+
+                                console.log(result);
+
+                                if (result.message == "success") {
+
+                                    iziToast.success({
+                                        title: 'Great',
+                                        message: result.res,
+                                        position: 'topRight',
+                                    });
+
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 2000);
+
+                                } else {
+                                    iziToast.error({
+                                        title: 'Oops',
+                                        message: result.res,
+                                        position: 'topRight',
+                                    });
+                                }
+
+
+                            },
+                            error: function(err) {
+                                $(`#btn${id}`).text('Activate Live');
+                                iziToast.error({
+                                    title: 'Oops',
+                                    message: err.message,
+                                    position: 'topRight',
+                                });
+                            }
+
+                        });
+                    });
+
+
+                } else {
+
+                }
+            });
+
+
+
+
+
     }
 
 

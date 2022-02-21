@@ -12,11 +12,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         All IDV Failed By Country
+         Non-Active PaySprint By Country
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">All IDV Failed By Country</li>
+        <li class="active">Non-Active PaySprint By Country</li>
       </ol>
     </section>
 
@@ -63,15 +63,14 @@
                             
                             <td>{{ $data->country }}</td>
 
-                            @if($allusersdata = \App\User::where([['country', '=', $data->country],['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->count())
+                            @if($allusersdata = \App\User::where([['country', '=', $data->country],['countryapproval', '=', 0], ['accountLevel', '=', 0]])->count())
                                 <td>{{ $allusersdata }}</td>
                             @endif
-
                             
 
                             <td>
 
-                              <a href="{{ route('overrideusers', 'country='.$data->country) }}" type="button" class="btn btn-primary">View details</a>
+                              <a href="{{ route('notactivepsusers', 'country='.$data->country) }}" type="button" class="btn btn-primary">View details</a>
 
                               
                             </td>

@@ -42,7 +42,9 @@ Route::get('passwordreminder', 'CheckSetupController@passwordReminder');
 Route::get('notification-table', 'CheckSetupController@notificationTable');
 Route::get('notification-period', 'CheckSetupController@notificationPeriod');
 Route::get('monthlytransaction', 'CheckSetupController@monthlyTransactionHistory');
+Route::get('nonmonthlytransaction', 'CheckSetupController@nonMonthlyTransactionHistory');
 Route::get('exbccardrequest', 'CheckSetupController@checkExbcCardRequest');
+Route::get('trullioverification', 'CheckSetupController@checkTrullioVerification');
 Route::get('migratetolevelone', 'CheckSetupController@migrateUsersToLevelOne');
 Route::get('insertspecialinfoactivity', 'CheckSetupController@insertspecialinfoActivity');
 Route::get('autofeestructure', 'CheckSetupController@setupFeeStructure');
@@ -219,6 +221,8 @@ Route::post('create-payment-invoice-intent', ['uses' => 'MonerisController@invoi
 // Express Payment Callback
 Route::prefix('expresspay')->group(function () {
 	Route::get('/resp', ['uses' => 'MonerisController@expressCallback', 'as' => 'express callback']);
+	Route::get('/business', ['uses' => 'MonerisController@expressBusinessCallback', 'as' => 'express business callback']);
+	Route::get('/responseback', ['uses' => 'HomeController@expressResponseback', 'as' => 'epsresponseback']);
 });
 
 
@@ -412,10 +416,14 @@ Route::get('allusers', ['uses' => 'AdminController@allPlatformUsers', 'as' => 'a
 
 
 Route::get('approvedusers', ['uses' => 'AdminController@allApprovedUsers', 'as' => 'approvedusers']);
+Route::get('upgradedconsumer', ['uses' => 'AdminController@allUpgradedConsumers', 'as' => 'upgradedconsumer']);
+Route::get('upgradedmerchant', ['uses' => 'AdminController@allUpgradedMerchants', 'as' => 'upgradedmerchant']);
+Route::get('approvedpendingusers', ['uses' => 'AdminController@allApprovedPendingUsers', 'as' => 'approvedpendingusers']);
 Route::get('matchedusers', ['uses' => 'AdminController@allMatchedUsers', 'as' => 'matchedusers']);
 Route::get('leveltwousers', ['uses' => 'AdminController@allLevelTwoUsers', 'as' => 'leveltwousers']);
 Route::get('pendingusers', ['uses' => 'AdminController@allPendingUsers', 'as' => 'pendingusers']);
 Route::get('overrideusers', ['uses' => 'AdminController@allOverrideUsers', 'as' => 'overrideusers']);
+Route::get('notactivepsusers', ['uses' => 'AdminController@allNotActivePsUsers', 'as' => 'notactivepsusers']);
 Route::get('closedusers', ['uses' => 'AdminController@allClosedUsers', 'as' => 'closedusers']);
 Route::get('suspendedusers', ['uses' => 'AdminController@allSuspendedUsers', 'as' => 'suspendedusers']);
 Route::get('newusers', ['uses' => 'AdminController@allNewusers', 'as' => 'newusers']);
@@ -440,10 +448,16 @@ Route::get('allusersbycountry', ['uses' => 'AdminController@allPlatformUsersByCo
 
 
 Route::get('approvedusersbycountry', ['uses' => 'AdminController@allApprovedUsersByCountry', 'as' => 'approved users by country']);
+Route::get('upgradedconsumerbycountry', ['uses' => 'AdminController@allUpgradedConsumerByCountry', 'as' => 'upgraded consumers by country']);
+Route::get('upgradedmerchantbycountry', ['uses' => 'AdminController@allUpgradedMerchantByCountry', 'as' => 'upgraded merchant by country']);
+Route::get('merchantaccountbycountry', ['uses' => 'AdminController@merchantAccountModeByCountry', 'as' => 'merchant account mode by country']);
+Route::get('merchantdetails', ['uses' => 'AdminController@merchantDetails', 'as' => 'merchant account details']);
+Route::get('approvedpendingusersbycountry', ['uses' => 'AdminController@allApprovedPendingUsersByCountry', 'as' => 'approved pending users by country']);
 Route::get('leveltwousersbycountry', ['uses' => 'AdminController@levelTwoUsersByCountry', 'as' => 'level two users by country']);
 Route::get('matchedusersbycountry', ['uses' => 'AdminController@allMatchedUsersByCountry', 'as' => 'matched users by country']);
 Route::get('pendingusersbycountry', ['uses' => 'AdminController@allPendingUsersByCountry', 'as' => 'pending users by country']);
 Route::get('overrideusersbycountry', ['uses' => 'AdminController@allOverrideUsersByCountry', 'as' => 'override users by country']);
+Route::get('psusersnotactivebycountry', ['uses' => 'AdminController@allPSUsersNotActiveByCountry', 'as' => 'ps not active by country']);
 Route::get('closedusersbycountry', ['uses' => 'AdminController@allClosedUsersByCountry', 'as' => 'closed users by country']);
 Route::get('suspendedusersbycountry', ['uses' => 'AdminController@allSuspendedUsersByCountry', 'as' => 'suspended users by country']);
 
@@ -952,6 +966,9 @@ Route::group(['prefix' => 'Ajax'], function () {
 
 	Route::post('getOrganization', ['uses' => 'HomeController@getOrganization', 'as' => 'getOrganization']);
 
+	// Check IDV Information
+	Route::post('checkIdvPassInfo', ['uses' => 'IdvController@checkIdvPassInfo', 'as' => 'checkIdvPassInfo']);
+
 
 
 	Route::post('PaymentInvoice', ['uses' => 'MonerisController@purchase', 'as' => 'PaymentInvoice']);
@@ -1012,6 +1029,7 @@ Route::group(['prefix' => 'Ajax'], function () {
 	Route::post('refundmoneybacktowallet', ['uses' => 'AdminController@ajaxRefundMoneyBackToWallet', 'as' => 'Ajaxrefundmoneybacktowallet']);
 	Route::post('accesstousepaysprint', ['uses' => 'AdminController@ajaxAccessToUsePaysprint', 'as' => 'grant country']);
 	Route::post('accesstousepaysprintimt', ['uses' => 'AdminController@ajaxAccessToUsePaysprintImt', 'as' => 'grant imt']);
+	Route::post('activatemerchantaccount', ['uses' => 'AdminController@activatemerchantaccount', 'as' => 'active merchant account']);
 
 
 	Route::post('quotedecision', ['uses' => 'ConsultantController@ajaxquotedecision', 'as' => 'Ajaxquotedecision']);

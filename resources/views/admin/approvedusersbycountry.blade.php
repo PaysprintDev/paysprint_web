@@ -53,6 +53,7 @@
                                         <th>Country</th>
                                         <th>Total Count</th>
                                         <th>Action</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -64,7 +65,7 @@
 
                                                 <td>{{ $data->country }}</td>
 
-                                                @if ($allusersdata = \App\User::where('country', $data->country)->where('accountLevel', 3)->count())
+                                                @if ($allusersdata = \App\User::where('country', $data->country)->where('account_check', 2)->count())
                                                     <td>{{ $allusersdata }}</td>
                                                 @endif
 

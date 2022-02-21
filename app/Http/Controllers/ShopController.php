@@ -36,8 +36,12 @@ class ShopController extends Controller
             'currencyCode' => $this->getCountryCode($thisuser->country),
             'continent' => $timezone[0],
             'name' => $thisuser->businessname,
-            'currencyCode' => $this->getCountryCode($getCurrencyCode->name),
+            'refCode' => $thisuser->ref_code,
+            'mycurrencyCode' => $this->getCountryCode($getCurrencyCode->name),
         );
+
+
+        // dd($data);
 
 
         return view('main.shop.index')->with(['data' => $data]);

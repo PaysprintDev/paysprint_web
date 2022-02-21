@@ -12,11 +12,12 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                All IDV Passed By Country
+                Merchants Account Mode</p>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li class="active">All IDV Passed By Country</li>
+                <li class="active">Merchants Account Mode</p>
+                </li>
             </ol>
         </section>
 
@@ -53,6 +54,7 @@
                                         <th>Country</th>
                                         <th>Total Count</th>
                                         <th>Action</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -64,7 +66,7 @@
 
                                                 <td>{{ $data->country }}</td>
 
-                                                @if ($allusersdata = \App\User::where([['country', '=', $data->country], ['accountLevel', '>=', 2], ['approval', '>=', 1], ['account_check', '=', 0]])->count())
+                                                @if ($allusersdata = \App\ClientInfo::where('accountMode', $mode)->where('country', $data->country)->count())
                                                     <td>{{ $allusersdata }}</td>
                                                 @endif
 
@@ -72,7 +74,7 @@
 
                                                 <td>
 
-                                                    <a href="{{ route('matchedusers', 'country=' . $data->country) }}"
+                                                    <a href="{{ route('merchant account details', 'country=' . $data->country . '&mode=' . $mode) }}"
                                                         type="button" class="btn btn-primary">View details</a>
 
 

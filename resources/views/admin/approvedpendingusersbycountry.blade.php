@@ -12,11 +12,11 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                All IDV Passed By Country
+                All IDV Completed - Pending By Country
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li class="active">All IDV Passed By Country</li>
+                <li class="active">All IDV Completed - Pending By Country</li>
             </ol>
         </section>
 
@@ -64,7 +64,7 @@
 
                                                 <td>{{ $data->country }}</td>
 
-                                                @if ($allusersdata = \App\User::where([['country', '=', $data->country], ['accountLevel', '>=', 2], ['approval', '>=', 1], ['account_check', '=', 0]])->count())
+                                                @if ($allusersdata = \App\User::where([['country', '=', $data->country], ['account_check', '=', 1]])->count())
                                                     <td>{{ $allusersdata }}</td>
                                                 @endif
 
@@ -72,7 +72,7 @@
 
                                                 <td>
 
-                                                    <a href="{{ route('matchedusers', 'country=' . $data->country) }}"
+                                                    <a href="{{ route('approvedpendingusers', 'country=' . $data->country) }}"
                                                         type="button" class="btn btn-primary">View details</a>
 
 
