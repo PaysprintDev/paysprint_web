@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Storage;
+
 use Rap2hpoutre\FastExcel\FastExcel;
 
 use Illuminate\Support\Facades\Mail;
@@ -84,6 +86,11 @@ use App\Points;
 
 use App\ClaimedPoints;
 
+use App\Community;
+use App\Answer;
+
+
+
 use App\HistoryReport;
 use App\ReferralGenerate;
 use App\ReferredUsers;
@@ -135,11 +142,11 @@ class HomeController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @return void
+     *  @return void
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints']]);
+        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage', 'storeAskedQuestions']]);
 
         $location = $this->myLocation();
 
@@ -3569,6 +3576,9 @@ class HomeController extends Controller
     public function community(Request $req)
     {
 
+
+        $community = Community::orderBy('created_at', 'DESC')->get();
+
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
                 $this->page = 'Contact';
@@ -3576,13 +3586,15 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
-                    'continent' => $this->timezone[0]
+                    'continent' => $this->timezone[0],
+                    'community' => $community
                 );
             } else {
                 $this->page = 'community';
                 $this->name = '';
                 $data = [
-                    'continent' => $this->timezone[0]
+                    'continent' => $this->timezone[0],
+                    'community' => $community
                 ];
             }
         } else {
@@ -3590,7 +3602,8 @@ class HomeController extends Controller
             $this->name = session('name');
             $this->email = session('email');
             $data = [
-                'continent' => $this->timezone[0]
+                'continent' => $this->timezone[0],
+                'community' => $community
             ];
         }
 
@@ -3623,12 +3636,86 @@ class HomeController extends Controller
             $data = [
                 'continent' => $this->timezone[0]
             ];
-        }
+
+            
+        };
+
 
         return view('main.developer.askquestion')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
-    public function subMessage(Request $req)
+
+
+    public function storeAskedQuestions(Request $request)
+    {  
+
+        // dd($request->all());
+
+        try{
+            $path = NULL;
+
+            if($request->hasFile('file')){
+    
+                // Do your file upload here and set $path
+
+                //Get filename with extension
+                $filenameWithExt = $request->file('file')->getClientOriginalName();
+                // Get just filename
+                $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+                // Get just extension
+                $extension = $request->file('file')->getClientOriginalExtension();
+
+                // Filename to store
+                $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+
+                $fileToStore = $fileNameToStore;
+                //Upload Image-
+                $path = $request->file('file')->storeAs('public/communityfile', $fileToStore);
+
+                // $path = $request->move(public_path('/communityfile/'), $fileNameToStore);
+
+                $request->file('file')->move(public_path('../../communityfile/'), $fileToStore);
+
+                $path = route('home').'/communityfile/'.$fileNameToStore;
+
+            }
+    
+
+            if($request->categories == "others"){
+                $categories = $request->specify_categories;
+            } else {
+                $categories = $request->categories;
+            }
+
+            Community::insert([
+                'categories' => $categories, 'question' => $request->question, 'file' => $path, 'description' => $request->description, 'name' => $request->name, 'email' => $request->email
+            ]);
+            
+            $resData = 'Submitted successfully';
+                $resp = "success";
+
+                return redirect()->route('community');
+        }  
+        
+        catch (\Throwable $th) {
+            $resData = $th->getMessage();
+            $resp = "error";
+
+            // dd($resData);
+        }
+
+
+
+            //return redirect(route('community'));
+        
+        
+        
+    }
+   
+    public function subMessage(Request $req, $id)
     {
+
+        $community = Community::where('id', $id)->first();
+        $answer = Answer::where('questionid', $id)->orderBy('created_at', 'DESC')->get();
 
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
@@ -3637,13 +3724,17 @@ class HomeController extends Controller
                 $this->email = Auth::user()->email;
                 $data = array(
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
-                    'continent' => $this->timezone[0]
+                    'continent' => $this->timezone[0],
+                    'community' => $community,
+                    'answer' => $answer
                 );
             } else {
                 $this->page = 'community';
                 $this->name = '';
                 $data = [
-                    'continent' => $this->timezone[0]
+                    'continent' => $this->timezone[0],
+                    'community' => $community,
+                    'answer' => $answer
                 ];
             }
         } else {
@@ -3651,13 +3742,49 @@ class HomeController extends Controller
             $this->name = session('name');
             $this->email = session('email');
             $data = [
-                'continent' => $this->timezone[0]
+                'continent' => $this->timezone[0],
+                'community' => $community,
+                'answer' => $answer
+
             ];
-        }
+        };
+
+       
+
+
+
 
         return view('main.developer.submessage')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
+   
 
+    public function storeSubMessage(Request $request)
+    {  
+
+        // dd($request->all());
+
+        try{
+        
+            Answer::insert([
+                'questionId' => $request->questionId, 'comment' => $request->comment, 'name' => $request->name, 
+            ]);
+            
+            $resData = 'Success';
+                $resp = "success";
+        }  
+        
+        catch (\Throwable $th) {
+            $resData = $th->getMessage();
+            $resp = "error";
+        }
+
+
+
+            return redirect()->route('submessage', $request->questionId);
+        
+        
+        
+    }
 
     public function service(Request $req)
     {

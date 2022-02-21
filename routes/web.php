@@ -159,7 +159,10 @@ Route::get('payorganization', ['uses' => 'HomeController@payOrganization', 'as' 
 Route::get('contact', ['uses' => 'HomeController@contact', 'as' => 'contact']);
 Route::get('developers/community', ['uses' => 'HomeController@community', 'as' => 'community']);
 Route::get('developers/askquestion', ['uses' => 'HomeController@askQuestion', 'as' => 'askquestion']);
-Route::get('developers/submessage', ['uses' => 'HomeController@subMessage', 'as' => 'submessage']);
+Route::post('developers/askquestion', ['uses' => 'HomeController@storeAskedQuestions', 'as' => 'askquestion']);
+Route::get('developers/submessage/{id}', ['uses' => 'HomeController@subMessage', 'as' => 'submessage']);
+
+Route::post('developers/storeanswer', ['uses' => 'HomeController@storeSubMessage', 'as' => 'storeanswer']);
 
 Route::get('Service', ['uses' => 'HomeController@service', 'as' => 'service']);
 
@@ -875,11 +878,19 @@ Route::prefix('Admin/aml')->group(function () {
 	Route::get('/transactionreview', ['uses' => 'AmlController@transactionReview', 'as' => 'aml transaction review']);
 	Route::get('refundmoneyrequestbycountry', ['uses' => 'AdminController@refundMoneyRequestByCountry', 'as' => 'refund details by country aml']);
 	Route::get('/transactionanalysis', ['uses' => 'AmlController@transactionAnalysis', 'as' => 'aml transaction analysis']);
+	Route::get('/transactionanalysissubpage', ['uses' => 'AmlController@transactionAnalysisSubPage', 'as' => 'aml transaction analysis subpage']);
 	Route::get('/compliancedeskreview', ['uses' => 'AmlController@complianceDeskReview', 'as' => 'aml compliance desk review']);
+	Route::get('/compliancedeskreviewsubpage', ['uses' => 'AmlController@complianceDeskReviewSubPage', 'as' => 'aml compliance desk review subpage']);
 	Route::get('/reports', ['uses' => 'AmlController@reports', 'as' => 'aml reports']);
 	Route::get('/creditcardholdreturn', ['uses' => 'AmlController@creditCardHoldReturn', 'as' => 'credit card hold return']);
 	Route::get('/platform', ['uses' => 'AmlController@platForm', 'as' => 'platform']);
 	Route::get('/customerservice', ['uses' => 'AmlController@customerService', 'as' => 'customer service']);
+	Route::get('/viewdocument', ['uses' => 'AmlController@viewDocument', 'as' => 'viewdocument']);
+	Route::get('/viewkyckybreport', ['uses' => 'AmlController@viewKycKybReport', 'as' => 'viewkyckybreport']);
+	Route::get('/viewcomplianceinformation', ['uses' => 'AmlController@viewComplianceInformation', 'as' => 'viewcomplianceinformation']);
+	Route::get('/viewindustry', ['uses' => 'AmlController@viewIndustry', 'as' => 'viewindustry']);
+	Route::get('/linkedaccount', ['uses' => 'AmlController@linkedAccount', 'as' => 'linkedaccount']);
+	Route::get('/connectedaccounts', ['uses' => 'AmlController@connectedAccounts', 'as' => 'connectedaccounts']);
 	Route::get('/technology', ['uses' => 'AmlController@technology', 'as' => 'technology']);
 	Route::get('/bankrequestamlwithdrawalbycountry', ['uses' => 'AmlController@requestForWithdrawalToBank', 'as' => 'Request aml for Withdrawal to bank']);
 

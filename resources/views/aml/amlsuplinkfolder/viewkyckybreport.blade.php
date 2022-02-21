@@ -11,11 +11,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Transaction Analysis
+        View KYC/KYB Report
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Transaction Analysis</li>
+        <li class="active"> View KYC/KYB Report</li>
       </ol>
     </section>
 
@@ -30,22 +30,11 @@
         <div class="col-xs-12">
           <div class="box">
 
-            <div class="box-body table table-responsive">
+            <div class="box-body">
+                  
 
-              <table class="table table-bordered table-striped" id="example3">
-
-                <form class="d-flex">
-                    <input class="form-control mt-6" type="search" name="search" aria-label="Search" placeholder="Search by PS number"><br>
-                    {{-- <button class=" btn btn-primary btn-block bg-primary" type="{{ route('aml transaction analysis subpage') }}">Get Transcaton Acount</button> --}}
-                    <a type="button" href="{{ route('aml transaction analysis subpage',) }}" class="btn btn-primary btn-block">Get Transcaton Acount</a>
-                  </form>
-             
-                <tbody>
-
-                   
-                   
-                </tbody>
-              </table>
+                    </div>
+              
             </div>
             <!-- /.box-body -->
           </div>
