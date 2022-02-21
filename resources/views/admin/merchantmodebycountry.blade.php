@@ -74,7 +74,7 @@
 
                                                 <td>
 
-                                                    <a href="{{ route('merchant account details', 'country=' . $data->country) }}"
+                                                    <a href="{{ route('merchant account details', 'country=' . $data->country . '&mode=' . $mode) }}"
                                                         type="button" class="btn btn-primary">View details</a>
 
 

@@ -112,7 +112,6 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
 @if (session('role') != 'Super')
-
     <!--Start of Tawk.to Script-->
     <script type="text/javascript">
         var Tawk_API = Tawk_API || {},
@@ -128,7 +127,6 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         })();
     </script>
     <!--End of Tawk.to Script-->
-
 @endif
 
 
@@ -4571,6 +4569,88 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
             });
         });
+
+
+
+    }
+
+    function activateLive(val, id) {
+
+
+        swal({
+                title: "Are you sure?",
+                text: `Click OK to move account to ${val.toUpperCase()} mode`,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    var route = "{{ URL('Ajax/activatemerchantaccount') }}";
+                    thisdata = {
+                        val,
+                        id
+                    };
+
+                    Pace.restart();
+                    Pace.track(function() {
+                        setHeaders();
+                        jQuery.ajax({
+                            url: route,
+                            method: 'post',
+                            data: thisdata,
+                            dataType: 'JSON',
+                            beforeSend: function() {
+
+                                $(`#btn${id}`).text('Please wait...');
+                            },
+                            success: function(result) {
+
+                                $(`#btn${id}`).text('Activate Live');
+
+                                console.log(result);
+
+                                if (result.message == "success") {
+
+                                    iziToast.success({
+                                        title: 'Great',
+                                        message: result.res,
+                                        position: 'topRight',
+                                    });
+
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 2000);
+
+                                } else {
+                                    iziToast.error({
+                                        title: 'Oops',
+                                        message: result.res,
+                                        position: 'topRight',
+                                    });
+                                }
+
+
+                            },
+                            error: function(err) {
+                                $(`#btn${id}`).text('Activate Live');
+                                iziToast.error({
+                                    title: 'Oops',
+                                    message: err.message,
+                                    position: 'topRight',
+                                });
+                            }
+
+                        });
+                    });
+
+
+                } else {
+
+                }
+            });
+
+
 
 
 

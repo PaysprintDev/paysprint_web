@@ -481,6 +481,18 @@ class UserController extends Controller
                 $getSub = TransactionCost::where('country', $thisuser->country)->where('structure', $subType)->first();
 
 
+                // Check merchant test mode
+                $client = ClientInfo::where('user_id', $thisuser->ref_code)->first();
+
+                if(isset($client) && $client->accountMode == "test"){
+                    $data = [];
+                    $status = 400;
+                    $message = 'You are in test mode';
+
+                    $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                    return $this->returnJSON($resData, $status);
+                }
 
 
 
@@ -1293,7 +1305,8 @@ class UserController extends Controller
             $bank = ListOfBanks::where('code', $req->bank_code)->first();
 
 
-            BVNVerificationList::insert(['user_id' => $thisuser->id, 'bvn_number' => $req->bvn, 'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
+
+            BVNVerificationList::insert(['user_id' => $thisuser->id, 'bvn_number' => $req->bvn, 'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name, 'status' => $response->verificationStatus, 'description' => $response->description]);
 
             if ($response->responseCode == "00" && $response->verificationStatus == "VERIFIED") {
 

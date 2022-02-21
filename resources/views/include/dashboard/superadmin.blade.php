@@ -353,7 +353,7 @@
                 @endif
             </h3>
 
-            <p>IDV Completed</p>
+            <p>IDV Fully Completed</p>
         </div>
         <div class="icon">
             <i class="ion ion-person-add"></i>
@@ -391,12 +391,12 @@
     <div class="small-box bg-orange">
         <div class="inner">
             <h3>
-                @if ($matchedUsers = \App\User::where([['accountLevel', '=', 2], ['approval', '=', 1], ['bvn_verification', '>=', 1], ['account_check', '=', 0]])->count())
+                @if ($matchedUsers = \App\User::where([['accountLevel', '>=', 2], ['approval', '>=', 1], ['account_check', '=', 0]])->count())
                 {{ $matchedUsers }} @else 0
                 @endif
             </h3>
 
-            <p>IDV Passed</p>
+            <p>IDV Passed - (Set restriction)</p>
         </div>
         <div class="icon">
             <i class="ion ion-person-add"></i>

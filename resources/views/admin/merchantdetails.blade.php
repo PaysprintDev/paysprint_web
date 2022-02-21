@@ -80,283 +80,262 @@
                                     @if (count($allusers) > 0)
                                         <?php $i = 1; ?>
                                         @foreach ($allusers as $datainfo)
-                                            <tr>
-                                                <td>{{ $i++ }}</td>
+                                            @if (isset($datainfo['users']))
+                                                <tr>
+                                                    <td>{{ $i++ }}</td>
 
-                                                <td style="color: green; font-weight: bold;">
-                                                    {{ $datainfo['users']->ref_code }}
-                                                </td>
-                                                <td>{{ $datainfo['users']->name }}</td>
-                                                <td>{{ $datainfo['users']->businessname }}</td>
-                                                @if ($user = \App\Admin::where('email', $datainfo['users']->email)->first())
-                                                    <td style="color: navy; font-weight: bold;">{{ $user->username }}
+                                                    <td style="color: green; font-weight: bold;">
+                                                        {{ $datainfo['users']->ref_code }}
                                                     </td>
-                                                @else
-                                                    <td>-</td>
-                                                @endif
-                                                <td>{{ $datainfo['users']->email }}</td>
-                                                <td>{{ $datainfo['users']->telephone }}</td>
-                                                <td>{{ $datainfo['users']->address }}</td>
+                                                    <td>{{ $datainfo['users']->name }}</td>
+                                                    <td>{{ $datainfo['users']->businessname }}</td>
+                                                    @if ($user = \App\Admin::where('email', $datainfo['users']->email)->first())
+                                                        <td style="color: navy; font-weight: bold;">{{ $user->username }}
+                                                        </td>
+                                                    @else
+                                                        <td>-</td>
+                                                    @endif
+                                                    <td>{{ $datainfo['users']->email }}</td>
+                                                    <td>{{ $datainfo['users']->telephone }}</td>
+                                                    <td>{{ $datainfo['users']->address }}</td>
 
-                                                <td>
+                                                    <td>
 
 
-                                                    @if ($datainfo['users']->incorporation_doc_front != null || $datainfo['users']->incorporation_doc_back != null)
-                                                        <small style="font-weight: bold;">
-                                                            Incorporation Document: @if ($datainfo['users']->incorporation_doc_front != null)
-                                                                <a href="{{ $datainfo['users']->incorporation_doc_front }}"
-                                                                    target="_blank">Front view</a>
-                                                                @endif | @if ($datainfo['users']->incorporation_doc_back != null)
-                                                                    <a href="{{ $datainfo['users']->incorporation_doc_back }}"
-                                                                        target="_blank">Back view</a>
+
+                                                        @if ($datainfo['users']->incorporation_doc_front != null || $datainfo['users']->incorporation_doc_back != null)
+                                                            <small style="font-weight: bold;">
+                                                                Incorporation Document: @if ($datainfo['users']->incorporation_doc_front != null)
+                                                                    <a href="{{ $datainfo['users']->incorporation_doc_front }}"
+                                                                        target="_blank">Front view</a>
+                                                                    @endif | @if ($datainfo['users']->incorporation_doc_back != null)
+                                                                        <a href="{{ $datainfo['users']->incorporation_doc_back }}"
+                                                                            target="_blank">Back view</a>
+                                                                    @endif
+                                                            </small>
+
+                                                            <input type="checkbox" name="incorporationcheck"
+                                                                id="incorporationcheck{{ $datainfo['users']->id }}"
+                                                                onchange="checkMyBox('incorporationcheck', '{{ $datainfo['users']->id }}')"
+                                                                @if ($datainfo['users']->business_doc_check == 'incorporationcheck') checked @endif>
+                                                            <hr>
+                                                        @endif
+
+                                                        @if ($datainfo['users']->directors_document != null)
+                                                            <small style="font-weight: bold;">
+                                                                Director's Document: @if ($datainfo['users']->directors_document != null)
+                                                                    <a href="{{ $datainfo['users']->directors_document }}"
+                                                                        target="_blank">View</a>
                                                                 @endif
-                                                        </small>
+                                                            </small>
 
-                                                        <input type="checkbox" name="incorporationcheck"
-                                                            id="incorporationcheck{{ $datainfo['users']->id }}"
-                                                            onchange="checkMyBox('incorporationcheck', '{{ $datainfo['users']->id }}')"
-                                                            @if ($datainfo['users']->business_check == 1) checked @endif>
-                                                        <hr>
-                                                    @endif
+                                                            <input type="checkbox" name="directorcheck"
+                                                                id="directorcheck{{ $datainfo['users']->id }}"
+                                                                onchange="checkMyBox('directorcheck', '{{ $datainfo['users']->id }}')"
+                                                                @if ($datainfo['users']->business_doc_check == 'directorcheck') checked @endif>
 
-                                                    @if ($datainfo['users']->directors_document != null)
-                                                        <small style="font-weight: bold;">
-                                                            Director's Document: @if ($datainfo['users']->directors_document != null)
-                                                                <a href="{{ $datainfo['users']->directors_document }}"
-                                                                    target="_blank">View</a>
-                                                            @endif
-                                                        </small>
-
-                                                        <input type="checkbox" name="directorcheck"
-                                                            id="directorcheck{{ $datainfo['users']->id }}"
-                                                            onchange="checkMyBox('directorcheck', '{{ $datainfo['users']->id }}')"
-                                                            @if ($datainfo['users']->business_check == 1) checked @endif>
-
-                                                        <hr>
-                                                    @endif
+                                                            <hr>
+                                                        @endif
 
 
-                                                    @if ($datainfo['users']->shareholders_document != null)
-                                                        <small style="font-weight: bold;">
-                                                            Shareholder's Document: @if ($datainfo['users']->shareholders_document != null)
-                                                                <a href="{{ $datainfo['users']->shareholders_document }}"
-                                                                    target="_blank">View</a>
-                                                            @endif
-                                                        </small>
+                                                        @if ($datainfo['users']->shareholders_document != null)
+                                                            <small style="font-weight: bold;">
+                                                                Shareholder's Document: @if ($datainfo['users']->shareholders_document != null)
+                                                                    <a href="{{ $datainfo['users']->shareholders_document }}"
+                                                                        target="_blank">View</a>
+                                                                @endif
+                                                            </small>
 
-                                                        <input type="checkbox" name="shareholdercheck"
-                                                            id="shareholdercheck{{ $datainfo['users']->id }}"
-                                                            onchange="checkMyBox('shareholdercheck', '{{ $datainfo['users']->id }}')"
-                                                            @if ($datainfo['users']->business_check == 1) checked @endif>
+                                                            <input type="checkbox" name="shareholdercheck"
+                                                                id="shareholdercheck{{ $datainfo['users']->id }}"
+                                                                onchange="checkMyBox('shareholdercheck', '{{ $datainfo['users']->id }}')"
+                                                                @if ($datainfo['users']->business_doc_check == 'shareholdercheck') checked @endif>
 
-                                                        <hr>
-                                                    @endif
-                                                    @if ($datainfo['users']->proof_of_identity_1 != null)
-                                                        <small style="font-weight: bold;">
-                                                            Proof of identity 1: @if ($datainfo['users']->proof_of_identity_1 != null)
-                                                                <a href="{{ $datainfo['users']->proof_of_identity_1 }}"
-                                                                    target="_blank">View</a>
-                                                            @endif
-                                                        </small>
+                                                            <hr>
+                                                        @endif
+                                                        @if ($datainfo['users']->proof_of_identity_1 != null)
+                                                            <small style="font-weight: bold;">
+                                                                Proof of identity 1: @if ($datainfo['users']->proof_of_identity_1 != null)
+                                                                    <a href="{{ $datainfo['users']->proof_of_identity_1 }}"
+                                                                        target="_blank">View</a>
+                                                                @endif
+                                                            </small>
 
-                                                        <input type="checkbox" name="proofcheck"
-                                                            id="proofcheck{{ $datainfo['users']->id }}"
-                                                            onchange="checkMyBox('proofcheck', '{{ $datainfo['users']->id }}')"
-                                                            @if ($datainfo['users']->business_check == 1) checked @endif>
+                                                            <input type="checkbox" name="proofcheck"
+                                                                id="proofcheck{{ $datainfo['users']->id }}"
+                                                                onchange="checkMyBox('proofcheck', '{{ $datainfo['users']->id }}')"
+                                                                @if ($datainfo['users']->business_doc_check == 'proofcheck') checked @endif>
 
-                                                        <hr>
-                                                    @endif
-                                                    @if ($datainfo['users']->proof_of_identity_2 != null)
-                                                        <small style="font-weight: bold;">
-                                                            Proof of identity 2: @if ($datainfo['users']->proof_of_identity_2 != null)
-                                                                <a href="{{ $datainfo['users']->proof_of_identity_2 }}"
-                                                                    target="_blank">View</a>
-                                                            @endif
-                                                        </small>
+                                                            <hr>
+                                                        @endif
+                                                        @if ($datainfo['users']->proof_of_identity_2 != null)
+                                                            <small style="font-weight: bold;">
+                                                                Proof of identity 2: @if ($datainfo['users']->proof_of_identity_2 != null)
+                                                                    <a href="{{ $datainfo['users']->proof_of_identity_2 }}"
+                                                                        target="_blank">View</a>
+                                                                @endif
+                                                            </small>
 
-                                                        <input type="checkbox" name="proof2check"
-                                                            id="proof2check{{ $datainfo['users']->id }}"
-                                                            onchange="checkMyBox('proof2check', '{{ $datainfo['users']->id }}')"
-                                                            @if ($datainfo['users']->business_check == 1) checked @endif>
+                                                            <input type="checkbox" name="proof2check"
+                                                                id="proof2check{{ $datainfo['users']->id }}"
+                                                                onchange="checkMyBox('proof2check', '{{ $datainfo['users']->id }}')"
+                                                                @if ($datainfo['users']->business_doc_check == 'proof2check') checked @endif>
 
-                                                        <hr>
-                                                    @endif
-                                                    @if ($datainfo['users']->aml_policy != null)
-                                                        <small style="font-weight: bold;">
-                                                            AML policy: @if ($datainfo['users']->aml_policy != null)
-                                                                <a href="{{ $datainfo['users']->aml_policy }}"
-                                                                    target="_blank">View</a>
-                                                            @endif
-                                                        </small>
+                                                            <hr>
+                                                        @endif
+                                                        @if ($datainfo['users']->aml_policy != null)
+                                                            <small style="font-weight: bold;">
+                                                                AML policy: @if ($datainfo['users']->aml_policy != null)
+                                                                    <a href="{{ $datainfo['users']->aml_policy }}"
+                                                                        target="_blank">View</a>
+                                                                @endif
+                                                            </small>
 
-                                                        <input type="checkbox" name="amlcheck"
-                                                            id="amlcheck{{ $datainfo['users']->id }}"
-                                                            onchange="checkMyBox('amlcheck', '{{ $datainfo['users']->id }}')"
-                                                            @if ($datainfo['users']->business_check == 1) checked @endif>
+                                                            <input type="checkbox" name="amlcheck"
+                                                                id="amlcheck{{ $datainfo['users']->id }}"
+                                                                onchange="checkMyBox('amlcheck', '{{ $datainfo['users']->id }}')"
+                                                                @if ($datainfo['users']->business_doc_check == 'amlcheck') checked @endif>
 
-                                                        <hr>
-                                                    @endif
-                                                    @if ($datainfo['users']->compliance_audit_report != null)
-                                                        <small style="font-weight: bold;">
-                                                            Audit Report: @if ($datainfo['users']->compliance_audit_report != null)
-                                                                <a href="{{ $datainfo['users']->compliance_audit_report }}"
-                                                                    target="_blank">View</a>
-                                                            @endif
-                                                        </small>
+                                                            <hr>
+                                                        @endif
+                                                        @if ($datainfo['users']->compliance_audit_report != null)
+                                                            <small style="font-weight: bold;">
+                                                                Audit Report: @if ($datainfo['users']->compliance_audit_report != null)
+                                                                    <a href="{{ $datainfo['users']->compliance_audit_report }}"
+                                                                        target="_blank">View</a>
+                                                                @endif
+                                                            </small>
 
-                                                        <input type="checkbox" name="auditcheck"
-                                                            id="auditcheck{{ $datainfo['users']->id }}"
-                                                            onchange="checkMyBox('auditcheck', '{{ $datainfo['users']->id }}')"
-                                                            @if ($datainfo['users']->business_check == 1) checked @endif>
+                                                            <input type="checkbox" name="auditcheck"
+                                                                id="auditcheck{{ $datainfo['users']->id }}"
+                                                                onchange="checkMyBox('auditcheck', '{{ $datainfo['users']->id }}')"
+                                                                @if ($datainfo['users']->business_doc_check == 'auditcheck') checked @endif>
 
-                                                        <hr>
-                                                    @endif
-                                                    @if ($datainfo['users']->organizational_chart != null)
-                                                        <small style="font-weight: bold;">
-                                                            Organization Chart: @if ($datainfo['users']->organizational_chart != null)
-                                                                <a href="{{ $datainfo['users']->organizational_chart }}"
-                                                                    target="_blank">View</a>
-                                                            @endif
-                                                        </small>
+                                                            <hr>
+                                                        @endif
+                                                        @if ($datainfo['users']->organizational_chart != null)
+                                                            <small style="font-weight: bold;">
+                                                                Organization Chart: @if ($datainfo['users']->organizational_chart != null)
+                                                                    <a href="{{ $datainfo['users']->organizational_chart }}"
+                                                                        target="_blank">View</a>
+                                                                @endif
+                                                            </small>
 
-                                                        <input type="checkbox" name="orgchartcheck"
-                                                            id="orgchartcheck{{ $datainfo['users']->id }}"
-                                                            onchange="checkMyBox('orgchartcheck', '{{ $datainfo['users']->id }}')"
-                                                            @if ($datainfo['users']->business_check == 1) checked @endif>
+                                                            <input type="checkbox" name="orgchartcheck"
+                                                                id="orgchartcheck{{ $datainfo['users']->id }}"
+                                                                onchange="checkMyBox('orgchartcheck', '{{ $datainfo['users']->id }}')"
+                                                                @if ($datainfo['users']->business_doc_check == 'orgchartcheck') checked @endif>
 
-                                                        <hr>
-                                                    @endif
-                                                    @if ($datainfo['users']->financial_license != null)
-                                                        <small style="font-weight: bold;">
-                                                            Finance Licence: @if ($datainfo['users']->financial_license != null)
-                                                                <a href="{{ $datainfo['users']->financial_license }}"
-                                                                    target="_blank">View</a>
-                                                            @endif
-                                                        </small>
+                                                            <hr>
+                                                        @endif
+                                                        @if ($datainfo['users']->financial_license != null)
+                                                            <small style="font-weight: bold;">
+                                                                Finance Licence: @if ($datainfo['users']->financial_license != null)
+                                                                    <a href="{{ $datainfo['users']->financial_license }}"
+                                                                        target="_blank">View</a>
+                                                                @endif
+                                                            </small>
 
-                                                        <input type="checkbox" name="financecheck"
-                                                            id="financecheck{{ $datainfo['users']->id }}"
-                                                            onchange="checkMyBox('financecheck', '{{ $datainfo['users']->id }}')"
-                                                            @if ($datainfo['users']->business_check == 1) checked @endif>
+                                                            <input type="checkbox" name="financecheck"
+                                                                id="financecheck{{ $datainfo['users']->id }}"
+                                                                onchange="checkMyBox('financecheck', '{{ $datainfo['users']->id }}')"
+                                                                @if ($datainfo['users']->business_doc_check == 'financecheck') checked @endif>
 
-                                                        <hr>
-                                                    @endif
+                                                            <hr>
+                                                        @endif
 
 
-                                                    @if ($datainfo['users']->incorporation_doc_front == null || $datainfo['users']->directors_document == null || $datainfo['users']->shareholders_document == null || $datainfo['users']->proof_of_identity_1 == null || $datainfo['users']->proof_of_identity_2 == null || $datainfo['users']->aml_policy == null || $datainfo['users']->compliance_audit_report == null || $datainfo['users']->organizational_chart == null || $datainfo['users']->financial_license == null)
-                                                        <small style="font-weight: bold;">
-                                                            No business document
-                                                        </small>
+                                                        @if ($datainfo['users']->incorporation_doc_front == null && $datainfo['users']->directors_document == null && $datainfo['users']->shareholders_document == null && $datainfo['users']->proof_of_identity_1 == null && $datainfo['users']->proof_of_identity_2 == null && $datainfo['users']->aml_policy == null && $datainfo['users']->compliance_audit_report == null && $datainfo['users']->organizational_chart == null && $datainfo['users']->financial_license == null)
+                                                            <small style="font-weight: bold;">
+                                                                No business document
+                                                            </small>
 
-                                                        <input type="checkbox" name="nobusinessdocument"
-                                                            id="nobusinessdocument{{ $datainfo['users']->id }}"
-                                                            onchange="checkMyBox('nobusinessdocument', '{{ $datainfo['users']->id }}')">
+                                                            <input type="checkbox" name="nobusinessdocument"
+                                                                id="nobusinessdocument{{ $datainfo['users']->id }}"
+                                                                onchange="checkMyBox('nobusinessdocument', '{{ $datainfo['users']->id }}')">
 
-                                                        <hr>
-                                                    @endif
+                                                            <hr>
+                                                        @endif
 
 
 
-                                                </td>
-
-
-                                                @if ($datainfo['users']->approval == 2 && $datainfo['users']->accountLevel > 0)
-                                                    <td style="color: green; font-weight: bold;" align="center">Approved
                                                     </td>
 
-                                                @elseif ($datainfo['users']->approval == 1 && $datainfo['users']->accountLevel > 0)
 
-                                                    <td style="color: darkorange; font-weight: bold;" align="center">
-                                                        Awaiting Approval</td>
+                                                    @if ($datainfo['users']->approval == 2 && $datainfo['users']->accountLevel > 0 && $datainfo['users']->account_check == 2)
+                                                        <td style="color: green; font-weight: bold;" align="center">Approved
+                                                        </td>
 
-                                                @elseif ($datainfo['users']->approval == 0 && $datainfo['users']->accountLevel > 0)
-                                                    <td style="color: navy; font-weight: bold;" align="center">Override
-                                                        Level 1</td>
+                                                    @elseif ($datainfo['users']->approval == 2 && $datainfo['users']->accountLevel > 0 && $datainfo['users']->account_check == 1)
 
-                                                @else
-                                                    <td style="color: red; font-weight: bold;" align="center">Not
-                                                        Approved</td>
-                                                @endif
+                                                        <td style="color: darkorange; font-weight: bold;" align="center">
+                                                            Awaiting Approval</td>
 
-                                                <td align="center">
+                                                    @elseif ($datainfo['users']->approval == 1 && $datainfo['users']->accountLevel > 0)
 
-                                                    <a href="{{ route('user more detail', $datainfo['users']->id) }}"><i
-                                                            class="far fa-eye text-primary" style="font-size: 20px;"
-                                                            title="More details"></i></strong></a>
+                                                        <td style="color: darkorange; font-weight: bold;" align="center">
+                                                            Awaiting Approval</td>
 
-
-
-                                                    @if ($datainfo['users']->approval == 2 && $datainfo['users']->accountLevel > 0)
-                                                        <a href="javascript:void()"
-                                                            onclick="downgradetoLevel1('{{ $datainfo['users']->id }}')"
-                                                            class="text-danger"><i class="fas fa-power-off text-danger"
-                                                                style="font-size: 20px;" title="Downgrade to Level 1"></i>
-                                                            <img class="spindowngrade{{ $datainfo['users']->id }} disp-0"
-                                                                src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
-                                                                style="width: 20px; height: 20px;"></a>
-
-
-                                                    @elseif($datainfo['users']->approval == 1 && $datainfo['users']->accountLevel > 0)
-
-                                                        <a href="javascript:void()"
-                                                            onclick="approveaccount('{{ $datainfo['users']->id }}')"
-                                                            class="text-danger"><i
-                                                                class="fas fa-check-square text-success"
-                                                                style="font-size: 20px;" title="Approve Account"></i>
-                                                            <img class="spin{{ $datainfo['users']->id }} disp-0"
-                                                                src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
-                                                                style="width: 20px; height: 20px;"></a>
-
-                                                        <a href="javascript:void()"
-                                                            onclick="disapproveaccount('{{ $datainfo['users']->id }}')"
-                                                            class="text-danger"><i class="fas fa-power-off text-danger"
-                                                                style="font-size: 20px;" title="Disapprove Account"></i>
-                                                            <img class="spindis{{ $datainfo['users']->id }} disp-0"
-                                                                src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
-                                                                style="width: 20px; height: 20px;"></a>
-
-
-                                                    @elseif ($datainfo['users']->approval == 0 && $datainfo['users']->accountLevel > 0)
-
-                                                        <a href="javascript:void()"
-                                                            onclick="approveaccount('{{ $datainfo['users']->id }}')"
-                                                            class="text-danger"><i
-                                                                class="fas fa-check-square text-danger"
-                                                                style="font-size: 20px;" title="Approve Account"></i>
-                                                            <img class="spin{{ $datainfo['users']->id }} disp-0"
-                                                                src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
-                                                                style="width: 20px; height: 20px;"></a>
+                                                    @elseif ($datainfo['users']->approval == 0 && $datainfo['users']->accountLevel > 0 && $datainfo['users']->account_check < 2)
+                                                        <td style="color: navy; font-weight: bold;" align="center">Override
+                                                            Level 1</td>
 
                                                     @else
-
-
-                                                        <a href="javascript:void()"
-                                                            onclick="approveaccount('{{ $datainfo['users']->id }}')"
-                                                            class="text-primary"><i class="far fa-lightbulb text-success"
-                                                                style="font-size: 20px;" title="Approve Account"></i>
-                                                            <img class="spin{{ $datainfo['users']->id }} disp-0"
-                                                                src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
-                                                                style="width: 20px; height: 20px;"></a>
+                                                        <td style="color: red; font-weight: bold;" align="center">
+                                                            Not Approved</td>
                                                     @endif
 
-                                                    <a href="{{ route('send message', 'id=' . $datainfo['users']->id) }}"
-                                                        class="text-info"><i class="far fa-envelope text-success"
-                                                            style="font-size: 20px;" title="Send Mail"></i></a>
+                                                    <td align="center">
 
-                                                    <a href="javascript:void()"
-                                                        onclick="closeAccount('{{ $datainfo['users']->id }}')"
-                                                        class="text-danger"><i class="far fa-trash-alt text-danger"
-                                                            style="font-size: 20px;" title="Close Account"></i> <img
-                                                            class="spinclose{{ $datainfo['users']->id }} disp-0"
-                                                            src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
-                                                            style="width: 20px; height: 20px;"></a>
+                                                        @if ($datainfo['users']->approval == 2 && $datainfo['users']->accountLevel > 0 && $datainfo['users']->account_check == 2)
+                                                            @if (Request::get('mode') == 'test')
+                                                                <button class="btn btn-success"
+                                                                    id="btn{{ $datainfo['users']->ref_code }}"
+                                                                    onclick="activateLive('live', '{{ $datainfo['users']->ref_code }}')">Activate
+                                                                    Live</button>
+
+                                                            @else
+
+                                                                <button class="btn btn-danger"
+                                                                    id="btn{{ $datainfo['users']->ref_code }}"
+                                                                    onclick="activateLive('test', '{{ $datainfo['users']->ref_code }}')">Activate
+                                                                    Test</button>
+                                                            @endif
+
+
+                                                        @elseif ($datainfo['users']->approval == 2 && $datainfo['users']->accountLevel > 0 && $datainfo['users']->account_check == 1)
+                                                            @if (Request::get('mode') == 'test')
+                                                                <button class="btn btn-success"
+                                                                    id="btn{{ $datainfo['users']->ref_code }}"
+                                                                    onclick="activateLive('live', '{{ $datainfo['users']->ref_code }}')">Activate
+                                                                    Live</button>
+
+                                                            @else
+
+                                                                <button class="btn btn-danger"
+                                                                    id="btn{{ $datainfo['users']->ref_code }}"
+                                                                    onclick="activateLive('test', '{{ $datainfo['users']->ref_code }}')">Activate
+                                                                    Test</button>
+                                                            @endif
 
 
 
-                                                </td>
+                                                        @else
+
+                                                            <button class="btn btn-danger" disabled>
+                                                                @if (Request::get('mode') == 'test')
+                                                                    Activate Live
+                                                                @else
+                                                                    Activate Test
+                                                                @endif
+                                                            </button>
+                                                        @endif
+
+                                                    </td>
 
 
-                                            </tr>
+                                                </tr>
+                                            @endif
                                         @endforeach
 
 
