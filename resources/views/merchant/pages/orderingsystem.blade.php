@@ -1,8 +1,8 @@
 @extends('layouts.merch.merchant-dashboard')
 
 
-@section('content')
 
+@section('content')
     <div class="page-body">
         <!-- Container-fluid starts-->
         <div class="container-fluid">
@@ -2606,7 +2606,4 @@
 
         </div>
     </div>
-
-
-
 @endsection

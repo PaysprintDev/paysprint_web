@@ -112,7 +112,6 @@
 
                 @if (Request::get('user') != null)
                     @if ($newuser = \App\AnonUsers::where('ref_code', Request::get('user'))->first())
-
                         @php
                             $name = explode(' ', $newuser->name);
                             $ref_code = Request::get('user');
@@ -130,7 +129,6 @@
                             $email = '';
                             
                         @endphp
-
                     @endif
 
                 @else
@@ -149,7 +147,8 @@
 
                 <div class="form-group has-feedback">
                     <label for="business_name"><span class="reqField">*</span> Legal Entity Name</label>
-                    <input type="hidden" name="ref_code" id="ref_code" @if ($ref_code != '') value="{{ $ref_code }}" readonly @else placeholder="Ref code" @endif>
+                    <input type="hidden" name="ref_code" id="ref_code"
+                        @if ($ref_code != '') value="{{ $ref_code }}" readonly @else placeholder="Ref code" @endif>
                     <input type="hidden" name="user_id" id="user_id" class="form-control"
                         value="{{ 'PaySprint_' . mt_rand(1000, 9999) }}">
                     <input type="text" name="business_name" id="business_name" class="form-control"
@@ -562,13 +561,15 @@
 
                 <div class="form-group has-feedback">
                     <label for="email"><span class="reqField">*</span> Email</label>
-                    <input type="email" name="email" id="email" class="form-control" @if ($email != '') value="{{ $email }}" readonly @else placeholder="Email Address *" required @endif>
+                    <input type="email" name="email" id="email" class="form-control"
+                        @if ($email != '') value="{{ $email }}" readonly @else placeholder="Email Address *" required @endif>
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                 </div>
 
                 <div class="form-group has-feedback">
                     <label for="cemail"><span class="reqField">*</span> Confirm Email</label>
-                    <input type="email" name="cemail" id="cemail" class="form-control" @if ($email != '') value="{{ $email }}" readonly @else placeholder="Confirm Email *" required @endif>
+                    <input type="email" name="cemail" id="cemail" class="form-control"
+                        @if ($email != '') value="{{ $email }}" readonly @else placeholder="Confirm Email *" required @endif>
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                 </div>
 
@@ -589,32 +590,6 @@
                     </div>
                 </div>
 
-                <div class="form-group has-feedback">
-                    <label for="how_your_heard_about_us"><span class="reqField">*</span> How do you know about
-                        us?</label>
-                    <select name="how_your_heard_about_us" id="how_your_heard_about_us" class="form-control">
-                        <option value="">Select option </option>
-                        <option value="Google Ads">Google Ads</option>
-                        <option value="Facebook">Facebook </option>
-                        <option value="Youtube">Youtube </option>
-                        <option value="Twitter">Twitter</option>
-                        <option value="Search Engine">Search Engine</option>
-                        <option value="Instagram">Instagram</option>
-                        <option value="Email">Email</option>
-                        <option value="Radio">Radio</option>
-                        <option value="TV">TV</option>
-                        <option value="Newspaper">Newspaper</option>
-                        <option value="Word of mouth">Word of mouth</option>
-                        <option value="Others">Others</option>
-                    </select>
-                </div>
-
-                <div class="form-group has-feedback specify_know_about disp-0">
-                    <label for="specify_how_your_heard_about_us">Specify how your heard about us</label>
-                    <input type="text" name="specify_how_your_heard_about_us" id="specify_how_your_heard_about_us"
-                        class="form-control">
-                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                </div>
 
                 <div class="form-group has-feedback">
                     <label for="how_your_heard_about_us"><span class="reqField">*</span> How do you know about
@@ -647,8 +622,8 @@
 
 
 
-      
-    
+
+
 
                 <div class="form-group has-feedback">
                     <label for=" describe_purpose">Purpose of opening the Account (please describe the purpose)</label>
@@ -663,7 +638,7 @@
 
 
                 <div class="form-group has-feedback">
-                    <label for="size_of_transaction"><span class="reqField">*</span> Size of Trancation to be
+                    <label for="size_of_transaction"><span class="reqField">*</span> Size of Transaction to be
                         expected</label>
                     <select name="size_of_transaction" id="size_of_transaction" class="form-control">
                         <option value="">Select Transaction size</option>
@@ -673,237 +648,84 @@
                         <option value="Above 500,001">Above 500,001</option>
                     </select>
 
-                <div class="form-group has-feedback">
-                    <label for=" describe_purpose">Purpose of opening the Account (please describe the purpose)</label>
+
+                    <div class="form-group has-feedback">
+                        <label for="source_of_funds"><span class="reqField">*</span> Source of Funds</label>
+                        <select name="source_of_funds" id="source_of_funds" class="form-control">
+                            <option value="">Select Source of Funds</option>
+                            <option value="Salary, Pension, Social benefits">Salary, Pension, Social benefits</option>
+                            <option value="Directors Remuneration Share of profits">Directors Remuneration Share of
+                                profits
+                            </option>
+                            <option value="Dividend, interest on loan etc">Dividend, interest on loan etc</option>
+                            <option value="Families and Friends">Families and Friends</option>
+                            <option value="Others">Other (Please describe)</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group has-feedback specifySourceOfFunds disp-0">
+                        <label for="specify_source">Specify Source of Funds</label>
+                        <input type="text" name="specify_source" id="specify_source" class="form-control">
+                        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                    </div>
+
+                    <div class="form-group has-feedback">
+                        <label for="referred_by">Referred By <small class="reqField">(Optional)</small></label>
+                        <input type="text" name="referred_by" id="referred_by" class="form-control"
+                            @if ($referred_by != '') value="{{ $referred_by }}" readonly @else placeholder="E.g 69212" @endif>
+                        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+
+                    </div>
+
+
+
+
                     <div class="row">
-                        <div class="col-xs-12">
-                            <textarea type="text" name="describe_purpose" id="describe_purpose" class="form-control"
-                                placeholder=""></textarea>
+                        <div class="col-xs-8">
+                            <div class="checkbox icheck">
+                                <label>
+                                    <input type="checkbox" name="checkbox" id="checkBox">
+                                </label>
+                                <a href="{{ route('terms of use') }}" target="_blank"
+                                    lass="text-primary"><strong>Accept
+                                        Terms and Conditions</strong></a>
+                            </div>
                         </div>
+
                     </div>
-                </div>
+
+                    <div class="form-group has-feedback">
+                        {!! htmlFormSnippet() !!}
+                    </div>
 
 
-                <div class="form-group has-feedback">
-                    <label for="size_of_transaction"><span class="reqField">*</span> Size of Trancation to be
-                        expected</label>
-                    <select name="size_of_transaction" id="size_of_transaction" class="form-control">
-                        <option value="">Select Transaction size</option>
-                        <option value="0 - 10,000">0 - 10,000</option>
-                        <option value="10,001 - 50,000">10,001 - 50,000</option>
-                        <option value="50,000 - 500,000">50,000 - 500,000</option>
-                        <option value="Above 500,001">Above 500,001</option>
-                    </select>
-                </div>
-
-                <div class="form-group has-feedback">
-                    <label for="source_of_funds"><span class="reqField">*</span> Source of Funds</label>
-                    <select name="source_of_funds" id="source_of_funds" class="form-control">
-                        <option value="">Select Source of Funds</option>
-                        <option value="Salary, Pension, Social benefits">Salary, Pension, Social benefits</option>
-                        <option value="Directors Remuneration Share of profits">Directors Remuneration Share of profits
-                        </option>
-                        <option value="Dividend, interest on loan etc">Dividend, interest on loan etc</option>
-                        <option value="Families and Friends">Families and Friends</option>
-                        <option value="Others">Other (Please describe)</option>
-                    </select>
-                </div>
 
 
-                <div class="form-group has-feedback specifySourceOfFunds disp-0">
-                    <label for="specify_source">Specify Source of Funds</label>
-                    <input type="text" name="specify_source" id="specify_source" class="form-control">
-                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                </div>
-
-                <div class="form-group has-feedback">
-                    <label for="referred_by">Referred By <small class="reqField">(Optional)</small></label>
-                    <input type="text" name="referred_by" id="referred_by" class="form-control"
-                        @if ($referred_by != '') value="{{ $referred_by }}" readonly @else placeholder="E.g 69212" @endif>
-                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-
-                </div>
-
-                <div class="form-group has-feedback">
-                    <label for="source_of_funds"><span class="reqField">*</span> Source of Funds</label>
-                    <select name="source_of_funds" id="source_of_funds" class="form-control">
-                        <option value="">Select Source of Funds</option>
-                        <option value="Salary, Pension, Social benefits">Salary, Pension, Social benefits</option>
-                        <option value="Directors Remuneration Share of profits">Directors Remuneration Share of profits
-                        </option>
-                        <option value="Dividend, interest on loan etc">Dividend, interest on loan etc</option>
-                        <option value="Families and Friends">Families and Friends</option>
-                        <option value="Others">Other (Please describe)</option>
-                    </select>
-                </div>
-
-
-                <div class="form-group has-feedback specifySourceOfFunds disp-0">
-                    <label for="specify_source">Specify Source of Funds</label>
-                    <input type="text" name="specify_source" id="specify_source" class="form-control">
-                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                </div>
-
-                <div class="form-group has-feedback">
-                    <label for="referred_by">Referred By <small class="reqField">(Optional)</small></label>
-                    <input type="text" name="referred_by" id="referred_by" class="form-control"
-                        @if ($referred_by != '') value="{{ $referred_by }}" readonly @else placeholder="E.g 69212" @endif>
-                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                </div>
-
-                <div class="form-group has-feedback">
-                    <label for=" describe_purpose">Purpose of opening the Account (please describe the purpose)</label>
                     <div class="row">
-                        <div class="col-xs-12">
-                            <textarea type="text" name="describe_purpose" id="describe_purpose" class="form-control"
-                                placeholder=""></textarea>
+                        <div class="col-xs-8">
+                            <img src="https://cdn.dribbble.com/users/608059/screenshots/2032455/spinner.gif"
+                                class="spinner disp-0" style="width: auto; height: 40px;">
+                            <div class="checkbox icheck disp-0">
+                                <label>
+                                    <input type="checkbox"> Accept Terms & Conditions
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                        <!-- /.col -->
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-success btn-block btn-flat"
+                                onclick="signUp()">Register</button>
 
-
-
-                <div class="form-group has-feedback">
-                    <label for="size_of_transaction"><span class="reqField">*</span> Size of Trancation to be
-                        expected</label>
-                    <select name="size_of_transaction" id="size_of_transaction" class="form-control">
-                        <option value="">Select Transaction size</option>
-                        <option value="0 - 10,000">0 - 10,000</option>
-                        <option value="10,001 - 50,000">10,001 - 50,000</option>
-                        <option value="50,000 - 500,000">50,000 - 500,000</option>
-                        <option value="Above 500,001">Above 500,001</option>
-                    </select>
-                </div>
-
-                <div class="form-group has-feedback">
-                    <label for="source_of_funds"><span class="reqField">*</span> Source of Funds</label>
-                    <select name="source_of_funds" id="source_of_funds" class="form-control">
-                        <option value="">Select Source of Funds</option>
-                        <option value="Salary, Pension, Social benefits">Salary, Pension, Social benefits</option>
-                        <option value="Directors Remuneration Share of profits">Directors Remuneration Share of profits
-                        </option>
-                        <option value="Dividend, interest on loan etc">Dividend, interest on loan etc</option>
-                        <option value="Families and Friends">Families and Friends</option>
-                        <option value="Others">Other (Please describe)</option>
-                    </select>
-                </div>
-
-
-                <div class="form-group has-feedback specifySourceOfFunds disp-0">
-                    <label for="specify_source">Specify Source of Funds</label>
-                    <input type="text" name="specify_source" id="specify_source" class="form-control">
-                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                </div>
-
-                <div class="form-group has-feedback">
-                    <label for="referred_by">Referred By <small class="reqField">(Optional)</small></label>
-                    <input type="text" name="referred_by" id="referred_by" class="form-control"
-                        @if ($referred_by != '') value="{{ $referred_by }}" readonly @else placeholder="E.g 69212" @endif>
-                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                <div class="row">
-                    <div class="col-xs-8">
-                        <div class="checkbox icheck">
-                            <label>
-                                <input type="checkbox" name="checkbox" id="checkBox">
-                            </label>
-                            <a href="{{ route('terms of use') }}" target="_blank" lass="text-primary"><strong>Accept
-                                    Terms and Conditions</strong></a>
                         </div>
+                        <!-- /.col -->
                     </div>
-
-                </div>
-
-                <div class="form-group has-feedback">
-                    {!! htmlFormSnippet() !!}
-                </div>
-
-
-
-
-                <div class="row">
-                    <div class="col-xs-8">
-                        <img src="https://cdn.dribbble.com/users/608059/screenshots/2032455/spinner.gif"
-                            class="spinner disp-0" style="width: auto; height: 40px;">
-                        <div class="checkbox icheck disp-0">
-                            <label>
-                                <input type="checkbox"> Accept Terms & Conditions
-                            </label>
-                        </div>
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-md-12">
-                        <button type="button" class="btn btn-success btn-block btn-flat"
-                            onclick="signUp()">Register</button>
-
-                    </div>
-                    <!-- /.col -->
-                </div>
             </form>
 
             <strong><small>Already have an account? <a
                         href="{{ route('AdminLogin') }}">Login</a></small></strong><br>
 
 
-
-
-
-
-                <div class="row">
-                    <div class="col-xs-8">
-                        <div class="checkbox icheck">
-                            <label>
-                                <input type="checkbox" name="checkbox" id="checkBox">
-                            </label>
-                            <a href="{{ route('terms of use') }}" target="_blank" lass="text-primary"><strong>Accept
-                                    Terms and Conditions</strong></a>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="form-group has-feedback">
-                    {!! htmlFormSnippet() !!}
-                </div>
-
-
-
-
-                <div class="row">
-                    <div class="col-xs-8">
-                        <img src="https://cdn.dribbble.com/users/608059/screenshots/2032455/spinner.gif"
-                            class="spinner disp-0" style="width: auto; height: 40px;">
-                        <div class="checkbox icheck disp-0">
-                            <label>
-                                <input type="checkbox"> Accept Terms & Conditions
-                            </label>
-                        </div>
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-md-12">
-                        <button type="button" class="btn btn-success btn-block btn-flat"
-                            onclick="signUp()">Register</button>
-
-                    </div>
-                    <!-- /.col -->
-                </div>
-            </form>
-
-            <strong><small>Already have an account? <a
-                        href="{{ route('AdminLogin') }}">Login</a></small></strong><br>
 
 
         </div>
@@ -1015,124 +837,6 @@
             }
 
         });
-
-
-        $('#how_your_heard_about_us').change(function() {
-
-            if ($('#how_your_heard_about_us').val() == "Others") {
-                // Show a specify input field
-                $('.specify_know_about').removeClass('disp-0');
-            } else {
-                // Remove the specified input field
-                $('.specify_know_about').addClass('disp-0');
-            }
-
-        });
-
-
-
-        $("#type_of_service").change(function() {
-            if ($("#type_of_service").val() == "Add Service Type") {
-                $(".otherservice").removeClass('disp-0');
-            } else {
-                $(".otherservice").addClass('disp-0');
-            }
-        });
-
-        // Register function
-        function signUp() {
-
-            var route = "{{ URL('Ajax/Adminregister') }}";
-            if (grecaptcha.getResponse() == "") {
-                swal('Oops', 'Check the captcha box', 'info');
-                return false;
-            } else if ($('#business_name').val() == "") {
-                swal('Oops!', 'Business name field can\'t be empty', 'warning');
-                return false;
-            } else if ($('#business_telephone').val() == "") {
-                swal('Oops!', 'Business telephone field can\'t be empty', 'warning');
-                return false;
-            } else if ($('#industry').val() == "") {
-                swal('Oops!', 'Select industry', 'warning');
-                return false;
-            } else if ($('#firstname').val() == "") {
-                swal('Oops!', 'Firstname field can\'t be empty', 'warning');
-                return false;
-            } else if ($('#lastname').val() == "") {
-                swal('Oops!', 'Lastname field can\'t be empty', 'warning');
-                return false;
-            } else if ($('#dayOfBirth').val() == "") {
-                swal('Oops!', 'Please select day of birth', 'warning');
-                return false;
-            } else if ($('#monthOfBirth').val() == "") {
-                swal('Oops!', 'Please select month of birth', 'warning');
-                return false;
-            } else if ($('#yearOfBirth').val() == "") {
-                swal('Oops!', 'Please select year of birth', 'warning');
-                return false;
-            } else if ($('#telephone').val() == "") {
-                swal('Oops!', 'Your telephone number is needed', 'warning');
-                return false;
-            } else if ($('#username').val() == "") {
-                swal('Oops!', 'Your username is needed for next login', 'warning');
-                return false;
-            } else if ($('#email').val() == "") {
-                swal('Oops!', 'Email field can\'t be empty', 'warning');
-                return false;
-            } else if ($('#cemail').val() == "") {
-                swal('Oops!', 'Please confirm email', 'warning');
-                return false;
-            } else if ($('#country').val() == "") {
-                swal('Oops!', 'Country field can\'t be empty', 'warning');
-                return false;
-            } else if ($('#state').val() == "") {
-                swal('Oops!', 'State field can\'t be empty', 'warning');
-                return false;
-            } else if ($('#locality').val() == "") {
-                swal('Oops!', 'City field can\'t be empty', 'warning');
-                return false;
-            } else if ($('#postal_code').val() == "") {
-                swal('Oops!', 'Postal/Zip Code field can\'t be empty', 'warning');
-                return false;
-            } else if ($('#password').val() == "") {
-                swal('Oops!', 'Password field can\'t be empty', 'warning');
-                return false;
-            } else if ($('#cpassword').val() == "") {
-                swal('Oops!', 'You have to confirm your password', 'warning');
-                return false;
-            } else if ($('#email').val() != $('#cemail').val()) {
-                swal('Oops!', 'Your email doesn\'t match', 'info');
-                return false;
-            } else if ($('#password').val() != $('#cpassword').val()) {
-                swal('Oops!', 'Your password doesn\'t match', 'info');
-                return false;
-            } else if ($('#checkBox').prop('checked') == false) {
-                swal('Oops!', 'You have to accept terms and conditions', 'warning');
-                return false;
-            } else if ($('#how_your_heard_about_us').val() == "") {
-                swal('Oops!', 'Please tell us how you know about us', 'warning');
-                return false;
-            } else if ($('#size_of_transaction').val() == "") {
-                swal('Oops!', 'Please tell us how you know about us', 'warning');
-                return false;
-            } else if ($('#source_of_funds').val() == "") {
-                swal('Oops!', 'Please select the source of funds.', 'warning');
-                return false;
-            }
-
-
-
-
-            }
-
-        });
-
-
-
-            }
-
-        });
-
 
 
         $('#how_your_heard_about_us').change(function() {

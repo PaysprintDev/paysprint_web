@@ -136,7 +136,7 @@
 
                             <li>
                                 <a class="nav-link"
-                                    href="{{ Auth::user()->country == 'Nigeria' ? route('utility bills') : route('select utility bills country') }}"><i
+                                    href="{{ Auth::user()->country == 'Nigeria'? route('utility bills'): route('select utility bills country', 'country=' . Auth::user()->country) }}"><i
                                         data-feather="shopping-bag"></i><span>Bill Payments</span></a>
                             </li>
 

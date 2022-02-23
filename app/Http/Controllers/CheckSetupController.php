@@ -1356,6 +1356,125 @@ class CheckSetupController extends Controller
     }
 
 
+
+    // Move From IDV Failed TO IDV Passed and send a message of no document ...
+    public function moveFromFailedToPass(){
+
+        try {
+            
+            $getFailedUsers = User::where([['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->where('country', 'Nigeria')->get();
+
+
+            if(count($getFailedUsers) > 0){
+                foreach($getFailedUsers as $users){
+                    // Move them to passed...
+                    User::where('id', $users->id)->update(['approval' => 1]);
+
+                    // Send Mail...
+
+                    $this->name = $users->name;
+                    $this->email = $users->email;
+                    // $this->email = 'adenugaadebambo41@gmail.com';
+                    $this->subject = "Account Verification";
+
+                    $this->message = "<p>We are glad to have you on PaySprint.</p><p>Your PaySprint wallet has been prepared and ready for use.</p><p>However, you can only <strong>RECEIVE</strong> funds to your wallet until you have completed the required identity verification process that would enable you <em>'to Add Money/Top Up Wallet' and 'Send Money from Wallet'</em></p><br><p>To Complete the identity verification processes, kindly follow these steps:</p><p>a. Login to your PaySprint Account on your mobile app or at: www.paysprint.ca</p><p>b. Go to Profile section and upload the following:</p><p>1. Selfie of yourself</p><p>2. Government Issued Photo ID (Drivers license or International Passport or National ID card)</p><p>3. Utility Bill ( Electricity, Hydro etc. Note that Bank or Credit Card Statements are not accepted)</p><br><p>Thank you for choosing us.</p>";
+
+
+                    $this->sendEmail($this->email, "Incomplete Setup");
+
+
+                    echo "Moved for ".$users->name."<hr>";
+
+                }
+
+                
+            }
+
+
+
+        } catch (\Throwable $th) {
+            $this->slack('Move From IDV Failed To Pass Error Module moveFromFailedToPass() line 1367: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+        }
+    }
+
+
+    // Move From IDV Passed TO IDV Completed Pending
+    public function moveFromPassedToCompletedPending(){
+
+        try {
+            
+            $getPassedUsers = User::where([['accountLevel', '=', 2], ['approval', '=', 1], ['account_check', '=', 0]])->where('country', 'India')->get();
+
+            dd($getPassedUsers);
+
+
+            if(count($getPassedUsers) > 0){
+                foreach($getPassedUsers as $users){
+                    // Move them to passed...
+                    User::where('id', $users->id)->update(['account_check' => 1]);
+
+                                        // Send Mail...
+
+                    $this->name = $users->name;
+                    $this->email = $users->email;
+                    // $this->email = 'adenugaadebambo41@gmail.com';
+                    $this->subject = "Account Verification";
+
+                    $this->message = "<p>We are glad to have you on PaySprint.</p><p>Your PaySprint wallet has been prepared and ready for use.</p><p>However, you can only <strong>RECEIVE</strong> funds to your wallet until you have completed the required identity verification process that would enable you <em>'to Add Money/Top Up Wallet' and 'Send Money from Wallet'</em></p><br><p>To Complete the identity verification processes, kindly follow these steps:</p><p>a. Login to your PaySprint Account on your mobile app or at: www.paysprint.ca</p><p>b. Go to Profile section and upload the following:</p><p>1. Selfie of yourself</p><p>2. Government Issued Photo ID (Drivers license or International Passport or National ID card)</p><p>3. Utility Bill ( Electricity, Hydro etc. Note that Bank or Credit Card Statements are not accepted)</p><br><p>Thank you for choosing us.</p>";
+
+
+                    $this->sendEmail($this->email, "Incomplete Setup");
+
+
+                    echo "Moved for ".$users->name."<hr>";
+
+                }
+
+                
+            }
+
+
+
+        } catch (\Throwable $th) {
+            $this->slack('Move From IDV Passed To Completed Pending Error Module moveFromPassedToCompletedPending() line 1439: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+        }
+    }
+
+
+    // Send Message to merchants owners
+
+    public function cronToMerchant(){
+        try {
+            $getMerchants = User::where('accountType', 'Merchant')->where([['accountLevel', '=', 2], ['approval', '<=', 1], ['account_check', '<=', 1]])->get();
+
+            if(count($getMerchants) > 0){
+
+                foreach($getMerchants as $users){
+
+
+                    $this->name = $users->name;
+                    $this->email = $users->email;
+                    // $this->email = 'adenugaadebambo41@gmail.com';
+                    $this->subject = "Complete your business profile today";
+
+                    $this->message = "<p>Hello ".$this->name.",</p><p>Do you know that merchants with complete profile has 20x chance of driving more traffic to their business on PaySprint.</p><p>Complete your business profile today and drive more traffic to your business page.</p><br><p>Thank you for choosing us.</p>";
+
+
+                    $this->sendEmail($this->email, "Incomplete Setup");
+
+
+                    echo "Sent Mail To ".$users->name."<hr>";
+
+                }
+
+            }
+
+        } catch (\Throwable $th) {
+            $this->slack('Move From IDV Passed To Completed Pending Error Module cronToMerchant() line 1450: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+        }
+    }
+
+
     public function passwordReminder()
     {
         $getUsers = User::where('pass_date', '!=', null)->where('disableAccount', '!=', 'on')->where('countryapproval', 1)->get();

@@ -1057,7 +1057,7 @@ class HomeController extends Controller
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if($client->accountMode == "test"){
+        if(isset($client) && $client->accountMode == "test"){
             
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -1432,7 +1432,7 @@ class HomeController extends Controller
 
                 $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if($client->accountMode == "test"){
+        if(isset($client) && $client->accountMode == "test"){
             
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -1637,17 +1637,18 @@ class HomeController extends Controller
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if($client->accountMode == "test"){
+
+        if(isset($client) && $client->accountMode == "test"){
             
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
 
+
         $data = array(
-            'continent' => $this->timezone[0]
+            'continent' => $this->timezone[0],
+            'countryApproval' => AllCountries::where('approval', 1)->orderBy('created_at', 'DESC')->get()
         );
-
-
 
 
         return view('main.selectutilitycountry')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -1681,7 +1682,7 @@ class HomeController extends Controller
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if($client->accountMode == "test"){
+        if(isset($client) && $client->accountMode == "test"){
             
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -2054,7 +2055,7 @@ class HomeController extends Controller
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if($client->accountMode == "test"){
+        if(isset($client) && $client->accountMode == "test"){
             
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -3634,7 +3635,7 @@ class HomeController extends Controller
     {
 
 
-        $community = Community::orderBy('created_at', 'DESC')->get();
+        $community = Community::orderBy('created_at', 'DESC')->paginate(5);
 
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {

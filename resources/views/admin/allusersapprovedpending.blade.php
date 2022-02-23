@@ -201,6 +201,17 @@
                                                             <hr>
                                                         @endif
 
+                                                        <small style="font-weight: bold;">
+                                                            No document
+                                                        </small>
+
+                                                        <input type="checkbox" name="nodocument"
+                                                            id="nodocument{{ $datainfo->id }}"
+                                                            onchange="checkMyBox('nodocument', '{{ $datainfo->id }}')"
+                                                            checked>
+
+                                                        <hr>
+
 
 
                                                     </td>

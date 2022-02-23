@@ -105,7 +105,6 @@
     <div class="container">
 
         @isset($data['specialInfo'])
-
             <div class="row">
                 <div class="alert alert-success show" role="alert">
                     <strong>
@@ -145,13 +144,11 @@
 
                 </div>
             </div>
-
         @endif
 
 
 
         @if (Auth::user()->country == 'Canada' && Auth::user()->accountType == 'Merchant')
-
             <div class="row">
                 <div class="alert alert-info" role="alert">
 
@@ -163,7 +160,6 @@
 
                 </div>
             </div>
-
         @endif
 
         <div class="row">
@@ -208,8 +204,9 @@
                             <li class="list-group-item">
                                 Trade FX with PaySprint <br><br>
 
-                                <a type="button" class="btn btn-primary" href="{{ route('paysprint currency exchange') }}"
-                                    id="cardSubmit">PaySprint Currency FX</a>
+                                <a type="button" class="btn btn-primary"
+                                    href="{{ route('paysprint currency exchange') }}" id="cardSubmit">PaySprint
+                                    Currency FX</a>
 
                                 <hr>
 
@@ -291,7 +288,7 @@
 
                                                 <td style="font-weight: 700"
                                                     class="{{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}">
-                                                    {{ $sendRecData->credit != 0 ? '+' . $data['currencyCode']->currencySymbol . number_format($sendRecData->credit, 2) : '-' . $data['currencyCode']->currencySymbol . number_format($sendRecData->debit, 2) }}
+                                                    {{ $sendRecData->credit != 0? '+' . $data['currencyCode']->currencySymbol . number_format($sendRecData->credit, 2): '-' . $data['currencyCode']->currencySymbol . number_format($sendRecData->debit, 2) }}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -332,16 +329,12 @@
                                     @if (isset($data['payInvoice']))
 
                                         @foreach (json_decode($data['payInvoice']) as $payInv)
-
                                             {{-- {{ dd($payInv) }} --}}
 
 
                                             {{-- Get Merchant Currency --}}
 
                                             @if ($merchant = \App\User::where('ref_code', $payInv->uploaded_by)->first())
-
-
-
                                                 @if ($payInv->invoiced_currency != null)
                                                     @php
                                                         $currencySymb = $payInv->invoiced_currency_symbol;
@@ -352,7 +345,6 @@
                                                     @php
                                                         $currencySymb = $merchant->currencySymbol;
                                                     @endphp
-
                                                 @endif
 
 
@@ -367,7 +359,6 @@
                                                     $currencySymb = $data['currencyCode']->currencySymbol;
                                                     $countryBase = Auth::user()->country;
                                                 @endphp
-
                                             @endif
 
 
@@ -503,7 +494,7 @@
                                                 </td>
                                                 <td style="font-weight: 700"
                                                     class="{{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}">
-                                                    {{ $sendRecData->credit != 0 ? '+' . $data['currencyCode']->currencySymbol . number_format($sendRecData->credit, 2) : '-' . $data['currencyCode']->currencySymbol . number_format($sendRecData->debit, 2) }}
+                                                    {{ $sendRecData->credit != 0? '+' . $data['currencyCode']->currencySymbol . number_format($sendRecData->credit, 2): '-' . $data['currencyCode']->currencySymbol . number_format($sendRecData->debit, 2) }}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -528,7 +519,10 @@
                             </div>
                             <div class="col-md-4">
                                 <i class="far fa-bell" title="Notifications" style="cursor: pointer"
-                                    onclick="location.href='{{ route('notifications') }}'"></i>@if (count($data['getfiveNotifications']) > 0 && $data['getfiveNotifications'][0]->notify == 0) <i class="fas fa-circle fa-blink" style="color: rgb(129, 6, 6)"></i> @endif
+                                    onclick="location.href='{{ route('notifications') }}'"></i>
+                                @if (count($data['getfiveNotifications']) > 0 && $data['getfiveNotifications'][0]->notify == 0)
+                                    <i class="fas fa-circle fa-blink" style="color: rgb(129, 6, 6)"></i>
+                                @endif
                             </div>
                         </div>
                         <div class="table table-responsive infoRec">
@@ -641,7 +635,6 @@
 
 
                         @if (Auth::user()->country == 'Nigeria')
-
                             <li class="list-group-item" title="Bank Verification (BVN)">
 
                                 <div class="row">
@@ -656,7 +649,6 @@
 
 
                             </li>
-
                         @endif
 
 
@@ -726,7 +718,8 @@
                                     @if (Auth::user()->country == 'Nigeria')
                                         <a href="{{ route('utility bills') }}">Utility Payment</small></a>
                                     @else
-                                        <a href="{{ route('select utility bills country') }}">Utility
+                                        <a
+                                            href="{{ route('select utility bills country', 'country=' . Auth::user()->country) }}">Utility
                                             Payment</small></a>
                                     @endif
 
@@ -778,7 +771,6 @@
                         @if (count($data['getmerchantsByCategory']) > 0)
 
                             @foreach ($data['getmerchantsByCategory'] as $merchants)
-
                                 <li class="list-group-item" title="{{ $merchants->industry }}">
                                     <div class="row">
                                         <div class="col-md-12">
@@ -789,7 +781,6 @@
                                     </div>
 
                                 </li>
-
                             @endforeach
 
                             @if (count($data['getmerchantsByCategory']) == 8)

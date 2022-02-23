@@ -719,7 +719,7 @@
 
                 try {
 
-
+                    var callbackUrl;
 
                     var netamount = $('#amounttosend').val();
                     var feeamount = $('#commissiondeduct').val();
@@ -731,10 +731,15 @@
                     var currencyCode = `{{ $data['currencyCode']->currencyCode }}`;
                     var conversionamount = $('#conversionamount').val();
                     var api_token = `{{ Auth::user()->api_token }}`;
-                    var callbackUrl =
-                        `{{ env('APP_URL') }}/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
-                    // var callbackUrl =
-                    // `http://localhost:9090/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
+
+
+                    if (`{{ env('APP_ENV') }}` != "local") {
+                        callbackUrl =
+                            `{{ env('APP_URL') }}/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
+                    } else {
+                        callbackUrl =
+                            `http://localhost:9090/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
+                    }
 
                     var productId = "{{ Auth::user()->ref_code }}";
                     var description = "Added {{ $data['currencyCode']->currencyCode }}" + netamount +

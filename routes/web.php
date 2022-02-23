@@ -52,6 +52,9 @@ Route::get('checktelephone', 'CheckSetupController@checkTelephone');
 Route::get('userarchive', 'CheckSetupController@userAccountArchive');
 Route::get('matchedusersmove', 'CheckSetupController@matchedUsersAccount');
 Route::get('approvedusersmove', 'CheckSetupController@approvedUsersAccount');
+Route::get('movefailedtopass', 'CheckSetupController@moveFromFailedToPass');
+Route::get('movepassedtocompletedpending', 'CheckSetupController@moveFromPassedToCompletedPending');
+Route::get('crontomerchant', 'CheckSetupController@cronToMerchant');
 
 
 // IDV Mail Chimp
@@ -159,12 +162,17 @@ Route::get('Statement', ['uses' => 'HomeController@statement', 'as' => 'statemen
 Route::get('payorganization', ['uses' => 'HomeController@payOrganization', 'as' => 'payorganization']);
 
 Route::get('contact', ['uses' => 'HomeController@contact', 'as' => 'contact']);
-Route::get('developers/community', ['uses' => 'HomeController@community', 'as' => 'community']);
-Route::get('developers/askquestion', ['uses' => 'HomeController@askQuestion', 'as' => 'askquestion']);
-Route::post('developers/askquestion', ['uses' => 'HomeController@storeAskedQuestions', 'as' => 'askquestion']);
-Route::get('developers/submessage/{id}', ['uses' => 'HomeController@subMessage', 'as' => 'submessage']);
 
-Route::post('developers/storeanswer', ['uses' => 'HomeController@storeSubMessage', 'as' => 'storeanswer']);
+
+Route::prefix('developers')->group(function () {
+Route::get('/community', ['uses' => 'HomeController@community', 'as' => 'community']);
+Route::get('/askquestion', ['uses' => 'HomeController@askQuestion', 'as' => 'askquestion']);
+Route::post('/askquestion', ['uses' => 'HomeController@storeAskedQuestions', 'as' => 'askquestion']);
+Route::get('/submessage/{id}', ['uses' => 'HomeController@subMessage', 'as' => 'submessage']);
+Route::post('/storeanswer', ['uses' => 'HomeController@storeSubMessage', 'as' => 'storeanswer']);
+});
+
+
 
 Route::get('Service', ['uses' => 'HomeController@service', 'as' => 'service']);
 
@@ -318,7 +326,7 @@ Route::prefix('merchant')->group(function () {
 	Route::get('/profile', [MerchantPageController::class, 'profile'])->name('merchants profile');
 	Route::get('/invoicepage', [MerchantPageController::class, 'invoicePage'])->name('invoice page');
 	Route::get('/paymentgateway', [MerchantPageController::class, 'paymentGateway'])->name('new merchant payment gateway');
-	Route::get('/orderingsystem', [MerchantPageController::class, 'orderingSystem'])->name('ordering system');
+	Route::get('/estore', [MerchantPageController::class, 'orderingSystem'])->name('ordering system');
 
 	Route::get('businessprofile/{id}', [MerchantPageController::class, 'businessProfile'])->name('merchant business profile');
 

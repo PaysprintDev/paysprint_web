@@ -6418,6 +6418,7 @@ class AdminController extends Controller
         // Send Mail to the support agent
         $this->name = $req->firstname . ' ' . $req->lastname;
         $this->email = $req->email;
+        $this->subject = "Role assignment on PaySprint";
         $this->info = "Fund remittance";
 
         $this->message = '<p>Hello ' . $this->name . ', </p><p>You have been assigned a role on PaySprint. Below are your login details;</p><p style="font-weight: bold;">Username: ' . $req->user_id . '</p><p style="font-weight: bold;">Password: ' . $req->firstname . '</p><hr><p>Login Url: <a href="https://paysprint.ca/AdminLogin">https://paysprint.ca/AdminLogin</a></p>';
@@ -6443,6 +6444,7 @@ class AdminController extends Controller
             $this->name = $req->firstname . ' ' . $req->lastname;
             $this->email = $req->email;
             $this->info = "Your PaySprint Referral Account Actiavted";
+            $this->subject = "Your PaySprint Referral Account Actiavted";
 
 
             $this->message = '<p>Hello ' . $this->name . ', </p><p>Thanks for joining our affiliate program. Your Business Referral code is:</p><p style="font-weight: bold;"> ' . $req->ref_code . '</p><p> and must be used by the leads when signing up in order to tag the users to your referral account.</p><p style="font-weight: bold;">Kindly use this link to  track your achievements and Referral commission earned and paid: ' . route('referrals list of users', $req->ref_code) . '</p><p>PaySprint Inc.</p>';
@@ -6493,6 +6495,7 @@ class AdminController extends Controller
         // Send Mail to the support agent
         $this->name = $req->firstname . ' ' . $req->lastname;
         $this->email = $req->email;
+        $this->subject = "Role assignment on PaySprint";
         $this->info = "Fund remittance";
 
         $this->message = '<p>Hello ' . $this->name . ', </p><p>You have been assigned a role on PaySprint. Below are your login details;</p><p style="font-weight: bold;">Username: ' . $req->user_id . '</p><p style="font-weight: bold;">Password: ' . $req->firstname . '</p><hr><p>Login Url: <a href="https://paysprint.ca/AdminLogin">https://paysprint.ca/AdminLogin</a></p>';
@@ -6519,6 +6522,7 @@ class AdminController extends Controller
             $this->name = $req->name;
             $this->email = $req->email;
             $this->info = "Your PaySprint Referral Account Actiavted";
+            $this->subject = "Your PaySprint Referral Account Actiavted";
 
 
             $this->message = '<p>Hello ' . $this->name . ', </p><p>Thanks for joining our affiliate program. Your Business Referral code is:</p><p style="font-weight: bold;"> ' . $req->ref_code . '</p><p> and must be used by the leads when signing up in order to tag the users to your referral account.</p><p style="font-weight: bold;">Kindly use this link to  track your achievements and Referral commission earned and paid: ' . route('referrals list of users', $req->ref_code) . '</p><p>PaySprint Inc.</p>';
@@ -14039,6 +14043,7 @@ class AdminController extends Controller
                 $this->admin = "Admin";
                 $this->info = "Fund remittance";
                 $this->info2 = "Cash withdrawal request";
+                $this->subject = "Cash withdrawal request";
 
                 $this->infomessage = 'A client of PaySprint has requested for a withdrawal of <b>$' . $req->amount . '</b> using the ' . $req->card_method . ' method. <br><br> Details is as stated below: <hr><br> Organization name: ' . $this->name . ' <br> Amount to Withdraw: ' . $req->amount . ' <br> Payment Method: ' . $req->card_method . ' <br><hr>.Thanks';
 
@@ -14321,6 +14326,7 @@ class AdminController extends Controller
                     $this->name = $getClient[0]->client_name;
                     $this->email = $getClient[0]->client_email;
                     $this->info = "Fund remittance";
+                    $this->subject = "Fund successfully processed";
 
                     $this->message = 'The fund withdrawal request has been successfully processed and fund transferred to ' . $getClient[0]->card_method;
 
@@ -14355,6 +14361,7 @@ class AdminController extends Controller
                     $this->name = $getClient[0]->client_name;
                     $this->email = $getClient[0]->client_email;
                     $this->info = "Fund remittance";
+                    $this->subject = "Fund successfully processed";
 
                     $this->message = 'The fund withdrawal request has been successfully processed and fund transferred to ' . $getClient[0]->card_method;
 
@@ -14513,6 +14520,7 @@ class AdminController extends Controller
             $this->email = $receiver[0]->email;
             // $this->email = "bambo@vimfile.com";
             $this->info = "Fund remittance";
+            $this->subject = "You have received a payment on PaySprint";
 
             $this->message = "You have received a payment on PaySprint via send money. <br> Payment made by " . $sender[0]->name . " for the purpose of " . $getTrans[0]->purpose . ". <br><br> Below is the transaction details; <br><br> Amount sent: " . number_format($getTrans[0]->amount_to_send, 2) . " <br><br> Admin Charge: " . $getTrans[0]->commission . " <br><br> Amount received: " . number_format($rem, 2) . " <br><br> Thanks <br> PaySprint Team";
 
@@ -15576,6 +15584,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
         $this->name = $thisuser->business_name;
         $this->email = $thisuser->email;
         $this->info = "Fund remittance";
+        $this->subject = "Account activated for live";
 
         if($req->val == "live"){
             $this->message = '<p>Hello ' . $this->name .'!, </p><p>This is a confirmation that the merchant account has been activated.</p><p>The PaySprint Merchant Account default Subscription Plan is FREE Plan.</p><p>You will need to upgrade the subscription to access other features.</p><p>We welcome you to PaySprint for Merchant</p>';
@@ -16537,7 +16546,8 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
         } elseif ($purpose == 'Fund remittance' || $purpose == 'Your PaySprint Referral Account Actiavted') {
             $objDemo->name = $this->name;
             $objDemo->email = $this->email;
-            $objDemo->subject = $this->info;
+            $objDemo->subject = $this->subject;
+            $objDemo->info = $this->info;
             $objDemo->message = $this->message;
         } elseif ($purpose == 'Refund Request') {
             $objDemo->name = $this->name;
