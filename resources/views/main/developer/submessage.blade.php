@@ -20,6 +20,9 @@
 
     <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
 
+    <!-- include summernote css/js -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+
     <title>PaySprint | Developer's Community</title>
 
     <style>
@@ -154,7 +157,7 @@
 
 
 
-                                                    
+
 
 
 
@@ -179,17 +182,19 @@
                                                                 <div class="content-description">
                                                                     {!! $item->comment !!}
                                                                 </div>
-                                                            
+
 
 
                                                                 <div class="content-actions">
                                                                     <div class="row">
 
-                                                                        <div class="col-md-8" style="color: #6c757d">
+                                                                        <div class="col-md-8"
+                                                                            style="color: #6c757d">
                                                                             <small>{{ $item->name }}</small>
 
                                                                         </div>
-                                                                        <div class="col-md-4" style="color: #6c757d">
+                                                                        <div class="col-md-4"
+                                                                            style="color: #6c757d">
                                                                             <small>
                                                                                 {{ $item->created_at->diffForHumans() }}
                                                                             </small>
@@ -200,8 +205,6 @@
 
                                                             </div>
                                                         </div>
-                                                        
-
                                                     @endforeach
                                                     <br>
 
@@ -274,7 +277,7 @@
                                             <h4>Categories</h4>
                                             <div class="card" style="width: 18rem;">
                                                 <ul class="list-group list-group-flush">
-                                                    
+
                                                     <a href="{{ route('askquestion') }}">
                                                         <li class="list-group-item">Ask a Question</li>
                                                     </a>
@@ -307,16 +310,25 @@
 
 
 
-            <script src="{{ asset('js/jquery-1.12.0.min.js') }}"></script>
-            <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+            <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+            @include('include.message')
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"
+                        integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
+            </script>
+            <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
             <script src="{{ asset('js/jquery.simpleLoadMore.js') }}"></script>
             <script>
-                $('.some-list').simpleLoadMore({ 
+                $(document).ready(function() {
+                    $('#comment').summernote();
+                });
+
+                $('.some-list').simpleLoadMore({
                     item: '.postcard',
                     count: 3,
                     btnHTML: '<a href="#" class="load-more__btn btn btn-primary">View More</a>',
 
-                   
+
                 });
                 // $('.some-list-2').simpleLoadMore({
                 //   item: 'div',
