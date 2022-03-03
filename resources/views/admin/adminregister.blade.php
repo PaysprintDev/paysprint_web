@@ -93,6 +93,9 @@
         <div class="login-box-body">
             <p class="login-box-msg">Register Account</p>
 
+            <div id="google_translate_element"></div>
+            <br>
+
             <a href="{{ route('merchant home') }}" type="button" class="btn btn-primary btn-block">Goto Homepage</a>
             <br>
 
@@ -678,6 +681,50 @@
 
                     </div>
 
+                    <div class="row australia disp-0">
+
+                        <div class="col-12">
+
+                            <div class="form-group">
+                                <label for="australia">I confirm that i am authourised to provide the
+                                    personal details
+                                    presented
+                                    and i consent to my information being checked with the document issuer
+                                    or
+                                    official record holder
+                                    via third party systems for the prupose of confirming my
+                                    identity.</label>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                    <div class="row china disp-0">
+
+                        <div class="col-12">
+
+                            <div class="form-group">
+                                <label for="australia">I confirm that i am authourised to provide the
+                                    personal details presented and i consent to my information being checked
+                                    with Chinese Identity
+                                    Verification Services (CIVS) via third party systems for the purpose of
+                                    confirming an identity under the <a
+                                        href="http://www.npc.gov.cn/npc/c30834/202108/a8c4e3672c74491a80b53a172bb753fe.shtml"
+                                        target="_blank">laws of China </a> (an unofficial
+                                    translation
+                                    of the Personal Information Protection Law (PIPL) available <a
+                                        href="https://digichina.stanford.edu/work/translation-personal-information-protection-law-of-the-peoples-republic-of-china-effective-nov-1-2021/"
+                                        target="_blank">here</a> and
+                                    Data Security Law available <a
+                                        href="https://digichina.stanford.edu/work/translation-data-security-law-of-the-peoples-republic-of-china/"
+                                        target="_blank">here</a> </label>
+                            </div>
+
+
+                        </div>
+                    </div>
 
 
 
@@ -734,6 +781,8 @@
     <!-- /.login-box -->
     <!-- jQuery 3 -->
     <script src="{{ asset('ext/bower_components/jquery/dist/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+    </script>
     <script src="{{ asset('js/country-state-select.js') }}"></script>
     <script src="https://raw.githubusercontent.com/HubSpot/pace/v1.0.0/pace.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -808,6 +857,14 @@
         src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_API_KEY') }}&libraries=places&callback=initAutocomplete"
         async defer></script>
 
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en'
+            }, 'google_translate_element');
+        }
+    </script>
+
 
     <script language="javascript">
         populateCountries("country", "state");
@@ -820,6 +877,23 @@
                 radioClass: 'iradio_square-blue',
                 increaseArea: '20%' /* optional */
             });
+
+        });
+
+
+        $('#country').change(function() {
+
+            if ($('#country').val() == "Australia" || $('#country').val() == "New Zealand") {
+                $(".australia").removeClass('disp-0');
+                $(".china").addClass('disp-0');
+            } else if ($('#country').val() == "China") {
+                $(".australia").addClass('disp-0');
+                $(".china").removeClass('disp-0');
+            } else {
+                $(".australia").addClass('disp-0');
+                $(".china").addClass('disp-0');
+            }
+
 
         });
 

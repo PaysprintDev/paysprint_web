@@ -21,6 +21,8 @@ use App\TransactionCost as TransactionCost;
 use App\RequestRefund as RequestRefund;
 use App\SpecialInformation as SpecialInformation;
 use App\ImportExcel as ImportExcel;
+use App\UpgradePlan as UpgradePlan;
+use Carbon\Carbon;
 
 
 use App\Traits\ExpressPayment;
@@ -1441,7 +1443,7 @@ class CheckSetupController extends Controller
     }
 
 
-    // Send Message to merchants owners
+    // Send Message to merchants
 
     public function cronToMerchant(){
         try {
@@ -1457,7 +1459,7 @@ class CheckSetupController extends Controller
                     // $this->email = 'adenugaadebambo41@gmail.com';
                     $this->subject = "Complete your business profile today";
 
-                    $this->message = "<p>Hello ".$this->name.",</p><p>Do you know that merchants with complete profile has 20x chance of driving more traffic to their business on PaySprint.</p><p>Complete your business profile today and drive more traffic to your business page.</p><br><p>Thank you for choosing us.</p>";
+                    $this->message = "<p>Do you know that merchants with complete profile has 20x chance of driving more traffic to their business on PaySprint.</p><p>Complete your business profile today and drive more traffic to your business page.</p><br><p>Thank you for choosing us.</p>";
 
 
                     $this->sendEmail($this->email, "Incomplete Setup");
@@ -1470,7 +1472,44 @@ class CheckSetupController extends Controller
             }
 
         } catch (\Throwable $th) {
-            $this->slack('Move From IDV Passed To Completed Pending Error Module cronToMerchant() line 1450: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+            $this->slack('Cron to Merchant Error Module cronToMerchant() line 1473: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+        }
+    }
+
+
+    // Send Messages to consumers...
+    public function cronToConsumers(){
+        try{
+            $getConsumers = User::where('accountType', 'Individual')->where([['accountLevel', '=', 2], ['approval', '<=', 1], ['account_check', '<=', 1]])->get();
+
+            if(count($getConsumers) > 0){
+
+                foreach($getConsumers as $users){
+
+
+                    $this->name = $users->name;
+                    $this->email = $users->email;
+                    // $this->email = 'adenugaadebambo41@gmail.com';
+                    $this->subject = "Its Time to Complete Your Verification on PaySprint";
+
+                    $this->message = "<p>We  wish to remind you that your verification process is yet to be completed.</p><p>You can only RECEIVE funds to your wallet until you have completed the required identity verification process that would enable you 'to Add Money/Top Up Wallet' and 'Send Money from Wallet' and also access other features on PaySprint.</p><p>To Complete the identity verification processes, kindly follow these steps:</p><p>a. Login to your PaySprint Account on your mobile app or at: <a href='https://paysprint.ca'>www.paysprint.ca</a></p><p> b. Go to Profile section and upload the following: <br> 1. Selfie of yourself <br> 2. Government Issued Photo ID (Drivers license or International Passport or National ID card) <br> 3. Utility Bill ( Electricity, Hydro etc. Note that Bank or Credit Card Statements are not accepted)</p><br><p>Thank you for choosing us.</p>";
+
+
+
+
+
+                    $this->sendEmail($this->email, "Incomplete Setup");
+
+
+                    echo "Sent Mail To ".$users->name."<hr>";
+
+                }
+
+            }
+
+        }
+         catch (\Throwable $th) {
+            $this->slack('Cron to Consumers Error Module cronToConsumers() line 1507: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
     }
 
@@ -1507,6 +1546,36 @@ class CheckSetupController extends Controller
                 }
             } else {
                 // DO nothing
+            }
+        }
+    }
+
+
+
+    public function giveAccountCheckUpgrade(){
+        $users = User::where('account_check', 2)->where('plan', 'basic')->get();
+        
+        if(count($users) > 0){
+            foreach($users as $user){
+                // Update to Classic
+                User::where('id', $user->id)->update(['plan' => 'classic']);
+
+                if ($user->accountType == 'Individual') {
+                    $subType = 'Consumer Monthly Subscription';
+                } else {
+                    $subType = 'Merchant Monthly Subscription';
+                }
+
+                $getSub = TransactionCost::where('country', $user->country)->where('structure', $subType)->first();
+
+                $expire_date = Carbon::now()->addMonth()->toDateTimeString();
+
+                $amount = $getSub->fixed;
+
+                UpgradePlan::updateOrInsert(['userId' => $user->ref_code], ['userId' => $user->ref_code, 'plan' => 'classic', 'amount' => $amount, 'duration' => "monthly", 'expire_date' => $expire_date]);
+
+
+                echo "Updated: ".$user->name." next expiry set for ".$expire_date;
             }
         }
     }

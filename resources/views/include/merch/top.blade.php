@@ -57,6 +57,8 @@
     <!-- Responsive css-->
     <link rel="stylesheet" type="text/css" href="{{ asset('merchantassets/assets/css/responsive.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
+    <!-- include summernote css/js -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 </head>
 
 <body>

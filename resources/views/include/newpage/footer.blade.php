@@ -50,6 +50,8 @@
                                 <li class="py-2"><a class="gr-text-9 gr-text-color"
                                         href="{{ route('contact') }}">Contact us</a></li>
                                 <li class="py-2"><a class="gr-text-9 gr-text-color"
+                                        href="{{ route('community') }}">Community forum</a></li>
+                                <li class="py-2"><a class="gr-text-9 gr-text-color"
                                         href="{{ route('terms of use') }}">Terms of Use</a></li>
                                 <li class="py-2"><a class="gr-text-9 gr-text-color"
                                         href="{{ route('privacy policy') }}">Privacy Policy

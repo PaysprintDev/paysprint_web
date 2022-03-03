@@ -28,6 +28,7 @@
         "simplesoftwareio/simple-qrcode": "~4",
         "spatie/laravel-newsletter": "^4.10",
         "spatie/laravel-permission": "4.4.0",
+        "spatie/laravel-translatable": "^4.6",
         "stripe/stripe-php": "^7.92",
         "trulioo/trulioo-sdk": "^1.0",
         "twilio/sdk": "^6.20"
