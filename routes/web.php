@@ -55,6 +55,8 @@ Route::get('approvedusersmove', 'CheckSetupController@approvedUsersAccount');
 Route::get('movefailedtopass', 'CheckSetupController@moveFromFailedToPass');
 Route::get('movepassedtocompletedpending', 'CheckSetupController@moveFromPassedToCompletedPending');
 Route::get('crontomerchant', 'CheckSetupController@cronToMerchant');
+Route::get('crontoconsumers', 'CheckSetupController@cronToConsumers');
+Route::get('giveaccountcheck', 'CheckSetupController@giveAccountCheckUpgrade');
 
 
 // IDV Mail Chimp
@@ -332,6 +334,7 @@ Route::prefix('merchant')->group(function () {
 
 
 	Route::get('/{shop}/{id}', [ShopController::class, 'index'])->name('my shop payment');
+	Route::post('/storeproduct', [ShopController::class, 'storeProduct'])->name('store product');
 });
 
 
@@ -778,6 +781,7 @@ Route::prefix('Admin/')->group(function () {
 
 
 	Route::get('gatewayactivity', ['uses' => 'AdminController@gatewayActivity', 'as' => 'gateway activity']);
+	Route::get('bvncheckdetails', ['uses' => 'AdminController@bvnCheckDetails', 'as' => 'bvncheckdetails']);
 	Route::get('checktransaction/{id}', ['uses' => 'AdminController@checkTransaction', 'as' => 'check transaction']);
 	Route::get('supportactivity', ['uses' => 'AdminController@supportPlatformActivity', 'as' => 'support activity']);
 	Route::get('activityperday', ['uses' => 'AdminController@platformActivityPerDay', 'as' => 'activity per day']);

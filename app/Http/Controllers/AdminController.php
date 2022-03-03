@@ -87,6 +87,8 @@ use App\SupportActivity as SupportActivity;
 
 use App\CashAdvance as CashAdvance;
 
+use App\BVNVerificationList as BVNVerificationList;
+
 use App\CrossBorder as CrossBorder;
 use App\InvestorPost;
 use App\InvestorRelation;
@@ -95,6 +97,9 @@ use App\UserClosed as UserClosed;
 use App\PricingSetup as PricingSetup;
 
 use App\MailCampaign as MailCampaign;
+use App\UpgradePlan as UpgradePlan;
+use Carbon\Carbon;
+
 use App\MarkUp;
 use App\ReferralGenerate;
 use App\ReferredUsers;
@@ -162,7 +167,11 @@ class AdminController extends Controller
         if (session('role') == 'Merchant') {
 
             return redirect()->route('dashboard');
-        } else {
+        }
+        elseif(session('role') == 'Aml compliance'){
+            return redirect()->route('aml dashboard');
+        }
+         else {
             if ($req->session()->has('username') == true) {
 
 
@@ -243,7 +252,7 @@ class AdminController extends Controller
                 );
 
 
-                
+
 
 
 
@@ -2885,6 +2894,7 @@ class AdminController extends Controller
     }
     public function getFlaggedUsers()
     {
+        
         $data = User::where('flagged', 1)->orderBy('created_at', 'DESC')->get();
 
         return $data;
@@ -6097,6 +6107,65 @@ class AdminController extends Controller
 
 
             return view('admin.pages.monerisactivity')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
+    public function bvnCheckDetails(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'activity' => $this->bvnStatusActivity()
+            );
+
+
+
+            return view('admin.pages.bvnactivity')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
         } else {
             return redirect()->route('AdminLogin');
         }
@@ -9702,7 +9771,14 @@ class AdminController extends Controller
     public function userBankDetailsByCountry()
     {
 
-        $data = AddBank::orderBy('created_at', 'DESC')->groupBy('country')->get();
+        if(session('role') == 'Aml compliance'){
+            $data = AddBank::where('country', 'Canada')->orWhere('country', 'United States')->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        }
+        else{
+            $data = AddBank::orderBy('created_at', 'DESC')->groupBy('country')->get();
+        }
+
+        
 
         return $data;
     }
@@ -14544,7 +14620,7 @@ class AdminController extends Controller
 
         if ($data->approval == 2 && $data->account_check == 2) {
 
-            $user->where('id', $req->id)->update(['approval' => 0, 'accountLevel' => 0, 'disableAccount' => 'on']);
+            $user->where('id', $req->id)->update(['approval' => 0, 'accountLevel' => 0, 'disableAccount' => 'on', 'plan' => 'basic']);
 
             $subject = 'Account information not approved';
             $message = "This is to inform you that your account information does not match the requirement for review. You will not be able to login or conduct any transaction both on the mobile app and on the web during this period. Kindly attach a copy of your Utility bill and send to compliance@paysprint.ca . We shall inform you when your PaySprint account is available for use. We regret any inconvenience this action might cause you. If you have any concern, please send us a message on : compliance@paysprint.ca";
@@ -14560,7 +14636,22 @@ class AdminController extends Controller
             $resData = ['res' => 'Account information disapproved', 'message' => 'success', 'title' => 'Great'];
         } elseif ($data->approval >= 1 && $data->account_check <= 1) {
 
-            $user->where('id', $req->id)->update(['approval' => 2, 'accountLevel' => 3, 'disableAccount' => 'off', 'account_check' => 2]);
+            $user->where('id', $req->id)->update(['approval' => 2, 'accountLevel' => 3, 'disableAccount' => 'off', 'account_check' => 2, 'plan' => 'classic']);
+
+            if ($data->accountType == 'Individual') {
+                    $subType = 'Consumer Monthly Subscription';
+                } else {
+                    $subType = 'Merchant Monthly Subscription';
+                }
+
+            $getSub = TransactionCost::where('country', $data->country)->where('structure', $subType)->first();
+
+            $expire_date = Carbon::now()->addMonth()->toDateTimeString();
+
+            $amount = $getSub->fixed;
+
+            UpgradePlan::updateOrInsert(['userId' => $data->ref_code], ['userId' => $data->ref_code, 'plan' => 'classic', 'amount' => $amount, 'duration' => "monthly", 'expire_date' => $expire_date]);
+
 
             $subject = 'Account information approved';
 
@@ -14607,7 +14698,7 @@ class AdminController extends Controller
 
             $resData = ['res' => 'Account information approved', 'message' => 'success', 'title' => 'Great'];
         } else {
-            $user->where('id', $req->id)->update(['approval' => 1, 'accountLevel' => 2, 'disableAccount' => 'off']);
+            $user->where('id', $req->id)->update(['approval' => 1, 'accountLevel' => 2, 'disableAccount' => 'off', 'plan' => 'basic']);
 
             $subject = 'Account information approved';
 
@@ -15774,6 +15865,14 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
         return $data;
     }
 
+    public function bvnStatusActivity()
+    {
+
+        $data = BVNVerificationList::orderBy('created_at', 'DESC')->take(2000)->get();
+
+        return $data;
+    }
+
 
     public function userSupportActivities()
     {
@@ -15930,7 +16029,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     public function allUsersApprovedPending()
     {
 
-        $data = User::where('account_check', 1)->orderBy('created_at', 'DESC')->get();
+        $data = User::where('account_check', 1)->orderBy('lastUpdated', 'DESC')->get();
 
         return $data;
     }
@@ -16051,7 +16150,9 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
     public function approvedUsersByCountry()
     {
+
         $data = User::where('account_check', 2)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+
 
         return $data;
     }
@@ -16099,7 +16200,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
     public function approvedPendingUsersByCountry()
     {
-        $data = User::where('account_check', 1)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        $data = User::where('account_check', 1)->orderBy('lastUpdated', 'DESC')->groupBy('country')->get();
 
         return $data;
     }
@@ -16170,7 +16271,16 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
     public function closedUsersByCountry()
     {
+
+        if(session('role') == 'Aml compliance'){
+        $data = UserClosed::where('country', 'Canada')->orWhere('country', 'United States')->orderBy('created_at', 'DESC')->groupBy('country')->get();
+
+        }
+        else{
         $data = UserClosed::orderBy('created_at', 'DESC')->groupBy('country')->get();
+
+        }
+
 
         return $data;
     }
@@ -16178,7 +16288,14 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
     public function suspendedUsersByCountry()
     {
+
+        if(session('role') == 'Aml compliance'){
+        $data = User::where('flagged', 1)->where('country', 'Canada')->orWhere('country', 'United States')->orderBy('created_at', 'DESC')->groupBy('country')->get();
+
+        }
+        else{
         $data = User::where('flagged', 1)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        }
 
         return $data;
     }

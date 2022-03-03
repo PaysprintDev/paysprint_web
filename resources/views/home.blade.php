@@ -181,9 +181,47 @@
                                     id="cardSubmit">Upgrade
                                     Account</button>
                             @else
-                                <button class="btn btn-danger" onclick="changeMyPlan('changeplan')"
-                                    id="cardSubmit">Downgrade
-                                    Account</button>
+                                @if (Auth::user()->country == 'Canada' || Auth::user()->country == 'United States')
+                                    <button class="btn btn-danger" onclick="changeMyPlan('changeplan')"
+                                        id="cardSubmit">Downgrade
+                                        Account</button>
+
+                                    @isset($data['myplan'])
+                                        <br>
+                                        <br>
+                                        <p class="text-info">Next Renewal:
+                                            {{ date('d-m-Y', strtotime($data['myplan']->expire_date)) }}</p>
+
+                                        @php
+                                            $expire = date('Y-m-d', strtotime($data['myplan']->expire_date));
+                                            $now = time();
+                                            $your_date = strtotime($expire);
+                                            $datediff = $your_date - $now;
+                                        @endphp
+
+                                        <p class="text-danger">
+                                            {{ round($datediff / (60 * 60 * 24)) > 1? round($datediff / (60 * 60 * 24)) . 'days': round($datediff / (60 * 60 * 24)) . 'day' }}
+                                            left</p>
+                                    @endisset
+                                @else
+                                    @isset($data['myplan'])
+                                        <p class="text-info">Next Renewal:
+                                            {{ date('d-m-Y', strtotime($data['myplan']->expire_date)) }}</p>
+
+                                        @php
+                                            $expire = date('Y-m-d', strtotime($data['myplan']->expire_date));
+                                            $now = time();
+                                            $your_date = strtotime($expire);
+                                            $datediff = $your_date - $now;
+                                        @endphp
+
+                                        <p class="text-danger">
+                                            {{ round($datediff / (60 * 60 * 24)) > 1? round($datediff / (60 * 60 * 24)) . 'days': round($datediff / (60 * 60 * 24)) . 'day' }}
+                                            left</p>
+                                    @endisset
+                                @endif
+
+
                             @endif
 
                             <hr>
@@ -204,13 +242,25 @@
                             <li class="list-group-item">
                                 Trade FX with PaySprint <br><br>
 
-                                <a type="button" class="btn btn-primary"
-                                    href="{{ route('paysprint currency exchange') }}" id="cardSubmit">PaySprint
-                                    Currency FX</a>
+                                @if ($data['imtAccess']->imt == 'false')
+                                    <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit"
+                                        disabled>PaySprint
+                                        Currency FX</a>
 
-                                <hr>
+                                    <hr>
 
-                                <a href="#">Learn more about trading on PaySprint</a>
+                                    <a href="#">COMING SOON!!!</a>
+                                @else
+                                    <a type="button" class="btn btn-primary"
+                                        href="{{ route('paysprint currency exchange') }}" id="cardSubmit">PaySprint
+                                        Currency FX</a>
+
+                                    <hr>
+
+                                    <a href="#">Learn more about trading on PaySprint</a>
+                                @endif
+
+
                             </li>
 
                         </ul>
@@ -292,7 +342,6 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-
                                     @else
                                         <tr>
                                             <td colspan="3" align="center">No record</td>
@@ -339,9 +388,7 @@
                                                     @php
                                                         $currencySymb = $payInv->invoiced_currency_symbol;
                                                     @endphp
-
                                                 @else
-
                                                     @php
                                                         $currencySymb = $merchant->currencySymbol;
                                                     @endphp
@@ -352,9 +399,7 @@
                                                 @php
                                                     $countryBase = $merchant->country;
                                                 @endphp
-
                                             @else
-
                                                 @php
                                                     $currencySymb = $data['currencyCode']->currencySymbol;
                                                     $countryBase = Auth::user()->country;
@@ -387,13 +432,11 @@
                                                                                 style='cursor: pointer;'
                                                                                 onclick=location.href='{{ route('payment', $payInv->invoice_no) }}'>Pay
                                                                                 Invoice</span></small>
-
                                                                     @elseif($payInv->payment_status == 2)
                                                                         <small><span class='badge badge-danger'
                                                                                 style='cursor: pointer;'
                                                                                 onclick=location.href='{{ route('payment', $payInv->invoice_no) }}'>Pay
                                                                                 Balance</span></small>
-
                                                                     @else
                                                                         <small><span
                                                                                 class='badge badge-success'>Paid</span></small>
@@ -437,7 +480,6 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-
                                     @else
                                         <tr>
                                             <td colspan="3" align="center">No record</td>
@@ -498,7 +540,6 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-
                                     @else
                                         <tr>
                                             <td colspan="3" align="center">No record</td>
@@ -554,7 +595,6 @@
 
                                             </tr>
                                         @endforeach
-
                                     @else
                                         <tr>
                                             <td colspan="3" align="center">No record</td>
@@ -788,9 +828,7 @@
                                     class="btn btn-danger btn-block">View more <i class="fa fa-arrow-circle-o-right"
                                         aria-hidden="true"></i></a>
                             @endif
-
                         @else
-
                             <li class="list-group-item" title="No available merchant">
                                 <div class="row">
                                     <div class="col-md-12">

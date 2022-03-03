@@ -30,7 +30,6 @@ use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 
-
 use App\User as User;
 
 use App\UserClosed as UserClosed;
@@ -73,6 +72,7 @@ use App\AddCard as AddCard;
 
 use App\AddBank as AddBank;
 
+
 use App\CardIssuer as CardIssuer;
 
 use App\Notifications as Notifications;
@@ -85,6 +85,7 @@ use App\PricingSetup as PricingSetup;
 use App\Points;
 
 use App\ClaimedPoints;
+use App\UpgradePlan;
 
 use App\Community;
 use App\Answer;
@@ -189,6 +190,8 @@ class HomeController extends Controller
                     'continent' => $this->timezone[0],
                     'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
                     'pointsclaim' => $this->getClaimedHistory(Auth::user()->id),
+                    'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
+                    'imtAccess' => AllCountries::where('name', Auth::user()->country)->first()
                 );
 
                 $view = 'home';
@@ -247,6 +250,8 @@ class HomeController extends Controller
                     'continent' => $this->timezone[0],
                     'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
                     'pointsclaim' => $this->getClaimedHistory(Auth::user()->user_id),
+                    'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
+                    'imtAccess' => AllCountries::where('name', Auth::user()->country)->first()
                 );
 
                 $view = 'home';
@@ -296,6 +301,8 @@ class HomeController extends Controller
                     'continent' => $this->timezone[0],
                     'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
                     'pointsclaim' => $this->getClaimedHistory(Auth::user()->user_id),
+                    'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
+                    'imtAccess' => AllCountries::where('name', Auth::user()->country)->first()
 
                 );
             } else {

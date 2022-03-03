@@ -44,6 +44,23 @@
                 @else
                     <button class="btn btn-danger" onclick="changeMyPlan('changeplan')" id="cardSubmit">Downgrade
                         Account</button>
+
+
+                    @isset($data['myplan'])
+                        <br>
+                        <br>
+                        @php
+                            $expire = date('Y-m-d', strtotime($data['myplan']->expire_date));
+                            $now = time();
+                            $your_date = strtotime($expire);
+                            $datediff = $your_date - $now;
+                        @endphp
+                        <p class="text-success" style="font-weight: bold; font-size: 16px;">Next Renewal:
+                            {{ date('d-m-Y', strtotime($data['myplan']->expire_date)) }}</p>
+                        <p class="text-danger" style="font-weight: bold; font-size: 16px;">
+                            {{ round($datediff / (60 * 60 * 24)) > 1? round($datediff / (60 * 60 * 24)) . 'days': round($datediff / (60 * 60 * 24)) . 'day' }}
+                            left</p>
+                    @endisset
                 @endif
 
 
@@ -230,9 +247,7 @@
                                     <a class="nav-link menu-title" href="{{ route('cash advance') }}"><i
                                             data-feather="shopping-bag"></i><span>Merchant Cash Advance</span></a>
                                 </li>
-
                             @else
-
                                 <li>
                                     <a class="nav-link menu-title" href="#"><i
                                             data-feather="shopping-bag"></i><span>Merchant Cash Advance <br><small
@@ -258,9 +273,7 @@
                                         onclick="whatyouOffer('{{ Auth::user()->email }}')"><i
                                             data-feather="database"></i><span>Manage Rental Property </span></a>
                                 </li>
-
                             @else
-
                                 <li>
                                     <a class="nav-link menu-title" href="#"><i
                                             data-feather="shopping-bag"></i><span>Manage Rental Property <br><small

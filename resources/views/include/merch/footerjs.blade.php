@@ -44,6 +44,8 @@
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://raw.githubusercontent.com/HubSpot/pace/v1.0.0/pace.min.js"></script>
 <script src="{{ asset('pace/pace.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
 <!-- Plugins JS Ends-->
 
 <!-- Plugins JS start-->
@@ -78,6 +80,19 @@
         $("#single_telephone").on("keyup", function() {
             var phonenumber = $("#single_telephone").val();
             runUsercheck(phonenumber, 'telephone');
+        });
+
+
+        $('#store_description').summernote({
+            placeholder: 'Enter product description',
+            tabsize: 2,
+            height: 120,
+            toolbar: [
+                ['font', ['bold', 'underline', 'clear']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['insert', ['link']],
+                ['view', ['help']]
+            ]
         });
 
     });
