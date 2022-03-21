@@ -26,16 +26,21 @@ use App\Traits\PaysprintPoint;
 
 use App\Traits\PointsHistory;
 use App\Traits\SpecialInfo;
+use App\Traits\MyEstore;
 use App\TransactionCost;
+use App\StoreProducts;
+use App\StoreOrders;
+use App\StoreDiscount;
+use App\StoreMainShop;
 
 class MerchantPageController extends Controller
 {
 
-    use PaysprintPoint, PointsHistory, SpecialInfo;
+    use PaysprintPoint, PointsHistory, SpecialInfo, MyEstore;
 
     public function __construct()
     {
-        $this->middleware('auth')->except(['businessProfile']);
+        $this->middleware('auth')->except(['businessProfile', 'merchantShop']);
     }
 
     public function index()
@@ -190,6 +195,43 @@ class MerchantPageController extends Controller
         ];
 
         return view('merchant.pages.sentinvoice')->with(['pages' => 'sent invoice', 'data' => $data]);
+    }
+
+
+    // Setup Shop Here...
+    public function merchantShop($merchant){
+
+        // Get merchant...
+        $thismerchant = ClientInfo::where('business_name', $merchant)->first();
+
+        if(isset($thismerchant)){
+                $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
+
+            // If Has Main Store setup
+            $merchantStore = $this->getMyStore($getMerchantId->id);
+
+            if(isset($merchantStore)){
+
+                $data = [
+                    'mystore' => $merchantStore,
+                    'myproduct' => $this->getProducts($getMerchantId->id),
+                    'user' => $getMerchantId
+                ];
+
+                return view('merchant.pages.shop.index')->with(['pages' => $merchant.' Shop', 'data' => $data]);
+            }
+            else{
+                return view('errors.comingsoon')->with(['pages' => $merchant.' Shop']);
+            }
+
+        }
+        else{
+            return view('errors.comingsoon')->with(['pages' => $merchant.' Shop']);
+        }
+
+
+
+       
     }
 
     public function paidInvoice()
@@ -361,8 +403,12 @@ class MerchantPageController extends Controller
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
-            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
+            'myProducts' => $this->getMyProducts(Auth::user()->id),
+            'myOrders' => $this->getMyOrders(Auth::user()->id),
+            'myDiscounts' => $this->getMyDiscounts(Auth::user()->id),
         ];
+        
 
         return view('merchant.pages.orderingsystem')->with(['pages' => 'invoice page', 'data' => $data]);
     }
@@ -512,6 +558,27 @@ class MerchantPageController extends Controller
     {
 
         $data = AllCountries::where('approval', 1)->get();
+
+        return $data;
+    }
+
+    public function getMyProducts($merchantId){
+        $data = StoreProducts::where('merchantId', $merchantId)->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+
+    }
+
+
+    public function getMyOrders($merchantId){
+        $data = StoreOrders::join('estore_product', 'estore_orders.productId', '=', 'estore_product.id')->join('users', 'estore_orders.userId', '=', 'users.id')->where('estore_orders.merchantId', $merchantId)->orderBy('estore_orders.created_at', 'DESC')->get();
+
+        return $data;
+
+    }
+
+    public function getMyDiscounts($merchantId){
+        $data = StoreDiscount::select('estore_discount.id as discountId', 'estore_discount.userId', 'estore_discount.code', 'estore_discount.valueType', 'estore_discount.discountAmount', 'estore_discount.productId', 'estore_discount.startDate', 'estore_discount.endDate', 'estore_product.id', 'estore_product.productName')->join('estore_product', 'estore_discount.productId', '=', 'estore_product.id')->where('estore_discount.userId', $merchantId)->orderBy('estore_discount.created_at', 'DESC')->get();
 
         return $data;
     }

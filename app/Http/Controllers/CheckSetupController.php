@@ -1580,6 +1580,31 @@ class CheckSetupController extends Controller
         }
     }
 
+    public function downcheckMerchants(){
+        $users = User::where('account_check', 2)->where('accountType', 'Merchant')->where('plan', 'classic')->get();
+
+        if(count($users) > 0){
+            foreach($users as $user){
+
+                // Get Client Information
+                $getClient = ClientInfo::where('user_id', $user->ref_code)->first();
+
+                if(isset($getClient) && $getClient->accountMode == "test"){
+
+                    // Downgrade to basic...
+
+                    User::where('ref_code', $getClient->user_id)->update(['plan' => 'basic']);
+
+
+                    echo "Updated: ".$getClient->business_name;
+
+                }
+
+            }
+        }
+
+    }
+
 
     // Update EPS Vendor
     // public function updateEPSVendor(){
@@ -2107,6 +2132,24 @@ class CheckSetupController extends Controller
 
 
         echo "Suspended Account";
+    }
+
+    public function upgradedAccounts()
+    {
+        $getUsers = User::where('plan', 'classic')->inRandomOrder()->get();
+
+        foreach ($getUsers as $users) {
+            if ($users->accountType == "Individual") {
+                $category = "Upgraded Consumers Account";
+            } else {
+                $category = "Upgraded Merchants Account";
+            }
+
+            $this->mailListCategorize($users->name, $users->email, $users->address, $users->telephone, $category, $users->country, 'Subscription');
+        }
+
+
+        echo "Upgraded Account";
     }
 
 

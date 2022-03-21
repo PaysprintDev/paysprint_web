@@ -17,7 +17,6 @@
             <h1>
                 @if (Request::get('country') != null)
                     All Override Approvals In {{ Request::get('country') }}
-
                 @else
                     All Override Approvals
                 @endif
@@ -27,7 +26,6 @@
                 <li class="active">
                     @if (Request::get('country') != null)
                         All Override Approvals In {{ Request::get('country') }}
-
                     @else
                         All Override Approvals
                     @endif
@@ -198,27 +196,18 @@
                                                         @if ($datainfo->approval == 2 && $datainfo->accountLevel > 0 && $datainfo->account_check == 2)
                                                             <td style="color: green; font-weight: bold;" align="center">
                                                                 Approved</td>
-
                                                         @elseif ($datainfo->approval == 2 && $datainfo->accountLevel > 0 && $datainfo->account_check == 1)
-
                                                             <td style="color: darkorange; font-weight: bold;"
                                                                 align="center">Awaiting Approval</td>
-
-
                                                         @elseif ($datainfo->approval == 2 && $datainfo->accountLevel > 0 && $datainfo->account_check == 0)
-
                                                             <td style="color: darkorange; font-weight: bold;"
                                                                 align="center">Awaiting Approval</td>
-
                                                         @elseif ($datainfo->approval == 1 && $datainfo->accountLevel == 2)
-
                                                             <td style="color: darkorange; font-weight: bold;"
                                                                 align="center">Awaiting Approval</td>
-
                                                         @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)
                                                             <td style="color: navy; font-weight: bold;" align="center">
                                                                 Override Level 1</td>
-
                                                         @else
                                                             <td style="color: red; font-weight: bold;" align="center">Not
                                                                 Approved</td>
@@ -254,11 +243,7 @@
                                                                         style="width: 20px; height: 20px;"></a>
 
                                                                 {{-- <a href="javascript:void(0)" onclick="approveaccount('{{ $datainfo->id }}')" class="text-danger"><i class="fas fa-check-square text-success" style="font-size: 20px;" title="Disapprove Account"></i> <img class="spin{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> --}}
-
-
-
                                                             @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)
-
                                                                 <a href="javascript:void(0)"
                                                                     onclick="disapproveaccount('{{ $datainfo->id }}')"
                                                                     class="text-danger"><i
@@ -278,10 +263,7 @@
                                                                         class="spinmove{{ $datainfo->id }} disp-0"
                                                                         src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
                                                                         style="width: 20px; height: 20px;"></a>
-
                                                             @else
-
-
                                                                 <a href="javascript:void(0)"
                                                                     onclick="approveaccount('{{ $datainfo->id }}')"
                                                                     class="text-primary"><i
@@ -334,14 +316,17 @@
                                                     </button>
 
 
-                                                    <!-- Modal -->
-                                                    <div class="modal fade" id="launchFileUpload{{ $datainfo->id }}"
-                                                        tabindex="-1" role="dialog" aria-labelledby="launchFileUploadTitle"
-                                                        aria-hidden="true">
-                                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                                            <form action="{{ route('upload user doc') }}" method="POST"
-                                                                enctype="multipart/form-data" id="{{ $datainfo->id }}">
-                                                                @csrf
+                                                    <form action="{{ route('upload user doc') }}" method="POST"
+                                                        enctype="multipart/form-data"
+                                                        id="uploadthisform{{ $datainfo->id }}">
+                                                        @csrf
+                                                        <!-- Modal -->
+                                                        <div class="modal fade"
+                                                            id="launchFileUpload{{ $datainfo->id }}" tabindex="-1"
+                                                            role="dialog" aria-labelledby="launchFileUploadTitle"
+                                                            aria-hidden="true">
+                                                            <div class="modal-dialog modal-dialog-centered" role="document">
+
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
                                                                         <h3 class="modal-title"
@@ -355,6 +340,7 @@
 
                                                                     <div class="modal-body">
                                                                         <input type="file" name="image"
+                                                                            id="uploadContent{{ $datainfo->id }}"
                                                                             class="form-control">
                                                                         <input type="hidden" name="user_id"
                                                                             value="{{ $datainfo->id }}">
@@ -362,32 +348,30 @@
                                                                     <div class="modal-footer">
                                                                         <button type="button" class="btn btn-secondary"
                                                                             data-dismiss="modal">Close</button>
-                                                                        <button type="submit"
-                                                                            class="btn btn-primary">Upload</button>
+                                                                        <button type="button" class="btn btn-primary"
+                                                                            id="uploadBtn{{ $datainfo->id }}"
+                                                                            onclick="uploadDocsForUser('uploadthisform', '{{ $datainfo->id }}')">Upload</button>
                                                                     </div>
 
                                                                 </div>
 
-                                                            </form>
 
+                                                            </div>
                                                         </div>
-                                                    </div>
+
+                                                    </form>
+
 
 
 
 
                                                     {{-- End Modal --}}
                                                 @endforeach
-
-
-
                                             @else
                                                 <tr>
                                                     <td colspan="11" align="center">No record available</td>
                                                 </tr>
                                             @endif
-
-
                                         @else
                                             @if (count($allusers) > 0)
                                                 <?php $i = 1; ?>
@@ -473,8 +457,9 @@
                                                                         style="font-size: 20px;" title="Disapprove"></i>
                                                                     <img class="spin{{ $data->id }} disp-0"
                                                                         src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
-                                                                    style="width: 20px; height: 20px;"></a> @else <a
-                                                                    href="javascript:void(0)"
+                                                                        style="width: 20px; height: 20px;"></a>
+                                                            @else
+                                                                <a href="javascript:void(0)"
                                                                     onclick="approveaccount('{{ $data->id }}')"
                                                                     class="text-primary"><i
                                                                         class="far fa-lightbulb text-success"
@@ -496,9 +481,6 @@
 
                                                     </tr>
                                                 @endforeach
-
-
-
                                             @else
                                                 <tr>
                                                     <td colspan="9" align="center">No record available</td>

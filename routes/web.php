@@ -57,6 +57,7 @@ Route::get('movepassedtocompletedpending', 'CheckSetupController@moveFromPassedT
 Route::get('crontomerchant', 'CheckSetupController@cronToMerchant');
 Route::get('crontoconsumers', 'CheckSetupController@cronToConsumers');
 Route::get('giveaccountcheck', 'CheckSetupController@giveAccountCheckUpgrade');
+Route::get('downcheckmerchant', 'CheckSetupController@downcheckMerchants');
 
 
 // IDV Mail Chimp
@@ -65,6 +66,7 @@ Route::get('idvpassedlist', 'CheckSetupController@idvPassedList');
 Route::get('idvfailedlist', 'CheckSetupController@idvFailedList');
 Route::get('docpendinglist', 'CheckSetupController@docPendingList');
 Route::get('suspendedaccountlist', 'CheckSetupController@suspendedAccountList');
+Route::get('upgradedaccountlist', 'CheckSetupController@upgradedAccounts');
 
 // Update BVN List
 Route::get('bvnlistupdate', 'CheckSetupController@bvnListUpdate');
@@ -152,6 +154,8 @@ Route::get('/', ['uses' => 'HomeController@homePage', 'as' => 'home']);
 Route::get('/merchant-home', ['uses' => 'HomeController@merchantIndex', 'as' => 'merchant home']);
 
 Route::get('/home', ['uses' => 'HomeController@authIndex', 'as' => 'user home']);
+
+Route::get('/shop/{merchant}', ['uses' => 'MerchantPageController@merchantShop', 'as' => 'merchant shop now']);
 
 Route::get('/supporting-haiti', ['uses' => 'HomeController@haitiDonation', 'as' => 'haiti donation']);
 
@@ -335,6 +339,15 @@ Route::prefix('merchant')->group(function () {
 
 	Route::get('/{shop}/{id}', [ShopController::class, 'index'])->name('my shop payment');
 	Route::post('/storeproduct', [ShopController::class, 'storeProduct'])->name('store product');
+	Route::post('/storediscount', [ShopController::class, 'storeDiscount'])->name('store discount');
+	Route::post('/updateproduct/{id}', [ShopController::class, 'updateProduct'])->name('update product');
+	Route::post('/deleteproduct/{id}', [ShopController::class, 'deleteProduct'])->name('delete product');
+	Route::post('/updatediscount/{id}', [ShopController::class, 'updateDiscount'])->name('update discount');
+	Route::post('/deletediscount/{id}', [ShopController::class, 'deleteDiscount'])->name('delete discount');
+
+
+	Route::post('/setupestore', [ShopController::class, 'setupEstore'])->name('setup estore');
+
 });
 
 

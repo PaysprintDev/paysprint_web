@@ -2142,6 +2142,79 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     }
 
 
+
+    function uploadDocsForUser(value, id) {
+
+        var formData = new FormData();
+        var spinner = $('#uploadBtn' + id);
+        var route = "{{ route('upload user doc') }}";
+
+        swal({
+                title: "Are you sure?",
+                text: "Click Ok to continue...",
+                icon: "info",
+                buttons: true,
+                dangerMode: false,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+
+                    // Do Ajax
+
+                    formData.append("user_id", id);
+
+                    var fileSelect = document.getElementById("uploadContent" + id);
+                    if (fileSelect.files && fileSelect.files.length == 1) {
+                        var file = fileSelect.files[0]
+                        formData.set("image", file, file.name);
+                    }
+
+                    setHeaders();
+                    jQuery.ajax({
+                        url: route,
+                        method: 'post',
+                        data: formData,
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'JSON',
+                        beforeSend: function() {
+                            spinner.text('Please wait...');
+                        },
+                        success: function(result) {
+
+                            spinner.text('Upload');
+
+                            if (result.res == "success") {
+
+                                swal('Great', result.message, 'success');
+
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 2000);
+
+                            } else {
+                                swal('Oops', result.message, 'error');
+                            }
+
+
+
+
+                        },
+                        error: function(err) {
+                            spinner.text('Upload');
+                            swal("Oops!", err.responseJSON.message, "error");
+                        }
+
+                    });
+
+
+                }
+            });
+
+    }
+
+
     function checkverification(id) {
 
         var thisdata;
