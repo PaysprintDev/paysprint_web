@@ -508,6 +508,8 @@ class AmlController extends Controller
 
         $allcountries = $this->getAllCountries();
 
+        $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+
         $received = [
             'payInvoice' => $this->payInvoice(session('email')),
         ];
@@ -523,8 +525,10 @@ class AmlController extends Controller
             'escrowfund' => $this->getEscrowFunding(),
         );
 
+        
 
-        return view('aml.reports')->with(['pages' => 'AML Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'transCost' => $transCost, 'data' => $data]);
+
+        return view('aml.reports')->with(['pages' => 'AML Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'transCost' => $transCost, 'data' => $data, 'invoiceImport' => $invoiceImport]);
     }
 
 

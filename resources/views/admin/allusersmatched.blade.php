@@ -194,17 +194,16 @@
                                                         @endif
 
 
-                                                        @if ($datainfo->nin_front == null && $datainfo->nin_back == null && $datainfo->drivers_license_front == null && $datainfo->drivers_license_back == null && $datainfo->international_passport_front == null && $datainfo->international_passport_back == null && $datainfo->incorporation_doc_front == null)
-                                                            <small style="font-weight: bold;">
-                                                                No document
-                                                            </small>
 
-                                                            <input type="checkbox" name="nodocument"
-                                                                id="nodocument{{ $datainfo->id }}"
-                                                                onchange="checkMyBox('nodocument', '{{ $datainfo->id }}')">
+                                                        <small style="font-weight: bold;">
+                                                            No document
+                                                        </small>
 
-                                                            <hr>
-                                                        @endif
+                                                        <input type="checkbox" name="nodocument"
+                                                            id="nodocument{{ $datainfo->id }}"
+                                                            onchange="checkMyBox('nodocument', '{{ $datainfo->id }}')">
+
+                                                        <hr>
 
 
 

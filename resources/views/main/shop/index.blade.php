@@ -812,6 +812,10 @@
 
                 try {
 
+                    var callbackUrl;
+
+
+
 
                     var netamount = $('#typepayamount').val();
                     var feeamount = "0.00";
@@ -823,11 +827,14 @@
                     var currencyCode = `{{ $data['currencyCode']->currencyCode }}`;
                     var conversionamount = $('#conversionamount').val();
                     var ref_code = `{{ $data['refCode'] }}`;
-                    var callbackUrl =
-                        `{{ env('APP_URL') }}/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&ref_code=${ref_code}`;
-                    // var callbackUrl =
-                    // `http://localhost:9090/expresspay/business?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&ref_code=${ref_code}`;
 
+                    if (`{{ env('APP_ENV') }}` != "local") {
+                        callbackUrl =
+                            `{{ env('APP_URL') }}/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&ref_code=${ref_code}`;
+                    } else {
+                        callbackUrl =
+                            `http://localhost:9090/expresspay/business?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&ref_code=${ref_code}`;
+                    }
 
                     var productId = paymentToken;
                     var description = "Paid {{ $currencySymb }}" + netamount +

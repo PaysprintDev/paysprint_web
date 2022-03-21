@@ -10,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="viho admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities. laravel/framework: ^8.40">
+        content="Fastest and affordable method of sending and receiving money, paying invoice and getting Paid at anytime!">
     <meta name="keywords"
         content="Unlimited Transactions, Add money to Wallet from Debit or Credit Cards., Withdraw money to EXBC, Prepaid Mastercard for Free., Send money Locally and Abroad., Pay Invoice at a click of button., Create and send professional invoice on the Go., Fast-track how you get paid as a merchant, Safe and Secure- multi-level security authentications features, account, affordable, alert, answer, anytime, area, build, business, canada, cardiology, career, cart, check, checkout, click, clients, coming, commerce, components, conditions, confirm, consultant, contact, contents, demo, details, easy ,email, environment, family, fastest, features, footer, forms, free, friends, getting, government, headers, hero, home, invoice, landlord, launch, level, login, manage, management, mbbs, merchant, message, method, modal, money, multi, news, newsletter, opening, page, pages, paid, parking, password, paying, paysprint, pricing, product, property, question, receiving, rental, reset, safe,secure,security, send, sending, senior, services,sign, simple, soon, started, stats, submit,team, terms, testimonial, text, tickets,today, transfer, unique, utility, utitlity, video, wallet, want, works, worry">
     <meta name="author" content="Pils36">
@@ -57,6 +57,31 @@
     <!-- Responsive css-->
     <link rel="stylesheet" type="text/css" href="{{ asset('merchantassets/assets/css/responsive.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
+    <!-- include summernote css/js -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/6.0.0-beta.2/basic.min.css"
+        integrity="sha512-MeagJSJBgWB9n+Sggsr/vKMRFJWs+OUphiDV7TJiYu+TNQD9RtVJaPDYP8hA/PAjwRnkdvU+NsTncYTKlltgiw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/6.0.0-beta.2/dropzone.min.css"
+        integrity="sha512-qkeymXyips4Xo5rbFhX+IDuWMDEmSn7Qo7KpPMmZ1BmuIA95IPVYsVZNn8n4NH/N30EY7PUZS3gTeTPoAGo1mA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RVX8CC7GDP"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-RVX8CC7GDP');
+    </script>
+
 </head>
 
 <body>

@@ -1,4 +1,4 @@
- @if ($pages == 'AML Dashboard')
+ @if ($pages == 'AML Dashboard' || session('role') == 'Aml compliance')
 
      @include('include.adminamlaside')
 
@@ -72,9 +72,6 @@
                          @endif
 
                          @if (session('role') == 'Super')
-
-
-
                              <li class="treeview">
                                  <a href="#">
                                      <i class="fa fa-book"></i>
@@ -149,9 +146,6 @@
 
                                  </ul>
                              </li>
-
-
-
                          @endif
 
                      </ul>
@@ -160,7 +154,6 @@
                  @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only' || session('role') == 'Access to Level 1 only')
 
                      @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only')
-
                          <li class="treeview">
                              <a href="#">
                                  <i class="fa fa-book"></i>
@@ -212,6 +205,23 @@
                                      </ul>
                                  </li>
 
+
+                                 <li class="treeview">
+                                     <a href="#">
+                                         <i class="fa fa-book"></i>
+                                         <span>Verification</span>
+                                         <span class="pull-right-container">
+                                             <i class="fa fa-angle-left pull-right"></i>
+                                         </span>
+                                     </a>
+                                     <ul class="treeview-menu">
+                                         <li title="Bank verification"><a href="{{ route('bvncheckdetails') }}"><i
+                                                     class="fa fa-circle-o text-red"></i> BVN</a></li>
+
+
+                                     </ul>
+                                 </li>
+
                              </ul>
                          </li>
 
@@ -247,11 +257,9 @@
                              </a>
 
                          </li>
-
                      @endif
 
                      @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only')
-
                          <li>
                              <a href="{{ route('business report') }}">
                                  <i class="fa fa-book"></i>
@@ -267,13 +275,10 @@
                              </a>
 
                          </li>
-
                      @endif
 
 
                      @if (session('role') == 'Super')
-
-
                          <li class="treeview">
                              <a href="#">
                                  <i class="fa fa-book"></i>
@@ -293,8 +298,6 @@
                              </ul>
                          </li>
                          <li>
-
-
                      @endif
 
 
@@ -512,7 +515,6 @@
                      @endif
 
                      @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access to Level 1 and 2 only')
-
                          <li class="treeview">
                              <a href="#">
                                  <i class="fas fa-wallet"></i>
@@ -540,12 +542,10 @@
 
                              </ul>
                          </li>
-
                      @endif
 
 
                      @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only')
-
                          <li class="treeview">
                              <a href="#">
                                  <i class="fas fa-money-bill"></i>
@@ -620,7 +620,6 @@
             <span>Money Transfer Trans...</span>
           </a>
         </li> --}}
-
                      @endif
 
 
