@@ -31,7 +31,19 @@
           <div class="box">
 
             <div class="box-body">
-                  
+              <table class="table table-bordered table-striped" id="example3">
+                <thead>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h3 id="period_start"></h3>
+                    </div>
+                    <div class="col-md-6">
+                      <h3 id="period_stop"></h3>
+                    </div>
+                  </div>
+                
+                </thead>
+              </table>
 
                     </div>
               

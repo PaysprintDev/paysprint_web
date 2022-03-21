@@ -34,10 +34,9 @@
 
               <table class="table table-bordered table-striped" id="example3">
 
-                <form class="d-flex">
-                    <input class="form-control mt-6" type="search" name="search" aria-label="Search" placeholder="Search by PS number"><br>
-                    {{-- <button class=" btn btn-primary btn-block bg-primary" type="{{ route('aml transaction analysis subpage') }}">Get Transcaton Acount</button> --}}
-                    <a type="button" href="{{ route('aml transaction analysis subpage',) }}" class="btn btn-primary btn-block">Get Transcaton Acount</a>
+                <form class="d-flex" action="{{ route('aml transaction analysis subpage') }}" method="GET" class="d-flex">
+                  <input class="form-control mt-6" type="search" name="search" aria-label="Search" placeholder="Search by PS number" required><br>
+                  <button class=" btn btn-primary btn-block bg-primary" type="submit">Get Transaction Acount</button>
                   </form>
              
                 <tbody>

@@ -43,63 +43,36 @@
                         </div>
                       </div>
                     <tr>
-                      <th>Date</th>
-                      <th>Description</th>
-                      <th>Amount</th>
-                      <th>Status</th>
+                      <th>#</th>    
+                      <th>Name</th>    
+                      <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
+
+                      @if (count($data['users']) > 0)
+
+                      @php
+                        $i = 1;
+                      @endphp
+
+                        @foreach ($data['users'] as $user)
+                          <tr>
+                            <td>{{ $i++ }}</td>
+                            <td>{{ $user->name }}</td>
+                            <td><a type="button" href="{{route('user more detail', $user->id)}}" class="btn btn-primary btn-block">View details</a></td>
+                          </tr>
+                        @endforeach
                         
-                        @if (isset($data['prepaidRequestWithdrawal']) && count($data['prepaidRequestWithdrawal']->data) > 0 && $data['prepaidRequestWithdrawal']->status == 200)
-                        <?php $i = 1;?>
-                            @foreach ($data['prepaidRequestWithdrawal']->data as $items)
-    
-                              @if ($items->load_status == "NOT PROCESSED" || $items->load_status == "PENDING")
-                                  <tr>
-                                  <td>{{ $i++ }}</td>
-    
-                                  @if($user = \App\User::where('email', $items->email)->first())
-    
-                                    @php
-                                        $currencyCode = $user->currencyCode;
-                                        $currencySymbol = $user->currencySymbol;
-                                        $name = $user->name;
-                                    @endphp
-    
-    
-                                  @else
-    
-                                    @php
-                                        $currencyCode = '';
-                                        $currencySymbol = '';
-                                        $name = '-';
-                                    @endphp
-                                  @endif
-                                  <td>{{ $name }}</td>
-                                  <td>{{ $items->email }}</td>
-                                  <td>{{ $items->transaction_id }}</td>
-                                  <td>{{ $items->reference_code }}</td>
-                                  <td>{{ $items->card_number }}</td>
-    
-                                  <td style="font-weight: 700;">{{ $currencySymbol.' '.number_format($items->amount, 2) }}</td>
-    
-                                  <td>{{ date('d/M/Y', strtotime($items->created_at)) }}</td>
-    
-                                  <td style="font-weight: bold; color: @if($items->load_status == "NOT PROCESSED") red; @elseif($items->load_status == "PENDING") darkorange; @else green; @endif">{{ $items->load_status }}</td>
-    
-    
-                              </tr>
-                              @endif
-    
-                            @endforeach
-    
-                        @else
-                        <tr>
-                            <td colspan="9" align="center">No record available</td>
-                        </tr>
-                        @endif
-                    </tbody>
+                      @else
+                      <tr>
+                        <td colspan="3" align="center">No record found</td>
+                      </tr>
+                      @endif
+
+                      
+                     
+                        
                 </table>
 
                     </div>

@@ -27,27 +27,32 @@
       <br>
 
       <div class="row">
+        
+        {{-- @if(!isset($data['users']->ref_code)) --}}
+        
+        
         <div class="col-xs-12">
           <div class="box">
 
             <div class="box-body table table-responsive">
+              
 
-              <table class="table table-bordered table-striped" id="example3">
+              <table class="table table-bordered table-striped" >
                 <form class="row g-3">
                   <div class="col-md-6">
-                    <label for="inputEmail4" class="form-label">Name:</label>
+                    <label for="inputEmail4" class="form-label">Name:</label> {{ $data['users']->name }}
                     
                   </div>
                   <div class="col-md-6">
-                    <label for="inputPassword4" class="form-label">Phone:</label>
+                    <label for="inputPassword4" class="form-label">Phone:</label> {{ $data['users']->telephone }}
                     
                   </div>
                   <div class="col-md-6">
-                    <label for="inputEmail4" class="form-label">Email:</label>
+                    <label for="inputEmail4" class="form-label">Email:</label> {{ $data['users']->email }}
                     
                   </div>
                   <div class="col-md-6">
-                    <label for="inputPassword4" class="form-label">Acount Type:</label>
+                    <label for="inputPassword4" class="form-label">Acount Type:</label> {{ $data['users']->accountType }}
                     
                   </div>
                   
@@ -119,6 +124,7 @@
                         <td colspan="9" align="center">No record available</td>
                     </tr>
                     @endif
+                   
                 </tbody>
               </table>
             </div>
