@@ -16,6 +16,9 @@ class ImageController extends Controller
     {
 
 
+        try {
+            
+
 
         if ($request->file('image')) {
             //Get filename with extension
@@ -40,6 +43,20 @@ class ImageController extends Controller
 
         User::where('id', $request->user_id)->update(['idvdoc' => $fileNameToStore]);
 
-        return redirect()->back()->with('success', 'Successfully uploaded!');
+
+        $data = ['res' => 'success', 'message' => 'Successfully uploaded'];
+        $status = 200;
+
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            $data = ['res' => 'fail', 'message' => $th->getMessage()];
+        $status = 400;
+        }
+
+
+
+        return $this->returnJSON($data, $status);
+ 
     }
 }

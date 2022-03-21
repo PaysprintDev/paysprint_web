@@ -150,7 +150,7 @@ class MaintenanceFeeCharge extends Controller
         try {
             $todaysDate = Carbon::now()->toDateTimeString();
 
-            $getUsers = UpgradePlan::where('expire_date', '<=', $todaysDate)->get();
+            $getUsers = UpgradePlan::where('expire_date', '<=', $todaysDate)->where('plan', 'classic')->get();
 
 
             if (count($getUsers) > 0) {
@@ -246,10 +246,21 @@ class MaintenanceFeeCharge extends Controller
                             $this->sendMessage($sendMsg, $sendPhone);
                         }
                     } else {
-                        // Put account to basic plan
-                        User::where('id', $users->id)->update(['plan' => 'basic']);
+                        
+                        if($users->country == "Canada" || $users->country == "United States") {
+                            // Put account to basic plan
+                            User::where('id', $users->id)->update(['plan' => 'basic']);
 
-                        UpgradePlan::updateOrInsert(['userId' => $users->ref_code], ['userId' => $users->ref_code, 'plan' => 'basic', 'amount' => "0", 'duration' => $duration, 'expire_date' => $expire_date]);
+                            UpgradePlan::updateOrInsert(['userId' => $users->ref_code], ['userId' => $users->ref_code, 'plan' => 'basic', 'amount' => "0", 'duration' => $duration, 'expire_date' => $expire_date]);
+                        }
+                        else{
+                            // Put account to basic plan
+                            User::where('id', $users->id)->update(['plan' => 'classic']);
+
+                            UpgradePlan::updateOrInsert(['userId' => $users->ref_code], ['userId' => $users->ref_code, 'plan' => 'classic', 'amount' => "0", 'duration' => $duration, 'expire_date' => $expire_date]);
+                        }
+
+                        
                     }
 
 

@@ -21,6 +21,8 @@ class CurrencyConverterApiController extends Controller
 
         $markValue = (1 + ($markuppercent[0]->percentage / 100));
 
+        $markdownValue = (1 - ($markuppercent[0]->percentage / 100));
+
         $currency = 'USD' . $req->currency;
         $amount = $req->amount;
         $localCurrency = 'USD' . $req->localcurrency;
@@ -51,6 +53,8 @@ class CurrencyConverterApiController extends Controller
 
 
 
+        // dd($result->quotes); 71228
+
 
 
         if ($result->success == true) {
@@ -60,18 +64,71 @@ class CurrencyConverterApiController extends Controller
 
                 if ($req->localcurrency != $req->currency) {
                     // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
-                    $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
+
+
+                    // If $result->quotes->$localCurrency > 1, mark down and divide $result->quotes->$currency * $convertLocal / $markValue
+
+
+                    // If $result->quotes->$localCurrency < 1, mark up and $result->quotes->$localCurrency * amount * $markdownValue
+
+
+                    if($result->quotes->$localCurrency > 1){
+                        $convertLocal = $amount / $result->quotes->$localCurrency;
+
+                        $convRate = $result->quotes->$currency * $convertLocal / $markValue;
+
+                        // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
+                    }
+                    elseif($result->quotes->$localCurrency < 1){
+                        $convertLocal = $amount / $result->quotes->$localCurrency;
+
+                        $convRate = $result->quotes->$currency * $convertLocal * $markdownValue;
+                    }
+                    else{
+                        $convertLocal = $amount / $result->quotes->$localCurrency;
+
+                        $convRate = $result->quotes->$currency * $convertLocal;
+                    }
+
+
+
                 } else {
                     // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
                     $convertLocal = $amount / $result->quotes->$localCurrency;
+                    // Converting your USD value to other currency ie CAD * Y 
+                    $convRate = $result->quotes->$currency * $convertLocal;
                 }
 
-                // Converting your USD value to other currency ie CAD * Y 
-                $convRate = $result->quotes->$currency * $convertLocal;
-            } elseif ($req->val == "send") {
-                $convertLocal = $amount / $result->quotes->$localCurrency;
+                
 
-                $convRate = $result->quotes->$currency * $convertLocal;
+
+
+            } elseif ($req->val == "send") {
+
+                // If $result->quotes->$localCurrency > 1, mark down and divide $result->quotes->$currency * $convertLocal / $markValue
+
+
+                // If $result->quotes->$localCurrency < 1, mark up and $result->quotes->$localCurrency * amount * $markdownValue
+
+
+                if($result->quotes->$localCurrency > 1){
+                    $convertLocal = $amount / $result->quotes->$localCurrency;
+
+                $convRate = $result->quotes->$currency * $convertLocal / $markValue;
+                }
+                elseif($result->quotes->$localCurrency < 1){
+                    $convertLocal = $amount / $result->quotes->$localCurrency;
+
+                    $convRate = $result->quotes->$currency * $convertLocal * $markdownValue;
+                }
+                else{
+                    $convertLocal = $amount / $result->quotes->$localCurrency;
+
+                    $convRate = $result->quotes->$currency * $convertLocal;
+                }
+
+
+                
             } else {
                 // This amount is the amount in dollars
                 $convRate = $result->quotes->$currency * $amount;

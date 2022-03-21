@@ -40,11 +40,14 @@
 <script src="{{ asset('merchantassets/assets/js/datepicker/date-picker/datepicker.js') }}"></script>
 <script src="{{ asset('merchantassets/assets/js/datepicker/date-picker/datepicker.en.js') }}"></script>
 <script src="{{ asset('merchantassets/assets/js/datepicker/date-picker/datepicker.custom.js') }}"></script>
+<script src="{{ asset('merchantassets/assets/js/dropzone/dropzone-script.js') }}"></script>
+<script src="{{ asset('merchantassets/assets/js/dropzone/dropzone.js') }}"></script>
 <script src="{{ asset('merchantassets/assets/js/print.js') }}"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://raw.githubusercontent.com/HubSpot/pace/v1.0.0/pace.min.js"></script>
 <script src="{{ asset('pace/pace.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
 
 <!-- Plugins JS Ends-->
 
@@ -83,7 +86,7 @@
         });
 
 
-        $('#store_description').summernote({
+        $('.store_description').summernote({
             placeholder: 'Enter product description',
             tabsize: 2,
             height: 120,
@@ -1529,6 +1532,66 @@
         }
     }
 
+    function deleteProduct(id) {
+
+        swal({
+                title: "Are you sure?",
+                text: "Click OK to proceed",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $(`#formProduct${id}`).submit();
+                } else {
+
+                }
+            });
+
+
+
+    }
+
+
+    function deleteDiscount(id) {
+
+        swal({
+                title: "Are you sure?",
+                text: "Click OK to proceed",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $(`#formDiscount${id}`).submit();
+                } else {
+
+                }
+            });
+
+
+
+    }
+
+
+    function generateDiscountCode() {
+        // Generate random...
+        $('#code').val('');
+        const randomCode = Math.random().toString(16).substr(2, 8).toUpperCase();
+
+        $('#code').val(randomCode);
+    }
+
+    $('#valueType').change(function() {
+        if ($('#valueType').val() == "Percentage") {
+            $('.symbolText').text('%');
+        } else {
+            $('.symbolText').text('{{ Auth::user()->currencySymbol }}');
+        }
+    })
+
     function setHeaders() {
         $.ajaxSetup({
             headers: {
@@ -1537,6 +1600,20 @@
             }
         });
     }
+
+
+
+    Dropzone.options.myGreatDropzone = { // camelized version of the `id`
+        paramName: "file", // The name that will be used to transfer the file
+        maxFilesize: 2, // MB
+        accept: function(file, done) {
+            if (file.name == "justinbieber.jpg") {
+                done("Naha, you don't.");
+            } else {
+                done();
+            }
+        }
+    };
 </script>
 
 </body>

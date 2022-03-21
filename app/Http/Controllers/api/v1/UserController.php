@@ -1102,7 +1102,7 @@ class UserController extends Controller
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-        $query = ClientInfo::select('id', 'user_id as userId', 'business_name as businessName', 'address', 'corporate_type as corporateType', 'industry', 'type_of_service as typeOfService', 'website', 'firstname', 'lastname', 'telephone', 'country', 'state', 'city', 'zip_code as zipCode', 'description')->where('industry', $req->get('industry'))->where('country', $thisuser->country)->orderBy('created_at', 'DESC')->orderBy('business_name', 'ASC')->get();
+        $query = ClientInfo::select('id', 'user_id as userId', 'business_name as businessName', 'address', 'corporate_type as corporateType', 'industry', 'type_of_service as typeOfService', 'website', 'firstname', 'lastname', 'telephone', 'country', 'state', 'city', 'zip_code as zipCode', 'description', 'email as businessEmail')->where('industry', $req->get('industry'))->where('country', $thisuser->country)->orderBy('created_at', 'DESC')->orderBy('business_name', 'ASC')->get();
 
         if (count($query) > 0) {
 
