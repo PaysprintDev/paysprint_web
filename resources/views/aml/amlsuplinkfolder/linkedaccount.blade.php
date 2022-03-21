@@ -30,75 +30,65 @@
         <div class="col-xs-12">
           <div class="box">
 
+            
+
             <div class="box-body">
-                  
-                <table class="table table-bordered table-striped" id="example3">
-                    <thead>
-                      <div class="row">
-                        <div class="col-md-6">
-                          <h3 id="period_start"></h3>
-                        </div>
-                        <div class="col-md-6">
-                          <h3 id="period_stop"></h3>
-                        </div>
-                      </div>
-                    <tr>
-                      <th>Date</th>
-                      <th>Description</th>
-                      <th>Amount</th>
-                      <th>Status</th>
-                    </tr>
-                    </thead>
+              <table class="table table-bordered table-striped" id="example3">
+                <thead>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h3 id="period_start"></h3>
+                    </div>
+                    <div class="col-md-6">
+                      <h3 id="period_stop"></h3>
+                    </div>
+                  </div>
+                
+                </thead>
+               
                     <tbody>
+
+                      @if($data['link_accounts'] !== NULL)
                         
-                        @if (isset($data['prepaidRequestWithdrawal']) && count($data['prepaidRequestWithdrawal']->data) > 0 && $data['prepaidRequestWithdrawal']->status == 200)
-                        <?php $i = 1;?>
-                            @foreach ($data['prepaidRequestWithdrawal']->data as $items)
-    
-                              @if ($items->load_status == "NOT PROCESSED" || $items->load_status == "PENDING")
-                                  <tr>
-                                  <td>{{ $i++ }}</td>
-    
-                                  @if($user = \App\User::where('email', $items->email)->first())
-    
-                                    @php
-                                        $currencyCode = $user->currencyCode;
-                                        $currencySymbol = $user->currencySymbol;
-                                        $name = $user->name;
-                                    @endphp
-    
-    
-                                  @else
-    
-                                    @php
-                                        $currencyCode = '';
-                                        $currencySymbol = '';
-                                        $name = '-';
-                                    @endphp
-                                  @endif
-                                  <td>{{ $name }}</td>
-                                  <td>{{ $items->email }}</td>
-                                  <td>{{ $items->transaction_id }}</td>
-                                  <td>{{ $items->reference_code }}</td>
-                                  <td>{{ $items->card_number }}</td>
-    
-                                  <td style="font-weight: 700;">{{ $currencySymbol.' '.number_format($items->amount, 2) }}</td>
-    
-                                  <td>{{ date('d/M/Y', strtotime($items->created_at)) }}</td>
-    
-                                  <td style="font-weight: bold; color: @if($items->load_status == "NOT PROCESSED") red; @elseif($items->load_status == "PENDING") darkorange; @else green; @endif">{{ $items->load_status }}</td>
-    
-    
-                              </tr>
-                              @endif
-    
-                            @endforeach
-    
-                        @else
-                        <tr>
-                            <td colspan="9" align="center">No record available</td>
-                        </tr>
+                        
+                      <tr>
+                        <td><strong>Link Ref Code:</strong></td>
+                        <td>
+                            {{ $data['link_accounts']->link_ref_code }} 
+                        </td>
+                        
+
+      
+                        @if ($merchant = \App\User::where('ref_code', $data['link_accounts']->link_ref_code)->first())
+
+                        @php
+                          $userid = $merchant->id
+                        @endphp
+
+                        @elseif ($merchant = \App\User::where('ref_code', $data['link_accounts']->link_ref_code)->NULL)
+
+                        @else{
+                          No record
+                        }
+                        
                         @endif
+
+
+                        <td> <a type="button" href="{{route('user more detail', $userid)}}" class="btn btn-primary btn-block">View details</a></td>
+
+                                         
+                      </tr>
+
+
+                      @else
+
+                      <tr>
+                        <td colspan="3" align="center">No linked account</td>
+                      </tr>
+
+                      @endif
+                     
+                     
                     </tbody>
                 </table>
 

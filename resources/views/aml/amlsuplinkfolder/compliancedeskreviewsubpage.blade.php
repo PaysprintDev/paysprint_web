@@ -4,6 +4,7 @@
 
 
 <?php use \App\Http\Controllers\User; ?>
+<?php use \App\Http\Controllers\client_info; ?>
 <?php use \App\Http\Controllers\AddCard; ?>
 
   <!-- Content Wrapper. Contains page content -->
@@ -27,47 +28,166 @@
       <br>
 
       <div class="row">
+        @if(isset($data['users']->ref_code))
+        
         <div class="col-xs-12">
           <div class="box">
 
             <div class="box-body">
                   <div class="col-md-6">
-                    <label for="inputEmail4" class="form-label">Name:</label>
+                    <label for="inputEmail4"  class="form-label">Name:</label> {{ $data['users']->name }}
                     
                   </div>
                   <div class="col-md-6">
-                    <label for="inputPassword4" class="form-label">Phone:</label>
+                    <label for="inputPassword4" class="form-label">Phone:</label> {{ $data['users']->telephone }}
                     
                   </div>
                   <div class="col-md-6">
-                    <label for="inputEmail4" class="form-label">Email:</label>
+                    <label for="inputEmail4" class="form-label">Email:</label> {{ $data['users']->email }}
                     
                   </div>
                   <div class="col-md-6">
-                    <label for="inputPassword4" class="form-label">Acount Type:</label>
+                    <label for="inputPassword4" class="form-label">Acount Type:</label> {{ $data['users']->accountType }}
                     
                   </div>
-                    <div class="row">
 
-                      <div class="col-md-4 mb-2"><a class="btn btn-primary mb-2 " style="width: 100%" href="#">Profile Information</a></div>
-                      <div class="col-md-4"><a class="btn btn-primary mb-2" style="width: 100%" href="{{ route('viewdocument',) }}"> View Document</a></div>
-                      <div class="col-md-4"><a class="btn btn-primary mb-2" style="width: 100%" href="{{ route('viewkyckybreport',) }}">View KYC/KYB Report</a></div>
-                      
+                  <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-aqua">
+                        <div class="inner">
+                            <h3>&nbsp;</h3>
+                
+                
+                            <p>Profile Information</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-stats-bars"></i>
+                        </div>
+                        <a href="{{route('user more detail', $data['users']->id)}}" class="small-box-footer">View details <i
+                                class="fa fa-arrow-circle-right"></i></a>
                     </div>
-                    <div class="row">
+                </div>
 
-                      <div class="col-md-4 mb-2"><a class="btn btn-primary mb-2" style="width: 100%" href="{{ route('viewcomplianceinformation',) }}">View Compliance Information</a></div>
-                      <div class="col-md-4"><a class="btn btn-primary mb-2" style="width: 100%" href="{{ route('viewindustry',) }}"> View Industry</a></div>
-                      <div class="col-md-4"><a class="btn btn-primary mb-2" style="width: 100%" href="{{ route('linkedaccount',) }}">Linked Account</a></div>
-                      
-                    </div>
-                    <div class="row">
-
-                      <div class="col-md-4 mb-2"><a class="btn btn-primary mb-2" style="width: 100%" href="{{ route('connectedaccounts',) }}">Connected Accounts</a></div>
-                      
-                    </div>
+                <div class="col-lg-3 col-xs-6">
+                  <!-- small box -->
+                  <div class="small-box bg-aqua">
+                      <div class="inner">
+                        <h3>&nbsp;</h3>
+                          
               
+              
+                          <p> View Document</p>
+                      </div>
+                      <div class="icon">
+                          <i class="ion ion-stats-bars"></i>
+                      </div>
+                      <a href="{{ route('viewdocument',  'search='.$data['users']->ref_code) }}" class="small-box-footer">View details <i
+                              class="fa fa-arrow-circle-right"></i></a>
+                  </div>
+              </div>
+
+              <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-aqua">
+                    <div class="inner">
+                        <h3>&nbsp;</h3>
+            
+            
+                        <p>View KYC/KYB Report</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                    <a href="{{ route('viewkyckybreport', 'search='.$data['users']->ref_code) }}" class="small-box-footer">View details <i
+                            class="fa fa-arrow-circle-right"></i></a>
+                </div>
             </div>
+
+            <div class="col-lg-3 col-xs-6">
+              <!-- small box -->
+              <div class="small-box bg-aqua">
+                  <div class="inner">
+                      <h3>&nbsp;</h3>
+          
+          
+                      <p>View Compliance Information</p>
+                  </div>
+                  <div class="icon">
+                      <i class="ion ion-stats-bars"></i>
+                  </div>
+                  <a href="{{ route('viewcomplianceinformation', 'search='.$data['users']->ref_code) }}" method="GET" class="small-box-footer">View details <i
+                          class="fa fa-arrow-circle-right"></i></a>
+              </div>
+          </div>
+          <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-aqua">
+                <div class="inner">
+                    <h3>&nbsp;</h3>
+        
+        
+                    <p>View Industry</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="{{ route('viewindustry', 'search='.$data['users']->ref_code) }}"  class="small-box-footer">View details <i
+                        class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-aqua">
+              <div class="inner">
+                  <h3>&nbsp;</h3>
+      
+      
+                  <p>Linked Account</p>
+              </div>
+              <div class="icon">
+                  <i class="ion ion-stats-bars"></i>
+              </div>
+              <a href="{{ route('linkedaccount', 'search='.$data['users']->ref_code) }}" class="small-box-footer">View details <i
+                      class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+
+              <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-aqua">
+                    <div class="inner">
+                        <h3>&nbsp;</h3>
+            
+            
+                        <p>Connected Accounts</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                    <a href="{{ route('connectedaccounts', 'search='.$data['users']->name) }}" class="small-box-footer">View details <i
+                            class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            @else
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="box">
+                  <td colspan="9" text-align="center">
+                    No record available
+                  </td>
+                </div>
+              </div>
+            </div>
+            @endif
+
+           
+
+                                                     
+                   
+
+                   
+           
             <!-- /.box-body -->
           </div>
           <!-- /.box -->

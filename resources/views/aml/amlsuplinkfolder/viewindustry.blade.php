@@ -41,63 +41,49 @@
                               <h3 id="period_stop"></h3>
                             </div>
                           </div>
-                        <tr>
-                          <th>Date</th>
-                          <th>Description</th>
-                          <th>Amount</th>
-                          <th>Status</th>
-                        </tr>
+                        
                         </thead>
                         <tbody>
+                          {{-- {{ dd($data) }} --}}
+
+                          @if($data['client_info'] !== NULL)
+
+                          <tr>
+                            <td><strong> Business Name:</strong></td>
+                            <td>@if($data['client_info']){{ $data['client_info']->business_name }} @else NA @endif</td>
+                          </tr>
+                          <tr>
+                            <td><strong>Company Registration Number:</strong></td>
+                            <td>@if($data['client_info']->companyRegistrationNumber != NULL){{ $data['client_info']->companyRegistrationNumber }} @else NA @endif</td>
+                          </tr>
+                          <tr>
+                            <td><strong>Date Of Incorporation:</strong></td>
+        
+                            <td>@if($data['client_info']->dateOfIncorporation != NULL){{ $data['client_info']->dateOfIncorporation }} @else NA @endif</td>
+                          </tr>
+                          <tr>
+                            <td><strong>Industry:</strong></td>
+        
+                            <td>@if($data['client_info']->industry != NULL){{ $data['client_info']->industry }} @else NA @endif</td>
+                          </tr>
+                          <tr>
+                            <td><strong>Type Of Service:</strong></td>
+        
+                            <td>@if($data['client_info']->type_of_service != NULL){{ $data['client_info']->type_of_service }} @else NA @endif</td>
+                          </tr>
                             
-                            @if (isset($data['prepaidRequestWithdrawal']) && count($data['prepaidRequestWithdrawal']->data) > 0 && $data['prepaidRequestWithdrawal']->status == 200)
-                            <?php $i = 1;?>
-                                @foreach ($data['prepaidRequestWithdrawal']->data as $items)
-        
-                                  @if ($items->load_status == "NOT PROCESSED" || $items->load_status == "PENDING")
-                                      <tr>
-                                      <td>{{ $i++ }}</td>
-        
-                                      @if($user = \App\User::where('email', $items->email)->first())
-        
-                                        @php
-                                            $currencyCode = $user->currencyCode;
-                                            $currencySymbol = $user->currencySymbol;
-                                            $name = $user->name;
-                                        @endphp
-        
-        
-                                      @else
-        
-                                        @php
-                                            $currencyCode = '';
-                                            $currencySymbol = '';
-                                            $name = '-';
-                                        @endphp
-                                      @endif
-                                      <td>{{ $name }}</td>
-                                      <td>{{ $items->email }}</td>
-                                      <td>{{ $items->transaction_id }}</td>
-                                      <td>{{ $items->reference_code }}</td>
-                                      <td>{{ $items->card_number }}</td>
-        
-                                      <td style="font-weight: 700;">{{ $currencySymbol.' '.number_format($items->amount, 2) }}</td>
-        
-                                      <td>{{ date('d/M/Y', strtotime($items->created_at)) }}</td>
-        
-                                      <td style="font-weight: bold; color: @if($items->load_status == "NOT PROCESSED") red; @elseif($items->load_status == "PENDING") darkorange; @else green; @endif">{{ $items->load_status }}</td>
-        
-        
-                                  </tr>
-                                  @endif
-        
-                                @endforeach
-        
-                            @else
-                            <tr>
-                                <td colspan="9" align="center">No record available</td>
-                            </tr>
-                            @endif
+                          @else
+
+                      <tr>
+                        <td colspan="3" align="center">No linked account</td>
+                      </tr>
+
+                      @endif
+                            
+                  
+                </tbody>
+              </table>
+
                         </tbody>
                     </table>
                     

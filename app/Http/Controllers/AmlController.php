@@ -1811,7 +1811,8 @@ class AmlController extends Controller
     public function transactionAnalysisSubPage()
     {
         $data = array(
-            'activity' => $this->userActivity()
+            'activity' => $this->userActivity(),
+            'users' => DB::table('users')->where('ref_code', request()->search)->first()
         );
 
         $transCost = $this->transactionCost();
@@ -1834,9 +1835,17 @@ class AmlController extends Controller
     }
     public function complianceDeskReviewSubPage()
     {
+
+        
         $data = array(
-            'activity' => $this->userActivity()
+            'activity' => $this->userActivity(),
+            'users' => DB::table('users')->where('ref_code', request()->search)->first()
         );
+
+        
+
+
+      
 
         $transCost = $this->transactionCost();
 
@@ -1847,7 +1856,8 @@ class AmlController extends Controller
     public function viewDocument()
     {
         $data = array(
-            'activity' => $this->userActivity()
+            'activity' => $this->userActivity(),
+            'users' => DB::table('users')->where('ref_code', request()->search)->first()
         );
 
         $transCost = $this->transactionCost();
@@ -1858,7 +1868,8 @@ class AmlController extends Controller
     public function viewKycKybReport()
     {
         $data = array(
-            'activity' => $this->userActivity()
+            'activity' => $this->userActivity(),
+            'users' => DB::table('users')->where('ref_code', request()->search)->first()
         );
 
         $transCost = $this->transactionCost();
@@ -1869,7 +1880,9 @@ class AmlController extends Controller
     public function viewComplianceInformation()
     {
         $data = array(
-            'activity' => $this->userActivity()
+            'activity' => $this->userActivity(),
+            'users' => DB::table('users')->where('ref_code', request()->search)->first(),
+
         );
 
         $transCost = $this->transactionCost();
@@ -1880,8 +1893,11 @@ class AmlController extends Controller
     public function viewIndustry()
     {
         $data = array(
-            'activity' => $this->userActivity()
+            'activity' => $this->userActivity(),
+            'client_info' => DB::table('client_info')->where('user_id', request()->search)->first()
         );
+
+       
 
         $transCost = $this->transactionCost();
 
@@ -1891,7 +1907,8 @@ class AmlController extends Controller
     public function linkedAccount()
     {
         $data = array(
-            'activity' => $this->userActivity()
+            'activity' => $this->userActivity(),
+            'link_accounts' => DB::table('link_accounts')->where('ref_code', request()->search)->first()
         );
 
         $transCost = $this->transactionCost();
@@ -1902,7 +1919,8 @@ class AmlController extends Controller
     public function connectedAccounts()
     {
         $data = array(
-            'activity' => $this->userActivity()
+            'activity' => $this->userActivity(),
+            'users' => DB::table('users')->where('name', 'like', '%'.request()->search.'%')->get()
         );
 
         $transCost = $this->transactionCost();

@@ -31,7 +31,27 @@
           <div class="box">
 
             <div class="box-body">
-                  
+              <table class="table table-bordered table-striped" >
+               
+
+                
+                <tbody>
+                   
+                  <tr>
+                    <td><strong> How do you know about us:</strong></td>
+                    <td>@if($data['users']->knowAboutUs != NULL){{ $data['users']->knowAboutUs }} @else NA @endif</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Size of Transaction to be expected:</strong></td>
+                    <td>@if($data['users']->knowAboutUs != NULL){{ $data['users']->transactionSize }} @else NA @endif</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Source of Funds:</strong></td>
+
+                    <td>@if($data['users']->knowAboutUs != NULL){{ $data['users']->sourceOfFunding }} @else NA @endif</td>
+                  </tr>
+                </tbody>
+              </table>
 
                     </div>
               
