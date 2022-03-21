@@ -2866,19 +2866,19 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
         try {
 
             if (isset($getInvoice)) {
+                $merchantId = $getInvoice->uploaded_by; 
+                $merchantName = $getInvoice->merchantName;
+                $thisuser = User::where('ref_code', $merchantId)->where('businessname', $merchantName)->first();
 
+                if ($req->paymentToken != null && $thisuser->country != "Canada") {
 
-
-                if ($req->paymentToken != null) {
-
-                    $merchantId = $getInvoice->uploaded_by;
-                    $merchantName = $getInvoice->merchantName;
+                   
                     $amount = $req->amountinvoiced;
                     $merchantpay = $req->merchantpay;
 
 
 
-                    $thisuser = User::where('ref_code', $merchantId)->where('businessname', $merchantName)->first();
+                   
 
 
                     // Credit Merchant Wallet and Add Statement
@@ -2969,11 +2969,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 } else {
                     // Process payment for moneris gateway
 
-
-
-                    $merchantId = $getInvoice->uploaded_by;
                     $creditcard_no = $req->creditcard_no;
-                    $merchantName = $getInvoice->merchantName;
+                   
 
                     $month = $req->month;
                     $expirydate = $req->expirydate;
@@ -3255,7 +3252,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
             // Get merchant info
             $thisuser = User::where('ref_code', $req->merchant_id)->first();
 
-            if ($req->paymentToken != null) {
+            if ($req->paymentToken != null && $thisuser->country != "Canada") {
 
                        $getGateway = AllCountries::where('name', $thisuser->country)->first();
 
@@ -3622,7 +3619,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                 $getGateway = AllCountries::where('name', $thisuser->country)->first();
 
-                if ($req->paymentToken != null) {
+                if ($req->paymentToken != null && $thisuser->country != "Canada") {
 
 
                     $getTransactionCode = $this->verifyTransaction($req->paymentToken);
@@ -4365,7 +4362,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                     $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                 } else {
-                    if ($req->paymentToken != null) {
+                    if ($req->paymentToken != null && $thisuser->country != "Canada") {
 
                         $getTransactionCode = $this->verifyTransaction($req->paymentToken);
 
@@ -4951,7 +4948,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $this->slack('Oops!, ' . $thisuser->name . ' ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                         } else {
 
-
+                            $this->slack($thisuser->name . " add money to wallet access to test on live for:: " . $req->currencyCode . " " . $req->amount . " to their wallet.", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                             $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "purchase", "PaySprint/Vimfile Add Money to the Wallet of " . $thisuser->name, $req->mode);
 
@@ -7451,6 +7448,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
         }
 
 
+        
+
+
 
         if ($mode == "test") {
             if ($type == "purchase") {
@@ -7494,6 +7494,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
         }
 
 
+
+        
 
 
 
@@ -7557,6 +7559,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
         /******************************* Response ************************************/
         $mpgResponse = $mpgHttpPost->getMpgResponse();
 
+        
+        $this->slack("Name: ".$thisuser->name." | Mode: ".$mode, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
 

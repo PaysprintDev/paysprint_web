@@ -1021,6 +1021,21 @@
                                 <small id="stockHelp" class="form-text text-muted">How many do you have in stock</small>
                             </div>
 
+
+                            <div class="form-group">
+                                <label for="stock">Category</label>
+                                <select name="category" id="categorey" class="form-control form-select">
+                                    @if (count($data['productcategory']) > 0)
+                                        <option value="">Select category</option>
+
+                                        @foreach ($data['productcategory'] as $item)
+                                            <option value="{{ $item->category }}">{{ $item->category }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                <small id="stockHelp" class="form-text text-muted">Select product category</small>
+                            </div>
+
                             <div class="form-group">
                                 <label for="stock">Product Image</label>
                                 <input type="file" class="form-control" name="file" id="file"

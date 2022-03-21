@@ -32,6 +32,7 @@ use App\StoreProducts;
 use App\StoreOrders;
 use App\StoreDiscount;
 use App\StoreMainShop;
+use App\StoreCategory;
 
 class MerchantPageController extends Controller
 {
@@ -407,6 +408,7 @@ class MerchantPageController extends Controller
             'myProducts' => $this->getMyProducts(Auth::user()->id),
             'myOrders' => $this->getMyOrders(Auth::user()->id),
             'myDiscounts' => $this->getMyDiscounts(Auth::user()->id),
+            'productcategory' => $this->getProductCategory()
         ];
         
 
@@ -579,6 +581,12 @@ class MerchantPageController extends Controller
 
     public function getMyDiscounts($merchantId){
         $data = StoreDiscount::select('estore_discount.id as discountId', 'estore_discount.userId', 'estore_discount.code', 'estore_discount.valueType', 'estore_discount.discountAmount', 'estore_discount.productId', 'estore_discount.startDate', 'estore_discount.endDate', 'estore_product.id', 'estore_product.productName')->join('estore_product', 'estore_discount.productId', '=', 'estore_product.id')->where('estore_discount.userId', $merchantId)->orderBy('estore_discount.created_at', 'DESC')->get();
+
+        return $data;
+    }
+
+    public function getProductCategory(){
+        $data = StoreCategory::orderBy('category', 'ASC')->get();
 
         return $data;
     }
