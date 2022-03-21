@@ -52,6 +52,12 @@ Route::get('checktelephone', 'CheckSetupController@checkTelephone');
 Route::get('userarchive', 'CheckSetupController@userAccountArchive');
 Route::get('matchedusersmove', 'CheckSetupController@matchedUsersAccount');
 Route::get('approvedusersmove', 'CheckSetupController@approvedUsersAccount');
+Route::get('movefailedtopass', 'CheckSetupController@moveFromFailedToPass');
+Route::get('movepassedtocompletedpending', 'CheckSetupController@moveFromPassedToCompletedPending');
+Route::get('crontomerchant', 'CheckSetupController@cronToMerchant');
+Route::get('crontoconsumers', 'CheckSetupController@cronToConsumers');
+Route::get('giveaccountcheck', 'CheckSetupController@giveAccountCheckUpgrade');
+Route::get('downcheckmerchant', 'CheckSetupController@downcheckMerchants');
 
 
 // IDV Mail Chimp
@@ -60,6 +66,7 @@ Route::get('idvpassedlist', 'CheckSetupController@idvPassedList');
 Route::get('idvfailedlist', 'CheckSetupController@idvFailedList');
 Route::get('docpendinglist', 'CheckSetupController@docPendingList');
 Route::get('suspendedaccountlist', 'CheckSetupController@suspendedAccountList');
+Route::get('upgradedaccountlist', 'CheckSetupController@upgradedAccounts');
 
 // Update BVN List
 Route::get('bvnlistupdate', 'CheckSetupController@bvnListUpdate');
@@ -148,6 +155,8 @@ Route::get('/merchant-home', ['uses' => 'HomeController@merchantIndex', 'as' => 
 
 Route::get('/home', ['uses' => 'HomeController@authIndex', 'as' => 'user home']);
 
+Route::get('/shop/{merchant}', ['uses' => 'MerchantPageController@merchantShop', 'as' => 'merchant shop now']);
+
 Route::get('/supporting-haiti', ['uses' => 'HomeController@haitiDonation', 'as' => 'haiti donation']);
 
 Route::get('about', ['uses' => 'HomeController@about', 'as' => 'about']);
@@ -159,12 +168,17 @@ Route::get('Statement', ['uses' => 'HomeController@statement', 'as' => 'statemen
 Route::get('payorganization', ['uses' => 'HomeController@payOrganization', 'as' => 'payorganization']);
 
 Route::get('contact', ['uses' => 'HomeController@contact', 'as' => 'contact']);
-Route::get('developers/community', ['uses' => 'HomeController@community', 'as' => 'community']);
-Route::get('developers/askquestion', ['uses' => 'HomeController@askQuestion', 'as' => 'askquestion']);
-Route::post('developers/askquestion', ['uses' => 'HomeController@storeAskedQuestions', 'as' => 'askquestion']);
-Route::get('developers/submessage/{id}', ['uses' => 'HomeController@subMessage', 'as' => 'submessage']);
 
-Route::post('developers/storeanswer', ['uses' => 'HomeController@storeSubMessage', 'as' => 'storeanswer']);
+
+Route::prefix('developers')->group(function () {
+Route::get('/community', ['uses' => 'HomeController@community', 'as' => 'community']);
+Route::get('/askquestion', ['uses' => 'HomeController@askQuestion', 'as' => 'askquestion']);
+Route::post('/askquestion', ['uses' => 'HomeController@storeAskedQuestions', 'as' => 'askquestion']);
+Route::get('/submessage/{id}', ['uses' => 'HomeController@subMessage', 'as' => 'submessage']);
+Route::post('/storeanswer', ['uses' => 'HomeController@storeSubMessage', 'as' => 'storeanswer']);
+});
+
+
 
 Route::get('Service', ['uses' => 'HomeController@service', 'as' => 'service']);
 
@@ -318,12 +332,22 @@ Route::prefix('merchant')->group(function () {
 	Route::get('/profile', [MerchantPageController::class, 'profile'])->name('merchants profile');
 	Route::get('/invoicepage', [MerchantPageController::class, 'invoicePage'])->name('invoice page');
 	Route::get('/paymentgateway', [MerchantPageController::class, 'paymentGateway'])->name('new merchant payment gateway');
-	Route::get('/orderingsystem', [MerchantPageController::class, 'orderingSystem'])->name('ordering system');
+	Route::get('/estore', [MerchantPageController::class, 'orderingSystem'])->name('ordering system');
 
 	Route::get('businessprofile/{id}', [MerchantPageController::class, 'businessProfile'])->name('merchant business profile');
 
 
 	Route::get('/{shop}/{id}', [ShopController::class, 'index'])->name('my shop payment');
+	Route::post('/storeproduct', [ShopController::class, 'storeProduct'])->name('store product');
+	Route::post('/storediscount', [ShopController::class, 'storeDiscount'])->name('store discount');
+	Route::post('/updateproduct/{id}', [ShopController::class, 'updateProduct'])->name('update product');
+	Route::post('/deleteproduct/{id}', [ShopController::class, 'deleteProduct'])->name('delete product');
+	Route::post('/updatediscount/{id}', [ShopController::class, 'updateDiscount'])->name('update discount');
+	Route::post('/deletediscount/{id}', [ShopController::class, 'deleteDiscount'])->name('delete discount');
+
+
+	Route::post('/setupestore', [ShopController::class, 'setupEstore'])->name('setup estore');
+
 });
 
 
@@ -770,6 +794,7 @@ Route::prefix('Admin/')->group(function () {
 
 
 	Route::get('gatewayactivity', ['uses' => 'AdminController@gatewayActivity', 'as' => 'gateway activity']);
+	Route::get('bvncheckdetails', ['uses' => 'AdminController@bvnCheckDetails', 'as' => 'bvncheckdetails']);
 	Route::get('checktransaction/{id}', ['uses' => 'AdminController@checkTransaction', 'as' => 'check transaction']);
 	Route::get('supportactivity', ['uses' => 'AdminController@supportPlatformActivity', 'as' => 'support activity']);
 	Route::get('activityperday', ['uses' => 'AdminController@platformActivityPerDay', 'as' => 'activity per day']);

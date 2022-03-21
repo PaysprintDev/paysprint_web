@@ -87,6 +87,8 @@ use App\SupportActivity as SupportActivity;
 
 use App\CashAdvance as CashAdvance;
 
+use App\BVNVerificationList as BVNVerificationList;
+
 use App\CrossBorder as CrossBorder;
 use App\InvestorPost;
 use App\InvestorRelation;
@@ -95,6 +97,9 @@ use App\UserClosed as UserClosed;
 use App\PricingSetup as PricingSetup;
 
 use App\MailCampaign as MailCampaign;
+use App\UpgradePlan as UpgradePlan;
+use Carbon\Carbon;
+
 use App\MarkUp;
 use App\ReferralGenerate;
 use App\ReferredUsers;
@@ -162,7 +167,11 @@ class AdminController extends Controller
         if (session('role') == 'Merchant') {
 
             return redirect()->route('dashboard');
-        } else {
+        }
+        elseif(session('role') == 'Aml compliance'){
+            return redirect()->route('aml dashboard');
+        }
+         else {
             if ($req->session()->has('username') == true) {
 
 
@@ -243,7 +252,7 @@ class AdminController extends Controller
                 );
 
 
-                
+
 
 
 
@@ -2885,6 +2894,7 @@ class AdminController extends Controller
     }
     public function getFlaggedUsers()
     {
+        
         $data = User::where('flagged', 1)->orderBy('created_at', 'DESC')->get();
 
         return $data;
@@ -6102,6 +6112,65 @@ class AdminController extends Controller
         }
     }
 
+
+    public function bvnCheckDetails(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'activity' => $this->bvnStatusActivity()
+            );
+
+
+
+            return view('admin.pages.bvnactivity')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
     public function checkTransaction(Request $req, $id)
     {
 
@@ -6418,6 +6487,7 @@ class AdminController extends Controller
         // Send Mail to the support agent
         $this->name = $req->firstname . ' ' . $req->lastname;
         $this->email = $req->email;
+        $this->subject = "Role assignment on PaySprint";
         $this->info = "Fund remittance";
 
         $this->message = '<p>Hello ' . $this->name . ', </p><p>You have been assigned a role on PaySprint. Below are your login details;</p><p style="font-weight: bold;">Username: ' . $req->user_id . '</p><p style="font-weight: bold;">Password: ' . $req->firstname . '</p><hr><p>Login Url: <a href="https://paysprint.ca/AdminLogin">https://paysprint.ca/AdminLogin</a></p>';
@@ -6443,6 +6513,7 @@ class AdminController extends Controller
             $this->name = $req->firstname . ' ' . $req->lastname;
             $this->email = $req->email;
             $this->info = "Your PaySprint Referral Account Actiavted";
+            $this->subject = "Your PaySprint Referral Account Actiavted";
 
 
             $this->message = '<p>Hello ' . $this->name . ', </p><p>Thanks for joining our affiliate program. Your Business Referral code is:</p><p style="font-weight: bold;"> ' . $req->ref_code . '</p><p> and must be used by the leads when signing up in order to tag the users to your referral account.</p><p style="font-weight: bold;">Kindly use this link to  track your achievements and Referral commission earned and paid: ' . route('referrals list of users', $req->ref_code) . '</p><p>PaySprint Inc.</p>';
@@ -6493,6 +6564,7 @@ class AdminController extends Controller
         // Send Mail to the support agent
         $this->name = $req->firstname . ' ' . $req->lastname;
         $this->email = $req->email;
+        $this->subject = "Role assignment on PaySprint";
         $this->info = "Fund remittance";
 
         $this->message = '<p>Hello ' . $this->name . ', </p><p>You have been assigned a role on PaySprint. Below are your login details;</p><p style="font-weight: bold;">Username: ' . $req->user_id . '</p><p style="font-weight: bold;">Password: ' . $req->firstname . '</p><hr><p>Login Url: <a href="https://paysprint.ca/AdminLogin">https://paysprint.ca/AdminLogin</a></p>';
@@ -6519,6 +6591,7 @@ class AdminController extends Controller
             $this->name = $req->name;
             $this->email = $req->email;
             $this->info = "Your PaySprint Referral Account Actiavted";
+            $this->subject = "Your PaySprint Referral Account Actiavted";
 
 
             $this->message = '<p>Hello ' . $this->name . ', </p><p>Thanks for joining our affiliate program. Your Business Referral code is:</p><p style="font-weight: bold;"> ' . $req->ref_code . '</p><p> and must be used by the leads when signing up in order to tag the users to your referral account.</p><p style="font-weight: bold;">Kindly use this link to  track your achievements and Referral commission earned and paid: ' . route('referrals list of users', $req->ref_code) . '</p><p>PaySprint Inc.</p>';
@@ -9698,7 +9771,14 @@ class AdminController extends Controller
     public function userBankDetailsByCountry()
     {
 
-        $data = AddBank::orderBy('created_at', 'DESC')->groupBy('country')->get();
+        if(session('role') == 'Aml compliance'){
+            $data = AddBank::where('country', 'Canada')->orWhere('country', 'United States')->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        }
+        else{
+            $data = AddBank::orderBy('created_at', 'DESC')->groupBy('country')->get();
+        }
+
+        
 
         return $data;
     }
@@ -14039,6 +14119,7 @@ class AdminController extends Controller
                 $this->admin = "Admin";
                 $this->info = "Fund remittance";
                 $this->info2 = "Cash withdrawal request";
+                $this->subject = "Cash withdrawal request";
 
                 $this->infomessage = 'A client of PaySprint has requested for a withdrawal of <b>$' . $req->amount . '</b> using the ' . $req->card_method . ' method. <br><br> Details is as stated below: <hr><br> Organization name: ' . $this->name . ' <br> Amount to Withdraw: ' . $req->amount . ' <br> Payment Method: ' . $req->card_method . ' <br><hr>.Thanks';
 
@@ -14321,6 +14402,7 @@ class AdminController extends Controller
                     $this->name = $getClient[0]->client_name;
                     $this->email = $getClient[0]->client_email;
                     $this->info = "Fund remittance";
+                    $this->subject = "Fund successfully processed";
 
                     $this->message = 'The fund withdrawal request has been successfully processed and fund transferred to ' . $getClient[0]->card_method;
 
@@ -14355,6 +14437,7 @@ class AdminController extends Controller
                     $this->name = $getClient[0]->client_name;
                     $this->email = $getClient[0]->client_email;
                     $this->info = "Fund remittance";
+                    $this->subject = "Fund successfully processed";
 
                     $this->message = 'The fund withdrawal request has been successfully processed and fund transferred to ' . $getClient[0]->card_method;
 
@@ -14513,6 +14596,7 @@ class AdminController extends Controller
             $this->email = $receiver[0]->email;
             // $this->email = "bambo@vimfile.com";
             $this->info = "Fund remittance";
+            $this->subject = "You have received a payment on PaySprint";
 
             $this->message = "You have received a payment on PaySprint via send money. <br> Payment made by " . $sender[0]->name . " for the purpose of " . $getTrans[0]->purpose . ". <br><br> Below is the transaction details; <br><br> Amount sent: " . number_format($getTrans[0]->amount_to_send, 2) . " <br><br> Admin Charge: " . $getTrans[0]->commission . " <br><br> Amount received: " . number_format($rem, 2) . " <br><br> Thanks <br> PaySprint Team";
 
@@ -14536,7 +14620,7 @@ class AdminController extends Controller
 
         if ($data->approval == 2 && $data->account_check == 2) {
 
-            $user->where('id', $req->id)->update(['approval' => 0, 'accountLevel' => 0, 'disableAccount' => 'on']);
+            $user->where('id', $req->id)->update(['approval' => 0, 'accountLevel' => 0, 'disableAccount' => 'on', 'plan' => 'basic']);
 
             $subject = 'Account information not approved';
             $message = "This is to inform you that your account information does not match the requirement for review. You will not be able to login or conduct any transaction both on the mobile app and on the web during this period. Kindly attach a copy of your Utility bill and send to compliance@paysprint.ca . We shall inform you when your PaySprint account is available for use. We regret any inconvenience this action might cause you. If you have any concern, please send us a message on : compliance@paysprint.ca";
@@ -14552,7 +14636,22 @@ class AdminController extends Controller
             $resData = ['res' => 'Account information disapproved', 'message' => 'success', 'title' => 'Great'];
         } elseif ($data->approval >= 1 && $data->account_check <= 1) {
 
-            $user->where('id', $req->id)->update(['approval' => 2, 'accountLevel' => 3, 'disableAccount' => 'off', 'account_check' => 2]);
+            $user->where('id', $req->id)->update(['approval' => 2, 'accountLevel' => 3, 'disableAccount' => 'off', 'account_check' => 2, 'plan' => 'classic']);
+
+            if ($data->accountType == 'Individual') {
+                    $subType = 'Consumer Monthly Subscription';
+                } else {
+                    $subType = 'Merchant Monthly Subscription';
+                }
+
+            $getSub = TransactionCost::where('country', $data->country)->where('structure', $subType)->first();
+
+            $expire_date = Carbon::now()->addMonth()->toDateTimeString();
+
+            $amount = $getSub->fixed;
+
+            UpgradePlan::updateOrInsert(['userId' => $data->ref_code], ['userId' => $data->ref_code, 'plan' => 'classic', 'amount' => $amount, 'duration' => "monthly", 'expire_date' => $expire_date]);
+
 
             $subject = 'Account information approved';
 
@@ -14599,7 +14698,7 @@ class AdminController extends Controller
 
             $resData = ['res' => 'Account information approved', 'message' => 'success', 'title' => 'Great'];
         } else {
-            $user->where('id', $req->id)->update(['approval' => 1, 'accountLevel' => 2, 'disableAccount' => 'off']);
+            $user->where('id', $req->id)->update(['approval' => 1, 'accountLevel' => 2, 'disableAccount' => 'off', 'plan' => 'basic']);
 
             $subject = 'Account information approved';
 
@@ -15576,6 +15675,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
         $this->name = $thisuser->business_name;
         $this->email = $thisuser->email;
         $this->info = "Fund remittance";
+        $this->subject = "Account activated for live";
 
         if($req->val == "live"){
             $this->message = '<p>Hello ' . $this->name .'!, </p><p>This is a confirmation that the merchant account has been activated.</p><p>The PaySprint Merchant Account default Subscription Plan is FREE Plan.</p><p>You will need to upgrade the subscription to access other features.</p><p>We welcome you to PaySprint for Merchant</p>';
@@ -15765,6 +15865,14 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
         return $data;
     }
 
+    public function bvnStatusActivity()
+    {
+
+        $data = BVNVerificationList::orderBy('created_at', 'DESC')->take(2000)->get();
+
+        return $data;
+    }
+
 
     public function userSupportActivities()
     {
@@ -15921,7 +16029,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     public function allUsersApprovedPending()
     {
 
-        $data = User::where('account_check', 1)->orderBy('created_at', 'DESC')->get();
+        $data = User::where('account_check', 1)->orderBy('lastUpdated', 'DESC')->get();
 
         return $data;
     }
@@ -16042,7 +16150,9 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
     public function approvedUsersByCountry()
     {
+
         $data = User::where('account_check', 2)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+
 
         return $data;
     }
@@ -16090,7 +16200,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
     public function approvedPendingUsersByCountry()
     {
-        $data = User::where('account_check', 1)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        $data = User::where('account_check', 1)->orderBy('lastUpdated', 'DESC')->groupBy('country')->get();
 
         return $data;
     }
@@ -16161,7 +16271,16 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
     public function closedUsersByCountry()
     {
+
+        if(session('role') == 'Aml compliance'){
+        $data = UserClosed::where('country', 'Canada')->orWhere('country', 'United States')->orderBy('created_at', 'DESC')->groupBy('country')->get();
+
+        }
+        else{
         $data = UserClosed::orderBy('created_at', 'DESC')->groupBy('country')->get();
+
+        }
+
 
         return $data;
     }
@@ -16169,7 +16288,14 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
     public function suspendedUsersByCountry()
     {
+
+        if(session('role') == 'Aml compliance'){
+        $data = User::where('flagged', 1)->where('country', 'Canada')->orWhere('country', 'United States')->orderBy('created_at', 'DESC')->groupBy('country')->get();
+
+        }
+        else{
         $data = User::where('flagged', 1)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        }
 
         return $data;
     }
@@ -16537,7 +16663,8 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
         } elseif ($purpose == 'Fund remittance' || $purpose == 'Your PaySprint Referral Account Actiavted') {
             $objDemo->name = $this->name;
             $objDemo->email = $this->email;
-            $objDemo->subject = $this->info;
+            $objDemo->subject = $this->subject;
+            $objDemo->info = $this->info;
             $objDemo->message = $this->message;
         } elseif ($purpose == 'Refund Request') {
             $objDemo->name = $this->name;

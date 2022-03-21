@@ -19,6 +19,20 @@
 
     <link href="{{ asset('cfx/assets/css/theme.min.css') }}" rel="stylesheet" type="text/css" media="all">
 
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RVX8CC7GDP"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-RVX8CC7GDP');
+    </script>
+
 </head>
 
 <body class="bg-gray-100 project-management-template">

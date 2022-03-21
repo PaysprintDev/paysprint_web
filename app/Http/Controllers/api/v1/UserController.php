@@ -465,10 +465,10 @@ class UserController extends Controller
 
 
             // Check if Account is verified
-            if ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
+            if ($thisuser->account_check < 2) {
                 $data = [];
                 $status = 400;
-                $message = 'Please upload your Utility bill with your current address for verification';
+                $message = 'You account needs to be verified before continuing';
             } else {
 
 
@@ -1102,7 +1102,7 @@ class UserController extends Controller
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-        $query = ClientInfo::select('id', 'user_id as userId', 'business_name as businessName', 'address', 'corporate_type as corporateType', 'industry', 'type_of_service as typeOfService', 'website', 'firstname', 'lastname', 'telephone', 'country', 'state', 'city', 'zip_code as zipCode', 'description')->where('industry', $req->get('industry'))->where('country', $thisuser->country)->orderBy('created_at', 'DESC')->orderBy('business_name', 'ASC')->get();
+        $query = ClientInfo::select('id', 'user_id as userId', 'business_name as businessName', 'address', 'corporate_type as corporateType', 'industry', 'type_of_service as typeOfService', 'website', 'firstname', 'lastname', 'telephone', 'country', 'state', 'city', 'zip_code as zipCode', 'description', 'email as businessEmail')->where('industry', $req->get('industry'))->where('country', $thisuser->country)->orderBy('created_at', 'DESC')->orderBy('business_name', 'ASC')->get();
 
         if (count($query) > 0) {
 
@@ -1306,9 +1306,9 @@ class UserController extends Controller
 
 
 
-            BVNVerificationList::insert(['user_id' => $thisuser->id, 'bvn_number' => $req->bvn, 'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name, 'status' => $response->verificationStatus, 'description' => $response->description]);
+            BVNVerificationList::insert(['user_id' => $thisuser->id, 'bvn_number' => $req->bvn, 'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name, 'status' => $response->transactionStatus, 'description' => $response->description]);
 
-            if ($response->responseCode == "00" && $response->verificationStatus == "VERIFIED") {
+            if ($response->responseCode == "00" && $response->verificationStatus == "VERIFIED" || $response->responseCode == "00" && $response->transactionStatus == "SUCCESSFUL") {
 
                 if ($thisuser->approval == 2 && $thisuser->accountLevel == 3) {
                     User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 3, 'approval' => 2,  'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
@@ -1322,11 +1322,12 @@ class UserController extends Controller
 
 
                 $data = $response->response;
-                $message = $response->description;
+                $message = $response->transactionStatus;
+                // $message = $response->description;
                 $status = 200;
             } else {
                 $data = [];
-                $message = $response->description.". ENSURE YOU PROVIDE FULLNAME AS REGISTERED WITH BANK";
+                $message = $response->description;
                 $status = 400;
             }
 
@@ -1777,7 +1778,7 @@ class UserController extends Controller
         $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/" . $pathWay . "/" . $fileNameToStore;
 
 
-        User::where('id', $id)->update(['' . $rowName . '' => $docPath]);
+        User::where('id', $id)->update(['' . $rowName . '' => $docPath, 'lastUpdated' => date('Y-m-d H:i:s')]);
 
         $this->updatePoints($id, 'Quick Set Up');
     }

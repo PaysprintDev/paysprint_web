@@ -1157,7 +1157,7 @@
                                     }
 
                                     datarec = "<tr><td><img src='" + avatar +
-                                        "' style='width:40px; height:40px; border-radius: 100%;'></td><td>" +
+                                        "' style='width:200px; object-fit: contain; border-radius: 100%;'></td><td>" +
                                         k.name + "</td><td>" + k.address + "</td><td>" + k
                                         .ref_code + "</td><td>" + k.city + "</td><td>" + k
                                         .state + "</td><td>" + k.country + "</td><td>" +
@@ -1242,7 +1242,7 @@
                                     }
 
                                     datarec = "<tr><td><img src='" + avatar +
-                                        "' style='width:40px; height:40px; border-radius: 100%;'></td><td>" +
+                                        "' style='width:200px; object-fit: contain; border-radius: 100%;'></td><td>" +
                                         k.name + "</td><td>" + k.address + "</td><td>" + k
                                         .ref_code + "</td><td>" + k.city + "</td><td>" + k
                                         .state + "</td><td>" + k.country + "</td><td>" +
@@ -1333,7 +1333,7 @@
                                 }
 
                                 datarec = "<tr><td><img src='" + avatar +
-                                    "' style='width:40px; height:40px; border-radius: 100%;'></td><td>" +
+                                    "' style='width:200px; object-fit: contain; border-radius: 100%;'></td><td>" +
                                     k.name + "</td><td>" + k.address + "</td><td>" +
                                     k.ref_code + "</td><td>" + k.city +
                                     "</td><td>" + k.state + "</td><td>" + k
