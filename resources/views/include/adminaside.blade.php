@@ -1,9 +1,7 @@
  @if ($pages == 'AML Dashboard' || session('role') == 'Aml compliance')
 
      @include('include.adminamlaside')
-
  @else
-
      <!-- Left side column. contains the logo and sidebar -->
      <aside class="main-sidebar">
          <!-- sidebar: style can be found in sidebar.less -->
@@ -153,7 +151,7 @@
 
                  @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only' || session('role') == 'Access to Level 1 only')
 
-                     @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only')
+                     @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only' || session('role') == 'Access to Level 1 only')
                          <li class="treeview">
                              <a href="#">
                                  <i class="fa fa-book"></i>
@@ -621,14 +619,7 @@
           </a>
         </li> --}}
                      @endif
-
-
-
                  @elseif(session('role') != 'Super' && session('role') != 'Access to Level 1 only' && session('role') != 'Access to Level 1 and 2 only' && session('role') != 'Customer Marketing')
-
-
-
-
                      <li class="treeview createandSendInvoice" title="Create and Send Invoice">
                          <a href="#">
                              <i class="fa fa-book"></i>

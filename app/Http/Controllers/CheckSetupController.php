@@ -1013,7 +1013,7 @@ class CheckSetupController extends Controller
     {
         // Create Statement And Credit EXBC account holder
         // $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
-        $exbcMerchant = User::where('email', 'lakishabrown053@gmail.com')->first();
+        $exbcMerchant = User::where('email', 'Finance@monrenardbleu.com')->first();
 
         if (isset($exbcMerchant)) {
 
@@ -1022,9 +1022,9 @@ class CheckSetupController extends Controller
             // $transaction_id = "pi_3JhWOuHJCM3bYqU11nuYRlIa";
 
             // $activity = "Added ".$exbcMerchant->currencyCode.''.number_format(20, 2)." to your Wallet to load EXBC Prepaid Card";
-            $activity = "Wallet reversal of " . $exbcMerchant->currencyCode . '' . number_format(493.80, 2) . " has been returned to your Bank Account";
+            $activity = "Wallet charge of " . $exbcMerchant->currencyCode . '' . number_format(14.67, 2) . " has been deducted from your wallet. Reason: ADDED MONEY PROCESSING ERROR";
             $credit = 0;
-            $debit = 493.80;
+            $debit = 14.67;
             $reference_code = $transaction_id;
             $balance = 0;
             $trans_date = date('Y-m-d');
@@ -1033,9 +1033,9 @@ class CheckSetupController extends Controller
             $regards = $exbcMerchant->ref_code;
             $statement_route = "wallet";
 
-            $merchantwalletBal = $exbcMerchant->wallet_balance - 493.80;
+            $merchantwalletBal = $exbcMerchant->wallet_balance - 14.67;
 
-            User::where('email', 'lakishabrown053@gmail.com')->update([
+            User::where('email', 'Finance@monrenardbleu.com')->update([
                 'wallet_balance' => $merchantwalletBal
             ]);
 
@@ -1044,11 +1044,11 @@ class CheckSetupController extends Controller
             // Senders statement
             $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
 
-            $this->getfeeTransaction($reference_code, $exbcMerchant->ref_code, 493.80, 0.00, 493.80);
+            $this->getfeeTransaction($reference_code, $exbcMerchant->ref_code, 14.67, 0.00, 14.67);
 
             // $sendMerchantMsg = "Hi ".$exbcMerchant->name.", ".$exbcMerchant->currencyCode." 20.00 was added to your wallet to load EXBC Prepaid Card. Your new wallet balance is ".$exbcMerchant->currencyCode.' '.number_format($merchantwalletBal, 2).". Thanks.";
 
-            $sendMerchantMsg = 'Wallet reversal of ' . $exbcMerchant->currencyCode . ' ' . number_format(493.80, 2) . ' (Gross Amount of ' . $exbcMerchant->currencyCode . ' ' . number_format(493.80, 2) . ' less transaction fee ' . $exbcMerchant->currencyCode . ' ' . number_format(0.00, 2) . ') has been returned to your Bank Account. You now have ' . $exbcMerchant->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your PaySprint Wallet.';
+            $sendMerchantMsg = 'Wallet reversal of ' . $exbcMerchant->currencyCode . ' ' . number_format(14.67, 2) . ' (Gross Amount of ' . $exbcMerchant->currencyCode . ' ' . number_format(14.67, 2) . ' less transaction fee ' . $exbcMerchant->currencyCode . ' ' . number_format(0.00, 2) . ') has been deducted from your wallet. Reason: ADDED MONEY PROCESSING ERROR. You now have ' . $exbcMerchant->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your PaySprint Wallet.';
 
             $this->createNotification($exbcMerchant->ref_code, $sendMerchantMsg);
 
@@ -1057,7 +1057,7 @@ class CheckSetupController extends Controller
             $gateway = ucfirst($getGateway->gateway);
 
 
-            $message = 'Wallet reversal of ' . $exbcMerchant->currencyCode . ' ' . number_format(493.80, 2) . ' has been returned to your Bank Account';
+            $message = 'Wallet charge of ' . $exbcMerchant->currencyCode . ' ' . number_format(14.67, 2) . ' has been deducted from your wallet. Reason: ADDED MONEY PROCESSING ERROR';
 
             $this->keepRecord($reference_code, $message, "Success", $gateway, $exbcMerchant->country);
 

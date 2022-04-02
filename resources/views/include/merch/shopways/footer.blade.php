@@ -21,7 +21,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="f-c f-payment">
+                    <li class="f-c f-payment disp-0">
                         <a href="javascript:void(0)"><img src="{{ asset('shopassets/image/payment.png') }}"
                                 class="img-fluid" alt="payment image"></a>
                     </li>

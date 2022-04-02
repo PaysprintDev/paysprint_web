@@ -228,14 +228,45 @@
                                                                     class="p-text">{{ $product->stock . ' in stock' }}</span>
                                                             </div>
                                                             <div class="pro-icn">
-                                                                <a href="#" class="w-c-q-icn"><i
-                                                                        class="fa fa-heart"></i></a>
-                                                                <a href="#" class="w-c-q-icn"><i
-                                                                        class="fa fa-shopping-bag"></i></a>
-                                                                <a href="javascript:void(0)" class="w-c-q-icn"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#productModal{{ $product->id }}"><i
-                                                                        class="fa fa-eye"></i></a>
+
+
+                                                                @guest
+                                                                    <a href="javascript:void(0)" class="w-c-q-icn"
+                                                                        onclick="addWishlist('{{ $product->id }}', 0)"><i
+                                                                            class="fa fa-heart"></i></a>
+                                                                    <a href="javascript:void(0)"
+                                                                        onclick="addCart('{{ $product->id }}', 0)"
+                                                                        class="w-c-q-icn"><i
+                                                                            class="fa fa-shopping-bag"></i></a>
+                                                                    <a href="javascript:void(0)" class="w-c-q-icn"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#productModal{{ $product->id }}"><i
+                                                                            class="fa fa-eye"></i></a>
+
+                                                                @endguest
+
+
+                                                                @auth
+                                                                    <a href="javascript:void(0)"
+                                                                        class="w-c-q-icn wishes{{ $product->id }}"
+                                                                        onclick="addWishlist('{{ $product->id }}', {{ Auth::id() }})"><i
+                                                                            class="fa fa-heart"></i></a>
+                                                                    <a href="javascript:void(0)"
+                                                                        onclick="addCart('{{ $product->id }}', {{ Auth::id() }})"
+                                                                        class="w-c-q-icn carty{{ $product->id }}"><i
+                                                                            class="fa fa-shopping-bag "></i></a>
+                                                                    <a href="javascript:void(0)" class="w-c-q-icn"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#productModal{{ $product->id }}"><i
+                                                                            class="fa fa-eye"></i></a>
+
+                                                                    <div class="spinner-grow text-warning disp-0 modalspinner{{ $product->id }}"
+                                                                        role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                    </div>
+                                                                @endauth
+
+
                                                             </div>
                                                         </div>
                                                         <div class="tab-caption">
@@ -774,6 +805,8 @@
     <!-- featured products end -->
 
 
+
+
     <!-- quick veiw start -->
     <section class="quick-view">
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -975,12 +1008,42 @@
                                     <div class="plus-minus">
                                         <span>
                                             <a href="javascript:void(0)" class="minus-btn text-black">-</a>
-                                            <input type="text" name="name" value="1" min="1"
+                                            <input type="text" name="quantity"
+                                                id="quantity{{ $data['myproduct'][$i]->id }}" value="1" min="1"
                                                 max="{{ $data['myproduct'][$i]->stock }}">
+
+
                                             <a href="javascript:void(0)" class="plus-btn text-black">+</a>
                                         </span>
-                                        <a href="#" class="quick-cart"><i class="fa fa-shopping-bag"></i></a>
-                                        <a href="#" class="quick-wishlist"><i class="fa fa-heart"></i></a>
+
+
+                                        @auth
+                                            <a href="javascript:void(0)"
+                                                onclick="addCart('{{ $data['myproduct'][$i]->id }}', {{ Auth::id() }})"
+                                                class="quick-cart carty{{ $data['myproduct'][$i]->id }}"><i
+                                                    class="fa fa-shopping-bag"></i></a>
+                                            <a href="javascript:void(0)"
+                                                onclick="addWishlist('{{ $data['myproduct'][$i]->id }}', {{ Auth::id() }})"
+                                                class="quick-wishlist wishes{{ $data['myproduct'][$i]->id }}"><i
+                                                    class="fa fa-heart"></i></a>
+
+                                            <div class="spinner-grow text-warning disp-0 modalspinner{{ $data['myproduct'][$i]->id }}"
+                                                role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                        @endauth
+
+
+                                        @guest
+                                            <a href="javascript:void(0)"
+                                                onclick="addCart('{{ $data['myproduct'][$i]->id }}', 0)"
+                                                class="quick-cart"><i class="fa fa-shopping-bag"></i></a>
+                                            <a href="javascript:void(0)"
+                                                onclick="addWishlist('{{ $data['myproduct'][$i]->id }}', 0)"
+                                                class="quick-wishlist"><i class="fa fa-heart"></i></a>
+                                        @endguest
+
+
                                     </div>
                                 </div>
                             </div>

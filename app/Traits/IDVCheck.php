@@ -195,6 +195,9 @@ trait IDVCheck
         elseif ($data == "Level 3") {
             $message = "<p>Kindly upload your business document in your profile for verification.</p><br><p>Thank you for choosing us.</p>";
         }
+        else{
+            $message = "<p>Your PaySprint wallet has been prepared and ready for use.</p><p>However, you can only <strong>RECEIVE</strong> funds to your wallet until you have completed the required identity verification process that would enable you <em>'to Add Money/Top Up Wallet' and 'Send Money from Wallet'</em></p><br><p>To Complete the identity verification processes, kindly follow these steps:</p><p>a. Login to your PaySprint Account on your mobile app or at: www.paysprint.ca</p><p>b. Go to Profile section and upload the following:</p><p>1. Selfie of yourself</p><p>2. Utility Bill ( Electricity, Hydro etc. Note that Bank or Credit Card Statements are not accepted)</p><br><p>Thank you for choosing us.</p>";
+        }
 
 
         $this->nameuser = $name;
