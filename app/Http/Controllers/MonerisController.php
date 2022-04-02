@@ -68,6 +68,7 @@ use App\SpecialInformation as SpecialInformation;
 
 use App\CrossBorderBeneficiary as CrossBorderBeneficiary;
 
+use App\SupportActivity as SupportActivity;
 
 use App\CcWithdrawal as CcWithdrawal;
 
@@ -128,13 +129,15 @@ use App\Traits\ElavonPayment;
 use App\Traits\Xwireless;
 use App\Traits\PaysprintPoint;
 use App\Traits\IDVCheck;
+use App\Traits\SpecialInfo;
+use App\Traits\AccountNotify;
 
 use Throwable;
 
 class MonerisController extends Controller
 {
 
-    use PaymentGateway, PaystackPayment, ExpressPayment, ElavonPayment, Xwireless, PaysprintPoint, IDVCheck;
+    use PaymentGateway, PaystackPayment, ExpressPayment, ElavonPayment, Xwireless, PaysprintPoint, IDVCheck, SpecialInfo, AccountNotify;
 
     public $to;
     public $name;
@@ -312,7 +315,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $trans_date = date('Y-m-d');
                         $statement_route = "invoice";
 
-                        $this->insStatement($req->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country);
+                        $this->insStatement($req->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country, 0);
 
 
 
@@ -326,7 +329,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $this->createNotification($thisuser->ref_code, "Payment successfully made for " . $req->service . " to " . $client->business_name);
 
                         $monerisactivity = "Payment successfully made for " . $req->service . " to " . $client->business_name . " by " . $thisuser->name;
-                        $this->keepRecord($mpgResponse->responseData['ReceiptId'], $mpgResponse->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
+                        $this->keepRecord($mpgResponse->responseData['ReceiptId'], $mpgResponse->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, 0);
                     } else {
                         $resData = ['res' => 'Something went wrong', 'message' => 'info', 'title' => 'Oops!'];
 
@@ -352,7 +355,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
             $action = 'error';
 
             $monerisactivity = "Payment error for " . $req->service . " to " . $client->business_name . " by " . $thisuser->name;
-            $this->keepRecord("", $mpgResponse->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
+            $this->keepRecord("", $mpgResponse->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, 0);
         }
 
         // return $this->returnJSON($resData, 200);
@@ -554,18 +557,18 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                                             // My Statement
-                                            // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country); 
+                                            // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country, 0); 
 
                                             $this->name = $thisuser->name;
                                             $this->email = $thisuser->email;
                                             // $this->email = "bambo@vimfile.com";
                                             $this->subject = "Your Invoice # [" . $req->invoice_no . "] of " . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' from ' . $thismerchant->businessname . ' ' . number_format($req->amount, 2) . " is Paid";
 
-                                            $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is <strong>' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '</strong>. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
+                                            $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is <strong>' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '</strong>. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
 
                                             $this->sendEmail($this->email, "Fund remittance");
 
-                                            $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
+                                            $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
 
                                             $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -603,7 +606,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                             $statement_route = "wallet";
 
                                             // Senders statement
-                                            // $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thismerchant->country);
+                                            // $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thismerchant->country, 0);
 
 
                                             $this->name = $thismerchant->name;
@@ -611,11 +614,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                             // $this->email = "bambo@vimfile.com";
                                             $this->subject = $thisuser->name . " has paid Invoice: [" . $req->invoice_no . "]";
 
-                                            $this->message = '<p>You have received <strong>' . $req->currencyCode . '' . number_format($req->amount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>, invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '.</p> <p>You now have <strong>' . $req->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
+                                            $this->message = '<p>You have received <strong>' . $req->currencyCode . '' . number_format($req->amount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>, invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '.</p> <p>You have <strong>' . $req->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
 
                                             $this->sendEmail($this->email, "Fund remittance");
 
-                                            $recMesg = 'You have received ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . ', invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
+                                            $recMesg = 'You have received ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . ', invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You have ' . $req->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
 
                                             $userPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -1035,7 +1038,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                                                                 // Senders statement
-                                                                // $this->insStatement($thisuser->email, $reference_code, $activity, $debit, $credit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                                                                // $this->insStatement($thisuser->email, $reference_code, $activity, $debit, $credit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
 
 
@@ -1057,11 +1060,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 // $this->email = "bambo@vimfile.com";
                                                                 $this->subject = "Your Invoice # [" . $req->invoice_no . "] of " . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' from ' . $thismerchant->businessname .  " is Paid";
 
-                                                                $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
+                                                                $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
 
                                                                 $this->sendEmail($this->email, "Fund remittance");
 
-                                                                $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
+                                                                $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. You have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
 
                                                                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -1098,7 +1101,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 $statement_route = "wallet";
 
                                                                 // Senders statement
-                                                                $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thismerchant->country);
+                                                                $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thismerchant->country, 0);
 
 
                                                                 $this->name = $thismerchant->name;
@@ -1106,11 +1109,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 // $this->email = "bambo@vimfile.com";
                                                                 $this->subject = $thisuser->name . " has paid Invoice: [" . $req->invoice_no . "]";
 
-                                                                $this->message = '<p>You have received <strong>' . $thismerchant->currencyCode . '' . number_format($paidinvoiceamount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>.</p> <p>You now have <strong>' . $thismerchant->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
+                                                                $this->message = '<p>You have received <strong>' . $thismerchant->currencyCode . '' . number_format($paidinvoiceamount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>.</p> <p>You have <strong>' . $thismerchant->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
 
                                                                 $this->sendEmail($this->email, "Fund remittance");
 
-                                                                $recMesg = 'You have received ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . '. You now have ' . $thismerchant->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
+                                                                $recMesg = 'You have received ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . '. You have ' . $thismerchant->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
 
                                                                 $userPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -1291,11 +1294,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 // $this->email = "bambo@vimfile.com";
                                                                 $this->subject = "Your Invoice # [" . $req->invoice_no . "] of " . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' from ' . $thismerchant->businessname . ' ' . number_format($req->amount, 2) . " is Paid";
 
-                                                                $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
+                                                                $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
 
                                                                 $this->sendEmail($this->email, "Fund remittance");
 
-                                                                $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
+                                                                $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. You have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
 
                                                                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -1332,7 +1335,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 $statement_route = "wallet";
 
                                                                 // Senders statement
-                                                                $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thismerchant->country);
+                                                                $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thismerchant->country, 0);
 
 
                                                                 $this->name = $thismerchant->name;
@@ -1340,11 +1343,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 // $this->email = "bambo@vimfile.com";
                                                                 $this->subject = $thisuser->name . " has paid Invoice: [" . $req->invoice_no . "]";
 
-                                                                $this->message = '<p>You have received <strong>' . $req->currencyCode . '' . number_format($req->amount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>.</p> <p>You now have <strong>' . $req->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
+                                                                $this->message = '<p>You have received <strong>' . $req->currencyCode . '' . number_format($req->amount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>.</p> <p>You have <strong>' . $req->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
 
                                                                 $this->sendEmail($this->email, "Fund remittance");
 
-                                                                $recMesg = 'You have received ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
+                                                                $recMesg = 'You have received ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . '. You have ' . $req->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
 
                                                                 $userPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -1677,7 +1680,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                                                                 // My Statement
-                                                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country);
+                                                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country, 0);
 
 
                                                                 $remainingBalance = ($thisuser->wallet_balance - $minBal);
@@ -1698,11 +1701,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 // $this->email = "bambo@vimfile.com";
                                                                 $this->subject = "Your Invoice # [" . $req->invoice_no . "] of " . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' from ' . $thismerchant->businessname .  " is Paid";
 
-                                                                $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
+                                                                $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
 
                                                                 $this->sendEmail($this->email, "Fund remittance");
 
-                                                                $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
+                                                                $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. You have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
 
                                                                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -1739,7 +1742,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 $statement_route = "wallet";
 
                                                                 // Senders statement
-                                                                $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thismerchant->country);
+                                                                $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thismerchant->country, 0);
 
 
                                                                 $this->name = $thismerchant->name;
@@ -1747,11 +1750,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 // $this->email = "bambo@vimfile.com";
                                                                 $this->subject = $thisuser->name . " has paid Invoice: [" . $req->invoice_no . "]";
 
-                                                                $this->message = '<p>You have received <strong>' . $thismerchant->currencyCode . '' . number_format($paidinvoiceamount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>.</p> <p>You now have <strong>' . $thismerchant->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
+                                                                $this->message = '<p>You have received <strong>' . $thismerchant->currencyCode . '' . number_format($paidinvoiceamount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>.</p> <p>You have <strong>' . $thismerchant->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
 
                                                                 $this->sendEmail($this->email, "Fund remittance");
 
-                                                                $recMesg = 'You have received ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . '. You now have ' . $thismerchant->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
+                                                                $recMesg = 'You have received ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . '. You have ' . $thismerchant->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
 
                                                                 $userPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -1906,7 +1909,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                                                                 // My Statement
-                                                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country);
+                                                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country, 0);
 
 
                                                                 $remainingBalance = ($thisuser->wallet_balance - $minBal);
@@ -1930,11 +1933,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 // $this->email = "bambo@vimfile.com";
                                                                 $this->subject = "Your Invoice # [" . $req->invoice_no . "] of " . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' from ' . $thismerchant->businessname . ' ' . number_format($req->amount, 2) . " is Paid";
 
-                                                                $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
+                                                                $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
 
                                                                 $this->sendEmail($this->email, "Fund remittance");
 
-                                                                $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
+                                                                $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. You have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
 
                                                                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -1971,7 +1974,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 $statement_route = "wallet";
 
                                                                 // Senders statement
-                                                                $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thismerchant->country);
+                                                                $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thismerchant->country, 0);
 
 
                                                                 $this->name = $thismerchant->name;
@@ -1979,11 +1982,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 // $this->email = "bambo@vimfile.com";
                                                                 $this->subject = $thisuser->name . " has paid Invoice: [" . $req->invoice_no . "]";
 
-                                                                $this->message = '<p>You have received <strong>' . $req->currencyCode . '' . number_format($req->amount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>.</p> <p>You now have <strong>' . $req->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
+                                                                $this->message = '<p>You have received <strong>' . $req->currencyCode . '' . number_format($req->amount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>.</p> <p>You have <strong>' . $req->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
 
                                                                 $this->sendEmail($this->email, "Fund remittance");
 
-                                                                $recMesg = 'You have received ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
+                                                                $recMesg = 'You have received ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . '. You have ' . $req->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
 
                                                                 $userPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -2274,18 +2277,18 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                                             // My Statement
-                                            // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country); 
+                                            // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country, 0); 
 
                                             $this->name = $thisuser->name;
                                             $this->email = $thisuser->email;
                                             // $this->email = "bambo@vimfile.com";
                                             $this->subject = "Your Invoice # [" . $req->invoice_no . "] of " . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' from ' . $thismerchant->businessname . ' ' . number_format($req->amount, 2) . " is Paid";
 
-                                            $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is <strong>' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '</strong>. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
+                                            $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is <strong>' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '</strong>. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
 
                                             $this->sendEmail($this->email, "Fund remittance");
 
-                                            $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
+                                            $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $thismerchant->name . ' for ' . $purpose . '. Your balance on Invoice # [' . $req->invoice_no . '] is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
 
                                             $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -2323,7 +2326,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                             $statement_route = "wallet";
 
                                             // Senders statement
-                                            // $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thismerchant->country);
+                                            // $this->insStatement($thismerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thismerchant->country, 0);
 
 
                                             $this->name = $thismerchant->name;
@@ -2331,11 +2334,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                             // $this->email = "bambo@vimfile.com";
                                             $this->subject = $thisuser->name . " has paid Invoice: [" . $req->invoice_no . "]";
 
-                                            $this->message = '<p>You have received <strong>' . $req->currencyCode . '' . number_format($req->amount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>, invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '.</p> <p>You now have <strong>' . $req->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
+                                            $this->message = '<p>You have received <strong>' . $req->currencyCode . '' . number_format($req->amount, 2) . '</strong> for <b>INVOICE # [' . $req->invoice_no . ']</b> paid by <b>' . $thisuser->name . '</b>, invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '.</p> <p>You have <strong>' . $req->currencyCode . '' . number_format($merchantwalletBalance, 2) . '</strong> in your wallet account with PaySprint</p><p>Thanks PaySprint Team.</p>';
 
                                             $this->sendEmail($this->email, "Fund remittance");
 
-                                            $recMesg = 'You have received ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . ', invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
+                                            $recMesg = 'You have received ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $thisuser->name . ', invoice balance left is ' . $req->currencyCode . ' ' . number_format($newAmount, 2) . '. You have ' . $req->currencyCode . ' ' . number_format($merchantwalletBalance, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
 
                                             $userPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -2589,7 +2592,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                                                 // Senders statement
-                                                $this->insStatement($thisuser->email, $reference_code, $activity, $debit, $credit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                                                $this->insStatement($thisuser->email, $reference_code, $activity, $debit, $credit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
 
 
@@ -2605,11 +2608,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                 $this->email = $thisuser->email;
                                                 $this->subject = "Your Invoice # [" . $invoice_no . "] of " . $wallet->currencyCode . ' ' . number_format($req->amount, 2) . ' for ' . $purpose .  " is Paid";
 
-                                                $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $wallet->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> for ' . $purpose . '. The Direct deposit into receivers Bank account would be done within the next 72 hours. You now have <strong>' . $wallet->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint FX Wallet account.</p><p>Thanks PaySprint Team.</p>';
+                                                $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $wallet->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> for ' . $purpose . '. The Direct deposit into receivers Bank account would be done within the next 72 hours. You have <strong>' . $wallet->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint FX Wallet account.</p><p>Thanks PaySprint Team.</p>';
 
                                                 $this->sendEmail($this->email, "Fund remittance");
 
-                                                $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $wallet->currencyCode . ' ' . number_format($req->amount, 2) . ' for ' . $purpose . '. The Direct deposit into receivers Bank account would be done within the next 72 hours. You now have ' . $wallet->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint FX Wallet account. Thanks PaySprint Team.';
+                                                $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $wallet->currencyCode . ' ' . number_format($req->amount, 2) . ' for ' . $purpose . '. The Direct deposit into receivers Bank account would be done within the next 72 hours. You have ' . $wallet->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint FX Wallet account. Thanks PaySprint Team.';
 
                                                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -2720,7 +2723,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                                                     // My Statement
-                                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country);
+                                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country, 0);
 
 
                                                     $remainingBalance = $thisuser->wallet_balance;
@@ -2735,11 +2738,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     $this->email = $thisuser->email;
                                                     $this->subject = "Your Invoice # [" . $invoice_no . "] of " . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . ' for ' . $purpose .  " is Paid";
 
-                                                    $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> for ' . $purpose . '. The Direct deposit into receivers Bank account would be done within the next 72 hours. You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
+                                                    $this->message = '<p>Hi ' . $thisuser->name . ' You have successfully paid invoice of <strong>' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> for ' . $purpose . '. The Direct deposit into receivers Bank account would be done within the next 72 hours. You have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
 
                                                     $this->sendEmail($this->email, "Fund remittance");
 
-                                                    $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . ' for ' . $purpose . '. The Direct deposit into receivers Bank account would be done within the next 72 hours. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
+                                                    $sendMsg = 'Hi ' . $thisuser->name . ' You have successfully paid invoice of ' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . ' for ' . $purpose . '. The Direct deposit into receivers Bank account would be done within the next 72 hours. You have ' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . ' in PaySprint Wallet account. Thanks PaySprint Team.';
 
                                                     $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -2889,7 +2892,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                     // Generate Statement
 
-                    $activity = 'You have received ' . $thisuser->currencyCode . ' ' . number_format($merchantpay, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $req->name . '. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
+                    $activity = 'You have received ' . $thisuser->currencyCode . ' ' . number_format($merchantpay, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $req->name . '. You have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
                     $credit = $merchantpay;
                     $debit = 0;
                     $reference_code = $req->paymentToken;
@@ -2901,7 +2904,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     $statement_route = "wallet";
 
                     // Senders statement
-                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
                     $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amountinvoiced);
 
@@ -2916,7 +2919,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
 
-                    $sendMsg = 'Invoice amount of ' . $thisuser->currencyCode . ' ' . number_format($merchantpay, 2) . ' has been sent to your wallet with PaySprint from ' . $req->name . '. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                    $sendMsg = 'Invoice amount of ' . $thisuser->currencyCode . ' ' . number_format($merchantpay, 2) . ' has been sent to your wallet with PaySprint from ' . $req->name . '. You have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
                     $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -2998,7 +3001,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                         // Generate Statement
 
-                        $activity = 'You have received ' . $thisuser->currencyCode . ' ' . number_format($merchantpay, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $req->name . '. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
+                        $activity = 'You have received ' . $thisuser->currencyCode . ' ' . number_format($merchantpay, 2) . ' for INVOICE # [' . $req->invoice_no . '] paid by ' . $req->name . '. You have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' in your wallet account with PaySprint. Thanks PaySprint Team.';
                         $credit = $merchantpay;
                         $debit = 0;
                         $reference_code = $response->responseData['ReceiptId'];
@@ -3023,7 +3026,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $regards,
                             1,
                             $statement_route,
-                            $thisuser->country
+                            $thisuser->country, 0
                         );
 
                         $this->getfeeTransaction($reference_code, $thisuser->ref_code, $merchantpay, "0.00", $req->amountinvoiced);
@@ -3037,7 +3040,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                         $this->message = '<p>Invoice amount of <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> has been sent to ' . $thisuser->businessname . '. Your debit card was charged <strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> successfully.</p><p>Thank you for choosing PaySprint.</p>';
 
-                        $sendMsg = 'Invoice amount of ' . $thisuser->currencyCode . ' ' . number_format($merchantpay, 2) . ' has been paid to your wallet with PaySprint. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                        $sendMsg = 'Invoice amount of ' . $thisuser->currencyCode . ' ' . number_format($merchantpay, 2) . ' has been paid to your wallet with PaySprint. You have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
                         $userPhone = User::where('email', $thisuser->email)->where(
                             'telephone',
@@ -3142,8 +3145,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                         // Update Wallet Balance
-                        $walletBal = $thisuser->wallet_balance + $req->amount;
-                        User::where('ref_code', $req->ref_code)->update(['wallet_balance' => $walletBal]);
+                        $walletBal = $thisuser->wallet_balance;
+                        $holdBal = $thisuser->hold_balance + $req->amount;
+                        User::where('ref_code', $req->ref_code)->update(['wallet_balance' => $walletBal, 'hold_balance' => $holdBal]);
 
                         $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('ref_code', $req->ref_code)->first();
 
@@ -3159,7 +3163,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $statement_route = "wallet";
 
                         // Senders statement
-                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
                         $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
@@ -3170,9 +3174,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $this->email = $thisuser->email;
                         $this->subject = $req->currencyCode . ' ' . number_format($req->amount, 2) . " now added to your wallet with PaySprint";
 
-                        $this->message = '<p><strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> has been added to your wallet with PaySprint. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                        $this->message = '<p><strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> has been added to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                        $sendMsg = $req->currencyCode . ' ' . number_format($req->amount, 2) . ' has been added to your wallet with PaySprint. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                        $sendMsg = $req->currencyCode . ' ' . number_format($req->amount, 2) . ' has been added to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
                         $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -3201,7 +3205,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                         $this->createNotification($thisuser->ref_code, $sendMsg);
 
-                        $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country);
+                        $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country, 1);
 
                         $this->updatePoints($thisuser->id, 'Add money');
 
@@ -3210,6 +3214,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                         $this->sendEmail($this->email, "Fund remittance");
+
+                        $adminMessage = "<p>Transaction ID: ".$reference_code."</p><p>Name: ".$thisuser->name."</p><p>Account Number: ".$thisuser->ref_code."</p><p>Country: ".$thisuser->country."</p><p>Date: ".date('d/m/Y h:i:a')."</p><p>Amount: ".$req->currencyCode . ' ' . number_format($req->amount, 2)."</p><p>Status: Successful</p>";
+
+                        $this->notifyAdmin($gateway." inflow", $adminMessage);
+                        
                         }   
                         else{
                             $data = false;
@@ -3264,8 +3273,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                         // Update Wallet Balance
-                        $walletBal = $thisuser->wallet_balance + $req->amount;
-                        User::where('ref_code', $req->merchant_id)->update(['wallet_balance' => $walletBal]);
+                        $walletBal = $thisuser->wallet_balance;
+                        $holdBal = $thisuser->hold_balance + $req->amount;
+                        User::where('ref_code', $req->merchant_id)->update(['wallet_balance' => $walletBal, 'hold_balance' => $holdBal]);
 
                         $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('ref_code', $req->merchant_id)->first();
 
@@ -3281,7 +3291,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $statement_route = "wallet";
 
                         // Senders statement
-                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 1);
 
                         $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, "0.00", $req->amount);
 
@@ -3292,9 +3302,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $this->email = $thisuser->email;
                         $this->subject = $req->currencyCode . ' ' . number_format($req->amount, 2) . " now added to your wallet with PaySprint";
 
-                         $this->message = '<p><strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> added to your wallet with PaySprint from '.$req->fullname.'. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                         $this->message = '<p><strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> added to your wallet with PaySprint from '.$req->fullname.'. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                        $sendMsg = $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your wallet with PaySprint from '.$req->fullname.'. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                        $sendMsg = $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your wallet with PaySprint from '.$req->fullname.'. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
                         $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -3322,7 +3332,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                         $this->createNotification($thisuser->ref_code, $sendMsg);
 
-                        $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country);
+                        $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country, 1);
 
                         $this->updatePoints($thisuser->id, 'Add money');
 
@@ -3347,8 +3357,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $cardNo = str_repeat("*", strlen($req->creditcard_no) - 4) . substr($req->creditcard_no, -4);
 
                                 // Update Wallet Balance
-                                $walletBal = $thisuser->wallet_balance + $req->amount;
-                                User::where('ref_code', $req->merchant_id)->update(['wallet_balance' => $walletBal]);
+                                $walletBal = $thisuser->wallet_balance;
+                                $holdBal = $thisuser->hold_balance + $req->amount;
+                                User::where('ref_code', $req->merchant_id)->update(['wallet_balance' => $walletBal, 'hold_balance' => $holdBal]);
 
                                 $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('ref_code', $req->merchant_id)->first();
 
@@ -3364,7 +3375,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $statement_route = "wallet";
 
                                 // Senders statement
-                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 1);
 
                                 $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, "0.00", $req->amount);
 
@@ -3376,9 +3387,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $this->email = $thisuser->email;
                                 $this->subject = $req->currencyCode . ' ' . number_format($req->amount, 2) . " now added to your wallet with PaySprint";
 
-                                $this->message = '<p><strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> added to your wallet with PaySprint from '.$req->fullname.'. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                                $this->message = '<p><strong>' . $req->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> added to your wallet with PaySprint from '.$req->fullname.'. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                                $sendMsg = $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your wallet with PaySprint from '.$req->fullname.'. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                $sendMsg = $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your wallet with PaySprint from '.$req->fullname.'. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
                                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -3414,7 +3425,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                 $monerisactivity = $thisuser->name . ' ' . $sendMsg;
-                                $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
+                                $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, 1);
                             } else {
                                 $data = [];
                                 $message = $response->responseData['Message'] . " If the error persists, kindly login on the web app at https://paysprint.ca to continue your transactions.";
@@ -3425,7 +3436,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $this->slack('Oops!, ' . $thisuser->name . ' ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                 $monerisactivity = $thisuser->name . ' ' . $message;
-                                $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
+                                $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, 0);
                             }
                     }
 
@@ -3479,7 +3490,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 $statement_route = "Others";
 
                 // Senders statement
-                $this->insStatement($merchantInfo->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $merchantInfo->country);
+                $this->insStatement($merchantInfo->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $merchantInfo->country, 0);
 
 
                 $this->createNotification($merchantInfo->ref_code, $activity);
@@ -3532,7 +3543,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 $statement_route = "Others";
 
                 // Senders statement
-                $this->insStatement($merchantInfo->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $merchantInfo->country);
+                $this->insStatement($merchantInfo->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $merchantInfo->country, 0);
 
 
                 $this->createNotification($merchantInfo->ref_code, $activity);
@@ -3614,7 +3625,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                 $this->slack($thisuser->name . " wants to add " . $req->currencyCode . " " . $req->amount . " to their wallet. This is a test environment nothing happens to your money", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
-                $monerisDeductamount = $req->conversionamount;
+                // $monerisDeductamount = $req->conversionamount;
+                $monerisDeductamount = $req->amount;
                 // $monerisDeductamount = $this->currencyConvert($req->currencyCode, $req->amount);
 
                 $getGateway = AllCountries::where('name', $thisuser->country)->first();
@@ -3635,8 +3647,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                     // Update Wallet Balance
-                    $walletBal = $thisuser->wallet_balance + $req->amounttosend;
-                    // User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal]);
+                    $walletBal = $thisuser->wallet_balance;
+                    $holdBal = $thisuser->hold_balance + $req->amounttosend;
+                    // User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal, 'hold_balance' => $holdBal]);
 
                     $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
@@ -3652,7 +3665,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     $statement_route = "wallet";
 
                     // Senders statement
-                    // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                    // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 1);
 
                     // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
@@ -3665,12 +3678,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     $this->email = $thisuser->email;
                     $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " now added to your wallet with PaySprint";
 
+                    $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-
-
-                    $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
-
-                    $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                    $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint.  Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
                     $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -3716,11 +3726,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $statement_route = "wallet";
 
                         // Senders statement
-                        // $this->insStatement($thisuser->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                        // $this->insStatement($thisuser->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
                         // $this->getfeeTransaction($reference_number, $thisuser->ref_code, 15, 0, 15);
 
-                        $sendMsg = $activity . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' balance in your account';
+                        $sendMsg = $activity . '. You have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' balance in your account';
 
                         $userPhone = User::where('email', $getUser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -3749,6 +3759,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     $this->createNotification($thisuser->ref_code, $sendMsg);
 
                     $this->updatePoints($thisuser->id, 'Add money');
+
+                    
 
                     // $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country);
 
@@ -4011,8 +4023,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $cardNo = str_repeat("*", strlen($cardDetails->card_number) - 4) . substr($cardDetails->card_number, -4);
 
                                 // Update Wallet Balance
-                                $walletBal = $thisuser->wallet_balance + $req->amounttosend;
-                                // User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal]);
+                                $walletBal = $thisuser->wallet_balance;
+                                $holdBal = $thisuser->hold_balance + $req->amounttosend;
+                                // User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal, 'hold_balance' => $holdBal]);
 
                                 $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
@@ -4028,7 +4041,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $statement_route = "wallet";
 
                                 // Senders statement
-                                // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                                // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 1);
 
                                 // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
@@ -4042,9 +4055,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $this->email = $thisuser->email;
                                 $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " now added to your wallet with PaySprint";
 
-                                $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                                $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                                $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
                                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -4079,7 +4092,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg . ". This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                 $monerisactivity = $thisuser->name . ' ' . $sendMsg;
-                                $this->keepRecord($reference_code, $responseCode, $monerisactivity, $gateway, $thisuser->country);
+                                $this->keepRecord($reference_code, $responseCode, $monerisactivity, $gateway, $thisuser->country, 1);
                             } else {
                                 $data = [];
                                 $message = $responseCode;
@@ -4110,7 +4123,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $cardNo = str_repeat("*", strlen($cardDetails->card_number) - 4) . substr($cardDetails->card_number, -4);
 
                                 // Update Wallet Balance
-                                $walletBal = $thisuser->wallet_balance + $req->amounttosend;
+                                $walletBal = $thisuser->wallet_balance;
+                                $holdBal = $thisuser->hold_balance + $req->amounttosend;
                                 // User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal]);
 
                                 $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
@@ -4127,7 +4141,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $statement_route = "wallet";
 
                                 // Senders statement
-                                // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                                // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
                                 // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
@@ -4141,9 +4155,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $this->email = $thisuser->email;
                                 $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " now added to your wallet with PaySprint";
 
-                                $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                                $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                                $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
                                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -4223,8 +4237,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $cardNo = str_repeat("*", strlen($cardDetails->card_number) - 4) . substr($cardDetails->card_number, -4);
 
                             // Update Wallet Balance
-                            $walletBal = $thisuser->wallet_balance + $req->amounttosend;
-                            // User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal]);
+                            $walletBal = $thisuser->wallet_balance;
+                            $holdBal = $thisuser->hold_balance + $req->amounttosend;
+                            // User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal, 'hold_balance' => $holdBal]);
 
                             $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
@@ -4240,7 +4255,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $statement_route = "wallet";
 
                             // Senders statement
-                            // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                            // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 1);
 
                             // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
@@ -4254,9 +4269,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $this->email = $thisuser->email;
                             $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " now added to your wallet with PaySprint";
 
-                            $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                            $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                            $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                            $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
                             $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -4340,9 +4355,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 // Log::info($thisuser->name." wants to add ".$req->currencyCode." ".$req->amount." to their wallet.");
 
 
-                $this->slack($thisuser->name . " wants to add " . $req->currencyCode . " " . $req->amount . " to their wallet.", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                $this->slack($thisuser->name . " wants to add " . $req->currencyCode . " " . $req->amount . " to their wallet. Conversion amount ".$req->conversionamount, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
-                $monerisDeductamount = $req->conversionamount;
+                // $monerisDeductamount = $req->conversionamount;
+                $monerisDeductamount = $req->amount;
                 // $monerisDeductamount = $this->currencyConvert($req->currencyCode, $req->amount);
 
 
@@ -4378,8 +4394,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                         // Update Wallet Balance
-                        $walletBal = $thisuser->wallet_balance + $req->amounttosend;
-                        User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal]);
+                        $walletBal = $thisuser->wallet_balance;
+                        $holdBal = $thisuser->hold_balance + $req->amounttosend;
+                        User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal, 'hold_balance' => $holdBal]);
 
                         $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
@@ -4395,7 +4412,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $statement_route = "wallet";
 
                         // Senders statement
-                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 1);
 
                         $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
@@ -4406,9 +4423,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $this->email = $thisuser->email;
                         $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " now added to your wallet with PaySprint";
 
-                        $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                        $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                        $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                        $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
                         $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -4453,11 +4470,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $statement_route = "wallet";
 
                             // Senders statement
-                            $this->insStatement($thisuser->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                            $this->insStatement($thisuser->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
                             $this->getfeeTransaction($reference_number, $thisuser->ref_code, 15, 0, 15);
 
-                            $sendMsg = $activity . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' balance in your account';
+                            $sendMsg = $activity . '. You have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' balance in your account';
 
                             $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -4485,7 +4502,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                         $this->createNotification($thisuser->ref_code, $sendMsg);
 
-                        $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country);
+                        $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country, 1);
 
                         $this->updatePoints($thisuser->id, 'Add money');
 
@@ -4494,6 +4511,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                         $this->sendEmail($this->email, "Fund remittance");
+
+                         $adminMessage = "<p>Transaction ID: ".$reference_code."</p><p>Name: ".$thisuser->name."</p><p>Account Number: ".$thisuser->ref_code."</p><p>Country: ".$thisuser->country."</p><p>Date: ".date('d/m/Y h:i:a')."</p><p>Amount: ".$req->currencyCode . ' ' . number_format($req->amounttosend, 2)."</p><p>Status: Successful</p>";
+
+                        $this->notifyAdmin($gateway." inflow", $adminMessage);
+                        
                     } else {
 
 
@@ -4752,8 +4774,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     $cardNo = str_repeat("*", strlen($cardDetails->card_number) - 4) . substr($cardDetails->card_number, -4);
 
                                     // Update Wallet Balance
-                                    $walletBal = $thisuser->wallet_balance + $req->amounttosend;
-                                    User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal]);
+                                    $walletBal = $thisuser->wallet_balance;
+                                    $holdBal = $thisuser->hold_balance + $req->amounttosend;
+                                    
+                                    User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal, 'hold_balance' => $holdBal]);
 
                                     $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
@@ -4769,7 +4793,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     $statement_route = "wallet";
 
                                     // Senders statement
-                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 1);
 
                                     $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
@@ -4783,9 +4807,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     $this->email = $thisuser->email;
                                     $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " now added to your wallet with PaySprint";
 
-                                    $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                                    $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet.  You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                                    $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                    $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet.  You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
                                     $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -4806,6 +4830,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                     $this->sendEmail($this->email, "Fund remittance");
 
+
+                                    
+
                                     $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
 
                                     $data = $userInfo;
@@ -4821,7 +4848,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                     $monerisactivity = $thisuser->name . ' ' . $sendMsg;
-                                    $this->keepRecord($reference_code, $responseCode, $monerisactivity, $gateway, $thisuser->country);
+                                    $this->keepRecord($reference_code, $responseCode, $monerisactivity, $gateway, $thisuser->country, 1);
+
+                                     $adminMessage = "<p>Transaction ID: ".$reference_code."</p><p>Name: ".$thisuser->name."</p><p>Account Number: ".$thisuser->ref_code."</p><p>Country: ".$thisuser->country."</p><p>Date: ".date('d/m/Y h:i:a')."</p><p>Amount: ".$req->currencyCode . ' ' . number_format($req->amounttosend, 2)."</p><p>Status: Successful</p>";
+
+                                    $this->notifyAdmin($gateway." inflow", $adminMessage);
                                 } else {
                                     $data = [];
                                     $message = $responseCode;
@@ -4834,7 +4865,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     $this->slack('Oops!, ' . $thisuser->name . ' ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                     $monerisactivity = $thisuser->name . ' ' . $message;
-                                    $this->keepRecord("", $responseCode, $monerisactivity, $gateway, $thisuser->country);
+                                    $this->keepRecord("", $responseCode, $monerisactivity, $gateway, $thisuser->country, 0);
                                 }
                             } else {
 
@@ -4852,8 +4883,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     $cardNo = str_repeat("*", strlen($cardDetails->card_number) - 4) . substr($cardDetails->card_number, -4);
 
                                     // Update Wallet Balance
-                                    $walletBal = $thisuser->wallet_balance + $req->amounttosend;
-                                    User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal]);
+                                    $walletBal = $thisuser->wallet_balance;
+                                    $holdBal = $thisuser->hold_balance + $req->amounttosend;
+                                    User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal, 'hold_balance' => $holdBal]);
 
                                     $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
@@ -4869,7 +4901,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     $statement_route = "wallet";
 
                                     // Senders statement
-                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 1);
 
                                     $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
@@ -4883,9 +4915,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     $this->email = $thisuser->email;
                                     $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " now added to your wallet with PaySprint";
 
-                                    $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                                    $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet.  You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                                    $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                    $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet.  You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
                                     $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -4906,6 +4938,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                     $this->sendEmail($this->email, "Fund remittance");
 
+                                    
+                                    
+
                                     $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
 
                                     $data = $userInfo;
@@ -4923,7 +4958,12 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                     $monerisactivity = $thisuser->name . ' ' . $sendMsg;
-                                    $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
+                                    $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, 1);
+
+
+                                    $adminMessage = "<p>Transaction ID: ".$reference_code."</p><p>Name: ".$thisuser->name."</p><p>Account Number: ".$thisuser->ref_code."</p><p>Country: ".$thisuser->country."</p><p>Date: ".date('d/m/Y h:i:a')."</p><p>Amount: ".$req->currencyCode . ' ' . number_format($req->amounttosend, 2)."</p><p>Status: Successful</p>";
+
+                                    $this->notifyAdmin($gateway." inflow", $adminMessage);
                                 } else {
                                     $data = [];
                                     $message = $response->responseData['Message'] . " If the error persists, kindly login on the web app at https://paysprint.ca to continue your transactions.";
@@ -4934,7 +4974,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     $this->slack('Oops!, ' . $thisuser->name . ' ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                     $monerisactivity = $thisuser->name . ' ' . $message;
-                                    $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
+                                    $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, 0);
                                 }
                             }
                         } elseif ($thisuser->country == "Nigeria") {
@@ -4948,7 +4988,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $this->slack('Oops!, ' . $thisuser->name . ' ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                         } else {
 
-                            $this->slack($thisuser->name . " add money to wallet access to test on live for:: " . $req->currencyCode . " " . $req->amount . " to their wallet.", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                            $this->slack($thisuser->name . " add money to wallet access on live for:: " . $req->currencyCode . " " . $req->amount . " to their wallet.", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                             $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $monerisDeductamount, "purchase", "PaySprint/Vimfile Add Money to the Wallet of " . $thisuser->name, $req->mode);
 
@@ -4964,8 +5004,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $cardNo = str_repeat("*", strlen($cardDetails->card_number) - 4) . substr($cardDetails->card_number, -4);
 
                                 // Update Wallet Balance
-                                $walletBal = $thisuser->wallet_balance + $req->amounttosend;
-                                User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal]);
+                                $walletBal = $thisuser->wallet_balance;
+                                $holdBal = $thisuser->hold_balance + $req->amounttosend;
+                                User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal, 'hold_balance' => $holdBal]);
 
                                 $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
@@ -4981,7 +5022,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $statement_route = "wallet";
 
                                 // Senders statement
-                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 1);
 
                                 $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
@@ -4995,9 +5036,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $this->email = $thisuser->email;
                                 $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " now added to your wallet with PaySprint";
 
-                                $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                                $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                                $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
                                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -5017,6 +5058,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 }
 
                                 $this->sendEmail($this->email, "Fund remittance");
+                                
 
                                 $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
 
@@ -5033,7 +5075,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                 $monerisactivity = $thisuser->name . ' ' . $sendMsg;
-                                $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
+                                $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, 1);
+
+                                $adminMessage = "<p>Transaction ID: ".$reference_code."</p><p>Name: ".$thisuser->name."</p><p>Account Number: ".$thisuser->ref_code."</p><p>Country: ".$thisuser->country."</p><p>Date: ".date('d/m/Y h:i:a')."</p><p>Amount: ".$req->currencyCode . ' ' . number_format($req->amounttosend, 2)."</p><p>Status: Successful</p>";
+
+                                    $this->notifyAdmin($gateway." inflow", $adminMessage);
                             } else {
                                 $data = [];
                                 $message = $response->responseData['Message'] . " If the error persists, kindly login on the web app at https://paysprint.ca to continue your transactions.";
@@ -5044,7 +5090,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $this->slack('Oops!, ' . $thisuser->name . ' ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                 $monerisactivity = $thisuser->name . ' ' . $message;
-                                $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country);
+                                $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, 0);
                             }
                         }
                     }
@@ -5278,7 +5324,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                 // ]);
 
                                                 // Senders statement
-                                                // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country);
+                                                // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
                                                 // $this->createNotification($thisuser->ref_code, "Hello ".strtoupper($thisuser->name).", ".$message);
 
@@ -5311,11 +5357,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     // ]);
 
                                                     // Senders statement
-                                                    // $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
+                                                    // $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country, 0);
 
                                                     // $this->createNotification($exbcMerchant->ref_code, "Hello ".strtoupper($exbcMerchant->name).", ".$this->name." has ".$message);
 
-                                                    $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
+                                                    $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
 
                                                     $userPhone = User::where('email', $exbcMerchant->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -5384,10 +5430,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     $statement_route = "wallet";
 
                                                     // Senders statement
-                                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country);
+                                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
 
-                                                    $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                                    $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
 
 
@@ -5472,7 +5518,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                 $statement_route = "wallet";
 
                                                 // Senders statement
-                                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                                                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
                                                 // Notification
                                                 $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
@@ -5484,11 +5530,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                 $this->email = $thisuser->email;
                                                 $this->subject = $req->currencyCode . ' ' . number_format($req->amount, 2) . " has been Withdrawn from your Wallet with PaySprint";
 
-                                                $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
+                                                $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
 
 
 
-                                                $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
+                                                $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
 
                                                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -5623,7 +5669,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     ]);
 
                                                     // Senders statement
-                                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country);
+                                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
                                                     $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message);
 
@@ -5662,11 +5708,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                         ]);
 
                                                         // Senders statement
-                                                        $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
+                                                        $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country, 0);
 
                                                         $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message);
 
-                                                        $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
+                                                        $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
 
                                                         $userPhone = User::where('email', $exbcMerchant->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -5730,10 +5776,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     $statement_route = "wallet";
 
                                                     // Senders statement
-                                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country);
+                                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
 
-                                                    $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                                    $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
 
 
@@ -5810,7 +5856,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     $statement_route = "wallet";
 
                                                     // Senders statement
-                                                    // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                                                    // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
                                                     // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
@@ -5825,9 +5871,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     $this->email = $thisuser->email;
                                                     $this->subject = $req->currencyCode . ' ' . number_format($req->amount, 2) . " has been Withdrawn from your Wallet with PaySprint";
 
-                                                    $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
+                                                    $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
 
-                                                    $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
+                                                    $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
 
                                                     $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -6127,7 +6173,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     ]);
 
                                                     // Senders statement
-                                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country);
+                                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
                                                     $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message);
 
@@ -6161,11 +6207,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                         ]);
 
                                                         // Senders statement
-                                                        $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
+                                                        $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country, 0);
 
                                                         $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message);
 
-                                                        $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
+                                                        $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
 
                                                         $userPhone = User::where('email', $exbcMerchant->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -6235,10 +6281,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                         $statement_route = "wallet";
 
                                                         // Senders statement
-                                                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country);
+                                                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
 
-                                                        $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                                        $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
 
 
@@ -6328,7 +6374,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     $statement_route = "wallet";
 
                                                     // Senders statement
-                                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                                                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
                                                     // Notification
                                                     $cardDetails = AddCard::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
@@ -6340,11 +6386,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     $this->email = $thisuser->email;
                                                     $this->subject = $req->currencyCode . ' ' . number_format($req->amount, 2) . " has been Withdrawn from your Wallet with PaySprint";
 
-                                                    $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
+                                                    $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
 
 
 
-                                                    $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
+                                                    $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
 
                                                     $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -6486,7 +6532,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                         ]);
 
                                                         // Senders statement
-                                                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country);
+                                                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
                                                         $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message);
 
@@ -6524,11 +6570,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                             ]);
 
                                                             // Senders statement
-                                                            $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
+                                                            $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country, 0);
 
                                                             $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message);
 
-                                                            $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You now have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
+                                                            $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
 
                                                             $userPhone = User::where('email', $exbcMerchant->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -6598,10 +6644,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                         $statement_route = "wallet";
 
                                                         // Senders statement
-                                                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country);
+                                                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
 
-                                                        $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                                        $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
 
 
@@ -6677,7 +6723,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                         $statement_route = "wallet";
 
                                                         // Senders statement
-                                                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                                                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
                                                         // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
                                                         $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
@@ -6693,9 +6739,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                         $this->email = $thisuser->email;
                                                         $this->subject = $req->currencyCode . ' ' . number_format($req->amount, 2) . " has been Withdrawn from your Wallet with PaySprint";
 
-                                                        $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
+                                                        $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
 
-                                                        $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
+                                                        $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
 
                                                         $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -6843,13 +6889,13 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
             $statement_route = "wallet";
 
             // Senders statement
-            $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country);
+            $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
 
             MonerisActivity::where('transaction_id', $req->reference_code)->update(['reversal_state' => 1]);
 
 
-            $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The charge back request of ' . $thisuser->currencyCode . ' ' . number_format($data->credit, 2) . ' from PaySprint to your Bank Account has been processed. The Direct deposit into your Bank account would be done within the next 5 business days. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+            $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The charge back request of ' . $thisuser->currencyCode . ' ' . number_format($data->credit, 2) . ' from PaySprint to your Bank Account has been processed. The Direct deposit into your Bank account would be done within the next 5 business days. You have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
 
 
@@ -6881,6 +6927,99 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
             $message = "Reversal successfully completed";
+            $status = 200;
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+            $status = 400;
+            $thisuser = [];
+        }
+
+
+        $resData = ['data' => $thisuser, 'message' => $message, 'status' => $status];
+
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+    public function paymentReleaseFeeBack(Request $req)
+    {
+
+
+        try {
+            // Get Transaction Info
+            $data = Statement::where('reference_code', $req->reference_code)->first();
+            
+
+            $thisuser = User::where('email', $data->user_id)->first();
+
+            
+
+            $transDeduct = $thisuser->hold_balance - $data->credit;
+
+            $walletBal = $thisuser->wallet_balance + $data->credit;
+
+
+            User::where('email', $thisuser->email)->update([
+                'wallet_balance' => $walletBal,
+                'hold_balance' => $transDeduct
+            ]);
+
+
+            Statement::where('reference_code', $req->reference_code)->update(['hold_fee' => 0]);
+            MonerisActivity::where('transaction_id', $req->reference_code)->update(['hold_fee' => 0]);
+
+            $query = [
+                    'user_id' => session('user_id'),
+                    'name' => session('firstname') . ' ' . session('lastname'),
+                    'activity' => 'Released hold fund for '.$thisuser->name.' : ' . date('d-M-Y h:i:a'),
+                ];
+
+                $this->createSupportActivity($query);
+
+
+
+            $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', ' . $thisuser->currencyCode . ' ' . number_format($data->credit, 2) . ' processed by PaySprint to your wallet. You have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+
+
+            // Mail Customer
+
+            $this->name = $thisuser->name;
+            $this->email = $thisuser->email;
+            $this->subject = $thisuser->currencyCode . ' ' . number_format($data->credit, 2) . " now added to your wallet with PaySprint";
+
+            $this->message = '<strong>' . $thisuser->currencyCode . ' ' . number_format($data->credit, 2) . '</strong> processed by PaySprint to your wallet. You have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+
+            $sendMsg = $thisuser->currencyCode . ' ' . number_format($data->credit, 2) . ' processed by PaySprint to your wallet. You have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+
+            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+            if (isset($userPhone)) {
+
+                $sendPhone = $thisuser->telephone;
+            } else {
+                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+            }
+
+            if ($thisuser->country == "Nigeria") {
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                $this->sendSms($sendMsg, $correctPhone);
+            } else {
+                $this->sendMessage($sendMsg, $sendPhone);
+            }
+
+
+            $this->sendEmail($this->email, "Fund remittance");
+
+
+
+            // Log::info("Reversal successfull! ".strtoupper($thisuser->name)." ".$sendMsg);
+
+            $this->slack("Processed fee successfully to " . strtoupper($thisuser->name) . " " . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+
+            $message = "Fund processed successfully";
             $status = 200;
         } catch (\Throwable $th) {
             $message = $th->getMessage();
@@ -7076,18 +7215,18 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                         $statement_route = "wallet";
 
                                         // Senders statement
-                                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                                        $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
 
                                         $this->name = $thisuser->name;
                                         $this->email = $thisuser->email;
                                         $this->subject = $thisuser->currencyCode . ' ' . number_format($req->amounttosend, 2) . " has been Withdrawn from your Wallet with PaySprint";
 
-                                        $this->message = '<p>' . $billPayResponse->responseMessage . '</p><br><p>Recharge of ' . strtoupper($billerName) . ' for a sum of ' . $thisuser->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' from your PaySprint wallet is successful. </p><p>You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
+                                        $this->message = '<p>' . $billPayResponse->responseMessage . '</p><br><p>Recharge of ' . strtoupper($billerName) . ' for a sum of ' . $thisuser->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' from your PaySprint wallet is successful. </p><p>You have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
 
 
 
-                                        $sendMsg = $billPayResponse->responseMessage . ' .Recharge of ' . strtoupper($billerName) . ' for a sum of ' . $thisuser->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' from your PaySprint wallet is successful. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
+                                        $sendMsg = $billPayResponse->responseMessage . ' .Recharge of ' . strtoupper($billerName) . ' for a sum of ' . $thisuser->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' from your PaySprint wallet is successful. You have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
 
                                         $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -7207,7 +7346,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                             $statement_route = "wallet";
 
                                             // Senders statement
-                                            $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                                            $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
                                             $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
@@ -7216,9 +7355,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                             $this->email = $thisuser->email;
                                             $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " has been Withdrawn from your Wallet with PaySprint";
 
-                                            $this->message = '<p>' . $billPayResponse->responseMessage . '</p><br><p>Recharge of ' . strtoupper($billerName) . ' for a sum of ' . $thisuser->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' from your PaySprint wallet is successful. </p><p>You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
+                                            $this->message = '<p>' . $billPayResponse->responseMessage . '</p><br><p>Recharge of ' . strtoupper($billerName) . ' for a sum of ' . $thisuser->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' from your PaySprint wallet is successful. </p><p>You have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
 
-                                            $sendMsg = $billPayResponse->responseMessage . ' .Recharge of ' . strtoupper($billerName) . ' for a sum of ' . $thisuser->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' from your PaySprint wallet is successful. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
+                                            $sendMsg = $billPayResponse->responseMessage . ' .Recharge of ' . strtoupper($billerName) . ' for a sum of ' . $thisuser->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' from your PaySprint wallet is successful. You have ' . $thisuser->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
 
                                             $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -7364,7 +7503,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
             $statement_route = "wallet";
 
             // Senders statement
-            // $this->insStatement($data->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $data->country);
+            // $this->insStatement($data->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $data->country, 0);
 
         } else {
 
@@ -7421,7 +7560,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
             $statement_route = "wallet";
 
             // Senders statement
-            // $this->insStatement($data->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $data->country);
+            // $this->insStatement($data->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $data->country, 0);
 
         }
 
@@ -7534,6 +7673,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
             'crypt_type' => $crypt,
             'dynamic_descriptor' => $dynamic_descriptor
         );
+        
+        
+        $this->slack(json_encode($txnArray), $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
         // dd($txnArray);
         /**************************** Transaction Object *****************************/
@@ -7976,10 +8118,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     $statement_route = "invoice";
 
                     // Senders statement
-                    $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $user->country);
+                    $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $user->country, 0);
 
                     // Receiver Statement
-                    $this->insStatement($client->email, $reference_code, "Received money for " . $service . " from " . $user->name, $req->amount, 0, $balance, $trans_date, $status, "Invoice", $client->ref_code, 1, $statement_route, $client->country);
+                    $this->insStatement($client->email, $reference_code, "Received money for " . $service . " from " . $user->name, $req->amount, 0, $balance, $trans_date, $status, "Invoice", $client->ref_code, 1, $statement_route, $client->country, 0);
 
 
 
@@ -8248,8 +8390,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                 // Update Wallet Balance
-                $walletBal = $thisuser->wallet_balance + $req->amounttosend;
-                User::where('api_token', $req->api_token)->update(['wallet_balance' => $walletBal]);
+                $walletBal = $thisuser->wallet_balance;
+                $holdBal = $thisuser->hold_balance + $req->amounttosend;
+                User::where('api_token', $req->api_token)->update(['wallet_balance' => $walletBal, 'hold_balance' => $holdBal]);
 
                 $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->api_token)->first();
 
@@ -8265,7 +8408,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 $statement_route = "wallet";
 
                 // Senders statement
-                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 1);
 
                 $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
@@ -8276,9 +8419,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 $this->email = $thisuser->email;
                 $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " now added to your wallet with PaySprint";
 
-                $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You now have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You now have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -8322,11 +8465,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     $statement_route = "wallet";
 
                     // Senders statement
-                    $this->insStatement($thisuser->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+                    $this->insStatement($thisuser->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
                     $this->getfeeTransaction($reference_number, $thisuser->ref_code, 15, 0, 15);
 
-                    $sendMsg = $activity . '. You now have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' balance in your account';
+                    $sendMsg = $activity . '. You have ' . $req->currencyCode . ' ' . number_format($walletBalance, 2) . ' balance in your account';
 
                     $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -8372,12 +8515,12 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                 $data = $userInfo;
                 $status = 200;
-                $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to your wallet';
+                $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to your wallet. Kindly allow up to 12-24 hours for the funds to reflect in your wallet.';
                 $action = 'success';
 
                 $this->createNotification($thisuser->ref_code, $sendMsg);
 
-                $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country);
+                $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country, 1);
 
                 $this->updatePoints($thisuser->id, 'Add money');
 
@@ -8391,6 +8534,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 );
 
                 $this->sendEmail($this->email, "Fund remittance");
+
+                $adminMessage = "<p>Transaction ID: ".$reference_code."</p><p>Name: ".$thisuser->name."</p><p>Account Number: ".$thisuser->ref_code."</p><p>Country: ".$thisuser->country."</p><p>Date: ".date('d/m/Y h:i:a')."</p><p>Amount: ".$req->currencyCode . ' ' . number_format($req->amounttosend, 2)."</p><p>Status: Successful</p>";
+
+                $this->notifyAdmin($gateway." inflow", $adminMessage);
+
             } else {
                 $data = [];
                 $message = "Payment not received | ".$getVerification->responseMessage;
@@ -8416,9 +8564,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
 
-    public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $country)
+    public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $country, $hold_fee)
     {
-        Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route, 'country' => $country]);
+        Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route, 'country' => $country, 'hold_fee' => $hold_fee]);
     }
 
     public function insFXStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $auto_deposit, $country = null, $confirmation)

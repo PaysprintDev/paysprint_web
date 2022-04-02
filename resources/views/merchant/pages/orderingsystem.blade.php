@@ -31,7 +31,7 @@
                         Categories</button>
                     <button class="nav-link" id="nav-managestore-tab" data-bs-toggle="tab"
                         data-bs-target="#nav-managestore" type="button" role="tab" aria-controls="nav-managestore"
-                        aria-selected="false">Manage Store</button>
+                        aria-selected="false">Manage eStore</button>
                     <button class="nav-link btn btn-success" type="button" data-bs-toggle="modal"
                         data-bs-target="#addProductModal">Add product + </button>
 
@@ -171,6 +171,28 @@
                                                                                 <small id="stockHelp"
                                                                                     class="form-text text-muted">How many do
                                                                                     you have in stock</small>
+                                                                            </div>
+
+                                                                            <div class="form-group">
+                                                                                <label for="stock">Category</label>
+                                                                                <select name="category" id="category"
+                                                                                    class="form-control form-select">
+                                                                                    @if (count($data['productcategory']) > 0)
+                                                                                        <option value="">Select category
+                                                                                        </option>
+
+                                                                                        @foreach ($data['productcategory'] as $item)
+                                                                                            <option
+                                                                                                value="{{ $item->category }}"
+                                                                                                {{ $product->category == $item->category ? 'selected' : '' }}>
+                                                                                                {{ $item->category }}
+                                                                                            </option>
+                                                                                        @endforeach
+                                                                                    @endif
+                                                                                </select>
+                                                                                <small id="stockHelp"
+                                                                                    class="form-text text-muted">Select
+                                                                                    product category</small>
                                                                             </div>
 
                                                                             <div class="form-group">
@@ -856,7 +878,7 @@
                                             <div class="row">
                                                 <div class="col-md-9">
                                                     <h5 class="card-text">
-                                                        Setup Your Store
+                                                        Setup Your eStore
                                                     </h5>
                                                     <p>
                                                         You can now setup your store for your customers to see how your
@@ -866,7 +888,7 @@
                                                 <div class="col-md-3">
                                                     <button class="btn btn-success" style="width: 100%;"
                                                         data-bs-toggle="modal" data-bs-target="#createStoreModal">Setup
-                                                        Store</button>
+                                                        eStore</button>
                                                 </div>
                                             </div>
                                             <hr>
@@ -874,12 +896,12 @@
                                             <div class="row">
                                                 <div class="col-md-9">
                                                     <h5 class="card-text">
-                                                        Activate announcements & flash messages
+                                                        Announcements
                                                     </h5>
                                                     <p>
                                                         You can now activate announcements to be able to share information
                                                         on your
-                                                        store with new and existing customers.
+                                                        eStore with new and existing customers.
                                                     </p>
                                                 </div>
                                                 <div class="col-md-3">
@@ -887,42 +909,30 @@
                                                 </div>
                                             </div>
                                             <hr>
-                                            <div class="row">
-                                                <div class="col-md-9">
-                                                    <h5 class="card-text">
-                                                        Generate QR code for your store
-                                                    </h5>
-                                                    <p>
-                                                        You can now generate and download QR codes to share on your store.
-                                                        Customers can scan the code to have access to all your products.
-                                                    </p>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <button class="btn btn-success" style="width: 100%;"><small>Activate QR
-                                                            code</small></button>
-                                                </div>
-                                            </div>
-                                            <hr>
+
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <h5 class="card-text">
-                                                        Shipping Preference
+                                                        Shipping Option
                                                     </h5>
                                                     <br>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" value=""
                                                             id="flexCheckDefault">
                                                         <label class="form-check-label" for="flexCheckDefault">
-                                                            Turn off shipping
+                                                            I am shipping
                                                         </label>
                                                     </div>
+                                                    {{-- TODO:: Shipping Regions and rate becomes active --}}
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" value=""
                                                             id="flexCheckChecked">
                                                         <label class="form-check-label" for="flexCheckChecked">
-                                                            I’ll handle my shipping
+                                                            I am not shipping
                                                         </label>
                                                     </div>
+
+                                                    {{-- TODO:: Pickup address becomes active... type in your pickup address.. Adress, city state, country and postal code --}}
                                                 </div>
 
                                             </div>
@@ -1024,7 +1034,7 @@
 
                             <div class="form-group">
                                 <label for="stock">Category</label>
-                                <select name="category" id="categorey" class="form-control form-select">
+                                <select name="category" id="category" class="form-control form-select">
                                     @if (count($data['productcategory']) > 0)
                                         <option value="">Select category</option>
 
@@ -1173,7 +1183,7 @@
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Setup Store</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Setup eStore</h5>
                         <button class="btn-close" type="button" data-dismiss="modal" aria-label="Close"
                             onclick="$('.modal').modal('hide')"></button>
                     </div>

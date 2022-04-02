@@ -58,9 +58,10 @@
                                             <th>Action</th>
                                             <th>&nbsp;</th>
                                             <th>&nbsp;</th>
-
+                                            <th>&nbsp;</th>
                                         @else
                                             <th>Action</th>
+                                            <th>&nbsp;</th>
                                             <th>&nbsp;</th>
                                         @endif
                                     </tr>
@@ -77,20 +78,15 @@
                                                 @if ($userStatement = \App\Statement::where('reference_code', $data->transaction_id)->first())
                                                     @if (isset($userStatement))
                                                         @if ($userStatement = \App\User::where('email', $userStatement->user_id)->first())
-
                                                             <td>
                                                                 {{ $userStatement->name }} {!! $data->flag_state == 1 ? '<img src="https://img.icons8.com/emoji/20/000000/triangular-flag.png"/>' : '' !!}
                                                             </td>
-
                                                         @else
                                                             <td>- {!! $data->flag_state == 1 ? '<img src="https://img.icons8.com/emoji/20/000000/triangular-flag.png"/>' : '' !!}</td>
                                                         @endif
                                                     @else
-
                                                         <td>- {!! $data->flag_state == 1 ? '<img src="https://img.icons8.com/emoji/20/000000/triangular-flag.png"/>' : '' !!}</td>
-
                                                     @endif
-
                                                 @else
                                                     <td>- {!! $data->flag_state == 1 ? '<img src="https://img.icons8.com/emoji/20/000000/triangular-flag.png"/>' : '' !!}</td>
                                                 @endif
@@ -138,17 +134,27 @@
                                                     @endif
 
                                                 </td>
+                                                <td>
+                                                    @if ($data->hold_fee == 1)
+                                                        <a type="button" class="btn btn-primary" href="javascript:void(0)"
+                                                            onclick="releaseFee('{{ $data->transaction_id }}')">Release
+                                                            <img src="https://img.icons8.com/office/20/000000/spinner-frame-4.png"
+                                                                class="fa fa-spin spinFee{{ $data->transaction_id }} disp-0"></a>
+                                                    @else
+                                                        <a type="button" class="btn btn-success" href="javascript:void(0)"
+                                                            style="cursor: not-allowed">Released</a>
+                                                    @endif
+
+                                                </td>
 
                                             </tr>
                                         @endforeach
-
-
                                     @else
                                         <tr>
                                             @if (Request::get('gateway') == 'paystack')
-                                                <td colspan="10" align="center">No record available</td>
+                                                <td colspan="11" align="center">No record available</td>
                                             @else
-                                                <td colspan="8" align="center">No record available</td>
+                                                <td colspan="9" align="center">No record available</td>
                                             @endif
                                         </tr>
                                     @endif

@@ -13555,6 +13555,27 @@ class AdminController extends Controller
 
 
                             $this->sendEmail($this->to, "Refund Request");
+
+
+                            if($req->country == "India"){
+
+                                $this->name = $req->firstname . ' ' . $req->lastname;
+                                // $this->email = "bambo@vimfile.com";
+                                $this->email = $req->email;
+                                $this->subject = "Special Notice";
+
+                                $mailmessage = "Dear ".$req->fname.", If you are presenting India Aadhaar Card as the form of identification, kindly upload your India Permanent Account Number card as well using same icon.Thanks";
+
+                                $this->message = '<p>' . $mailmessage . '</p>';
+
+
+                                $this->sendEmail($this->email, "Fund remittance");
+
+
+
+                            }
+
+
                         } else {
                             $message = "error";
                             $title = "Oops!";

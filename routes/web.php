@@ -155,7 +155,7 @@ Route::get('/merchant-home', ['uses' => 'HomeController@merchantIndex', 'as' => 
 
 Route::get('/home', ['uses' => 'HomeController@authIndex', 'as' => 'user home']);
 
-Route::get('/shop/{merchant}', ['uses' => 'MerchantPageController@merchantShop', 'as' => 'merchant shop now']);
+
 
 Route::get('/supporting-haiti', ['uses' => 'HomeController@haitiDonation', 'as' => 'haiti donation']);
 
@@ -177,6 +177,24 @@ Route::post('/askquestion', ['uses' => 'HomeController@storeAskedQuestions', 'as
 Route::get('/submessage/{id}', ['uses' => 'HomeController@subMessage', 'as' => 'submessage']);
 Route::post('/storeanswer', ['uses' => 'HomeController@storeSubMessage', 'as' => 'storeanswer']);
 });
+
+
+
+Route::prefix('shop')->group(function () {
+	Route::get('/{merchant}', ['uses' => 'MerchantPageController@merchantShop', 'as' => 'merchant shop now']);
+
+});
+
+
+Route::prefix('product')->group(function () {
+	Route::get('/cart', ['uses' => 'MerchantPageController@myCart', 'as' => 'customer shoping cart']);
+	Route::get('/checkout', ['uses' => 'MerchantPageController@myCheckout', 'as' => 'checkout item']);
+	Route::post('/place-order', ['uses' => 'ShopController@placeOrder', 'as' => 'place order']);
+	Route::get('payment', ['uses' => 'HomeController@estorePayment', 'as' => 'estore payment']);
+
+});
+
+
 
 
 
@@ -1040,6 +1058,7 @@ Route::group(['prefix' => 'Ajax'], function () {
 
 
 	Route::post('paychargeback', ['uses' => 'MonerisController@paymentChargeBack', 'as' => 'Ajaxpaychargeback']);
+	Route::post('releasefeeback', ['uses' => 'MonerisController@paymentReleaseFeeBack', 'as' => 'Ajaxreleasefeeback']);
 
 
 	Route::post('moveUser', ['uses' => 'AdminController@ajaxmoveUser', 'as' => 'AjaxmoveUser']);
