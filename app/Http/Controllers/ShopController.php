@@ -13,6 +13,7 @@ use App\StoreDiscount;
 use App\StoreMainShop;
 use App\StoreWishList;
 use App\StoreCart;
+use App\StoreBillingDetail;
 use App\Traits\MyEstore;
 
 class ShopController extends Controller
@@ -73,6 +74,7 @@ class ShopController extends Controller
             'file' => 'required',
             'description' => 'required',
             'category' => 'required',
+            'deliveryDate' => 'required'
 
         ]);
 
@@ -85,6 +87,7 @@ class ShopController extends Controller
 
 
 
+
             $query = [
                 'merchantId' => Auth::id(),
                 'productName' => $req->productName,
@@ -93,7 +96,8 @@ class ShopController extends Controller
                 'stock' => $req->stock,
                 'image' => $docPath,
                 'description' => $req->description,
-                'category' => $req->category
+                'category' => $req->category,
+                'deliveryDate' => $req->deliveryDate
             ];
 
             // Insert record
@@ -126,7 +130,12 @@ class ShopController extends Controller
             //Get Cart Items and delete from cart...
             $getCart = StoreCart::where('userId', $req->userId)->get();
 
-            // Get Product Delivery date...
+            // Add shipping details...
+            StoreBillingDetail::updateOrCreate(['userId' => $req->userId, 'merchantId' => $req->merchantId],[
+                 'userId' => $req->userId, 'merchantId' => $req->merchantId, 'company_name' => $req->company, 'country' => $req->country, 'state' => $req->state, 'address' => $req->address, 'apartment' => $req->apartment, 'city' => $req->city, 'postalcode' => $req->postalCode, 'email' => $req->email, 'phone' => $req->phone
+            ]);
+
+
 
             if(count($getCart) > 0){
 
@@ -380,6 +389,7 @@ class ShopController extends Controller
             'headerSubtitle' => 'required',
             'headerContent' => 'required',
             'businessLogo' => 'required',
+            'refundPolicy' => 'required',
         ]);
 
 
@@ -433,7 +443,8 @@ class ShopController extends Controller
                 'headerSubtitle' => $req->headerSubtitle,
                 'advertSectionImage' => $advertSectionImage,
                 'advertTitle' => $req->advertTitle,
-                'advertSubtitle' => $req->advertSubtitle
+                'advertSubtitle' => $req->advertSubtitle,
+                'refundPolicy' => $req->refundPolicy
             ];
 
 

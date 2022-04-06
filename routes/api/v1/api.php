@@ -373,7 +373,7 @@ Route::prefix('/v1')->group(function () {
         });
     });
 
-    Route::post('walletbalance',  ['uses' => 'api\v1\MerchantApiController@getMyWalletBalance']);
+    Route::post('walletbalance',  ['uses' => 'api\v1\MerchantApiController@getMyWalletBalance', 'as' => 'check customer wallet balance']);
 
 
 

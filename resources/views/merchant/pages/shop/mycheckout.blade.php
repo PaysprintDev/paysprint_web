@@ -10,7 +10,7 @@
                     <div class="col">
                         <div class="about-l">
                             <ul class="about-link">
-                                <li class="go-home"><a href="index1.html">Home</a></li>
+                                <li class="go-home"><a href="{{ url()->previous() }}">Home</a></li>
                                 <li class="about-p"><span>Your checkout</span></li>
                             </ul>
                         </div>
@@ -38,6 +38,7 @@
                                             <input type="text" name="name" class="form-control" placeholder="Full name"
                                                 value="{{ Auth::user()->name }}">
                                             <input type="hidden" name="userId" value="{{ Auth::id() }}">
+                                            <input type="hidden" name="merchantId" value="{{ $data['user']->id }}">
                                         </li>
 
                                     </ul>
