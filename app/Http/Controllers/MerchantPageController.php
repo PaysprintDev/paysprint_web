@@ -474,7 +474,8 @@ class MerchantPageController extends Controller
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if($client->accountMode == "test"){
+
+        if(isset($client) && $client->accountMode == "test"){
             
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }

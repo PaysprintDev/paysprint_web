@@ -880,6 +880,7 @@ class HomeController extends Controller
         
 
         $getMerchant = User::where('id', $req->merchantId)->first();
+        $getMerchantKey = ClientInfo::where('user_id', $getMerchant->ref_code)->first();
 
 
         if ($req->session()->has('email') == false) {
@@ -908,7 +909,8 @@ class HomeController extends Controller
             'othercurrencyCode' => $this->otherCurrencyCodeOfficial($getMerchant->ref_code),
             'getOrder' => $this->getOrders($req->merchantId, $req->userId),
             'getCart' => $this->getPayCartList($req->userId, $req->merchantId),
-            'continent' => $this->timezone[0]
+            'continent' => $this->timezone[0],
+            'merchantApiKey' => $getMerchantKey->api_secrete_key
         );
 
 

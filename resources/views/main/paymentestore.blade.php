@@ -202,7 +202,7 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <div class="mt-3">
-                                                    <form action="#" method="post">
+                                                    <form action="#" method="post" id="forCustomers">
                                                         @csrf
 
                                                         <div class="form-group"> <label for="enter_account_number">
@@ -218,7 +218,14 @@
                                                                 </div> <input type="text" name="accountNumber"
                                                                     id="accountNumber" class="form-control"
                                                                     placeholder="6921229" required>
+
+                                                                <input type="hidden" name="route" value="estore">
+                                                                <input type="hidden" name="mode"
+                                                                    value="{{ env('APP_ENV') == 'local' ? 'test' : 'live' }}">
                                                             </div>
+
+                                                            <small class="text-danger errorBalance"></small>
+
                                                         </div>
 
 
@@ -230,14 +237,15 @@
                                                                     </h4>
                                                                 </div>
                                                                 <div class="col-md-12">
-                                                                    <h4>
+                                                                    <h4 class='mywalletBalance'>
                                                                     </h4>
                                                                 </div>
                                                             </div>
                                                         </div>
 
 
-                                                        <div class="form-group"> <label for="amounttosend">
+
+                                                        <div class="form-group"> <label for="amount">
                                                                 <h6><span style="color: red;">*</span> Amount</h6>
                                                             </label>
                                                             <div class="input-group">
@@ -246,8 +254,8 @@
                                                                         class="input-group-text text-muted">
                                                                         {{ $data['paymentorg']->currencySymbol }}</span>
                                                                 </div>
-                                                                <input type="text" name="amounttosend"
-                                                                    class="form-control" id="amounttosend"
+                                                                <input type="text" name="amount" class="form-control"
+                                                                    id="amount"
                                                                     value="{{ sprintf('%.2f', $totalCost) }}"
                                                                     placeholder="0.00" readonly>
                                                             </div>
@@ -291,7 +299,7 @@
 
                                                         <div class="form-group mt-4">
 
-                                                            <button type="button" onclick="#"
+                                                            <button type="button" onclick="payForOrder()"
                                                                 class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn">
                                                                 Make Payment </button>
                                                         </div>
@@ -350,7 +358,7 @@
 
 
 
-                                                        <div class="form-group"> <label for="amounttosend">
+                                                        <div class="form-group"> <label for="amount">
                                                                 <h6><span style="color: red;">*</span>Amount</h6>
                                                             </label>
                                                             <div class="input-group">
@@ -359,8 +367,8 @@
                                                                         class="input-group-text text-muted">
                                                                         {{ $data['paymentorg']->currencySymbol }}</span>
                                                                 </div>
-                                                                <input type="text" name="amounttosend"
-                                                                    class="form-control" id="amounttosend"
+                                                                <input type="text" name="amount" class="form-control"
+                                                                    id="amounttosend"
                                                                     value="{{ sprintf('%.2f', $totalCost) }}"
                                                                     placeholder="0.00" readonly>
                                                             </div>
@@ -609,6 +617,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js"></script>
 
     <script src="{{ asset('pace/pace.min.js') }}"></script>
     <script src="{{ asset('js/country-state-select.js') }}"></script>
@@ -634,12 +643,106 @@
 
 
 
+        $('#accountNumber').on('keyup', async function() {
+
+            if ($('#accountNumber').val() != '') {
+
+                $('.mywalletBalance').text('');
+                $('.errorBalance').text('');
+
+                try {
+
+
+                    let data = {
+                        accountNumber: $('#accountNumber').val(),
+                        platform: 'estore'
+                    }
+                    let result = await axios({
+                        method: 'POST',
+                        url: "{{ route('check customer wallet balance') }}",
+                        headers: {},
+                        data: data
+                    });
+
+                    $('.errorBalance').text('');
+
+                    if (result.status === 200) {
+                        $('.mywalletBalance').text(
+                            `${result.data.data.currencyCode+' '+parseFloat(result.data.data.wallet_balance).toFixed(2)}`
+                        );
+                    }
+
+
+                } catch (error) {
+
+                    $('.mywalletBalance').text('');
+
+                    if (error.response) {
+                        $('.errorBalance').text(
+                            `${error.response.data.message}`);
+                    } else {
+                        $('.errorBalance').text(
+                            `${error.message}`);
+                    }
+
+
+                }
+
+
+
+            }
+
+
+        });
+
+
+        // Axios to process the payment...
+
+        async function payForOrder() {
+            try {
+
+                var data = new FormData(forCustomers);
+                var headers = {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                    'Authorization': 'Bearer {{ $data['merchantApiKey'] }}'
+                };
+
+                const config = {
+                    method: 'POST',
+                    url: "{{ URL('/api/v1/customers') }}",
+                    headers: headers,
+                    data: data
+                }
+
+                console.log(config);
+
+
+                const response = await axios(config);
+
+
+                console.log(response);
+
+
+
+            } catch (error) {
+
+                if (error.response) {
+                    swal("Oops", error.response.data.message, "error");
+                } else {
+                    swal("Oops", error.message, "error");
+                }
+            }
+        }
+
+
+
 
         //Set CSRF HEADERS
         function setHeaders() {
             jQuery.ajaxSetup({
                 headers: {
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                    'Authorization': 'Bearer {{ $data['merchantApiKey'] }}'
                 }
             });
         }
