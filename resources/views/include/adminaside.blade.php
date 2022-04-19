@@ -103,6 +103,10 @@
                                      <li><a href="#"><i class="fa fa-circle-o"></i> My News Posts</a></li>
                                      <li><a href="{{ route('new investor subscriber') }}"><i
                                                  class="fa fa-circle-o"></i> Subscribers</a></li>
+                                     <li><a href="{{ route('create investor post') }}"><i
+                                                 class="fa fa-circle-o"></i> Create</a></li>
+                                     <li><a href="{{ route('investorposts') }}"><i
+                                                 class="fa fa-circle-o"></i> View</a></li>
 
                                  </ul>
                              </li>
