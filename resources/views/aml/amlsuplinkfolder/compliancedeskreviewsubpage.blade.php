@@ -169,6 +169,7 @@
                             class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
+             
             @else
             <div class="row">
               <div class="col-xs-12">

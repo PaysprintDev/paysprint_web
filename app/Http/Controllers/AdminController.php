@@ -46,6 +46,7 @@ use App\CollectionFee as CollectionFee;
 use App\ServiceType as ServiceType;
 
 use App\Statement as Statement;
+use App\createpost as createpost;
 
 use App\BankWithdrawal as BankWithdrawal;
 
@@ -1447,7 +1448,7 @@ class AdminController extends Controller
     }
 
 
-    public function newInvestorPost(Request $req)
+    public function investorPost(Request $req)
     {
         if ($req->session()->has('username') == true) {
             // dd(Session::all());
@@ -1492,7 +1493,7 @@ class AdminController extends Controller
             $getxPay = $this->getxpayTrans();
 
             $data = array(
-                'percentage' => $this->markupPercentage()
+                'users' => $this->investor_relations()
             );
 
 
@@ -1563,6 +1564,9 @@ class AdminController extends Controller
         }
     }
 
+    
+   
+
 
 
     public function getInvestorSubscribers()
@@ -1572,42 +1576,117 @@ class AdminController extends Controller
         return $data;
     }
 
+   
+
+    public function investorPosts(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+
+            $data = array(
+                'byStructure' => TransactionCost::select('structure')->groupBy('structure')->get(),
+                'byMethod' => TransactionCost::select('method')->groupBy('method')->get(),
+                'countryprice' => $this->getCountryPricing($req->get('country')),
+                'inverstor_relations' ,
+            );
+
+
+
+            return view('admin.investorposts')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
 
     public function createInvestorPost(Request $req)
     {
 
-        try {
-            if ($req->file('file')) {
-                //Get filename with extension
-                $filenameWithExt = $req->file('file')->getClientOriginalName();
+        $transCost = $this->transactionCost();
 
-                $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-                // Get just extension
-                $extension = $req->file('file')->getClientOriginalExtension();
-                // Filename to store
-                $fileNameToStore = rand() . '_' . time() . '.' . $extension;
-
-                $req->file('file')->move(public_path('../../investorfiles/'), $fileNameToStore);
-
-                $filePath = "http://" . $_SERVER['HTTP_HOST'] . "/" . $fileNameToStore;
-            } else {
-                $filePath = '';
-            }
+            $data = array(
+                'byStructure' => TransactionCost::select('structure')->groupBy('structure')->get(),
+                'byMethod' => TransactionCost::select('method')->groupBy('method')->get(),
+                'countryprice' => $this->getCountryPricing($req->get('country'))
+                
+            );
 
 
-            // Insert record
-            $thisPost = InvestorPost::insert(['title' => $req->title, 'description' => $req->description, 'file' => $filePath]);
 
-            $status = 'success';
-            $message = 'Successfully posted';
-        } catch (\Throwable $th) {
-            $status = 'error';
-            $message = $th->getMessage();
-        }
-
-
-        return redirect()->back()->with($status, $message);
+            return view('admin.createpost')->with(['pages' => 'Dashboard', 'transCost' => $transCost,  'data' => $data]);
+        
     }
+
+
+    public function createInvestorPosts(Request $req)
+    {
+
+       
+        $post = new Createpost();
+
+        $post->ref_code = $req->ref_code;
+        $post->post_title = $req->post_title;
+        $post->description = $req->description;
+        $post->minimum_acount = $req->minimum_acount;
+        $post->locked_in_return = $req->locked_in_return;
+        $post->term = $req->term;
+        $post->liquidation_amouunt = $req->liquidation_amouunt;
+        $post->offer_open_date = $req->offer_open_date;
+        $post->offer_end_date = $req->offer_end_date;
+        $post->investment_activation_date = $req->investment_activation_date;
+        $post->investment_document = $req->investment_document;
+
+
+
+
+
+            //return view('admin.createpost')->with(['pages' => 'Dashboard', 'transCost' => $transCost,  'data' => $data]);
+        
+    }
+
+    
+
+  
 
     public function saveMarkup(Request $req)
     {
@@ -1673,7 +1752,7 @@ class AdminController extends Controller
 
 
 
-            return view('admin.countrypricing')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'data' => $data]);
+            return view('admin.createpost')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'data' => $data]);
         } else {
             return redirect()->route('AdminLogin');
         }
