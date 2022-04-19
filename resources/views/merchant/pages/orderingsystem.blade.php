@@ -9,8 +9,25 @@
             <div class="page-header">
                 <div class="row">
 
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 float-right">
                         <!-- Bookmark Start-->
+
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <td>eStore Escrow Balance</td>
+                                    <td style="font-weight: bold;">
+                                        {{ Auth::user()->currencySymbol . '' . number_format(Auth::user()->escrow_balance, 2) }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Dispute Balance</td>
+                                    <td style="font-weight: bold;">
+                                        {{ Auth::user()->currencySymbol . '' . number_format(Auth::user()->dispute_balance, 2) }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
                         <!-- Bookmark Ends-->
                     </div>
@@ -20,18 +37,23 @@
         <div class="container-fluid list-products">
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact"
+                        type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Product
+                        Categories</button>
                     <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
                         type="button" role="tab" aria-controls="nav-home" aria-selected="true">Products</button>
                     <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
                         type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Orders</button>
+                    <button class="nav-link" id="nav-sales-tab" data-bs-toggle="tab" data-bs-target="#nav-sales"
+                        type="button" role="tab" aria-controls="nav-sales" aria-selected="false">Sales</button>
+                    <button class="nav-link" id="nav-refund-tab" data-bs-toggle="tab" data-bs-target="#nav-refund"
+                        type="button" role="tab" aria-controls="nav-refund" aria-selected="false">Refund</button>
                     <button class="nav-link" id="nav-discount-tab" data-bs-toggle="tab" data-bs-target="#nav-discount"
                         type="button" role="tab" aria-controls="nav-discount" aria-selected="false">Discount codes</button>
-                    <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact"
-                        type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Product
-                        Categories</button>
+
                     <button class="nav-link" id="nav-managestore-tab" data-bs-toggle="tab"
                         data-bs-target="#nav-managestore" type="button" role="tab" aria-controls="nav-managestore"
-                        aria-selected="false">Manage Store</button>
+                        aria-selected="false">Manage eStore</button>
                     <button class="nav-link btn btn-success" type="button" data-bs-toggle="modal"
                         data-bs-target="#addProductModal">Add product + </button>
 
@@ -83,7 +105,8 @@
                                                             <td>{{ date('d/m/Y', strtotime($product->created_at)) }}</td>
                                                             <td>
 
-                                                                <form action="{{ route('delete product', $product->id) }}"
+                                                                <form
+                                                                    action="{{ route('delete product', $product->id) }}"
                                                                     method="post" id="formProduct{{ $product->id }}">
                                                                     @csrf
                                                                 </form>
@@ -174,6 +197,28 @@
                                                                             </div>
 
                                                                             <div class="form-group">
+                                                                                <label for="stock">Category</label>
+                                                                                <select name="category" id="category"
+                                                                                    class="form-control form-select">
+                                                                                    @if (count($data['productcategory']) > 0)
+                                                                                        <option value="">Select category
+                                                                                        </option>
+
+                                                                                        @foreach ($data['productcategory'] as $item)
+                                                                                            <option
+                                                                                                value="{{ $item->category }}"
+                                                                                                {{ $product->category == $item->category ? 'selected' : '' }}>
+                                                                                                {{ $item->category }}
+                                                                                            </option>
+                                                                                        @endforeach
+                                                                                    @endif
+                                                                                </select>
+                                                                                <small id="stockHelp"
+                                                                                    class="form-text text-muted">Select
+                                                                                    product category</small>
+                                                                            </div>
+
+                                                                            <div class="form-group">
                                                                                 <label for="stock">Product Image</label>
                                                                                 <input type="file" class="form-control"
                                                                                     name="file" id="file"
@@ -235,11 +280,12 @@
                                             <table class="table table-bordernone display" id="basic-2">
                                                 <thead>
                                                     <tr>
+                                                        <th scope="col">Action</th>
                                                         <th scope="col">Image</th>
                                                         <th scope="col">Product name</th>
                                                         <th scope="col">Customer name</th>
                                                         <th scope="col">Order number</th>
-                                                        <th scope="col">Units</th>
+                                                        <th scope="col">Quantity</th>
                                                         <th scope="col">Price</th>
                                                         <th scope="col">Payment Status</th>
                                                         <th scope="col">Date</th>
@@ -251,6 +297,19 @@
                                                     @if (count($data['myOrders']) > 0)
                                                         @foreach ($data['myOrders'] as $orders)
                                                             <tr>
+                                                                <td>
+                                                                    @if ($orders->deliveryStatus == 'off')
+                                                                        <button class="btn btn-danger">Out for
+                                                                            delivery</button>
+                                                                    @elseif($orders->deliveryStatus == 'in-progress')
+                                                                        <button class="btn btn-warning" disabled>Delivery in
+                                                                            progress</button>
+                                                                    @else
+                                                                        <button class="btn btn-success"
+                                                                            disabled>Delivered</button>
+                                                                    @endif
+
+                                                                </td>
                                                                 <td>
                                                                     <a href="{{ $orders->image }}" target="_blank"><img
                                                                             class="img-fluid img-30"
@@ -281,7 +340,7 @@
                                                         @endforeach
                                                     @else
                                                         <tr>
-                                                            <td colspan="8" align="center">No orders received.</td>
+                                                            <td colspan="9" align="center">No orders received.</td>
                                                         </tr>
                                                     @endif
 
@@ -856,7 +915,7 @@
                                             <div class="row">
                                                 <div class="col-md-9">
                                                     <h5 class="card-text">
-                                                        Setup Your Store
+                                                        Setup Your eStore
                                                     </h5>
                                                     <p>
                                                         You can now setup your store for your customers to see how your
@@ -866,7 +925,7 @@
                                                 <div class="col-md-3">
                                                     <button class="btn btn-success" style="width: 100%;"
                                                         data-bs-toggle="modal" data-bs-target="#createStoreModal">Setup
-                                                        Store</button>
+                                                        eStore</button>
                                                 </div>
                                             </div>
                                             <hr>
@@ -874,12 +933,12 @@
                                             <div class="row">
                                                 <div class="col-md-9">
                                                     <h5 class="card-text">
-                                                        Activate announcements & flash messages
+                                                        Announcements
                                                     </h5>
                                                     <p>
                                                         You can now activate announcements to be able to share information
                                                         on your
-                                                        store with new and existing customers.
+                                                        eStore with new and existing customers.
                                                     </p>
                                                 </div>
                                                 <div class="col-md-3">
@@ -887,42 +946,30 @@
                                                 </div>
                                             </div>
                                             <hr>
-                                            <div class="row">
-                                                <div class="col-md-9">
-                                                    <h5 class="card-text">
-                                                        Generate QR code for your store
-                                                    </h5>
-                                                    <p>
-                                                        You can now generate and download QR codes to share on your store.
-                                                        Customers can scan the code to have access to all your products.
-                                                    </p>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <button class="btn btn-success" style="width: 100%;"><small>Activate QR
-                                                            code</small></button>
-                                                </div>
-                                            </div>
-                                            <hr>
+
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <h5 class="card-text">
-                                                        Shipping Preference
+                                                        Shipping Option
                                                     </h5>
                                                     <br>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" value=""
                                                             id="flexCheckDefault">
                                                         <label class="form-check-label" for="flexCheckDefault">
-                                                            Turn off shipping
+                                                            In-Store Pick Up
                                                         </label>
                                                     </div>
+                                                    {{-- TODO:: Shipping Regions and rate becomes active --}}
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" value=""
                                                             id="flexCheckChecked">
                                                         <label class="form-check-label" for="flexCheckChecked">
-                                                            I’ll handle my shipping
+                                                            Delivery
                                                         </label>
                                                     </div>
+
+                                                    {{-- TODO:: Pickup address becomes active... type in your pickup address.. Adress, city state, country and postal code --}}
                                                 </div>
 
                                             </div>
@@ -992,6 +1039,21 @@
 
                             @csrf
 
+
+                            <div class="form-group">
+                                <label for="stock">Category</label>
+                                <select name="category" id="category" class="form-control form-select" required>
+                                    @if (count($data['productcategory']) > 0)
+                                        <option value="">Select category</option>
+
+                                        @foreach ($data['productcategory'] as $item)
+                                            <option value="{{ $item->category }}">{{ $item->category }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                <small id="stockHelp" class="form-text text-muted">Select product category</small>
+                            </div>
+
                             <div class="form-group">
                                 <label for="productName">Product Name</label>
                                 <input type="text" class="form-control" name="productName" id="productName"
@@ -1014,11 +1076,21 @@
                                     stated in your
                                     local currency</small>
                             </div>
+
                             <div class="form-group">
                                 <label for="stock">Stock</label>
                                 <input type="number" min="1" max="100" class="form-control" name="stock" id="stock"
                                     aria-describedby="stockHelp" placeholder="Enter quantity in stock" required>
                                 <small id="stockHelp" class="form-text text-muted">How many do you have in stock</small>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea class="form-control store_description" name="description" aria-describedby="descriptionHelp"
+                                    placeholder="Enter product description" required></textarea>
+                                <small id="descriptionHelp" class="form-text text-muted">Give your customers the
+                                    description about this product</small>
                             </div>
 
                             <div class="form-group">
@@ -1029,11 +1101,11 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="description">Description</label>
-                                <textarea class="form-control store_description" name="description" aria-describedby="descriptionHelp"
-                                    placeholder="Enter product description" required></textarea>
-                                <small id="descriptionHelp" class="form-text text-muted">Give your customers the
-                                    description about this product</small>
+                                <label for="deliveryDate">Delivery Period</label>
+                                <input type="text" min="1" max="100" class="form-control" name="deliveryDate"
+                                    id="deliveryDate" aria-describedby="deliveryDateHelp" placeholder="6 days" required>
+                                <small id="deliveryDateHelp" class="form-text text-muted">How many days would the product
+                                    be shipped?</small>
                             </div>
 
 
@@ -1158,7 +1230,7 @@
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Setup Store</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Setup eStore</h5>
                         <button class="btn-close" type="button" data-dismiss="modal" aria-label="Close"
                             onclick="$('.modal').modal('hide')"></button>
                     </div>
@@ -1248,6 +1320,17 @@
 
                                 <small id="advertSubtitleHelp" class="form-text text-muted">If ADVERT CONTENT IMAGE is more
                                     than one (1), separate by comma (,)</small>
+
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="advertSubtitle">Return and Refund Policy </label>
+
+                                <textarea name="refundPolicy" id="refundPolicy" cols="30" rows="10" class="form-control"></textarea>
+
+                                <small id="advertSubtitleHelp" class="form-text text-muted">Here is to assertain your
+                                    customers of your return and refund policy</small>
 
                             </div>
 

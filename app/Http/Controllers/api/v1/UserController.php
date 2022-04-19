@@ -214,6 +214,7 @@ class UserController extends Controller
                         $this->createNotification($newRefcode, "Hello " . $request->firstname . ", PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!. Welcome on board.");
                     }
                 } else {
+
                     $message = "success";
                     $title = "Great";
                     $link = "/";
@@ -234,12 +235,32 @@ class UserController extends Controller
                 $this->email = $request->email;
                 $this->subject = "Welcome to PaySprint";
 
-                $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca <br> b. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents <br> All other features would be enabled for you as soon as Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
+                $mailmessage = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca <br> b. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents <br> All other features would be enabled for you as soon as Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
 
-                $this->message = '<p>' . $message . '</p>';
+                $this->message = '<p>' . $mailmessage . '</p>';
 
 
                 $this->sendEmail($this->email, "Fund remittance");
+
+
+                if($request->country == "India"){
+
+                    $this->name = $request->firstname . ' ' . $request->lastname;
+                    // $this->email = "bambo@vimfile.com";
+                    $this->email = $request->email;
+                    $this->subject = "Special Notice";
+
+                    $mailmessage = "Dear ".$request->firstname.", If you are presenting India Aadhaar Card as the form of identification, kindly upload your India Permanent Account Number card as well using same icon.Thanks";
+
+                    $this->message = '<p>' . $mailmessage . '</p>';
+
+
+                    $this->sendEmail($this->email, "Fund remittance");
+
+
+
+                }
+
             } else {
 
                 $message = "error";
@@ -265,6 +286,10 @@ class UserController extends Controller
             // $resInfo = "Hello ".$request->firstname."!, Welcome to PaySprint!";
             // $data = $user;
             // $statusCode = 200;
+
+
+
+
 
             $status = $statusCode;
 

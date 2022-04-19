@@ -233,7 +233,7 @@ class GooglePaymentController extends Controller
                                             $respaction = 'error';
 
                                             return redirect()->back()->with($respaction, $response);
-                                        } elseif (isset($imtCountry) && $imtCountry->imt == "false") {
+                                        } elseif ((isset($imtCountry) && $imtCountry->imt == "false" && $client->country != $user->country)) {
                                             $resData = ['res' => 'International money transfer is not yet available to ' . $imtCountry->name, 'message' => 'error', 'title' => 'Oops!'];
 
                                             $response = 'International money transfer is not yet available to ' . $imtCountry->name;

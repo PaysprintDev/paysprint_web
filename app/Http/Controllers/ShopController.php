@@ -11,9 +11,15 @@ use App\StoreProducts;
 use App\StoreOrders;
 use App\StoreDiscount;
 use App\StoreMainShop;
+use App\StoreWishList;
+use App\StoreCart;
+use App\StoreBillingDetail;
+use App\Traits\MyEstore;
 
 class ShopController extends Controller
 {
+
+    use MyEstore;
 
     public function __construct()
     {
@@ -53,6 +59,9 @@ class ShopController extends Controller
 
 
 
+
+
+
     public function storeProduct(Request $req){
 
         try {
@@ -63,7 +72,10 @@ class ShopController extends Controller
             'previousAmount' => 'required',
             'stock' => 'required',
             'file' => 'required',
-            'description' => 'required'
+            'description' => 'required',
+            'category' => 'required',
+            'deliveryDate' => 'required'
+
         ]);
 
         if ($validator->passes()) {
@@ -75,6 +87,7 @@ class ShopController extends Controller
 
 
 
+
             $query = [
                 'merchantId' => Auth::id(),
                 'productName' => $req->productName,
@@ -83,6 +96,8 @@ class ShopController extends Controller
                 'stock' => $req->stock,
                 'image' => $docPath,
                 'description' => $req->description,
+                'category' => $req->category,
+                'deliveryDate' => $req->deliveryDate
             ];
 
             // Insert record
@@ -104,6 +119,67 @@ class ShopController extends Controller
 
 
         return redirect()->back()->with($status, $message);
+
+    }
+
+
+    public function placeOrder(Request $req){
+
+        try{
+
+            //Get Cart Items and delete from cart...
+            $getCart = StoreCart::where('userId', $req->userId)->get();
+
+            if($req->shipping_check == "on"){
+                $shippingName = $req->name;
+                $shippingAddress = $req->address.' '.$req->city.' '.$req->state.' '.$req->country;
+                $shippingEmail = $req->email;
+                $shippingPhone = $req->phone;
+            }
+            else{
+                $shippingName = $req->shippingName;
+                $shippingAddress = $req->shippingAddress;
+                $shippingEmail = $req->shippingEmail;
+                $shippingPhone = $req->shippingPhone;
+            }
+
+            // Add shipping details...
+            StoreBillingDetail::updateOrCreate(['userId' => $req->userId, 'merchantId' => $req->merchantId],[
+                 'userId' => $req->userId, 'merchantId' => $req->merchantId, 'fulllname' => $req->name, 'company_name' => $req->company, 'country' => $req->country, 'state' => $req->state, 'address' => $req->address, 'apartment' => $req->apartment, 'city' => $req->city, 'postalcode' => $req->postalCode, 'email' => $req->email, 'phone' => $req->phone, 'shippingName' => $shippingName, 'shippingAddress' => $shippingAddress, 'shippingEmail' => $shippingEmail, 'shippingPhone' => $shippingPhone
+            ]);
+
+
+
+            if(count($getCart) > 0){
+
+                $address = $req->address.' '.$req->city.' '.$req->state.' '.$req->country;
+
+                foreach($getCart as $cartItem){
+                    // Put items in orders...
+                    StoreOrders::updateOrCreate(['productId' => $cartItem->productId, 'userId' => $req->userId, 'merchantId' => $cartItem->merchantId],[
+                         'orderId' => 'ESTORE_'.uniqid(), 'productId' => $cartItem->productId, 'userId' => $req->userId, 'merchantId' => $cartItem->merchantId, 'quantity' => $cartItem->quantity, 'paymentStatus' => 'not paid', 'additionalInfo' => $req->additionalInfo, 'address' => $address, 'postalCode' => $req->postalCode, 'deliveryDate' => $cartItem->deliveryDate
+                    ]);
+
+                }
+
+            }
+            
+
+            return redirect()->route('estore payment', ['merchantId' => $cartItem->merchantId, 'userId' => $req->userId, 'country' => $req->country]);
+
+
+            
+
+        }
+         catch (\Throwable $th) {
+            $status = 'error';
+            $message = $th->getMessage();
+
+            return redirect()->back()->with($status, $message); 
+        }
+
+
+        
 
     }
 
@@ -166,7 +242,8 @@ class ShopController extends Controller
             'amount' => 'required',
             'previousAmount' => 'required',
             'stock' => 'required',
-            'description' => 'required'
+            'description' => 'required',
+            'category' => 'required'
         ]);
 
         if ($validator->passes()) {
@@ -190,7 +267,7 @@ class ShopController extends Controller
             }
 
 
-                        $query = [
+            $query = [
                 'merchantId' => Auth::id(),
                 'productName' => $req->productName,
                 'amount' => $req->amount,
@@ -198,6 +275,7 @@ class ShopController extends Controller
                 'stock' => $req->stock,
                 'image' => $docPath,
                 'description' => $req->description,
+                'category' => $req->category
             ];
 
             // Insert record
@@ -205,8 +283,6 @@ class ShopController extends Controller
 
 
             StoreProducts::where('id', $id)->update($query);
-
-
  
 
             $status = 'success';
@@ -326,6 +402,7 @@ class ShopController extends Controller
             'headerSubtitle' => 'required',
             'headerContent' => 'required',
             'businessLogo' => 'required',
+            'refundPolicy' => 'required',
         ]);
 
 
@@ -379,7 +456,8 @@ class ShopController extends Controller
                 'headerSubtitle' => $req->headerSubtitle,
                 'advertSectionImage' => $advertSectionImage,
                 'advertTitle' => $req->advertTitle,
-                'advertSubtitle' => $req->advertSubtitle
+                'advertSubtitle' => $req->advertSubtitle,
+                'refundPolicy' => $req->refundPolicy
             ];
 
 
@@ -418,6 +496,95 @@ class ShopController extends Controller
         }
 
         return redirect()->back()->with($status, $message);
+
+    }
+
+
+    public function addToWishList(Request $req){
+
+        try{
+
+            // Check if user already has the item in wishlist...
+            $checkWishlist = StoreWishList::where('productId', $req->productId)->where('userId', $req->userId)->first();
+
+
+            $getProduct = StoreProducts::where('id', $req->productId)->first();
+
+            if(isset($checkWishlist)){
+                $status = 200;
+                $resData = ['data' => [], 'message' => 'Already added to wishlist'];
+            }
+            else{
+                $data = StoreWishList::create([
+                    'userId' => $req->userId,
+                    'productId' => $req->productId,
+                    'merchantId' => $getProduct->merchantId,
+                ]);
+
+                
+
+                $status = 200;
+                $resData = ['data' => $data, 'message' => 'Added '.$getProduct->productName.' to wishlist'];
+
+
+            }
+
+
+        } catch (\Throwable $th) {
+            $status = 400;
+            $resData = ['data' => [], 'message' => $th->getMessage()];
+        }
+
+
+        return $this->returnJSON($resData, $status);
+        
+    }
+
+
+    public function addToCart(Request $req){
+
+        try{
+
+            // Check if user already has the item in wishlist...
+            $checkCart = StoreCart::where('productId', $req->productId)->where('userId', $req->userId)->first();
+
+            if(isset($req->quantity)){
+                $quantity = $req->quantity;
+            }
+            else{
+                $quantity = "1";
+            }
+
+
+            $getProduct = StoreProducts::where('id', $req->productId)->first();
+
+             $data = StoreCart::updateOrCreate(['userId' => $req->userId,
+                    'productId' => $req->productId],[
+                    'userId' => $req->userId,
+                    'productId' => $req->productId,
+                    'merchantId' => $getProduct->merchantId,
+                    'quantity' => $quantity,
+                    'productName' => $getProduct->productName,
+                    'productImage' => $getProduct->image,
+                    'price' => $getProduct->amount,
+                    'deliveryDate' => $getProduct->deliveryDate,
+                    'shippingFee' => $getProduct->shippingFee,
+                    'taxFee' => $getProduct->taxFee
+                ]);
+
+                
+
+                $status = 200;
+                $resData = ['data' => $data, 'message' => 'Added '.$quantity.' '.$getProduct->productName.' to cart'];
+
+
+        } catch (\Throwable $th) {
+            $status = 400;
+            $resData = ['data' => [], 'message' => $th->getMessage()];
+        }
+
+
+        return $this->returnJSON($resData, $status);
 
     }
 

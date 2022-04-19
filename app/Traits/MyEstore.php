@@ -15,6 +15,8 @@ use App\StoreProducts;
 use App\StoreOrders;
 use App\StoreDiscount;
 use App\StoreMainShop;
+use App\StoreWishList;
+use App\StoreCart;
 
 trait MyEstore
 {
@@ -33,4 +35,47 @@ trait MyEstore
 
         return $data;
     }
+
+    public function getMyWishlist($id){
+
+        if($id == 0) $data = [];
+
+        $data = StoreWishList::where('userId', $id)->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+
+        
+    }
+    public function getMyCartlist($id){
+
+        if($id == 0) $data = [];
+
+        $data = StoreCart::where('userId', $id)->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+
+    }
+
+    public function getPayCartList($id, $merchantId){
+
+        $data = StoreCart::where('userId', $id)->where('merchantId', $merchantId)->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+
+    }
+
+    public function getThisProduct($id){
+        $data = StoreProducts::where('id', $id)->first();
+
+        return $data;
+    }
+
+
+    public function getOrders($merchantid, $userid){
+        $data = StoreOrders::where('userId', $userid)->where('merchantId', $merchantid)->where('paymentStatus', 'not paid')->get();
+
+        return $data;
+    }
+
+
 }

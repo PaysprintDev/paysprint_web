@@ -353,7 +353,7 @@
                             <li class="dropdown">
                                 <a class="nav-link menu-title link-nav "
                                     href="https://paysprintworkspace.slack.com/archives/C02TBVDV37B" target="_blank"><i
-                                        data-feather="file-text"></i><span>Community Forum</span></a>
+                                        data-feather="file-text"></i><span>Get Support</span></a>
                             </li>
 
                             <li class="sidebar-main-title">

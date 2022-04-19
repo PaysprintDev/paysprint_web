@@ -122,6 +122,7 @@ use App\Traits\MailChimpNewsLetter;
 
 use App\Traits\GenerateOtp;
 use App\VerificationCode;
+use App\Traits\MyEstore;
 
 class HomeController extends Controller
 {
@@ -139,7 +140,7 @@ class HomeController extends Controller
     public $country;
     public $timezone;
 
-    use RpmApp, Trulioo, AccountNotify, PaystackPayment, ExpressPayment, SpecialInfo, Xwireless, PaymentGateway, MailChimpNewsLetter, PaysprintPoint, PointsHistory, GenerateOtp, IDVCheck;
+    use RpmApp, Trulioo, AccountNotify, PaystackPayment, ExpressPayment, SpecialInfo, Xwireless, PaymentGateway, MailChimpNewsLetter, PaysprintPoint, PointsHistory, GenerateOtp, IDVCheck, MyEstore;
     /**
      * Create a new controller instance.
      *
@@ -871,6 +872,55 @@ class HomeController extends Controller
 
 
         return view('main.paymentorganization')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function estorePayment(Request $req)
+    {
+        
+
+        $getMerchant = User::where('id', $req->merchantId)->first();
+        $getMerchantKey = ClientInfo::where('user_id', $getMerchant->ref_code)->first();
+
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Payment';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            } else {
+
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+
+            $this->page = 'Payment';
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+        }
+
+        $data = array(
+            'paymentorg' => $this->getthisOrganization($getMerchant->ref_code),
+            'currencyCode' => $this->getCountryCode($req->country),
+            'othercurrencyCode' => $this->otherCurrencyCodeOfficial($getMerchant->ref_code),
+            'getOrder' => $this->getOrders($req->merchantId, $req->userId),
+            'getCart' => $this->getPayCartList($req->userId, $req->merchantId),
+            'continent' => $this->timezone[0],
+            'merchantApiKey' => $getMerchantKey->api_secrete_key,
+            'merchantMainApiKey' => $getMerchant->api_token,
+            'paymentgateway' => $this->getPaymentGateway($req->country)
+        );
+
+
+
+
+
+
+        return view('main.paymentestore')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -4270,6 +4320,27 @@ class HomeController extends Controller
 
 
                     $this->sendEmail($this->email, "Fund remittance");
+
+
+                    if($req->country == "India"){
+
+                        $this->name = $req->fname . ' ' . $req->lname;
+                        // $this->email = "bambo@vimfile.com";
+                        $this->email = $req->email;
+                        $this->subject = "Special Notice";
+
+                        $mailmessage = "Dear ".$req->fname.", If you are presenting India Aadhaar Card as the form of identification, kindly upload your India Permanent Account Number card as well using same icon.Thanks";
+
+                        $this->message = '<p>' . $mailmessage . '</p>';
+
+
+                        $this->sendEmail($this->email, "Fund remittance");
+
+
+
+                    }
+
+
                 } else {
 
                     $message = "error";
@@ -5103,6 +5174,7 @@ class HomeController extends Controller
 
     public function ajaxgetCommission(Request $req)
     {
+
 
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
