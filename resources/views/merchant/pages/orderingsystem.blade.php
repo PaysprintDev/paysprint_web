@@ -9,8 +9,25 @@
             <div class="page-header">
                 <div class="row">
 
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 float-right">
                         <!-- Bookmark Start-->
+
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <td>eStore Escrow Balance</td>
+                                    <td style="font-weight: bold;">
+                                        {{ Auth::user()->currencySymbol . '' . number_format(Auth::user()->escrow_balance, 2) }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Dispute Balance</td>
+                                    <td style="font-weight: bold;">
+                                        {{ Auth::user()->currencySymbol . '' . number_format(Auth::user()->dispute_balance, 2) }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
                         <!-- Bookmark Ends-->
                     </div>
@@ -88,7 +105,8 @@
                                                             <td>{{ date('d/m/Y', strtotime($product->created_at)) }}</td>
                                                             <td>
 
-                                                                <form action="{{ route('delete product', $product->id) }}"
+                                                                <form
+                                                                    action="{{ route('delete product', $product->id) }}"
                                                                     method="post" id="formProduct{{ $product->id }}">
                                                                     @csrf
                                                                 </form>
@@ -1309,9 +1327,10 @@
                             <div class="form-group">
                                 <label for="advertSubtitle">Return and Refund Policy </label>
 
-                                    <textarea name="refundPolicy" id="refundPolicy" cols="30" rows="10" class="form-control"></textarea>
+                                <textarea name="refundPolicy" id="refundPolicy" cols="30" rows="10" class="form-control"></textarea>
 
-                                <small id="advertSubtitleHelp" class="form-text text-muted">Here is to assertain your customers of your return and refund policy</small>
+                                <small id="advertSubtitleHelp" class="form-text text-muted">Here is to assertain your
+                                    customers of your return and refund policy</small>
 
                             </div>
 

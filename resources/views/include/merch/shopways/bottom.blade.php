@@ -200,7 +200,18 @@
 
 
         }
+
+        $('#shipping_check').change(() => {
+
+            if ($('#shipping_check').prop('checked') == true) {
+                $('.shippingInfo').addClass('disp-0');
+            } else {
+                $('.shippingInfo').removeClass('disp-0');
+            }
+        })
     </script>
+
+
 
 
 

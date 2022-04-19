@@ -130,9 +130,22 @@ class ShopController extends Controller
             //Get Cart Items and delete from cart...
             $getCart = StoreCart::where('userId', $req->userId)->get();
 
+            if($req->shipping_check == "on"){
+                $shippingName = $req->name;
+                $shippingAddress = $req->address.' '.$req->city.' '.$req->state.' '.$req->country;
+                $shippingEmail = $req->email;
+                $shippingPhone = $req->phone;
+            }
+            else{
+                $shippingName = $req->shippingName;
+                $shippingAddress = $req->shippingAddress;
+                $shippingEmail = $req->shippingEmail;
+                $shippingPhone = $req->shippingPhone;
+            }
+
             // Add shipping details...
             StoreBillingDetail::updateOrCreate(['userId' => $req->userId, 'merchantId' => $req->merchantId],[
-                 'userId' => $req->userId, 'merchantId' => $req->merchantId, 'company_name' => $req->company, 'country' => $req->country, 'state' => $req->state, 'address' => $req->address, 'apartment' => $req->apartment, 'city' => $req->city, 'postalcode' => $req->postalCode, 'email' => $req->email, 'phone' => $req->phone
+                 'userId' => $req->userId, 'merchantId' => $req->merchantId, 'fulllname' => $req->name, 'company_name' => $req->company, 'country' => $req->country, 'state' => $req->state, 'address' => $req->address, 'apartment' => $req->apartment, 'city' => $req->city, 'postalcode' => $req->postalCode, 'email' => $req->email, 'phone' => $req->phone, 'shippingName' => $shippingName, 'shippingAddress' => $shippingAddress, 'shippingEmail' => $shippingEmail, 'shippingPhone' => $shippingPhone
             ]);
 
 
@@ -152,7 +165,7 @@ class ShopController extends Controller
             }
             
 
-            return redirect()->route('estore payment', ['merchantId' => $cartItem->merchantId, 'userId' => $req->userId, 'country' => Auth::user()->country]);
+            return redirect()->route('estore payment', ['merchantId' => $cartItem->merchantId, 'userId' => $req->userId, 'country' => $req->country]);
 
 
             

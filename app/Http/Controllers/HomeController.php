@@ -905,13 +905,16 @@ class HomeController extends Controller
 
         $data = array(
             'paymentorg' => $this->getthisOrganization($getMerchant->ref_code),
-            'currencyCode' => $this->getCountryCode(Auth::user()->country),
+            'currencyCode' => $this->getCountryCode($req->country),
             'othercurrencyCode' => $this->otherCurrencyCodeOfficial($getMerchant->ref_code),
             'getOrder' => $this->getOrders($req->merchantId, $req->userId),
             'getCart' => $this->getPayCartList($req->userId, $req->merchantId),
             'continent' => $this->timezone[0],
-            'merchantApiKey' => $getMerchantKey->api_secrete_key
+            'merchantApiKey' => $getMerchantKey->api_secrete_key,
+            'merchantMainApiKey' => $getMerchant->api_token,
+            'paymentgateway' => $this->getPaymentGateway($req->country)
         );
+
 
 
 
@@ -5171,6 +5174,7 @@ class HomeController extends Controller
 
     public function ajaxgetCommission(Request $req)
     {
+
 
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
