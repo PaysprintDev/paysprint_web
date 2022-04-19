@@ -8,11 +8,13 @@ use App\ReferredUsers;
 use Illuminate\Support\Facades\Hash;
 
 use App\SpecialInformation as SpecialInformation;
+use App\SpecialNotification as SpecialNotification;
 use App\SupportActivity as SupportActivity;
 use App\ClientInfo as ClientInfo;
 
 use App\SuperAdmin as SuperAdmin;
 use App\User;
+use App\Notifications;
 
 trait SpecialInfo
 {
@@ -20,7 +22,47 @@ trait SpecialInfo
     public function createInfo($query)
     {
 
-        $data = SpecialInformation::updateOrCreate(['country' => $query['country']], $query);
+        if($query['communication'] == "Notification"){
+
+            $data = SpecialNotification::updateOrCreate(['country' => $query['country']], $query);
+            
+            $getUsers = User::where('country', $query['country'])->get();
+
+            foreach ($getUsers as $users){
+                Notifications::insert([
+                    'ref_code' => $users->ref_code,
+                    'period' => date('Y-m-d'),
+                    'activity' => $query['information'],
+                    'country' => $query['country'],
+                    'platform' => 'web'
+                ]);
+
+            }
+
+        }
+        else{
+
+            $data = SpecialInformation::updateOrCreate(['country' => $query['country']], $query);
+
+            $getUsers = User::where('country', $query['country'])->get();
+
+            foreach ($getUsers as $users){
+                Notifications::insert([
+                    'ref_code' => $users->ref_code,
+                    'period' => date('Y-m-d'),
+                    'activity' => $query['information'],
+                    'country' => $query['country'],
+                    'platform' => 'web'
+                ]);
+
+            }
+        }
+        
+
+
+
+
+        // Update activity report / notification
 
         return $data;
     }

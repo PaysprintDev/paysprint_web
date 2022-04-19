@@ -21,7 +21,6 @@
         gtag('js', new Date());
 
         gtag('config', 'UA-91615293-4');
-
     </script>
 </head>
 
@@ -36,10 +35,10 @@
                         <a href="#" class="logo-link nk-sidebar-logo">
                             <img class="logo-light logo-img"
                                 src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
-                                srcset="images/logo2x.png 2x" alt="DashLite">
+                                srcset="images/logo2x.png 2x" alt="PaySprint">
                             <img class="logo-dark logo-img"
                                 src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
-                                srcset="images/logo-dark2x.png 2x" alt="DashLite">
+                                srcset="images/logo-dark2x.png 2x" alt="PaySprint">
                         </a>
                     </div>
                     <div class="nk-menu-trigger mr-n2">
@@ -151,11 +150,15 @@
                                     <div class="nk-block-head" id="introduction">
                                         <div class="nk-block-head-content pt-2">
                                             <h5 class="nk-block-title">Getting Started</h5>
-                                            
+
                                             <div class="nk-block-des">
                                                 <p>
-PaySprint offers developers the ability to receive money from third-party application directly to their paysprint wallet leveraging on our REST API’s. Entrepreneur’s, Startup companies, SME's (Small and Medium Enterprises), MSME’s & Enterprises deploy with these solutions.
-</p>
+                                                    PaySprint offers developers the ability to receive money from
+                                                    third-party application directly to their paysprint wallet
+                                                    leveraging on our REST API’s. Entrepreneur’s, Startup companies,
+                                                    SME's (Small and Medium Enterprises), MSME’s & Enterprises deploy
+                                                    with these solutions.
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -187,7 +190,7 @@ PaySprint offers developers the ability to receive money from third-party applic
                                                     during your sign up.</p>
                                                 <ul class="gy-2">
                                                     <pre
-                                                        class="prettyprint lang-html"> {{ (isset($data['getbusinessDetail'])) ? $data['getbusinessDetail']->api_secrete_key : "4d55fce450eb59d0699f33c6f42b2a73050520211620214476" }} </pre>
+                                                        class="prettyprint lang-html"> {{ isset($data['getbusinessDetail'])? $data['getbusinessDetail']->api_secrete_key: '4d55fce450eb59d0699f33c6f42b2a73050520211620214476' }} </pre>
 
 
 
@@ -199,7 +202,8 @@ PaySprint offers developers the ability to receive money from third-party applic
                                     <div class="nk-block" id="jsList">
                                         <div class="nk-block-head wide-sm">
                                             <div class="nk-block-head-content pt-2">
-                                                <h5 class="nk-block-title">Receive Money Paysprint User <span class="badge badge-pill badge-primary">POST</span></h5>
+                                                <h5 class="nk-block-title">Receive Money Paysprint User <span
+                                                        class="badge badge-pill badge-primary">POST</span></h5>
                                             </div>
                                         </div>
 
@@ -215,6 +219,7 @@ curl --location --request POST '{baseUrl}/customers' \
 --form 'accountNumber="69212"' \ //Customer's PaySprint account number
 --form 'amount="50"' \ //Amount to charge
 --form 'purpose="Contribution"' \ // Purpose of Payment
+--form 'transactionPin="1234"' \ // PaySprint transaction pin
 --form 'mode="test"' //live or test
 </pre>
                                             </div>
@@ -226,7 +231,8 @@ curl --location --request POST '{baseUrl}/customers' \
                                     <div class="nk-block" id="jsList">
                                         <div class="nk-block-head wide-sm">
                                             <div class="nk-block-head-content pt-2">
-                                                <h5 class="nk-block-title">Receive Money Guest <span class="badge badge-pill badge-primary">POST</span></h5>
+                                                <h5 class="nk-block-title">Receive Money Guest <span
+                                                        class="badge badge-pill badge-primary">POST</span></h5>
                                             </div>
                                         </div>
 
@@ -262,18 +268,19 @@ curl --location --request POST '{baseUrl}/visitors' \
                                     </div>
 
 
-<hr class="hr border-light mt-5 mb-4">
-                                <div class="nk-block" id="cssList">
-                                    <div class="nk-block-head wide-sm">
-                                        <div class="nk-block-head-content pt-2">
-                                            <h5 class="nk-block-title">RESPONSE <span class="badge badge-pill badge-success">200</span>
+                                    <hr class="hr border-light mt-5 mb-4">
+                                    <div class="nk-block" id="cssList">
+                                        <div class="nk-block-head wide-sm">
+                                            <div class="nk-block-head-content pt-2">
+                                                <h5 class="nk-block-title">RESPONSE <span
+                                                        class="badge badge-pill badge-success">200</span>
 
-                                            </h5>
+                                                </h5>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="code-block">
-                                        <!-- <h6 class="overline-title title">Status code</h6> -->
-                                        <pre class="prettyprint lang-html">
+                                        <div class="code-block">
+                                            <!-- <h6 class="overline-title title">Status code</h6> -->
+                                            <pre class="prettyprint lang-html">
 {
     "data": {
         "name": "Shawn Davids",
@@ -291,85 +298,86 @@ curl --location --request POST '{baseUrl}/visitors' \
     "status": 200
 }
 </pre>
-                                    </div>
-                                </div><!-- nk-block -->
-
-                                <hr class="hr border-light mt-5 mb-4">
-                                <div class="nk-block" id="cssList">
-                                    <div class="nk-block-head wide-sm">
-                                        <div class="nk-block-head-content pt-2">
-                                            <h5 class="nk-block-title">RESPONSE <span class="badge badge-pill badge-danger">400</span>
-
-                                            </h5>
                                         </div>
-                                    </div>
-                                    <div class="code-block">
-                                        <!-- <h6 class="overline-title title">Status code</h6> -->
-                                        <pre class="prettyprint lang-html">
+                                    </div><!-- nk-block -->
+
+                                    <hr class="hr border-light mt-5 mb-4">
+                                    <div class="nk-block" id="cssList">
+                                        <div class="nk-block-head wide-sm">
+                                            <div class="nk-block-head-content pt-2">
+                                                <h5 class="nk-block-title">RESPONSE <span
+                                                        class="badge badge-pill badge-danger">400</span>
+
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        <div class="code-block">
+                                            <!-- <h6 class="overline-title title">Status code</h6> -->
+                                            <pre class="prettyprint lang-html">
 {
     "data": {},
     "message": "Insufficient balance!. Your current wallet balance is CAD 1.00",
     "status": 400
 }
 </pre>
-                                    </div>
-                                </div><!-- nk-block -->
-
-
-                                <hr class="hr border-light mt-5 mb-4">
-                                <div class="nk-block" id="rtl">
-                                    <div class="nk-block-head wide-sm">
-                                        <div class="nk-block-head-content pt-2">
-                                            <h5 class="nk-block-title">POSTMAN REFERENCE</h5>
                                         </div>
-                                    </div>
-                                    <div class="row g-gs">
-                                        <div class="col-12">
-                                            <div class="card card-bordered">
-                                                <div class="card-inner">
-                                                    <h6 class="overline-title">Run it on POSTMAN
-                                                    </h6>
-                                                    <p>
-                                                        <a href="https://www.getpostman.com/collections/7135ceea9cd86961f373" target="_blank">https://www.getpostman.com/collections/7135ceea9cd86961f373</a>
-                                                    </p>
-                                                    <div class="postman-run-button"
-                                                        data-postman-action="collection/import"
-                                                        data-postman-var-1="7135ceea9cd86961f373"
-                                                        data-postman-param="env%5BPaySprint%20Endpoint%5D=W3sia2V5IjoidXJsIiwidmFsdWUiOiJodHRwczovL3BheXNwcmludC5uZXQvYXBpL3YxIiwiZW5hYmxlZCI6dHJ1ZX0seyJrZXkiOiJhcHBrZXkiLCJ2YWx1ZSI6ImJhc2U2NDpKRk0rUEphV0QvcEJ5cFgrTmhYdWREckFtaWFuWmRHWVo0MXF6NFdoWEwwPSIsImVuYWJsZWQiOnRydWV9LHsia2V5IjoiYmVhcmVyIiwidmFsdWUiOiJleUowZVhBaU9pSktWMVFpTENKaGJHY2lPaUpTVXpJMU5pSXNJbXAwYVNJNkltTXdNV0UzTkdOaVpEaG1NalZtT1dVd1pXTmhaVEJsT1dNek1HUTNZVFJtTW1Sak16SmxPRFUyT0RJeU9HTXlaak5pTWpJd1l6TTRaRGhqTVROaE9URmpNVFkzWTJVM05qbGtNamhsT1dJMEluMC5leUpoZFdRaU9pSXhJaXdpYW5ScElqb2lZekF4WVRjMFkySmtPR1l5TldZNVpUQmxZMkZsTUdVNVl6TXdaRGRoTkdZeVpHTXpNbVU0TlRZNE1qSTRZekptTTJJeU1qQmpNemhrT0dNeE0yRTVNV014TmpkalpUYzJPV1F5T0dVNVlqUWlMQ0pwWVhRaU9qRTJNak15T1RVME5EZ3NJbTVpWmlJNk1UWXlNekk1TlRRME9Dd2laWGh3SWpveE5qVTBPRE14TkRRNExDSnpkV0lpT2lJeE15SXNJbk5qYjNCbGN5STZXMTE5LnJXZWZZQU5MaUJ0VTktdjNGQWJLamthWmhvV09hNWVCcEo2TVZnbG1IbUZrMmVzSG4yQlJ6a0lkNUo0ZTQ2V1daR1NucEFEdUZ3Y2NDbncwX1dDRmlsS256WGtMNnhnc243dzdhWXFzY0RZZEtfS3BHN0d6eGpmVzNNQk1LSmpSUU1mZWhxVDZoWHl4NnNDaWpMRFFDaWsxM3ZfRXNHVzZtX1UzNm5MZ3RRZWtmM0phckppakdyaXF5RHJEZkhiZlNzaU9UVzFtVjZsc2V1RXNyS0dPV3dhcWJrTzBMQ3FGU21VWGVfM2FXM0xwNzY1VmFzbGVabHVFcE5jbHNDMUk3alR0Z3pxVHdGUzVGVWNoQXYxNzB3R3l3enk5M3c4ejQ1bXEyeXVNV0owbFdYV1pWZ24tVmc3ZzhBNFU0VU1GeUxHRTd1dEVvTk1IR3k5bFJiWU9iUG84R3U4QXpEVVVUc2MwQm1HTzNKaTRsN1VyV3hBSG5uNWN2Ykx1YXA1SDdKaFpPSGJVWnpSdjhQUHc5cHBsc3huek5Zd2tpbER5Y3VXeFpHOUZjLWFPeHBYYnZMaDJlQTc1VFdna1ZSOUJqT1V6Qkp3bVE4UzhBR19OVmx5aTE2amdyb0g1Z3J1STl6eTU3bHNCd2JqdzBnV0Y5dXRqdFNmUnp4emNRS2xHNHBoc2dYUjlISDA4MVFNSGJodG92VGg2d1VvOHh2VGJQd0ZxSHlSSjVEOHJhbldWYjMyZDZGMjRNOUY2eUdYVmxWblVaTU0wSEhjdG9hWC1oVzhIQm5uV0otZkdXVFFSaEdTbXB1Uk1nMG0xaVFjRVFfMVpwaGRLVURxMzdvaHRwWnJyTlJiSXFIWm1pV1RNMFNXcV9jNHdjY2RyNkZPZHpLZVVlY1pLTUFjIiwiZW5hYmxlZCI6dHJ1ZX0seyJrZXkiOiJtZXJjaGFudGtleSIsInZhbHVlIjoiOTYyYzE2MGM4NzhlYWY4ZjY5NmUyZDdlNGIxZGZhNDAyOTA0MjAyMTE2MTk2ODk3NjUiLCJlbmFibGVkIjp0cnVlfV0=">
-                                                    </div>
-                                                    <script type="text/javascript">
-                                                        (function (p, o, s, t, m, a, n) {
-                                                            !p[s] && (p[s] = function () {
-                                                                (p[t] || (p[t] = [])).push(arguments);
-                                                            });
-                                                            !o.getElementById(s + t) && o.getElementsByTagName(
-                                                                "head")[0].appendChild((
-                                                                (n = o.createElement("script")),
-                                                                (n.id = s + t), (n.async = 1), (n.src = m),
-                                                                n
-                                                            ));
-                                                        }(window, document, "_pm", "PostmanRunObject",
-                                                            "https://run.pstmn.io/button.js"));
+                                    </div><!-- nk-block -->
 
-                                                    </script>
+
+                                    <hr class="hr border-light mt-5 mb-4">
+                                    <div class="nk-block" id="rtl">
+                                        <div class="nk-block-head wide-sm">
+                                            <div class="nk-block-head-content pt-2">
+                                                <h5 class="nk-block-title">POSTMAN REFERENCE</h5>
+                                            </div>
+                                        </div>
+                                        <div class="row g-gs">
+                                            <div class="col-12">
+                                                <div class="card card-bordered">
+                                                    <div class="card-inner">
+                                                        <h6 class="overline-title">Run it on POSTMAN
+                                                        </h6>
+                                                        <p>
+                                                            <a href="https://documenter.getpostman.com/view/6125941/UVyswvMn"
+                                                                target="_blank">https://documenter.getpostman.com/view/6125941/UVyswvMn</a>
+                                                        </p>
+                                                        <div class="postman-run-button"
+                                                            data-postman-action="collection/import"
+                                                            data-postman-var-1="7135ceea9cd86961f373"
+                                                            data-postman-param="env%5BPaySprint%20Endpoint%5D=W3sia2V5IjoidXJsIiwidmFsdWUiOiJodHRwczovL3BheXNwcmludC5uZXQvYXBpL3YxIiwiZW5hYmxlZCI6dHJ1ZX0seyJrZXkiOiJhcHBrZXkiLCJ2YWx1ZSI6ImJhc2U2NDpKRk0rUEphV0QvcEJ5cFgrTmhYdWREckFtaWFuWmRHWVo0MXF6NFdoWEwwPSIsImVuYWJsZWQiOnRydWV9LHsia2V5IjoiYmVhcmVyIiwidmFsdWUiOiJleUowZVhBaU9pSktWMVFpTENKaGJHY2lPaUpTVXpJMU5pSXNJbXAwYVNJNkltTXdNV0UzTkdOaVpEaG1NalZtT1dVd1pXTmhaVEJsT1dNek1HUTNZVFJtTW1Sak16SmxPRFUyT0RJeU9HTXlaak5pTWpJd1l6TTRaRGhqTVROaE9URmpNVFkzWTJVM05qbGtNamhsT1dJMEluMC5leUpoZFdRaU9pSXhJaXdpYW5ScElqb2lZekF4WVRjMFkySmtPR1l5TldZNVpUQmxZMkZsTUdVNVl6TXdaRGRoTkdZeVpHTXpNbVU0TlRZNE1qSTRZekptTTJJeU1qQmpNemhrT0dNeE0yRTVNV014TmpkalpUYzJPV1F5T0dVNVlqUWlMQ0pwWVhRaU9qRTJNak15T1RVME5EZ3NJbTVpWmlJNk1UWXlNekk1TlRRME9Dd2laWGh3SWpveE5qVTBPRE14TkRRNExDSnpkV0lpT2lJeE15SXNJbk5qYjNCbGN5STZXMTE5LnJXZWZZQU5MaUJ0VTktdjNGQWJLamthWmhvV09hNWVCcEo2TVZnbG1IbUZrMmVzSG4yQlJ6a0lkNUo0ZTQ2V1daR1NucEFEdUZ3Y2NDbncwX1dDRmlsS256WGtMNnhnc243dzdhWXFzY0RZZEtfS3BHN0d6eGpmVzNNQk1LSmpSUU1mZWhxVDZoWHl4NnNDaWpMRFFDaWsxM3ZfRXNHVzZtX1UzNm5MZ3RRZWtmM0phckppakdyaXF5RHJEZkhiZlNzaU9UVzFtVjZsc2V1RXNyS0dPV3dhcWJrTzBMQ3FGU21VWGVfM2FXM0xwNzY1VmFzbGVabHVFcE5jbHNDMUk3alR0Z3pxVHdGUzVGVWNoQXYxNzB3R3l3enk5M3c4ejQ1bXEyeXVNV0owbFdYV1pWZ24tVmc3ZzhBNFU0VU1GeUxHRTd1dEVvTk1IR3k5bFJiWU9iUG84R3U4QXpEVVVUc2MwQm1HTzNKaTRsN1VyV3hBSG5uNWN2Ykx1YXA1SDdKaFpPSGJVWnpSdjhQUHc5cHBsc3huek5Zd2tpbER5Y3VXeFpHOUZjLWFPeHBYYnZMaDJlQTc1VFdna1ZSOUJqT1V6Qkp3bVE4UzhBR19OVmx5aTE2amdyb0g1Z3J1STl6eTU3bHNCd2JqdzBnV0Y5dXRqdFNmUnp4emNRS2xHNHBoc2dYUjlISDA4MVFNSGJodG92VGg2d1VvOHh2VGJQd0ZxSHlSSjVEOHJhbldWYjMyZDZGMjRNOUY2eUdYVmxWblVaTU0wSEhjdG9hWC1oVzhIQm5uV0otZkdXVFFSaEdTbXB1Uk1nMG0xaVFjRVFfMVpwaGRLVURxMzdvaHRwWnJyTlJiSXFIWm1pV1RNMFNXcV9jNHdjY2RyNkZPZHpLZVVlY1pLTUFjIiwiZW5hYmxlZCI6dHJ1ZX0seyJrZXkiOiJtZXJjaGFudGtleSIsInZhbHVlIjoiOTYyYzE2MGM4NzhlYWY4ZjY5NmUyZDdlNGIxZGZhNDAyOTA0MjAyMTE2MTk2ODk3NjUiLCJlbmFibGVkIjp0cnVlfV0=">
+                                                        </div>
+                                                        <script type="text/javascript">
+                                                            (function(p, o, s, t, m, a, n) {
+                                                                !p[s] && (p[s] = function() {
+                                                                    (p[t] || (p[t] = [])).push(arguments);
+                                                                });
+                                                                !o.getElementById(s + t) && o.getElementsByTagName(
+                                                                    "head")[0].appendChild((
+                                                                    (n = o.createElement("script")),
+                                                                    (n.id = s + t), (n.async = 1), (n.src = m),
+                                                                    n
+                                                                ));
+                                                            }(window, document, "_pm", "PostmanRunObject",
+                                                                "https://run.pstmn.io/button.js"));
+                                                        </script>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div><!-- nk-block -->
+                                    </div><!-- nk-block -->
 
 
 
                                 </div><!-- nk-block -->
 
-                                
-
-                                
 
 
 
 
-                                
+
+
+
+
 
 
                             </div><!-- nk-block -->

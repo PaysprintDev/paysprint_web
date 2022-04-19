@@ -1,6 +1,7 @@
 @extends('layouts.newpage.merchantapp')
 
 @section('content')
+
     <style>
         .circle-xxxl {
             max-width: 300px;
@@ -54,7 +55,7 @@
 
                         </div>
 
-                        <a data-fancybox href="https://youtu.be/ptsmEYFJMx4"
+                        <a data-fancybox href="https://youtu.be/txfp2Pzbzrg"
                             class="video-link gr-text-color mt-8 gr-flex-y-center justify-content-center justify-content-lg-start">
                             <span class="mr-2 gr-text-color circle-18 border border-black-dynamic">
                                 <i class="icon icon-triangle-right-17-2 gr-text-14"></i>
@@ -161,7 +162,7 @@
                 <div class="col-xl-6 col-lg-7 col-md-9">
                     <div class="section-title text-center mb-11 mb-lg-19 px-lg-3">
                         <h4 class="pre-title gr-text-12 text-red text-uppercase mb-7">Our services</h4>
-                        <h2 class="title gr-text-4">We provide great services that meet your business needs</h2>
+                        <h2 class="title gr-text-4">We provide great services for merchants based on needs</h2>
                     </div>
                 </div>
             </div>
@@ -175,10 +176,10 @@
                         <div class="card-img mb-11">
                             <img src="{{ asset('newpage/image/l5/png/l5-service-card1.png') }}" alt="...">
                         </div>
-                        <h3 class="card-title gr-text-6 mb-6">Create and Send Invoice with Ease</h3>
-                        <p class="gr-text-9 mb-11">Professional Invoicing, Simplified! Create and send professional invoices
-                            with a click of a button. You can create and send a single invoice or send batch invoices and
-                            set up recurring payments, instalments and pay taxes!</p>
+                        <h3 class="card-title gr-text-6 mb-6">Professional Invoicing, Simplified!</h3>
+                        <p class="gr-text-9 mb-11">Create and send professional invoices with a click of a button. You can
+                            create and send a single invoice or send batch invoices and set up recurring payments,
+                            instalments and pay taxes!</p>
                         <a href="{{ route('AdminLogin') }}" class="gr-text-9 btn-link with-icon text-white mt-auto">Get
                             Started <i class="icon icon-tail-right"></i></a>
                     </div>
@@ -191,10 +192,11 @@
                         <div class="card-img mb-11">
                             <img src="{{ asset('newpage/image/l5/png/l5-service-card2.png') }}" alt="...">
                         </div>
-                        <h3 class="card-title gr-text-6 mb-6">Accept and Receive Payments at No Cost</h3>
-                        <p class="gr-text-9 mb-11">Accept Payments. You have the option of accepting payments to your
-                            PaySprint Merchant’s Wallet through mobile app (In-Store) or on your website (Online Sale).
-                            Connect your bank account and have your payments ready for direct deposits. </p>
+                        <h3 class="card-title gr-text-6 mb-6">Accept Payments</h3>
+                        <p class="gr-text-9 mb-11">You have the option of accepting payment to your PaySprint Wallet through
+                            the Online Payment (when you generate and send invoice through PaySprint website or mobile app)
+                            or accept payment on your website (by installing PaySprint as a Payment Gateway on your
+                            website). Connect your bank account and have your payments ready for direct deposits. </p>
                         <a href="{{ route('AdminLogin') }}" class="gr-text-9 btn-link with-icon text-white mt-auto">Get
                             Started <i class="icon icon-tail-right"></i></a>
                     </div>
@@ -207,9 +209,10 @@
                         <div class="card-img mb-11">
                             <img src="{{ asset('newpage/image/l5/png/l5-service-card3.png') }}" alt="...">
                         </div>
-                        <h3 class="card-title gr-text-6 mb-6">Connect Your Business with Customers</h3>
-                        <p class="gr-text-9 mb-11">Its easier to grow your business when you open a Merchant Account on
-                            PaySprint. Connect your business with customers and close more sales than ever!</p>
+                        <h3 class="card-title gr-text-6 mb-6">Track balances on invoice with ease</h3>
+                        <p class="gr-text-9 mb-11">We have made it easier for you to track balances on invoices when you
+                            enable the installment feature on an invoice or for customer. Installment payments help you give
+                            more choices to your customers. Generate timely statements for your business.</p>
                         <a href="{{ route('AdminLogin') }}" class="gr-text-9 btn-link with-icon text-white mt-auto">Get
                             Started <i class="icon icon-tail-right"></i></a>
                     </div>
@@ -233,9 +236,8 @@
                     <div class="col-xl-6 col-lg-7 col-md-9">
                         <div class="section-title text-center mb-11 mb-lg-19 px-lg-3">
                             <h4 class="pre-title gr-text-12 text-red text-uppercase mb-7" style="font-size: 28px;">
-                                <strong>Our services</strong>
-                            </h4>
-                            <h2 class="title gr-text-4">We provide great services that meet your business needs</h2>
+                                <strong>Our services</strong></h4>
+                            <h2 class="title gr-text-4">We provide great services for merchants based on needs</h2>
                         </div>
                     </div>
                 </div>
@@ -252,13 +254,12 @@
                             </div>
                             <div class="widget-text">
                                 <img class="rating mb-11" src="{{ asset('newpage/image/l5/png/5-stars.png') }}" alt="">
-                                <h4 class="review-text gr-text-6 font-weight-bold mb-9">Create and Send Invoice with Ease
+                                <h4 class="review-text gr-text-6 font-weight-bold mb-9">Professional Invoicing, Simplified!
                                 </h4>
                                 <div class="reviewer-block d-flex flex-wrap">
-                                    <h5 class="name gr-text-9 mr-7 mb-md-0">Professional Invoicing, Simplified! Create and
-                                        send professional invoices with a click of a button. You can create and send a
-                                        single invoice or send batch invoices and set up recurring payments, instalments and
-                                        pay taxes!</h5>
+                                    <h5 class="name gr-text-9 mr-7 mb-md-0">Create and send professional invoices with a
+                                        click of a button. You can create and send a single invoice or send batch invoices
+                                        and set up recurring payments, instalments and pay taxes!</h5>
                                 </div>
                             </div>
                         </div>
@@ -274,13 +275,13 @@
                             <div class="widget-text">
                                 <img class="rating mb-11" src="{{ asset('newpage/image/l5/png/5-stars.png') }}"
                                     alt="">
-                                <h4 class="review-text gr-text-6 font-weight-bold mb-9">Accept and Receive Payments at No
-                                    Cost</h4>
+                                <h4 class="review-text gr-text-6 font-weight-bold mb-9">Accept Payments</h4>
                                 <div class="reviewer-block d-flex flex-wrap">
-                                    <h5 class="name gr-text-9 mr-7 mb-md-0">Accept Payments. You have the option of
-                                        accepting payments to your PaySprint Merchant’s Wallet through mobile app (In-Store)
-                                        or on your website (Online Sale). Connect your bank account and have your payments
-                                        ready for direct deposits. </h5>
+                                    <h5 class="name gr-text-9 mr-7 mb-md-0">You have the option of accepting payment to
+                                        your PaySprint Wallet through the Online Payment (when you generate and send invoice
+                                        through PaySprint website or mobile app) or accept payment on your website (by
+                                        installing PaySprint as a Payment Gateway on your website). Connect your bank
+                                        account and have your payments ready for direct deposits. </h5>
                                 </div>
                             </div>
 
@@ -302,19 +303,19 @@
                         <div class="review-widget media align-items-center px-lg-7 flex-column flex-sm-row">
                             <div class="widget-image mr-12 mr-lg-19 mb-9 mb-md-0">
                                 <img class="circle-xxxl"
-                                    src="https://res.cloudinary.com/pilstech/image/upload/v1620219151/paysprint_asset/Additional_feature_bd4ib0.png"
+                                    src="https://res.cloudinary.com/pilstech/image/upload/v1620218932/paysprint_asset/Track_balance_lnsutp.png"
                                     alt="">
                             </div>
                             <div class="widget-text">
                                 <img class="rating mb-11" src="{{ asset('newpage/image/l5/png/5-stars.png') }}"
                                     alt="">
-                                <h4 class="review-text gr-text-6 font-weight-bold mb-9">Connect Your Business with
-                                    Customers
+                                <h4 class="review-text gr-text-6 font-weight-bold mb-9">Track balances on invoice with ease
                                 </h4>
                                 <div class="reviewer-block d-flex flex-wrap">
-                                    <h5 class="name gr-text-9 mr-7 mb-md-0">Its easier to grow your business when you open
-                                        a Merchant Account on PaySprint. Connect your business with customers and close more
-                                        sales than ever!</h5>
+                                    <h5 class="name gr-text-9 mr-7 mb-md-0">We have made it easier for you to track
+                                        balances on invoices when you enable the installment feature on an invoice or for
+                                        customer. Installment payments help you give more choices to your customers.
+                                        Generate timely statements for your business.</h5>
                                 </div>
                             </div>
                         </div>
@@ -330,15 +331,22 @@
                             <div class="widget-text">
                                 <img class="rating mb-11" src="{{ asset('newpage/image/l5/png/5-stars.png') }}"
                                     alt="">
-                                <h4 class="review-text gr-text-6 font-weight-bold mb-9">eStore (Your Personalised Online
-                                    Store)</h4>
+                                <h4 class="review-text gr-text-6 font-weight-bold mb-9">Business Performance Report</h4>
                                 <div class="reviewer-block d-flex flex-wrap">
-                                    <h5 class="name gr-text-9 mr-7 mb-md-0">Sell More Online. PaySprint eStore is enables
-                                        you to sell more, online. With easy to set up tools and easy to use content
-                                        management features, small business owners can set up own online store and sell more
-                                        on social media. Even, if your business already have a website, PaySprint eStore
-                                        provides you with additional outlets to sell more to customers!
+                                    <h5 class="name gr-text-9 mr-7 mb-md-0">Reports enable you to manage and control your
+                                        business activities. Have important statistics related to your business available
+                                        with ease. PaySprint Merchant Services provides you with robust reports including:
 
+                                        <ul style="list-style: none; text-align: left;">
+                                            <li>● Sent Invoices</li>
+                                            <li>● Paid Invoices</li>
+                                            <li>● Unpaid (Pending) Invoices</li>
+                                            <li>● Customer Balance Report</li>
+                                            <li>● Taxes Report</li>
+                                            <li>● Invoice Type Report</li>
+                                            <li>● Recurring invoice report</li>
+                                            <li>● Wallet Transaction History</li>
+                                        </ul>
 
                                     </h5>
 
@@ -349,7 +357,7 @@
 
                             <div class="widget-image mr-12 mr-lg-19 mb-9 mb-md-0">
                                 <img class="circle-xxxl"
-                                    src="https://res.cloudinary.com/pilstech/image/upload/v1620219151/paysprint_asset/Additional_feature_bd4ib0.png"
+                                    src="https://res.cloudinary.com/pilstech/image/upload/v1620218932/paysprint_asset/Generate_report_txk53f.png"
                                     alt="">
                             </div>
 
@@ -372,13 +380,18 @@
                             <div class="widget-text">
                                 <img class="rating mb-11" src="{{ asset('newpage/image/l5/png/5-stars.png') }}"
                                     alt="">
-                                <h4 class="review-text gr-text-6 font-weight-bold mb-9">Cross Border Business Payments
-                                </h4>
+                                <h4 class="review-text gr-text-6 font-weight-bold mb-9">Additional Features</h4>
                                 <div class="reviewer-block d-flex flex-wrap">
-                                    <h5 class="name gr-text-9 mr-7 mb-md-0">Pay Bills in other Currencies. We have helped
-                                        many merchants to overcome the hurdles in making payments in other currencies. With
-                                        PaySprint CBBP, merchants are now able to meet foreign financial obligations without
-                                        hassles.
+                                    <h5 class="name gr-text-9 mr-7 mb-md-0">PaySprint Merchant Services is filled with more
+                                        additional features Get the full advantage with PaySprint.
+
+                                        <ul style="list-style: none; text-align: left;">
+                                            <li>● Manage Your Business On Any Device, (Mobile, Web etc).</li>
+                                            <li>● Free Lead Generation.</li>
+                                            <li>● Connect Your Preferred Accounting Software.</li>
+                                            <li>● Invite Your Accountant.</li>
+                                            <li>● Safe and Secure Multi-Level Security and Authentication Features.</li>
+                                        </ul>
 
 
                                     </h5>
@@ -389,41 +402,6 @@
 
                 </div>
 
-
-
-                <div class="row justify-content-center align-items-center pt-15">
-
-                    <div class="col-xl-11 col-lg-12">
-                        <div class="review-widget media align-items-center px-lg-7 flex-column flex-sm-row">
-
-                            <div class="widget-text">
-                                <img class="rating mb-11" src="{{ asset('newpage/image/l5/png/5-stars.png') }}"
-                                    alt="">
-                                <h4 class="review-text gr-text-6 font-weight-bold mb-9">Merchant Cash Advance</h4>
-                                <div class="reviewer-block d-flex flex-wrap">
-                                    <h5 class="name gr-text-9 mr-7 mb-md-0">Supporting Businesses with Finance. Our
-                                        Merchant Cash Advance is built to support small businesses like yours with much
-                                        needed financing with little requirements. Whatever may be the need, our merchant
-                                        cash advance program is available to you!
-
-
-                                    </h5>
-
-
-
-                                </div>
-                            </div>
-
-                            <div class="widget-image mr-12 mr-lg-19 mb-9 mb-md-0">
-                                <img class="circle-xxxl"
-                                    src="https://res.cloudinary.com/pilstech/image/upload/v1620219151/paysprint_asset/Additional_feature_bd4ib0.png"
-                                    alt="">
-                            </div>
-
-                        </div>
-                    </div>
-
-                </div>
 
 
             </div>
@@ -698,7 +676,7 @@
     </div>
 
 
-    <div class="content-section pt-13 pt-lg-12 pb-11 pb-lg-22 hover-tilt bg-default-8 disp-0">
+    <div class="content-section pt-13 pt-lg-12 pb-11 pb-lg-22 hover-tilt bg-default-8">
         <div class="container">
             <div class="row align-items-center justify-content-center">
                 {{-- <div class="col-sm-10 col-md-9 col-lg-6 col-xl-5 mb-n7 mb-lg-0">
@@ -825,7 +803,7 @@
                                     style="height: 350px !important;width: 350px !important;">
                             </center>
                             <a class="video-play-trigger gr-abs-center bg-white circle-xl gr-flex-all-center gr-abs-hover-y focus-reset"
-                                data-fancybox="" href="https://youtu.be/ptsmEYFJMx4" tabindex="-1"><i
+                                data-fancybox="" href="https://youtu.be/txfp2Pzbzrg" tabindex="-1"><i
                                     class="icon icon-triangle-right-17-2"></i></a>
                             {{-- <div class="abs-shape gr-abs-tr-custom gr-z-index-n1">
                       <img src="{{ asset('newpage/image/l4/png/l4-hero-shape.png') }}" alt="" class="w-100" data-aos="zoom-in" data-aos-delay="400" data-aos-duration="800" data-aos-once="true">
@@ -838,16 +816,14 @@
                 <div class="col-md-3">
                     <center>
                         <img class="shadow-lg"
-                            src="https://res.cloudinary.com/pilstech/image/upload/v1649325520/paysprint_asset/image_zuxln4.png"
-                            alt="mobile app"
-                            style="width: 100%; height: 500px; border-radius: 10px; position: relative; z-index: 1000;">
-                        {{-- <img class="shadow-lg"
                             src="https://res.cloudinary.com/pilstech/image/upload/v1621960721/paysprint_asset/paysprint_front_v55thg.jpg"
-                            alt="mobile app" style="width: 80%; border-radius: 10px; position: relative; z-index: 1000;"> --}}
+                            alt="mobile app" style="width: 80%; border-radius: 10px; position: relative; z-index: 1000;">
                     </center>
                 </div>
 
             </div>
         </div>
     </div>
+
+
 @endsection

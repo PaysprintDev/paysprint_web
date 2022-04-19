@@ -32,6 +32,7 @@ use App\StoreProducts;
 use App\StoreOrders;
 use App\StoreDiscount;
 use App\StoreMainShop;
+use App\StoreCategory;
 
 class MerchantPageController extends Controller
 {
@@ -87,6 +88,7 @@ class MerchantPageController extends Controller
 
         return view('merchant.pages.invoice')->with(['pages' => 'invoice single', 'data' => $data]);
     }
+    
 
     public function invoiceForm()
     {
@@ -212,11 +214,21 @@ class MerchantPageController extends Controller
 
             if(isset($merchantStore)){
 
+                if(Auth::check() == true){
+                    $userId = Auth::id();
+                }
+                else{
+                    $userId = 0;
+                }
+
                 $data = [
                     'mystore' => $merchantStore,
                     'myproduct' => $this->getProducts($getMerchantId->id),
-                    'user' => $getMerchantId
+                    'user' => $getMerchantId,
+                    'mywishlist' => $this->getMyWishlist($userId),
+                    'mycartlist' => $this->getMyCartlist($userId),
                 ];
+
 
                 return view('merchant.pages.shop.index')->with(['pages' => $merchant.' Shop', 'data' => $data]);
             }
@@ -233,6 +245,73 @@ class MerchantPageController extends Controller
 
        
     }
+
+
+        // Shopping Cart
+    public function myCart(Request $req){
+
+        // Get merchant...
+        $thismerchant = ClientInfo::where('business_name', $req->store)->first();
+
+        if(isset($thismerchant)){
+
+            $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
+
+            // If Has Main Store setup
+            $merchantStore = $this->getMyStore($getMerchantId->id);
+
+
+                    $data = [
+                        'mystore' => $merchantStore,
+                    'myproduct' => $this->getProducts($getMerchantId->id),
+                    'user' => $getMerchantId,
+                    'mywishlist' => $this->getMyWishlist(Auth::id()),
+                    'mycartlist' => $this->getMyCartlist(Auth::id()),
+                ];
+
+        
+        return view('merchant.pages.shop.mycart')->with(['pages' => $req->store.' Shop', 'data' => $data]);
+        }
+        else{
+            return view('errors.comingsoon')->with(['pages' => $req->store.' Shop']);
+        }
+
+
+    }
+
+
+    // Checkout Item ...
+    public function myCheckout(Request $req){
+
+        // Get merchant...
+        $thismerchant = ClientInfo::where('business_name', $req->store)->first();
+
+        if(isset($thismerchant)){
+
+            $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
+
+            // If Has Main Store setup
+            $merchantStore = $this->getMyStore($getMerchantId->id);
+
+
+                    $data = [
+                        'mystore' => $merchantStore,
+                    'myproduct' => $this->getProducts($getMerchantId->id),
+                    'user' => $getMerchantId,
+                    'mywishlist' => $this->getMyWishlist(Auth::id()),
+                    'mycartlist' => $this->getMyCartlist(Auth::id()),
+                ];
+
+        
+        return view('merchant.pages.shop.mycheckout')->with(['pages' => $req->store.' Shop', 'data' => $data]);
+        }
+        else{
+            return view('errors.comingsoon')->with(['pages' => $req->store.' Shop']);
+        }
+
+
+    }
+
 
     public function paidInvoice()
     {
@@ -395,7 +474,8 @@ class MerchantPageController extends Controller
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if($client->accountMode == "test"){
+
+        if(isset($client) && $client->accountMode == "test"){
             
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -407,6 +487,7 @@ class MerchantPageController extends Controller
             'myProducts' => $this->getMyProducts(Auth::user()->id),
             'myOrders' => $this->getMyOrders(Auth::user()->id),
             'myDiscounts' => $this->getMyDiscounts(Auth::user()->id),
+            'productcategory' => $this->getProductCategory()
         ];
         
 
@@ -579,6 +660,12 @@ class MerchantPageController extends Controller
 
     public function getMyDiscounts($merchantId){
         $data = StoreDiscount::select('estore_discount.id as discountId', 'estore_discount.userId', 'estore_discount.code', 'estore_discount.valueType', 'estore_discount.discountAmount', 'estore_discount.productId', 'estore_discount.startDate', 'estore_discount.endDate', 'estore_product.id', 'estore_product.productName')->join('estore_product', 'estore_discount.productId', '=', 'estore_product.id')->where('estore_discount.userId', $merchantId)->orderBy('estore_discount.created_at', 'DESC')->get();
+
+        return $data;
+    }
+
+    public function getProductCategory(){
+        $data = StoreCategory::orderBy('category', 'ASC')->get();
 
         return $data;
     }

@@ -46,8 +46,9 @@
                             <div class="col">
                                 <div class="header-main">
                                     <!-- logo start -->
+
                                     <div class="header-element logo">
-                                        <a href="{{ route('merchant shop now', $pages) }}">
+                                        <a href="{{ route('merchant shop now', $data['user']->businessname) }}">
                                             <img src="{{ $data['mystore']->businessLogo }}" alt="logo-image"
                                                 class="img-fluid" style="width: 70px; height: 70px;">
                                         </a>
@@ -61,7 +62,8 @@
                                                     <div class="mainwrap">
                                                         <ul class="main-menu">
                                                             <li class="menu-link parent">
-                                                                <a href="javascript:void(0)" class="link-title">
+                                                                <a href="{{ route('merchant shop now', $data['user']->businessname) }}"
+                                                                    class="link-title">
                                                                     <span class="sp-link-title">Home</span>
                                                                 </a>
 
@@ -411,25 +413,69 @@
                                                             class="ion-ios-search-strong"></i></a>
                                                 </div>
                                             </li>
-                                            <li class="side-wrap wishlist-wrap">
-                                                <a href="#" class="header-wishlist">
-                                                    <span class="wishlist-icon"><i class="icon-heart"></i></span>
-                                                    <span class="wishlist-counter">0</span>
-                                                </a>
-                                            </li>
-                                            <li class="side-wrap cart-wrap">
-                                                <div class="shopping-widget">
-                                                    <div class="shopping-cart">
-                                                        <a href="javascript:void(0)" class="cart-count">
-                                                            <span class="cart-icon-wrap">
-                                                                <span class="cart-icon"><i
-                                                                        class="icon-handbag"></i></span>
-                                                                <span id="cart-total" class="bigcounter">5</span>
-                                                            </span>
-                                                        </a>
+
+
+
+
+
+                                            @auth
+
+
+                                                <li class="side-wrap wishlist-wrap">
+                                                    <a href="#" class="header-wishlist">
+                                                        <span class="wishlist-icon"><i class="icon-heart"></i></span>
+                                                        <span
+                                                            class="wishlist-counter">{{ count($data['mywishlist']) }}</span>
+                                                    </a>
+                                                </li>
+
+                                                <li class="side-wrap cart-wrap">
+                                                    <div class="shopping-widget">
+                                                        <div class="shopping-cart">
+                                                            <a href="javascript:void(0)" class="cart-count">
+                                                                <span class="cart-icon-wrap">
+                                                                    <span class="cart-icon"><i
+                                                                            class="icon-handbag"></i></span>
+                                                                    <span id="cart-total"
+                                                                        class="bigcounter">{{ count($data['mycartlist']) }}</span>
+                                                                </span>
+                                                            </a>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </li>
+                                                </li>
+                                            @endauth
+
+
+                                            @guest
+
+                                                <li class="side-wrap wishlist-wrap">
+                                                    <a href="#" class="header-wishlist">
+                                                        <span class="wishlist-icon"><i class="icon-heart"></i></span>
+                                                    </a>
+                                                </li>
+
+                                                <li class="side-wrap cart-wrap">
+                                                    <div class="shopping-widget">
+                                                        <div class="shopping-cart">
+                                                            <a href="javascript:void(0)" class="cart-count">
+                                                                <span class="cart-icon-wrap">
+                                                                    <span class="cart-icon"><i
+                                                                            class="icon-handbag"></i></span>
+                                                                </span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </li>
+
+                                                <li class="side-wrap wishlist-wrap">
+                                                    <a href="{{ route('login') }}" class="header-wishlist">
+                                                        <span class="wishlist-icon"><i class="icon-user"></i></span>
+                                                    </a>
+                                                </li>
+                                            @endguest
+
+
+
                                         </ul>
                                     </div>
                                     <!-- header icon end -->

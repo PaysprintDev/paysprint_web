@@ -29,7 +29,6 @@
             <script
                         src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_LOCAL_CLIENT_ID') }}&currency={{ Auth::user()->currencyCode }}">
             </script>
-
         @else
             <script
                         src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ Auth::user()->currencyCode }}">
@@ -281,13 +280,10 @@
                                                 class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
                                                 Confirm
                                             </button></div>
-
                                     @elseif($data['paymentgateway']->gateway == 'Stripe')
-
                                         <div class="card-footer"> <button type="submit"
                                                 class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Pay
                                                 Now</button></div>
-
                                     @elseif($data['paymentgateway']->gateway == 'PayPal')
                                         {{-- PayPal --}}
                                         <div class="card-footer" id="paypal-button-container"></div>

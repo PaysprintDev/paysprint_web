@@ -42,6 +42,9 @@
     <!-- style -->
     <link rel="stylesheet" type="text/css" href="{{ asset('shopassets/css/style5.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('shopassets/css/responsive5.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css"
+        integrity="sha512-O03ntXoVqaGUTAeAmvQ2YSzkCvclZEcPQu1eqloPaHfJ5RuNGiS4l+3duaidD801P50J28EHyonCV06CUlTSag=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
     <style>
