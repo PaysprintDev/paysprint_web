@@ -1,5 +1,6 @@
 @if ($pages != 'Supporting HAITI')
 
+
     <!-- Footer section -->
     <div class="footer-section bg-default-6">
         <div class="container">
@@ -10,33 +11,64 @@
                             <p class="footer-title gr-text-11 mb-7" style="font-size: 20px;"><strong>ABOUT OUR
                                     COMPANY</strong></p>
 
-                            <p>PaySprint is the fastest and most affordable way to send and receive money. Pay invoices
-                                and get paid at anytime!</p>
+                            @if (route('home') == 'https://paysprintmerchantservices.com')
+                                <p>PaySprint is the fastest and most affordable way to create and send invoice, pay
+                                    invoice and get paid at anytime!</p>
+                            @else
+                                <p>PaySprint is the fastest and most affordable way to send and receive money. Pay
+                                    invoices
+                                    and get paid at anytime!</p>
+                            @endif
+
+
                         </div>
                     </div>
                     <div class="col-6 col-lg-2">
                         <div class="single-footer mb-13 mb-lg-9">
                             <p class="footer-title gr-text-11 mb-7" style="font-size: 20px;"><strong>SERVICES</strong>
                             </p>
-                            <ul class="footer-list list-unstyled">
-                                @guest
+
+
+                            @if (route('home') == 'https://paysprintmerchantservices.com')
+                                <ul class="footer-list list-unstyled">
+
                                     <li class="py-2"><a class="gr-text-9 gr-text-color"
-                                            href="{{ route('my account') }}">Money Transfer</a></li>
-                                @endguest
+                                            href="{{ route('invoice') }}">Create and Send Invoice</a></li>
 
-                                @auth
-                                    <li onclick="$('#sendMoney').click()"><a href="javascript:void()">Money Transfer</a>
+
+                                    <li class="py-2"><a class="gr-text-9 gr-text-color" href="{{ route('my account') }}">Accept
+                                            Payments</a>
                                     </li>
-                                @endauth
 
-                                <li class="py-2"><a class="gr-text-9 gr-text-color"
-                                        href="{{ route('invoice') }}">Pay Invoice</a></li>
-                                <li class="py-2"><a class="gr-text-9 gr-text-color"
-                                        href="{{ route('my account') }}">Wallet</a></li>
-
+                                    <li class="py-2"><a class="gr-text-9 gr-text-color" onclick="comingSoon()"
+                                            href="javascript:void(0)">eStore</a></li>
+                                    <li class="py-2"><a class="gr-text-9 gr-text-color"
+                                            href="{{ route('my account') }}">Wallet</a></li>
 
 
-                            </ul>
+
+                                </ul>
+                            @else
+                                <ul class="footer-list list-unstyled">
+                                    @guest
+                                        <li class="py-2"><a class="gr-text-9 gr-text-color"
+                                                href="{{ route('my account') }}">Money Transfer</a></li>
+                                    @endguest
+
+                                    @auth
+                                        <li onclick="$('#sendMoney').click()"><a href="javascript:void()">Money Transfer</a>
+                                        </li>
+                                    @endauth
+
+                                    <li class="py-2"><a class="gr-text-9 gr-text-color"
+                                            href="{{ route('invoice') }}">Pay Invoice</a></li>
+                                    <li class="py-2"><a class="gr-text-9 gr-text-color"
+                                            href="{{ route('my account') }}">Wallet</a></li>
+
+
+
+                                </ul>
+                            @endif
                         </div>
                     </div>
                     <div class="col-6 col-lg-4">
@@ -113,14 +145,23 @@
                             <p class="footer-title gr-text-11 mb-7" style="font-size: 20px;"><strong>CONTACT US</strong>
                             </p>
                             <ul class="footer-list list-unstyled">
-                                <li class="py-2"><a
-                                        class="gr-text-9 text-primary font-weight-bold hover-underline active"
-                                        href="mailto:info@paysprint.ca"><i class="fa fa-envelope"
-                                            aria-hidden="true"></i> info@paysprint.ca</a></li>
+
+                                @if (route('home') == 'https://paysprintmerchantservices.com')
+                                    <li class="py-2"><a
+                                            class="gr-text-9 text-primary font-weight-bold hover-underline active"
+                                            href="mailto:info@paysprintmerchantservices.com"><i class="fa fa-envelope"
+                                                aria-hidden="true"></i> info@paysprintmerchantservices.com</a></li>
+                                @else
+                                    <li class="py-2"><a
+                                            class="gr-text-9 text-primary font-weight-bold hover-underline active"
+                                            href="mailto:info@paysprint.ca"><i class="fa fa-envelope"
+                                                aria-hidden="true"></i> info@paysprint.ca</a></li>
+                                @endif
+
                                 <li class="py-2"><a
                                         class="gr-text-9 text-primary font-weight-bold hover-underline active"
                                         href="javascript:void()"><i class="fa fa-map-marker" aria-hidden="true"></i>
-                                        PaySprint by Express Ca Corp,
+                                        PaySprint,
                                         10 George St. North, Brampton. ON. L6X1R2. Canada</a></li>
                             </ul>
                         </div>

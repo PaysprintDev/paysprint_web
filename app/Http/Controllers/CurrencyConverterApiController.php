@@ -75,14 +75,16 @@ class CurrencyConverterApiController extends Controller
                     if($result->quotes->$localCurrency > 1){
                         $convertLocal = $amount / $result->quotes->$localCurrency;
 
-                        $convRate = $result->quotes->$currency * $convertLocal / $markValue;
+                        // $convRate = $result->quotes->$currency * $convertLocal / $markValue;
+                        $convRate = $result->quotes->$currency * $convertLocal;
 
                         // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
                     }
                     elseif($result->quotes->$localCurrency < 1){
                         $convertLocal = $amount / $result->quotes->$localCurrency;
 
-                        $convRate = $result->quotes->$currency * $convertLocal * $markdownValue;
+                        // $convRate = $result->quotes->$currency * $convertLocal * $markdownValue;
+                        $convRate = $result->quotes->$currency * $convertLocal;
                     }
                     else{
                         $convertLocal = $amount / $result->quotes->$localCurrency;
@@ -111,15 +113,18 @@ class CurrencyConverterApiController extends Controller
                 // If $result->quotes->$localCurrency < 1, mark up and $result->quotes->$localCurrency * amount * $markdownValue
 
 
+
                 if($result->quotes->$localCurrency > 1){
                     $convertLocal = $amount / $result->quotes->$localCurrency;
 
-                $convRate = $result->quotes->$currency * $convertLocal / $markValue;
+                // $convRate = $result->quotes->$currency * $convertLocal / $markValue;
+                $convRate = $result->quotes->$currency * $convertLocal;
                 }
                 elseif($result->quotes->$localCurrency < 1){
                     $convertLocal = $amount / $result->quotes->$localCurrency;
 
-                    $convRate = $result->quotes->$currency * $convertLocal * $markdownValue;
+                    // $convRate = $result->quotes->$currency * $convertLocal * $markdownValue;
+                    $convRate = $result->quotes->$currency * $convertLocal;
                 }
                 else{
                     $convertLocal = $amount / $result->quotes->$localCurrency;

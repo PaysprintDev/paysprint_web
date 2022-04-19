@@ -71,6 +71,8 @@ use App\CrossBorderBeneficiary as CrossBorderBeneficiary;
 use App\SupportActivity as SupportActivity;
 
 use App\CcWithdrawal as CcWithdrawal;
+use App\StoreOrders as StoreOrders;
+use App\StoreCart as StoreCart;
 
 use App\Classes\mpgGlobals;
 use App\Classes\httpsPost;
@@ -8258,6 +8260,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     public function paymentIntent(Request $req)
     {
 
+
         if (env('APP_ENV') == "local") {
             Stripe::setApiKey(env('STRIPE_LOCAL_SECRET_KEY'));
         } else {
@@ -8538,6 +8541,243 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 $adminMessage = "<p>Transaction ID: ".$reference_code."</p><p>Name: ".$thisuser->name."</p><p>Account Number: ".$thisuser->ref_code."</p><p>Country: ".$thisuser->country."</p><p>Date: ".date('d/m/Y h:i:a')."</p><p>Amount: ".$req->currencyCode . ' ' . number_format($req->amounttosend, 2)."</p><p>Status: Successful</p>";
 
                 $this->notifyAdmin($gateway." inflow", $adminMessage);
+
+            } else {
+                $data = [];
+                $message = "Payment not received | ".$getVerification->responseMessage;
+                $status = 400;
+                $action = 'error';
+            }
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = "Payment not received | ".$th->getMessage();
+            $status = 400;
+            $action = 'error';
+        }
+
+
+        $resData = ['res' => $data, 'message' => $message, 'status' => $status];
+        
+
+        return redirect()->route('epsresponseback')->with($action, $message);
+
+
+        // return $this->returnJSON($resData, $status);
+    }
+
+
+    public function estoreExpressCallback(Request $req)
+    {
+
+        try {
+            // Verify Payment ...
+            $getVerification = $this->getVerification($req->paymentToken);
+
+            // dd($getVerification);
+
+            if ($getVerification->responseCode == "00") {
+                // Insert Payment Record
+
+                if ($req->commission == "on") {
+                    $grossAmount = $req->amount;
+                } else {
+                    $grossAmount = $req->amount + $req->commissiondeduct;
+                }
+
+
+                $thismerchant = ClientInfo::where('api_secrete_key', $req->api_token)->first();
+
+                $thisuser = User::where('ref_code', $thismerchant->user_id)->first();
+
+
+                // Get Guest Information....
+                $activeuser = User::where('ref_code', $req->ref_code)->first();
+
+
+
+                $this->slack($req->productDescription, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+
+                $getGateway = AllCountries::where('name', $thisuser->country)->first();
+
+                if($getGateway->gateway == "PayStack" || $getGateway->gateway == "Express Payment Solution"){
+                    $gateway = "Express Payment Solution";
+                }
+                else{
+                    $gateway = ucfirst($getGateway->gateway);
+                }
+
+
+                $referenced_code = $req->paymentToken;
+
+
+
+                // Update Wallet Balance
+                $walletBal = $thisuser->wallet_balance;
+
+    
+
+
+                $activity = "Transfer of " . $req->currencyCode . " " . number_format($req->amount, 2) . " to " . $thisuser->businessname . " for " . $req->purpose . " on PaySprint Wallet from ".$req->name;
+
+                $credit = $req->amount;
+                $debit = 0;
+                $reference_code = $referenced_code;
+                $balance = 0;
+                $trans_date = date('Y-m-d');
+                $status = "Delivered";
+                $action = "Wallet credit";
+                $regards = $thisuser->ref_code;
+                $statement_route = "wallet";
+
+                // Send Money to Escrow account and delete items in cart, also update the payment status of order
+                $escrowBalance = $thisuser->escrow_balance + $req->amount;
+                $disputeBalance = $thisuser->dispute_balance;
+
+                User::where('ref_code', $thisuser->ref_code)->update(['escrow_balance' => $escrowBalance, 'dispute_balance' => $disputeBalance]);
+
+                $this->insStatement($thisuser->email, $reference_code, $activity, $credit, 0, $balance, $trans_date, $status, "Wallet credit", $thisuser->ref_code, 1, $statement_route, $thisuser->auto_deposit, $thisuser->country);
+
+
+
+                $sendMsg = "Hi " . $req->name . ", You have successfully transferred " . $req->currencyCode . " " . number_format($req->amount, 2) . " to " . $thisuser->businessname." for ".$req->purpose." and a transaction fee of ".$req->currencyCode." ".number_format($req->commissiondeduct, 2)." inclusively charged from your card. Open a PaySprint account today to pay at a lesser rate.";
+
+                $sendPhone = $req->phone;
+                
+                if ($req->country == "Nigeria") {
+
+                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                    $this->sendSms($sendMsg, $correctPhone);
+                } else {
+                    $this->sendMessage($sendMsg, $sendPhone);
+                }
+
+
+                $recWallet = $thisuser->escrow_balance + $req->amount;
+
+                    $recMsg = "Hi " . $thisuser->businessname . ", You have received " . $req->currencyCode . " " . number_format($req->amount, 2) . " in your PaySprint wallet for " . $req->purpose . " from " . $thisuser->name . ". You now have " . $req->currencyCode . ' ' . number_format($recWallet, 2) . " balance in your escrow wallet. PaySprint Team";
+
+
+                $merchantgetPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                if (isset($merchantgetPhone)) {
+
+                    $recPhone = $thisuser->telephone;
+                } else {
+                    $recPhone = "+" . $thisuser->code . $thisuser->telephone;
+                }
+
+                if ($thisuser->country == "Nigeria") {
+
+                    $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                    $this->sendSms($recMsg, $correctPhone);
+                } else {
+                    $this->sendMessage($recMsg, $recPhone);
+                }
+
+
+                $myOrderDetails = StoreOrders::where('userId', $activeuser->id)->where('merchantId', $thisuser->id)->where('paymentStatus', 'not paid')->get();
+
+                $orderIds = "";
+                $orderItems = "";
+
+                for($i = 0; $i < count($myOrderDetails); $i++){
+
+                    // Get Cart Item
+                    $cartItemDetails = StoreCart::where('productId', $myOrderDetails[$i]->productId)->first();
+
+                    $orderIds .= $myOrderDetails[$i]->orderId.", ";
+
+
+
+                    $orderItems .= "<tr>
+                    
+                    <td>".($i + 1)."</td>
+                    <td>
+                        <img src='".$cartItemDetails->productImage."' />
+                    </td>
+                    <td>
+                        ".$cartItemDetails->productName."
+                    </td>
+                    <td>
+                        ".$cartItemDetails->quantity."
+                    </td>
+                    <td>
+                        ".$thisuser->currencySymbol." ".number_format($cartItemDetails->price, 2)."
+                    </td>
+                    <td>
+                        ".date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2))."
+                    </td>
+                    
+                    </tr>";
+
+                }
+
+                $forbuyer = "<p>You will receive an Out-for-Delivery Email and SMS Notification that contains a One-Time-Passcode (OTP) once your order is out for delivery.</p><p>When you received your order, please click on the link in the notification and use the OTP provided to confirm that you have received the ordered items.</p><p>You earn 100 reward points from PaySprint for delivery confirmation.</p><p>Thanks for your business</p><p>".$thisuser->businessname."</p>";
+
+
+                $forseller = "<p>The Buyer will receive an Out-for-Delivery Email and SMS Notifications that contain a One-Time-Passcode (OTP) when you check mark out for delivery icon of the order.</p><p>Kindly note that the buyer will use the OTP generated  icon to confirm the delivery before funds for the order moves from your eStore Account to your Merchant Wallet.</p><p>eStore Manager</p>";
+
+                $estoresubject = "We have Received Your Order. Your Order Confirmation Number is: [".$orderIds."]";
+
+                $estoremessagebuyer = "<p>Thank you for your visit to our eStore on PaySprint. This is to confirm your order:</p><table><thead><tr><td>#</td><td>Image </td><td>Item</td><td>Qty</td><td>Amount</td><td>Expt. Delivery</td></tr></thead><tbody>".$orderItems."</tbody></table><hr>".$forbuyer;
+
+
+                $estoremessageseller = "<p>You have received an order for processing on PaySprint eStore. The details of the order are:</p><table><thead><tr><td>#</td><td>Image </td><td>Item</td><td>Qty</td><td>Amount</td><td>Expt. Delivery</td></tr></thead><tbody>".$orderItems."</tbody></table><hr>".$forseller;
+
+
+                // Send Mail to Buyer...
+                $this->estoreMail($activeuser->email, $activeuser->name, $estoresubject, $estoremessagebuyer);
+
+                // Send Mail to Seller...
+                $this->estoreMail($thisuser->email, $thisuser->name, $estoresubject, $estoremessageseller);
+
+                StoreOrders::where('userId', $activeuser->id)->where('merchantId', $thisuser->id)->where('paymentStatus', 'not paid')->update(['paymentStatus' => 'paid']);
+
+                StoreCart::where('userId', $activeuser->id)->where('merchantId', $thisuser->id)->delete();
+
+
+
+
+                $adminMessage = "<p>Transaction ID: ".$reference_code."</p><p>Name: ".$thisuser->name."</p><p>Business Name: ".$thisuser->businessname."</p><p>Account Number: ".$thisuser->ref_code."</p><p>Country: ".$thisuser->country."</p><p>Date: ".date('d/m/Y h:i:a')."</p><p>Amount: ".$req->currencyCode . ' ' . number_format($req->amount, 2)."</p><p>PS Commission: ".$req->currencyCode . ' ' . number_format($req->commissiondeduct, 2)."</p><p>Status: Successful</p>";
+
+                $this->notifyAdmin($gateway." inflow", $adminMessage);
+
+
+                                $userInfo = User::select(
+                    'id',
+                    'code as countryCode',
+                    'ref_code as refCode',
+                    'name',
+                    'email',
+                    'password',
+                    'address',
+                    'telephone',
+                    'city',
+                    'state',
+                    'country',
+                    'zip as zipCode',
+                    'avatar',
+                    'api_token as apiToken',
+                    'approval',
+                    'accountType',
+                    'wallet_balance as walletBalance',
+                    'number_of_withdrawals as numberOfWithdrawal',
+                    'transaction_pin as transactionPin',
+                    'currencyCode',
+                    'currencySymbol'
+                )->where('ref_code', $thismerchant->user_id)->first();
+
+                $data = $userInfo;
+                $status = 200;
+                $message = 'You have successfully transferred ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to '.$thisuser->businessname.'.';
+                $action = 'success';
+
+                $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country, 1);
+
+                $this->updatePoints($thisuser->id, 'Estore Add money');
 
             } else {
                 $data = [];

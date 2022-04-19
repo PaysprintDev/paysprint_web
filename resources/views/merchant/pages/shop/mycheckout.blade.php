@@ -94,7 +94,7 @@
                                     <ul class="billing-ul input-2">
                                         <li class="billing-li">
                                             <label>Email address</label>
-                                            <input type="text" name="email" class="form-control"
+                                            <input type="email" name="email" class="form-control"
                                                 placeholder="Email address" value="{{ Auth::user()->email }}" required>
                                         </li>
                                         <li class="billing-li">
@@ -103,9 +103,60 @@
                                                 value="{{ Auth::user()->telephone }}" required>
                                         </li>
                                     </ul>
+                                    <br>
+                                    <ul class="billing-ul input-2">
+                                        <li class="billing-li">
+                                            <label>Add Shipping Details</label> <br>
+                                            <input type="checkbox" name="shipping_check" id="shipping_check"> Same as
+                                            billing details
+                                        </li>
+
+                                    </ul>
+
+                                    <br>
+
+                                    <div class="shippingInfo">
+                                        <h2>Shipping details</h2>
+                                        <ul class="billing-ul input-2">
+                                            <li class="billing-li">
+                                                <label>Full name</label>
+                                                <input type="text" name="shippingName" class="form-control"
+                                                    placeholder="Full name">
+                                            </li>
+
+                                        </ul>
+                                        <ul class="billing-ul input-2">
+                                            <li class="billing-li">
+                                                <label>Address</label>
+                                                <input type="text" name="shippingAddress" class="form-control"
+                                                    placeholder="Address">
+                                            </li>
+
+                                        </ul>
+
+                                        <ul class="billing-ul input-2">
+                                            <li class="billing-li">
+                                                <label>Email address</label>
+                                                <input type="email" name="shippingEmail" class="form-control"
+                                                    placeholder="Email address">
+                                            </li>
+
+                                        </ul>
+                                        <ul class="billing-ul input-2">
+                                            <li class="billing-li">
+                                                <label>Phone Number</label>
+                                                <input type="text" name="shippingPhone" class="form-control"
+                                                    placeholder="Phone Number">
+                                            </li>
+
+                                        </ul>
+                                    </div>
+
                                 </div>
 
                             </div>
+
+                            <br>
 
                             <div class="order-area">
                                 <div class="check-pro">

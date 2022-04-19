@@ -253,6 +253,7 @@ Route::post('create-payment-invoice-intent', ['uses' => 'MonerisController@invoi
 // Express Payment Callback
 Route::prefix('expresspay')->group(function () {
 	Route::get('/resp', ['uses' => 'MonerisController@expressCallback', 'as' => 'express callback']);
+	Route::get('/estoreresp', ['uses' => 'MonerisController@estoreExpressCallback', 'as' => 'estore express callback']);
 	Route::get('/business', ['uses' => 'MonerisController@expressBusinessCallback', 'as' => 'express business callback']);
 	Route::get('/responseback', ['uses' => 'HomeController@expressResponseback', 'as' => 'epsresponseback']);
 });

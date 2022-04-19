@@ -365,6 +365,7 @@ Route::prefix('/v1')->group(function () {
         // Receive Money To PaySprint
         Route::post('customers',  ['uses' => 'api\v1\MerchantApiController@receiveMoneyFromPaysprintCustomer']);
         Route::post('visitors',  ['uses' => 'api\v1\MerchantApiController@receiveMoneyFromVisitors']);
+        Route::post('visitors-payment',  ['uses' => 'api\v1\MerchantApiController@receiveMoneyFromEstoreVisitors']);
 
         // Checkout Routes
 
