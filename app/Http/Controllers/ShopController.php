@@ -127,8 +127,12 @@ class ShopController extends Controller
 
         try{
 
+
+
             //Get Cart Items and delete from cart...
             $getCart = StoreCart::where('userId', $req->userId)->get();
+
+
 
             if($req->shipping_check == "on"){
                 $shippingName = $req->name;
@@ -143,14 +147,15 @@ class ShopController extends Controller
                 $shippingPhone = $req->shippingPhone;
             }
 
-            // Add shipping details...
-            StoreBillingDetail::updateOrCreate(['userId' => $req->userId, 'merchantId' => $req->merchantId],[
-                 'userId' => $req->userId, 'merchantId' => $req->merchantId, 'fulllname' => $req->name, 'company_name' => $req->company, 'country' => $req->country, 'state' => $req->state, 'address' => $req->address, 'apartment' => $req->apartment, 'city' => $req->city, 'postalcode' => $req->postalCode, 'email' => $req->email, 'phone' => $req->phone, 'shippingName' => $shippingName, 'shippingAddress' => $shippingAddress, 'shippingEmail' => $shippingEmail, 'shippingPhone' => $shippingPhone
-            ]);
+
+
+
 
 
 
             if(count($getCart) > 0){
+
+                
 
                 $address = $req->address.' '.$req->city.' '.$req->state.' '.$req->country;
 
@@ -163,6 +168,13 @@ class ShopController extends Controller
                 }
 
             }
+
+            
+            // Add shipping details...
+            StoreBillingDetail::updateOrCreate(['userId' => $req->userId, 'merchantId' => $req->merchantId],[
+                 'userId' => $req->userId, 'merchantId' => $req->merchantId, 'fulllname' => $req->name, 'company_name' => $req->company, 'country' => $req->country, 'state' => $req->state, 'address' => $req->address, 'apartment' => $req->apartment, 'city' => $req->city, 'postalcode' => $req->postalCode, 'email' => $req->email, 'phone' => $req->phone, 'shippingName' => $shippingName, 'shippingAddress' => $shippingAddress, 'shippingEmail' => $shippingEmail, 'shippingPhone' => $shippingPhone
+            ]);
+
             
 
             return redirect()->route('estore payment', ['merchantId' => $cartItem->merchantId, 'userId' => $req->userId, 'country' => $req->country]);
