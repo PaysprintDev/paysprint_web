@@ -1816,7 +1816,7 @@ class AmlController extends Controller
     {
         $data = array(
             'activity' => $this->userActivity(),
-            'users' => DB::table('users')->where('ref_code', request()->search)->first()
+            'users' => $this->findSearchedUser(request()->search)
         );
 
         $transCost = $this->transactionCost();
@@ -1843,7 +1843,7 @@ class AmlController extends Controller
         
         $data = array(
             'activity' => $this->userActivity(),
-            'users' => DB::table('users')->where('ref_code', request()->search)->first()
+            'users' => $this->findSearchedUser(request()->search)
         );
 
         
@@ -1857,11 +1857,62 @@ class AmlController extends Controller
         return view('aml.amlsuplinkfolder.compliancedeskreviewsubpage')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
     }
 
+
+    public function findSearchedUser($ref_code){
+
+        $data = DB::table('users')->where('ref_code', $ref_code)->first();
+
+        
+
+        if(!isset($data)){
+            $data = DB::table('users_closed')->where('ref_code', $ref_code)->first();
+
+        }
+
+        
+
+        return $data;
+
+    }
+
+    public function findSearchedUserByName($name){
+
+        $data = DB::table('users')->where('name', $name)->first();
+
+        
+
+        if(!isset($data)){
+            $data = DB::table('users_closed')->where('name', $name)->first();
+            
+        }
+
+        
+
+        return $data;
+
+    }
+    public function findSearchedUserUsers_closed($name){
+
+        $data = DB::table('users')->where('name', 'LIKE', '%'.$name.'%')->get();
+
+        
+
+        if(!isset($data)){
+            $data = DB::table('users_closed')->where('name', 'LIKE', '%'.$name.'%')->get();
+            
+        }
+
+        
+
+        return $data;
+
+    }
+
     public function viewDocument()
     {
         $data = array(
             'activity' => $this->userActivity(),
-            'users' => DB::table('users')->where('ref_code', request()->search)->first()
+            'users' => $this->findSearchedUser(request()->search)
         );
 
         $transCost = $this->transactionCost();
@@ -1873,7 +1924,7 @@ class AmlController extends Controller
     {
         $data = array(
             'activity' => $this->userActivity(),
-            'users' => DB::table('users')->where('ref_code', request()->search)->first()
+            'users' => $this->findSearchedUser(request()->search)
         );
 
         $transCost = $this->transactionCost();
@@ -1885,7 +1936,7 @@ class AmlController extends Controller
     {
         $data = array(
             'activity' => $this->userActivity(),
-            'users' => DB::table('users')->where('ref_code', request()->search)->first(),
+            'users' => $this->findSearchedUser(request()->search),
 
         );
 
@@ -1923,13 +1974,35 @@ class AmlController extends Controller
     public function connectedAccounts()
     {
         $data = array(
-            'activity' => $this->userActivity(),
-            'users' => DB::table('users')->where('name', 'like', '%'.request()->search.'%')->get()
+            'userinfo' => $this->findSearchedUserByName(request()->search),
+            'users' => $this->findSearchedUserUsers_closed(request()->search)
         );
 
         $transCost = $this->transactionCost();
 
         return view('aml.amlsuplinkfolder.connectedaccounts')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
+    }
+    public function moneySent()
+    {
+        $data = array(
+            'activity' => $this->userActivity(),
+            'users' => DB::table('statement')->where('user_id', request()->search)->where('action', 'Wallet debit')->get()
+        );
+
+        $transCost = $this->transactionCost();
+
+        return view('aml.amlsuplinkfolder.moneysent')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
+    }
+    public function moneyReceived()
+    {
+        $data = array(
+            'activity' => $this->userActivity(),
+            'users' => DB::table('statement')->where('user_id', request()->search)->where('action', 'Wallet credit')->get()
+        );
+
+        $transCost = $this->transactionCost();
+
+        return view('aml.amlsuplinkfolder.moneyreceived')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
     }
 
     public function compliance()
@@ -1969,6 +2042,8 @@ class AmlController extends Controller
 
         return view('aml.amlsuplinkfolder.suspicioustransaction')->with(['data' => $data]);
     }
+
+    
 
     // public function topUpRedFlagged(){
     //     $data = array(

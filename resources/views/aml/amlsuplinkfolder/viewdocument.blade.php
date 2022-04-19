@@ -55,80 +55,80 @@
 
                       <tr>
                         <td><strong> NIN Front</strong></td>
-                        <td> <a type="button" href="{{ $data['users']->nin_front }}" class="btn btn-primary btn-block">View File</a></td>
+                        <td> <a type="button" href="{{ isset($data['users']->nin_front) ? $data['users']->nin_front : '#' }}" class="btn btn-primary btn-block">{{ isset($data['users']->nin_front) ? 'View File' : 'NA' }}</a></td>
                       </tr>
                       <tr>
                         <td><strong>Drivers License Front</strong></td>
-                        <td> <a type="button" href="{{ $data['users']->drivers_license_front }}" class="btn btn-primary btn-block">View File</a></td>
+                        <td> <a type="button" href="{{ isset($data['users']->drivers_license_front) ? $data['users']->drivers_license_front : '#'  }}" class="btn btn-primary btn-block">{{ isset($data['users']->drivers_license_front) ? 'View File' : 'NA' }}</a></td>
                       </tr>
                       <tr>
                         <td><strong>International Passport Front</strong></td>
     
-                        <td> <a type="button" href="{{ $data['users']->international_passport_front }}" class="btn btn-primary btn-block">View File</a></td>
+                        <td> <a type="button" href="{{ isset($data['users']->international_passport_front) ? $data['users']->international_passport_front : '#'  }}" class="btn btn-primary btn-block">{{ isset($data['users']->international_passport_front) ? 'View File' : 'NA' }}</a></td>
                       </tr>
                       <tr>
                         <td><strong>NIN Back</strong></td>
-                        <td> <a type="button" href="{{ $data['users']->nin_back }}" class="btn btn-primary btn-block">View File</a></td>
+                        <td> <a type="button" href="{{ isset($data['users']->nin_back) ? $data['users']->nin_back : '#'  }}" class="btn btn-primary btn-block">{{ isset($data['users']->nin_back) ? 'View File' : 'NA' }}</a></td>
                       </tr>
                       <tr>
                         <td><strong>Drivers License Back</strong></td>
     
-                        <td> <a type="button" href="{{ $data['users']->drivers_license_back }}" class="btn btn-primary btn-block">View File</a></td>
+                        <td> <a type="button" href="{{ isset($data['users']->drivers_license_back) ? $data['users']->drivers_license_back : '#'  }}" class="btn btn-primary btn-block">{{ isset($data['users']->drivers_license_back) ? 'View File' : 'NA' }}</a></td>
                       </tr>
                       <tr>
                         <td><strong>International Passport Back</strong></td>
     
-                        <td> <a type="button" href="{{ $data['users']->international_passport_back }}" class="btn btn-primary btn-block">View File</a></td>
+                        <td> <a type="button" href="{{ isset($data['users']->international_passport_back) ? $data['users']->international_passport_back : '#'  }}" class="btn btn-primary btn-block">{{ isset($data['users']->international_passport_back) ? 'View File' : 'NA' }}</a></td>
                       </tr>
                       <tr>
                         <td><strong>Incorporation Document Front</strong></td>
     
-                        <td> <a type="button" href="{{ $data['users']->incorporation_doc_front }}" class="btn btn-primary btn-block">View File</a></td>
+                        <td> <a type="button" href="{{ isset($data['users']->incorporation_doc_front) ? $data['users']->incorporation_doc_front : '#'  }}" class="btn btn-primary btn-block">{{ isset($data['users']->incorporation_doc_front) ? 'View File' : 'NA' }}</a></td>
                       </tr> 
                        <tr>
                         <td><strong>Incorporation Document Back</strong></td>
     
-                        <td> <a type="button" href="{{ $data['users']->incorporation_doc_back }}" class="btn btn-primary btn-block">View File</a></td>
+                        <td> <a type="button" href="{{ isset($data['users']->incorporation_doc_back) ? $data['users']->incorporation_doc_back : '#'  }}" class="btn btn-primary btn-block">{{ isset($data['users']->incorporation_doc_back) ? 'View File' : 'NA' }}</a></td>
                       </tr>
                       <tr>
                         <td><strong>Directors Document</strong></td>
     
-                        <td> <a type="button" href="{{ $data['users']->directors_document }}" class="btn btn-primary btn-block">View File</a></td>
+                        <td> <a type="button" href="{{ isset($data['users']->directors_document) ? $data['users']->directors_document : '#'  }}" class="btn btn-primary btn-block">{{ isset($data['users']->directors_document) ? 'View File' : 'NA' }}</a></td>
                       </tr>
                       <tr>
                         <td><strong>Shareholders Document</strong></td>
     
-                        <td> <a type="button" href="{{ $data['users']->shareholders_document }}" class="btn btn-primary btn-block">View File</a></td>
+                        <td> <a type="button" href="{{ isset($data['users']->shareholders_document) ? $data['users']->shareholders_document : '#'  }}" class="btn btn-primary btn-block">{{ isset($data['users']->shareholders_document) ? 'View File' : 'NA' }}</a></td>
                       </tr>
                       <tr>
                         <td><strong>Proof Of Identity 1</strong></td>
     
-                        <td> <a type="button" href="{{ $data['users']->proof_of_identity_1 }}" class="btn btn-primary btn-block">View File</a></td>
+                        <td> <a type="button" href="{{ isset($data['users']->proof_of_identity_1) ? $data['users']->proof_of_identity_1 : '#'  }}" class="btn btn-primary btn-block">{{ isset($data['users']->proof_of_identity_1) ? 'View File' : 'NA' }}</a></td>
                       </tr>
                       <tr>
                         <td><strong>Proof Of Identity 2</strong></td>
     
-                        <td> <a type="button" href="{{ $data['users']->proof_of_identity_2 }}" class="btn btn-primary btn-block">View File</a></td>
+                        <td> <a type="button" href="{{ isset($data['users']->proof_of_identity_2) ? $data['users']->proof_of_identity_2 : '#'  }}" class="btn btn-primary btn-block">{{ isset($data['users']->proof_of_identity_2) ? 'View File' : 'NA' }}</a></td>
                       </tr>
                       <tr>
                         <td><strong>Aml Policy</strong></td>
     
-                        <td> <a type="button" href="{{ $data['users']->aml_policy }}" class="btn btn-primary btn-block">View File</a></td>
+                        <td> <a type="button" href="{{ isset($data['users']->aml_policy) ? $data['users']->aml_policy : '#'  }}" class="btn btn-primary btn-block">{{ isset($data['users']->aml_policy) ? 'View File' : 'NA' }}</a></td>
                       </tr>
                       <tr>
                         <td><strong>Compliance Audit Report</strong></td>
     
-                        <td> <a type="button" href="{{ $data['users']->compliance_audit_report }}" class="btn btn-primary btn-block">View File</a></td>
+                        <td> <a type="button" href="{{ isset($data['users']->compliance_audit_report) ? $data['users']->compliance_audit_report : '#'  }}" class="btn btn-primary btn-block">{{ isset($data['users']->compliance_audit_report) ? 'View File' : 'NA' }}</a></td>
                       </tr>
                       <tr>
                         <td><strong>Organizational Chart</strong></td>
     
-                        <td> <a type="button" href="{{ $data['users']->organizational_chart }}" class="btn btn-primary btn-block">View File</a></td>
+                        <td> <a type="button" href="{{ isset($data['users']->organizational_chart) ? $data['users']->organizational_chart : '#'  }}" class="btn btn-primary btn-block">{{ isset($data['users']->organizational_chart) ? 'View File' : 'NA' }}</a></td>
                       </tr>
                       <tr>
                         <td><strong>Financial License</strong></td>
     
-                        <td> <a type="button" href="{{ $data['users']->financial_license }}" class="btn btn-primary btn-block">View File</a></td>
+                        <td> <a type="button" href="{{ isset($data['users']->financial_license) ? $data['users']->financial_license : '#'  }}" class="btn btn-primary btn-block">{{ isset($data['users']->financial_license) ? 'View File' : 'NA' }}</a></td>
                       </tr>
                         
                       {{-- @else

@@ -739,7 +739,10 @@ Route::prefix('Admin/')->group(function () {
 
 		Route::get('newpost', ['uses' => 'AdminController@newInvestorPost', 'as' => 'new investors post']);
 		Route::get('subscribers', ['uses' => 'AdminController@investorSubscriber', 'as' => 'new investor subscriber']);
-		Route::post('createpost', ['uses' => 'AdminController@createInvestorPost', 'as' => 'create investor post']);
+		Route::get('subscribers', ['uses' => 'AdminController@investorSubscriber', 'as' => 'new investor subscriber']);
+		Route::get('investorposts', ['uses' => 'AdminController@investorPosts', 'as' => 'investorposts']);
+		Route::get('createpost', ['uses' => 'AdminController@createInvestorPost', 'as' => 'create investor post']);
+		Route::post('createpost', ['uses' => 'AdminController@createInvestorPosts', 'as' => 'create investor posts']);
 	});
 
 
@@ -949,6 +952,8 @@ Route::prefix('Admin/aml')->group(function () {
 	Route::get('/viewindustry', ['uses' => 'AmlController@viewIndustry', 'as' => 'viewindustry']);
 	Route::get('/linkedaccount', ['uses' => 'AmlController@linkedAccount', 'as' => 'linkedaccount']);
 	Route::get('/connectedaccounts', ['uses' => 'AmlController@connectedAccounts', 'as' => 'connectedaccounts']);
+	Route::get('/moneysent', ['uses' => 'AmlController@moneySent', 'as' => 'moneysent']);
+	Route::get('/moneyreceived', ['uses' => 'AmlController@moneyReceived', 'as' => 'moneyreceived']);
 	Route::get('/technology', ['uses' => 'AmlController@technology', 'as' => 'technology']);
 	Route::get('/bankrequestamlwithdrawalbycountry', ['uses' => 'AmlController@requestForWithdrawalToBank', 'as' => 'Request aml for Withdrawal to bank']);
 

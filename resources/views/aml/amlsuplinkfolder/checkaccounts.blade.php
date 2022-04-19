@@ -11,11 +11,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Connected Accounts
+        Check Accounts
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active"> Connected Accounts</li>
+        <li class="active"> Check Accounts</li>
       </ol>
     </section>
 
@@ -31,7 +31,6 @@
           <div class="box">
 
             <div class="box-body">
-              
                   
                 <table class="table table-bordered table-striped" id="example3">
                     <thead>
@@ -43,14 +42,10 @@
                           <h3 id="period_stop"></h3>
                         </div>
                       </div>
-                     
-                      <a type="button" href="{{ route('moneysent', 'search='.$data['userinfo']->email) }}" class="btn btn-primary">View Money Sent</a>
-                      <a type="button" href="{{ route('moneyreceived', 'search='.$data['userinfo']->email) }}" class="btn btn-primary">View Money Received</a><br><br>
                     <tr>
-                      
                       <th>#</th>    
                       <th>Name</th>    
-                      <th>Action</th>
+                      <th>Status</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -62,7 +57,6 @@
                       @endphp
 
                         @foreach ($data['users'] as $user)
-                        
                           <tr>
                             <td>{{ $i++ }}</td>
                             <td>{{ $user->name }}</td>

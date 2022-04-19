@@ -11,11 +11,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Connected Accounts
+        Money Received
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active"> Connected Accounts</li>
+        <li class="active"> Money Received</li>
       </ol>
     </section>
 
@@ -43,14 +43,14 @@
                           <h3 id="period_stop"></h3>
                         </div>
                       </div>
-                     
-                      <a type="button" href="{{ route('moneysent', 'search='.$data['userinfo']->email) }}" class="btn btn-primary">View Money Sent</a>
-                      <a type="button" href="{{ route('moneyreceived', 'search='.$data['userinfo']->email) }}" class="btn btn-primary">View Money Received</a><br><br>
+                      
                     <tr>
                       
                       <th>#</th>    
-                      <th>Name</th>    
-                      <th>Action</th>
+                      <th>Email</th>    
+                      <th>Amount</th>    
+                      <th>Status</th>    
+                      
                     </tr>
                     </thead>
                     <tbody>
@@ -62,17 +62,22 @@
                       @endphp
 
                         @foreach ($data['users'] as $user)
-                        
+
+                        @if ($userStatement = \App\Statement::where('user_id', '!=', request()->get('search'))->where('reference_code', $user->reference_code)->where('action', 'Wallet debit')->first())
                           <tr>
                             <td>{{ $i++ }}</td>
-                            <td>{{ $user->name }}</td>
-                            <td><a type="button" href="{{route('user more detail', $user->id)}}" class="btn btn-primary btn-block">View details</a></td>
+                            <td>{{ $userStatement->user_id }}</td>
+                            <td>{{ $userStatement->debit }}</td>
+                            <td>{{ $userStatement->action }}</td>
+                            
                           </tr>
+
+                          @endif
                         @endforeach
                         
                       @else
                       <tr>
-                        <td colspan="3" align="center">No record found</td>
+                        <td colspan="4" align="center">No record found</td>
                       </tr>
                       @endif
 
