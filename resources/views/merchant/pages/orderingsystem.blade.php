@@ -288,7 +288,8 @@
                                                         <th scope="col">Quantity</th>
                                                         <th scope="col">Price</th>
                                                         <th scope="col">Payment Status</th>
-                                                        <th scope="col">Date</th>
+                                                        <th scope="col">Order Date</th>
+                                                        <th scope="col">Payment Date</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -336,11 +337,14 @@
                                                                 <td>
                                                                     {{ date('d/m/Y', strtotime($orders->created_at)) }}
                                                                 </td>
+                                                                <td>
+                                                                    {{ date('d/m/Y', strtotime($orders->updated_at)) }}
+                                                                </td>
                                                             </tr>
                                                         @endforeach
                                                     @else
                                                         <tr>
-                                                            <td colspan="9" align="center">No orders received.</td>
+                                                            <td colspan="10" align="center">No orders received.</td>
                                                         </tr>
                                                     @endif
 
