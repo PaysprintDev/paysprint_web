@@ -104,6 +104,8 @@
 
 
 
+
+
                             <!-- credit card info-->
                             <div id="credit-card" class="tab-pane fade show active pt-3">
 
@@ -178,7 +180,15 @@
                                                             <h4><img
                                                                     src="https://img.icons8.com/nolan/25/shopping-cart-promotion.png" />
                                                                 {{ $data['paymentorg']->currencyCode . ' ' . number_format($totalCost, 2) }}
+<<<<<<< HEAD
                                                             </h4>
+=======
+
+                                                            </h4>
+                                                            <small class="processFee disp-0">
+
+                                                            </small>
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -311,8 +321,14 @@
                                                             </label>
                                                             <div class="input-group">
                                                                 <input type="text" name="commissiondeduct"
+<<<<<<< HEAD
                                                                     class="form-control" id="commissiondeduct"
                                                                     value="" placeholder="0.00" readonly>
+=======
+                                                                    class="form-control commissiondeduct"
+                                                                    id="commissiondeduct" value="" placeholder="0.00"
+                                                                    readonly>
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
 
                                                                 <input type="hidden" name="totalcharge"
                                                                     class="form-control" id="totalcharge" value=""
@@ -466,9 +482,13 @@
                                                             </div>
                                                         </div>
 
+<<<<<<< HEAD
                                                         @if ($data['currencyCode']->currencyCode == $data['paymentorg']->currencyCode)
                                                         @else
                                                         @endif
+=======
+
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
 
                                                         <div
                                                             class="form-group @if ($data['currencyCode']->currencyCode != $data['paymentorg']->currencyCode) disp-0 @endif ">
@@ -513,6 +533,26 @@
                                                         </div>
 
 
+<<<<<<< HEAD
+=======
+                                                        <div class="form-group disp-0"> <label for="commissiondeduct">
+                                                                <h6>Fee Charge</h6>
+                                                            </label>
+                                                            <div class="input-group">
+                                                                <input type="text" name="commissiondeduct"
+                                                                    class="form-control commissiondeduct"
+                                                                    id="commissiondeduct" value="" placeholder="0.00"
+                                                                    readonly>
+
+                                                                <input type="hidden" name="totalcharge"
+                                                                    class="form-control" id="totalcharge" value=""
+                                                                    placeholder="0.00" readonly>
+
+                                                            </div>
+                                                        </div>
+
+
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
                                                         <div class="form-group"> <label for="country">
                                                                 <h6><span style="color: red;">*</span> Country</h6>
                                                             </label>
@@ -740,6 +780,7 @@
                                             <div class="card">
                                                 <div class="card-body">
                                                     <center>
+<<<<<<< HEAD
                                                         <p>Create a PaySprint account to pay at a lesser rate.</p>
                                                         <p>
                                                             <a type="button" class="btn btn-primary"
@@ -750,6 +791,22 @@
                                                                 ACCOUNT</a>
                                                         </p>
 
+=======
+                                                        <p>Create a PaySprint account to save on processing fees.</p>
+
+
+                                                        <p>
+                                                            <a type="button" class="btn btn-primary"
+                                                                href="{{ route('register') }}" target="_blank">Create
+                                                                Consumer Account</a> <a type="button"
+                                                                class="btn btn-success"
+                                                                href="{{ route('AdminRegister') }}"
+                                                                target="_blank">Create Merchant Account</a>
+                                                        </p>
+
+
+
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
                                                         <p>
                                                             or
                                                         </p>
@@ -757,15 +814,22 @@
                                                         <p>DOWNLOAD OUR APP</p>
 
                                                         <div class="row">
+<<<<<<< HEAD
                                                             <div class="col-md-6">
+=======
+                                                            <div class="col-md-12">
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
                                                                 <a href="https://play.google.com/store/apps/details?id=com.fursee.damilare.sprint_mobile"
                                                                     target="_blank"
                                                                     class="btn text-white gr-hover-y px-lg-9">
                                                                     <img src="https://res.cloudinary.com/pilstech/image/upload/v1620148943/paysprint_asset/l6-download-gplay_o9rcfj.png"
                                                                         alt="play store" width="100%">
                                                                 </a>
+<<<<<<< HEAD
                                                             </div>
                                                             <div class="col-md-6">
+=======
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
                                                                 <a href="https://apps.apple.com/gb/app/paysprint/id1567742130"
                                                                     target="_blank"
                                                                     class="btn text-white gr-hover-y px-lg-9">
@@ -773,6 +837,10 @@
                                                                         alt="apple store" width="100%">
                                                                 </a>
                                                             </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
                                                         </div>
 
                                                     </center>
@@ -846,7 +914,11 @@
                     e.preventDefault();
 
                     var netamount = $('#conversionamount').val();
+<<<<<<< HEAD
                     var feeamount = $('#commissiondeduct').val();
+=======
+                    var feeamount = $('.commissiondeduct').val();
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
                     var amount = (+netamount + +feeamount).toFixed(2);
 
                     var route = '/create-payment-intent';
@@ -856,7 +928,11 @@
                     formData.append('paymentMethodType', 'card');
                     formData.append('amount', amount);
                     formData.append('amounttosend', amount);
+<<<<<<< HEAD
                     formData.append('commissiondeduct', $('#commissiondeduct').val());
+=======
+                    formData.append('commissiondeduct', $('.commissiondeduct').val());
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
                     formData.append('currencyCode', `{{ Auth::user()->currencyCode }}`);
 
                     Pace.restart();
@@ -979,7 +1055,11 @@
                 createOrder: function(data, actions) {
 
                     var netamount = $('#conversionamount').val();
+<<<<<<< HEAD
                     var feeamount = $('#commissiondeduct').val();
+=======
+                    var feeamount = $('.commissiondeduct').val();
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
                     var amount = (+netamount + +feeamount).toFixed(2);
 
                     // Set up the transaction
@@ -1040,10 +1120,19 @@
 
                     $('#commission').prop("checked", false);
 
+<<<<<<< HEAD
+=======
+                    $('.processFee').removeClass('disp-0');
+
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
 
 
                 } else {
                     $('#cardType').val(value);
+<<<<<<< HEAD
+=======
+                    $('.processFee').addClass('disp-0');
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
 
                     $('#commission').prop("checked", true);
                 }
@@ -1228,6 +1317,10 @@
         function runCommission() {
 
             $('.commissionInfo').html("");
+<<<<<<< HEAD
+=======
+            $(".convertedCommission").html("");
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
             var amount = $("#amounttosend").val();
             // var amount = $("#conversionamount").val();
             var card_type = $('#cardType').val();
@@ -1292,6 +1385,7 @@
                                 $('.commissionInfo').addClass('alert alert-success');
                                 $('.commissionInfo').removeClass('alert alert-danger');
 
+<<<<<<< HEAD
                                 $('.commissionInfo').html(
                                     "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['paymentorg']->currencySymbol }}" +
                                     chargeAmount +
@@ -1299,6 +1393,12 @@
 
                                 $("#amounttosend").val(result.data);
                                 $("#commissiondeduct").val(result.collection);
+=======
+
+
+                                $("#amounttosend").val(result.data);
+                                $(".commissiondeduct").val(result.collection);
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
 
                                 $("#totalcharge").val(chargeAmount);
 
@@ -1306,12 +1406,30 @@
 
                                 currencyConvert(totalCharge);
 
+<<<<<<< HEAD
+=======
+                                $('.processFee').html(
+                                    "<strong class='text-danger'>Processing Fees: {{ $data['paymentorg']->currencySymbol }}" +
+                                    parseFloat(result.collection).toFixed(2) +
+                                    "</strong><p>(You can save on Processing Fees by Opening  a PaySprint Account)</p>"
+                                );
+
+
+
+                                $('.commissionInfo').html(
+                                    "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['paymentorg']->currencySymbol }}" +
+                                    chargeAmount +
+                                    " <span class='convertedCommission'></span> will be charged.</span></li></li></ul>"
+                                );
+
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
 
                             } else {
 
                                 $('.commissionInfo').addClass('alert alert-danger');
                                 $('.commissionInfo').removeClass('alert alert-success');
 
+<<<<<<< HEAD
                                 $('.commissionInfo').html(
                                     "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['paymentorg']->currencySymbol }}" +
                                     (+result.data + +result.collection).toFixed(2) +
@@ -1319,6 +1437,12 @@
 
                                 $("#amounttosend").val(result.data);
                                 $("#commissiondeduct").val(result.collection);
+=======
+
+
+                                $("#amounttosend").val(result.data);
+                                $(".commissiondeduct").val(result.collection);
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
                                 $("#totalcharge").val((+result.data + +result.collection));
 
                                 totalCharge = $("#totalcharge").val();
@@ -1326,6 +1450,22 @@
 
                                 currencyConvert(totalCharge);
 
+<<<<<<< HEAD
+=======
+                                $('.processFee').html(
+                                    "<strong class='text-danger'>Processing Fees: {{ $data['paymentorg']->currencySymbol }}" +
+                                    parseFloat(result.collection).toFixed(2) +
+                                    "</strong><p>(You can save on Processing Fees by Opening  a PaySprint Account)</p>"
+                                );
+
+
+                                $('.commissionInfo').html(
+                                    "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['paymentorg']->currencySymbol }}" +
+                                    (+result.data + +result.collection).toFixed(2) +
+                                    " <span class='convertedCommission'></span> will be charged.</span></li></li></ul>"
+                                );
+
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
                             }
 
 
@@ -1344,6 +1484,10 @@
         function currencyConvert(amount) {
 
             $(".conversionamount").val("");
+<<<<<<< HEAD
+=======
+            $(".convertedCommission").html("");
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
 
             var currency = "{{ $data['currencyCode']->currencyCode }}";
             var localcurrency = "{{ $data['paymentorg']->currencyCode }}";
@@ -1367,18 +1511,37 @@
 
 
                     if (result.message == "success") {
+<<<<<<< HEAD
                         $(".conversionamount").val(result.data);
                     } else {
                         $(".conversionamount").val("");
                     }
 
 
+=======
+                        $(".conversionamount").val(parseFloat(result.data).toFixed(2));
+                        $(".convertedCommission").html("({{ $data['currencyCode']->currencySymbol }}" +
+                            parseFloat(result.data).toFixed(2) + ")");
+
+                    } else {
+                        $(".conversionamount").val("");
+                        $(".convertedCommission").html("");
+                    }
+
+
+
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
                 }
 
             });
         }
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
         // EPS Integration...
 
         async function estoreWithEPS() {
@@ -1391,7 +1554,11 @@
                 var callbackUrl;
 
                 var netamount = $('#conversionamount').val();
+<<<<<<< HEAD
                 var feeamount = $('#commissiondeduct').val();
+=======
+                var feeamount = $('.commissiondeduct').val();
+>>>>>>> 464100d5098f5f07b8888f2318d44a14a6ed2a37
                 var amount = (+netamount + +feeamount).toFixed(2);
                 var paymentToken = 'estore_' + Math.floor((Math.random() * 1000000000) + 1);
                 var publicKey =

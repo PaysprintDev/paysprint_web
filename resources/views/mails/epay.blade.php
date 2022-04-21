@@ -649,7 +649,7 @@
                                                                                                             {{ isset($maildata->name) ? $maildata->name : '' }},
                                                                                                         </h3>
 
-                                                                                                        {!! $maildata->message !!}
+                                                                                                        {!! isset($maildata->message) ? $maildata->message : '' !!}
 
                                                                                                         <hr>
                                                                                                         <p>
