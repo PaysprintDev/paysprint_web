@@ -1448,7 +1448,7 @@ class AdminController extends Controller
     }
 
 
-    public function investorPost(Request $req)
+        public function newInvestorPost(Request $req)
     {
         if ($req->session()->has('username') == true) {
             // dd(Session::all());
@@ -1493,7 +1493,7 @@ class AdminController extends Controller
             $getxPay = $this->getxpayTrans();
 
             $data = array(
-                'users' => $this->investor_relations()
+                'percentage' => $this->markupPercentage()
             );
 
 
@@ -1504,6 +1504,7 @@ class AdminController extends Controller
             return redirect()->route('AdminLogin');
         }
     }
+
 
 
 
@@ -1627,7 +1628,7 @@ class AdminController extends Controller
                 'byStructure' => TransactionCost::select('structure')->groupBy('structure')->get(),
                 'byMethod' => TransactionCost::select('method')->groupBy('method')->get(),
                 'countryprice' => $this->getCountryPricing($req->get('country')),
-                'inverstor_relations' ,
+                'investor_relations' => InvestorPost::orderBy('created_at', 'DESC')->get()
             );
 
 
@@ -12545,10 +12546,10 @@ class AdminController extends Controller
 
             $client = $this->getMyClientInfo(session('user_id'));
 
-        if($client->accountMode == "test"){
+        // if($client->accountMode == "test"){
             
-            return redirect()->route('dashboard')->with('error', 'You are in test mode');
-        }
+        //     return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        // }
 
             // dd($otherPays);
 

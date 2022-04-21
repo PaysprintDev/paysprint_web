@@ -148,8 +148,10 @@ class ShopController extends Controller
             }
 
 
-
-
+                // Add shipping details...
+            StoreBillingDetail::updateOrCreate(['userId' => $req->userId, 'merchantId' => $req->merchantId],[
+                 'userId' => $req->userId, 'merchantId' => $req->merchantId, 'fulllname' => $req->name, 'company_name' => $req->company, 'country' => $req->country, 'state' => $req->state, 'address' => $req->address, 'apartment' => $req->apartment, 'city' => $req->city, 'postalcode' => $req->postalCode, 'email' => $req->email, 'phone' => $req->phone, 'shippingName' => $shippingName, 'shippingAddress' => $shippingAddress, 'shippingEmail' => $shippingEmail, 'shippingPhone' => $shippingPhone
+            ]);
 
 
 
@@ -170,10 +172,6 @@ class ShopController extends Controller
             }
 
             
-            // Add shipping details...
-            StoreBillingDetail::updateOrCreate(['userId' => $req->userId, 'merchantId' => $req->merchantId],[
-                 'userId' => $req->userId, 'merchantId' => $req->merchantId, 'fulllname' => $req->name, 'company_name' => $req->company, 'country' => $req->country, 'state' => $req->state, 'address' => $req->address, 'apartment' => $req->apartment, 'city' => $req->city, 'postalcode' => $req->postalCode, 'email' => $req->email, 'phone' => $req->phone, 'shippingName' => $shippingName, 'shippingAddress' => $shippingAddress, 'shippingEmail' => $shippingEmail, 'shippingPhone' => $shippingPhone
-            ]);
 
             
 
@@ -186,7 +184,7 @@ class ShopController extends Controller
          catch (\Throwable $th) {
             $status = 'error';
             $message = $th->getMessage();
-
+            
             return redirect()->back()->with($status, $message); 
         }
 

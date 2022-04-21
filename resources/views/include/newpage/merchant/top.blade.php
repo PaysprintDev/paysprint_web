@@ -61,6 +61,24 @@
         gtag('config', 'G-RVX8CC7GDP');
     </script>
 
+
+    <script type="text/javascript" id="zsiqchat">
+        var $zoho = $zoho || {};
+        $zoho.salesiq = $zoho.salesiq || {
+            widgetcode: "a7ffa31136f6ab021392ea01a2816af0033ebbc69fda5e9fa38407829c8ee302",
+            values: {},
+            ready: function() {}
+        };
+        var d = document;
+        s = d.createElement("script");
+        s.type = "text/javascript";
+        s.id = "zsiqscript";
+        s.defer = true;
+        s.src = "https://salesiq.zoho.com/widget";
+        t = d.getElementsByTagName("script")[0];
+        t.parentNode.insertBefore(s, t);
+    </script>
+
 </head>
 
 <body data-theme="light">
