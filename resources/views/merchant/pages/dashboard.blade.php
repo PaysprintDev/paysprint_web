@@ -876,6 +876,13 @@
                                 </button>
                             </li>
 
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link btn btn-default" type="button" role="tab"
+                                    onclick="location.href='{{ route('getwalletStatement') }}'">
+                                    <h6>Transaction History</h6>
+                                </button>
+                            </li>
+
                         </ul>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="profile" role="tabpanel"

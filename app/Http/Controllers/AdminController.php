@@ -1678,7 +1678,7 @@ class AdminController extends Controller
        
         $getPost = Createpost::where('id', $id)->first();
             
-        $docPath = $getPost->investment_document;
+        $docPath = $getPost;
 
         if($req->hasFile('investment_document')){
             //Get filename with extension

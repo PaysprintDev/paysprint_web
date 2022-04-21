@@ -1,6 +1,8 @@
 @extends('layouts.dashboard')
 
 @section('dashContent')
+
+
     <?php use App\Http\Controllers\User; ?>
     <?php use App\Http\Controllers\AddCard; ?>
 
@@ -9,11 +11,11 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Investors Post
+                Investor Relation Posts
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li class="active"> Money Sent</li>
+                <li class="active">Investor Relation Posts</li>
             </ol>
         </section>
 
@@ -27,93 +29,73 @@
 
             <div class="row">
                 <div class="col-xs-12">
-                    {!! session('msg') !!}
                     <div class="box">
 
-                        @if (count($data['posts']) > 0)
-                            @foreach ($data['posts'] as $value)
-                                <div class="box-body">
-
-                                    <table class="table table-bordered table-striped" id="example3">
-
-                                        <tbody>
+                        <div class="box-body">
 
 
+                            <table class="table table-bordered table-striped" id="example3">
+                                <thead>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h3 id="period_start"></h3>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h3 id="period_stop"></h3>
+                                        </div>
+                                    </div>
+
+                                    <tr>
+
+                                        <th>#</th>
+                                        <th>Title</th>
+                                        <th>Description</th>
+                                        <th>File</th>
+                                        <th>Date created</th>
+                                        <th>Action</th>
+                                        <th></th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (count($data['investor_relations']) > 0)
+                                        @php
+                                            $i = 1;
+                                        @endphp
+
+                                        @foreach ($data['investor_relations'] as $theposts)
                                             <tr>
-                                                <td>Reference Code:</td>
-                                                <td>{{ $value['ref_code'] }}</td>
+                                                <td>{{ $i++ }}</td>
+                                                <td>{{ $theposts->title }}</td>
+                                                <td>{!! $theposts->description !!}</td>
+                                                <td>
+                                                    <a
+                                                        href="{{ $theposts->file != null ? $theposts->file : 'javascript:void()' }}">{{ $theposts->file != null ? 'Open file' : 'NILL' }}</a>
+                                                </td>
+                                                <td>{{ date('d/m/Y', strtotime($theposts->created_at)) }}</td>
+                                                <td>
+                                                    <button class="btn btn-primary">Edit</button>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-danger">Delete</button>
+
+                                                </td>
                                             </tr>
-                                            <tr>
-                                                <td>Title:</td>
-                                                <td>{!! $value['post_title'] !!}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Description:</td>
-                                                <td>{!! $value['description'] !!}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Minimum Amount</td>
-                                                <td>{{ $value['minimum_acount'] }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Locked _in_Return</td>
-                                                <td>{{ $value['locked_in_return'] }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Term</td>
-                                                <td>{{ $value['term'] }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Liquidation Amount</td>
-                                                <td>{{ $value['liquidation_amouunt'] }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Offer Open Date:</td>
-                                                <td>{{ $value['offer_open_date'] }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Offer End Date:</td>
-                                                <td>{{ $value['offer_end_date'] }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Activate Post:</td>
-                                                <td>{{ $value['activate_post'] }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Investment Activation Date:</td>
-                                                <td>{{ $value['investment_activation_date'] }}</td>
-                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="7" align="center">No record found</td>
+                                        </tr>
+                                    @endif
 
 
 
-                                        </tbody>
 
+                            </table>
 
-                                    </table>
-                                    <form action="{{ route('delete investor post', $value['id']) }}" method="post"
-                                        id="delete" style="visibility: hidden">
-                                        @csrf
-                                    </form>
-                                    <button href="javascript:void(0)" onclick="deleteInvestorPost()"
-                                        class="ms-2 btn btn-danger">Delete</button>
-                                    <a href="{{ route('edit investor post', $value->id) }}" alt=""
-                                        class="btn btn-primary">Edit</a>
-                                    <button class=" btn btn-success ms-4">Activate</button>
-                                </div>
-                            @endforeach
-                        @endif
+                        </div>
+
                     </div>
-
-
-                    <nav aria-label="...">
-                        <ul class="pagination pagination-lg">
-
-                            <li class="page-item">
-                                {{ $data['posts']->links() }}
-                            </li>
-                        </ul>
-                    </nav>
-
                     <!-- /.box-body -->
                 </div>
                 <!-- /.box -->
