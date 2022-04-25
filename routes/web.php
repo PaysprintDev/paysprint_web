@@ -958,10 +958,13 @@ Route::prefix('Admin/aml')->group(function () {
 	Route::get('/moneysent', ['uses' => 'AmlController@moneySent', 'as' => 'moneysent']);
 	Route::get('/moneyreceived', ['uses' => 'AmlController@moneyReceived', 'as' => 'moneyreceived']);
 	Route::get('/technology', ['uses' => 'AmlController@technology', 'as' => 'technology']);
+	Route::post('/gettechnology', ['uses' => 'AmlController@gettechnology', 'as' => 'gettechnology']);
 	Route::get('/bankrequestamlwithdrawalbycountry', ['uses' => 'AmlController@requestForWithdrawalToBank', 'as' => 'Request aml for Withdrawal to bank']);
 
 	Route::get('/view', ['uses' => 'AmlController@view', 'as' => 'View']);
 	Route::get('/upload', ['uses' => 'AmlController@upload', 'as' => 'Upload']);
+    Route::post('/uploads', ['uses' => 'AmlController@uploads', 'as' => 'Uploads']);
+	Route::get('amlbvnactivity', ['uses' => 'AmlController@amlBvnActivity', 'as' => 'amlbvnactivity']);
 
 	Route::get('/purchaserequestreturnaml', ['uses' => 'AmlController@purchaseRequestReturnAml', 'as' => 'Purchase aml Refund Request']);
 	Route::get('refunddetail/{transid}', ['uses' => 'AmlController@getRefundDetailAml', 'as' => 'refund detail']);
