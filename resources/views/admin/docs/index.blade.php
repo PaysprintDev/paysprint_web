@@ -34,10 +34,10 @@
                     <div class="nk-sidebar-brand">
                         <a href="#" class="logo-link nk-sidebar-logo">
                             <img class="logo-light logo-img"
-                                src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
+                                src="https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png"
                                 srcset="images/logo2x.png 2x" alt="PaySprint">
                             <img class="logo-dark logo-img"
-                                src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
+                                src="https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png"
                                 srcset="images/logo-dark2x.png 2x" alt="PaySprint">
                         </a>
                     </div>
@@ -102,10 +102,10 @@
                             <div class="nk-header-brand d-xl-none">
                                 <a href="#" class="logo-link">
                                     <img class="logo logo-img"
-                                        src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
+                                        src="https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png"
                                         alt="logo">
                                     <img class="logo-dark logo-img"
-                                        src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
+                                        src="https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png"
                                         srcset="images/logo-dark2x.png 2x" alt="logo-dark">
                                 </a>
                             </div>

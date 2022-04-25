@@ -587,7 +587,7 @@
                                                                                         class="textContent">
                                                                                         <h1
                                                                                             style="color:#000;line-height:100%;font-family:Helvetica,Arial,sans-serif;font-size:35px;font-weight:normal;margin-bottom:5px;text-align:center;">
-                                                                                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
+                                                                                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png"
                                                                                                 style="height: 100px">
                                                                                         </h1><br>
 

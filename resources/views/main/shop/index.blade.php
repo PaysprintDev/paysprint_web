@@ -204,13 +204,7 @@
 
                                             </div>
                                         </div>
-
-
-
-
                                     @else
-
-
                                         <div class="form-group disp-0">
                                             <div class="input-group">
                                                 <p style="color: red; font-weight: bold;"><input type="checkbox" checked
@@ -248,13 +242,7 @@
                                                 <div class="input-group-append"> </div>
                                             </div>
                                         </div>
-
-
-
                                     @else
-
-
-
                                         <div class="form-group topay"> <label for="currency">
                                                 <h6>Amount to Pay</h6>
                                             </label>
@@ -855,7 +843,7 @@
                         "buttonColor": "#0000",
                         "footerText": "Powered by Pro-filr Nig. LTD",
                         "footerLink": "https://paysprint.ca",
-                        "footerLogo": "https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png",
+                        "footerLogo": "https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png",
                         "metadata": [{
                             "name": "name",
                             "value": "{{ $data['name'] }}"
