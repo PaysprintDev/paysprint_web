@@ -24,6 +24,7 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <!-- jQuery UI 1.11.4 -->
 <script src="{{ asset('ext/bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
+<script src="{{ asset('merchantassets/assets/js/dropzone/dropzone.js') }}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
     $.widget.bridge('uibutton', $.ui.button);
@@ -4826,6 +4827,36 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                 'Authorization': "Bearer " + "{{ session('api_token') }}"
             }
         });
+    }
+
+
+
+    Dropzone.options.myDropzone = {
+        url: "{{ route('Uploads') }}",
+        autoProcessQueue: false,
+        uploadMultiple: true,
+        parallelUploads: 5,
+        maxFiles: 5,
+        maxFilesize: 100, // MB
+        paramName: "file",
+        addRemoveLinks: true,
+        init: function() {
+            dzClosure = this; // Makes sure that 'this' is understood inside the functions below.
+
+            // for Dropzone to process the queue (instead of default form behavior):
+            document.getElementById("submit_all").addEventListener("click", function(e) {
+                // Make sure that the form isn't actually being sent.
+                e.preventDefault();
+                e.stopPropagation();
+                dzClosure.processQueue();
+            });
+
+            //send all the form data along with the files:
+            this.on("sendingmultiple", function(data, xhr, formData) {
+                formData.append("_token", "{{ csrf_token() }}");
+                formData.append("file_title", $("#file_title").val());
+            });
+        }
     }
 </script>
 
