@@ -62,6 +62,15 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ asset('ext/bower_components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js') }}">
 </script>
 
+<!-- Summer Note -->
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $('.summernote').summernote();
+
+    });
+</script>
+
 <!-- bootstrap time picker -->
 <script src="{{ asset('ext/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
 
@@ -4781,6 +4790,25 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
 
+
+
+    }
+
+
+    function deleteInvestorPost() {
+
+        swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this post!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $('#delete').submit();
+                }
+            });
 
 
     }
