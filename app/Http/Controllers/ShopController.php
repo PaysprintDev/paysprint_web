@@ -702,6 +702,162 @@ class ShopController extends Controller
     }
 
 
+    public function verifyProductCode(Request $req){
+
+        
+
+
+        try {
+
+            // Get Order with order id and
+             $getOrder = StoreOrders::where('orderId', $req->orderId)->first();
+
+             if(isset($getOrder)){
+
+                $code = $req->pin0.$req->pin1.$req->pin2.$req->pin3;
+
+                // dd(['code' => (int)$code, 'otp' => (int)$req->otp, 'typeCode' => gettype($code), 'typeOtp' => gettype($req->otp)]);
+
+                if((int)$code != (int)$req->otp){
+                    $data = [];
+                    $message = 'Invalid OTP provided';
+                    $status = 400;
+                    $action = 'error';
+                }
+                else{
+
+                    //  Check for code...
+                $codeCheck = StoreDelivery::where('deliveryCode', $req->otp)->where('orderId', $req->orderId)->where('status', 'not claimed')->first();
+
+                if(isset($codeCheck)){
+
+                    $getUser = User::where('id', $getOrder->userId)->first();
+                    $getMerchant = User::where('id', $getOrder->merchantId)->first();
+
+                    $getProduct = StoreProducts::where('id', $getOrder->productId)->first();
+
+                    // TODO:: 1 => Update Store delivery to Claim
+                    StoreDelivery::where('deliveryCode', $req->otp)->where('orderId', $req->orderId)->update(['status' => 'claimed']);
+
+                    // TODO:: 2 => Update store order to delivered
+                    StoreOrders::where('orderId', $req->orderId)->update(['deliveryStatus' => 'delivered']);
+
+
+                    // TODO:: 3 => Credit merchant wallet from escrow balance
+                    $productPrice = $getProduct->amount * $getOrder->quantity;
+                    $escrowBalance = $getMerchant->escrow_balance - $productPrice;
+                    $walletBalance = $getMerchant->wallet_balance + $productPrice;
+
+                    User::where('id', $getOrder->merchantId)->update(['wallet_balance' => $walletBalance, 'escrow_balance' => $escrowBalance]);
+                    
+
+                    // TODO:: 4 => Notify merchant of new wallet balance and customer on Thanks message...
+
+                    // Mail Merchant ...
+                    $this->name = $getMerchant->name;
+                        $this->email = $getMerchant->email;
+                        $this->subject = $getMerchant->currencyCode . ' ' . number_format($productPrice, 2) . " now added to your wallet with PaySprint";
+
+                        $this->message = '<p>Item with order '.$req->orderId.' has successfully been confirmed and delivered to customer: '.$getUser->name.'. <strong>' . $getMerchant->currencyCode . ' ' . number_format($productPrice, 2) . '</strong> has been added to your wallet with PaySprint. You have <strong>' . $getMerchant->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> balance in your account</p>';
+
+                        $sendMsg = 'Item with order '.$req->orderId.' has successfully been confirmed and delivered to customer: '.$getUser->name.'. ' . $getMerchant->currencyCode . ' ' . number_format($productPrice, 2) . ' has been added to your wallet with PaySprint. You have ' . $getMerchant->currencyCode . ' ' . number_format($walletBalance, 2) . ' balance in your account';
+
+
+                        $userPhone = User::where('email', $getMerchant->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                        if (isset($userPhone)) {
+
+                            $sendPhone = $getMerchant->telephone;
+                        } else {
+                            $sendPhone = "+" . $getMerchant->code . $getMerchant->telephone;
+                        }
+
+                        if ($getMerchant->country == "Nigeria") {
+
+                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                            $this->sendSms($sendMsg, $correctPhone);
+                        } else {
+                            $this->sendMessage($sendMsg, $sendPhone);
+                        }
+
+
+                        // Send Mail to Merchant...
+                        $this->estoreMail($getMerchant->email, $getMerchant->name, $this->subject, $this->message);
+
+
+                        // Mail Consumer...
+
+                        $subject = 'Item with order '.$req->orderId.' delivered!';
+
+                        $message = '<p>Item with order '.$req->orderId.' has successfully been confirmed and delivered. Thank you for your patronage!</p>';
+                        
+
+                        $sendMsg2 = 'Item with order '.$req->orderId.' has successfully been confirmed and delivered. Thank you for your patronage!';
+
+
+                        $userPhone2 = User::where('email', $getUser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                        if (isset($userPhone2)) {
+
+                            $sendPhone2 = $getUser->telephone;
+                        } else {
+                            $sendPhone2 = "+" . $getUser->code . $getUser->telephone;
+                        }
+
+                        if ($getUser->country == "Nigeria") {
+
+                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone2);
+                            $this->sendSms($sendMsg2, $correctPhone);
+                        } else {
+                            $this->sendMessage($sendMsg2, $sendPhone2);
+                        }
+
+
+
+                        // Send Mail to Merchant...
+                        $this->estoreMail($getUser->email, $getUser->name, $subject, $message);
+
+
+                        $data = true;
+                    $message = 'Delivery confirmed!';
+                    $status = 200;
+                    $action = 'success';
+
+                }
+                else{
+                    $data = [];
+                    $message = 'Invalid OTP provided';
+                    $status = 400;
+                    $action = 'error';
+                }
+
+                }
+
+                 
+
+             }
+             else{
+                $data = [];
+                $message = 'Unknown order id';
+                $status = 404;
+                $action = 'error';
+             }
+
+
+
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+            $action = 'error';
+        }
+
+
+        return redirect()->route('epsresponseback')->with($action, $message);
+
+    }
+
+
     public function uploadImageFile($file, $fileroute){
                  //Get filename with extension
             $filenameWithExt = $file->getClientOriginalName();

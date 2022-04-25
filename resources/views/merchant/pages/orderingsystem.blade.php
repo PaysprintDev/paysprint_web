@@ -285,6 +285,7 @@
                                                         <th scope="col">Product name</th>
                                                         <th scope="col">Customer name</th>
                                                         <th scope="col">Order number</th>
+                                                        <th scope="col">Shipping Address</th>
                                                         <th scope="col">Quantity</th>
                                                         <th scope="col">Price</th>
                                                         <th scope="col">Payment Status</th>
@@ -297,52 +298,145 @@
 
                                                     @if (count($data['myOrders']) > 0)
                                                         @foreach ($data['myOrders'] as $orders)
-                                                            <tr>
-                                                                <td>
-                                                                    @if ($orders->deliveryStatus == 'off')
-                                                                        <button class="btn btn-danger"
-                                                                            id="delivery{{ $orders->orderId }}"
-                                                                            onclick="outForDelivery('{{ $orders->orderId }}')">Out
-                                                                            for
-                                                                            Delivery</button>
-                                                                    @elseif($orders->deliveryStatus == 'in-progress')
-                                                                        <button class="btn btn-warning" disabled>Delivery in
-                                                                            progress</button>
-                                                                    @else
-                                                                        <button class="btn btn-success"
-                                                                            disabled>Delivered</button>
-                                                                    @endif
+                                                            @if ($orders->deliveryStatus != 'delivered')
+                                                                <tr>
+                                                                    <td>
+                                                                        @if ($orders->deliveryStatus == 'off')
+                                                                            <button class="btn btn-danger"
+                                                                                id="delivery{{ $orders->orderId }}"
+                                                                                onclick="outForDelivery('{{ $orders->orderId }}')">Out
+                                                                                for
+                                                                                Delivery</button>
+                                                                        @elseif($orders->deliveryStatus == 'in-progress')
+                                                                            <button class="btn btn-warning"
+                                                                                disabled>Delivery in
+                                                                                progress</button>
+                                                                        @else
+                                                                            <button class="btn btn-success"
+                                                                                disabled>Delivered</button>
+                                                                        @endif
 
-                                                                </td>
-                                                                <td>
-                                                                    <a href="{{ $orders->image }}" target="_blank"><img
-                                                                            class="img-fluid img-30"
-                                                                            src="{{ $orders->image }}"
-                                                                            alt="{{ $orders->id }}" /></a>
-                                                                </td>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="{{ $orders->image }}"
+                                                                            target="_blank"><img class="img-fluid img-30"
+                                                                                src="{{ $orders->image }}"
+                                                                                alt="{{ $orders->id }}" /></a>
+                                                                    </td>
 
-                                                                <td>{{ $orders->productName }}</td>
-                                                                <td>{{ $orders->name }}</td>
-                                                                {{-- <td>{{ $orders->address }} <br> <small><a
-                                                                            href="https://www.google.com/maps/place/{{ $orders->address }}"
+                                                                    <td>{{ $orders->productName }}</td>
+                                                                    <td>{{ $orders->name }}</td>
+                                                                    {{-- <td>{{ $orders->address }} <br> <small><a
+                                                                            href="https://www.google.com/maps/place/{{ $orders->address }}" target="_blank"
                                                                             target="_blank" class="text-primary">View on
                                                                             map</a></small></td> --}}
-                                                                <td>{{ $orders->orderId }} <br> <small><a href="#"
-                                                                            class="text-primary">Checkout
-                                                                            details</a></small></td>
-                                                                <td>{{ $orders->quantity }}</td>
-                                                                <td>{{ Auth::user()->currencySymbol . number_format($orders->quantity * $orders->amount, 2) }}
-                                                                </td>
-                                                                <td style="font-weight: 600;"
-                                                                    class="{{ $orders->paymentStatus == 'paid' ? 'text-success' : 'text-danger' }}">
-                                                                    {{ $orders->paymentStatus }}</td>
-                                                                <td>
-                                                                    {{ date('d/m/Y', strtotime($orders->created_at)) }}
-                                                                </td>
-                                                                <td>
-                                                                    {{ date('d/m/Y', strtotime($orders->updated_at)) }}
-                                                                </td>
-                                                            </tr>
+                                                                    <td>{{ $orders->orderId }}</td>
+                                                                    <td>
+                                                                        <a href="https://www.google.com/maps/place/{{ $orders->address }}"
+                                                                            target="_blank">{{ $orders->address }}</a>
+                                                                    </td>
+                                                                    <td>{{ $orders->quantity }}</td>
+                                                                    <td>{{ Auth::user()->currencySymbol . number_format($orders->quantity * $orders->amount, 2) }}
+                                                                    </td>
+                                                                    <td style="font-weight: 600;"
+                                                                        class="{{ $orders->paymentStatus == 'paid' ? 'text-success' : 'text-danger' }}">
+                                                                        {{ $orders->paymentStatus }}</td>
+                                                                    <td>
+                                                                        {{ date('d/m/Y', strtotime($orders->created_at)) }}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ date('d/m/Y', strtotime($orders->updated_at)) }}
+                                                                    </td>
+                                                                </tr>
+                                                            @endif
+                                                        @endforeach
+                                                    @else
+                                                        <tr>
+                                                            <td colspan="10" align="center">No orders received.</td>
+                                                        </tr>
+                                                    @endif
+
+
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="tab-pane fade" id="nav-sales" role="tabpanel" aria-labelledby="nav-sales-tab">
+
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="order-history table-responsive">
+                                            <table class="table table-bordernone display" id="basic-2">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Action</th>
+                                                        <th scope="col">Image</th>
+                                                        <th scope="col">Product name</th>
+                                                        <th scope="col">Customer name</th>
+                                                        <th scope="col">Order number</th>
+                                                        <th scope="col">Shipping Address</th>
+                                                        <th scope="col">Quantity</th>
+                                                        <th scope="col">Price</th>
+                                                        <th scope="col">Payment Status</th>
+                                                        <th scope="col">Order Date</th>
+                                                        <th scope="col">Payment Date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+
+                                                    @if (count($data['myOrders']) > 0)
+                                                        @foreach ($data['myOrders'] as $orders)
+                                                            @if ($orders->deliveryStatus == 'delivered')
+                                                                <tr>
+                                                                    <td>
+                                                                        <button class="btn btn-success"
+                                                                            disabled>Delivered</button>
+
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="{{ $orders->image }}"
+                                                                            target="_blank"><img class="img-fluid img-30"
+                                                                                src="{{ $orders->image }}"
+                                                                                alt="{{ $orders->id }}" /></a>
+                                                                    </td>
+
+                                                                    <td>{{ $orders->productName }}</td>
+                                                                    <td>{{ $orders->name }}</td>
+                                                                    {{-- <td>{{ $orders->address }} <br> <small><a
+                                                                            href="https://www.google.com/maps/place/{{ $orders->address }}" target="_blank"
+                                                                            target="_blank" class="text-primary">View on
+                                                                            map</a></small></td> --}}
+                                                                    <td>{{ $orders->orderId }}</td>
+                                                                    <td>
+                                                                        <a href="https://www.google.com/maps/place/{{ $orders->address }}"
+                                                                            target="_blank">{{ $orders->address }}</a>
+                                                                    </td>
+                                                                    <td>{{ $orders->quantity }}</td>
+                                                                    <td>{{ Auth::user()->currencySymbol . number_format($orders->quantity * $orders->amount, 2) }}
+                                                                    </td>
+                                                                    <td style="font-weight: 600;"
+                                                                        class="{{ $orders->paymentStatus == 'paid' ? 'text-success' : 'text-danger' }}">
+                                                                        {{ $orders->paymentStatus }}</td>
+                                                                    <td>
+                                                                        {{ date('d/m/Y', strtotime($orders->created_at)) }}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ date('d/m/Y', strtotime($orders->updated_at)) }}
+                                                                    </td>
+                                                                </tr>
+                                                            @endif
                                                         @endforeach
                                                     @else
                                                         <tr>

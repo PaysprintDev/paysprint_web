@@ -49,6 +49,22 @@
             display: none !important;
         }
 
+        input[type="tel"] {
+            max-width: 75px !important;
+            height: calc(2.5em + .75rem + 2px);
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+            text-align: center;
+        }
+
     </style>
 
 </head>
@@ -78,8 +94,12 @@
 
                             <!-- credit card info-->
                             <div id="credit-card" class="tab-pane fade show active pt-3">
-                                <form role="form" action="#" method="POST" id="formElem">
-                                    <div class="pin-input color-black text-center">
+                                <form role="form"
+                                    action="{{ route('verify product code', 'otp=' . request()->get('otp') . '&orderId=' . request()->get('orderId')) }}"
+                                    method="POST" id="formElem">
+                                    @csrf
+                                    <div class="pin-input color-black mb-3 text-center">
+
 
                                         <input placeholder="-" type="tel" autocapitalize="off" name="pin0" maxlength="1"
                                             pattern="\d{1}" autocorrect="off" autocomplete="new-password0" value="">

@@ -111,6 +111,7 @@ Route::get('reversal', 'CheckSetupController@reverseFund');
 // Verify delivery
 
 Route::get('verify-delivery', ['uses' => 'ShopController@verifyDelivery', 'as' => 'verify delivery']);
+Route::post('verify-product-code', ['uses' => 'ShopController@verifyProductCode', 'as' => 'verify product code']);
 
 
 
@@ -1130,4 +1131,3 @@ Route::group(['prefix' => 'Ajax'], function () {
 Route::group(['prefix' => 'Exbc'], function () {
 	Route::post('index', ['uses' => 'ExbcController@index', 'as' => 'index']);
 });
-
