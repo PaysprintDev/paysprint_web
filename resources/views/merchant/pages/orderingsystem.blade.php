@@ -300,8 +300,11 @@
                                                             <tr>
                                                                 <td>
                                                                     @if ($orders->deliveryStatus == 'off')
-                                                                        <button class="btn btn-danger">Out for
-                                                                            delivery</button>
+                                                                        <button class="btn btn-danger"
+                                                                            id="delivery{{ $orders->orderId }}"
+                                                                            onclick="outForDelivery('{{ $orders->orderId }}')">Out
+                                                                            for
+                                                                            Delivery</button>
                                                                     @elseif($orders->deliveryStatus == 'in-progress')
                                                                         <button class="btn btn-warning" disabled>Delivery in
                                                                             progress</button>
@@ -330,10 +333,9 @@
                                                                 <td>{{ $orders->quantity }}</td>
                                                                 <td>{{ Auth::user()->currencySymbol . number_format($orders->quantity * $orders->amount, 2) }}
                                                                 </td>
-                                                                <td style="font-weight: 600;">
-                                                                    {{ $orders->paymentStatus }}<br> <small><a href="#"
-                                                                            class="text-primary">Update
-                                                                            payment</a></small></td>
+                                                                <td style="font-weight: 600;"
+                                                                    class="{{ $orders->paymentStatus == 'paid' ? 'text-success' : 'text-danger' }}">
+                                                                    {{ $orders->paymentStatus }}</td>
                                                                 <td>
                                                                     {{ date('d/m/Y', strtotime($orders->created_at)) }}
                                                                 </td>

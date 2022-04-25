@@ -14,12 +14,25 @@ use App\StoreMainShop;
 use App\StoreWishList;
 use App\StoreCart;
 use App\StoreBillingDetail;
+use App\StoreDelivery;
 use App\Traits\MyEstore;
+
+use App\Traits\Xwireless;
+
+use Illuminate\Support\Facades\Mail;
+
+use App\Mail\sendEmail;
 
 class ShopController extends Controller
 {
 
-    use MyEstore;
+    use MyEstore, Xwireless;
+
+
+    public $to;
+    public $name;
+    public $subject;
+    public $message;
 
     public function __construct()
     {
@@ -59,7 +72,10 @@ class ShopController extends Controller
 
 
 
+    public function verifyDelivery(){
 
+        return view('main.verifydelivery');
+    }
 
 
     public function storeProduct(Request $req){
@@ -599,6 +615,93 @@ class ShopController extends Controller
     }
 
 
+
+    public function outForDelivery(Request $req){
+
+        try {
+
+            $getOrder = StoreOrders::where('orderId', $req->orderId)->first();
+
+            if(isset($getOrder)){
+
+                // Generate OTP...
+
+                $code = mt_rand(0000, 9999);
+
+                $link = route('verify delivery', 'otp='.$code.'&orderId='.$req->orderId);
+
+                // Insert Record ... 
+                StoreDelivery::insert([
+                    'merchantId' => $getOrder->merchantId, 'userId' => $getOrder->userId, 'orderId' => $req->orderId, 'productId' => $getOrder->productId, 'deliveryCode' => $code
+                ]);
+
+
+                StoreOrders::where('orderId', $req->orderId)->update(['deliveryStatus' => 'in-progress']);
+
+                // Get product
+                $getProduct = StoreProducts::where('id', $getOrder->productId)->first();
+
+
+                // Get billing details
+                $getBilling = StoreBillingDetail::where('userId', $getOrder->userId)->where('merchantId', $getOrder->merchantId)->first();
+                
+
+
+                // SEND MAIL......
+                $getUser = User::where('id', $getOrder->userId)->first();
+                $getMerchant = User::where('id', $getOrder->merchantId)->first();
+
+                $this->subject = 'Your item '.$getProduct->productName.' is out for delivery';
+                $this->message = '<p>We have just dispatched your items from your order '.$req->orderId.'.</p><p>The package will be delivered by our delivery agent once it gets to the delivery hub at the following address: '.$getBilling->shippingAddress.' </p><p>Kindly click on the link: '.$link.' and enter the code: <b>'.$code.'</b> to confirm your package as soon as our delivery associate get them to you.</p>';
+
+                
+
+
+                 $sendMsg = "Hi " . $getUser->name . ", We have just dispatched your items from your order ".$req->orderId.". Kindly click on the link: ".$link." and enter the code: ".$code." to confirm your package as soon as our delivery associate get them to you.".$getMerchant->businessname;
+
+                    $getPhone = User::where('email', $getUser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                    if (isset($getPhone)) {
+
+                        $sendPhone = $getUser->telephone;
+                    } else {
+                        $sendPhone = "+" . $getUser->code . $getUser->telephone;
+                    }
+
+                    if ($getUser->country == "Nigeria") {
+
+                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                        $this->sendSms($sendMsg, $correctPhone);
+                    } else {
+                        $this->sendMessage($sendMsg, $sendPhone);
+                    }
+
+
+                    // Send Mail to Buyer...
+                $this->estoreMail($getUser->email, $getUser->name, $this->subject, $this->message);
+
+
+                $status = 200;
+                $resData = ['data' => true, 'message' => 'Order successfully processed!'];
+
+            }
+            else{
+                $status = 404;
+                $resData = ['data' => [], 'message' => 'Order not found'];
+            }
+            
+
+
+        } catch (\Throwable $th) {
+            $status = 400;
+            $resData = ['data' => [], 'message' => $th->getMessage()];
+        }
+
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
     public function uploadImageFile($file, $fileroute){
                  //Get filename with extension
             $filenameWithExt = $file->getClientOriginalName();
@@ -624,6 +727,35 @@ class ShopController extends Controller
         $data = AllCountries::where('name', $country)->first();
 
         return $data;
+    }
+
+
+    public function estoreMail($email, $name, $subject, $message)
+    {
+
+        $this->to = $email;
+        $this->name = $name;
+        $this->subject = $subject;
+        $this->message = $message;
+
+        $this->sendEmail($this->to, "Fund remittance");
+    }
+
+
+        public function sendEmail($objDemoa, $purpose)
+    {
+        $objDemo = new \stdClass();
+        $objDemo->purpose = $purpose;
+        
+        if ($purpose == 'Fund remittance') {
+            $objDemo->name = $this->name;
+            $objDemo->email = $this->email;
+            $objDemo->subject = $this->subject;
+            $objDemo->message = $this->message;
+        }
+
+        Mail::to($objDemoa)
+            ->send(new sendEmail($objDemo));
     }
 
 

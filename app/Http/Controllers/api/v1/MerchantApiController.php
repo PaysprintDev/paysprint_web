@@ -382,7 +382,7 @@ class MerchantApiController extends Controller
                                             } catch (\Exception $th) {
                                                 $status = 400;
 
-                                                $resData = ['data' => [], 'message' => 'Error: ' . $th, 'status' => $status];
+                                                $resData = ['data' => [], 'message' => 'Error: ' . $th->getMessage(), 'status' => $status];
                                             }
                                         }
                                     } else {
@@ -610,7 +610,7 @@ class MerchantApiController extends Controller
                                             } catch (\Exception $th) {
                                                 $status = 400;
 
-                                                $resData = ['data' => [], 'message' => 'Error: ' . $th, 'status' => $status];
+                                                $resData = ['data' => [], 'message' => 'Error: ' . $th->getMessage(), 'status' => $status];
                                             }
                                         }
                                     }
@@ -811,7 +811,7 @@ class MerchantApiController extends Controller
                                                 } catch (\Exception $th) {
                                                     $status = 400;
 
-                                                    $resData = ['data' => [], 'message' => 'Error: ' . $th, 'status' => $status];
+                                                    $resData = ['data' => [], 'message' => 'Error: ' . $th->getMessage(), 'status' => $status];
                                                 }
                                             }
                                         }
@@ -972,7 +972,7 @@ class MerchantApiController extends Controller
                                                 } catch (\Exception $th) {
                                                     $status = 400;
 
-                                                    $resData = ['data' => [], 'message' => 'Error: ' . $th, 'status' => $status];
+                                                    $resData = ['data' => [], 'message' => 'Error: ' . $th->getMessage(), 'status' => $status];
                                                 }
                                             }
                                         }
@@ -1252,7 +1252,7 @@ class MerchantApiController extends Controller
                                             } catch (\Exception $th) {
                                                 $status = 400;
 
-                                                $resData = ['data' => [], 'message' => 'Error: ' . $th, 'status' => $status];
+                                                $resData = ['data' => [], 'message' => 'Error: ' . $th->getMessage(), 'status' => $status];
                                             }
                                         }
                                     } else {
@@ -1478,7 +1478,7 @@ class MerchantApiController extends Controller
                                             } catch (\Exception $th) {
                                                 $status = 400;
 
-                                                $resData = ['data' => [], 'message' => 'Error: ' . $th, 'status' => $status];
+                                                $resData = ['data' => [], 'message' => 'Error: ' . $th->getMessage(), 'status' => $status];
                                             }
                                         }
                                     }
@@ -1660,7 +1660,7 @@ class MerchantApiController extends Controller
                                             } catch (\Exception $th) {
                                                 $status = 400;
 
-                                                $resData = ['data' => [], 'message' => 'Error: ' . $th, 'status' => $status];
+                                                $resData = ['data' => [], 'message' => 'Error: ' . $th->getMessage(), 'status' => $status];
                                             }
                                         }
                                     } else {
@@ -1806,7 +1806,7 @@ class MerchantApiController extends Controller
                                             } catch (\Exception $th) {
                                                 $status = 400;
 
-                                                $resData = ['data' => [], 'message' => 'Error: ' . $th, 'status' => $status];
+                                                $resData = ['data' => [], 'message' => 'Error: ' . $th->getMessage(), 'status' => $status];
                                             }
                                         }
                                     }
@@ -2090,7 +2090,7 @@ class MerchantApiController extends Controller
                                     } catch (\Exception $th) {
                                         $status = 400;
 
-                                        $resData = ['data' => [], 'message' => 'Error: ' . $th, 'status' => $status];
+                                        $resData = ['data' => [], 'message' => 'Error: ' . $th->getMessage(), 'status' => $status];
                                     }
                                 } else {
                                     // Currency converter
@@ -2303,7 +2303,7 @@ class MerchantApiController extends Controller
                                     } catch (\Exception $th) {
                                         $status = 400;
 
-                                        $resData = ['data' => [], 'message' => 'Error: ' . $th, 'status' => $status];
+                                        $resData = ['data' => [], 'message' => 'Error: ' . $th->getMessage(), 'status' => $status];
                                     }
                                 }
                             }
@@ -2555,7 +2555,7 @@ class MerchantApiController extends Controller
                                     } catch (\Exception $th) {
                                         $status = 400;
 
-                                        $resData = ['data' => [], 'message' => 'Error: ' . $th, 'status' => $status];
+                                        $resData = ['data' => [], 'message' => 'Error: ' . $th->getMessage(), 'status' => $status];
                                     }
                                 } else {
                                     // Currency converter
@@ -2768,7 +2768,7 @@ class MerchantApiController extends Controller
                                     } catch (\Exception $th) {
                                         $status = 400;
 
-                                        $resData = ['data' => [], 'message' => 'Error: ' . $th, 'status' => $status];
+                                        $resData = ['data' => [], 'message' => 'Error: ' . $th->getMessage(), 'status' => $status];
                                     }
                                 }
 
@@ -2796,7 +2796,7 @@ class MerchantApiController extends Controller
         } catch (\Exception $th) {
             $status = 400;
 
-            $resData = ['data' => [], 'message' => 'Error: ' . $th, 'status' => $status];
+            $resData = ['data' => [], 'message' => 'Error: ' . $th->getMessage(), 'status' => $status];
         }
 
         return $this->returnJSON($resData, $status);
@@ -3000,7 +3000,7 @@ class MerchantApiController extends Controller
                         } catch (\Exception $th) {
                             $status = 400;
 
-                            $resData = ['data' => [], 'message' => 'Error: ' . $th, 'status' => $status];
+                            $resData = ['data' => [], 'message' => 'Error: ' . $th->getMessage(), 'status' => $status];
                         }
                     } else {
 
@@ -3159,7 +3159,7 @@ class MerchantApiController extends Controller
                         } catch (\Exception $th) {
                             $status = 400;
 
-                            $resData = ['data' => [], 'message' => 'Error: ' . $th, 'status' => $status];
+                            $resData = ['data' => [], 'message' => 'Error: ' . $th->getMessage(), 'status' => $status];
                         }
                     } else {
 

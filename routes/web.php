@@ -60,6 +60,11 @@ Route::get('giveaccountcheck', 'CheckSetupController@giveAccountCheckUpgrade');
 Route::get('downcheckmerchant', 'CheckSetupController@downcheckMerchants');
 
 
+// Send Notice to Users and Merchants...
+Route::get('publicizemerchant', 'CheckSetupController@publicizeMerchantToConsumer');
+Route::get('notify-merchant-page', 'CheckSetupController@notifyMerchantPage');
+
+
 // IDV Mail Chimp
 Route::get('idvcompletedlist', 'CheckSetupController@idvCompletedList');
 Route::get('idvpassedlist', 'CheckSetupController@idvPassedList');
@@ -103,6 +108,9 @@ Route::get('reversal', 'CheckSetupController@reverseFund');
 // Generate Shop Links...
 
 
+// Verify delivery
+
+Route::get('verify-delivery', ['uses' => 'ShopController@verifyDelivery', 'as' => 'verify delivery']);
 
 
 

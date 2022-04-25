@@ -357,7 +357,14 @@ Route::prefix('/v1')->group(function () {
         Route::post('/shop/product/addtowishlist', ['uses' => 'ShopController@addToWishList', 'as' => 'add to wish list']);
         Route::post('/shop/product/addtocart', ['uses' => 'ShopController@addToCart', 'as' => 'add to cart']);
 
+
+
+        // Estore
+         Route::post('/order/out-for-delivery', ['uses' => 'ShopController@outForDelivery', 'as' => 'out for delivery or pickup']);
     });
+
+
+
 
 
     Route::group(['middleware' => ['merchantkey']], function () {

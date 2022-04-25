@@ -18,7 +18,7 @@
 
                        <a @guest href="{{ route('merchant home') }}" @endguest @auth
                        href="{{ route('merchant home') }}" @endauth><img
-                           src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
+                           src="https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png"
                            class="light-version-logo " style="width: 300px; height: inherit;"></a>
 
                    {{-- <a href="https://shade.uxtheme.net/shade-pro">
@@ -78,12 +78,10 @@
                                    </li>
 
                                @endguest
-
                            @endif
 
 
                            @if (Session::has('username') == true)
-
                                <li class="nav-item">
                                    <a class="nav-link" href="{{ route('Admin') }}" role="button"
                                        aria-expanded="false">DASHBOARD</a>
@@ -120,7 +118,7 @@
 
                                    <a class="nav-link dropdown-toggle gr-toggle-arrow" id="navbarDropdown"
                                        href="#features" role="button" data-toggle="dropdown" aria-haspopup="true"
-                                       aria-expanded="false">{{ strlen(session('firstname') . ' ' . session('lastname')) < 10 ? session('firstname') . ' ' . session('lastname') : substr(session('firstname') . ' ' . session('lastname'), 0, 10) . '...' }}
+                                       aria-expanded="false">{{ strlen(session('firstname') . ' ' . session('lastname')) < 10? session('firstname') . ' ' . session('lastname'): substr(session('firstname') . ' ' . session('lastname'), 0, 10) . '...' }}
                                        <i class="icon icon-small-down"></i></a>
                                    <ul class="gr-menu-dropdown dropdown-menu" aria-labelledby="navbarDropdown">
                                        <li class="drop-menu-item">
@@ -146,8 +144,6 @@
 
                                    </ul>
                                </li>
-
-
                            @endif
 
 
@@ -180,12 +176,7 @@
    </header>
 
    <!-- navbar- -->
-
-
 @else
-
-
-
    <div class="d-flex">
        <span class="border-3 border-blue d-flex w-100"></span>
        <span class="border-3 border-red d-flex w-100"></span>
@@ -203,7 +194,7 @@
 
                    <a @guest href="{{ route('home') }}" @endguest @auth href="{{ route('user home') }}"
                    @endauth><img
-                       src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
+                       src="https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png"
                        class="light-version-logo " style="width: 300px; height: inherit;"></a>
 
                {{-- <a href="https://shade.uxtheme.net/shade-pro">
