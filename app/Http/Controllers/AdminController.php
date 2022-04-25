@@ -46,7 +46,7 @@ use App\CollectionFee as CollectionFee;
 use App\ServiceType as ServiceType;
 
 use App\Statement as Statement;
-use App\createpost as createpost;
+use App\Createpost as Createpost;
 
 use App\BankWithdrawal as BankWithdrawal;
 
@@ -1448,7 +1448,7 @@ class AdminController extends Controller
     }
 
 
-        public function newInvestorPost(Request $req)
+    public function investorPost(Request $req)
     {
         if ($req->session()->has('username') == true) {
             // dd(Session::all());
@@ -1493,7 +1493,7 @@ class AdminController extends Controller
             $getxPay = $this->getxpayTrans();
 
             $data = array(
-                'percentage' => $this->markupPercentage()
+                'users' => $this->investor_relations()
             );
 
 
@@ -1504,7 +1504,6 @@ class AdminController extends Controller
             return redirect()->route('AdminLogin');
         }
     }
-
 
 
 
@@ -1565,8 +1564,8 @@ class AdminController extends Controller
         }
     }
 
-    
-   
+
+
 
 
 
@@ -1577,7 +1576,7 @@ class AdminController extends Controller
         return $data;
     }
 
-   
+
 
     public function investorPosts(Request $req)
     {
@@ -1624,14 +1623,11 @@ class AdminController extends Controller
 
             $getxPay = $this->getxpayTrans();
 
-            $data = array(
-                'byStructure' => TransactionCost::select('structure')->groupBy('structure')->get(),
-                'byMethod' => TransactionCost::select('method')->groupBy('method')->get(),
-                'countryprice' => $this->getCountryPricing($req->get('country')),
-                'investor_relations' => InvestorPost::orderBy('created_at', 'DESC')->get()
-            );
+            $data = [
 
+                'posts' => Createpost::orderBy('created_at', 'DESC')->paginate(2)
 
+            ];
 
             return view('admin.investorposts')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'data' => $data]);
         } else {
@@ -1649,45 +1645,136 @@ class AdminController extends Controller
                 'byStructure' => TransactionCost::select('structure')->groupBy('structure')->get(),
                 'byMethod' => TransactionCost::select('method')->groupBy('method')->get(),
                 'countryprice' => $this->getCountryPricing($req->get('country'))
-                
+
             );
 
 
 
             return view('admin.createpost')->with(['pages' => 'Dashboard', 'transCost' => $transCost,  'data' => $data]);
-        
+
     }
+
+    public function editInvestorPost(Request $req, $id){
+
+          $transCost = $this->transactionCost();
+
+          $data = array(
+                'byStructure' => TransactionCost::select('structure')->groupBy('structure')->get(),
+                'byMethod' => TransactionCost::select('method')->groupBy('method')->get(),
+                'countryprice' => $this->getCountryPricing($req->get('country')),
+                'post' => Createpost::where('id', $id)->first()
+
+            );
+
+        return view('admin.editinvestorpost')->with(['pages' => 'Dashboard', 'transCost' => $transCost,  'data' => $data]);
+    }
+
+        public function deleteInvestorPost($id){
+            $post=Createpost::where('id',$id)->delete();
+            return back()->with("msg", "<div class='alert alert-success'>Post Deleted Successfully</div>");
+        }
+
+    public function editInvestorPosts(Request $req, $id){
+       
+        $getPost = Createpost::where('id', $id)->first();
+            
+        $docPath = $getPost;
+
+        if($req->hasFile('investment_document')){
+            //Get filename with extension
+        $filenameWithExt = $req->file('investment_document')->getClientOriginalName();
+        // Get just filename
+        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        // Get just extension
+        $extension = $req->file('investment_document')->getClientOriginalExtension();
+        // Filename to store
+        $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+
+
+        $path = $req->file('investment_document')->move(public_path('../../investorreldocs/'), $fileNameToStore);
+
+
+        $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/investorreldocs/" . $fileNameToStore;
+        }
+
+        $post=Createpost::where('id', $id)->update([
+        'ref_code' => $req->reference_code,
+       'post_title' => $req->post_title,
+        'description' => $req->description,
+        'minimum_acount' => $req->minimum_amount,
+        'locked_in_return' => $req->locked_return,
+        'term' => $req->term,
+        'liquidation_amouunt' => $req->liquidation_amouunt,
+        'offer_open_date' => $req->offer_open_date,
+        'offer_end_date' => $req->offer_end_date,
+        'investment_activation_date' => $req->investment_activation_date,
+        'investment_document' => $docPath
+        ]);
+
+        return back()->with("msg", "<div class='alert alert-success'>Post Updated Successfully</div>");
+
+    }
+
+
 
 
     public function createInvestorPosts(Request $req)
     {
 
-       
-        $post = new Createpost();
+            
 
-        $post->ref_code = $req->ref_code;
-        $post->post_title = $req->post_title;
-        $post->description = $req->description;
-        $post->minimum_acount = $req->minimum_acount;
-        $post->locked_in_return = $req->locked_in_return;
-        $post->term = $req->term;
-        $post->liquidation_amouunt = $req->liquidation_amouunt;
-        $post->offer_open_date = $req->offer_open_date;
-        $post->offer_end_date = $req->offer_end_date;
-        $post->investment_activation_date = $req->investment_activation_date;
-        $post->investment_document = $req->investment_document;
 
+        $docPath = "";
+
+        if($req->hasFile('investment_document')){
+            //Get filename with extension
+        $filenameWithExt = $req->file('investment_document')->getClientOriginalName();
+        // Get just filename
+        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        // Get just extension
+        $extension = $req->file('investment_document')->getClientOriginalExtension();
+        // Filename to store
+        $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+
+
+        $path = $req->file('investment_document')->move(public_path('../../investorreldocs/'), $fileNameToStore);
+
+
+        $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/investorreldocs/" . $fileNameToStore;
+        }
+
+
+
+
+
+        $post = Createpost::insert([
+        'ref_code' => $req->reference_code,
+       'post_title' => $req->post_title,
+        'description' => $req->description,
+        'minimum_acount' => $req->minimum_amount,
+        'locked_in_return' => $req->locked_return,
+        'term' => $req->term,
+        'liquidation_amouunt' => $req->liquidation_amouunt,
+        'offer_open_date' => $req->offer_open_date,
+        'offer_end_date' => $req->offer_end_date,
+        'investment_activation_date' => $req->investment_activation_date,
+        'investment_document' => $docPath,
+        'activate_post'=>$req->activate_post
+
+        ]);
+
+        return back()->with("msg","<div class='alert alert-success'>Post Created Successfully</div>");
 
 
 
 
             //return view('admin.createpost')->with(['pages' => 'Dashboard', 'transCost' => $transCost,  'data' => $data]);
-        
+
     }
 
-    
 
-  
+
+
 
     public function saveMarkup(Request $req)
     {
@@ -2187,7 +2274,7 @@ class AdminController extends Controller
             $client = $this->getMyClientInfo(session('user_id'));
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -2256,7 +2343,7 @@ class AdminController extends Controller
             $client = $this->getMyClientInfo(session('user_id'));
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -2974,7 +3061,7 @@ class AdminController extends Controller
     }
     public function getFlaggedUsers()
     {
-        
+
         $data = User::where('flagged', 1)->orderBy('created_at', 'DESC')->get();
 
         return $data;
@@ -9858,7 +9945,7 @@ class AdminController extends Controller
             $data = AddBank::orderBy('created_at', 'DESC')->groupBy('country')->get();
         }
 
-        
+
 
         return $data;
     }
@@ -10596,7 +10683,7 @@ class AdminController extends Controller
             $client = $this->getMyClientInfo(session('user_id'));
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -10976,7 +11063,7 @@ class AdminController extends Controller
             $client = $this->getMyClientInfo(session('user_id'));
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -11084,7 +11171,7 @@ class AdminController extends Controller
             $client = $this->getMyClientInfo(session('user_id'));
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -11190,7 +11277,7 @@ class AdminController extends Controller
             $client = $this->getMyClientInfo(session('user_id'));
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -11296,7 +11383,7 @@ class AdminController extends Controller
             $client = $this->getMyClientInfo(session('user_id'));
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -11405,7 +11492,7 @@ class AdminController extends Controller
             $client = $this->getMyClientInfo(session('user_id'));
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -11463,7 +11550,7 @@ class AdminController extends Controller
             $client = $this->getMyClientInfo(session('user_id'));
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -11520,7 +11607,7 @@ class AdminController extends Controller
             $client = $this->getMyClientInfo(session('user_id'));
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -12546,10 +12633,10 @@ class AdminController extends Controller
 
             $client = $this->getMyClientInfo(session('user_id'));
 
-        // if($client->accountMode == "test"){
-            
-        //     return redirect()->route('dashboard')->with('error', 'You are in test mode');
-        // }
+        if($client->accountMode == "test"){
+
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
 
             // dd($otherPays);
 
@@ -16279,7 +16366,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
         $data = [];
         $client = ClientInfo::where('country', $country)->where('accountMode', $mode)->get();
 
-        
+
 
         for ($i=0; $i < count($client); $i++){
             $element = $client[$i];
@@ -16295,7 +16382,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
 
         return $data;
-        
+
     }
 
 
@@ -16803,3 +16890,4 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
             ->send(new sendEmail($objDemo));
     }
 }
+

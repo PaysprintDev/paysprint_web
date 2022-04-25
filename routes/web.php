@@ -744,13 +744,16 @@ Route::prefix('Admin/')->group(function () {
 
 	// Investors Relation
 	Route::prefix('investor/')->group(function () {
-		
 
 		Route::get('newpost', ['uses' => 'AdminController@newInvestorPost', 'as' => 'new investors post']);
 		Route::get('subscribers', ['uses' => 'AdminController@investorSubscriber', 'as' => 'new investor subscriber']);
 		Route::get('investorposts', ['uses' => 'AdminController@investorPosts', 'as' => 'investorposts']);
 		Route::get('createpost', ['uses' => 'AdminController@createInvestorPost', 'as' => 'create investor post']);
 		Route::post('createpost', ['uses' => 'AdminController@createInvestorPosts', 'as' => 'create investor posts']);
+        Route::get('editpost/{id}', ['uses' => 'AdminController@editInvestorPost', 'as' => 'edit investor post' ]);
+        Route::post('editpost/{id}', ['uses' => 'AdminController@editInvestorPosts', 'as' => 'edit investor posts' ]);
+        Route::post('deletepost/{id}', ['uses' => 'AdminController@deleteInvestorPosts', 'as' => 'delete investor post' ]);
+
 	});
 
 
@@ -1127,3 +1130,4 @@ Route::group(['prefix' => 'Ajax'], function () {
 Route::group(['prefix' => 'Exbc'], function () {
 	Route::post('index', ['uses' => 'ExbcController@index', 'as' => 'index']);
 });
+
