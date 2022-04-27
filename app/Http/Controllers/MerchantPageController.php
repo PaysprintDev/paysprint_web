@@ -209,10 +209,6 @@ class MerchantPageController extends Controller
         if(isset($thismerchant)){
                 $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
 
-            // If Has Main Store setup
-            $merchantStore = $this->getMyStore($getMerchantId->id);
-
-            if(isset($merchantStore)){
 
                 if(Auth::check() == true){
                     $userId = Auth::id();
@@ -221,6 +217,22 @@ class MerchantPageController extends Controller
                     $userId = 0;
                 }
 
+                if($userId == $getMerchantId->id){
+                    // If Has Main Store setup
+                $merchantStore = $this->checkMyStore($getMerchantId->id);
+                }
+                else{
+                    // If Has Main Store setup
+            $merchantStore = $this->getMyStore($getMerchantId->id);
+                }
+                
+
+            
+
+            if(isset($merchantStore)){
+
+                
+
                 $data = [
                     'mystore' => $merchantStore,
                     'myproduct' => $this->getProducts($getMerchantId->id),
@@ -228,6 +240,8 @@ class MerchantPageController extends Controller
                     'mywishlist' => $this->getMyWishlist($userId),
                     'mycartlist' => $this->getMyCartlist($userId),
                 ];
+
+
 
 
                 return view('merchant.pages.shop.index')->with(['pages' => $merchant.' Shop', 'data' => $data]);

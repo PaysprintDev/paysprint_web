@@ -70,16 +70,18 @@ Route::prefix('/v1')->group(function () {
 
         // Investor Relation ....
         // TODO 1:: This is a get route...
+
+
+
         // TODO 2:: Do a post route to send payload to the controller ...
+
+
+        
         // TODO 3:: Do a get specific for the users interest.. 
 
 
 
     });
-
-
-    // Get Currency value
-    Route::get('/fetchcurrency', ['uses' => 'CurrencyFxController@fetchCurrency', 'as' => 'currency fetcher']);
 
 
     Route::group(['middleware' => ['apitoken']], function () {
@@ -364,9 +366,6 @@ Route::prefix('/v1')->group(function () {
     });
 
 
-
-
-
     Route::group(['middleware' => ['merchantkey']], function () {
 
         // Receive Money To PaySprint
@@ -381,9 +380,10 @@ Route::prefix('/v1')->group(function () {
         });
     });
 
+        // Get Currency value
+    Route::get('/fetchcurrency', ['uses' => 'CurrencyFxController@fetchCurrency', 'as' => 'currency fetcher']);
+
     Route::post('walletbalance',  ['uses' => 'api\v1\MerchantApiController@getMyWalletBalance', 'as' => 'check customer wallet balance']);
-
-
 
     Route::get('/userdata', ['uses' => 'CurrencyFxController@getUserData', 'as' => 'currency user data']);
 });
