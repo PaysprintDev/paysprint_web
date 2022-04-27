@@ -1,6 +1,13 @@
+ 
+ 
  @if ($pages == 'AML Dashboard' || session('role') == 'Aml compliance')
 
      @include('include.adminamlaside')
+
+  @elseif($pages == "Estore Dashboard" || session('role') == 'estore manager')
+  
+  @include('include.adminestoreaside')
+  
  @else
      <!-- Left side column. contains the logo and sidebar -->
      <aside class="main-sidebar">
@@ -60,6 +67,10 @@
                          @if (session('role') == 'Super' || session('role') == 'Aml compliance')
                              <li title="AML Dashboard"><a href="{{ route('aml dashboard') }}"><i
                                          class="fa fa-circle-o text-red"></i> AML Dashboard</a></li>
+                         @endif
+                         @if (session('role') == 'Super' || session('role') == 'Aml compliance')
+                             <li title="E-Store Manager"><a href="{{ route('store dashboard') }}"><i
+                                         class="fa fa-circle-o text-red"></i>E-Store Manager</a></li>
                          @endif
 
                          @if (session('role') == 'Customer Marketing')

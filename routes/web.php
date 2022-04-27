@@ -998,6 +998,16 @@ Route::prefix('Admin/aml')->group(function () {
 	Route::get('purchaserefundrequest', ['uses' => 'AmlController@purchaseRefundRequest', 'as' => 'aml purchase refund request']);
 });
 
+//Estore Manager Route
+Route::prefix('Admin/estore')->group(function () {
+	Route::get('/dashboard', ['uses' => 'StoreController@index', 'as' => 'store dashboard']);
+	Route::get('/reviewstore', ['uses' => 'StoreController@reviewStore', 'as' => 'review e-store']);
+	Route::get('/productscategory', ['uses' => 'StoreController@productsCategory', 'as' => 'products category']);
+	Route::get('/feedback', ['uses' => 'StoreController@feedback', 'as' => 'feedback']);
+	Route::get('/refundanddisputereport', ['uses' => 'StoreController@refundDisputeReport', 'as' => 'refund and dispute report']);
+	Route::get('/expiredotp', ['uses' => 'StoreController@expiredOtp', 'as' => 'expired otp']);
+});
+
 
 // Ajax Route
 Route::group(['prefix' => 'Ajax'], function () {
