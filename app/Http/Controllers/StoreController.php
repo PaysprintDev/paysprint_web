@@ -77,6 +77,8 @@ use App\InAppMessage as InAppMessage;
 
 
 use App\InvoiceCommission;
+use App\StoreMainShop;
+use App\StoreCategory;
 use App\MonerisActivity as MonerisActivity;
 
 use App\SupportActivity as SupportActivity;
@@ -213,6 +215,7 @@ class StoreController extends Controller
     //review e-store
     public function reviewStore(Request $req)
     {
+
         // dd(Session::all());
 
 
@@ -285,6 +288,7 @@ class StoreController extends Controller
                 'getCard' => $this->getUserCard(session('myID')),
                 'getBank' => $this->getUserBank(session('myID')),
                 'getTax' => $this->getTax(session('myID')),
+                'stores' => $this->getStores(),
                 // 'listbank' => $this->getBankList(),
                 // 'escrowfund' => $this->getEscrowFunding(),
             );
@@ -298,6 +302,13 @@ class StoreController extends Controller
             return redirect()->route('AdminLogin');
         }
     }
+
+    public function getStores(){
+        $store=StoreMainShop::get();
+        return $store;
+
+    }
+
 
     //store products
     public function productsCategory(Request $req)
@@ -374,6 +385,7 @@ class StoreController extends Controller
                 'getCard' => $this->getUserCard(session('myID')),
                 'getBank' => $this->getUserBank(session('myID')),
                 'getTax' => $this->getTax(session('myID')),
+                'products' => $this->getEstoreCategory(),
                 // 'listbank' => $this->getBankList(),
                 // 'escrowfund' => $this->getEscrowFunding(),
             );
@@ -388,6 +400,10 @@ class StoreController extends Controller
         }
     }
 
+    public function getEstoreCategory(){
+        $products=StoreCategory::all();
+        return $products;
+    }
     //feedback
      public function feedback(Request $req)
      {
@@ -567,7 +583,6 @@ class StoreController extends Controller
      }
 
         //expiredotp
-      //Refund and Dispute
       public function expiredOtp(Request $req)
       {
           // dd(Session::all());

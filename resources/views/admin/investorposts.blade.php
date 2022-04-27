@@ -58,12 +58,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (count($data['investor_relations']) > 0)
+                                    @if (count($data['posts']) > 0)
                                         @php
                                             $i = 1;
                                         @endphp
 
-                                        @foreach ($data['investor_relations'] as $theposts)
+                                        @foreach ($data['posts'] as $theposts)
                                             <tr>
                                                 <td>{{ $i++ }}</td>
                                                 <td>{{ $theposts->title }}</td>
@@ -74,7 +74,7 @@
                                                 </td>
                                                 <td>{{ date('d/m/Y', strtotime($theposts->created_at)) }}</td>
                                                 <td>
-                                                    <button class="btn btn-primary">Edit</button>
+                                                    <a href="" class="btn btn-primary">Edit</a>
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-danger">Delete</button>
