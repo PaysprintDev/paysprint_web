@@ -37,6 +37,7 @@
     <!--home page slider end-->
 
 
+
     @if ($data['mystore']->advertSectionImage != null)
         <!-- grid banner start -->
 

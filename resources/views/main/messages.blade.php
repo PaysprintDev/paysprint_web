@@ -35,7 +35,15 @@
                         </p>
 
                         <div class="d-grid gap-2 col-md-12">
-                            <a href="{{ route('my account') }}" class="btn btn-primary ">Goto Wallet</a>
+
+                            @if (session('success') && session('success') != 'Delivery confirmed!')
+                                <a href="{{ route('my account') }}" class="btn btn-primary ">Goto Wallet</a>
+                            @elseif (session('success') && session('success') == 'Delivery confirmed!')
+                                <a href="{{ route('home') }}" class="btn btn-success ">Goto Homepage</a>
+                            @else
+                                <a href="{{ url()->previous() }}" class="btn btn-danger ">Go back</a>
+                            @endif
+
                         </div>
 
 

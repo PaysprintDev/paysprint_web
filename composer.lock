@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9e166a530c53632b94790bd01a153b48",
+    "content-hash": "38d08beeade6ac4a388015ddee78e3c2",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -388,6 +388,57 @@
                 }
             ],
             "time": "2021-08-15T20:50:18+00:00"
+        },
+        {
+            "name": "cronitor/cronitor-php",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cronitorio/cronitor-php.git",
+                "reference": "edb44708cbc40e468ae5b58943beecdc4b539da8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cronitorio/cronitor-php/zipball/edb44708cbc40e468ae5b58943beecdc4b539da8",
+                "reference": "edb44708cbc40e468ae5b58943beecdc4b539da8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6",
+                "symfony/yaml": "^4.4|^5.2|^6.0"
+            },
+            "require-dev": {
+                "codeception/aspect-mock": "^3.1",
+                "ext-curl": "*",
+                "friendsofphp/php-cs-fixer": "^2.18",
+                "phpunit/phpunit": "^6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Cronitor\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Cronitor"
+                }
+            ],
+            "description": "Cronitor PHP Library",
+            "homepage": "https://cronitor.io/",
+            "keywords": [
+                "api",
+                "cronitor"
+            ],
+            "support": {
+                "issues": "https://github.com/cronitorio/cronitor-php/issues",
+                "source": "https://github.com/cronitorio/cronitor-php/tree/1.2.0"
+            },
+            "time": "2022-04-04T19:12:27+00:00"
         },
         {
             "name": "currency-cloud/client",

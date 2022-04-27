@@ -4,6 +4,10 @@
 </div>
 <!-- latest jquery-->
 <script src=" {{ asset('merchantassets/assets/js/jquery-3.5.1.min.js') }}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js"
+integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ=="
+crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- feather icon js-->
 <script src=" {{ asset('merchantassets/assets/js/icons/feather-icon/feather.min.js') }}"></script>
 <script src=" {{ asset('merchantassets/assets/js/icons/feather-icon/feather-icon.js') }}"></script>
@@ -1590,7 +1594,59 @@
         } else {
             $('.symbolText').text('{{ Auth::user()->currencySymbol }}');
         }
-    })
+    });
+
+
+    async function outForDelivery(orderId) {
+
+        // Run axios...
+        try {
+
+            $('#delivery' + orderId).text('Please wait...');
+
+
+            var data = new FormData();
+
+
+            data.append('orderId', orderId);
+
+
+            var headers = {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                'Authorization': 'Bearer {{ Auth::user()->api_token }}'
+            };
+
+            const config = {
+                method: 'POST',
+                url: "{{ URL('/api/v1/order/out-for-delivery') }}",
+                headers: headers,
+                data: data
+            }
+
+
+            const response = await axios(config);
+
+            console.log(response);
+
+            swal("Great!", response.message, "success");
+
+            setTimeout(function() {
+                location.reload();
+            }, 2000);
+
+        } catch (error) {
+
+            $('#delivery' + orderId).text('Out for Delivery / Pickup');
+
+            if (error.response) {
+                swal("Oops", error.response.data.message, "error");
+            } else {
+                swal("Oops", error.message, "error");
+            }
+        }
+
+
+    }
 
     function setHeaders() {
         $.ajaxSetup({
