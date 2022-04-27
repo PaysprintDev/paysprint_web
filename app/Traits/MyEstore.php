@@ -24,6 +24,15 @@ trait MyEstore
     public function getMyStore($id)
     {
 
+        $data = StoreMainShop::where('merchantId', $id)->where('publish', true)->where('status', 'active')->first();
+
+        return $data;
+    }
+
+
+    public function checkMyStore($id)
+    {
+
         $data = StoreMainShop::where('merchantId', $id)->first();
 
         return $data;

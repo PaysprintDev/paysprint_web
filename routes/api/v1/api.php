@@ -73,15 +73,14 @@ Route::prefix('/v1')->group(function () {
 
         Route::get('investor/activatedposts', ['uses' => 'api\v1\InvestorRelationController@investorActivatedPosts']);
         // TODO 2:: Do a post route to send payload to the controller ...
+
+
+        
         // TODO 3:: Do a get specific for the users interest.. 
 
 
 
     });
-
-
-    // Get Currency value
-    Route::get('/fetchcurrency', ['uses' => 'CurrencyFxController@fetchCurrency', 'as' => 'currency fetcher']);
 
 
     Route::group(['middleware' => ['apitoken']], function () {
@@ -359,6 +358,10 @@ Route::prefix('/v1')->group(function () {
         Route::post('/shop/product/addtowishlist', ['uses' => 'ShopController@addToWishList', 'as' => 'add to wish list']);
         Route::post('/shop/product/addtocart', ['uses' => 'ShopController@addToCart', 'as' => 'add to cart']);
 
+
+
+        // Estore
+         Route::post('/order/out-for-delivery', ['uses' => 'ShopController@outForDelivery', 'as' => 'out for delivery or pickup']);
     });
 
 
@@ -376,9 +379,10 @@ Route::prefix('/v1')->group(function () {
         });
     });
 
+        // Get Currency value
+    Route::get('/fetchcurrency', ['uses' => 'CurrencyFxController@fetchCurrency', 'as' => 'currency fetcher']);
+
     Route::post('walletbalance',  ['uses' => 'api\v1\MerchantApiController@getMyWalletBalance', 'as' => 'check customer wallet balance']);
-
-
 
     Route::get('/userdata', ['uses' => 'CurrencyFxController@getUserData', 'as' => 'currency user data']);
 });

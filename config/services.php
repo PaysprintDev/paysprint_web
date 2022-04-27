@@ -35,4 +35,8 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'cronitor' => [
+        'api_key' => env('CRONITOR_API_KEY'),
+    ],
+
 ];

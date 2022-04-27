@@ -1606,6 +1606,41 @@ class CheckSetupController extends Controller
     }
 
 
+
+    // publicizeMerchantToConsumer
+    public function publicizeMerchantToConsumer(Request $req){
+
+        $template = "";
+
+        // Get Merchant's with description....
+        $getClient = ClientInfo::where('description', '!=', NULL)->get();
+
+        if(count($getClient) > 0){
+
+            foreach($getClient as $merchants){
+                // Get Users in the country...
+
+                $getUsers = User::where('country', $merchants->country)->get();
+
+                    
+
+
+                for($i = 0; $i < count($getUsers); $i++){
+                    // echo $getUsers[$i]->name.' | '.$getUsers[$i]->country.' | '.$getUsers[$i]->email."<hr>";
+
+
+                }
+
+
+
+            }
+
+        }
+
+
+    }
+
+
     // Update EPS Vendor
     // public function updateEPSVendor(){
     //     $data = $this->getVendors();

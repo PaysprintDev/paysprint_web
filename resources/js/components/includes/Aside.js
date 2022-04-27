@@ -410,11 +410,11 @@ class Aside extends Component {
 				<nav className="navbar navbar-vertical navbar-expand-lg navbar-light">
 					<a className="navbar-brand mx-auto d-none d-lg-block my-0 my-lg-4" href="/currencyfx">
 						<img
-							src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
+							src="https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png"
 							alt="Muze"
 						/>
 						<img
-							src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
+							src="https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png"
 							alt="Muze"
 							className="white-logo2"
 						/>
