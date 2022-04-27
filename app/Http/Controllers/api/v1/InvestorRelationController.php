@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\v1;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\InvestorPost;
+use App\Createpost;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Http\Request;
@@ -304,6 +305,31 @@ class InvestorRelationController extends Controller
         return $this->returnJSON($resData, $status);
     }
 
+        public function investorActivatedPosts(Request $req){
+
+            try {
+               // Get Activated Posts
+
+            $data = Createpost::where('activate_post', 'on')->orderBy('created_at', 'DESC')->get();
+
+            if (count($data) > 0) {
+                $status = 200;
+                $message = 'Success';
+            } else {
+                $status = 200;
+                $message = 'No record available';
+            }
+        } catch (\Throwable $th) {
+                $data = [];
+                 $message = $th->getMessage();
+                 $status = 400;
+            }
+
+            $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+            return $this->returnJSON($resData, $status);
+
+        }
 
     public function investorSpecificNews(Request $req, $id)
     {
