@@ -18,7 +18,7 @@
     <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
 
 
-    <title>PaySprint | Verify Delivery</title>
+    <title>PaySprint | Confirm Delivery</title>
 
     <style>
         body {
@@ -74,7 +74,7 @@
         <!-- For demo purpose -->
         <div class="row mb-4">
             <div class="col-lg-8 mx-auto text-center">
-                <h1 class="display-4">Verify Delivery</h1>
+                <h1 class="display-4">Confirm Delivery</h1>
             </div>
         </div> <!-- End -->
         <div class="row">

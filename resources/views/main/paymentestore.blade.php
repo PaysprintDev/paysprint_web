@@ -211,9 +211,8 @@
                                             data-target="#profile" type="button" role="tab" aria-controls="profile"
                                             aria-selected="false" onclick="setCardType('Debit Card')">
 
-                                            <img src="https://img.icons8.com/color/25/000000/mastercard-logo.png" /> I
-                                            do not
-                                            have a PaySprint Wallet</button>
+                                            <img src="https://img.icons8.com/color/25/000000/mastercard-logo.png" />
+                                            Debit/Credit Card Payment</button>
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <button class="nav-link" id="createAccount" data-toggle="tab"

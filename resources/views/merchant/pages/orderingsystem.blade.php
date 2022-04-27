@@ -1211,6 +1211,9 @@
 
 
 
+
+
+
                             <button type="submit" class="btn btn-primary">Submit</button>
 
                         </form>
@@ -1437,7 +1440,7 @@
 
 
                             <input type="submit" class="btn btn-danger" name="savePreview" value="Save and Preview">
-                            <input type="submit" class="btn btn-success" name="justSave" value="Just save it">
+                            <input type="submit" class="btn btn-success" name="publishStore" value="Publish Store">
 
                         </form>
                     </div>
