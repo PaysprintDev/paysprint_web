@@ -34,6 +34,9 @@
                         <!-- /.box-header -->
                         <div class="box-body table table-responsive">
                             <table class="table table-striped">
+                                @php
+                                    $counter=1;
+                                @endphp
                                 <thead>
                                     <tr>
                                         <th>S/N</th>
@@ -43,25 +46,44 @@
                                         <th>Publish State</th>
                                         <th>Date Created</th>
                                         <th>Date Updated</th>
-                                        <th>Action</th>
+                                        <th colspan="3" class="text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @if(count($data['stores']) > 0)
+                                        @foreach ( $data['stores'] as $value )
+
+                                        @if($user = \App\User::where('id', $value->merchantId)->first())
+
                                     <tr>
-                                        <td>1</td>
-                                        <td>Skima Store</td>
-                                        <td>paysprint.ca/store/skimastore</td>
-                                        <td>Published</td>
-                                        <td>Active</td>
-                                        <td>27/04/2022</td>
-                                        <td>27/04/2022</td>
+                                        <td>{{$counter++ }}</td>
+                                        <td>{{ $user->businessname }}</td>
+                                        <td><a href="{{ route('home').'/shop/'.$user->businessname }}" target="_blank">View store</a></td>
+                                        <td>
+
+                                            <span class="{{ $value->status == 'not active' ? 'text-danger' : 'text-success' }}">{{ $value->status}}</span>
+                                            
+                                        <td>
+                                            <span class="{{ $value->publish == false ? 'text-danger' : 'text-success' }}">{{ $value->publish == false ? 'Not published' : 'published' }}</span>
+                                               
+                                        </td>
+                                        <td>{{ date('d/M/Y', strtotime($value->created_at)) }}</td>
+                                        <td>{{ date('d/M/Y', strtotime($value->updated_at)) }}</td>
                                         <td>
                                             <a href="" class="btn btn-success">Message</a>
-                                            <br>
+                                        </td>
+                                        <td>
                                             <a href="" class="btn btn-primary">Edit</a>
+                                        </td>
+                                        <td>
                                             <a href="" class="btn btn-danger mt-2">Delete</a>
                                         </td>
                                     </tr>
+
+                                    @endif
+
+                                    @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                         </div>

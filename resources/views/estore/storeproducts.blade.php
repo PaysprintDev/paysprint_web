@@ -34,6 +34,9 @@
                         <!-- /.box-header -->
                         <div class="box-body table table-responsive">
                             <table class="table table-striped">
+                                @php
+                                    $counter=1;
+                                @endphp
                                 <thead>
                                     <tr>
                                         <th>S/N</th>
@@ -43,9 +46,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @if(count($data['products']) > 0)
+                                        @foreach ( $data['products'] as $products )
+                                            
+                                        
                                     <tr>
-                                        <td></td>
+                                        <td>{{ $counter ++ }}</td>
+                                        <td>{{ $products['category']}}</td>
+                                        <td>{{ $products['created_at']}}</td>
+                                        <td><a href="" class="btn btn-success">Accept</a></td>
+                                        <td><a href="" class="btn btn-primary">Edit</a></td>
+                                        <td><a href="" class="btn btn-danger">Delete</a></td>
                                     </tr>
+                                    @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
