@@ -1015,6 +1015,8 @@ Route::prefix('Admin/estore')->group(function () {
 	Route::get('/feedback', ['uses' => 'StoreController@feedback', 'as' => 'feedback']);
 	Route::get('/refundanddisputereport', ['uses' => 'StoreController@refundDisputeReport', 'as' => 'refund and dispute report']);
 	Route::get('/expiredotp', ['uses' => 'StoreController@expiredOtp', 'as' => 'expired otp']);
+	Route::get('/editstore/{id}', ['uses' => 'StoreController@editStore', 'as' => 'edit store']);
+	Route::post('/updatestore/{id}',['uses' => 'StoreController@updateStore', 'as' => 'update store' ]);
 });
 
 
