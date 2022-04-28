@@ -1020,6 +1020,8 @@ Route::prefix('Admin/estore')->group(function () {
 });
 
 
+
+
 // Ajax Route
 Route::group(['prefix' => 'Ajax'], function () {
 

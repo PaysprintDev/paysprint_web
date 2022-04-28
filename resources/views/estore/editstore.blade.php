@@ -29,45 +29,45 @@
                         <div class="box-header">
                             {!! session('msg') !!}
                             <h3 class="box-title"> Edit E-Store</h3>
-                            <form action="" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('update store', $data['store']->id) }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label>Business Logo</label>
                                         <img src='{{ asset($data['store']->businessLogo) }}' />
-                                        <input type="file" name="businesslogo" value="<img src='{{ asset($data['store']->businessLogo) }}' />" class="form-control">
+                                        <input type="file" name="businessLogo" value="<img src='{{ asset($data['store']->businessLogo) }}' />" class="form-control">
                                         <p>Upload the business logo of the store.</p>
                                     </div>
                                     <div class="col-md-12 mt-3">
                                         <label>Header Content Image</label>
                                         <img src='{{ asset($data['store']->headerContent) }}' />
-                                        <input type="file" name="contentimage" value="<img src='{{ asset($data['store']->headerContent) }}' />" class="form-control">
+                                        <input type="file" name="headerContent[]" value="<img src='{{ asset($data['store']->headerContent) }}' />"  class="form-control" multiple>
                                         <p>Upload the header content of the shop. MAX 3 pictures will be uploaded</p>
                                     </div>
                                     <div class="col-md-12 mt-3">
                                         <label>Header Title Text</label>
-                                        <input type="text" name="header_title" value="{{ $data['store']->headerTitle}}" class="form-control" placeholder="Enter header title">
+                                        <input type="text" name="headerTitle" value="{{ $data['store']->headerTitle}}" class="form-control" placeholder="Enter header title">
                                     </div>
                                     <div class="col-md-12 mt-3">
                                         <label>Header Sub-Title Text</label>
-                                        <input type="text" name="header_sub_title" value="{{ $data['store']->headerSubtitle}}" class="form-control" placeholder="Enter header sub-title">
+                                        <input type="text" name="headerSubtitle" value="{{ $data['store']->headerSubtitle}}" class="form-control" placeholder="Enter header sub-title">
                                     </div>
                                     <div class="col-md-12 mt-3">
                                         <label>Advert Section Image</label>
-                                        <input type="file" name="advert_image" value="{{ $data['store']->advertSectionImage}}" class="form-control" placeholder="Enter header title">
+                                        <input type="file" name="advertimage[]" value="{{ $data['store']->advertSectionImage}}" class="form-control" placeholder="Enter header title" multiple>
                                         <p>Upload the advert section image for the shop. MAX 3 pictures will be uploaded</p>
                                     </div>
                                     <div class="col-md-12 mt-3">
                                         <label>Advert Title Text</label>
-                                        <input type="text" name="advert_title" value="{{ $data['store']->advertTitle}}" class="form-control" placeholder="Enter advert title">
+                                        <input type="text" name="advertTitle" value="{{ $data['store']->advertTitle}}" class="form-control" placeholder="Enter advert title">
                                     </div>
                                     <div class="col-md-12 mt-3">
                                         <label>Advert Sub-title Text</label>
-                                        <input type="text" name="advert_sub_title" value="{{ $data['store']->advertSubtitle}}" class="form-control" placeholder="Enter advert sub_title">
+                                        <input type="text" name="advertSubtitle" value="{{ $data['store']->advertSubtitle}}" class="form-control" placeholder="Enter advert sub_title">
                                     </div>
                                     <div class="col-md-12 mt-3">
                                         <label>Return and Refund Policy</label>
-                                       <textarea class="form-control">{{ $data['store']->refundPolicy}}</textarea>
+                                       <textarea class="form-control" name="refundpolicy">{{ $data['store']->refundPolicy}}</textarea>
                                        <p>Here is to assertain your customers of your return and refund policy</p>
                                     </div>
                                     <button class="btn btn-success mt-4 form-control" type="submit">Update Store</button>
