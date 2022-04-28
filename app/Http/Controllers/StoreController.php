@@ -309,7 +309,6 @@ class StoreController extends Controller
 
     }
 
-
     //store products
     public function productsCategory(Request $req)
     {
@@ -400,6 +399,137 @@ class StoreController extends Controller
         }
     }
 
+    //EDIT Store
+    public function editStore(Request $req, $id)
+    {
+        // dd(Session::all());
+
+
+
+        if ($req->session()->has('username') == true) {
+
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $invoiceLinkImport = ImportExcelLink::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = OrganizationPay::orderBy('created_at', 'DESC')->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $invoiceLinkImport = ImportExcelLink::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = OrganizationPay::where('coy_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $this->recurBills(session('user_id'));
+            }
+
+
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+            $transCost = $this->transactionCost();
+            $allusers = $this->allUsers();
+
+            $getUserDetail = $this->getmyPersonalDetail(session('user_id'));
+
+            $getCard = $this->getUserCard(session('myID'));
+            $getBank = $this->getUserBank(session('myID'));
+
+            $getTax = $this->getTax(session('myID'));
+
+
+            $withdraws = [
+                'bank' => $this->requestFromBankWithdrawal(),
+                'purchase' => $this->purchaseRefundSentback(),
+                'credit' => $this->requestFromCardWithdrawal(),
+                'prepaid' => $this->pendingRequestFromPrepaidWithdrawal(),
+                // 'specialInfo' => $this->getthisInfo(session('country')),
+            ];
+
+
+            $pending = [
+                'transfer' => $this->pendingTransferTransactions(),
+                'texttotransfer' => $this->textToTransferUsers(),
+            ];
+
+            $refund = [
+                'requestforrefund' => $this->requestForAllRefund(),
+            ];
+
+            $allcountries = $this->getAllCountries();
+
+            $received = [
+                'payInvoice' => $this->payInvoice(session('email')),
+            ];
+
+            $data = array(
+                'getuserDetail' => $this->getmyPersonalDetail(session('user_id')),
+                'getbusinessDetail' => $this->getmyBusinessDetail(session('user_id')),
+                'merchantservice' => $this->_merchantServices(),
+                'getCard' => $this->getUserCard(session('myID')),
+                'getBank' => $this->getUserBank(session('myID')),
+                'getTax' => $this->getTax(session('myID')),
+                'store'=> StoreMainShop::where('id',$id)->first(),
+                // 'listbank' => $this->getBankList(),
+                // 'escrowfund' => $this->getEscrowFunding(),
+            );
+
+
+
+
+
+            return view('estore.editstore')->with(['pages' => 'Estore Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'invoiceImport' => $invoiceImport , 'payInvoice' => $payInvoice, 'invoiceLinkImport' => $invoiceLinkImport, 'transCost' => $transCost]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+        //update Store
+    
+    public function updateStore(Request $req, $id){
+        $getStore = StoreMainShop::where('id', $id)->first();
+            
+        $docPath = $getPost;
+
+        if($req->hasFile('businesslogo')){
+            //Get filename with extension
+        $filenameWithExt = $req->file('businesslogo')->getClientOriginalName();
+        // Get just filename
+        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        // Get just extension
+        $extension = $req->file('businesslogo')->getClientOriginalExtension();
+        // Filename to store
+        $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+
+
+        $path = $req->file('businesslogo')->move(public_path('../../investorreldocs/'), $fileNameToStore);
+
+
+        $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/investorreldocs/" . $fileNameToStore;
+        }
+
+        $post=StoreMainShop::where('id', $id)->update([
+        'ref_code' => $req->reference_code,
+       'post_title' => $req->post_title,
+        'description' => $req->description,
+        'minimum_acount' => $req->minimum_amount,
+        'locked_in_return' => $req->locked_return,
+        'term' => $req->term,
+        'liquidation_amouunt' => $req->liquidation_amouunt,
+        'offer_open_date' => $req->offer_open_date,
+        'offer_end_date' => $req->offer_end_date,
+        'investment_activation_date' => $req->investment_activation_date,
+        'investment_document' => $docPath
+        ]);
+
+        return back()->with("msg", "<div class='alert alert-success'>Post Updated Successfully</div>");
+
+    }
     public function getEstoreCategory(){
         $products=StoreCategory::all();
         return $products;

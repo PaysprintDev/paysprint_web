@@ -73,7 +73,7 @@
                                             <a href="" class="btn btn-success">Message</a>
                                         </td>
                                         <td>
-                                            <a href="" class="btn btn-primary">Edit</a>
+                                            <a href="{{ route('edit store',$value->id)}}" class="btn btn-primary">Edit</a>
                                         </td>
                                         <td>
                                             <a href="" class="btn btn-danger mt-2">Delete</a>
