@@ -58,6 +58,8 @@
                     <button class="nav-link btn btn-success" type="button" data-bs-toggle="modal"
                         data-bs-target="#addProductModal">Add product + </button>
 
+                    {{-- Continued here... --}}
+
                 </div>
 
             </nav>
