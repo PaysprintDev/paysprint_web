@@ -490,6 +490,14 @@ class StoreController extends Controller
         }
     }
 
+    //delete store
+    public function deleteStore(Request $req, $id){
+
+        $data=StoreMainShop::where('id', $id)->delete();
+
+        return back()->with("msg","<div class='alert alert-success'>Store Deleted Successfully</div>");
+    }
+
     //update Store
 
     public function updateStore(Request $req, $id)

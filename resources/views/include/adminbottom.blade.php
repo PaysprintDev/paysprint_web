@@ -4814,6 +4814,24 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     }
 
+    function deleteStore() {
+
+swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this store!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            $('#deletestore').submit();
+        }
+    });
+
+
+}
+
 
     function cannotSend() {
         swal('International Transfer Coming Soon!',
