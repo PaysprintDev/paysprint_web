@@ -2342,16 +2342,20 @@ class CurrencyFxController extends Controller
                 // Get Bids
                 $data = MakeBid::where('owner_id', $thisuser->id)->groupBy('order_id')->get();
 
+
                 foreach ($data as $value) {
                     $marketPlace = MarketPlace::where('order_id', $value->order_id)->first();
                     $thisbids = MakeBid::where('owner_id', $thisuser->id)->where('order_id', $value->order_id)->count();
 
-                    $value['sell_currencyCode'] = $marketPlace->sell_currencyCode;
-                    $value['buy_currencyCode'] = $marketPlace->buy_currencyCode;
-                    $value['count'] = $thisbids;
-                    $value['buying'] = $marketPlace->buy;
+                    if(isset($marketPlace->sell_currencyCode)){
+                        $value['sell_currencyCode'] = $marketPlace->sell_currencyCode;
+                        $value['buy_currencyCode'] = $marketPlace->buy_currencyCode;
+                        $value['count'] = $thisbids;
+                        $value['buying'] = $marketPlace->buy;
 
-                    $newData[] = $value;
+                        $newData[] = $value;
+                    }
+                    
                 }
 
 
