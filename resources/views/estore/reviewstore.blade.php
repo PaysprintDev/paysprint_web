@@ -70,13 +70,17 @@
                                         <td>{{ date('d/M/Y', strtotime($value->created_at)) }}</td>
                                         <td>{{ date('d/M/Y', strtotime($value->updated_at)) }}</td>
                                         <td>
-                                            <a href="" class="btn btn-success">Message</a>
+                                            <a href="{{ route('send message', 'id='.$user->id)}}" class="btn btn-success">Message</a>
                                         </td>
                                         <td>
-                                            <a href="" class="btn btn-primary">Edit</a>
-                                        </td>
+                                            <a href="{{ route('edit store',$value->id)}}" class="btn btn-primary">Edit</a>
+                                        </td> 
                                         <td>
-                                            <a href="" class="btn btn-danger mt-2">Delete</a>
+                                           <button class="btn btn-danger" id="btns" onclick="deleteStore();">Delete</button>
+                                           <form action="{{ route('delete store', $value->id)}}" method="post" style="visibility: hidden" id="deletestore">
+                                               @csrf
+                                            <input type="hidden" name="storeid" value="{{ $value->id}}" >
+                                           </form>
                                         </td>
                                     </tr>
 
