@@ -49,7 +49,8 @@
                     <button class="nav-link" id="nav-refund-tab" data-bs-toggle="tab" data-bs-target="#nav-refund"
                         type="button" role="tab" aria-controls="nav-refund" aria-selected="false">Refund</button>
                     <button class="nav-link" id="nav-discount-tab" data-bs-toggle="tab" data-bs-target="#nav-discount"
-                        type="button" role="tab" aria-controls="nav-discount" aria-selected="false">Discount codes</button>
+                        type="button" role="tab" aria-controls="nav-discount" aria-selected="false">Discount codes <span
+                            class="text-danger">[coming soon]</span></button>
 
                     <button class="nav-link" id="nav-managestore-tab" data-bs-toggle="tab"
                         data-bs-target="#nav-managestore" type="button" role="tab" aria-controls="nav-managestore"
@@ -142,6 +143,8 @@
 
                                                                             @csrf
 
+
+
                                                                             <div class="form-group">
                                                                                 <label for="productName">Product
                                                                                     Name</label>
@@ -153,6 +156,25 @@
                                                                                     required>
 
                                                                             </div>
+
+
+                                                                            <div class="form-group">
+                                                                                <label for="code">Product Code </label>
+                                                                                <span class="float-end"><a
+                                                                                        href="javascript:void(0)"
+                                                                                        class="text-primary"
+                                                                                        onclick="generateProductCode()">Generate
+                                                                                        code</a></span>
+                                                                                <input type="text"
+                                                                                    class="form-control productCode"
+                                                                                    name="productCode"
+                                                                                    aria-describedby="codeHelp"
+                                                                                    value="{{ $product->productCode }}"
+                                                                                    placeholder="Enter a product code"
+                                                                                    required>
+
+                                                                            </div>
+
                                                                             <div class="form-group">
                                                                                 <label for="amount">New Amount</label>
                                                                                 <input type="number" min="0.00" step="0.01"
@@ -554,7 +576,7 @@
                                                                                 <div class="form-group">
                                                                                     <label for="code">Discount code </label>
                                                                                     <span class="float-end"><a
-                                                                                            href="javascript:void()"
+                                                                                            href="javascript:void(0)"
                                                                                             class="text-primary"
                                                                                             onclick="generateDiscountCode()">Generate
                                                                                             code</a></span>
@@ -839,7 +861,9 @@
                                                         </div>
                                                         <div class="product-details">
                                                             <a href="javascript:void(0)">
-                                                                <h4>{{ $categories->productName }}</h4>
+                                                                <h4>{{ $categories->productName }} |
+                                                                    <small>{{ $categories->productCode }}</small>
+                                                                </h4>
                                                             </a>
                                                             <p>{!! $categories->description !!}</p>
                                                             <div class="product-price">
@@ -852,110 +876,7 @@
                                             </div>
                                         @endforeach
                                     @else
-                                        <div class="col-xl-3 col-sm-6 xl-4">
-                                            <div class="card">
-                                                <div class="product-box">
-                                                    <div class="product-img">
-                                                        <img class="img-fluid"
-                                                            src="{{ asset('merchantassets/assets/images/ecommerce/01.jpg') }}"
-                                                            alt="" />
-                                                        <div class="product-hover">
-                                                            <ul>
-                                                                <li>
-                                                                    <a href="javascript:void()"><i
-                                                                            class="icon-shopping-cart"></i></a>
-                                                                </li>
-                                                                <li>
-                                                                    <a data-bs-toggle="modal"
-                                                                        data-bs-target="#exampleModalCenter16"><i
-                                                                            class="icon-eye"></i></a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal fade" id="exampleModalCenter16">
-                                                        <div class="modal-dialog modal-lg modal-dialog-centered">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <div class="product-box row">
-                                                                        <div class="product-img col-lg-6"><img
-                                                                                class="img-fluid"
-                                                                                src="{{ asset('merchantassets/assets/images/ecommerce/01.jpg') }}"
-                                                                                alt="" /></div>
-                                                                        <div class="product-details col-lg-6 text-start">
-                                                                            <a href="javascript:void(0)">
-                                                                                <h4>Man's Jacket</h4>
-                                                                            </a>
-                                                                            <div class="product-price">
-                                                                                $26.00
-                                                                                <del>$35.00</del>
-                                                                            </div>
-                                                                            <div class="product-view">
-                                                                                <h6 class="f-w-600">Product Details
-                                                                                </h6>
-                                                                                <p class="mb-0">Sed ut
-                                                                                    perspiciatis, unde omnis
-                                                                                    iste natus error sit voluptatem
-                                                                                    accusantium
-                                                                                    doloremque laudantium, totam rem aperiam
-                                                                                    eaque ipsa, quae ab illo.</p>
-                                                                            </div>
-                                                                            <div class="product-size">
-                                                                                <ul>
-                                                                                    <li>
-                                                                                        <button
-                                                                                            class="btn btn-outline-light"
-                                                                                            type="button">M</button>
-                                                                                    </li>
-                                                                                    <li>
-                                                                                        <button
-                                                                                            class="btn btn-outline-light"
-                                                                                            type="button">L</button>
-                                                                                    </li>
-                                                                                    <li>
-                                                                                        <button
-                                                                                            class="btn btn-outline-light"
-                                                                                            type="button">Xl</button>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                            <div class="product-qnty">
-                                                                                <h6 class="f-w-600">Quantity</h6>
-                                                                                <fieldset>
-                                                                                    <div class="input-group">
-                                                                                        <input
-                                                                                            class="touchspin text-center"
-                                                                                            type="text" value="5" />
-                                                                                    </div>
-                                                                                </fieldset>
-                                                                                <div class="addcart-btn"><a
-                                                                                        class="btn btn-primary me-3"
-                                                                                        href="javascript:void()">Add to Cart
-                                                                                    </a><a class="btn btn-primary"
-                                                                                        href="javascript:void(0)">View
-                                                                                        Details</a></div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <button class="btn-close" type="button"
-                                                                        data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="product-details">
-                                                        <a href="javascript:void(0)">
-                                                            <h4>Man's Jacket</h4>
-                                                        </a>
-                                                        <p>Solid Denim Jacket</p>
-                                                        <div class="product-price">
-                                                            $26.00
-                                                            <del>$35.00</del>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <h3 class="mt-3 text-center">No product here</h3>
                                     @endif
 
 
@@ -1042,7 +963,9 @@
                                                     </p>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <button class="btn btn-warning" style="width: 100%;">Activate</button>
+                                                    <button class="btn btn-warning" style="width: 100%;"
+                                                        onclick="comingSoon()">Coming
+                                                        soon</button>
                                                 </div>
                                             </div>
                                             <hr>
@@ -1093,14 +1016,14 @@
                                             <div class="row">
                                                 <div class="col-md-9">
                                                     <h5 class="card-text">
-                                                        Add Tax
+                                                        Product Tax
                                                     </h5>
                                                     <p>
 
                                                     </p>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <button class="btn btn-success" style="width: 100%;"><small>Add
+                                                    <button class="btn btn-success" style="width: 100%;"><small>Add Product
                                                             Tax</small></button>
                                                 </div>
                                             </div>
@@ -1160,6 +1083,17 @@
                                     aria-describedby="productNameHelp" placeholder="Enter product name" required>
 
                             </div>
+
+                            <div class="form-group">
+                                <label for="code">Product Code </label>
+                                <span class="float-end"><a href="javascript:void(0)" class="text-primary"
+                                        onclick="generateProductCode()">Generate
+                                        code</a></span>
+                                <input type="text" class="form-control productCode" name="productCode"
+                                    aria-describedby="codeHelp" placeholder="Enter a product code" required>
+
+                            </div>
+
                             <div class="form-group">
                                 <label for="amount">New Amount</label>
                                 <input type="number" min="0.00" step="0.01" name="amount" class="form-control"
@@ -1239,7 +1173,7 @@
 
                             <div class="form-group">
                                 <label for="code">Discount code </label> <span class="float-end"><a
-                                        href="javascript:void()" class="text-primary"
+                                        href="javascript:void(0)" class="text-primary"
                                         onclick="generateDiscountCode()">Generate
                                         code</a></span>
                                 <input type="text" class="form-control" name="code" id="code" aria-describedby="codeHelp"

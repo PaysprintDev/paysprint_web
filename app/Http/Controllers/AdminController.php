@@ -172,6 +172,9 @@ class AdminController extends Controller
         elseif(session('role') == 'Aml compliance'){
             return redirect()->route('aml dashboard');
         }
+        elseif(session('role') == 'estore manager'){
+            return redirect()->route('store dashboard');
+        }
          else {
             if ($req->session()->has('username') == true) {
 
@@ -16890,4 +16893,3 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
             ->send(new sendEmail($objDemo));
     }
 }
-

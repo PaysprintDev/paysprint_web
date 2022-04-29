@@ -411,7 +411,7 @@ class ShopController extends Controller
                 'refundPolicy' => 'required',
             ]);
 
-            
+
 
 
             if ($validator->passes()) {
@@ -424,57 +424,53 @@ class ShopController extends Controller
                 $businessLogo = $this->uploadImageFile($req->file('businessLogo'), $routing . "/logo");
 
 
-                if(count($req->file('headerContent')) > 3){
+                if (count($req->file('headerContent')) > 3) {
 
                     $status = 'error';
-                $message = "Your header content file is more than 3";
+                    $message = "Your header content file is more than 3";
 
-                return redirect()->back()->with($status, $message);
+                    return redirect()->back()->with($status, $message);
 
-                }
-                else{
+                    
+                } else {
                     if (count($req->file('headerContent')) > 1) {
 
-                    foreach ($req->file('headerContent') as $headerContentFile) {
+                        foreach ($req->file('headerContent') as $headerContentFile) {
 
-                        $headContentImage .= $this->uploadImageFile($headerContentFile, $routing . "/headsection") . ", ";
+                            $headContentImage .= $this->uploadImageFile($headerContentFile, $routing . "/headsection") . ", ";
+                        }
+                    } else {
+                        $headContentImage = $this->uploadImageFile($req->file('headerContent'), $routing . "/headsection");
                     }
-                } else {
-                    $headContentImage = $this->uploadImageFile($req->file('headerContent'), $routing . "/headsection");
-                }
                 }
 
-                
+
 
 
                 if ($req->hasFile('advertSectionImage') && count($req->file('advertSectionImage')) > 0) {
 
-                    if(count($req->file('advertSectionImage')) > 3){
-                         $status = 'error';
+                    if (count($req->file('advertSectionImage')) > 3) {
+                        $status = 'error';
                         $message = "Your advert section image is more than 3";
 
                         return redirect()->back()->with($status, $message);
-                    }
-                    else{
+                    } else {
                         if (count($req->file('advertSectionImage')) > 1) {
 
-                        foreach ($req->file('advertSectionImage') as $advertSectionFile) {
+                            foreach ($req->file('advertSectionImage') as $advertSectionFile) {
 
-                            $advertSectionImage .= $this->uploadImageFile($advertSectionFile, $routing . "/advertsection") . ", ";
+                                $advertSectionImage .= $this->uploadImageFile($advertSectionFile, $routing . "/advertsection") . ", ";
+                            }
+                        } else {
+                            $advertSectionImage = $this->uploadImageFile($req->file('advertSectionImage'), $routing . "/advertsection");
                         }
-                    } else {
-                        $advertSectionImage = $this->uploadImageFile($req->file('advertSectionImage'), $routing . "/advertsection");
                     }
-                    }
-
-                    
                 }
 
 
-                if(isset($req->publishStore)){
+                if (isset($req->publishStore)) {
                     $publish = true;
-                }
-                else{
+                } else {
                     $publish = false;
                 }
 
@@ -497,17 +493,10 @@ class ShopController extends Controller
                 StoreMainShop::updateOrInsert(['merchantId' => Auth::id()], $query);
 
 
-                if(isset($req->savePreview)){
+                if (isset($req->savePreview)) {
 
-                     return redirect()->route('merchant shop now', Auth::user()->businessname);
-
+                    return redirect()->route('merchant shop now', Auth::user()->businessname);
                 }
-
-
-                // if(isset($req->justSave)){
-                // $status = 'success';
-                // $message = "Store created successfully";
-                // }
 
 
                 $status = 'success';

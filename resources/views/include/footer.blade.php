@@ -1153,7 +1153,7 @@
                                         avatar = k.avatar;
                                     } else {
                                         avatar =
-                                            "https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg";
+                                            "https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg";
                                     }
 
                                     datarec = "<tr><td><img src='" + avatar +
@@ -1238,7 +1238,7 @@
                                         avatar = k.avatar;
                                     } else {
                                         avatar =
-                                            "https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg";
+                                            "https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg";
                                     }
 
                                     datarec = "<tr><td><img src='" + avatar +
@@ -1329,7 +1329,7 @@
                                     avatar = k.avatar;
                                 } else {
                                     avatar =
-                                        "https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg";
+                                        "https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg";
                                 }
 
                                 datarec = "<tr><td><img src='" + avatar +
