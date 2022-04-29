@@ -192,7 +192,7 @@
         <div class="container">
             <div class="row contact_row">
                 <div class="col-sm-6 contact_info">
-                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg"
+                    <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg"
                         style="width: 100%;">
                 </div>
                 <div class="col-sm-6 contact_info send_message">
@@ -252,9 +252,7 @@
                                             $lname = $name[1];
                                             $email = $newuser->email;
                                         @endphp
-
                                     @else
-
                                         @php
                                             $ref_code = '';
                                             $fname = '';
@@ -263,7 +261,6 @@
                                         @endphp
                                     @endif
                                 @else
-
                                     @php
                                         $ref_code = '';
                                         $fname = '';
@@ -477,8 +474,8 @@
                                         purpose)</label>
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <textarea type="text" name="describe_purpose" id="describe_purpose"
-                                                class="form-control input_box" placeholder=""></textarea>
+                                            <textarea type="text" name="describe_purpose" id="describe_purpose" class="form-control input_box"
+                                                placeholder=""></textarea>
                                         </div>
                                     </div>
 

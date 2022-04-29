@@ -1,4 +1,5 @@
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,31 +32,33 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 
-        <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
+    <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
 
     <style>
-    /* width */
-body::-webkit-scrollbar {
-  width: 6px;
-}
+        /* width */
+        body::-webkit-scrollbar {
+            width: 6px;
+        }
 
-/* Track */
-body::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
+        /* Track */
+        body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
 
-/* Handle */
-body::-webkit-scrollbar-thumb {
-  background: #f6b60b;
-}
+        /* Handle */
+        body::-webkit-scrollbar-thumb {
+            background: #f6b60b;
+        }
 
-/* Handle on hover */
-body::-webkit-scrollbar-thumb:hover {
-  background: #f6b60b;
-}
+        /* Handle on hover */
+        body::-webkit-scrollbar-thumb:hover {
+            background: #f6b60b;
+        }
+
     </style>
 
 </head>
+
 <body>
 
     <!-- Preloader -->
@@ -71,13 +74,13 @@ body::-webkit-scrollbar-thumb:hover {
 
                 <li>
                     <a href="{{ route('login') }}">
-                       {{ __('Login') }}
+                        {{ __('Login') }}
                     </a>
                 </li>
 
                 <li>
                     <a href="{{ route('register') }}">
-                       {{ __('Register') }}
+                        {{ __('Register') }}
                     </a>
                 </li>
             </ul>
@@ -97,13 +100,17 @@ body::-webkit-scrollbar-thumb:hover {
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="col-md-2 p0">
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#min_navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#min_navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{{ route('home') }}"><p style="font-weight: bold; font-size: 30px; color: #111f29 font-family: tahoma"><span style="color: #f6b60b">Pay</span>Sprint</p></a>
+                    <a class="navbar-brand" href="{{ route('home') }}">
+                        <p style="font-weight: bold; font-size: 30px; color: #111f29 font-family: tahoma"><span
+                                style="color: #f6b60b">Pay</span>Sprint</p>
+                    </a>
                 </div>
             </div>
 
@@ -116,7 +123,7 @@ body::-webkit-scrollbar-thumb:hover {
 
                         </li>
 
-{{--                         <li class="dropdown submenu">
+                        {{-- <li class="dropdown submenu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Services</a>
                             <ul class="dropdown-menu other_dropdwn">
                                 <li><a href="#">Property Tax</a></li>
@@ -126,7 +133,7 @@ body::-webkit-scrollbar-thumb:hover {
                             </ul>
                         </li> --}}
 
-                        
+
                         <li class="dropdown submenu">
                             <a href="{{ route('about') }}">About Us</a>
                         </li>
@@ -153,7 +160,8 @@ body::-webkit-scrollbar-thumb:hover {
         <div class="container">
             <div class="row contact_row">
                 <div class="col-sm-6 contact_info">
-                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg" style="width: 100%;">
+                    <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg"
+                        style="width: 100%;">
                 </div>
                 <div class="col-sm-6 contact_info send_message">
                     <h2>{{ __('Reset Password') }}</h2>
@@ -165,15 +173,19 @@ body::-webkit-scrollbar-thumb:hover {
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ route('password.email') }}" aria-label="{{ __('Reset Password') }}">
+                    <form method="POST" action="{{ route('password.email') }}"
+                        aria-label="{{ __('Reset Password') }}">
                         @csrf
 
                         <br><br>
 
-                        
+
                         <div class="col-md-12">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
-                            <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required>
+                            <label for="email"
+                                class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+                            <input id="email" type="email"
+                                class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email"
+                                value="{{ old('email') }}" required>
 
                             @if ($errors->has('email'))
                                 <span class="invalid-feedback" role="alert">
@@ -181,11 +193,11 @@ body::-webkit-scrollbar-thumb:hover {
                                 </span>
                             @endif
                         </div>
-                        
+
 
                         <div class="form-group row mt-3">
                             <div class="col-md-12 offset-md-4">
-                            <br>
+                                <br>
 
                                 <button type="submit" class="btn btn-primary btn-block">
                                     {{ __('Send Password Reset Link') }}
@@ -201,7 +213,7 @@ body::-webkit-scrollbar-thumb:hover {
     </section>
 
 
-@include('include.bottom')
+    @include('include.bottom')
 
     <!-- jQuery JS -->
     <script src="{{ asset('js/jquery-1.12.0.min.js') }}"></script>
@@ -231,4 +243,5 @@ body::-webkit-scrollbar-thumb:hover {
 
 
 </body>
+
 </html>

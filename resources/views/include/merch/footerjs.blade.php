@@ -1588,6 +1588,21 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         $('#code').val(randomCode);
     }
 
+    function generateProductCode() {
+        // Generate random...
+        $('.productCode').val('');
+
+        // STPR_ => Store Product
+        const randomCode = `STPR_${Math.random().toString(16).substr(2, 8).toUpperCase()}`;
+
+        $('.productCode').val(randomCode);
+        $('.productCode').attr('readonly', true);
+    }
+
+    function comingSoon() {
+        swal('Hey!', 'This feature is coming soon to your screen', 'info');
+    }
+
     $('#valueType').change(function() {
         if ($('#valueType').val() == "Percentage") {
             $('.symbolText').text('%');

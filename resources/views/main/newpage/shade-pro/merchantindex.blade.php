@@ -24,7 +24,7 @@
                     <div class="hero-img position-relative" data-aos="fade-left" data-aos-duration="500"
                         data-aos-once="true">
                         <img class="w-100"
-                            src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg"
+                            src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg"
                             alt="" style="border-radius: 100%;">
                         <div class="gr-abs-tl gr-z-index-n1" data-aos="zoom-in" data-aos-delay="600" data-aos-duration="800"
                             data-aos-once="true">
@@ -95,47 +95,47 @@
                         class="brand-logos d-flex justify-content-center justify-content-xl-between align-items-center mx-n9 flex-wrap">
                         <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                             data-aos-duration="500" data-aos-once="true">
-                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/questrade_znhne7.png"
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/questrade_znhne7_ua01kw.png"
                                 alt="" class="w-100" width="80" height="80">
                         </div>
                         <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                             data-aos-duration="500" data-aos-delay="600" data-aos-once="true">
-                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/YahooFinanceLogo_geieeb.png"
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/YahooFinanceLogo_geieeb_gpqual.png"
                                 alt="" class="w-100" width="60" height="60">
                         </div>
                         <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                             data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
-                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/private_capital_lxc1jr.png"
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130249/assets/featuredon/private_capital_lxc1jr_kkswzw.png"
                                 alt="" class="w-100" width="60" height="60">
                         </div>
                         <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                             data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
-                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/benzinga_qpr7ot.png"
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/benzinga_qpr7ot_kdvvtl.png"
                                 alt="" class="w-100" width="100" height="100">
                         </div>
                         <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                             data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
-                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/reuters_o3wnje.png"
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/reuters_o3wnje_rmf94n.png"
                                 alt="" class="w-100" width="100" height="100">
                         </div>
                         <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                             data-aos-duration="500" data-aos-delay="400" data-aos-once="true">
-                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/canadianbusinessjournal_e3mobm.png"
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130249/assets/featuredon/canadianbusinessjournal_e3mobm_lllwjj.png"
                                 alt="" class="w-100" width="100" height="100">
                         </div>
                         <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                             data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
-                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1628673759/paysprint_asset/featuredon/magazinetoday_nsudvk.jpg"
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/magazinetoday_nsudvk_bjnihr.jpg"
                                 alt="" class="w-100" width="80" height="80">
                         </div>
                         <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                             data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
-                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/morningstar_ehxgue.png"
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/morningstar_ehxgue_mkpsrd.png"
                                 alt="" class="w-100" width="100" height="100">
                         </div>
                         <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                             data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
-                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1628701963/paysprint_asset/featuredon/1280px-The_Globe_and_Mail__2019-10-31_.svg_ph46rz.png"
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/1280px-The_Globe_and_Mail__2019-10-31_.svg_ph46rz_qo87pl.png"
                                 alt="" class="w-100" style="width: 300px !important;">
                         </div>
 
@@ -247,7 +247,7 @@
                         <div class="review-widget media align-items-center px-lg-7 flex-column flex-sm-row">
                             <div class="widget-image mr-12 mr-lg-19 mb-9 mb-md-0">
                                 <img class="circle-xxxl"
-                                    src="https://res.cloudinary.com/pilstech/image/upload/v1620218932/paysprint_asset/create_invoice_icljdw.png"
+                                    src="https://res.cloudinary.com/paysprint/image/upload/v1651130086/assets/create_invoice_icljdw_zrz9jh.png"
                                     alt="">
                             </div>
                             <div class="widget-text">
@@ -286,7 +286,7 @@
 
                             <div class="widget-image mr-12 mr-lg-19 mb-9 mb-md-0">
                                 <img class="circle-xxxl"
-                                    src="https://res.cloudinary.com/pilstech/image/upload/v1620218932/paysprint_asset/Accept_more_payments_aao3ta.png"
+                                    src="https://res.cloudinary.com/paysprint/image/upload/v1651130084/assets/Accept_more_payments_aao3ta_xplqth.png"
                                     alt="">
                             </div>
 
@@ -302,7 +302,7 @@
                         <div class="review-widget media align-items-center px-lg-7 flex-column flex-sm-row">
                             <div class="widget-image mr-12 mr-lg-19 mb-9 mb-md-0">
                                 <img class="circle-xxxl"
-                                    src="https://res.cloudinary.com/pilstech/image/upload/v1620219151/paysprint_asset/Additional_feature_bd4ib0.png"
+                                    src="https://res.cloudinary.com/paysprint/image/upload/v1651130084/assets/Additional_feature_bd4ib0_ztsdsh.png"
                                     alt="">
                             </div>
                             <div class="widget-text">
@@ -349,7 +349,7 @@
 
                             <div class="widget-image mr-12 mr-lg-19 mb-9 mb-md-0">
                                 <img class="circle-xxxl"
-                                    src="https://res.cloudinary.com/pilstech/image/upload/v1620219151/paysprint_asset/Additional_feature_bd4ib0.png"
+                                    src="https://res.cloudinary.com/paysprint/image/upload/v1651130084/assets/Additional_feature_bd4ib0_ztsdsh.png"
                                     alt="">
                             </div>
 
@@ -366,7 +366,7 @@
                         <div class="review-widget media align-items-center px-lg-7 flex-column flex-sm-row">
                             <div class="widget-image mr-12 mr-lg-19 mb-9 mb-md-0">
                                 <img class="circle-xxxl"
-                                    src="https://res.cloudinary.com/pilstech/image/upload/v1620219151/paysprint_asset/Additional_feature_bd4ib0.png"
+                                    src="https://res.cloudinary.com/paysprint/image/upload/v1651130084/assets/Additional_feature_bd4ib0_ztsdsh.png"
                                     alt="">
                             </div>
                             <div class="widget-text">
@@ -416,7 +416,7 @@
 
                             <div class="widget-image mr-12 mr-lg-19 mb-9 mb-md-0">
                                 <img class="circle-xxxl"
-                                    src="https://res.cloudinary.com/pilstech/image/upload/v1620219151/paysprint_asset/Additional_feature_bd4ib0.png"
+                                    src="https://res.cloudinary.com/paysprint/image/upload/v1651130084/assets/Additional_feature_bd4ib0_ztsdsh.png"
                                     alt="">
                             </div>
 
@@ -820,7 +820,7 @@
                     <div class="hero-img" data-aos="fade-left" data-aos-duration="500" data-aos-once="true">
                         <div class="hero-video-thumb position-relative gr-z-index-1">
                             <center>
-                                <img src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg"
+                                <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg"
                                     alt="" class="w-100 rounded-8"
                                     style="height: 350px !important;width: 350px !important;">
                             </center>
@@ -838,11 +838,11 @@
                 <div class="col-md-3">
                     <center>
                         <img class="shadow-lg"
-                            src="https://res.cloudinary.com/pilstech/image/upload/v1649325520/paysprint_asset/image_zuxln4.png"
+                            src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/image_zuxln4_kzk3zb.png"
                             alt="mobile app"
                             style="width: 100%; height: 500px; border-radius: 10px; position: relative; z-index: 1000;">
                         {{-- <img class="shadow-lg"
-                            src="https://res.cloudinary.com/pilstech/image/upload/v1621960721/paysprint_asset/paysprint_front_v55thg.jpg"
+                            src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_front_v55thg_gjjpzj.jpg"
                             alt="mobile app" style="width: 80%; border-radius: 10px; position: relative; z-index: 1000;"> --}}
                     </center>
                 </div>

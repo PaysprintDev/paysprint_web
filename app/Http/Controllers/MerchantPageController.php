@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 
+//Session
+use Session;
+
 use App\User as User;
 use App\ImportExcel as ImportExcel;
 use App\ImportExcelLink as ImportExcelLink;
@@ -223,7 +226,13 @@ class MerchantPageController extends Controller
                 }
                 else{
                     // If Has Main Store setup
+                    if(session('role')){
+                        $merchantStore = $this->checkMyStore($getMerchantId->id);
+                    }
+                    else{
             $merchantStore = $this->getMyStore($getMerchantId->id);
+
+                    }
                 }
                 
 
