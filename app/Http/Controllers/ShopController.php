@@ -2,26 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use App\AllCountries;
 use App\User;
-use App\StoreProducts;
+use App\StoreCart;
 use App\StoreOrders;
+use App\StorePickup;
+use App\AllCountries;
+use App\StoreCategory;
+use App\StoreDelivery;
 use App\StoreDiscount;
 use App\StoreMainShop;
+use App\StoreProducts;
 use App\StoreWishList;
-use App\StoreCart;
-use App\StoreBillingDetail;
-use App\StoreDelivery;
+use App\Mail\sendEmail;
 use App\Traits\MyEstore;
-
 use App\Traits\Xwireless;
 
-use Illuminate\Support\Facades\Mail;
+use App\StoreBillingDetail;
+use App\StoreShipping;
+use Illuminate\Http\Request;
 
-use App\Mail\sendEmail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class ShopController extends Controller
 {
@@ -104,17 +106,24 @@ class ShopController extends Controller
                 $docPath = $this->uploadImageFile($req->file('file'), $routing);
 
 
+                $category = $req->category == 'Other' ? $req->specifyCategory : $req->category;
+
+
+                if($req->category == 'Other'){
+                    StoreCategory::insert(['category' => $req->specifyCategory, 'state' => false]);
+                }
 
 
                 $query = [
                     'merchantId' => Auth::id(),
                     'productName' => $req->productName,
+                    'productCode' => $req->productCode,
                     'amount' => $req->amount,
                     'previousAmount' => $req->previousAmount,
                     'stock' => $req->stock,
                     'image' => $docPath,
                     'description' => $req->description,
-                    'category' => $req->category,
+                    'category' => $category,
                     'deliveryDate' => $req->deliveryDate
                 ];
 
@@ -277,18 +286,26 @@ class ShopController extends Controller
                 }
 
 
+                $category = $req->category == 'Other' ? $req->specifyCategory : $req->category;
+
+
+                if($req->category == 'Other'){
+                    StoreCategory::insert(['category' => $req->specifyCategory, 'state' => false]);
+                }
+
+
                 $query = [
                     'merchantId' => Auth::id(),
                     'productName' => $req->productName,
+                    'productCode' => $req->productCode,
                     'amount' => $req->amount,
                     'previousAmount' => $req->previousAmount,
                     'stock' => $req->stock,
                     'image' => $docPath,
                     'description' => $req->description,
-                    'category' => $req->category
+                    'category' => $category,
+                    'deliveryDate' => $req->deliveryDate
                 ];
-
-                // Insert record
 
 
 
@@ -397,6 +414,96 @@ class ShopController extends Controller
     }
 
 
+    public function storePickupAddress(Request $req)
+    {
+        try {
+
+            // Validate
+            $validator = Validator::make($req->all(), [
+                'address' => 'required',
+                'state' => 'required',
+                'deliveryRate' => 'required'
+            ]);
+
+
+            if ($validator->passes()) {
+
+                // Store the address...
+                $query =  [
+                    'merchantId' => Auth::id(),
+                    'address' => $req->address,
+                    'state' => $req->state,
+                    'deliveryRate' => $req->deliveryRate
+                ];
+
+                StorePickup::insert($query);
+
+                $status = 'success';
+                $message = 'Pickup address successfully setup for '.$req->state;
+
+            }
+             else {
+                $status = 'error';
+                $message = implode(",", $validator->messages()->all());
+            }
+
+
+        } catch (\Throwable $th) {
+            $status = 'error';
+            $message = $th->getMessage();
+        }
+
+
+        return redirect()->back()->with($status, $message);
+    }
+
+
+    public function storeShippingAddress(Request $req)
+    {
+        try {
+
+            // Validate
+            $validator = Validator::make($req->all(), [
+                'country' => 'required',
+                'state' => 'required',
+                'currencyCode' => 'required',
+                'deliveryRate' => 'required'
+            ]);
+
+
+            if ($validator->passes()) {
+
+                // Store the address...
+                $query =  [
+                    'merchantId' => Auth::id(),
+                    'country' => $req->country,
+                    'state' => $req->state,
+                    'currencyCode' => $req->currencyCode,
+                    'deliveryRate' => $req->deliveryRate
+                ];
+
+                StoreShipping::insert($query);
+
+                $status = 'success';
+                $message = 'Shipping address successfully setup for '.$req->state;
+
+            }
+             else {
+                $status = 'error';
+                $message = implode(",", $validator->messages()->all());
+            }
+
+
+        } catch (\Throwable $th) {
+            $status = 'error';
+            $message = $th->getMessage();
+        }
+
+
+        return redirect()->back()->with($status, $message);
+    }
+
+
     public function setupEstore(Request $req)
     {
 
@@ -431,7 +538,7 @@ class ShopController extends Controller
 
                     return redirect()->back()->with($status, $message);
 
-                    
+
                 } else {
                     if (count($req->file('headerContent')) > 1) {
 
@@ -614,9 +721,9 @@ class ShopController extends Controller
 
                 $link = route('verify delivery', 'otp=' . $code . '&orderId=' . $req->orderId);
 
-                // Insert Record ... 
+                // Insert Record ...
                 StoreDelivery::insert([
-                    'merchantId' => $getOrder->merchantId, 'userId' => $getOrder->userId, 'orderId' => $req->orderId, 'productId' => $getOrder->productId, 'deliveryCode' => $code
+                    'merchantId' => $getOrder->merchantId, 'userId' => $getOrder->userId, 'orderId' => $req->orderId, 'productId' => $getOrder->productId, 'deliveryCode' => $code, 'expiry' => date('d/m/Y')
                 ]);
 
 
@@ -636,12 +743,12 @@ class ShopController extends Controller
                 $getMerchant = User::where('id', $getOrder->merchantId)->first();
 
                 $this->subject = 'Your item ' . $getProduct->productName . ' is out for delivery';
-                $this->message = '<p>We have just dispatched your items from your order ' . $req->orderId . '.</p><p>The package will be delivered by our delivery agent once it gets to the delivery hub at the following address: ' . $getBilling->shippingAddress . ' </p><p>Kindly click on the link: ' . $link . ' and enter the code: <b>' . $code . '</b> to confirm your package as soon as our delivery associate get them to you.</p>';
+                $this->message = '<p>We have just dispatched your items from your order ' . $req->orderId . '.</p><p>The package will be delivered by our delivery agent once it gets to the delivery hub at the following address: ' . $getBilling->shippingAddress . ' </p><p>Kindly click on the link: ' . $link . ' and enter the code: <b>' . $code . '</b> to confirm your package as soon as our delivery associate get them to you. This code expires on ' . date('d/m/Y') .' (3 days) if order is not verified.</p>';
 
 
 
 
-                $sendMsg = "Hi " . $getUser->name . ", We have just dispatched your items from your order " . $req->orderId . ". Kindly click on the link: " . $link . " and enter the code: " . $code . " to confirm your package as soon as our delivery associate get them to you." . $getMerchant->businessname;
+                $sendMsg = "Hi " . $getUser->name . ", We have just dispatched your items from your order " . $req->orderId . ". Kindly click on the link: " . $link . " and enter the code: " . $code . " to confirm your package as soon as our delivery associate get them to you. This code expires in " . date('d/m/Y') ." (3 days)  if order is not verified." . $getMerchant->businessname;
 
                 $getPhone = User::where('email', $getUser->email)->where('telephone', 'LIKE', '%+%')->first();
 

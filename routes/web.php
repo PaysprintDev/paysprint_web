@@ -362,6 +362,7 @@ Route::prefix('merchant')->group(function () {
 	Route::get('/paymentgateway', [MerchantPageController::class, 'paymentGateway'])->name('new merchant payment gateway');
 	Route::get('/estore', [MerchantPageController::class, 'orderingSystem'])->name('ordering system');
 
+
 	Route::get('businessprofile/{id}', [MerchantPageController::class, 'businessProfile'])->name('merchant business profile');
 
 
@@ -372,6 +373,8 @@ Route::prefix('merchant')->group(function () {
 	Route::post('/deleteproduct/{id}', [ShopController::class, 'deleteProduct'])->name('delete product');
 	Route::post('/updatediscount/{id}', [ShopController::class, 'updateDiscount'])->name('update discount');
 	Route::post('/deletediscount/{id}', [ShopController::class, 'deleteDiscount'])->name('delete discount');
+	Route::post('/storepickupaddress', [ShopController::class, 'storePickupAddress'])->name('store pickup address');
+	Route::post('/storeshippingaddress', [ShopController::class, 'storeShippingAddress'])->name('store shipping address');
 
 
 	Route::post('/setupestore', [ShopController::class, 'setupEstore'])->name('setup estore');

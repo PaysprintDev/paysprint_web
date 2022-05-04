@@ -69,7 +69,12 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ asset('merchantassets/assets/js/script.js') }}"></script>
 <script src="{{ asset('merchantassets/assets/js/theme-customizer/customizer.js') }}"></script>
 <!-- Plugin used-->
+<script src="{{ asset('js/country-state-select.js') }}"></script>
 
+
+<script language="javascript">
+    populateCountries("delivery_country", "delivery_state");
+</script>
 
 <script>
     $(document).ready(function() {
@@ -1670,6 +1675,33 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                 'Authorization': "Bearer " + "{{ Auth::user()->api_token }}"
             }
         });
+    }
+
+
+    $('.prodCategory').change(function() {
+        if ($('.prodCategory').val() == 'Other') {
+            $('.specifycategory').removeClass('disp-0');
+        } else {
+            $('.specifycategory').addClass('disp-0');
+        }
+    });
+
+    $('#flexCheckDefault').on('click', function() {
+        if ($('#flexCheckDefault').prop('checked') == true) {
+            // Setup pickup point...
+            $('.instorebtn').click();
+        }
+    });
+    $('#flexCheckChecked').on('click', function() {
+        if ($('#flexCheckChecked').prop('checked') == true) {
+            // CLicking on another function
+            // $('.deliveryshippingbtn').click();
+            shippingWithRate();
+        }
+    });
+
+    function shippingWithRate() {
+        $('.deliveryshippingbtn').click();
     }
 
 
