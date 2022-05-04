@@ -4832,6 +4832,42 @@ swal({
 
 }
 
+function deleteCategory() {
+
+swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this category!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            $('#deletecategory').submit();
+        }
+    });
+
+
+}
+
+function updateState() {
+
+swal({
+        title: "Are you sure?",
+        text: "Are you sure you want to update the state of this category?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            $('#updatestate').submit();
+        }
+    });
+
+
+}
+
 
     function cannotSend() {
         swal('International Transfer Coming Soon!',
