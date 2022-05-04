@@ -80,6 +80,7 @@ use App\InAppMessage as InAppMessage;
 use App\InvoiceCommission;
 use App\StoreMainShop;
 use App\StoreCategory;
+use App\StoreDelivery;
 use App\MonerisActivity as MonerisActivity;
 
 use App\SupportActivity as SupportActivity;
@@ -886,6 +887,7 @@ class StoreController extends Controller
                 'getCard' => $this->getUserCard(session('myID')),
                 'getBank' => $this->getUserBank(session('myID')),
                 'getTax' => $this->getTax(session('myID')),
+                'otp' => StoreDelivery::all(),
                 // 'listbank' => $this->getBankList(),
                 // 'escrowfund' => $this->getEscrowFunding(),
             );
