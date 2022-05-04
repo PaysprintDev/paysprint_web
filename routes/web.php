@@ -1021,6 +1021,10 @@ Route::prefix('Admin/estore')->group(function () {
 	Route::get('/editstore/{id}', ['uses' => 'StoreController@editStore', 'as' => 'edit store']);
 	Route::post('/updatestore/{id}',['uses' => 'StoreController@updateStore', 'as' => 'update store' ]);
 	Route::post('/deletestore/{id}',['uses' => 'StoreController@deleteStore', 'as' => 'delete store']);
+	Route::get('/editcategory/{id}',['uses' => 'StoreController@editCategory', 'as' => 'edit category']);
+	Route::post('/updatecategory/{id}',['uses' => 'StoreController@updateCategory', 'as' => 'update category']);
+	Route::post('/deletecategory/{id}',['uses' => 'StoreController@deleteCategory', 'as' => 'delete category']);
+	Route::post('/updatestate/{id}',['uses' => 'StoreController@updateState', 'as' => 'update state']);
 });
 
 

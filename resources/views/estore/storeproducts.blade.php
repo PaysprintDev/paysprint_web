@@ -54,9 +54,22 @@
                                         <td>{{ $counter ++ }}</td>
                                         <td>{{ $products['category']}}</td>
                                         <td>{{ $products['created_at']}}</td>
-                                        <td><a href="" class="btn btn-success">Accept</a></td>
-                                        <td><a href="" class="btn btn-primary">Edit</a></td>
-                                        <td><a href="" class="btn btn-danger">Delete</a></td>
+                                        <td>
+
+                                            <button class="btn {{ $products->state == 1 ? 'btn-danger' : 'btn-success' }}" id="btns" onclick="updateState();">{{ $products->state == 1 ? 'Reject' : 'Accept' }}</button>
+                                            <form action="{{ route('update state', $products->id)}}" method="post" style="visibility: hidden" id="updatestate">
+                                                @csrf
+                                             <input type="hidden" name="category_state" value="{{ $products->state}}" >
+                                            </form>
+                                        </td>
+                                        <td><a href="{{ Route('edit category',$products->id)}}" class="btn btn-primary">Edit</a></td>
+                                        <td>
+                                            <button class="btn btn-danger" id="btns" onclick="deleteCategory();">Delete</button>
+                                            <form action="{{ route('delete category', $products->id)}}" method="post" style="visibility: hidden" id="deletecategory">
+                                                @csrf
+                                             <input type="hidden" name="categoryid" value="{{ $products->id}}" >
+                                            </form>
+                                        </td>
                                     </tr>
                                     @endforeach
                                     @endif

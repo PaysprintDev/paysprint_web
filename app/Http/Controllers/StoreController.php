@@ -80,6 +80,7 @@ use App\InAppMessage as InAppMessage;
 use App\InvoiceCommission;
 use App\StoreMainShop;
 use App\StoreCategory;
+use App\StoreDelivery;
 use App\MonerisActivity as MonerisActivity;
 
 use App\SupportActivity as SupportActivity;
@@ -498,6 +499,14 @@ class StoreController extends Controller
         return back()->with("msg","<div class='alert alert-success'>Store Deleted Successfully</div>");
     }
 
+    //delete productCategory
+    public function deleteCategory(Request $req, $id){
+
+        $data=StoreCategory::where('id', $id)->delete();
+
+        return back()->with("msg","<div class='alert alert-success'>Category Deleted Successfully</div>");
+    }
+
     //update Store
 
     public function updateStore(Request $req, $id)
@@ -878,6 +887,7 @@ class StoreController extends Controller
                 'getCard' => $this->getUserCard(session('myID')),
                 'getBank' => $this->getUserBank(session('myID')),
                 'getTax' => $this->getTax(session('myID')),
+                'otp' => StoreDelivery::all(),
                 // 'listbank' => $this->getBankList(),
                 // 'escrowfund' => $this->getEscrowFunding(),
             );
@@ -891,6 +901,133 @@ class StoreController extends Controller
             return redirect()->route('AdminLogin');
         }
     }
+
+    //editing products category on e-store
+
+    public function editCategory(Request $req, $id)
+    {
+        // dd(Session::all());
+
+
+
+        if ($req->session()->has('username') == true) {
+
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $invoiceLinkImport = ImportExcelLink::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = OrganizationPay::orderBy('created_at', 'DESC')->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $invoiceLinkImport = ImportExcelLink::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = OrganizationPay::where('coy_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $this->recurBills(session('user_id'));
+            }
+
+
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+            $transCost = $this->transactionCost();
+            $allusers = $this->allUsers();
+
+            $getUserDetail = $this->getmyPersonalDetail(session('user_id'));
+
+            $getCard = $this->getUserCard(session('myID'));
+            $getBank = $this->getUserBank(session('myID'));
+
+            $getTax = $this->getTax(session('myID'));
+
+
+            $withdraws = [
+                'bank' => $this->requestFromBankWithdrawal(),
+                'purchase' => $this->purchaseRefundSentback(),
+                'credit' => $this->requestFromCardWithdrawal(),
+                'prepaid' => $this->pendingRequestFromPrepaidWithdrawal(),
+                // 'specialInfo' => $this->getthisInfo(session('country')),
+            ];
+
+
+            $pending = [
+                'transfer' => $this->pendingTransferTransactions(),
+                'texttotransfer' => $this->textToTransferUsers(),
+            ];
+
+            $refund = [
+                'requestforrefund' => $this->requestForAllRefund(),
+            ];
+
+            $allcountries = $this->getAllCountries();
+
+            $received = [
+                'payInvoice' => $this->payInvoice(session('email')),
+            ];
+
+            $data = array(
+                'getuserDetail' => $this->getmyPersonalDetail(session('user_id')),
+                'getbusinessDetail' => $this->getmyBusinessDetail(session('user_id')),
+                'merchantservice' => $this->_merchantServices(),
+                'getCard' => $this->getUserCard(session('myID')),
+                'getBank' => $this->getUserBank(session('myID')),
+                'getTax' => $this->getTax(session('myID')),
+                'category' => storeCategory::where('id', $id)->first(),
+                // 'listbank' => $this->getBankList(),
+                // 'escrowfund' => $this->getEscrowFunding(),
+            );
+
+
+
+
+
+            return view('estore.editcategory')->with(['pages' => 'Estore Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'invoiceLinkImport' => $invoiceLinkImport, 'transCost' => $transCost]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+    //updating product category on e-store
+
+    public function updateCategory(Request $req, $id)
+    {
+        
+        $validator=Validator::make($req->all(), [
+            'category_name' => 'required',
+        ]);
+
+        if( $validator -> passes()){
+
+        StoreCategory::where('id', $id)->update([
+         'category' => $req->category_name,
+        ]);
+        }else{
+
+        }
+
+        return back()->with("msg", "<div class='alert alert-success'> Category Name updated Successfully</div>");
+    }
+
+    //function to update category state
+    public function updateState(Request $req, $id)
+    {
+        
+        
+
+            $catState = $req->category_state == 1 ? false : true;
+
+            $data=StoreCategory::where('id', $id)->update(['state' => $catState]);
+ 
+
+        return back()->with("msg", "<div class='alert alert-success'> Category State updated Successfully</div>");
+    }
+
     //All Users
     public function allUsers()
     {
