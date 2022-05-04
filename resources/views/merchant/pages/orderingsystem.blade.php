@@ -223,7 +223,7 @@
                                                                             <div class="form-group">
                                                                                 <label for="stock">Category</label>
                                                                                 <select name="category" id="category"
-                                                                                    class="form-control form-select">
+                                                                                    class="form-control form-select prodCategory">
                                                                                     @if (count($data['productcategory']) > 0)
                                                                                         <option value="">Select category
                                                                                         </option>
@@ -240,6 +240,18 @@
                                                                                 <small id="stockHelp"
                                                                                     class="form-text text-muted">Select
                                                                                     product category</small>
+                                                                            </div>
+
+
+                                                                            <div class="form-group specifycategory disp-0">
+                                                                                <label for="specifyCategory">Specify
+                                                                                    Category</label>
+                                                                                <input type="text" class="form-control"
+                                                                                    name="specifyCategory"
+                                                                                    id="specifyCategory"
+                                                                                    aria-describedby="specifyCategoryHelp"
+                                                                                    placeholder="Specify Category">
+
                                                                             </div>
 
                                                                             <div class="form-group">
@@ -519,7 +531,7 @@
 
 
                                                                 <td>{{ $discounts->productName }}</td>
-                                                                <td>{{ $discounts->valueType == 'Fixed'? Auth::user()->currencySymbol . $discounts->discountAmount: $discounts->discountAmount . '%' }}
+                                                                <td>{{ $discounts->valueType == 'Fixed' ? Auth::user()->currencySymbol . $discounts->discountAmount : $discounts->discountAmount . '%' }}
                                                                 </td>
 
                                                                 <td>{{ $discounts->valueType }}</td>
@@ -979,22 +991,116 @@
                                                     </h5>
                                                     <br>
                                                     <div class="form-check">
+
                                                         <input class="form-check-input" type="checkbox" value=""
-                                                            id="flexCheckDefault">
+                                                            id="flexCheckDefault"
+                                                            {{ $data['storepickup'] > 0 ? 'checked disabled' : '' }}>
                                                         <label class="form-check-label" for="flexCheckDefault">
                                                             In-Store Pick Up
                                                         </label>
+
+                                                        <button class="instorebtn d-none" data-bs-toggle="modal"
+                                                            data-bs-target="#instorePickup">Click button</button>
+
+                                                        {!! $data['storepickup'] > 0
+    ? '<span class="float-end"><a href="javascript:void(0)"
+                                                                class="text-primary">View
+                                                                pickup address</a></span>'
+    : '' !!}
+
+
+
                                                     </div>
-                                                    {{-- TODO:: Shipping Regions and rate becomes active --}}
+
+                                                    <div class="modal fade" id="instorePickup">
+                                                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="exampleModalLongTitle">
+                                                                        Setup Store Address</h5>
+                                                                    <button class="btn-close" type="button"
+                                                                        data-dismiss="modal" aria-label="Close"
+                                                                        onclick="$('.modal').modal('hide')"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <form action="{{ route('store pickup address') }}"
+                                                                        method="post">
+
+                                                                        @csrf
+
+                                                                        <div class="form-group">
+                                                                            <label for="instore_address">Address</label>
+                                                                            <input type="text" class="form-control"
+                                                                                name="address" id="instore_address"
+                                                                                aria-describedby="instore_addressHelp"
+                                                                                placeholder="Enter your address">
+                                                                            <small id="instore_addressHelp"
+                                                                                class="form-text text-muted">Please type
+                                                                                the correct address to your store</small>
+                                                                        </div>
+
+
+                                                                        <div class="form-group">
+                                                                            <label for="instore_state">State</label>
+                                                                            <input type="text" class="form-control"
+                                                                                name="state" id="instore_state"
+                                                                                aria-describedby="instore_stateHelp"
+                                                                                placeholder="E.g {{ Auth::user()->state }}"
+                                                                                required>
+                                                                            <small id="instore_addressHelp"
+                                                                                class="form-text text-muted">Note that this
+                                                                                should match with the address above</small>
+
+                                                                        </div>
+
+
+                                                                        <div class="form-group">
+                                                                            <label for="instore_state">Delivery Rate</label>
+                                                                            <input type="number" class="form-control"
+                                                                                name="deliveryRate"
+                                                                                id="instore_deliveryRate"
+                                                                                aria-describedby="instore_deliveryRateHelp"
+                                                                                placeholder="Enter delivery rate"
+                                                                                value="0.00" min="0.00" step="0.00"
+                                                                                required>
+                                                                            <small id="instore_addressHelp"
+                                                                                class="form-text text-muted">Please set
+                                                                                your store delivery rate</small>
+
+                                                                        </div>
+
+
+
+                                                                        <button type="submit"
+                                                                            class="btn btn-primary">Submit</button>
+
+                                                                    </form>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" value=""
-                                                            id="flexCheckChecked">
+                                                            id="flexCheckChecked"
+                                                            {{ $data['deliverypickup'] > 0 ? 'checked disabled' : '' }}>
                                                         <label class="form-check-label" for="flexCheckChecked">
                                                             Delivery
                                                         </label>
+
+
+
+                                                        {!! $data['deliverypickup'] > 0
+    ? '<span class="float-end"><a href="javascript:void(0)"
+                                                                class="text-danger">View
+                                                                delivery rates</a></span>'
+    : '' !!}
                                                     </div>
 
-                                                    {{-- TODO:: Pickup address becomes active... type in your pickup address.. Adress, city state, country and postal code --}}
+
                                                 </div>
 
                                             </div>
@@ -1009,9 +1115,107 @@
                                                     </p>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <button class="btn btn-danger btn-block"
-                                                        style="width: 100%;"><small>Add Shipping
+                                                    <button class="btn btn-danger btn-block" style="width: 100%;"
+                                                        onclick="shippingWithRate()"><small>Add Shipping
                                                             Fee</small></button>
+
+
+                                                    <button class="deliveryshippingbtn d-none" data-bs-toggle="modal"
+                                                        data-bs-target="#instoreShipping">Click button</button>
+                                                </div>
+
+
+
+                                            </div>
+
+                                            <div class="modal fade" id="instoreShipping">
+                                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLongTitle">
+                                                                Shipping Regions & Rates (Delivery Service)</h5>
+                                                            <button class="btn-close" type="button"
+                                                                data-dismiss="modal" aria-label="Close"
+                                                                onclick="$('.modal').modal('hide')"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form action="{{ route('store shipping address') }}"
+                                                                method="post">
+
+                                                                @csrf
+
+                                                                <div class="form-group">
+                                                                    <label for="instore_address">Country</label>
+                                                                    <select name="country" id="delivery_country"
+                                                                        class="form-control form-select" required>
+
+                                                                    </select>
+                                                                    <small id="delivery_countryHelp"
+                                                                        class="form-text text-muted">Please select
+                                                                        country you deliver to.</small>
+                                                                </div>
+
+
+
+                                                                <div class="form-group">
+                                                                    <label for="instore_state">Currency Code</label>
+                                                                    <select name="currencyCode" id="category"
+                                                                        class="form-control form-select" required>
+                                                                        @if (count($data['activeCountry']) > 0)
+                                                                            <option value="">Select currency code
+                                                                            </option>
+
+                                                                            @foreach ($data['activeCountry'] as $item)
+                                                                                <option
+                                                                                    value="{{ $item->currencyCode }}">
+                                                                                    {{ $item->name . ' (' . $item->currencyCode . ')' }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        @endif
+                                                                    </select>
+                                                                    <small id="instore_addressHelp"
+                                                                        class="form-text text-muted">Pick a correct
+                                                                        currency code for the above country</small>
+
+                                                                </div>
+
+
+                                                                <div class="form-group">
+                                                                    <label for="instore_state">State</label>
+                                                                    <select name="state" id="delivery_state"
+                                                                        class="form-control form-select" required>
+
+                                                                    </select>
+                                                                    <small id="instore_addressHelp"
+                                                                        class="form-text text-muted">Select the states
+                                                                        you deliver to</small>
+
+                                                                </div>
+
+
+
+                                                                <div class="form-group">
+                                                                    <label for="instore_state">Delivery Rate</label>
+                                                                    <input type="number" class="form-control"
+                                                                        name="deliveryRate" id="delivery_deliveryRate"
+                                                                        aria-describedby="instore_deliveryRateHelp"
+                                                                        placeholder="Enter delivery rate" value="0.00"
+                                                                        min="0.00" step="0.00" required>
+                                                                    <small id="instore_addressHelp"
+                                                                        class="form-text text-muted">Please set
+                                                                        your store delivery rate</small>
+
+                                                                </div>
+
+
+
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">Submit</button>
+
+                                                            </form>
+                                                        </div>
+
+                                                    </div>
                                                 </div>
                                             </div>
                                             <hr>
@@ -1067,7 +1271,8 @@
 
                             <div class="form-group">
                                 <label for="stock">Category</label>
-                                <select name="category" id="category" class="form-control form-select" required>
+                                <select name="category" id="category" class="form-control form-select prodCategory"
+                                    required>
                                     @if (count($data['productcategory']) > 0)
                                         <option value="">Select category</option>
 
@@ -1077,6 +1282,13 @@
                                     @endif
                                 </select>
                                 <small id="stockHelp" class="form-text text-muted">Select product category</small>
+                            </div>
+
+                            <div class="form-group specifycategory disp-0">
+                                <label for="specifyCategory">Specify Category</label>
+                                <input type="text" class="form-control" name="specifyCategory" id="specifyCategory"
+                                    aria-describedby="specifyCategoryHelp" placeholder="Specify Category">
+
                             </div>
 
                             <div class="form-group">

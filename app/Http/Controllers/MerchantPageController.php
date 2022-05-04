@@ -2,40 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\AllCountries;
-use App\Statement;
-use Illuminate\Http\Request;
+use App\Tax;
+use Session;
+use App\Points;
 
-use Illuminate\Support\Facades\Auth;
+use App\Statement;
 
 //Session
-use Session;
-
-use App\User as User;
-use App\ImportExcel as ImportExcel;
-use App\ImportExcelLink as ImportExcelLink;
-use App\InvoicePayment as InvoicePayment;
-use App\Points;
 use App\ClientInfo;
+
+use App\ServiceType;
+use App\StoreOrders;
+use App\StorePickup;
+use App\UpgradePlan;
+use App\AllCountries;
+use App\User as User;
 
 use App\ClaimedPoints;
 
 use App\HistoryReport;
-use App\UpgradePlan;
-use App\ServiceType;
 use App\Notifications;
-use App\Tax;
-use App\Traits\PaysprintPoint;
-
-use App\Traits\PointsHistory;
-use App\Traits\SpecialInfo;
-use App\Traits\MyEstore;
-use App\TransactionCost;
-use App\StoreProducts;
-use App\StoreOrders;
+use App\StoreCategory;
 use App\StoreDiscount;
 use App\StoreMainShop;
-use App\StoreCategory;
+use App\StoreProducts;
+
+use App\Traits\MyEstore;
+use App\TransactionCost;
+use App\Traits\SpecialInfo;
+use Illuminate\Http\Request;
+use App\Traits\PointsHistory;
+use App\Traits\PaysprintPoint;
+use App\ImportExcel as ImportExcel;
+use Illuminate\Support\Facades\Auth;
+use App\InvoicePayment as InvoicePayment;
+use App\ImportExcelLink as ImportExcelLink;
+use App\StoreShipping;
 
 class MerchantPageController extends Controller
 {
@@ -78,7 +80,7 @@ class MerchantPageController extends Controller
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -91,7 +93,7 @@ class MerchantPageController extends Controller
 
         return view('merchant.pages.invoice')->with(['pages' => 'invoice single', 'data' => $data]);
     }
-    
+
 
     public function invoiceForm()
     {
@@ -99,7 +101,7 @@ class MerchantPageController extends Controller
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -120,7 +122,7 @@ class MerchantPageController extends Controller
 
     public function invoiceTypes()
     {
-        
+
 
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
@@ -151,7 +153,7 @@ class MerchantPageController extends Controller
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -170,7 +172,7 @@ class MerchantPageController extends Controller
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -189,7 +191,7 @@ class MerchantPageController extends Controller
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -234,13 +236,13 @@ class MerchantPageController extends Controller
 
                     }
                 }
-                
 
-            
+
+
 
             if(isset($merchantStore)){
 
-                
+
 
                 $data = [
                     'mystore' => $merchantStore,
@@ -266,7 +268,7 @@ class MerchantPageController extends Controller
 
 
 
-       
+
     }
 
 
@@ -292,7 +294,7 @@ class MerchantPageController extends Controller
                     'mycartlist' => $this->getMyCartlist(Auth::id()),
                 ];
 
-        
+
         return view('merchant.pages.shop.mycart')->with(['pages' => $req->store.' Shop', 'data' => $data]);
         }
         else{
@@ -325,7 +327,7 @@ class MerchantPageController extends Controller
                     'mycartlist' => $this->getMyCartlist(Auth::id()),
                 ];
 
-        
+
         return view('merchant.pages.shop.mycheckout')->with(['pages' => $req->store.' Shop', 'data' => $data]);
         }
         else{
@@ -342,7 +344,7 @@ class MerchantPageController extends Controller
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -361,7 +363,7 @@ class MerchantPageController extends Controller
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -380,7 +382,7 @@ class MerchantPageController extends Controller
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -399,7 +401,7 @@ class MerchantPageController extends Controller
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -418,7 +420,7 @@ class MerchantPageController extends Controller
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -437,7 +439,7 @@ class MerchantPageController extends Controller
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -467,7 +469,7 @@ class MerchantPageController extends Controller
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         if($client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -499,7 +501,7 @@ class MerchantPageController extends Controller
 
 
         if(isset($client) && $client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -510,9 +512,12 @@ class MerchantPageController extends Controller
             'myProducts' => $this->getMyProducts(Auth::user()->id),
             'myOrders' => $this->getMyOrders(Auth::user()->id),
             'myDiscounts' => $this->getMyDiscounts(Auth::user()->id),
-            'productcategory' => $this->getProductCategory()
+            'productcategory' => $this->getProductCategory(),
+            'storepickup' => $this->getStorePickupCount(),
+            'deliverypickup' => $this->getDeliveryPickupCount(),
+            'activeCountry' => $this->getActiveCountries(),
         ];
-        
+
 
         return view('merchant.pages.orderingsystem')->with(['pages' => 'invoice page', 'data' => $data]);
     }
@@ -688,7 +693,20 @@ class MerchantPageController extends Controller
     }
 
     public function getProductCategory(){
-        $data = StoreCategory::orderBy('category', 'ASC')->get();
+        $data = StoreCategory::orderBy('category', 'ASC')->where('state', true)->get();
+
+        return $data;
+    }
+
+
+    public function getStorePickupCount(){
+        $data = StorePickup::count();
+
+        return $data;
+    }
+
+    public function getDeliveryPickupCount(){
+        $data = StoreShipping::count();
 
         return $data;
     }
