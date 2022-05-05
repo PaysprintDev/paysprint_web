@@ -1,13 +1,8 @@
- 
- 
  @if ($pages == 'AML Dashboard' || session('role') == 'Aml compliance')
 
      @include('include.adminamlaside')
-
-  @elseif($pages == "Estore Dashboard" || session('role') == 'estore manager')
-  
-  @include('include.adminestoreaside')
-  
+ @elseif($pages == 'Estore Dashboard' || session('role') == 'estore manager')
+     @include('include.adminestoreaside')
  @else
      <!-- Left side column. contains the logo and sidebar -->
      <aside class="main-sidebar">
@@ -16,7 +11,7 @@
              <!-- Sidebar user panel -->
              <div class="user-panel">
                  <div class="pull-left image">
-                     <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png"
+                     <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
                          class="img-circle" alt="User Image">
 
 
@@ -114,10 +109,10 @@
                                      <li><a href="#"><i class="fa fa-circle-o"></i> My News Posts</a></li>
                                      <li><a href="{{ route('new investor subscriber') }}"><i
                                                  class="fa fa-circle-o"></i> Subscribers</a></li>
-                                     <li><a href="{{ route('create investor post') }}"><i
-                                                 class="fa fa-circle-o"></i> Create</a></li>
-                                     <li><a href="{{ route('investorposts') }}"><i
-                                                 class="fa fa-circle-o"></i> View</a></li>
+                                     <li><a href="{{ route('create investor post') }}"><i class="fa fa-circle-o"></i>
+                                             Create</a></li>
+                                     <li><a href="{{ route('investorposts') }}"><i class="fa fa-circle-o"></i>
+                                             View</a></li>
 
                                  </ul>
                              </li>
@@ -769,7 +764,7 @@
                          <li class="quicksetup">
 
                              {{-- <div class="card" style="width: 100%;">
-                             
+
                              <ul class="list-group list-group-flush">
 
                                  <li class="list-group-item" title="total points">
@@ -799,7 +794,7 @@
                                              enctype="multipart/form-data">
                                              @csrf
                                              <div class="col-md-12">
-                                                 
+
 
                                                  <button type="submit" class="btn btn-default btn-block">Claim
                                                      Points</button>

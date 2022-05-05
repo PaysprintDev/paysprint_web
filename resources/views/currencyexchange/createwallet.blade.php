@@ -11,7 +11,8 @@
         integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
     <!-- Favicon -->
-    <link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png"
+    <link rel="icon"
+        href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
         type="image/x-icon" />
 
     <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
@@ -19,10 +20,8 @@
 
 
     @if ($data['mycountry']->gateway == 'Stripe')
-
         <script src="https://js.stripe.com/v3/"></script>
         <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
-
     @endif
 
     @if ($data['mycountry']->gateway == 'PayPal')
@@ -31,12 +30,10 @@
             <script
                         src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_LOCAL_CLIENT_ID') }}&currency={{ Auth::user()->currencyCode }}">
             </script>
-
         @else
             <script
                         src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ Auth::user()->currencyCode }}">
             </script>
-
         @endif
 
 
@@ -107,7 +104,7 @@
                                     @csrf
 
                                     @php
-                                        $escrowId = 'ES_' . uniqid() .'_'. strtoupper(date('D'));
+                                        $escrowId = 'ES_' . uniqid() . '_' . strtoupper(date('D'));
                                     @endphp
 
 
@@ -123,7 +120,7 @@
                                             <select name="country" id="country" class="form-control" required>
                                                 @foreach ($data['allcountry'] as $mywallet)
                                                     <option value="{{ $mywallet->name }}">
-                                                        {{ $mywallet->name . ' (' . $mywallet->currencyCode.')' }}
+                                                        {{ $mywallet->name . ' (' . $mywallet->currencyCode . ')' }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -135,116 +132,117 @@
 
 
 
+                            </div>
+
+                            <div class="form-group">
+                                <div class="row">
+
+                                    <div class="col-md-12 mb-3">
+                                        <button type="button" onclick="handShake('createwallet')"
+                                            class="btn btn-primary btn-block cardSubmit">Create Wallet</button>
                                     </div>
 
-                                    <div class="form-group">
-                                        <div class="row">
-                                            
-                                            <div class="col-md-12 mb-3">
-                                                <button type="button" onclick="handShake('createwallet')" class="btn btn-primary btn-block cardSubmit">Create Wallet</button>
-                                            </div>
-                                            
-                                        </div>
-                                    </div>
-
-                                    
-
-                                </form>
+                                </div>
                             </div>
 
 
 
-                        </div> <!-- End -->
+                            </form>
+                        </div>
 
-                    </div>
+
+
+                    </div> <!-- End -->
+
                 </div>
             </div>
         </div>
+    </div>
 
 
-        <script src="{{ asset('js/jquery-1.12.0.min.js') }}"></script>
+    <script src="{{ asset('js/jquery-1.12.0.min.js') }}"></script>
 
-        @include('include.message')
-
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"
-                integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
-        </script>
-
-        <script src="{{ asset('pace/pace.min.js') }}"></script>
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-        <script src="https://js.paystack.co/v1/inline.js"></script>
+    @include('include.message')
 
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"
+        integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
+    </script>
+
+    <script src="{{ asset('pace/pace.min.js') }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
 
 
 
-        <script>
-
-function handShake(val){
-
-var route;
-
-var formData;
-
-if(val == 'createwallet'){
-    formData = new FormData(formElem);
-    route = "{{ URL('/api/v1/createfxwallet') }}";
-
-        Pace.restart();
-    Pace.track(function(){
-        setHeaders();
-        jQuery.ajax({
-        url: route,
-        method: 'post',
-        data: formData,
-        cache: false,
-        processData: false,
-        contentType: false,
-        dataType: 'JSON',
-        beforeSend: function(){
-            $('.cardSubmit').text('Please wait...');
-        },
-        success: function(result){
-            console.log(result);
-
-            $('.cardSubmit').text('Create Wallet');
-
-            if(result.status == 200){
-                    swal("Success", result.message, "success");
-                    setTimeout(function(){ location.href="{{ route('currency exchange funding') }}"; }, 4000);
-                }
-                else{
-                    swal("Oops", result.message, "error");
-                }
-
-        },
-        error: function(err) {
-            $('.cardSubmit').text('Create Wallet');
-            swal("Oops", err.responseJSON.message, "error");
-
-        } 
-
-    });
-    });
-
-}
-
-}
 
 
-function setHeaders(){
+    <script>
+        function handShake(val) {
 
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': "{{csrf_token()}}",
-            'Authorization': "Bearer "+"{{ Auth::user()->api_token }}"
+            var route;
+
+            var formData;
+
+            if (val == 'createwallet') {
+                formData = new FormData(formElem);
+                route = "{{ URL('/api/v1/createfxwallet') }}";
+
+                Pace.restart();
+                Pace.track(function() {
+                    setHeaders();
+                    jQuery.ajax({
+                        url: route,
+                        method: 'post',
+                        data: formData,
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'JSON',
+                        beforeSend: function() {
+                            $('.cardSubmit').text('Please wait...');
+                        },
+                        success: function(result) {
+                            console.log(result);
+
+                            $('.cardSubmit').text('Create Wallet');
+
+                            if (result.status == 200) {
+                                swal("Success", result.message, "success");
+                                setTimeout(function() {
+                                    location.href =
+                                        "{{ route('currency exchange funding') }}";
+                                }, 4000);
+                            } else {
+                                swal("Oops", result.message, "error");
+                            }
+
+                        },
+                        error: function(err) {
+                            $('.cardSubmit').text('Create Wallet');
+                            swal("Oops", err.responseJSON.message, "error");
+
+                        }
+
+                    });
+                });
+
+            }
+
         }
-        });
 
-}
 
-        </script>
+        function setHeaders() {
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                    'Authorization': "Bearer " + "{{ Auth::user()->api_token }}"
+                }
+            });
+
+        }
+    </script>
 
 
 </body>

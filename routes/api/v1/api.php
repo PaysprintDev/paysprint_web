@@ -72,11 +72,12 @@ Route::prefix('/v1')->group(function () {
         // TODO 1:: This is a get route...
 
         Route::get('investor/activatedposts', ['uses' => 'api\v1\InvestorRelationController@investorActivatedPosts']);
-        // TODO 2:: Do a post route to send payload to the controller ...
+
+        // TODO 2:: Do a post route to send interest payload to the controller ...
 
 
-        
-        // TODO 3:: Do a get specific for the users interest.. 
+
+        // TODO 3:: Do a get specific for the users interest..
 
 
 
@@ -284,7 +285,7 @@ Route::prefix('/v1')->group(function () {
         // CurrencyFX Recent Bids
         Route::get('/getrecentbids', ['uses' => 'CurrencyFxController@getMyRecentBids', 'as' => 'currency fx my recent bids']);
 
-        // Get a particular bid 
+        // Get a particular bid
         Route::get('/getthisbids', ['uses' => 'CurrencyFxController@getThisParticularBids', 'as' => 'currency fx this particular bids']);
 
 
@@ -354,7 +355,7 @@ Route::prefix('/v1')->group(function () {
 
 
 
-        // Shop 
+        // Shop
         Route::post('/shop/product/addtowishlist', ['uses' => 'ShopController@addToWishList', 'as' => 'add to wish list']);
         Route::post('/shop/product/addtocart', ['uses' => 'ShopController@addToCart', 'as' => 'add to cart']);
 

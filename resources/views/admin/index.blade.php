@@ -60,9 +60,6 @@
                                     </div>
                                 </div>
                             @endif
-
-
-
                         @else
                             <small>Control panel</small>
                         @endif
@@ -90,27 +87,13 @@
                 @if (session('role') == 'Super')
 
                     @include('include.dashboard.superadmin')
-
                 @elseif (session('role') == 'Access to Level 1 and 2 only')
-
-
                     @include('include.dashboard.level2admin')
-
-
                 @elseif (session('role') == 'Access to Level 1 only')
-
                     @include('include.dashboard.level1admin')
-
-
                 @elseif (session('role') == 'Customer Marketing')
-
-
                     @include('include.dashboard.supportadmin')
-
-
-
                 @else
-
                     <div class="col-lg-12 col-xs-12">
                         <!-- small box -->
                         <div class="small-box bg-info paidInvoices">
@@ -255,7 +238,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <h4>
-                                                {{ strlen($getCard[0]->card_name) < 18? strtoupper($getCard[0]->card_name): substr(strtoupper($getCard[0]->card_name), 0, 18) . '...' }}
+                                                {{ strlen($getCard[0]->card_name) < 18 ? strtoupper($getCard[0]->card_name) : substr(strtoupper($getCard[0]->card_name), 0, 18) . '...' }}
                                             </h4>
                                         </div>
                                     </div>
@@ -267,9 +250,6 @@
                                                 card</a>
                                         </div>
                                     </div>
-
-
-
                                 @else
                                     <h3>&nbsp;</h3>
 
@@ -297,7 +277,7 @@
             <div class="icon">
               <i class="ion ion-archive"></i>
             </div>
-              <a href="{{ route('merchant profile') }}" class="small-box-footer">Continue <i class="fa fa-arrow-circle-right"></i></a> 
+              <a href="{{ route('merchant profile') }}" class="small-box-footer">Continue <i class="fa fa-arrow-circle-right"></i></a>
           </div> --}}
 
 
@@ -312,7 +292,7 @@
                             <button style="background-color: #000 !important;" class="px-2"
                                 title="PaySprint Payment Gateway"
                                 onclick="location.href='{{ route('merchant payment gateway', 'gateway=PaySprint') }}'">
-                                <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png"
+                                <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
                                     alt="PaySprint logo" width="50" height="50">
                             </button>
                             <button class="px-2" title="GooglePay Payment Gateway" onclick="comingSoon()"><img
@@ -330,8 +310,6 @@
                                 <a style="font-size: 14px; font-weight: bold;" type="button"
                                     href="{{ route('merchant add money') }}" class="btn btn-info btn-block">Add Money <i
                                         class="fas fa-plus"></i></a>
-
-
                             @else
                                 <a style="font-size: 14px; font-weight: bold;" type="button" href="javascript:void(0)"
                                     class="btn btn-success btn-block"
@@ -373,8 +351,6 @@
                                 <a style="font-size: 14px; font-weight: bold;" type="button"
                                     href="{{ route('merchant withdrawal') }}" class="btn btn-success btn-block">Withdraw
                                     Money <i class="fas fa-credit-card"></i></a>
-
-
                             @else
                                 <a style="font-size: 14px; font-weight: bold;" type="button" href="javascript:void(0)"
                                     class="btn btn-success btn-block"
@@ -432,7 +408,7 @@
                                             @if (count($left) > 0)
                                                 @php
                                                     $pendPaid = count($left);
-                                                    
+
                                                     $infoPend += $pendPaid;
                                                 @endphp
                                             @endif
@@ -480,7 +456,7 @@
 
           <section class="col-lg-12 specialText disp-0">
             <div class="alert alert-danger specialText disp-0" role="alert">
-                
+
                 {!! $withdraws['specialInfo']->information !!}
             </div>
           </section>
@@ -535,10 +511,7 @@
                                                     @php
                                                         $countryBase = $merchant->country;
                                                     @endphp
-
-
                                                 @else
-
                                                     @if ($payInv->invoiced_currency != null)
                                                         @php
                                                             $currencySymb = $payInv->invoiced_currency_symbol;
@@ -605,7 +578,6 @@
 
                                                 </tr>
                                             @endforeach
-
                                         @else
                                             <tr>
                                                 <td colspan="6" align="center"> No uploaded Invoice yet</td>
@@ -693,42 +665,41 @@ echo $output; ?></td>
                                                     <td align="center" style="font-weight: bold; color: navy;">
                                                         @if (isset($getUserDetail) == true)
                                                             {{ $symbolVal . number_format($invoiceImports->amount, 2) }}
-                                                        @else {{ number_format($invoiceImports->amount, 2) }}
+                                                        @else
+                                                            {{ number_format($invoiceImports->amount, 2) }}
                                                         @endif
                                                     </td>
 
                                                     <td align="center" style="font-weight: bold; color: purple;">
                                                         @if (isset($getUserDetail) == true)
                                                             {{ $symbolVal . number_format($invoiceImports->tax_amount, 2) }}
-                                                        @else {{ number_format($invoiceImports->tax_amount, 2) }}
+                                                        @else
+                                                            {{ number_format($invoiceImports->tax_amount, 2) }}
                                                         @endif
                                                     </td>
 
                                                     <td align="center" style="font-weight: bold; color: green;">
                                                         @if (isset($getUserDetail) == true)
                                                             {{ $symbolVal . number_format($invoiceImports->total_amount, 2) }}
-                                                        @else {{ number_format($invoiceImports->total_amount, 2) }}
+                                                        @else
+                                                            {{ number_format($invoiceImports->total_amount, 2) }}
                                                         @endif
                                                     </td>
 
                                                     @if ($invoiceImports->payment_status == 1)
                                                         <td align="center" style="font-weight: bold; color: green;">Paid
                                                         </td>
-
                                                     @elseif ($invoiceImports->payment_status == 2)
-
                                                         <td align="center" style="font-weight: bold; color: purple;">Part
                                                             Pay</td>
-
                                                     @else
-
                                                         <td align="center" style="font-weight: bold; color: red;">Unpaid
                                                         </td>
                                                     @endif
 
 
                                                     {{-- @if ($leftOver = \App\InvoicePayment::where('invoice_no', $invoiceImports->invoice_no)->get())
-                        
+
                                                         @if (count($leftOver) > 0)
                                                         <td align="center" style="font-weight: bold; color: green;">Paid</td>
 
@@ -830,14 +801,16 @@ echo $output; ?>
                                                     <td align="center" style="font-weight: bold; color: navy;">
                                                         @if (isset($getUserDetail) == true)
                                                             {{ $getUserDetail->currencySymbol . number_format($invoiceLinkImports->amount, 2) }}
-                                                        @else {{ number_format($invoiceLinkImports->amount, 2) }}
+                                                        @else
+                                                            {{ number_format($invoiceLinkImports->amount, 2) }}
                                                         @endif
                                                     </td>
 
                                                     <td align="center" style="font-weight: bold; color: purple;">
                                                         @if (isset($getUserDetail) == true)
                                                             {{ $getUserDetail->currencySymbol . number_format($invoiceLinkImports->tax_amount, 2) }}
-                                                        @else {{ number_format($invoiceLinkImports->tax_amount, 2) }}
+                                                        @else
+                                                            {{ number_format($invoiceLinkImports->tax_amount, 2) }}
                                                         @endif
                                                     </td>
 
@@ -852,21 +825,17 @@ echo $output; ?>
                                                     @if ($invoiceLinkImports->payment_status == 1)
                                                         <td align="center" style="font-weight: bold; color: green;">Paid
                                                         </td>
-
                                                     @elseif ($invoiceLinkImports->payment_status == 2)
-
                                                         <td align="center" style="font-weight: bold; color: purple;">Part
                                                             Pay</td>
-
                                                     @else
-
                                                         <td align="center" style="font-weight: bold; color: red;">Unpaid
                                                         </td>
                                                     @endif
 
 
                                                     {{-- @if ($leftOver = \App\InvoicePayment::where('invoice_no', $invoiceLinkImports->invoice_no)->get())
-                        
+
                         @if (count($leftOver) > 0)
                         <td align="center" style="font-weight: bold; color: green;">Paid</td>
 
@@ -952,7 +921,6 @@ echo $output; ?>
                                                         <td>{{ date('d/M/Y', strtotime($payInvoices->created_at)) }}</td>
                                                     </tr>
                                                 @endforeach
-
                                             @else
                                                 <tr>
                                                     <td colspan="9" align="center">No payment made to client yet</td>
@@ -964,9 +932,7 @@ echo $output; ?>
                                     </table>
                                 </div>
                                 <!-- /.box-body -->
-
                             @else
-
                                 <!-- /.box-header -->
                                 <div class="box-body table table-responsive">
                                     <table id="example1" class="table table-bordered table-hover">
@@ -1000,7 +966,6 @@ echo $output; ?>
                                                         <td>{{ date('d/M/Y', strtotime($payInvoices->created_at)) }}</td>
                                                     </tr>
                                                 @endforeach
-
                                             @else
                                                 <tr>
                                                     <td colspan="8" align="center">No Payment made yet</td>

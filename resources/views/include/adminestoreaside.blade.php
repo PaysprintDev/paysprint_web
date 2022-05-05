@@ -5,7 +5,7 @@
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png"
+                <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
                     class="img-circle" alt="User Image">
 
 
@@ -63,7 +63,7 @@
             </li>
 
             <li class="">
-                <a href="{{ route('review e-store')}}">
+                <a href="{{ route('review e-store') }}">
                     <i class="fa fa-book"></i>
                     <span>Review E-Store</span>
                     <!-- <span class="pull-right-container"> -->
@@ -71,7 +71,7 @@
                 </a>
             </li>
             <li class="">
-                <a href="{{ route('products category')}}">
+                <a href="{{ route('products category') }}">
                     <i class="fa fa-book"></i>
                     <span>Products Category</span>
                     <span class="pull-right-container">
@@ -79,7 +79,7 @@
                 </a>
             </li>
             <li class="">
-                <a href="{{ route('feedback')}}">
+                <a href="{{ route('feedback') }}">
                     <i class="fa fa-book"></i>
                     <span>Feedback</span>
                     <span class="pull-right-container">
@@ -87,7 +87,7 @@
                 </a>
             </li>
             <li class="">
-                <a href="{{ route('refund and dispute report')}}">
+                <a href="{{ route('refund and dispute report') }}">
                     <i class="fa fa-book"></i>
                     <span>Refund and Dispute Report</span>
                     <span class="pull-right-container">
@@ -95,7 +95,7 @@
                 </a>
             </li>
             <li class="">
-                <a href="{{ route('expired otp')}}">
+                <a href="{{ route('expired otp') }}">
                     <i class="fa fa-book"></i>
                     <span>Expired OTP</span>
                     <span class="pull-right-container">
@@ -103,7 +103,7 @@
                 </a>
             </li>
 
-          
+
 
 
 

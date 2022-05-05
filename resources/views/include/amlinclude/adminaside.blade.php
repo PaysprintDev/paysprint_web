@@ -5,7 +5,7 @@
          <!-- Sidebar user panel -->
          <div class="user-panel">
              <div class="pull-left image">
-                 <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png"
+                 <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
                      class="img-circle" alt="User Image">
 
 
@@ -60,7 +60,6 @@
                      @endif
 
                      @if (session('role') == 'Super')
-
                          <li class="treeview">
                              <a href="#">
                                  <i class="fa fa-book"></i>
@@ -95,9 +94,6 @@
 
                              </ul>
                          </li>
-
-
-
                      @endif
 
                  </ul>
@@ -106,7 +102,6 @@
              @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only' || session('role') == 'Access to Level 1 only')
 
                  @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only')
-
                      <li class="treeview">
                          <a href="#">
                              <i class="fa fa-book"></i>
@@ -123,8 +118,7 @@
                                          class="fa fa-circle-o text-red"></i> Activity Report</a></li>
                              <li title="Support"><a href="{{ route('support activity') }}"><i
                                          class="fa fa-circle-o text-red"></i> Support</a></li>
-                            <li title="Paysprint Point"><a
-                                     href="{{ route('paysprint point') }}"><i
+                             <li title="Paysprint Point"><a href="{{ route('paysprint point') }}"><i
                                          class="fa fa-circle-o text-red"></i> Paysprint Point</a></li>
                              <li title="Activity Statistics"><a
                                      href="{{ route('activity per day', 'start=' . date('Y-m-01') . '&end=' . date('Y-m-d', strtotime('+1 day'))) }}"><i
@@ -191,11 +185,9 @@
                          </a>
 
                      </li>
-
                  @endif
 
                  @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only')
-
                      <li>
                          <a href="{{ route('business report') }}">
                              <i class="fa fa-book"></i>
@@ -211,13 +203,10 @@
                          </a>
 
                      </li>
-
                  @endif
 
-                 
+
                  @if (session('role') == 'Super')
-
-
                      <li class="treeview">
                          <a href="#">
                              <i class="fa fa-book"></i>
@@ -229,15 +218,13 @@
                          <ul class="treeview-menu">
                              <li title="Invoice Commission"><a href="{{ route('invoice commission') }}"><i
                                          class="fa fa-circle-o text-red"></i> Invoice</a></li>
-                             <li title="Currency FX Commission"><a href="#"><i
-                                         class="fa fa-circle-o text-red"></i> Currency FX</a></li>
-                             <li title="Move Money Commission"><a href="#"><i
-                                         class="fa fa-circle-o text-red"></i> Move Money</a></li>
+                             <li title="Currency FX Commission"><a href="#"><i class="fa fa-circle-o text-red"></i>
+                                     Currency FX</a></li>
+                             <li title="Move Money Commission"><a href="#"><i class="fa fa-circle-o text-red"></i> Move
+                                     Money</a></li>
                          </ul>
                      </li>
                      <li>
-
-
                  @endif
 
 
@@ -448,7 +435,6 @@
                  @endif
 
                  @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access to Level 1 and 2 only')
-
                      <li class="treeview">
                          <a href="#">
                              <i class="fas fa-wallet"></i>
@@ -476,12 +462,10 @@
 
                          </ul>
                      </li>
-
                  @endif
 
 
                  @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only')
-
                      <li class="treeview">
                          <a href="#">
                              <i class="fas fa-money-bill"></i>
@@ -555,17 +539,8 @@
             <span>Money Transfer Trans...</span>
           </a>
         </li> --}}
-
                  @endif
-
-
-
-             @elseif(session('role') != "Super" && session('role') != "Access to Level 1 only" && session('role') !=
-                 "Access to Level 1 and 2 only" && session('role') != "Customer Marketing")
-
-
-
-
+             @elseif(session('role') != 'Super' && session('role') != 'Access to Level 1 only' && session('role') != 'Access to Level 1 and 2 only' && session('role') != 'Customer Marketing')
                  <li class="treeview createandSendInvoice" title="Create and Send Invoice">
                      <a href="#">
                          <i class="fa fa-book"></i>
@@ -722,30 +697,30 @@
                          </div>
 
                          <div class="card propertyManagement" style="width: 100%;">
-                            <div class="card-header"
-                                style="background-color: #5ed998; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
-                                Property Management
+                             <div class="card-header"
+                                 style="background-color: #5ed998; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
+                                 Property Management
 
-                            </div>
-                            <ul class="list-group list-group-flush">
+                             </div>
+                             <ul class="list-group list-group-flush">
 
 
-                                <li class="list-group-item" title="Rental Property Management">
-                                    <div class="row">
-                                        <div class="col-md-12">
+                                 <li class="list-group-item" title="Rental Property Management">
+                                     <div class="row">
+                                         <div class="col-md-12">
 
-                                            <a href="javascript:void()"
-                                                onclick="viewConsultant('{{ session('email') }}')"
-                                                style="color: navy; font-weight: 700;">View as Consultant</a>
+                                             <a href="javascript:void()"
+                                                 onclick="viewConsultant('{{ session('email') }}')"
+                                                 style="color: navy; font-weight: 700;">View as Consultant</a>
 
-                                            {{-- <a href="{{ route('rentalManagementAdmin') }}" style="color: navy; font-weight: 700;">Rental Property Management</a> --}}
-                                        </div>
-                                    </div>
+                                             {{-- <a href="{{ route('rentalManagementAdmin') }}" style="color: navy; font-weight: 700;">Rental Property Management</a> --}}
+                                         </div>
+                                     </div>
 
-                                </li>
+                                 </li>
 
-                            </ul>
-                        </div>
+                             </ul>
+                         </div>
 
                          <div class="card" style="width: auto;">
                              <div class="card-header"

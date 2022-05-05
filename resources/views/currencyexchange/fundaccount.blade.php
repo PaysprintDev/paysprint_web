@@ -11,7 +11,8 @@
         integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
     <!-- Favicon -->
-    <link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png"
+    <link rel="icon"
+        href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
         type="image/x-icon" />
 
     <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
@@ -120,7 +121,7 @@
                                                 @foreach ($data['mywallet'] as $mywallet)
                                                     <option value="{{ $mywallet->escrow_id }}"
                                                         {{ Request::get('currency') == $mywallet->escrow_id ? 'selected' : '' }}>
-                                                        {{ 'Wallet Balance: ' .$mywallet->currencySymbol .$mywallet->wallet_balance .' | Currency ' .$mywallet->currencyCode }}
+                                                        {{ 'Wallet Balance: ' . $mywallet->currencySymbol . $mywallet->wallet_balance . ' | Currency ' . $mywallet->currencyCode }}
                                                     </option>
                                                 @endforeach
                                             </select>
