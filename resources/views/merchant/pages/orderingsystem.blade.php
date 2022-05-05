@@ -209,7 +209,7 @@
                                                                             </div>
                                                                             <div class="form-group">
                                                                                 <label for="stock">Stock</label>
-                                                                                <input type="number" min="1" max="100"
+                                                                                <input type="number" min="1"
                                                                                     class="form-control" name="stock"
                                                                                     id="stock" aria-describedby="stockHelp"
                                                                                     placeholder="Enter quantity in stock"
@@ -1004,8 +1004,8 @@
 
                                                         {!! $data['storepickup'] > 0
     ? '<span class="float-end"><a href="javascript:void(0)"
-                                                                class="text-primary">View
-                                                                pickup address</a></span>'
+                                                                class="text-primary">View/Add
+                                                                pickup addresses</a></span>'
     : '' !!}
 
 
@@ -1095,7 +1095,7 @@
 
                                                         {!! $data['deliverypickup'] > 0
     ? '<span class="float-end"><a href="javascript:void(0)"
-                                                                class="text-danger">View
+                                                                class="text-danger">View/Add
                                                                 delivery rates</a></span>'
     : '' !!}
                                                     </div>
@@ -1301,7 +1301,7 @@
                             <div class="form-group">
                                 <label for="code">Product Code </label>
                                 <span class="float-end"><a href="javascript:void(0)" class="text-primary"
-                                        onclick="generateProductCode()">Generate
+                                        onclick="generateProductCode()">Auto Generate
                                         code</a></span>
                                 <input type="text" class="form-control productCode" name="productCode"
                                     aria-describedby="codeHelp" placeholder="Enter a product code" required>
@@ -1327,7 +1327,7 @@
 
                             <div class="form-group">
                                 <label for="stock">Stock</label>
-                                <input type="number" min="1" max="100" class="form-control" name="stock" id="stock"
+                                <input type="number" min="1" class="form-control" name="stock" id="stock"
                                     aria-describedby="stockHelp" placeholder="Enter quantity in stock" required>
                                 <small id="stockHelp" class="form-text text-muted">How many do you have in stock</small>
                             </div>
@@ -1350,7 +1350,7 @@
 
                             <div class="form-group">
                                 <label for="deliveryDate">Delivery Period</label>
-                                <input type="text" min="1" max="100" class="form-control" name="deliveryDate"
+                                <input type="text" min="1" class="form-control" name="deliveryDate"
                                     id="deliveryDate" aria-describedby="deliveryDateHelp" placeholder="6 days" required>
                                 <small id="deliveryDateHelp" class="form-text text-muted">How many days would the product
                                     be shipped?</small>
@@ -1388,7 +1388,7 @@
                             <div class="form-group">
                                 <label for="code">Discount code </label> <span class="float-end"><a
                                         href="javascript:void(0)" class="text-primary"
-                                        onclick="generateDiscountCode()">Generate
+                                        onclick="generateDiscountCode()">Auto Generate
                                         code</a></span>
                                 <input type="text" class="form-control" name="code" id="code" aria-describedby="codeHelp"
                                     placeholder="Enter a discount code" required>
