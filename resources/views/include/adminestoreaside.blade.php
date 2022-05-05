@@ -78,14 +78,14 @@
                     </span>
                 </a>
             </li>
-            <li class="">
-                <a href="{{ route('feedback') }}">
+            {{-- <li class="">
+                <a href="{{ route('feedback')}}">
                     <i class="fa fa-book"></i>
                     <span>Feedback</span>
                     <span class="pull-right-container">
                     </span>
                 </a>
-            </li>
+            </li> --}}
             <li class="">
                 <a href="{{ route('refund and dispute report') }}">
                     <i class="fa fa-book"></i>

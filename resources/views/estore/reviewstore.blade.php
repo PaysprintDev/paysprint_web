@@ -40,6 +40,7 @@
                                 <thead>
                                     <tr>
                                         <th>S/N</th>
+                                        <th>Business Logo </th>
                                         <th>Store Name</th>
                                         <th>Store Link</th>
                                         <th>Store Status</th>
@@ -57,6 +58,7 @@
 
                                     <tr>
                                         <td>{{$counter++ }}</td>
+                                        <td><img style="width: 45px; height:45px;"  src="{{ asset($value->businessLogo) }}"></td>
                                         <td>{{ $user->businessname }}</td>
                                         <td><a href="{{ route('home').'/shop/'.$user->businessname }}" target="_blank">View store</a></td>
                                         <td>
