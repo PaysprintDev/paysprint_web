@@ -63,7 +63,14 @@
                                         <td><a href="{{ route('home').'/shop/'.$user->businessname }}" target="_blank">View store</a></td>
                                         <td>
 
-                                            <span class="{{ $value->status == 'not active' ? 'text-danger' : 'text-success' }}">{{ $value->status}}</span>
+                                            <p class="{{ $value->status == 'not active' ? 'text-danger' : 'text-success' }} text-center">{{ $value->status}}</p>
+                                            <form action="{{ route('activate store',$value->id)}}" method="post" id="activation" class="disp-0">
+                                                @csrf
+                                            <input type="text" name="status" value="{{ $value->status}}">
+                                            </form>
+                                            <small>
+                                                <a href="javascript:void(0)" onclick="storeActivation('{{ $value->id }}')" id="btns{{ $value->id }}" type="button" style="font-weight: bold">{{ $value->status == 'not active' ? 'Click to activate' : 'Click to de-activate' }}</a>
+                                            </small>
                                             
                                         <td>
                                             <span class="{{ $value->publish == false ? 'text-danger' : 'text-success' }}">{{ $value->publish == false ? 'Not published' : 'published' }}</span>
