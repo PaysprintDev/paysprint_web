@@ -1194,6 +1194,18 @@ class StoreController extends Controller
         return back()->with("msg", "<div class='alert alert-success'> Category State updated Successfully</div>");
     }
 
+    //function to activate /de-activate store
+    public function activateStore(Request $req, $id)
+    {
+        
+            $storeStatus = $req->status == 'not active' ? 'active' : 'not active';
+
+            $data=StoreMainShop::where('id', $id)->update(['status' => $storeStatus]);
+ 
+
+        return back()->with("msg", "<div class='alert alert-success'> Store Status updated Successfully</div>");
+    }
+
     //All Users
     public function allUsers()
     {
