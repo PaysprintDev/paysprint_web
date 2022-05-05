@@ -4868,6 +4868,20 @@ swal({
 
 }
 
+function storeActivation(id){
+    swal({
+        title: "Are you sure?",
+        text: "Click OK to continue",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            $('#activation').submit();
+        }
+    });
+}
 
     function cannotSend() {
         swal('International Transfer Coming Soon!',
