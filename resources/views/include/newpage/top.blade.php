@@ -23,7 +23,8 @@
         content="Fastest and affordable method of sending and receiving money, paying invoice and getting Paid at anytime!">
     <title>{{ config('app.name', 'PaySprint') }} | {{ $pages }}</title>
     <!-- Favicon -->
-    <link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png"
+    <link rel="icon"
+        href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
         type="image/x-icon" />
     <!-- Bootstrap , fonts & icons  -->
     <link rel="stylesheet" href="{{ asset('newpage/css/bootstrap.css') }}">

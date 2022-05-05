@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="{{ asset('ext/plugins/iCheck/square/blue.css') }}">
 
     <!-- Favicon -->
-    <link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png"
+    <link rel="icon"
+        href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
         type="image/x-icon" />
 
     <!-- Bootstrap 3.3.7 -->
@@ -92,13 +93,10 @@
                 <div class="alert alert-success">
                     <span style="font-size: 14px; text-align: center">{{ session('success') }}</span>
                 </div>
-
             @elseif(session('error'))
-
                 <div class="alert alert-danger">
                     <span style="font-size: 14px; text-align: center">{{ session('error') }}</span>
                 </div>
-
             @endif
 
             <form action="#" method="post">
