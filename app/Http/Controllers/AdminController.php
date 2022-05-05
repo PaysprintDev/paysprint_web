@@ -1600,6 +1600,43 @@ class AdminController extends Controller
         return redirect()->back()->with($status, $message);
     }
 
+    
+    // public function createInvestorOpportunity(Request $req)
+    // {
+
+    //     try {
+    //         if ($req->file('file')) {
+    //             //Get filename with extension
+    //             $filenameWithExt = $req->file('file')->getClientOriginalName();
+
+    //             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+    //             // Get just extension
+    //             $extension = $req->file('file')->getClientOriginalExtension();
+    //             // Filename to store
+    //             $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+
+    //             $req->file('file')->move(public_path('../../investorfiles/'), $fileNameToStore);
+
+    //             $filePath = "http://" . $_SERVER['HTTP_HOST'] . "/" . $fileNameToStore;
+    //         } else {
+    //             $filePath = '';
+    //         }
+
+
+    //         // Insert record
+    //         $thisPost = InvestorPost::insert(['title' => $req->title, 'description' => $req->description, 'file' => $filePath]);
+
+    //         $status = 'success';
+    //         $message = 'Successfully posted';
+    //     } catch (\Throwable $th) {
+    //         $status = 'error';
+    //         $message = $th->getMessage();
+    //     }
+
+
+    //     return redirect()->back()->with($status, $message);
+    // }
+
     public function saveMarkup(Request $req)
     {
 

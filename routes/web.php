@@ -100,6 +100,7 @@ Route::get('reversal', 'CheckSetupController@reverseFund');
 
 // Vie List of Referred
 Route::get('/myreferredlist/{ref_code}', ['uses' => 'ReferralsController@index', 'as' => 'referrals list of users']);
+// Route::get('/claimedhistory/{ref_code}', ['uses' => 'ReferralsController@index', 'as' => 'show claimed history']);
 
 // Get Path Address
 Route::get('pathaddress', 'CheckSetupController@getPathAddress');
@@ -679,6 +680,7 @@ Route::prefix('Admin/')->group(function () {
 		Route::get('newpost', ['uses' => 'AdminController@newInvestorPost', 'as' => 'new investors post']);
 		Route::get('subscribers', ['uses' => 'AdminController@investorSubscriber', 'as' => 'new investor subscriber']);
 		Route::post('createpost', ['uses' => 'AdminController@createInvestorPost', 'as' => 'create investor post']);
+		// Route::post('createinvestoropportunity', ['uses' => 'AdminController@createInvestorOpportunity', 'as' => ' investor opportunity']);
 	});
 
 
