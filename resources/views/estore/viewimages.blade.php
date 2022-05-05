@@ -34,18 +34,13 @@
 
                             <div class="row card">
 
-                              @foreach ( explode(", ", $data['images']->headerContent) as $images)
-
-                              @if($images != null)
-                              <div class="card-body col-md-4">
-                                <img style="width:" src="{{ asset($images)}}">
-                             </div>
-                             
-                              @endif
-
-                              
-                                  
-                              @endforeach
+                                @foreach (explode(', ', $data['images']->headerContent) as $images)
+                                    @if ($images != null)
+                                        <div class="card-body col-md-4">
+                                            <img style="width: 300px; height: 300px;" src="{{ asset($images) }}">
+                                        </div>
+                                    @endif
+                                @endforeach
                             </div>
                         </div>
                         <!-- /.box-body -->

@@ -390,8 +390,8 @@ class StoreController extends Controller
         //advert images
         public function viewAdvertImages(Request $req, $id){
             if ($req->session()->has('username') == true) {
-    
-    
+
+
                 if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
                     $adminUser = Admin::orderBy('created_at', 'DESC')->get();
                     $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
@@ -400,7 +400,7 @@ class StoreController extends Controller
                         ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
                         ->orderBy('invoice_payment.created_at', 'DESC')
                         ->get();
-    
+
                     $otherPays = OrganizationPay::orderBy('created_at', 'DESC')->get();
                 } else {
                     $adminUser = Admin::where('username', session('username'))->get();
@@ -408,24 +408,24 @@ class StoreController extends Controller
                     $invoiceLinkImport = ImportExcelLink::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
                     $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
                     $otherPays = OrganizationPay::where('coy_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
-    
+
                     $this->recurBills(session('user_id'));
                 }
-    
-    
-    
+
+
+
                 $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
                 $transCost = $this->transactionCost();
                 $allusers = $this->allUsers();
-    
+
                 $getUserDetail = $this->getmyPersonalDetail(session('user_id'));
-    
+
                 $getCard = $this->getUserCard(session('myID'));
                 $getBank = $this->getUserBank(session('myID'));
-    
+
                 $getTax = $this->getTax(session('myID'));
-    
-    
+
+
                 $withdraws = [
                     'bank' => $this->requestFromBankWithdrawal(),
                     'purchase' => $this->purchaseRefundSentback(),
@@ -433,23 +433,23 @@ class StoreController extends Controller
                     'prepaid' => $this->pendingRequestFromPrepaidWithdrawal(),
                     // 'specialInfo' => $this->getthisInfo(session('country')),
                 ];
-    
-    
+
+
                 $pending = [
                     'transfer' => $this->pendingTransferTransactions(),
                     'texttotransfer' => $this->textToTransferUsers(),
                 ];
-    
+
                 $refund = [
                     'requestforrefund' => $this->requestForAllRefund(),
                 ];
-    
+
                 $allcountries = $this->getAllCountries();
-    
+
                 $received = [
                     'payInvoice' => $this->payInvoice(session('email')),
                 ];
-    
+
                 $data = array(
                     'getuserDetail' => $this->getmyPersonalDetail(session('user_id')),
                     'getbusinessDetail' => $this->getmyBusinessDetail(session('user_id')),
@@ -461,9 +461,9 @@ class StoreController extends Controller
                     // 'listbank' => $this->getBankList(),
                     // 'escrowfund' => $this->getEscrowFunding(),
                 );
-    
-    
-    
+
+
+
                 return view('estore.viewimages')->with(['pages' => 'Estore Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'invoiceLinkImport' => $invoiceLinkImport, 'transCost' => $transCost]);
             } else {
                 return redirect()->route('AdminLogin');
@@ -688,7 +688,7 @@ class StoreController extends Controller
             ]);
 
 
-        
+
 
 
             if ($validator->passes()) {
@@ -700,14 +700,19 @@ class StoreController extends Controller
 
                 $routing = $thisuser->businessname . "/estore";
 
+                $headContentImage = '';
+                $advertSectionImage = '';
 
-                $businessLogo = $storeId->businessLogo;
-                $headContentImage = $storeId->headerContent;
-                $advertSectionImage = $storeId->advertSectionImage;
+
+
+
 
                 if($req->hasFile('businessLogo')){
-                $businessLogo = $this->uploadImageFile($req->file('businessLogo'), $routing . "/logo");
-                } 
+                    $businessLogo = $this->uploadImageFile($req->file('businessLogo'), $routing . "/logo");
+                }
+                else{
+                    $businessLogo = $storeId->businessLogo;
+                }
 
 
                 if ($req->hasFile('headerContent') && count($req->file('headerContent')) > 0) {
@@ -725,6 +730,9 @@ class StoreController extends Controller
                             $headContentImage = $this->uploadImageFile($req->file('headerContent'), $routing . "/headsection");
                         }
                     }
+                }
+                else{
+                    $headContentImage = $storeId->headerContent;
                 }
 
 
@@ -745,6 +753,9 @@ class StoreController extends Controller
                             $advertSectionImage = $this->uploadImageFile($req->file('advertimage'), $routing . "/advertsection");
                         }
                     }
+                }
+                else{
+                    $advertSectionImage = $storeId->advertSectionImage;
                 }
 
 
@@ -1163,7 +1174,7 @@ class StoreController extends Controller
 
     public function updateCategory(Request $req, $id)
     {
-        
+
         $validator=Validator::make($req->all(), [
             'category_name' => 'required',
         ]);
@@ -1183,13 +1194,13 @@ class StoreController extends Controller
     //function to update category state
     public function updateState(Request $req, $id)
     {
-        
-        
+
+
 
             $catState = $req->category_state == 1 ? false : true;
 
             $data=StoreCategory::where('id', $id)->update(['state' => $catState]);
- 
+
 
         return back()->with("msg", "<div class='alert alert-success'> Category State updated Successfully</div>");
     }
@@ -1197,11 +1208,11 @@ class StoreController extends Controller
     //function to activate /de-activate store
     public function activateStore(Request $req, $id)
     {
-        
+
             $storeStatus = $req->status == 'not active' ? 'active' : 'not active';
 
             $data=StoreMainShop::where('id', $id)->update(['status' => $storeStatus]);
- 
+
 
         return back()->with("msg", "<div class='alert alert-success'> Store Status updated Successfully</div>");
     }
