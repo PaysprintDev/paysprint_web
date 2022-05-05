@@ -109,8 +109,11 @@
                                                  class="fa fa-circle-o"></i> My News Posts</a></li>
                                      <li><a href="{{ route('new investor subscriber') }}"><i
                                                  class="fa fa-circle-o"></i> Subscribers</a></li>
-
-                                 </ul>
+                                     <li><a href="{{ route('create investor opportunity') }}"><i
+                                                class="fa fa-circle-o"></i>Investors Opportunity</a></li>            
+                                            
+                                            
+                                </ul>
                              </li>
 
 

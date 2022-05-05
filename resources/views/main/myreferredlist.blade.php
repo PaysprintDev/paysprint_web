@@ -68,8 +68,8 @@
                 <h1 class="display-4">{{ $pages }}</h1>
             </div>
         </div> <!-- End -->
-        <div class="row">
-            <div class="col-lg-12 mx-auto">
+        <div class="row row-cols-1">
+            <div class="col-lg-8 mx-auto">
 
 
                 <div class="card ">
@@ -180,6 +180,78 @@
 
                         </div>
                     </div>
+                </div>
+                <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <table class="table  table-bordered table-striped">
+                       
+                        <thead>
+                            <h4 style="text-align: center">Referral Points</h4>
+                       
+                        <tbody>
+                          <tr>
+                            <th scope="row"> Total Points to Redeem</th>
+                            <td></td>
+                            <td>500</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Value of Points to Redeem</th>
+                            <td># or $</td>
+                            <td>100</td>
+
+                          </tr>
+                          <tr>
+                            <th scope="row">Points per each referal</th>
+                            <td></td>
+                            <td>10</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Number of Users Referred</th>
+                            <td></td>
+                            <td>150</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Total Points Earned</th>
+                            <td>Date</td>
+                            <td>1500</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Total Reward Claimed</th>
+                            <td></td>
+                            <td>-1500</td>
+
+                          </tr>
+                          <tr>
+                            <th scope="row">Balance</th>
+                            <td></td>
+                            <td>0</td>
+                          </tr>
+                          
+                        </tbody>
+                        
+                      </table>
+                      <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
+
+                        <!-- Credit card form tabs -->
+                        <ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
+                            <div class="col-md-6">
+                                
+                                <a class="btn btn-primary" href="{{route}}" role="button">Show Claimed History</a>
+                            </div>
+                            <div class="col-md-6 ">
+                                
+                                <button type="button" class="btn btn-danger ">Claim Reward</button>
+                            </div>
+                           
+
+                        </ul>
+
+
+
+                    </div>
+                      
+
+                </div>
                 </div>
             </div>
 
