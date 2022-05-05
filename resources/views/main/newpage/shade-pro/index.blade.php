@@ -1,8 +1,6 @@
 @extends('layouts.newpage.app')
 
 @section('content')
-
-
     <!-- Hero Area -->
     <!-- Hero Area -->
     <div class="bg-default-8 pb-15 pt-24 pt-lg-32 pb-lg-28" id="hero-area-animation" style="background: #f2f2f2; !important">
@@ -16,8 +14,8 @@
                     <div class="hero-img image-group-p12 position-relative mb-9 mb-sm-15 mb-lg-0" data-aos="fade-left"
                         data-aos-duration="500" data-aos-once="true">
                         <img class="w-100"
-                            src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg"
-                            alt="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg"
+                            src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg"
+                            alt="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg"
                             style="border-radius: 100%">
                         <div class="image-bg-positioning">
                             <img src="{{ asset('newpage/image/telemedicine/png/hero-img-sub.png') }}"
@@ -120,47 +118,47 @@
                         class="brand-logos d-flex justify-content-center justify-content-xl-between align-items-center mx-n9 flex-wrap">
                         <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                             data-aos-duration="500" data-aos-once="true">
-                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/questrade_znhne7.png"
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/questrade_znhne7_ua01kw.png"
                                 alt="" class="w-100" width="80" height="80">
                         </div>
                         <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                             data-aos-duration="500" data-aos-delay="600" data-aos-once="true">
-                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/YahooFinanceLogo_geieeb.png"
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/YahooFinanceLogo_geieeb_gpqual.png"
                                 alt="" class="w-100" width="60" height="60">
                         </div>
                         <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                             data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
-                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/private_capital_lxc1jr.png"
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130249/assets/featuredon/private_capital_lxc1jr_kkswzw.png"
                                 alt="" class="w-100" width="60" height="60">
                         </div>
                         <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                             data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
-                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/benzinga_qpr7ot.png"
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/benzinga_qpr7ot_kdvvtl.png"
                                 alt="" class="w-100" width="100" height="100">
                         </div>
                         <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                             data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
-                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/reuters_o3wnje.png"
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/reuters_o3wnje_rmf94n.png"
                                 alt="" class="w-100" width="100" height="100">
                         </div>
                         <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                             data-aos-duration="500" data-aos-delay="400" data-aos-once="true">
-                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/canadianbusinessjournal_e3mobm.png"
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130249/assets/featuredon/canadianbusinessjournal_e3mobm_lllwjj.png"
                                 alt="" class="w-100" width="100" height="100">
                         </div>
                         <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                             data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
-                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1628673759/paysprint_asset/featuredon/magazinetoday_nsudvk.jpg"
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/magazinetoday_nsudvk_bjnihr.jpg"
                                 alt="" class="w-100" width="80" height="80">
                         </div>
                         <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                             data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
-                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1628672792/paysprint_asset/featuredon/morningstar_ehxgue.png"
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/morningstar_ehxgue_mkpsrd.png"
                                 alt="" class="w-100" width="100" height="100">
                         </div>
                         <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
                             data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
-                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1628701963/paysprint_asset/featuredon/1280px-The_Globe_and_Mail__2019-10-31_.svg_ph46rz.png"
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/1280px-The_Globe_and_Mail__2019-10-31_.svg_ph46rz_qo87pl.png"
                                 alt="" class="w-100" style="width: 300px !important;">
                         </div>
 
@@ -703,7 +701,7 @@
                     <div class="hero-img" data-aos="fade-left" data-aos-duration="500" data-aos-once="true">
                         <div class="hero-video-thumb position-relative gr-z-index-1">
                             <center>
-                                <img src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg"
+                                <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg"
                                     alt="paysprint_jpeg_black_bk_ft8qly.jpg" class="w-100 rounded-8"
                                     style="height: 350px !important;width: 350px !important;">
                             </center>
@@ -721,7 +719,7 @@
                 <div class="col-md-3">
                     <center>
                         <img class="shadow-lg"
-                            src="https://res.cloudinary.com/pilstech/image/upload/v1621960721/paysprint_asset/paysprint_front_v55thg.jpg"
+                            src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_front_v55thg_gjjpzj.jpg"
                             alt="mobile app" style="width: 80%; border-radius: 10px; position: relative; z-index: 1000;">
                     </center>
                 </div>
@@ -729,6 +727,4 @@
             </div>
         </div>
     </div>
-
-
 @endsection

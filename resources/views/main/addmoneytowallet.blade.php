@@ -19,10 +19,8 @@
 
 
     @if ($data['paymentgateway']->gateway == 'Stripe')
-
         <script src="https://js.stripe.com/v3/"></script>
         <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
-
     @endif
 
     @if ($data['paymentgateway']->gateway == 'PayPal')
@@ -31,12 +29,10 @@
             <script
                         src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_LOCAL_CLIENT_ID') }}&currency={{ Auth::user()->currencyCode }}">
             </script>
-
         @else
             <script
                         src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ Auth::user()->currencyCode }}">
             </script>
-
         @endif
 
 
@@ -106,7 +102,9 @@
                                     @csrf
 
 
-                                    <div @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group" @else class="form-group disp-0" @endif> <label for="gateway">
+                                    <div
+                                        @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group" @else class="form-group disp-0" @endif>
+                                        <label for="gateway">
                                             {{-- <h6>Select Card Type/ Bank Account</h6> --}}
                                             <h6>Select Payment Gateway</h6>
                                         </label>
@@ -125,7 +123,9 @@
                                         </div>
                                     </div>
 
-                                    <div @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group" @else class="form-group disp-0" @endif> <label for="card_type">
+                                    <div
+                                        @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group" @else class="form-group disp-0" @endif>
+                                        <label for="card_type">
                                             <h6>Select Card Type/ Bank Account</h6>
                                         </label>
                                         <div class="input-group">
@@ -147,7 +147,9 @@
                                     </div>
 
 
-                                    <div @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group selectCard" @else class="form-group selectCard disp-0" @endif> <label for="card_id">
+                                    <div
+                                        @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group selectCard" @else class="form-group selectCard disp-0" @endif>
+                                        <label for="card_id">
                                             <h6>Select Card</h6>
                                         </label>
                                         <div class="input-group">
@@ -269,8 +271,7 @@
                                     {{-- @if (Auth::user()->approval == 2 && Auth::user()->accountLevel == 3) --}}
 
 
-                                    @if ($data['paymentgateway']->gateway == 'PayStack' || $data['paymentgateway']->gateway == 'Express')
-
+                                    @if ($data['paymentgateway']->gateway == 'PayStack' || $data['paymentgateway']->gateway == 'Express Payment Solution')
                                         {{-- <div class="card-footer"> <a type="button" id="epsButton" href="" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </a></div> --}}
 
 
@@ -279,13 +280,10 @@
                                                 class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
                                                 Confirm
                                             </button></div>
-
                                     @elseif($data['paymentgateway']->gateway == 'Stripe')
-
                                         <div class="card-footer"> <button type="submit"
                                                 class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Pay
                                                 Now</button></div>
-
                                     @elseif($data['paymentgateway']->gateway == 'PayPal')
                                         {{-- PayPal --}}
                                         <div class="card-footer" id="paypal-button-container"></div>
@@ -717,20 +715,28 @@
 
                 try {
 
-
+                    var callbackUrl;
 
                     var netamount = $('#amounttosend').val();
                     var feeamount = $('#commissiondeduct').val();
                     var amount = (+netamount + +feeamount).toFixed(2);
                     var paymentToken = '' + Math.floor((Math.random() * 1000000000) + 1);
-                    var publicKey = "XPPUBK-19995e83ba654840be35242359b66f8c-X";
+                    var publicKey =
+                        `{{ env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_KEY_DEV') : env('EPXRESS_PAYMENT_KEY_PROD') }}`;
                     var commission = $('#commission').val();
                     var currencyCode = `{{ $data['currencyCode']->currencyCode }}`;
                     var conversionamount = $('#conversionamount').val();
                     var api_token = `{{ Auth::user()->api_token }}`;
-                    // var callbackUrl = `{{ env('APP_URL') }}/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
-                    var callbackUrl =
-                        `http://localhost:9090/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
+
+
+                    if (`{{ env('APP_ENV') }}` != "local") {
+                        callbackUrl =
+                            `{{ env('APP_URL') }}/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
+                    } else {
+                        callbackUrl =
+                            `http://localhost:9090/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
+                    }
+
                     var productId = "{{ Auth::user()->ref_code }}";
                     var description = "Added {{ $data['currencyCode']->currencyCode }}" + netamount +
                         " to PaySprint Wallet and a Fee of " + feeamount + " inclusive.";
@@ -750,7 +756,7 @@
                         "buttonColor": "#0000",
                         "footerText": "Powered by Pro-filr Nig. LTD",
                         "footerLink": "https://paysprint.ca",
-                        "footerLogo": "https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png",
+                        "footerLogo": "https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png",
                         "metadata": [{
                             "name": "name",
                             "value": "{{ Auth::user()->name }}"
@@ -765,15 +771,19 @@
 
                     var config = {
                         method: 'post',
-                        url: 'https://pgsandbox.xpresspayments.com:8090/api/Payments/Initialize',
+                        url: `{{ env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_URL_DEV') : env('EPXRESS_PAYMENT_URL_PROD') }}api/Payments/Initialize`,
                         headers: {
-                            'Authorization': `bearer {{ env('EPXRESS_PAYMENT_KEY') }}`,
+                            'Authorization': `bearer {{ env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_KEY_DEV') : env('EPXRESS_PAYMENT_KEY_PROD') }}`,
                             'Content-Type': 'application/json'
                         },
                         data: data
                     };
 
+                    // console.log(config);
+
                     const response = await axios(config);
+
+                    // console.log(response);
 
                     $('.cardSubmit').text('Confirm');
 
@@ -792,7 +802,7 @@
 
                 } catch (error) {
                     $('.cardSubmit').text('Confirm');
-                    swal('Oops!', error.message, 'error');
+                    swal('Oops!', error.response.data.responseMessage, 'error');
                 }
 
 
@@ -1223,15 +1233,11 @@
 
                 // PayPal Integration End
             </script>
-
-
-
         @endif
 
 
 
         @if ($data['paymentgateway']->gateway == 'Stripe')
-
             <script>
                 // Stripe Integration Starts
 
@@ -1367,7 +1373,6 @@
 
                 // Stripe Integration Ends
             </script>
-
         @endif
 
 

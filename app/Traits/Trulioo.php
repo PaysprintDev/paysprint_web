@@ -90,6 +90,8 @@ trait Trulioo
         return json_decode($response);
     }
 
+    
+
 
 
     public function transStatus($transId)

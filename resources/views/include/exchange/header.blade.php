@@ -9,9 +9,9 @@
                         style="width:20px;" class="menu-close" alt="img">
                 </a>
                 <a class="navbar-brand mx-auto d-lg-none col-auto px-0" href="#">
-                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
+                    <img src="https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png"
                         alt="PaySprint" style="width: 120px;">
-                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
+                    <img src="https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png"
                         alt="Muze" class="white-logo">
                 </a>
                 <div class="col d-flex align-items-center">

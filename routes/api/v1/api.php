@@ -59,11 +59,28 @@ Route::prefix('/v1')->group(function () {
 
         // Do Investors data...
         Route::post('investordetails',  ['uses' => 'api\v1\InvestorRelationController@investorDetails'])->name('Investor details');
+
+        // Investor login
+        Route::post('investorlogin', ['uses' => 'api\v1\InvestorRelationController@investorLogin']);
+
+        // Investor Password Reset
+        Route::post('investor/forgot-password', ['uses' => 'api\v1\InvestorRelationController@investorForgotPassword']);
+        Route::post('investor/reset-password', ['uses' => 'api\v1\InvestorRelationController@investorResetPassword']);
+
+
+        // Investor Relation ....
+        // TODO 1:: This is a get route...
+
+        Route::get('investor/activatedposts', ['uses' => 'api\v1\InvestorRelationController@investorActivatedPosts']);
+        // TODO 2:: Do a post route to send payload to the controller ...
+
+
+        
+        // TODO 3:: Do a get specific for the users interest.. 
+
+
+
     });
-
-
-    // Get Currency value
-    Route::get('/fetchcurrency', ['uses' => 'CurrencyFxController@fetchCurrency', 'as' => 'currency fetcher']);
 
 
     Route::group(['middleware' => ['apitoken']], function () {
@@ -334,6 +351,17 @@ Route::prefix('/v1')->group(function () {
         // Get Transaction History
 
         Route::get('/fxtransactionhistory', ['uses' => 'CurrencyFxController@fxTransactionHistory', 'as' => 'get transaction history']);
+
+
+
+        // Shop 
+        Route::post('/shop/product/addtowishlist', ['uses' => 'ShopController@addToWishList', 'as' => 'add to wish list']);
+        Route::post('/shop/product/addtocart', ['uses' => 'ShopController@addToCart', 'as' => 'add to cart']);
+
+
+
+        // Estore
+         Route::post('/order/out-for-delivery', ['uses' => 'ShopController@outForDelivery', 'as' => 'out for delivery or pickup']);
     });
 
 
@@ -342,6 +370,7 @@ Route::prefix('/v1')->group(function () {
         // Receive Money To PaySprint
         Route::post('customers',  ['uses' => 'api\v1\MerchantApiController@receiveMoneyFromPaysprintCustomer']);
         Route::post('visitors',  ['uses' => 'api\v1\MerchantApiController@receiveMoneyFromVisitors']);
+        Route::post('visitors-payment',  ['uses' => 'api\v1\MerchantApiController@receiveMoneyFromEstoreVisitors']);
 
         // Checkout Routes
 
@@ -350,9 +379,10 @@ Route::prefix('/v1')->group(function () {
         });
     });
 
-    Route::post('walletbalance',  ['uses' => 'api\v1\MerchantApiController@getMyWalletBalance']);
+        // Get Currency value
+    Route::get('/fetchcurrency', ['uses' => 'CurrencyFxController@fetchCurrency', 'as' => 'currency fetcher']);
 
-
+    Route::post('walletbalance',  ['uses' => 'api\v1\MerchantApiController@getMyWalletBalance', 'as' => 'check customer wallet balance']);
 
     Route::get('/userdata', ['uses' => 'CurrencyFxController@getUserData', 'as' => 'currency user data']);
 });

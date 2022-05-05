@@ -60,27 +60,55 @@
                                     @if (count($allusers) > 0)
                                         <?php $i = 1; ?>
                                         @foreach ($allusers as $data)
-                                            <tr>
-                                                <td>{{ $i++ }}</td>
+                                            @if (session('role') == 'Aml compliance')
+                                                @if ($data->country == 'Canada' || $data->country == 'United States')
+                                                    <tr>
+                                                        <td>{{ $i++ }}</td>
 
-                                                <td>{{ $data->country }}</td>
+                                                        <td>{{ $data->country }}</td>
 
-                                                @if ($allusersdata = \App\User::where('country', $data->country)->where('accountLevel', 3)->where('account_check', 1)->count())
-                                                    <td>{{ $allusersdata }}</td>
+                                                        @if ($allusersdata = \App\User::where('country', $data->country)->where('account_check', 2)->count())
+                                                            <td>{{ $allusersdata }}</td>
+                                                        @endif
+
+
+
+                                                        <td>
+
+                                                            <a href="{{ route('approvedusers', 'country=' . $data->country) }}"
+                                                                type="button" class="btn btn-primary">View details</a>
+
+
+                                                        </td>
+
+
+                                                    </tr>
                                                 @endif
 
+                                            @else
+
+                                                <tr>
+                                                    <td>{{ $i++ }}</td>
+
+                                                    <td>{{ $data->country }}</td>
+
+                                                    @if ($allusersdata = \App\User::where('country', $data->country)->where('account_check', 2)->count())
+                                                        <td>{{ $allusersdata }}</td>
+                                                    @endif
 
 
-                                                <td>
 
-                                                    <a href="{{ route('approvedusers', 'country=' . $data->country) }}"
-                                                        type="button" class="btn btn-primary">View details</a>
+                                                    <td>
 
-
-                                                </td>
+                                                        <a href="{{ route('approvedusers', 'country=' . $data->country) }}"
+                                                            type="button" class="btn btn-primary">View details</a>
 
 
-                                            </tr>
+                                                    </td>
+
+
+                                                </tr>
+                                            @endif
                                         @endforeach
 
 

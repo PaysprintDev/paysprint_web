@@ -42,7 +42,9 @@ Route::get('passwordreminder', 'CheckSetupController@passwordReminder');
 Route::get('notification-table', 'CheckSetupController@notificationTable');
 Route::get('notification-period', 'CheckSetupController@notificationPeriod');
 Route::get('monthlytransaction', 'CheckSetupController@monthlyTransactionHistory');
+Route::get('nonmonthlytransaction', 'CheckSetupController@nonMonthlyTransactionHistory');
 Route::get('exbccardrequest', 'CheckSetupController@checkExbcCardRequest');
+Route::get('trullioverification', 'CheckSetupController@checkTrullioVerification');
 Route::get('migratetolevelone', 'CheckSetupController@migrateUsersToLevelOne');
 Route::get('insertspecialinfoactivity', 'CheckSetupController@insertspecialinfoActivity');
 Route::get('autofeestructure', 'CheckSetupController@setupFeeStructure');
@@ -50,6 +52,17 @@ Route::get('checktelephone', 'CheckSetupController@checkTelephone');
 Route::get('userarchive', 'CheckSetupController@userAccountArchive');
 Route::get('matchedusersmove', 'CheckSetupController@matchedUsersAccount');
 Route::get('approvedusersmove', 'CheckSetupController@approvedUsersAccount');
+Route::get('movefailedtopass', 'CheckSetupController@moveFromFailedToPass');
+Route::get('movepassedtocompletedpending', 'CheckSetupController@moveFromPassedToCompletedPending');
+Route::get('crontomerchant', 'CheckSetupController@cronToMerchant');
+Route::get('crontoconsumers', 'CheckSetupController@cronToConsumers');
+Route::get('giveaccountcheck', 'CheckSetupController@giveAccountCheckUpgrade');
+Route::get('downcheckmerchant', 'CheckSetupController@downcheckMerchants');
+
+
+// Send Notice to Users and Merchants...
+Route::get('publicizemerchant', 'CheckSetupController@publicizeMerchantToConsumer');
+Route::get('notify-merchant-page', 'CheckSetupController@notifyMerchantPage');
 
 
 // IDV Mail Chimp
@@ -58,6 +71,7 @@ Route::get('idvpassedlist', 'CheckSetupController@idvPassedList');
 Route::get('idvfailedlist', 'CheckSetupController@idvFailedList');
 Route::get('docpendinglist', 'CheckSetupController@docPendingList');
 Route::get('suspendedaccountlist', 'CheckSetupController@suspendedAccountList');
+Route::get('upgradedaccountlist', 'CheckSetupController@upgradedAccounts');
 
 // Update BVN List
 Route::get('bvnlistupdate', 'CheckSetupController@bvnListUpdate');
@@ -94,6 +108,10 @@ Route::get('reversal', 'CheckSetupController@reverseFund');
 // Generate Shop Links...
 
 
+// Verify delivery
+
+Route::get('verify-delivery', ['uses' => 'ShopController@verifyDelivery', 'as' => 'verify delivery']);
+Route::post('verify-product-code', ['uses' => 'ShopController@verifyProductCode', 'as' => 'verify product code']);
 
 
 
@@ -147,6 +165,8 @@ Route::get('/merchant-home', ['uses' => 'HomeController@merchantIndex', 'as' => 
 
 Route::get('/home', ['uses' => 'HomeController@authIndex', 'as' => 'user home']);
 
+
+
 Route::get('/supporting-haiti', ['uses' => 'HomeController@haitiDonation', 'as' => 'haiti donation']);
 
 Route::get('about', ['uses' => 'HomeController@about', 'as' => 'about']);
@@ -158,6 +178,35 @@ Route::get('Statement', ['uses' => 'HomeController@statement', 'as' => 'statemen
 Route::get('payorganization', ['uses' => 'HomeController@payOrganization', 'as' => 'payorganization']);
 
 Route::get('contact', ['uses' => 'HomeController@contact', 'as' => 'contact']);
+
+
+Route::prefix('developers')->group(function () {
+Route::get('/community', ['uses' => 'HomeController@community', 'as' => 'community']);
+Route::get('/askquestion', ['uses' => 'HomeController@askQuestion', 'as' => 'askquestion']);
+Route::post('/askquestion', ['uses' => 'HomeController@storeAskedQuestions', 'as' => 'askquestion']);
+Route::get('/submessage/{id}', ['uses' => 'HomeController@subMessage', 'as' => 'submessage']);
+Route::post('/storeanswer', ['uses' => 'HomeController@storeSubMessage', 'as' => 'storeanswer']);
+});
+
+
+
+Route::prefix('shop')->group(function () {
+	Route::get('/{merchant}', ['uses' => 'MerchantPageController@merchantShop', 'as' => 'merchant shop now']);
+
+});
+
+
+Route::prefix('product')->group(function () {
+	Route::get('/cart', ['uses' => 'MerchantPageController@myCart', 'as' => 'customer shoping cart']);
+	Route::get('/checkout', ['uses' => 'MerchantPageController@myCheckout', 'as' => 'checkout item']);
+	Route::post('/place-order', ['uses' => 'ShopController@placeOrder', 'as' => 'place order']);
+	Route::get('payment', ['uses' => 'HomeController@estorePayment', 'as' => 'estore payment']);
+
+});
+
+
+
+
 
 Route::get('Service', ['uses' => 'HomeController@service', 'as' => 'service']);
 
@@ -214,6 +263,9 @@ Route::post('create-payment-invoice-intent', ['uses' => 'MonerisController@invoi
 // Express Payment Callback
 Route::prefix('expresspay')->group(function () {
 	Route::get('/resp', ['uses' => 'MonerisController@expressCallback', 'as' => 'express callback']);
+	Route::get('/estoreresp', ['uses' => 'MonerisController@estoreExpressCallback', 'as' => 'estore express callback']);
+	Route::get('/business', ['uses' => 'MonerisController@expressBusinessCallback', 'as' => 'express business callback']);
+	Route::get('/responseback', ['uses' => 'HomeController@expressResponseback', 'as' => 'epsresponseback']);
 });
 
 
@@ -309,12 +361,25 @@ Route::prefix('merchant')->group(function () {
 	Route::get('/profile', [MerchantPageController::class, 'profile'])->name('merchants profile');
 	Route::get('/invoicepage', [MerchantPageController::class, 'invoicePage'])->name('invoice page');
 	Route::get('/paymentgateway', [MerchantPageController::class, 'paymentGateway'])->name('new merchant payment gateway');
-	Route::get('/orderingsystem', [MerchantPageController::class, 'orderingSystem'])->name('ordering system');
+	Route::get('/estore', [MerchantPageController::class, 'orderingSystem'])->name('ordering system');
+
 
 	Route::get('businessprofile/{id}', [MerchantPageController::class, 'businessProfile'])->name('merchant business profile');
 
 
 	Route::get('/{shop}/{id}', [ShopController::class, 'index'])->name('my shop payment');
+	Route::post('/storeproduct', [ShopController::class, 'storeProduct'])->name('store product');
+	Route::post('/storediscount', [ShopController::class, 'storeDiscount'])->name('store discount');
+	Route::post('/updateproduct/{id}', [ShopController::class, 'updateProduct'])->name('update product');
+	Route::post('/deleteproduct/{id}', [ShopController::class, 'deleteProduct'])->name('delete product');
+	Route::post('/updatediscount/{id}', [ShopController::class, 'updateDiscount'])->name('update discount');
+	Route::post('/deletediscount/{id}', [ShopController::class, 'deleteDiscount'])->name('delete discount');
+	Route::post('/storepickupaddress', [ShopController::class, 'storePickupAddress'])->name('store pickup address');
+	Route::post('/storeshippingaddress', [ShopController::class, 'storeShippingAddress'])->name('store shipping address');
+
+
+	Route::post('/setupestore', [ShopController::class, 'setupEstore'])->name('setup estore');
+
 });
 
 
@@ -407,11 +472,14 @@ Route::get('allusers', ['uses' => 'AdminController@allPlatformUsers', 'as' => 'a
 
 
 Route::get('approvedusers', ['uses' => 'AdminController@allApprovedUsers', 'as' => 'approvedusers']);
+Route::get('upgradedconsumer', ['uses' => 'AdminController@allUpgradedConsumers', 'as' => 'upgradedconsumer']);
+Route::get('upgradedmerchant', ['uses' => 'AdminController@allUpgradedMerchants', 'as' => 'upgradedmerchant']);
 Route::get('approvedpendingusers', ['uses' => 'AdminController@allApprovedPendingUsers', 'as' => 'approvedpendingusers']);
 Route::get('matchedusers', ['uses' => 'AdminController@allMatchedUsers', 'as' => 'matchedusers']);
 Route::get('leveltwousers', ['uses' => 'AdminController@allLevelTwoUsers', 'as' => 'leveltwousers']);
 Route::get('pendingusers', ['uses' => 'AdminController@allPendingUsers', 'as' => 'pendingusers']);
 Route::get('overrideusers', ['uses' => 'AdminController@allOverrideUsers', 'as' => 'overrideusers']);
+Route::get('notactivepsusers', ['uses' => 'AdminController@allNotActivePsUsers', 'as' => 'notactivepsusers']);
 Route::get('closedusers', ['uses' => 'AdminController@allClosedUsers', 'as' => 'closedusers']);
 Route::get('suspendedusers', ['uses' => 'AdminController@allSuspendedUsers', 'as' => 'suspendedusers']);
 Route::get('newusers', ['uses' => 'AdminController@allNewusers', 'as' => 'newusers']);
@@ -436,11 +504,16 @@ Route::get('allusersbycountry', ['uses' => 'AdminController@allPlatformUsersByCo
 
 
 Route::get('approvedusersbycountry', ['uses' => 'AdminController@allApprovedUsersByCountry', 'as' => 'approved users by country']);
+Route::get('upgradedconsumerbycountry', ['uses' => 'AdminController@allUpgradedConsumerByCountry', 'as' => 'upgraded consumers by country']);
+Route::get('upgradedmerchantbycountry', ['uses' => 'AdminController@allUpgradedMerchantByCountry', 'as' => 'upgraded merchant by country']);
+Route::get('merchantaccountbycountry', ['uses' => 'AdminController@merchantAccountModeByCountry', 'as' => 'merchant account mode by country']);
+Route::get('merchantdetails', ['uses' => 'AdminController@merchantDetails', 'as' => 'merchant account details']);
 Route::get('approvedpendingusersbycountry', ['uses' => 'AdminController@allApprovedPendingUsersByCountry', 'as' => 'approved pending users by country']);
 Route::get('leveltwousersbycountry', ['uses' => 'AdminController@levelTwoUsersByCountry', 'as' => 'level two users by country']);
 Route::get('matchedusersbycountry', ['uses' => 'AdminController@allMatchedUsersByCountry', 'as' => 'matched users by country']);
 Route::get('pendingusersbycountry', ['uses' => 'AdminController@allPendingUsersByCountry', 'as' => 'pending users by country']);
 Route::get('overrideusersbycountry', ['uses' => 'AdminController@allOverrideUsersByCountry', 'as' => 'override users by country']);
+Route::get('psusersnotactivebycountry', ['uses' => 'AdminController@allPSUsersNotActiveByCountry', 'as' => 'ps not active by country']);
 Route::get('closedusersbycountry', ['uses' => 'AdminController@allClosedUsersByCountry', 'as' => 'closed users by country']);
 Route::get('suspendedusersbycountry', ['uses' => 'AdminController@allSuspendedUsersByCountry', 'as' => 'suspended users by country']);
 
@@ -679,8 +752,13 @@ Route::prefix('Admin/')->group(function () {
 
 		Route::get('newpost', ['uses' => 'AdminController@newInvestorPost', 'as' => 'new investors post']);
 		Route::get('subscribers', ['uses' => 'AdminController@investorSubscriber', 'as' => 'new investor subscriber']);
-		Route::post('createpost', ['uses' => 'AdminController@createInvestorPost', 'as' => 'create investor post']);
-		// Route::post('createinvestoropportunity', ['uses' => 'AdminController@createInvestorOpportunity', 'as' => ' investor opportunity']);
+		Route::get('investorposts', ['uses' => 'AdminController@investorPosts', 'as' => 'investorposts']);
+		Route::get('createpost', ['uses' => 'AdminController@createInvestorPost', 'as' => 'create investor post']);
+		Route::post('createpost', ['uses' => 'AdminController@createInvestorPosts', 'as' => 'create investor posts']);
+        Route::get('editpost/{id}', ['uses' => 'AdminController@editInvestorPost', 'as' => 'edit investor post' ]);
+        Route::post('editpost/{id}', ['uses' => 'AdminController@editInvestorPosts', 'as' => 'edit investor posts' ]);
+        Route::post('deletepost/{id}', ['uses' => 'AdminController@deleteInvestorPosts', 'as' => 'delete investor post' ]);
+
 	});
 
 
@@ -754,6 +832,7 @@ Route::prefix('Admin/')->group(function () {
 
 
 	Route::get('gatewayactivity', ['uses' => 'AdminController@gatewayActivity', 'as' => 'gateway activity']);
+	Route::get('bvncheckdetails', ['uses' => 'AdminController@bvnCheckDetails', 'as' => 'bvncheckdetails']);
 	Route::get('checktransaction/{id}', ['uses' => 'AdminController@checkTransaction', 'as' => 'check transaction']);
 	Route::get('supportactivity', ['uses' => 'AdminController@supportPlatformActivity', 'as' => 'support activity']);
 	Route::get('activityperday', ['uses' => 'AdminController@platformActivityPerDay', 'as' => 'activity per day']);
@@ -876,16 +955,29 @@ Route::prefix('Admin/aml')->group(function () {
 	Route::get('/transactionreview', ['uses' => 'AmlController@transactionReview', 'as' => 'aml transaction review']);
 	Route::get('refundmoneyrequestbycountry', ['uses' => 'AdminController@refundMoneyRequestByCountry', 'as' => 'refund details by country aml']);
 	Route::get('/transactionanalysis', ['uses' => 'AmlController@transactionAnalysis', 'as' => 'aml transaction analysis']);
+	Route::get('/transactionanalysissubpage', ['uses' => 'AmlController@transactionAnalysisSubPage', 'as' => 'aml transaction analysis subpage']);
 	Route::get('/compliancedeskreview', ['uses' => 'AmlController@complianceDeskReview', 'as' => 'aml compliance desk review']);
+	Route::get('/compliancedeskreviewsubpage', ['uses' => 'AmlController@complianceDeskReviewSubPage', 'as' => 'aml compliance desk review subpage']);
 	Route::get('/reports', ['uses' => 'AmlController@reports', 'as' => 'aml reports']);
 	Route::get('/creditcardholdreturn', ['uses' => 'AmlController@creditCardHoldReturn', 'as' => 'credit card hold return']);
 	Route::get('/platform', ['uses' => 'AmlController@platForm', 'as' => 'platform']);
 	Route::get('/customerservice', ['uses' => 'AmlController@customerService', 'as' => 'customer service']);
+	Route::get('/viewdocument', ['uses' => 'AmlController@viewDocument', 'as' => 'viewdocument']);
+	Route::get('/viewkyckybreport', ['uses' => 'AmlController@viewKycKybReport', 'as' => 'viewkyckybreport']);
+	Route::get('/viewcomplianceinformation', ['uses' => 'AmlController@viewComplianceInformation', 'as' => 'viewcomplianceinformation']);
+	Route::get('/viewindustry', ['uses' => 'AmlController@viewIndustry', 'as' => 'viewindustry']);
+	Route::get('/linkedaccount', ['uses' => 'AmlController@linkedAccount', 'as' => 'linkedaccount']);
+	Route::get('/connectedaccounts', ['uses' => 'AmlController@connectedAccounts', 'as' => 'connectedaccounts']);
+	Route::get('/moneysent', ['uses' => 'AmlController@moneySent', 'as' => 'moneysent']);
+	Route::get('/moneyreceived', ['uses' => 'AmlController@moneyReceived', 'as' => 'moneyreceived']);
 	Route::get('/technology', ['uses' => 'AmlController@technology', 'as' => 'technology']);
+	Route::post('/gettechnology', ['uses' => 'AmlController@gettechnology', 'as' => 'gettechnology']);
 	Route::get('/bankrequestamlwithdrawalbycountry', ['uses' => 'AmlController@requestForWithdrawalToBank', 'as' => 'Request aml for Withdrawal to bank']);
 
 	Route::get('/view', ['uses' => 'AmlController@view', 'as' => 'View']);
 	Route::get('/upload', ['uses' => 'AmlController@upload', 'as' => 'Upload']);
+    Route::post('/uploads', ['uses' => 'AmlController@uploads', 'as' => 'Uploads']);
+	Route::get('amlbvnactivity', ['uses' => 'AmlController@amlBvnActivity', 'as' => 'amlbvnactivity']);
 
 	Route::get('/purchaserequestreturnaml', ['uses' => 'AmlController@purchaseRequestReturnAml', 'as' => 'Purchase aml Refund Request']);
 	Route::get('refunddetail/{transid}', ['uses' => 'AmlController@getRefundDetailAml', 'as' => 'refund detail']);
@@ -918,6 +1010,25 @@ Route::prefix('Admin/aml')->group(function () {
 	Route::get('activitylogaml', ['uses' => 'AmlController@activityLogAml', 'as' => 'log aml']);
 	Route::get('purchaserefundrequest', ['uses' => 'AmlController@purchaseRefundRequest', 'as' => 'aml purchase refund request']);
 });
+
+//Estore Manager Route
+Route::prefix('Admin/estore')->group(function () {
+	Route::get('/dashboard', ['uses' => 'StoreController@index', 'as' => 'store dashboard']);
+	Route::get('/reviewstore', ['uses' => 'StoreController@reviewStore', 'as' => 'review e-store']);
+	Route::get('/productscategory', ['uses' => 'StoreController@productsCategory', 'as' => 'products category']);
+	Route::get('/feedback', ['uses' => 'StoreController@feedback', 'as' => 'feedback']);
+	Route::get('/refundanddisputereport', ['uses' => 'StoreController@refundDisputeReport', 'as' => 'refund and dispute report']);
+	Route::get('/expiredotp', ['uses' => 'StoreController@expiredOtp', 'as' => 'expired otp']);
+	Route::get('/editstore/{id}', ['uses' => 'StoreController@editStore', 'as' => 'edit store']);
+	Route::post('/updatestore/{id}',['uses' => 'StoreController@updateStore', 'as' => 'update store' ]);
+	Route::post('/deletestore/{id}',['uses' => 'StoreController@deleteStore', 'as' => 'delete store']);
+	Route::get('/editcategory/{id}',['uses' => 'StoreController@editCategory', 'as' => 'edit category']);
+	Route::post('/updatecategory/{id}',['uses' => 'StoreController@updateCategory', 'as' => 'update category']);
+	Route::post('/deletecategory/{id}',['uses' => 'StoreController@deleteCategory', 'as' => 'delete category']);
+	Route::post('/updatestate/{id}',['uses' => 'StoreController@updateState', 'as' => 'update state']);
+});
+
+
 
 
 // Ajax Route
@@ -991,6 +1102,7 @@ Route::group(['prefix' => 'Ajax'], function () {
 
 
 	Route::post('paychargeback', ['uses' => 'MonerisController@paymentChargeBack', 'as' => 'Ajaxpaychargeback']);
+	Route::post('releasefeeback', ['uses' => 'MonerisController@paymentReleaseFeeBack', 'as' => 'Ajaxreleasefeeback']);
 
 
 	Route::post('moveUser', ['uses' => 'AdminController@ajaxmoveUser', 'as' => 'AjaxmoveUser']);
@@ -1005,6 +1117,7 @@ Route::group(['prefix' => 'Ajax'], function () {
 	Route::post('refundmoneybacktowallet', ['uses' => 'AdminController@ajaxRefundMoneyBackToWallet', 'as' => 'Ajaxrefundmoneybacktowallet']);
 	Route::post('accesstousepaysprint', ['uses' => 'AdminController@ajaxAccessToUsePaysprint', 'as' => 'grant country']);
 	Route::post('accesstousepaysprintimt', ['uses' => 'AdminController@ajaxAccessToUsePaysprintImt', 'as' => 'grant imt']);
+	Route::post('activatemerchantaccount', ['uses' => 'AdminController@activatemerchantaccount', 'as' => 'active merchant account']);
 
 
 	Route::post('quotedecision', ['uses' => 'ConsultantController@ajaxquotedecision', 'as' => 'Ajaxquotedecision']);

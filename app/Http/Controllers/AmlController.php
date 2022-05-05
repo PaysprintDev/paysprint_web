@@ -58,6 +58,8 @@ use App\DeletedCards as DeletedCards;
 
 use App\MerchantService as MerchantService;
 
+use App\BVNVerificationList as BVNVerificationList;
+
 use App\AnonUsers as AnonUsers;
 
 
@@ -86,6 +88,9 @@ use App\PricingSetup as PricingSetup;
 
 use App\MailCampaign as MailCampaign;
 use App\MarkUp;
+
+use App\Aml_compliance_guide;
+
 use App\Traits\Trulioo;
 
 use App\Traits\AccountNotify;
@@ -114,6 +119,8 @@ class AmlController extends Controller
     public function index(Request $req)
     {
         // dd(Session::all());
+
+
 
         if ($req->session()->has('username') == true) {
 
@@ -191,9 +198,135 @@ class AmlController extends Controller
 
 
 
-            return view('aml.index')->with(['pages' => 'AML Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'transCost' => $transCost]);
+            return view('aml.index')->with(['pages' => 'AML Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'invoiceImport' => $invoiceImport , 'payInvoice' => $payInvoice, 'invoiceLinkImport' => $invoiceLinkImport, 'transCost' => $transCost]);
         } else {
             return redirect()->route('AdminLogin');
+        }
+    }
+
+    public function recurBills($user_id)
+    {
+        // Get Statements
+
+        $today = date('Y-m-d');
+
+        $getimport = ImportExcel::where('payment_due_date', '<', $today)->where('uploaded_by', $user_id)->orderBy('created_at')->get();
+
+        // dd($getimport);
+
+        if (count($getimport) > 0) {
+            // Loop through information
+
+
+            foreach ($getimport as $key => $value) {
+                $recur = $value->recurring;
+                $trans_date = $value->transaction_date;
+                $due_date = $value->payment_due_date;
+                $email = $value->payee_email;
+
+
+
+
+                if ($recur == "One Time") {
+                    $period = null;
+                    $due_period = null;
+                } elseif ($recur == "Weekly") {
+                    $period = date('Y-m-d', strtotime($trans_date . ' + 7 days'));
+                    $due_period = date('Y-m-d', strtotime($due_date . ' + 7 days'));
+                } elseif ($recur == "Bi-Monthly") {
+                    $period = date('Y-m-d', strtotime($trans_date . ' + 14 days'));
+                    $due_period = date('Y-m-d', strtotime($due_date . ' + 14 days'));
+                } elseif ($recur == "Monthly") {
+                    $period = date('Y-m-d', strtotime($trans_date . ' + 30 days'));
+                    $due_period = date('Y-m-d', strtotime($due_date . ' + 30 days'));
+                } elseif ($recur == "Quaterly") {
+                    $period = date('Y-m-d', strtotime($trans_date . ' + 90 days'));
+                    $due_period = date('Y-m-d', strtotime($due_date . ' + 90 days'));
+                } elseif ($recur == "Half Yearly") {
+                    $period = date('Y-m-d', strtotime($trans_date . ' + 180 days'));
+                    $due_period = date('Y-m-d', strtotime($due_date . ' + 180 days'));
+                } elseif ($recur == "Yearly") {
+                    $period = date('Y-m-d', strtotime($trans_date . ' + 365 days'));
+                    $due_period = date('Y-m-d', strtotime($due_date . ' + 365 days'));
+                } elseif ($recur == null) {
+                    $period = date('Y-m-d', strtotime($trans_date . ' + 365 days'));
+                    $due_period = date('Y-m-d', strtotime($due_date . ' + 365 days'));
+                }
+
+
+
+
+
+                if ($due_period > $today) {
+
+                    $thisuser = User::where('ref_code', $user_id)->first();
+
+                    // Update
+                    $updt = ImportExcel::where('payee_email', $email)->where('uploaded_by', $user_id)->update(['transaction_date' => $period, 'payment_due_date' => $due_period, 'installcount' => 0]);
+
+                    // Send mail
+
+
+                    // Insert Statement
+                    $activity = "Invoice on " . $value->service;
+                    $credit = $value->amount;
+                    $debit = 0;
+                    $balance = 0;
+                    $reference_code = $value->invoice_no;
+                    $status = "Delivered";
+                    $action = "Invoice";
+                    $trans_date = $period;
+                    $regards = $user_id;
+
+                    $this->insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $thisuser->country);
+
+                    $getClient = ClientInfo::where('user_id', $user_id)->get();
+
+
+                    if (count($getClient) > 0) {
+                        $clientname = $getClient[0]->business_name;
+                        $clientaddress = $getClient[0]->address;
+                        $client_realname = $getClient[0]->firstname . ' ' . $getClient[0]->lastname;
+                        $city = $getClient[0]->city;
+                        $state = $getClient[0]->state;
+                        $zipcode = $getClient[0]->zip_code;
+                    } else {
+                        $clientname = "PaySprint (EXBC)";
+                        $client_realname = "PaySprint (EXBC)";
+                        $clientaddress = "PaySprint by Express Ca Corp, 10 George St. North, Brampton. ON. L6X1R2. Canada";
+                        $city = "Brampton";
+                        $state = "Ontario";
+                        $zipcode = "L6X1R2";
+                    }
+
+                    $this->to = $email;
+                    // $this->to = "adenugaadebambo41@gmail.com";
+                    $this->name = $value->name;
+                    $this->transaction_date = $period;
+                    $this->invoice_no = $value->invoice_no;
+                    $this->payee_ref_no = $value->payee_ref_no;
+                    $this->transaction_ref = $value->transaction_ref;
+                    $this->description = $value->description;
+                    $this->payment_due_date = $due_period;
+                    $this->customer_id = $value->customer_id;
+                    $this->amount = $value->amount;
+                    $this->address = $clientaddress;
+                    $this->service = $value->service;
+                    $this->clientname = $clientname;
+                    $this->client_realname = $client_realname;
+                    $this->city = $city;
+                    $this->state = $state;
+                    $this->zipcode = $zipcode;
+
+                    $this->subject = $this->clientname . ' sends you recurring invoice on PaySprint';
+
+                    $this->sendEmail($this->to, $this->subject);
+                } else {
+                    // Do nothing
+                }
+            }
+        } else {
+            // Do nothing
         }
     }
 
@@ -257,7 +390,7 @@ class AmlController extends Controller
 
     public function activityLog()
     {
-      
+
 
         $transCost = $this->transactionCost();
         $allusers = $this->allUsers();
@@ -343,7 +476,7 @@ class AmlController extends Controller
             'escrowfund' => $this->getEscrowFunding(),
             'activity' => $this->userActivity(),
             'flaggedUsers' => $this->getFlaggedUsers()
-            
+
         );
 
 
@@ -380,6 +513,8 @@ class AmlController extends Controller
 
         $allcountries = $this->getAllCountries();
 
+        $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+
         $received = [
             'payInvoice' => $this->payInvoice(session('email')),
         ];
@@ -396,7 +531,9 @@ class AmlController extends Controller
         );
 
 
-        return view('aml.reports')->with(['pages' => 'AML Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'transCost' => $transCost, 'data' => $data]);
+
+
+        return view('aml.reports')->with(['pages' => 'AML Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'transCost' => $transCost, 'data' => $data, 'invoiceImport' => $invoiceImport]);
     }
 
 
@@ -557,14 +694,83 @@ class AmlController extends Controller
         return view('aml.amlsuplinkfolder.customerservice')->with(['pages' => 'AML Dashboard', 'data' => $data, 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
     }
 
-    public function technology()
+    public function technology(Request $req)
     {
-        $data = array(
-            'activity' => $this->userActivity()
-        );
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
 
 
-        return view('aml.amlsuplinkfolder.technology')->with(['data' => $data]);
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'activity' => $this->userActivity()
+            );
+
+
+
+            return view('aml.amlsuplinkfolder.technology')->with(['pages' => 'AML Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+
+    }
+    }
+
+
+    public function gettechnology(Request $req)
+    {
+        
+
+        if($req->technology=='paystack' || $req->technology=='stripe' || $req->technology=='moneries' || $req->technology=='paypal' || $req->technology=='moneries'){
+
+            return redirect()->route('gateway activity', 'gateway='.$req->technology);
+        }elseif($req->technology=='bvn'){
+            return redirect()->route('bvncheckdetails', 'bvn='.$req->technology);
+        }else{
+            return redirect()->route('sms wireless platform', 'sms='.$req->technology);
+        }
+    }
+
+    public function bvnStatusActivity()
+    {
+
+        $data = BVNVerificationList::orderBy('created_at', 'DESC')->take(2000)->get();
+
+        return $data;
     }
 
     public function userSupportActivities()
@@ -1674,8 +1880,24 @@ class AmlController extends Controller
             'activity' => $this->userActivity()
         );
 
+        $transCost = $this->transactionCost();
 
-        return view('aml.amlsuplinkfolder.transactionanalysis')->with(['data' => $data]);
+
+
+        return view('aml.amlsuplinkfolder.transactionanalysis')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
+    }
+    public function transactionAnalysisSubPage()
+    {
+        $data = array(
+            'activity' => $this->userActivity(),
+            'users' => $this->findSearchedUser(request()->search)
+        );
+
+        $transCost = $this->transactionCost();
+
+
+
+        return view('aml.amlsuplinkfolder.transactionanalysissubpage')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
     }
 
     public function complianceDeskReview()
@@ -1684,8 +1906,177 @@ class AmlController extends Controller
             'activity' => $this->userActivity()
         );
 
+        $transCost = $this->transactionCost();
 
-        return view('aml.amlsuplinkfolder.compliancedeskreview')->with(['data' => $data]);
+
+        return view('aml.amlsuplinkfolder.compliancedeskreview')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
+    }
+    public function complianceDeskReviewSubPage()
+    {
+
+
+        $data = array(
+            'activity' => $this->userActivity(),
+            'users' => $this->findSearchedUser(request()->search)
+        );
+
+
+
+
+
+
+        $transCost = $this->transactionCost();
+
+
+        return view('aml.amlsuplinkfolder.compliancedeskreviewsubpage')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
+    }
+
+
+    public function findSearchedUser($ref_code){
+
+        $data = DB::table('users')->where('ref_code', $ref_code)->first();
+
+
+
+        if(!isset($data)){
+            $data = DB::table('users_closed')->where('ref_code', $ref_code)->first();
+
+        }
+
+
+
+        return $data;
+
+    }
+
+    public function findSearchedUserByName($name){
+
+        $data = DB::table('users')->where('name', $name)->first();
+
+
+
+        if(!isset($data)){
+            $data = DB::table('users_closed')->where('name', $name)->first();
+
+        }
+
+
+
+        return $data;
+
+    }
+    public function findSearchedUserUsers_closed($name){
+
+        $data = DB::table('users')->where('name', 'LIKE', '%'.$name.'%')->get();
+
+
+
+        if(!isset($data)){
+            $data = DB::table('users_closed')->where('name', 'LIKE', '%'.$name.'%')->get();
+
+        }
+
+
+
+        return $data;
+
+    }
+
+    public function viewDocument()
+    {
+        $data = array(
+            'activity' => $this->userActivity(),
+            'users' => $this->findSearchedUser(request()->search)
+        );
+
+        $transCost = $this->transactionCost();
+
+        return view('aml.amlsuplinkfolder.viewdocument')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
+    }
+
+    public function viewKycKybReport()
+    {
+        $data = array(
+            'activity' => $this->userActivity(),
+            'users' => $this->findSearchedUser(request()->search)
+        );
+
+        $transCost = $this->transactionCost();
+
+        return view('aml.amlsuplinkfolder.viewkyckybreport')->with([ 'pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
+    }
+
+    public function viewComplianceInformation()
+    {
+        $data = array(
+            'activity' => $this->userActivity(),
+            'users' => $this->findSearchedUser(request()->search),
+
+        );
+
+        $transCost = $this->transactionCost();
+
+        return view('aml.amlsuplinkfolder.viewcomplianceinformation')->with(['pages' => 'AML Dashboard',  'transCost' => $transCost, 'data' => $data]);
+    }
+
+    public function viewIndustry()
+    {
+        $data = array(
+            'activity' => $this->userActivity(),
+            'client_info' => DB::table('client_info')->where('user_id', request()->search)->first()
+        );
+
+
+
+        $transCost = $this->transactionCost();
+
+        return view('aml.amlsuplinkfolder.viewindustry')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
+    }
+
+    public function linkedAccount()
+    {
+        $data = array(
+            'activity' => $this->userActivity(),
+            'link_accounts' => DB::table('link_accounts')->where('ref_code', request()->search)->first()
+        );
+
+        $transCost = $this->transactionCost();
+
+        return view('aml.amlsuplinkfolder.linkedaccount')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
+    }
+
+    public function connectedAccounts()
+    {
+        $data = array(
+            'userinfo' => $this->findSearchedUserByName(request()->search),
+            'users' => $this->findSearchedUserUsers_closed(request()->search)
+        );
+
+        $transCost = $this->transactionCost();
+
+        return view('aml.amlsuplinkfolder.connectedaccounts')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
+    }
+    public function moneySent()
+    {
+        $data = array(
+            'activity' => $this->userActivity(),
+            'users' => DB::table('statement')->where('user_id', request()->search)->where('action', 'Wallet debit')->get()
+        );
+
+        $transCost = $this->transactionCost();
+
+        return view('aml.amlsuplinkfolder.moneysent')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
+    }
+    public function moneyReceived()
+    {
+        $data = array(
+            'activity' => $this->userActivity(),
+            'users' => DB::table('statement')->where('user_id', request()->search)->where('action', 'Wallet credit')->get()
+        );
+
+        $transCost = $this->transactionCost();
+
+        return view('aml.amlsuplinkfolder.moneyreceived')->with(['pages' => 'AML Dashboard', 'transCost' => $transCost, 'data' => $data]);
     }
 
     public function compliance()
@@ -1706,15 +2097,109 @@ class AmlController extends Controller
 
         return view('aml.amlsuplinkfolder.view')->with(['data' => $data]);
     }
-    public function upload()
+    public function upload(Request $req)
     {
-        $data = array(
-            'activity' => $this->userActivity()
-        );
+
+         if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
 
 
-        return view('aml.amlsuplinkfolder.upload')->with(['data' => $data]);
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'activity' => $this->userActivity()
+            );
+
+
+
+            return view('aml.amlsuplinkfolder.upload')->with(['pages' => 'AML Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+
     }
+ }
+
+ public function uploads(Request $req){
+        // dd($req->all());
+
+         $docPath = "";
+
+
+
+        if($req->hasFile('file') && count($req->file('file')) > 0){
+
+            foreach($req->file('file') as $value){
+
+                      //Get filename with extension
+        $filenameWithExt = $value->getClientOriginalName();
+        // Get just filename
+        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        // Get just extension
+        $extension = $value->getClientOriginalExtension();
+        // Filename to store
+        $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+
+
+        $path = $value->move(public_path('../../compliance_guide/'), $fileNameToStore);
+
+
+        $docPath .= "http://" . $_SERVER['HTTP_HOST'] . "/compliance_guide/" . $fileNameToStore.", ";
+
+            }
+
+
+
+        }
+
+
+        $post = Aml_compliance_guide::insert([
+        'file_title' => $req->file_title,
+        'file_name' => $docPath,
+        'admin_id'=>session('myID')
+
+        ]);
+
+        return redirect()->route('upload')->with("msg","<div class='alert alert-success'>File Uploaded Successfully</div>");
+
+ }
+
+ 
+
 
     public function suspiciousTransaction()
     {
@@ -1725,6 +2210,8 @@ class AmlController extends Controller
 
         return view('aml.amlsuplinkfolder.suspicioustransaction')->with(['data' => $data]);
     }
+
+
 
     // public function topUpRedFlagged(){
     //     $data = array(

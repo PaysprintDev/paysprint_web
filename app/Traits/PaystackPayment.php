@@ -54,7 +54,7 @@ trait PaystackPayment{
     }
 
     // Verify BVN
-    public function verifyBVN($bvn, $account_number, $bank_code, $name){
+    public function verifyBVN($bvn, $account_number, $bank_code, $name, $apiToken){
 
         $username = explode(" ", $name);
 
@@ -87,20 +87,46 @@ trait PaystackPayment{
             $lastname = "";
         }
 
-        $this->baseUrl = "https://api.paystack.co/bvn/match";
-
-        $this->curlPost = [
-            "bvn" => $bvn,
-            "account_number" => $account_number,
-            "bank_code" => $bank_code,
-            "first_name" => $firstname,
-            "last_name" => $lastname
-        ];
 
 
-        $data = $this->doCurlPost();
+
+        // $this->baseUrl = "https://api.paystack.co/bvn/match";
+
+        // $this->curlPost = [
+        //     "bvn" => $bvn,
+        //     "account_number" => $account_number,
+        //     "bank_code" => $bank_code,
+        //     "first_name" => $firstname,
+        //     "last_name" => $lastname
+        // ];
+
+        $userDetail = User::where('api_token', $apiToken)->first();
+
+        $this->baseUrl = env('VERIFIED_AFRICA_URL');
+
+        $monthNum  = $userDetail->monthOfBirth;
+        $monthName = date('M', mktime(0, 0, 0, $monthNum, 10));
+
+        $this->curlPost = json_encode([
+            'searchParameter' => $bvn,
+            'verificationType' => "BVN-BOOLEAN-MATCH",
+            'firstName' => $lastname,
+            'lastName' => $firstname,
+            'phone' => $userDetail->telephone,
+            'email' => $userDetail->email,
+            'dob' => $userDetail->dayOfBirth.'-'.$monthName.'-'.$userDetail->yearOfBirth
+        ]);
+
+
+
+        $data = $this->verifyMyBVN();
 
         return $data;
+
+
+        // $data = $this->doCurlPost();
+
+        // return $data;
     }
 
 
@@ -181,7 +207,7 @@ trait PaystackPayment{
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'GET',
         CURLOPT_HTTPHEADER => array(
-            'Authorization: Bearer '.env('PAYSTACK_SECRET_KEY')
+            'Authorization: Bearer '.env('PAYSTACK_LOCAL_SECRET_KEY')
         ),
         ));
 
@@ -217,5 +243,34 @@ trait PaystackPayment{
         return json_decode($result) ;
     }
 
-}
 
+
+    // Verified Africa Module
+    public function verifyMyBVN(){
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => $this->baseUrl,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => $this->curlPost,
+        CURLOPT_HTTPHEADER => array(
+            'apiKey: '.env('VERIFIED_AFRICA_APIKEY'),
+            'userid: '.env('VERIFIED_AFRICA_USERID'),
+            'Content-Type: application/json'
+        ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        return json_decode($response) ;
+    }
+
+}

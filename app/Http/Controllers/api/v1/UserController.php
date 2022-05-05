@@ -214,6 +214,7 @@ class UserController extends Controller
                         $this->createNotification($newRefcode, "Hello " . $request->firstname . ", PaySprint is the fastest and affordable method of Sending and Receiving money, Paying Invoice and Getting Paid at anytime!. Welcome on board.");
                     }
                 } else {
+
                     $message = "success";
                     $title = "Great";
                     $link = "/";
@@ -234,12 +235,32 @@ class UserController extends Controller
                 $this->email = $request->email;
                 $this->subject = "Welcome to PaySprint";
 
-                $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca <br> b. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents <br> All other features would be enabled for you as soon as Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
+                $mailmessage = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca <br> b. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents <br> All other features would be enabled for you as soon as Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
 
-                $this->message = '<p>' . $message . '</p>';
+                $this->message = '<p>' . $mailmessage . '</p>';
 
 
                 $this->sendEmail($this->email, "Fund remittance");
+
+
+                if($request->country == "India"){
+
+                    $this->name = $request->firstname . ' ' . $request->lastname;
+                    // $this->email = "bambo@vimfile.com";
+                    $this->email = $request->email;
+                    $this->subject = "Special Notice";
+
+                    $mailmessage = "Dear ".$request->firstname.", If you are presenting India Aadhaar Card as the form of identification, kindly upload your India Permanent Account Number card as well using same icon.Thanks";
+
+                    $this->message = '<p>' . $mailmessage . '</p>';
+
+
+                    $this->sendEmail($this->email, "Fund remittance");
+
+
+
+                }
+
             } else {
 
                 $message = "error";
@@ -265,6 +286,10 @@ class UserController extends Controller
             // $resInfo = "Hello ".$request->firstname."!, Welcome to PaySprint!";
             // $data = $user;
             // $statusCode = 200;
+
+
+
+
 
             $status = $statusCode;
 
@@ -465,10 +490,10 @@ class UserController extends Controller
 
 
             // Check if Account is verified
-            if ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
+            if ($thisuser->account_check < 2) {
                 $data = [];
                 $status = 400;
-                $message = 'Please upload your Utility bill with your current address for verification';
+                $message = 'You account needs to be verified before continuing';
             } else {
 
 
@@ -481,6 +506,18 @@ class UserController extends Controller
                 $getSub = TransactionCost::where('country', $thisuser->country)->where('structure', $subType)->first();
 
 
+                // Check merchant test mode
+                $client = ClientInfo::where('user_id', $thisuser->ref_code)->first();
+
+                if(isset($client) && $client->accountMode == "test"){
+                    $data = [];
+                    $status = 400;
+                    $message = 'You are in test mode';
+
+                    $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                    return $this->returnJSON($resData, $status);
+                }
 
 
 
@@ -489,12 +526,18 @@ class UserController extends Controller
                 // Check my plan
                 if ($thisuser->plan == "basic") {
                     $plan = 'classic';
-                    $planName = 'classic';
+                    $planName = 'classic paid plan';
                     $amount = $getSub->fixed;
+                    $today = date('Y-m-d');
+
+                    $recMessage = "<p>This is a confirmation that your PaySprint Account has been upgraded to a Paid Plan. Your subscription would be renewed at the next billing cycle ".date('d-m-Y', strtotime($today. "+28 days")).".</p><p>If this was a mistake, kindly login to your PaySprint Account to downgrade the Account.</p><p>Your current plan is CLASSIC PAID PLAN and </p>";
+
                 } else {
                     $plan = 'basic';
                     $planName = 'Free Forever';
                     $amount = "0";
+
+                    $recMessage = "<p>This is a confirmation that your PaySprint Account has been downgraded to Free Plan. Your subscription would not be renewed at the next billing cycle.</p><p>If this was a mistake, kindly login to your PaySprint Account to Upgrade the Account.</p><p>Your current plan is FREE FOREVER and </p>";
                 }
 
                 // Check wallet Balalnce
@@ -542,7 +585,7 @@ class UserController extends Controller
                     $this->email = $thisuser->email;
                     $this->subject = $activity;
 
-                    $this->message = '<p>' . $activity . '</p><p>You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> balance in your account</p>';
+                    $this->message = '<p>' . $recMessage . '</p><p>You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> balance in your account</p>';
 
                     $this->monthlyChargeInsert($thisuser->ref_code, $thisuser->country, $amount, $thisuser->currencyCode);
 
@@ -1084,7 +1127,7 @@ class UserController extends Controller
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-        $query = ClientInfo::select('id', 'user_id as userId', 'business_name as businessName', 'address', 'corporate_type as corporateType', 'industry', 'type_of_service as typeOfService', 'website', 'firstname', 'lastname', 'telephone', 'country', 'state', 'city', 'zip_code as zipCode', 'description')->where('industry', $req->get('industry'))->where('country', $thisuser->country)->orderBy('created_at', 'DESC')->orderBy('business_name', 'ASC')->get();
+        $query = ClientInfo::select('id', 'user_id as userId', 'business_name as businessName', 'address', 'corporate_type as corporateType', 'industry', 'type_of_service as typeOfService', 'website', 'firstname', 'lastname', 'telephone', 'country', 'state', 'city', 'zip_code as zipCode', 'description', 'email as businessEmail')->where('industry', $req->get('industry'))->where('country', $thisuser->country)->orderBy('created_at', 'DESC')->orderBy('business_name', 'ASC')->get();
 
         if (count($query) > 0) {
 
@@ -1269,21 +1312,28 @@ class UserController extends Controller
 
     public function bvnVerification(Request $req)
     {
-        $response = $this->verifyBVN($req->bvn, $req->account_number, $req->bank_code, $req->account_name);
-
-        Log::info(json_encode($response));
+        
 
         try {
 
 
             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
+
+            $response = $this->verifyBVN($req->bvn, $req->account_number, $req->bank_code, $req->account_name, $req->bearerToken());
+
+            Log::info(json_encode($response));
+
+            // dd($response);
+
+
             $bank = ListOfBanks::where('code', $req->bank_code)->first();
 
 
-            BVNVerificationList::insert(['user_id' => $thisuser->id, 'bvn_number' => $req->bvn, 'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
 
-            if ($response->status == true && $response->data->is_blacklisted == false) {
+            BVNVerificationList::insert(['user_id' => $thisuser->id, 'bvn_number' => $req->bvn, 'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name, 'status' => $response->transactionStatus, 'description' => $response->description]);
+
+            if ($response->responseCode == "00" && $response->verificationStatus == "VERIFIED" || $response->responseCode == "00" && $response->transactionStatus == "SUCCESSFUL") {
 
                 if ($thisuser->approval == 2 && $thisuser->accountLevel == 3) {
                     User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 3, 'approval' => 2,  'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
@@ -1296,12 +1346,13 @@ class UserController extends Controller
 
 
 
-                $data = $response->data;
-                $message = $response->message;
+                $data = $response->response;
+                $message = $response->transactionStatus;
+                // $message = $response->description;
                 $status = 200;
             } else {
                 $data = [];
-                $message = "Bank Verification Number does not match your account";
+                $message = $response->description;
                 $status = 400;
             }
 
@@ -1752,7 +1803,7 @@ class UserController extends Controller
         $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/" . $pathWay . "/" . $fileNameToStore;
 
 
-        User::where('id', $id)->update(['' . $rowName . '' => $docPath]);
+        User::where('id', $id)->update(['' . $rowName . '' => $docPath, 'lastUpdated' => date('Y-m-d H:i:s')]);
 
         $this->updatePoints($id, 'Quick Set Up');
     }

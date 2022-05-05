@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Storage;
+
 use Rap2hpoutre\FastExcel\FastExcel;
 
 use Illuminate\Support\Facades\Mail;
@@ -26,7 +28,6 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Log;
 
 use Maatwebsite\Excel\Facades\Excel;
-
 
 
 use App\User as User;
@@ -71,6 +72,7 @@ use App\AddCard as AddCard;
 
 use App\AddBank as AddBank;
 
+
 use App\CardIssuer as CardIssuer;
 
 use App\Notifications as Notifications;
@@ -83,6 +85,12 @@ use App\PricingSetup as PricingSetup;
 use App\Points;
 
 use App\ClaimedPoints;
+use App\UpgradePlan;
+
+use App\Community;
+use App\Answer;
+
+
 
 use App\HistoryReport;
 use App\ReferralGenerate;
@@ -114,6 +122,7 @@ use App\Traits\MailChimpNewsLetter;
 
 use App\Traits\GenerateOtp;
 use App\VerificationCode;
+use App\Traits\MyEstore;
 
 class HomeController extends Controller
 {
@@ -131,18 +140,17 @@ class HomeController extends Controller
     public $country;
     public $timezone;
 
-    use RpmApp, Trulioo, AccountNotify, PaystackPayment, ExpressPayment, SpecialInfo, Xwireless, PaymentGateway, MailChimpNewsLetter, PaysprintPoint, PointsHistory, GenerateOtp, IDVCheck;
+    use RpmApp, Trulioo, AccountNotify, PaystackPayment, ExpressPayment, SpecialInfo, Xwireless, PaymentGateway, MailChimpNewsLetter, PaysprintPoint, PointsHistory, GenerateOtp, IDVCheck, MyEstore;
     /**
      * Create a new controller instance.
      *
-     * @return void
+     *  @return void
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints']]);
+        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage', 'storeAskedQuestions', 'expressResponseback']]);
 
         $location = $this->myLocation();
-
 
         $this->timezone = explode("/", $location->timezone);
 
@@ -183,6 +191,8 @@ class HomeController extends Controller
                     'continent' => $this->timezone[0],
                     'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
                     'pointsclaim' => $this->getClaimedHistory(Auth::user()->id),
+                    'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
+                    'imtAccess' => AllCountries::where('name', Auth::user()->country)->first()
                 );
 
                 $view = 'home';
@@ -241,6 +251,8 @@ class HomeController extends Controller
                     'continent' => $this->timezone[0],
                     'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
                     'pointsclaim' => $this->getClaimedHistory(Auth::user()->user_id),
+                    'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
+                    'imtAccess' => AllCountries::where('name', Auth::user()->country)->first()
                 );
 
                 $view = 'home';
@@ -290,6 +302,8 @@ class HomeController extends Controller
                     'continent' => $this->timezone[0],
                     'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
                     'pointsclaim' => $this->getClaimedHistory(Auth::user()->user_id),
+                    'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
+                    'imtAccess' => AllCountries::where('name', Auth::user()->country)->first()
 
                 );
             } else {
@@ -760,10 +774,10 @@ class HomeController extends Controller
                 // International Transaction
                 $merchant = User::where('ref_code', $invDetails[0]->uploaded_by)->first();
 
-                if ($invDetails[0]->remaining_balance > 0) {
-                    if (
-                        $merchant->country != base64_decode($country)
-                    ) {
+                if(isset($merchant)){
+
+                    if ($invDetails[0]->remaining_balance > 0) {
+                    if ($merchant->country != base64_decode($country)) {
                         $dataInfo = $this->convertCurrencyRate($getCurrencyCode->currencyCode, $merchant->currencyCode, $invDetails[0]->remaining_balance);
                         $dataTot = $this->convertCurrencyRate($getCurrencyCode->currencyCode, $merchant->currencyCode, $invDetails[0]->total_amount);
 
@@ -777,9 +791,7 @@ class HomeController extends Controller
 
                     $remBal = $invDetails[0]->total_amount + $invDetails[0]->remaining_balance;
 
-                    if (
-                        $merchant->country != base64_decode($country)
-                    ) {
+                    if ($merchant->country != base64_decode($country)) {
                         $dataInfo = $this->convertCurrencyRate($getCurrencyCode->currencyCode, $merchant->currencyCode, $remBal);
                         $dataTot = $this->convertCurrencyRate($getCurrencyCode->currencyCode, $merchant->currencyCode, $invDetails[0]->total_amount);
                         $totalInvoice = $dataInfo;
@@ -802,9 +814,18 @@ class HomeController extends Controller
 
 
                 return view('main.paymentlink')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+
+                }
+                else{
+                    // Redirect to Login
+                    return redirect()->route('epsresponseback')->with('error', 'Unable to detect your country. Invoice payment cannot be processed');
+                }
+
+
+                
             } else {
                 // Redirect to Login
-                return redirect()->route('login')->with('error', 'Unable to detect your country. Invoice payment cannot be processed');
+                return redirect()->route('epsresponseback')->with('error', 'Unable to detect your country. Invoice payment cannot be processed');
             }
         } else {
             // Redirect to Login
@@ -851,6 +872,55 @@ class HomeController extends Controller
 
 
         return view('main.paymentorganization')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function estorePayment(Request $req)
+    {
+        
+
+        $getMerchant = User::where('id', $req->merchantId)->first();
+        $getMerchantKey = ClientInfo::where('user_id', $getMerchant->ref_code)->first();
+
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Payment';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            } else {
+
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+
+            $this->page = 'Payment';
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+        }
+
+        $data = array(
+            'paymentorg' => $this->getthisOrganization($getMerchant->ref_code),
+            'currencyCode' => $this->getCountryCode($req->country),
+            'othercurrencyCode' => $this->otherCurrencyCodeOfficial($getMerchant->ref_code),
+            'getOrder' => $this->getOrders($req->merchantId, $req->userId),
+            'getCart' => $this->getPayCartList($req->userId, $req->merchantId),
+            'continent' => $this->timezone[0],
+            'merchantApiKey' => $getMerchantKey->api_secrete_key,
+            'merchantMainApiKey' => $getMerchant->api_token,
+            'paymentgateway' => $this->getPaymentGateway($req->country)
+        );
+
+
+
+
+
+
+        return view('main.paymentestore')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -1042,6 +1112,13 @@ class HomeController extends Controller
             $this->email = Auth::user()->email;
         }
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if(isset($client) && $client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         // Insert Record for cash advance and redirect to cash advance page
         CashAdvance::updateOrInsert([
             'merchantId' => Auth::user()->id
@@ -1060,35 +1137,51 @@ class HomeController extends Controller
     {
 
 
-        if ($req->session()->has('email') == false) {
-            if (Auth::check() == true) {
-                $this->page = 'My Wallet';
-                $this->name = Auth::user()->name;
-                $this->email = Auth::user()->email;
+        if (Auth::user()->accountType == "Individual"){
+            if ($req->session()->has('email') == false) {
+                if (Auth::check() == true) {
+                    $this->page = 'My Wallet';
+                    $this->name = Auth::user()->name;
+                    $this->email = Auth::user()->email;
+                } else {
+                    $this->page = 'My Wallet';
+                    $this->name = '';
+                }
             } else {
                 $this->page = 'My Wallet';
-                $this->name = '';
+                $this->name = session('name');
+                $this->email = session('email');
             }
-        } else {
-            $this->page = 'My Wallet';
-            $this->name = session('name');
-            $this->email = session('email');
+
+
+            $data = array(
+                'currencyCode' => $this->getCountryCode(Auth::user()->country),
+                'getCard' => $this->getUserCard(),
+                'getBank' => $this->getUserBankDetail(),
+                'walletStatement' => $this->walletStatement(),
+                'continent' => $this->timezone[0],
+                'specialInfo' => $this->getthisInfo(Auth::user()->country),
+                'idvchecks' => $this->checkUsersPassAccount(Auth::user()->id),
+            );
+
+            // dd($data);
+        }
+        else{
+            return redirect()->route('dashboard');
         }
 
-
-        $data = array(
-            'currencyCode' => $this->getCountryCode(Auth::user()->country),
-            'getCard' => $this->getUserCard(),
-            'getBank' => $this->getUserBankDetail(),
-            'walletStatement' => $this->walletStatement(),
-            'continent' => $this->timezone[0],
-            'specialInfo' => $this->getthisInfo(Auth::user()->country),
-            'idvchecks' => $this->checkUsersPassAccount(Auth::user()->id),
-        );
-
-        // dd($data);
+        
 
         return view('main.myaccount')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function expressResponseback(Request $req)
+    {
+
+        $data = [];
+
+        return view('main.messages')->with(['data' => $data]);
     }
 
 
@@ -1394,6 +1487,13 @@ class HomeController extends Controller
             $this->email = session('email');
         }
 
+                $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if(isset($client) && $client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
 
         $data = array(
             'currencyCode' => $this->getCountryCode(Auth::user()->country),
@@ -1592,12 +1692,20 @@ class HomeController extends Controller
             $this->email = Auth::user()->email;
         }
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+
+        if(isset($client) && $client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
+
 
         $data = array(
-            'continent' => $this->timezone[0]
+            'continent' => $this->timezone[0],
+            'countryApproval' => AllCountries::where('approval', 1)->orderBy('created_at', 'DESC')->get()
         );
-
-
 
 
         return view('main.selectutilitycountry')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -1627,6 +1735,13 @@ class HomeController extends Controller
             $this->page = 'Airtime and Utility Bills';
             $this->name = Auth::user()->name;
             $this->email = Auth::user()->email;
+        }
+
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if(isset($client) && $client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
 
@@ -1993,6 +2108,13 @@ class HomeController extends Controller
                 'continent' => $this->timezone[0],
                 'getmyfacility' => $this->getMyFacility(base64_decode($email)),
             );
+        }
+
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if(isset($client) && $client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
         return view('main.myrentalmanagementfacility')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -3566,6 +3688,218 @@ class HomeController extends Controller
         return view('main.contact')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
+    public function community(Request $req)
+    {
+
+
+        $community = Community::orderBy('created_at', 'DESC')->paginate(5);
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Contact';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0],
+                    'community' => $community
+                );
+            } else {
+                $this->page = 'community';
+                $this->name = '';
+                $data = [
+                    'continent' => $this->timezone[0],
+                    'community' => $community
+                ];
+            }
+        } else {
+            $this->page = 'community';
+            $this->name = session('name');
+            $this->email = session('email');
+            $data = [
+                'continent' => $this->timezone[0],
+                'community' => $community
+            ];
+        }
+
+        return view('main.developer.community')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+    public function askQuestion(Request $req)
+    {
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Contact';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0]
+                );
+            } else {
+                $this->page = 'community';
+                $this->name = '';
+                $data = [
+                    'continent' => $this->timezone[0]
+                ];
+            }
+        } else {
+            $this->page = 'community';
+            $this->name = session('name');
+            $this->email = session('email');
+            $data = [
+                'continent' => $this->timezone[0]
+            ];
+
+            
+        };
+
+
+        return view('main.developer.askquestion')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function storeAskedQuestions(Request $request)
+    {  
+
+        // dd($request->all());
+
+        try{
+            $path = NULL;
+
+            if($request->hasFile('file')){
+    
+                // Do your file upload here and set $path
+
+                //Get filename with extension
+                $filenameWithExt = $request->file('file')->getClientOriginalName();
+                // Get just filename
+                $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+                // Get just extension
+                $extension = $request->file('file')->getClientOriginalExtension();
+
+                // Filename to store
+                $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+
+                $fileToStore = $fileNameToStore;
+                //Upload Image-
+                $path = $request->file('file')->storeAs('public/communityfile', $fileToStore);
+
+                // $path = $request->move(public_path('/communityfile/'), $fileNameToStore);
+
+                $request->file('file')->move(public_path('../../communityfile/'), $fileToStore);
+
+                $path = route('home').'/communityfile/'.$fileNameToStore;
+
+            }
+    
+
+            if($request->categories == "others"){
+                $categories = $request->specify_categories;
+            } else {
+                $categories = $request->categories;
+            }
+
+            Community::insert([
+                'categories' => $categories, 'question' => $request->question, 'file' => $path, 'description' => $request->description, 'name' => $request->name, 'email' => $request->email
+            ]);
+            
+            $resData = 'Submitted successfully';
+                $resp = "success";
+
+                return redirect()->route('community');
+        }  
+        
+        catch (\Throwable $th) {
+            $resData = $th->getMessage();
+            $resp = "error";
+
+            // dd($resData);
+        }
+
+
+
+            //return redirect(route('community'));
+        
+        
+        
+    }
+   
+    public function subMessage(Request $req, $id)
+    {
+
+        $community = Community::where('id', $id)->first();
+        $answer = Answer::where('questionid', $id)->orderBy('created_at', 'DESC')->get();
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Contact';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0],
+                    'community' => $community,
+                    'answer' => $answer
+                );
+            } else {
+                $this->page = 'community';
+                $this->name = '';
+                $data = [
+                    'continent' => $this->timezone[0],
+                    'community' => $community,
+                    'answer' => $answer
+                ];
+            }
+        } else {
+            $this->page = 'community';
+            $this->name = session('name');
+            $this->email = session('email');
+            $data = [
+                'continent' => $this->timezone[0],
+                'community' => $community,
+                'answer' => $answer
+
+            ];
+        };
+
+       
+
+
+
+
+        return view('main.developer.submessage')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+   
+
+    public function storeSubMessage(Request $request)
+    {  
+
+        // dd($request->all());
+
+        try{
+        
+            Answer::insert([
+                'questionId' => $request->questionId, 'comment' => $request->comment, 'name' => $request->name, 
+            ]);
+            
+            $resData = 'Success';
+                $resp = "success";
+        }  
+        
+        catch (\Throwable $th) {
+            $resData = $th->getMessage();
+            $resp = "error";
+        }
+
+
+
+            return redirect()->route('submessage', $request->questionId);
+        
+        
+        
+    }
 
     public function service(Request $req)
     {
@@ -3986,6 +4320,27 @@ class HomeController extends Controller
 
 
                     $this->sendEmail($this->email, "Fund remittance");
+
+
+                    if($req->country == "India"){
+
+                        $this->name = $req->fname . ' ' . $req->lname;
+                        // $this->email = "bambo@vimfile.com";
+                        $this->email = $req->email;
+                        $this->subject = "Special Notice";
+
+                        $mailmessage = "Dear ".$req->fname.", If you are presenting India Aadhaar Card as the form of identification, kindly upload your India Permanent Account Number card as well using same icon.Thanks";
+
+                        $this->message = '<p>' . $mailmessage . '</p>';
+
+
+                        $this->sendEmail($this->email, "Fund remittance");
+
+
+
+                    }
+
+
                 } else {
 
                     $message = "error";
@@ -4806,11 +5161,20 @@ class HomeController extends Controller
     }
 
 
+        // Get My Client Info
+    public function getMyClientInfo($ref_code)
+    {
+        $data = ClientInfo::where('user_id', $ref_code)->first();
+
+        return $data;
+    }
+
 
 
 
     public function ajaxgetCommission(Request $req)
     {
+
 
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();

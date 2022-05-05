@@ -18,9 +18,13 @@
 <script src="https://raw.githubusercontent.com/HubSpot/pace/v1.0.0/pace.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
+crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <!-- jQuery UI 1.11.4 -->
 <script src="{{ asset('ext/bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
+<script src="{{ asset('merchantassets/assets/js/dropzone/dropzone.js') }}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
     $.widget.bridge('uibutton', $.ui.button);
@@ -57,6 +61,15 @@
 
 <!-- bootstrap color picker -->
 <script src="{{ asset('ext/bower_components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js') }}">
+</script>
+
+<!-- Summer Note -->
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $('.summernote').summernote();
+
+    });
 </script>
 
 <!-- bootstrap time picker -->
@@ -109,7 +122,6 @@
 
 
 @if (session('role') != 'Super')
-
     <!--Start of Tawk.to Script-->
     <script type="text/javascript">
         var Tawk_API = Tawk_API || {},
@@ -125,7 +137,6 @@
         })();
     </script>
     <!--End of Tawk.to Script-->
-
 @endif
 
 
@@ -147,6 +158,9 @@
         $('#message').summernote({
             height: 300,
         });
+
+
+
     });
 </script>
 
@@ -2031,6 +2045,62 @@
     }
 
 
+    function releaseFee(reference_code) {
+
+        var thisdata;
+        var spinner = $('.spinFee' + reference_code);
+        var route = "{{ URL('Ajax/releasefeeback') }}";
+
+        swal({
+                title: "Are you sure?",
+                text: "Please be sure before you proceed!",
+                icon: "info",
+                buttons: true,
+                dangerMode: false,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    thisdata = {
+                        reference_code: reference_code
+                    };
+                    setHeaders();
+                    jQuery.ajax({
+                        url: route,
+                        method: 'post',
+                        data: thisdata,
+                        dataType: 'JSON',
+                        beforeSend: function() {
+                            spinner.removeClass('disp-0');
+                        },
+                        success: function(result) {
+                            spinner.addClass('disp-0');
+
+                            if (result.status == 200) {
+
+                                swal("Great!", result.message, "success");
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 2000);
+
+                            } else {
+                                swal("Oops!", result.message, "error");
+                            }
+
+
+                        },
+                        error: function(err) {
+                            spinner.addClass('disp-0');
+                            swal("Oops!", err.responseJSON.message, "error");
+                        }
+
+                    });
+
+                }
+            });
+
+    }
+
+
     function closeAccount(id) {
 
         var thisdata;
@@ -2131,6 +2201,79 @@
                         }
 
                     });
+
+                }
+            });
+
+    }
+
+
+
+    function uploadDocsForUser(value, id) {
+
+        var formData = new FormData();
+        var spinner = $('#uploadBtn' + id);
+        var route = "{{ route('upload user doc') }}";
+
+        swal({
+                title: "Are you sure?",
+                text: "Click Ok to continue...",
+                icon: "info",
+                buttons: true,
+                dangerMode: false,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+
+                    // Do Ajax
+
+                    formData.append("user_id", id);
+
+                    var fileSelect = document.getElementById("uploadContent" + id);
+                    if (fileSelect.files && fileSelect.files.length == 1) {
+                        var file = fileSelect.files[0]
+                        formData.set("image", file, file.name);
+                    }
+
+                    setHeaders();
+                    jQuery.ajax({
+                        url: route,
+                        method: 'post',
+                        data: formData,
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'JSON',
+                        beforeSend: function() {
+                            spinner.text('Please wait...');
+                        },
+                        success: function(result) {
+
+                            spinner.text('Upload');
+
+                            if (result.res == "success") {
+
+                                swal('Great', result.message, 'success');
+
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 2000);
+
+                            } else {
+                                swal('Oops', result.message, 'error');
+                            }
+
+
+
+
+                        },
+                        error: function(err) {
+                            spinner.text('Upload');
+                            swal("Oops!", err.responseJSON.message, "error");
+                        }
+
+                    });
+
 
                 }
             });
@@ -4292,7 +4435,7 @@
                                         avatar = k.avatar;
                                     } else {
                                         avatar =
-                                            "https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg";
+                                            "https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg";
                                     }
 
                                     datarec = "<tr><td><img src='" + avatar +
@@ -4377,7 +4520,7 @@
                                         avatar = k.avatar;
                                     } else {
                                         avatar =
-                                            "https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg";
+                                            "https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg";
                                     }
 
                                     datarec = "<tr><td><img src='" + avatar +
@@ -4516,6 +4659,7 @@
             checkProp
         };
 
+
         Pace.restart();
         Pace.track(function() {
             setHeaders();
@@ -4525,7 +4669,12 @@
                 data: thisdata,
                 dataType: 'JSON',
                 beforeSend: function() {
-
+                    iziToast.info({
+                        title: 'Hey',
+                        message: 'Processing request...',
+                        position: 'topRight',
+                        timeout: 500,
+                    });
                 },
                 success: function(result) {
 
@@ -4533,16 +4682,28 @@
 
                     if (result.message == "success") {
 
-                        // Show valid icon
+                        iziToast.success({
+                            title: 'Great',
+                            message: 'Message sent successfully',
+                            position: 'topRight',
+                        });
 
                     } else {
-                        // Show cancel icon
+                        iziToast.error({
+                            title: 'Oops',
+                            message: 'Something went wrong!',
+                            position: 'topRight',
+                        });
                     }
 
 
                 },
                 error: function(err) {
-                    // Show cancel icon
+                    iziToast.error({
+                        title: 'Oops',
+                        message: err.message,
+                        position: 'topRight',
+                    });
                 }
 
             });
@@ -4551,6 +4712,161 @@
 
 
     }
+
+    function activateLive(val, id) {
+
+
+        swal({
+                title: "Are you sure?",
+                text: `Click OK to move account to ${val.toUpperCase()} mode`,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    var route = "{{ URL('Ajax/activatemerchantaccount') }}";
+                    thisdata = {
+                        val,
+                        id
+                    };
+
+                    Pace.restart();
+                    Pace.track(function() {
+                        setHeaders();
+                        jQuery.ajax({
+                            url: route,
+                            method: 'post',
+                            data: thisdata,
+                            dataType: 'JSON',
+                            beforeSend: function() {
+
+                                $(`#btn${id}`).text('Please wait...');
+                            },
+                            success: function(result) {
+
+                                $(`#btn${id}`).text('Activate Live');
+
+                                console.log(result);
+
+                                if (result.message == "success") {
+
+                                    iziToast.success({
+                                        title: 'Great',
+                                        message: result.res,
+                                        position: 'topRight',
+                                    });
+
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 2000);
+
+                                } else {
+                                    iziToast.error({
+                                        title: 'Oops',
+                                        message: result.res,
+                                        position: 'topRight',
+                                    });
+                                }
+
+
+                            },
+                            error: function(err) {
+                                $(`#btn${id}`).text('Activate Live');
+                                iziToast.error({
+                                    title: 'Oops',
+                                    message: err.message,
+                                    position: 'topRight',
+                                });
+                            }
+
+                        });
+                    });
+
+
+                } else {
+
+                }
+            });
+
+
+
+
+
+    }
+
+
+    function deleteInvestorPost() {
+
+        swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this post!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $('#delete').submit();
+                }
+            });
+
+
+    }
+
+    function deleteStore() {
+
+swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this store!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            $('#deletestore').submit();
+        }
+    });
+
+
+}
+
+function deleteCategory() {
+
+swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this category!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            $('#deletecategory').submit();
+        }
+    });
+
+
+}
+
+function updateState() {
+
+swal({
+        title: "Are you sure?",
+        text: "Are you sure you want to update the state of this category?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            $('#updatestate').submit();
+        }
+    });
+
+
+}
 
 
     function cannotSend() {
@@ -4565,6 +4881,36 @@
                 'Authorization': "Bearer " + "{{ session('api_token') }}"
             }
         });
+    }
+
+
+
+    Dropzone.options.myDropzone = {
+        url: "{{ route('Uploads') }}",
+        autoProcessQueue: false,
+        uploadMultiple: true,
+        parallelUploads: 5,
+        maxFiles: 5,
+        maxFilesize: 100, // MB
+        paramName: "file",
+        addRemoveLinks: true,
+        init: function() {
+            dzClosure = this; // Makes sure that 'this' is understood inside the functions below.
+
+            // for Dropzone to process the queue (instead of default form behavior):
+            document.getElementById("submit_all").addEventListener("click", function(e) {
+                // Make sure that the form isn't actually being sent.
+                e.preventDefault();
+                e.stopPropagation();
+                dzClosure.processQueue();
+            });
+
+            //send all the form data along with the files:
+            this.on("sendingmultiple", function(data, xhr, formData) {
+                formData.append("_token", "{{ csrf_token() }}");
+                formData.append("file_title", $("#file_title").val());
+            });
+        }
     }
 </script>
 

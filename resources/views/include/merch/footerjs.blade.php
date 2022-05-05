@@ -4,6 +4,10 @@
 </div>
 <!-- latest jquery-->
 <script src=" {{ asset('merchantassets/assets/js/jquery-3.5.1.min.js') }}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js"
+integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ=="
+crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- feather icon js-->
 <script src=" {{ asset('merchantassets/assets/js/icons/feather-icon/feather.min.js') }}"></script>
 <script src=" {{ asset('merchantassets/assets/js/icons/feather-icon/feather-icon.js') }}"></script>
@@ -40,10 +44,15 @@
 <script src="{{ asset('merchantassets/assets/js/datepicker/date-picker/datepicker.js') }}"></script>
 <script src="{{ asset('merchantassets/assets/js/datepicker/date-picker/datepicker.en.js') }}"></script>
 <script src="{{ asset('merchantassets/assets/js/datepicker/date-picker/datepicker.custom.js') }}"></script>
+<script src="{{ asset('merchantassets/assets/js/dropzone/dropzone-script.js') }}"></script>
+<script src="{{ asset('merchantassets/assets/js/dropzone/dropzone.js') }}"></script>
 <script src="{{ asset('merchantassets/assets/js/print.js') }}"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://raw.githubusercontent.com/HubSpot/pace/v1.0.0/pace.min.js"></script>
 <script src="{{ asset('pace/pace.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
+
 <!-- Plugins JS Ends-->
 
 <!-- Plugins JS start-->
@@ -60,7 +69,12 @@
 <script src="{{ asset('merchantassets/assets/js/script.js') }}"></script>
 <script src="{{ asset('merchantassets/assets/js/theme-customizer/customizer.js') }}"></script>
 <!-- Plugin used-->
+<script src="{{ asset('js/country-state-select.js') }}"></script>
 
+
+<script language="javascript">
+    populateCountries("delivery_country", "delivery_state");
+</script>
 
 <script>
     $(document).ready(function() {
@@ -78,6 +92,19 @@
         $("#single_telephone").on("keyup", function() {
             var phonenumber = $("#single_telephone").val();
             runUsercheck(phonenumber, 'telephone');
+        });
+
+
+        $('.store_description').summernote({
+            placeholder: 'Enter product description',
+            tabsize: 2,
+            height: 120,
+            toolbar: [
+                ['font', ['bold', 'underline', 'clear']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['insert', ['link']],
+                ['view', ['help']]
+            ]
         });
 
     });
@@ -1514,6 +1541,133 @@
         }
     }
 
+    function deleteProduct(id) {
+
+        swal({
+                title: "Are you sure?",
+                text: "Click OK to proceed",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $(`#formProduct${id}`).submit();
+                } else {
+
+                }
+            });
+
+
+
+    }
+
+
+    function deleteDiscount(id) {
+
+        swal({
+                title: "Are you sure?",
+                text: "Click OK to proceed",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $(`#formDiscount${id}`).submit();
+                } else {
+
+                }
+            });
+
+
+
+    }
+
+
+    function generateDiscountCode() {
+        // Generate random...
+        $('#code').val('');
+        const randomCode = Math.random().toString(16).substr(2, 8).toUpperCase();
+
+        $('#code').val(randomCode);
+    }
+
+    function generateProductCode() {
+        // Generate random...
+        $('.productCode').val('');
+
+        // STPR_ => Store Product
+        const randomCode = `STPR_${Math.random().toString(16).substr(2, 8).toUpperCase()}`;
+
+        $('.productCode').val(randomCode);
+        $('.productCode').attr('readonly', true);
+    }
+
+    function comingSoon() {
+        swal('Hey!', 'This feature is coming soon to your screen', 'info');
+    }
+
+    $('#valueType').change(function() {
+        if ($('#valueType').val() == "Percentage") {
+            $('.symbolText').text('%');
+        } else {
+            $('.symbolText').text('{{ Auth::user()->currencySymbol }}');
+        }
+    });
+
+
+    async function outForDelivery(orderId) {
+
+        // Run axios...
+        try {
+
+            $('#delivery' + orderId).text('Please wait...');
+
+
+            var data = new FormData();
+
+
+            data.append('orderId', orderId);
+
+
+            var headers = {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                'Authorization': 'Bearer {{ Auth::user()->api_token }}'
+            };
+
+            const config = {
+                method: 'POST',
+                url: "{{ URL('/api/v1/order/out-for-delivery') }}",
+                headers: headers,
+                data: data
+            }
+
+
+            const response = await axios(config);
+
+            console.log(response);
+
+            swal("Great!", response.message, "success");
+
+            setTimeout(function() {
+                location.reload();
+            }, 2000);
+
+        } catch (error) {
+
+            $('#delivery' + orderId).text('Out for Delivery / Pickup');
+
+            if (error.response) {
+                swal("Oops", error.response.data.message, "error");
+            } else {
+                swal("Oops", error.message, "error");
+            }
+        }
+
+
+    }
+
     function setHeaders() {
         $.ajaxSetup({
             headers: {
@@ -1522,6 +1676,47 @@
             }
         });
     }
+
+
+    $('.prodCategory').change(function() {
+        if ($('.prodCategory').val() == 'Other') {
+            $('.specifycategory').removeClass('disp-0');
+        } else {
+            $('.specifycategory').addClass('disp-0');
+        }
+    });
+
+    $('#flexCheckDefault').on('click', function() {
+        if ($('#flexCheckDefault').prop('checked') == true) {
+            // Setup pickup point...
+            $('.instorebtn').click();
+        }
+    });
+    $('#flexCheckChecked').on('click', function() {
+        if ($('#flexCheckChecked').prop('checked') == true) {
+            // CLicking on another function
+            // $('.deliveryshippingbtn').click();
+            shippingWithRate();
+        }
+    });
+
+    function shippingWithRate() {
+        $('.deliveryshippingbtn').click();
+    }
+
+
+
+    Dropzone.options.myGreatDropzone = { // camelized version of the `id`
+        paramName: "file", // The name that will be used to transfer the file
+        maxFilesize: 2, // MB
+        accept: function(file, done) {
+            if (file.name == "justinbieber.jpg") {
+                done("Naha, you don't.");
+            } else {
+                done();
+            }
+        }
+    };
 </script>
 
 </body>

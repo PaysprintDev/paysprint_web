@@ -1,3 +1,5 @@
+<html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -190,11 +192,14 @@
         <div class="container">
             <div class="row contact_row">
                 <div class="col-sm-6 contact_info">
-                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg"
+                    <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg"
                         style="width: 100%;">
                 </div>
                 <div class="col-sm-6 contact_info send_message">
                     <h2>Sign Up for FREE</h2>
+
+                    <div id="google_translate_element"></div>
+                    <br>
 
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
 
@@ -240,7 +245,6 @@
 
                                 @if (Request::get('user') != null)
                                     @if ($newuser = \App\AnonUsers::where('ref_code', Request::get('user'))->first())
-
                                         @php
                                             $name = explode(' ', $newuser->name);
                                             $ref_code = Request::get('user');
@@ -248,20 +252,15 @@
                                             $lname = $name[1];
                                             $email = $newuser->email;
                                         @endphp
-
                                     @else
-
                                         @php
                                             $ref_code = '';
                                             $fname = '';
                                             $lname = '';
                                             $email = '';
                                         @endphp
-
-
                                     @endif
                                 @else
-
                                     @php
                                         $ref_code = '';
                                         $fname = '';
@@ -271,7 +270,8 @@
 
                                 @endif
 
-                                <input type="hidden" name="ref_code" id="ref_code" @if ($ref_code != '') value="{{ $ref_code }}" readonly @else placeholder="Ref code" @endif>
+                                <input type="hidden" name="ref_code" id="ref_code"
+                                    @if ($ref_code != '') value="{{ $ref_code }}" readonly @else placeholder="Ref code" @endif>
 
                                 <div class="indForm animated rollIn">
                                     <div class="row">
@@ -282,7 +282,8 @@
 
 
                                                 <input type="text" id="fname" name="firstname"
-                                                    class="form-control input_box" @if ($fname != '') value="{{ $fname }}" readonly @else placeholder="First Name *" required @endif>
+                                                    class="form-control input_box"
+                                                    @if ($fname != '') value="{{ $fname }}" readonly @else placeholder="First Name *" required @endif>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -290,7 +291,8 @@
                                                 <label for="lname"><span class="reqField">*</span> Last
                                                     Name</label>
                                                 <input type="text" id="lname" name="lastname"
-                                                    class="form-control input_box" @if ($lname != '') value="{{ $lname }}" readonly @else placeholder="Last Name *" required @endif>
+                                                    class="form-control input_box"
+                                                    @if ($lname != '') value="{{ $lname }}" readonly @else placeholder="Last Name *" required @endif>
                                             </div>
                                         </div>
                                     </div>
@@ -472,8 +474,8 @@
                                         purpose)</label>
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <textarea type="text" name="describe_purpose" id="describe_purpose"
-                                                class="form-control input_box" placeholder=""></textarea>
+                                            <textarea type="text" name="describe_purpose" id="describe_purpose" class="form-control input_box"
+                                                placeholder=""></textarea>
                                         </div>
                                     </div>
 
@@ -520,6 +522,56 @@
                                 </label>
                                 <input type="text" name="referred_by" id="referred_by" class="form-control input_box"
                                     @if ($referred_by != '') value="{{ $referred_by }}" readonly @else placeholder="E.g 69212" @endif>
+
+
+
+                                <div class="row australia disp-0">
+
+                                    <div class="col-12">
+
+                                        <div class="form-group">
+                                            <label for="australia">I confirm that i am authourised to provide the
+                                                personal details
+                                                presented
+                                                and i consent to my information being checked with the document issuer
+                                                or
+                                                official record holder
+                                                via third party systems for the prupose of confirming my
+                                                identity.</label>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+
+                                <div class="row china disp-0">
+
+                                    <div class="col-12">
+
+                                        <div class="form-group">
+                                            <label for="australia">I confirm that i am authourised to provide the
+                                                personal details presented and i consent to my information being checked
+                                                with Chinese Identity
+                                                Verification Services (CIVS) via third party systems for the purpose of
+                                                confirming an identity under the <a
+                                                    href="http://www.npc.gov.cn/npc/c30834/202108/a8c4e3672c74491a80b53a172bb753fe.shtml"
+                                                    target="_blank">laws of China </a> (an unofficial
+                                                translation
+                                                of the Personal Information Protection Law (PIPL) available <a
+                                                    href="https://digichina.stanford.edu/work/translation-personal-information-protection-law-of-the-peoples-republic-of-china-effective-nov-1-2021/"
+                                                    target="_blank">here</a> and
+                                                Data Security Law available <a
+                                                    href="https://digichina.stanford.edu/work/translation-data-security-law-of-the-peoples-republic-of-china/"
+                                                    target="_blank">here</a> </label>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+                                <br>
+
                                 <div class="row">
 
                                     <div class="col-sm-6">
@@ -535,6 +587,8 @@
 
                                     </div>
                                 </div>
+
+                                <br>
 
 
                                 {!! htmlFormSnippet() !!}
@@ -694,6 +748,8 @@
 
     <!-- jQuery JS -->
     <script src="{{ asset('js/jquery-1.12.0.min.js') }}"></script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+    </script>
     <script src="{{ asset('js/country-state-select.js') }}"></script>
     <script src="{{ asset('pace/pace.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
@@ -724,6 +780,14 @@
     <script language="javascript">
         populateCountries("country", "state");
         populateCountries("buscountry", "busstate");
+    </script>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en'
+            }, 'google_translate_element');
+        }
     </script>
 
     <script
@@ -775,6 +839,23 @@
                 // Remove the specified input field
                 $('.specify_know_about').addClass('disp-0');
             }
+
+        });
+
+
+        $('#country').change(function() {
+
+            if ($('#country').val() == "Australia" || $('#country').val() == "New Zealand") {
+                $(".australia").removeClass('disp-0');
+                $(".china").addClass('disp-0');
+            } else if ($('#country').val() == "China") {
+                $(".australia").addClass('disp-0');
+                $(".china").removeClass('disp-0');
+            } else {
+                $(".australia").addClass('disp-0');
+                $(".china").addClass('disp-0');
+            }
+
 
         });
 

@@ -19,10 +19,8 @@
 
 
     @if ($data['mycountry']->gateway == 'Stripe')
-
         <script src="https://js.stripe.com/v3/"></script>
         <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
-
     @endif
 
     @if ($data['mycountry']->gateway == 'PayPal')
@@ -31,12 +29,10 @@
             <script
                         src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_LOCAL_CLIENT_ID') }}&currency={{ Auth::user()->currencyCode }}">
             </script>
-
         @else
             <script
                         src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ Auth::user()->currencyCode }}">
             </script>
-
         @endif
 
 
@@ -124,7 +120,7 @@
                                                 @foreach ($data['mywallet'] as $mywallet)
                                                     <option value="{{ $mywallet->escrow_id }}"
                                                         {{ Request::get('currency') == $mywallet->escrow_id ? 'selected' : '' }}>
-                                                        {{ 'Wallet Balance: ' . $mywallet->currencySymbol . $mywallet->wallet_balance . ' | Currency ' . $mywallet->currencyCode }}
+                                                        {{ 'Wallet Balance: ' .$mywallet->currencySymbol .$mywallet->wallet_balance .' | Currency ' .$mywallet->currencyCode }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -214,8 +210,15 @@
 
 
                                                         <div class="col-md-12">
+                                                            <p>Account Name</p>
+                                                            <h5>PaySprint Inc.</h5>
+                                                            <hr>
+                                                        </div>
+
+
+                                                        <div class="col-md-12">
                                                             <p>Account Number</p>
-                                                            <h5>GB09TCCL04140420488070</h5>
+                                                            <h5>21205247594</h5>
                                                             <hr>
                                                         </div>
 
@@ -223,13 +226,13 @@
 
                                                         <div class="col-md-12">
                                                             <p>Bank Name</p>
-                                                            <h5>THE CURRENCY CLOUD LIMITED</h5>
+                                                            <h5>TD CANADA TRUST</h5>
                                                             <hr>
                                                         </div>
 
                                                         <div class="col-md-12">
                                                             <p>SWIFT Code</p>
-                                                            <h5>TCCLGB3L</h5>
+                                                            <h5>TDOMCATTTOR</h5>
 
                                                         </div>
 

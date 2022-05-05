@@ -4,10 +4,10 @@
               <div class="main-header-left">
                   {{-- <div class="logo-wrapper"><a href="dashboard.html"><img class="img-fluid" src="{{ asset('assets/images/logo/logo.png') }}" alt=""></a></div> --}}
                   <div class="logo-wrapper"><a href="dashboard.html"><img class="img-fluid"
-                              src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
+                              src="https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png"
                               alt=""></a></div>
                   <div class="dark-logo-wrapper"><a href="dashboard.html"><img class="img-fluid"
-                              src=" https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
+                              src=" https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png"
                               alt=""></a></div>
                   <div class="toggle-sidebar"><i class="status_toggle middle" data-feather="align-center"
                           id="sidebar-toggle"> </i></div>
@@ -81,7 +81,6 @@
                               @if (count($data['getfiveNotifications']) > 0)
 
                                   @foreach ($data['getfiveNotifications'] as $notifications)
-
                                       <li class="noti-primary"
                                           onclick="location.href='{{ route('notifications') }}'">
                                           <div class="media">
@@ -93,11 +92,8 @@
                                               </div>
                                           </div>
                                       </li>
-
                                   @endforeach
-
                               @else
-
                                   <li class="noti-primary">
                                       <div class="media">
                                           <span class="notification-bg bg-light-primary"><i data-feather="activity">

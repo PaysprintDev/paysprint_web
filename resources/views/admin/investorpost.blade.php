@@ -44,7 +44,7 @@
                             </div>
 
                             <div class="form-group has-success">
-                                <labe class="control-label" for="inputSuccess"> Upload file <small
+                                <label class="control-label" for="inputSuccess"> Upload file <small
                                         class="text-muted">(Optional)</small></label>
 
                                     <input type="file" name="file" id="file" class="form-control">

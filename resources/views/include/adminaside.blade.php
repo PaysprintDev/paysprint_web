@@ -1,9 +1,14 @@
- @if ($pages == 'AML Dashboard')
+ 
+ 
+ @if ($pages == 'AML Dashboard' || session('role') == 'Aml compliance')
 
      @include('include.adminamlaside')
 
+  @elseif($pages == "Estore Dashboard" || session('role') == 'estore manager')
+  
+  @include('include.adminestoreaside')
+  
  @else
-
      <!-- Left side column. contains the logo and sidebar -->
      <aside class="main-sidebar">
          <!-- sidebar: style can be found in sidebar.less -->
@@ -63,6 +68,10 @@
                              <li title="AML Dashboard"><a href="{{ route('aml dashboard') }}"><i
                                          class="fa fa-circle-o text-red"></i> AML Dashboard</a></li>
                          @endif
+                         @if (session('role') == 'Super' || session('role') == 'Aml compliance')
+                             <li title="E-Store Manager"><a href="{{ route('store dashboard') }}"><i
+                                         class="fa fa-circle-o text-red"></i>E-Store Manager</a></li>
+                         @endif
 
                          @if (session('role') == 'Customer Marketing')
                              <li title="Platform"><a href="{{ route('platform activity') }}"><i
@@ -72,9 +81,6 @@
                          @endif
 
                          @if (session('role') == 'Super')
-
-
-
                              <li class="treeview">
                                  <a href="#">
                                      <i class="fa fa-book"></i>
@@ -103,17 +109,17 @@
                                      </span>
                                  </a>
                                  <ul class="treeview-menu">
-                                     <li><a href="{{ route('new investors post') }}"><i
-                                                 class="fa fa-circle-o"></i> Post News</a></li>
-                                     <li><a href="#"><i
-                                                 class="fa fa-circle-o"></i> My News Posts</a></li>
+                                     <li><a href="{{ route('new investors post') }}"><i class="fa fa-circle-o"></i>
+                                             Post News</a></li>
+                                     <li><a href="#"><i class="fa fa-circle-o"></i> My News Posts</a></li>
                                      <li><a href="{{ route('new investor subscriber') }}"><i
                                                  class="fa fa-circle-o"></i> Subscribers</a></li>
-                                     <li><a href="{{ route('create investor opportunity') }}"><i
-                                                class="fa fa-circle-o"></i>Investors Opportunity</a></li>            
-                                            
-                                            
-                                </ul>
+                                     <li><a href="{{ route('create investor post') }}"><i
+                                                 class="fa fa-circle-o"></i> Create</a></li>
+                                     <li><a href="{{ route('investorposts') }}"><i
+                                                 class="fa fa-circle-o"></i> View</a></li>
+
+                                 </ul>
                              </li>
 
 
@@ -153,9 +159,6 @@
 
                                  </ul>
                              </li>
-
-
-
                          @endif
 
                      </ul>
@@ -163,8 +166,7 @@
 
                  @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only' || session('role') == 'Access to Level 1 only')
 
-                     @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only')
-
+                     @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only' || session('role') == 'Access to Level 1 only')
                          <li class="treeview">
                              <a href="#">
                                  <i class="fa fa-book"></i>
@@ -206,9 +208,29 @@
                                          <li title="Paypal"><a
                                                  href="{{ route('gateway activity', 'gateway=PayPal') }}"><i
                                                      class="fa fa-circle-o text-red"></i> Paypal</a></li>
+                                         <li title="Paypal"><a
+                                                 href="{{ route('gateway activity', 'gateway=Express Payment Solution') }}"><i
+                                                     class="fa fa-circle-o text-red"></i> Express</a></li>
                                          <li title="Stripe"><a
                                                  href="{{ route('gateway activity', 'gateway=Stripe') }}"><i
                                                      class="fa fa-circle-o text-red"></i> Stripe</a></li>
+
+                                     </ul>
+                                 </li>
+
+
+                                 <li class="treeview">
+                                     <a href="#">
+                                         <i class="fa fa-book"></i>
+                                         <span>Verification</span>
+                                         <span class="pull-right-container">
+                                             <i class="fa fa-angle-left pull-right"></i>
+                                         </span>
+                                     </a>
+                                     <ul class="treeview-menu">
+                                         <li title="Bank verification"><a href="{{ route('bvncheckdetails') }}"><i
+                                                     class="fa fa-circle-o text-red"></i> BVN</a></li>
+
 
                                      </ul>
                                  </li>
@@ -248,11 +270,9 @@
                              </a>
 
                          </li>
-
                      @endif
 
                      @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only')
-
                          <li>
                              <a href="{{ route('business report') }}">
                                  <i class="fa fa-book"></i>
@@ -268,13 +288,10 @@
                              </a>
 
                          </li>
-
                      @endif
 
 
                      @if (session('role') == 'Super')
-
-
                          <li class="treeview">
                              <a href="#">
                                  <i class="fa fa-book"></i>
@@ -294,8 +311,6 @@
                              </ul>
                          </li>
                          <li>
-
-
                      @endif
 
 
@@ -513,7 +528,6 @@
                      @endif
 
                      @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access to Level 1 and 2 only')
-
                          <li class="treeview">
                              <a href="#">
                                  <i class="fas fa-wallet"></i>
@@ -541,12 +555,10 @@
 
                              </ul>
                          </li>
-
                      @endif
 
 
                      @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only')
-
                          <li class="treeview">
                              <a href="#">
                                  <i class="fas fa-money-bill"></i>
@@ -621,18 +633,8 @@
             <span>Money Transfer Trans...</span>
           </a>
         </li> --}}
-
                      @endif
-
-
-
-                 @elseif(session('role') != "Super" && session('role') != "Access to Level 1 only" &&
-                     session('role') !=
-                     "Access to Level 1 and 2 only" && session('role') != "Customer Marketing")
-
-
-
-
+                 @elseif(session('role') != 'Super' && session('role') != 'Access to Level 1 only' && session('role') != 'Access to Level 1 and 2 only' && session('role') != 'Customer Marketing')
                      <li class="treeview createandSendInvoice" title="Create and Send Invoice">
                          <a href="#">
                              <i class="fa fa-book"></i>

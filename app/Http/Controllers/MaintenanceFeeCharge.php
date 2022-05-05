@@ -150,7 +150,7 @@ class MaintenanceFeeCharge extends Controller
         try {
             $todaysDate = Carbon::now()->toDateTimeString();
 
-            $getUsers = UpgradePlan::where('expire_date', '<=', $todaysDate)->get();
+            $getUsers = UpgradePlan::where('expire_date', '<=', $todaysDate)->where('plan', 'classic')->get();
 
 
             if (count($getUsers) > 0) {
@@ -161,9 +161,13 @@ class MaintenanceFeeCharge extends Controller
 
                     if ($users->accountType == "Individual") {
                         $subType = "Consumer Monthly Subscription";
+                        
                     } else {
                         $subType = "Merchant Monthly Subscription";
+                        
                     }
+
+                    $today = date('Y-m-d');
 
                     $walletBalance = $users->wallet_balance;
 
@@ -205,6 +209,8 @@ class MaintenanceFeeCharge extends Controller
                         $sendMsg = 'Hello ' . strtoupper($users->name) . ', ' . $activity . '. You now have ' . $users->currencyCode . ' ' . number_format($newBalance, 2) . ' balance in your account';
                         $sendPhone = "+" . $users->code . $users->telephone;
 
+                        $recMessage = "<p>This is a confirmation that your PaySprint Account has been renewed. The subscription  next renewal date is ".date('d-m-Y', strtotime($today. "+28 days")).".</p><p>Your current plan is CLASSIC PLAN. </p>";
+
                         $this->insStatement($users->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
 
                         $this->createNotification($users->ref_code, "Hello " . strtoupper($users->name) . ", " . $sendMsg);
@@ -213,7 +219,7 @@ class MaintenanceFeeCharge extends Controller
                         $this->email = $users->email;
                         $this->subject = $activity;
 
-                        $this->message = '<p>' . $activity . '</p><p>You now have <strong>' . $users->currencyCode . ' ' . number_format($newBalance, 2) . '</strong> balance in your account</p>';
+                        $this->message = '<p>' . $recMessage . '</p><p>You now have <strong>' . $users->currencyCode . ' ' . number_format($newBalance, 2) . '</strong> balance in your account</p>';
 
                         $this->monthlyChargeInsert($users->ref_code, $users->country, $amount, $users->currencyCode);
 
@@ -240,10 +246,21 @@ class MaintenanceFeeCharge extends Controller
                             $this->sendMessage($sendMsg, $sendPhone);
                         }
                     } else {
-                        // Put account to basic plan
-                        User::where('id', $users->id)->update(['plan' => 'basic']);
+                        
+                        if($users->country == "Canada" || $users->country == "United States") {
+                            // Put account to basic plan
+                            User::where('id', $users->id)->update(['plan' => 'basic']);
 
-                        UpgradePlan::updateOrInsert(['userId' => $users->ref_code], ['userId' => $users->ref_code, 'plan' => 'basic', 'amount' => "0", 'duration' => $duration, 'expire_date' => $expire_date]);
+                            UpgradePlan::updateOrInsert(['userId' => $users->ref_code], ['userId' => $users->ref_code, 'plan' => 'basic', 'amount' => "0", 'duration' => $duration, 'expire_date' => $expire_date]);
+                        }
+                        else{
+                            // Put account to basic plan
+                            User::where('id', $users->id)->update(['plan' => 'classic']);
+
+                            UpgradePlan::updateOrInsert(['userId' => $users->ref_code], ['userId' => $users->ref_code, 'plan' => 'classic', 'amount' => "0", 'duration' => $duration, 'expire_date' => $expire_date]);
+                        }
+
+                        
                     }
 
 
