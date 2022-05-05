@@ -1,6 +1,14 @@
 @extends('layouts.merch.merchant-shop')
 
 
+<style>
+    .h-s-content {
+        background-color: #fff;
+        padding: 20px 30px;
+        border-radius: 20px;
+    }
+
+</style>
 
 @section('content')
     <!--home page slider start-->
@@ -8,21 +16,81 @@
         <div class="home-slider-main-5">
             <div class="home5-slider swiper-container">
                 <div class="swiper-wrapper">
-                    @for ($i = 0; $i < count(explode(', ', $data['mystore']->headerContent)); $i++)
-                        @if (explode(', ', $data['mystore']->headerContent)[$i] != '')
+
+                    @for ($i = 0; $i < count(array_filter(explode(', ', $data['mystore']->headerContent))); $i++)
+                        @if (count(array_filter(explode(', ', $data['mystore']->headerTitle))) == count(array_filter(explode(', ', $data['mystore']->headerContent))) && count(array_filter(explode(', ', $data['mystore']->headerSubtitle))) == count(array_filter(explode(', ', $data['mystore']->headerContent))) && array_key_exists($i, array_filter(explode(', ', $data['mystore']->headerContent))))
                             <div class="swiper-slide">
-                                <div class="img-back s-image1"
-                                    style="background-image:url('{{ explode(', ', $data['mystore']->headerContent)[$i] }}');">
+
+
+                                @if (array_key_exists($i, array_filter(explode(', ', $data['mystore']->headerContent))))
+                                    @php
+                                        $headerContent = array_filter(explode(', ', $data['mystore']->headerContent))[$i];
+                                    @endphp
+                                @else
+                                    @php
+                                        $headerContent = array_filter(explode(', ', $data['mystore']->headerContent))[0];
+                                    @endphp
+                                @endif
+
+
+                                @if (count(array_filter(explode(', ', $data['mystore']->headerTitle))) == count(array_filter(explode(', ', $data['mystore']->headerContent))))
+                                    @php
+                                        $headerTitle = array_filter(explode(', ', $data['mystore']->headerTitle))[$i];
+                                    @endphp
+                                @else
+                                    @php
+                                        $headerTitle = array_filter(explode(', ', $data['mystore']->headerTitle))[0];
+                                    @endphp
+                                @endif
+
+
+
+                                @if (count(array_filter(explode(', ', $data['mystore']->headerSubtitle))) == count(array_filter(explode(', ', $data['mystore']->headerContent))))
+                                    @php
+                                        $headerSubtitle = array_filter(explode(', ', $data['mystore']->headerSubtitle))[$i];
+                                    @endphp
+                                @else
+                                    @php
+                                        $headerSubtitle = array_filter(explode(', ', $data['mystore']->headerSubtitle))[0];
+                                    @endphp
+                                @endif
+
+
+                                <div class="img-back s-image1" style="background-image:url('{{ $headerContent }}');">
                                     <div class="h-s-content">
 
-                                        <h1>{{ explode(', ', $data['mystore']->headerTitle)[$i] }}</h1>
-                                        <h3>{{ explode(', ', $data['mystore']->headerSubtitle)[$i] }}</h3>
+                                        <h1>{{ $headerTitle }}</h1>
+
+                                        <h3>{{ $headerSubtitle }}</h3>
+
+                                        <a href="#">Shop now</a>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        @else
+                            <div class="swiper-slide">
+                                <div class="img-back s-image1"
+                                    style="background-image:url('{{ array_filter(explode(', ', $data['mystore']->headerContent))[0] }}');">
+                                    <div class="h-s-content">
+
+                                        <h1>{{ array_filter(explode(', ', $data['mystore']->headerTitle))[0] }}</h1>
+
+                                        <h3>{{ array_filter(explode(', ', $data['mystore']->headerSubtitle))[0] }}</h3>
+
                                         <a href="#">Shop now</a>
                                     </div>
                                 </div>
                             </div>
                         @endif
                     @endfor
+
+
+
+
+
+
 
 
                 </div>
@@ -47,17 +115,32 @@
                     <div class="col">
                         <div class="organic-food-fresh-banner">
 
-                            @for ($i = 0; $i < count(explode(', ', $data['mystore']->advertSectionImage)); $i++)
-                                @if (explode(', ', $data['mystore']->advertSectionImage)[$i] != '')
+                            @for ($i = 0; $i < count(array_filter(explode(', ', $data['mystore']->advertSectionImage))); $i++)
+                                @if (array_key_exists($i, array_filter(explode(', ', $data['mystore']->advertSectionImage))) && count(array_filter(explode(', ', $data['mystore']->advertTitle))) == count(array_filter(explode(', ', $data['mystore']->advertSectionImage))) && count(array_filter(explode(', ', $data['mystore']->advertSubtitle))) == count(array_filter(explode(', ', $data['mystore']->advertSectionImage))))
                                     <div class="offer-banner">
                                         <a href="#" class="banner-hover">
-                                            <img src="{{ explode(', ', $data['mystore']->advertSectionImage)[$i] }}"
+                                            <img src="{{ array_filter(explode(', ', $data['mystore']->advertSectionImage))[$i] }}"
                                                 alt="offer-banner" class="img-fluid"
                                                 style="width: 100%; height: 280px; object-fit:cover;">
                                         </a>
                                         <div class="banner-content">
-                                            <span>{{ explode(', ', $data['mystore']->advertTitle)[$i] }}</span>
-                                            <h2>{{ explode(', ', $data['mystore']->advertSubtitle)[$i] }}</h2>
+                                            <span>{{ array_filter(explode(', ', $data['mystore']->advertTitle))[$i] }}</span>
+                                            <h2>{{ array_filter(explode(', ', $data['mystore']->advertSubtitle))[$i] }}
+                                            </h2>
+                                            <a href="#">Shop now <i class="fa fa-angle-right"></i></a>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="offer-banner">
+                                        <a href="#" class="banner-hover">
+                                            <img src="{{ array_filter(explode(', ', $data['mystore']->advertSectionImage))[0] }}"
+                                                alt="offer-banner" class="img-fluid"
+                                                style="width: 100%; height: 280px; object-fit:cover;">
+                                        </a>
+                                        <div class="banner-content">
+                                            <span>{{ array_filter(explode(', ', $data['mystore']->advertTitle))[0] }}</span>
+                                            <h2>{{ array_filter(explode(', ', $data['mystore']->advertSubtitle))[0] }}
+                                            </h2>
                                             <a href="#">Shop now <i class="fa fa-angle-right"></i></a>
                                         </div>
                                     </div>
@@ -993,7 +1076,7 @@
                                         <span
                                             class="new-price">{{ $data['user']->currencySymbol . number_format($data['myproduct'][$i]->amount, 2) }}</span>
                                         <span
-                                            style="{{ $data['myproduct'][$i]->previousAmount > 0 ? 'text-decoration: line-through;' : '' }}">{{ $data['myproduct'][$i]->previousAmount > 0? $data['user']->currencySymbol . number_format($data['myproduct'][$i]->previousAmount): '' }}</span>
+                                            style="{{ $data['myproduct'][$i]->previousAmount > 0 ? 'text-decoration: line-through;' : '' }}">{{ $data['myproduct'][$i]->previousAmount > 0 ? $data['user']->currencySymbol . number_format($data['myproduct'][$i]->previousAmount) : '' }}</span>
                                     </div>
                                     <div class="quick-rating">
                                         <i class="fa fa-star c-star"></i>
