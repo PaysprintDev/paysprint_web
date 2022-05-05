@@ -105,7 +105,6 @@
     <div class="container">
 
         @isset($data['specialInfo'])
-
             <div class="row">
                 <div class="alert alert-success show" role="alert">
                     <strong>
@@ -145,13 +144,11 @@
 
                 </div>
             </div>
-
         @endif
 
 
 
         @if (Auth::user()->country == 'Canada' && Auth::user()->accountType == 'Merchant')
-
             <div class="row">
                 <div class="alert alert-info" role="alert">
 
@@ -163,7 +160,6 @@
 
                 </div>
             </div>
-
         @endif
 
         <div class="row">
@@ -185,9 +181,47 @@
                                     id="cardSubmit">Upgrade
                                     Account</button>
                             @else
-                                <button class="btn btn-danger" onclick="changeMyPlan('changeplan')"
-                                    id="cardSubmit">Downgrade
-                                    Account</button>
+                                @if (Auth::user()->country == 'Canada' || Auth::user()->country == 'United States')
+                                    <button class="btn btn-danger" onclick="changeMyPlan('changeplan')"
+                                        id="cardSubmit">Downgrade
+                                        Account</button>
+
+                                    @isset($data['myplan'])
+                                        <br>
+                                        <br>
+                                        <p class="text-info">Next Renewal:
+                                            {{ date('d-m-Y', strtotime($data['myplan']->expire_date)) }}</p>
+
+                                        @php
+                                            $expire = date('Y-m-d', strtotime($data['myplan']->expire_date));
+                                            $now = time();
+                                            $your_date = strtotime($expire);
+                                            $datediff = $your_date - $now;
+                                        @endphp
+
+                                        <p class="text-danger">
+                                            {{ round($datediff / (60 * 60 * 24)) > 1? round($datediff / (60 * 60 * 24)) . 'days': round($datediff / (60 * 60 * 24)) . 'day' }}
+                                            left</p>
+                                    @endisset
+                                @else
+                                    @isset($data['myplan'])
+                                        <p class="text-info">Next Renewal:
+                                            {{ date('d-m-Y', strtotime($data['myplan']->expire_date)) }}</p>
+
+                                        @php
+                                            $expire = date('Y-m-d', strtotime($data['myplan']->expire_date));
+                                            $now = time();
+                                            $your_date = strtotime($expire);
+                                            $datediff = $your_date - $now;
+                                        @endphp
+
+                                        <p class="text-danger">
+                                            {{ round($datediff / (60 * 60 * 24)) > 1? round($datediff / (60 * 60 * 24)) . 'days': round($datediff / (60 * 60 * 24)) . 'day' }}
+                                            left</p>
+                                    @endisset
+                                @endif
+
+
                             @endif
 
                             <hr>
@@ -208,12 +242,25 @@
                             <li class="list-group-item">
                                 Trade FX with PaySprint <br><br>
 
-                                <a type="button" class="btn btn-primary" href="{{ route('paysprint currency exchange') }}"
-                                    id="cardSubmit">PaySprint Currency FX</a>
+                                @if ($data['imtAccess']->imt == 'false')
+                                    <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit"
+                                        disabled>PaySprint
+                                        Currency FX</a>
 
-                                <hr>
+                                    <hr>
 
-                                <a href="#">Learn more about trading on PaySprint</a>
+                                    <a href="#">COMING SOON!!!</a>
+                                @else
+                                    <a type="button" class="btn btn-primary"
+                                        href="{{ route('paysprint currency exchange') }}" id="cardSubmit">PaySprint
+                                        Currency FX</a>
+
+                                    <hr>
+
+                                    <a href="#">Learn more about trading on PaySprint</a>
+                                @endif
+
+
                             </li>
 
                         </ul>
@@ -291,11 +338,10 @@
 
                                                 <td style="font-weight: 700"
                                                     class="{{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}">
-                                                    {{ $sendRecData->credit != 0 ? '+' . $data['currencyCode']->currencySymbol . number_format($sendRecData->credit, 2) : '-' . $data['currencyCode']->currencySymbol . number_format($sendRecData->debit, 2) }}
+                                                    {{ $sendRecData->credit != 0? '+' . $data['currencyCode']->currencySymbol . number_format($sendRecData->credit, 2): '-' . $data['currencyCode']->currencySymbol . number_format($sendRecData->debit, 2) }}
                                                 </td>
                                             </tr>
                                         @endforeach
-
                                     @else
                                         <tr>
                                             <td colspan="3" align="center">No record</td>
@@ -332,27 +378,20 @@
                                     @if (isset($data['payInvoice']))
 
                                         @foreach (json_decode($data['payInvoice']) as $payInv)
-
                                             {{-- {{ dd($payInv) }} --}}
 
 
                                             {{-- Get Merchant Currency --}}
 
                                             @if ($merchant = \App\User::where('ref_code', $payInv->uploaded_by)->first())
-
-
-
                                                 @if ($payInv->invoiced_currency != null)
                                                     @php
                                                         $currencySymb = $payInv->invoiced_currency_symbol;
                                                     @endphp
-
                                                 @else
-
                                                     @php
                                                         $currencySymb = $merchant->currencySymbol;
                                                     @endphp
-
                                                 @endif
 
 
@@ -360,14 +399,11 @@
                                                 @php
                                                     $countryBase = $merchant->country;
                                                 @endphp
-
                                             @else
-
                                                 @php
                                                     $currencySymb = $data['currencyCode']->currencySymbol;
                                                     $countryBase = Auth::user()->country;
                                                 @endphp
-
                                             @endif
 
 
@@ -396,13 +432,11 @@
                                                                                 style='cursor: pointer;'
                                                                                 onclick=location.href='{{ route('payment', $payInv->invoice_no) }}'>Pay
                                                                                 Invoice</span></small>
-
                                                                     @elseif($payInv->payment_status == 2)
                                                                         <small><span class='badge badge-danger'
                                                                                 style='cursor: pointer;'
                                                                                 onclick=location.href='{{ route('payment', $payInv->invoice_no) }}'>Pay
                                                                                 Balance</span></small>
-
                                                                     @else
                                                                         <small><span
                                                                                 class='badge badge-success'>Paid</span></small>
@@ -446,7 +480,6 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-
                                     @else
                                         <tr>
                                             <td colspan="3" align="center">No record</td>
@@ -503,11 +536,10 @@
                                                 </td>
                                                 <td style="font-weight: 700"
                                                     class="{{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}">
-                                                    {{ $sendRecData->credit != 0 ? '+' . $data['currencyCode']->currencySymbol . number_format($sendRecData->credit, 2) : '-' . $data['currencyCode']->currencySymbol . number_format($sendRecData->debit, 2) }}
+                                                    {{ $sendRecData->credit != 0? '+' . $data['currencyCode']->currencySymbol . number_format($sendRecData->credit, 2): '-' . $data['currencyCode']->currencySymbol . number_format($sendRecData->debit, 2) }}
                                                 </td>
                                             </tr>
                                         @endforeach
-
                                     @else
                                         <tr>
                                             <td colspan="3" align="center">No record</td>
@@ -528,7 +560,10 @@
                             </div>
                             <div class="col-md-4">
                                 <i class="far fa-bell" title="Notifications" style="cursor: pointer"
-                                    onclick="location.href='{{ route('notifications') }}'"></i>@if (count($data['getfiveNotifications']) > 0 && $data['getfiveNotifications'][0]->notify == 0) <i class="fas fa-circle fa-blink" style="color: rgb(129, 6, 6)"></i> @endif
+                                    onclick="location.href='{{ route('notifications') }}'"></i>
+                                @if (count($data['getfiveNotifications']) > 0 && $data['getfiveNotifications'][0]->notify == 0)
+                                    <i class="fas fa-circle fa-blink" style="color: rgb(129, 6, 6)"></i>
+                                @endif
                             </div>
                         </div>
                         <div class="table table-responsive infoRec">
@@ -560,7 +595,6 @@
 
                                             </tr>
                                         @endforeach
-
                                     @else
                                         <tr>
                                             <td colspan="3" align="center">No record</td>
@@ -641,7 +675,6 @@
 
 
                         @if (Auth::user()->country == 'Nigeria')
-
                             <li class="list-group-item" title="Bank Verification (BVN)">
 
                                 <div class="row">
@@ -656,7 +689,6 @@
 
 
                             </li>
-
                         @endif
 
 
@@ -726,7 +758,8 @@
                                     @if (Auth::user()->country == 'Nigeria')
                                         <a href="{{ route('utility bills') }}">Utility Payment</small></a>
                                     @else
-                                        <a href="{{ route('select utility bills country') }}">Utility
+                                        <a
+                                            href="{{ route('select utility bills country', 'country=' . Auth::user()->country) }}">Utility
                                             Payment</small></a>
                                     @endif
 
@@ -778,7 +811,6 @@
                         @if (count($data['getmerchantsByCategory']) > 0)
 
                             @foreach ($data['getmerchantsByCategory'] as $merchants)
-
                                 <li class="list-group-item" title="{{ $merchants->industry }}">
                                     <div class="row">
                                         <div class="col-md-12">
@@ -789,7 +821,6 @@
                                     </div>
 
                                 </li>
-
                             @endforeach
 
                             @if (count($data['getmerchantsByCategory']) == 8)
@@ -797,9 +828,7 @@
                                     class="btn btn-danger btn-block">View more <i class="fa fa-arrow-circle-o-right"
                                         aria-hidden="true"></i></a>
                             @endif
-
                         @else
-
                             <li class="list-group-item" title="No available merchant">
                                 <div class="row">
                                     <div class="col-md-12">

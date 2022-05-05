@@ -2,39 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use App\AllCountries;
-use App\Statement;
-use Illuminate\Http\Request;
-
-use Illuminate\Support\Facades\Auth;
-
-use App\User as User;
-use App\ImportExcel as ImportExcel;
-use App\ImportExcelLink as ImportExcelLink;
-use App\InvoicePayment as InvoicePayment;
+use App\Tax;
+use Session;
 use App\Points;
+
+use App\Statement;
+
+//Session
 use App\ClientInfo;
+
+use App\ServiceType;
+use App\StoreOrders;
+use App\StorePickup;
+use App\UpgradePlan;
+use App\AllCountries;
+use App\User as User;
 
 use App\ClaimedPoints;
 
 use App\HistoryReport;
-use App\ServiceType;
 use App\Notifications;
-use App\Tax;
-use App\Traits\PaysprintPoint;
+use App\StoreCategory;
+use App\StoreDiscount;
+use App\StoreMainShop;
+use App\StoreProducts;
 
-use App\Traits\PointsHistory;
-use App\Traits\SpecialInfo;
+use App\Traits\MyEstore;
 use App\TransactionCost;
+use App\Traits\SpecialInfo;
+use Illuminate\Http\Request;
+use App\Traits\PointsHistory;
+use App\Traits\PaysprintPoint;
+use App\ImportExcel as ImportExcel;
+use Illuminate\Support\Facades\Auth;
+use App\InvoicePayment as InvoicePayment;
+use App\ImportExcelLink as ImportExcelLink;
+use App\StoreShipping;
 
 class MerchantPageController extends Controller
 {
 
-    use PaysprintPoint, PointsHistory, SpecialInfo;
+    use PaysprintPoint, PointsHistory, SpecialInfo, MyEstore;
 
     public function __construct()
     {
-        $this->middleware('auth')->except(['businessProfile']);
+        $this->middleware('auth')->except(['businessProfile', 'merchantShop']);
     }
 
     public function index()
@@ -52,7 +64,10 @@ class MerchantPageController extends Controller
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
             'clientInfo' => $this->getMyClientInfo(Auth::user()->ref_code),
             'planCost' => $this->getPlanCost(),
+            'specialInfo' => $this->getthisInfo(Auth::user()->country),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
         ];
+
 
 
 
@@ -62,18 +77,34 @@ class MerchantPageController extends Controller
 
     public function invoiceSingle()
     {
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
 
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
         ];
 
 
         return view('merchant.pages.invoice')->with(['pages' => 'invoice single', 'data' => $data]);
     }
 
+
     public function invoiceForm()
     {
+
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getServiceType' => $this->getServiceTypes(),
@@ -81,6 +112,7 @@ class MerchantPageController extends Controller
             'getpersonalData' => $this->getmyPersonalDetail(Auth::user()->ref_code),
             'getimt' => $this->getActiveCountries(),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
         ];
 
 
@@ -90,10 +122,13 @@ class MerchantPageController extends Controller
 
     public function invoiceTypes()
     {
+
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getServiceType' => $this->getServiceTypes(),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
         ];
 
         return view('merchant.pages.createinvoicetypes')->with(['pages' => 'invoice types', 'data' => $data]);
@@ -106,6 +141,7 @@ class MerchantPageController extends Controller
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getTax' => $this->getTax(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
         ];
 
         return view('merchant.pages.setuptax')->with(['pages' => 'set up tax', 'data' => $data]);
@@ -114,9 +150,17 @@ class MerchantPageController extends Controller
     public function invoiceStatement()
     {
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
         ];
 
         return view('merchant.pages.invoicestatement')->with(['pages' => 'invoice statement', 'data' => $data]);
@@ -125,9 +169,17 @@ class MerchantPageController extends Controller
     public function walletStatement()
     {
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
         ];
 
         return view('merchant.pages.walletstatement')->with(['pages' => 'wallet statement', 'data' => $data]);
@@ -136,20 +188,170 @@ class MerchantPageController extends Controller
     public function sentInvoice()
     {
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
         ];
 
         return view('merchant.pages.sentinvoice')->with(['pages' => 'sent invoice', 'data' => $data]);
     }
 
+
+    // Setup Shop Here...
+    public function merchantShop($merchant){
+
+        // Get merchant...
+        $thismerchant = ClientInfo::where('business_name', $merchant)->first();
+
+        if(isset($thismerchant)){
+                $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
+
+
+                if(Auth::check() == true){
+                    $userId = Auth::id();
+                }
+                else{
+                    $userId = 0;
+                }
+
+                if($userId == $getMerchantId->id){
+                    // If Has Main Store setup
+                $merchantStore = $this->checkMyStore($getMerchantId->id);
+                }
+                else{
+                    // If Has Main Store setup
+                    if(session('role')){
+                        $merchantStore = $this->checkMyStore($getMerchantId->id);
+                    }
+                    else{
+            $merchantStore = $this->getMyStore($getMerchantId->id);
+
+                    }
+                }
+
+
+
+
+            if(isset($merchantStore)){
+
+
+
+                $data = [
+                    'mystore' => $merchantStore,
+                    'myproduct' => $this->getProducts($getMerchantId->id),
+                    'user' => $getMerchantId,
+                    'mywishlist' => $this->getMyWishlist($userId),
+                    'mycartlist' => $this->getMyCartlist($userId),
+                ];
+
+
+
+
+                return view('merchant.pages.shop.index')->with(['pages' => $merchant.' Shop', 'data' => $data]);
+            }
+            else{
+                return view('errors.comingsoon')->with(['pages' => $merchant.' Shop']);
+            }
+
+        }
+        else{
+            return view('errors.comingsoon')->with(['pages' => $merchant.' Shop']);
+        }
+
+
+
+
+    }
+
+
+        // Shopping Cart
+    public function myCart(Request $req){
+
+        // Get merchant...
+        $thismerchant = ClientInfo::where('business_name', $req->store)->first();
+
+        if(isset($thismerchant)){
+
+            $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
+
+            // If Has Main Store setup
+            $merchantStore = $this->getMyStore($getMerchantId->id);
+
+
+                    $data = [
+                        'mystore' => $merchantStore,
+                    'myproduct' => $this->getProducts($getMerchantId->id),
+                    'user' => $getMerchantId,
+                    'mywishlist' => $this->getMyWishlist(Auth::id()),
+                    'mycartlist' => $this->getMyCartlist(Auth::id()),
+                ];
+
+
+        return view('merchant.pages.shop.mycart')->with(['pages' => $req->store.' Shop', 'data' => $data]);
+        }
+        else{
+            return view('errors.comingsoon')->with(['pages' => $req->store.' Shop']);
+        }
+
+
+    }
+
+
+    // Checkout Item ...
+    public function myCheckout(Request $req){
+
+        // Get merchant...
+        $thismerchant = ClientInfo::where('business_name', $req->store)->first();
+
+        if(isset($thismerchant)){
+
+            $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
+
+            // If Has Main Store setup
+            $merchantStore = $this->getMyStore($getMerchantId->id);
+
+
+                    $data = [
+                        'mystore' => $merchantStore,
+                    'myproduct' => $this->getProducts($getMerchantId->id),
+                    'user' => $getMerchantId,
+                    'mywishlist' => $this->getMyWishlist(Auth::id()),
+                    'mycartlist' => $this->getMyCartlist(Auth::id()),
+                ];
+
+
+        return view('merchant.pages.shop.mycheckout')->with(['pages' => $req->store.' Shop', 'data' => $data]);
+        }
+        else{
+            return view('errors.comingsoon')->with(['pages' => $req->store.' Shop']);
+        }
+
+
+    }
+
+
     public function paidInvoice()
     {
+
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
 
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
         ];
 
         return view('merchant.pages.paidinvoice')->with(['pages' => 'paid invoice', 'data' => $data]);
@@ -158,9 +360,17 @@ class MerchantPageController extends Controller
     public function pendingInvoice()
     {
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
         ];
 
         return view('merchant.pages.pendinginvoice')->with(['pages' => 'pending invoice', 'data' => $data]);
@@ -169,9 +379,17 @@ class MerchantPageController extends Controller
     public function balanceReport()
     {
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
         ];
 
         return view('merchant.pages.customerbalancereport')->with(['pages' => 'balance report', 'data' => $data]);
@@ -180,9 +398,17 @@ class MerchantPageController extends Controller
     public function taxesReport()
     {
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
         ];
 
         return view('merchant.pages.taxesreport')->with(['pages' => 'taxes report', 'data' => $data]);
@@ -191,9 +417,17 @@ class MerchantPageController extends Controller
     public function invoiceTypeReport()
     {
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
         ];
 
         return view('merchant.pages.invoicetypereport')->with(['pages' => 'invoice type report', 'data' => $data]);
@@ -202,9 +436,17 @@ class MerchantPageController extends Controller
     public function recurringType()
     {
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
         ];
 
         return view('merchant.pages.recurringtype')->with(['pages' => 'recurring type', 'data' => $data]);
@@ -216,6 +458,7 @@ class MerchantPageController extends Controller
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
         ];
 
         return view('merchant.pages.profile')->with(['pages' => 'profile', 'data' => $data]);
@@ -223,9 +466,17 @@ class MerchantPageController extends Controller
     public function invoicePage()
     {
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if($client->accountMode == "test"){
+
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
         ];
 
         return view('merchant.pages.invoicepage')->with(['pages' => 'invoice page', 'data' => $data]);
@@ -237,6 +488,7 @@ class MerchantPageController extends Controller
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
         ];
 
         return view('merchant.pages.paymentmethod')->with(['pages' => 'invoice page', 'data' => $data]);
@@ -245,10 +497,27 @@ class MerchantPageController extends Controller
     public function orderingSystem()
     {
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+
+        if(isset($client) && $client->accountMode == "test"){
+
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
+            'myProducts' => $this->getMyProducts(Auth::user()->id),
+            'myOrders' => $this->getMyOrders(Auth::user()->id),
+            'myDiscounts' => $this->getMyDiscounts(Auth::user()->id),
+            'productcategory' => $this->getProductCategory(),
+            'storepickup' => $this->getStorePickupCount(),
+            'deliverypickup' => $this->getDeliveryPickupCount(),
+            'activeCountry' => $this->getActiveCountries(),
         ];
+
 
         return view('merchant.pages.orderingsystem')->with(['pages' => 'invoice page', 'data' => $data]);
     }
@@ -261,6 +530,7 @@ class MerchantPageController extends Controller
             'businessprofile' => $this->getBusinessProfileData($id),
             'merchantbusiness' => $this->getThisMerchantBusiness($id),
             'getfiveNotifications' => $this->getfiveUserNotifications($id),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
         ];
 
 
@@ -397,6 +667,46 @@ class MerchantPageController extends Controller
     {
 
         $data = AllCountries::where('approval', 1)->get();
+
+        return $data;
+    }
+
+    public function getMyProducts($merchantId){
+        $data = StoreProducts::where('merchantId', $merchantId)->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+
+    }
+
+
+    public function getMyOrders($merchantId){
+        $data = StoreOrders::join('estore_product', 'estore_orders.productId', '=', 'estore_product.id')->join('users', 'estore_orders.userId', '=', 'users.id')->where('estore_orders.merchantId', $merchantId)->orderBy('estore_orders.created_at', 'DESC')->get();
+
+        return $data;
+
+    }
+
+    public function getMyDiscounts($merchantId){
+        $data = StoreDiscount::select('estore_discount.id as discountId', 'estore_discount.userId', 'estore_discount.code', 'estore_discount.valueType', 'estore_discount.discountAmount', 'estore_discount.productId', 'estore_discount.startDate', 'estore_discount.endDate', 'estore_product.id', 'estore_product.productName')->join('estore_product', 'estore_discount.productId', '=', 'estore_product.id')->where('estore_discount.userId', $merchantId)->orderBy('estore_discount.created_at', 'DESC')->get();
+
+        return $data;
+    }
+
+    public function getProductCategory(){
+        $data = StoreCategory::orderBy('category', 'ASC')->where('state', true)->get();
+
+        return $data;
+    }
+
+
+    public function getStorePickupCount(){
+        $data = StorePickup::count();
+
+        return $data;
+    }
+
+    public function getDeliveryPickupCount(){
+        $data = StoreShipping::count();
 
         return $data;
     }

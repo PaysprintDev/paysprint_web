@@ -21,6 +21,8 @@ use App\TransactionCost as TransactionCost;
 use App\RequestRefund as RequestRefund;
 use App\SpecialInformation as SpecialInformation;
 use App\ImportExcel as ImportExcel;
+use App\UpgradePlan as UpgradePlan;
+use Carbon\Carbon;
 
 
 use App\Traits\ExpressPayment;
@@ -28,6 +30,7 @@ use App\Traits\AccountNotify;
 use App\Traits\Xwireless;
 use App\Traits\PaymentGateway;
 use App\Traits\MailChimpNewsLetter;
+use App\Traits\Trulioo;
 
 class CheckSetupController extends Controller
 {
@@ -37,7 +40,7 @@ class CheckSetupController extends Controller
     public $subject;
     public $message;
 
-    use ExpressPayment, AccountNotify, Xwireless, PaymentGateway, MailChimpNewsLetter;
+    use ExpressPayment, AccountNotify, Xwireless, PaymentGateway, MailChimpNewsLetter, Trulioo;
     // Check user quick wallet setup
 
     public function updateQuickSetup()
@@ -1010,7 +1013,7 @@ class CheckSetupController extends Controller
     {
         // Create Statement And Credit EXBC account holder
         // $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
-        $exbcMerchant = User::where('email', 'lakishabrown053@gmail.com')->first();
+        $exbcMerchant = User::where('email', 'Finance@monrenardbleu.com')->first();
 
         if (isset($exbcMerchant)) {
 
@@ -1019,9 +1022,9 @@ class CheckSetupController extends Controller
             // $transaction_id = "pi_3JhWOuHJCM3bYqU11nuYRlIa";
 
             // $activity = "Added ".$exbcMerchant->currencyCode.''.number_format(20, 2)." to your Wallet to load EXBC Prepaid Card";
-            $activity = "Wallet reversal of " . $exbcMerchant->currencyCode . '' . number_format(493.80, 2) . " has been returned to your Bank Account";
+            $activity = "Wallet charge of " . $exbcMerchant->currencyCode . '' . number_format(14.67, 2) . " has been deducted from your wallet. Reason: ADDED MONEY PROCESSING ERROR";
             $credit = 0;
-            $debit = 493.80;
+            $debit = 14.67;
             $reference_code = $transaction_id;
             $balance = 0;
             $trans_date = date('Y-m-d');
@@ -1030,9 +1033,9 @@ class CheckSetupController extends Controller
             $regards = $exbcMerchant->ref_code;
             $statement_route = "wallet";
 
-            $merchantwalletBal = $exbcMerchant->wallet_balance - 493.80;
+            $merchantwalletBal = $exbcMerchant->wallet_balance - 14.67;
 
-            User::where('email', 'lakishabrown053@gmail.com')->update([
+            User::where('email', 'Finance@monrenardbleu.com')->update([
                 'wallet_balance' => $merchantwalletBal
             ]);
 
@@ -1041,11 +1044,11 @@ class CheckSetupController extends Controller
             // Senders statement
             $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
 
-            $this->getfeeTransaction($reference_code, $exbcMerchant->ref_code, 493.80, 0.00, 493.80);
+            $this->getfeeTransaction($reference_code, $exbcMerchant->ref_code, 14.67, 0.00, 14.67);
 
             // $sendMerchantMsg = "Hi ".$exbcMerchant->name.", ".$exbcMerchant->currencyCode." 20.00 was added to your wallet to load EXBC Prepaid Card. Your new wallet balance is ".$exbcMerchant->currencyCode.' '.number_format($merchantwalletBal, 2).". Thanks.";
 
-            $sendMerchantMsg = 'Wallet reversal of ' . $exbcMerchant->currencyCode . ' ' . number_format(493.80, 2) . ' (Gross Amount of ' . $exbcMerchant->currencyCode . ' ' . number_format(493.80, 2) . ' less transaction fee ' . $exbcMerchant->currencyCode . ' ' . number_format(0.00, 2) . ') has been returned to your Bank Account. You now have ' . $exbcMerchant->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your PaySprint Wallet.';
+            $sendMerchantMsg = 'Wallet reversal of ' . $exbcMerchant->currencyCode . ' ' . number_format(14.67, 2) . ' (Gross Amount of ' . $exbcMerchant->currencyCode . ' ' . number_format(14.67, 2) . ' less transaction fee ' . $exbcMerchant->currencyCode . ' ' . number_format(0.00, 2) . ') has been deducted from your wallet. Reason: ADDED MONEY PROCESSING ERROR. You now have ' . $exbcMerchant->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your PaySprint Wallet.';
 
             $this->createNotification($exbcMerchant->ref_code, $sendMerchantMsg);
 
@@ -1054,7 +1057,7 @@ class CheckSetupController extends Controller
             $gateway = ucfirst($getGateway->gateway);
 
 
-            $message = 'Wallet reversal of ' . $exbcMerchant->currencyCode . ' ' . number_format(493.80, 2) . ' has been returned to your Bank Account';
+            $message = 'Wallet charge of ' . $exbcMerchant->currencyCode . ' ' . number_format(14.67, 2) . ' has been deducted from your wallet. Reason: ADDED MONEY PROCESSING ERROR';
 
             $this->keepRecord($reference_code, $message, "Success", $gateway, $exbcMerchant->country);
 
@@ -1230,9 +1233,11 @@ class CheckSetupController extends Controller
     }
 
 
+
     // EXBC PREPAID CARD CHECK
     public function checkExbcCardRequest()
     {
+
 
         // RUN CRON GET
 
@@ -1245,7 +1250,10 @@ class CheckSetupController extends Controller
         //     $url = "https://exbc.ca/api/v1/paysprint/cardrequest";
         // }
 
-        $url = "https://exbc.ca/api/v1/paysprint/cardrequest";
+
+        try{
+
+            $url = "https://exbc.ca/api/v1/paysprint/cardrequest";
 
         $curl = curl_init();
 
@@ -1265,15 +1273,243 @@ class CheckSetupController extends Controller
 
         $response = curl_exec($curl);
 
+
         curl_close($curl);
 
         $result = json_decode($response);
 
 
+
         if (count($result->data)) {
             foreach ($result->data as $key => $value) {
-                $userDetail = User::where('ref_code', '!=', $value->ref_code)->update(['cardRequest' => 0]);
+                User::where('ref_code', '!=', $value->ref_code)->update(['cardRequest' => 0]);
             }
+        }
+        else{
+            $result = [];
+        }
+
+        }
+        catch(\Throwable $th){
+            $this->slack('EXBC Card Request Error Module checkExbcCardRequest() line 1235: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+        }
+
+        
+    }
+
+
+    public function checkTrullioVerification(){
+        // Get Users with transactionRecordID..
+
+        try{
+            $getUsers = User::where('transactionRecordId', '!=', NULL)->inRandomOrder()->take(15)->get();
+
+
+            foreach($getUsers as $user){
+                
+                $getthis = $this->getTransRec($user->transactionRecordId);
+
+
+
+
+                if(gettype($getthis) == 'string' || gettype($getthis) == NULL){
+                    $newresponse = $this->transStatus($user->transactionRecordId);
+                    
+                    $checker = $this->getTransRec($newresponse->TransactionRecordId);
+
+
+                }
+                else{
+
+
+                $checker = $getthis;
+
+                }
+
+
+
+                    $userData = $user->name." | ".$checker->Record->RecordStatus;
+
+                if($checker->Record->RecordStatus == "match"){
+                    User::where('transactionRecordId', $user->transactionRecordId)->update(['bvn_verification' => 1]);
+                }
+                else{
+                    User::where('transactionRecordId', $user->transactionRecordId)->update(['bvn_verification' => 0]);
+                }
+
+
+            echo $userData."<hr>";
+
+
+            }
+
+
+
+        }
+        catch(\Throwable $th){
+            $this->slack('Trullio Verification Check Error Module checkTrullioVerification() line 1295: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+        }
+
+
+
+
+
+
+    }
+
+
+
+    // Move From IDV Failed TO IDV Passed and send a message of no document ...
+    public function moveFromFailedToPass(){
+
+        try {
+            
+            $getFailedUsers = User::where([['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->where('country', 'Nigeria')->get();
+
+
+            if(count($getFailedUsers) > 0){
+                foreach($getFailedUsers as $users){
+                    // Move them to passed...
+                    User::where('id', $users->id)->update(['approval' => 1]);
+
+                    // Send Mail...
+
+                    $this->name = $users->name;
+                    $this->email = $users->email;
+                    // $this->email = 'adenugaadebambo41@gmail.com';
+                    $this->subject = "Account Verification";
+
+                    $this->message = "<p>We are glad to have you on PaySprint.</p><p>Your PaySprint wallet has been prepared and ready for use.</p><p>However, you can only <strong>RECEIVE</strong> funds to your wallet until you have completed the required identity verification process that would enable you <em>'to Add Money/Top Up Wallet' and 'Send Money from Wallet'</em></p><br><p>To Complete the identity verification processes, kindly follow these steps:</p><p>a. Login to your PaySprint Account on your mobile app or at: www.paysprint.ca</p><p>b. Go to Profile section and upload the following:</p><p>1. Selfie of yourself</p><p>2. Government Issued Photo ID (Drivers license or International Passport or National ID card)</p><p>3. Utility Bill ( Electricity, Hydro etc. Note that Bank or Credit Card Statements are not accepted)</p><br><p>Thank you for choosing us.</p>";
+
+
+                    $this->sendEmail($this->email, "Incomplete Setup");
+
+
+                    echo "Moved for ".$users->name."<hr>";
+
+                }
+
+                
+            }
+
+
+
+        } catch (\Throwable $th) {
+            $this->slack('Move From IDV Failed To Pass Error Module moveFromFailedToPass() line 1367: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+        }
+    }
+
+
+    // Move From IDV Passed TO IDV Completed Pending
+    public function moveFromPassedToCompletedPending(){
+
+        try {
+            
+            $getPassedUsers = User::where([['accountLevel', '=', 2], ['approval', '=', 1], ['account_check', '=', 0]])->where('country', 'India')->get();
+
+            dd($getPassedUsers);
+
+
+            if(count($getPassedUsers) > 0){
+                foreach($getPassedUsers as $users){
+                    // Move them to passed...
+                    User::where('id', $users->id)->update(['account_check' => 1]);
+
+                                        // Send Mail...
+
+                    $this->name = $users->name;
+                    $this->email = $users->email;
+                    // $this->email = 'adenugaadebambo41@gmail.com';
+                    $this->subject = "Account Verification";
+
+                    $this->message = "<p>We are glad to have you on PaySprint.</p><p>Your PaySprint wallet has been prepared and ready for use.</p><p>However, you can only <strong>RECEIVE</strong> funds to your wallet until you have completed the required identity verification process that would enable you <em>'to Add Money/Top Up Wallet' and 'Send Money from Wallet'</em></p><br><p>To Complete the identity verification processes, kindly follow these steps:</p><p>a. Login to your PaySprint Account on your mobile app or at: www.paysprint.ca</p><p>b. Go to Profile section and upload the following:</p><p>1. Selfie of yourself</p><p>2. Government Issued Photo ID (Drivers license or International Passport or National ID card)</p><p>3. Utility Bill ( Electricity, Hydro etc. Note that Bank or Credit Card Statements are not accepted)</p><br><p>Thank you for choosing us.</p>";
+
+
+                    $this->sendEmail($this->email, "Incomplete Setup");
+
+
+                    echo "Moved for ".$users->name."<hr>";
+
+                }
+
+                
+            }
+
+
+
+        } catch (\Throwable $th) {
+            $this->slack('Move From IDV Passed To Completed Pending Error Module moveFromPassedToCompletedPending() line 1439: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+        }
+    }
+
+
+    // Send Message to merchants
+
+    public function cronToMerchant(){
+        try {
+            $getMerchants = User::where('accountType', 'Merchant')->where([['accountLevel', '=', 2], ['approval', '<=', 1], ['account_check', '<=', 1]])->get();
+
+            if(count($getMerchants) > 0){
+
+                foreach($getMerchants as $users){
+
+
+                    $this->name = $users->name;
+                    $this->email = $users->email;
+                    // $this->email = 'adenugaadebambo41@gmail.com';
+                    $this->subject = "Complete your business profile today";
+
+                    $this->message = "<p>Do you know that merchants with complete profile has 20x chance of driving more traffic to their business on PaySprint.</p><p>Complete your business profile today and drive more traffic to your business page.</p><br><p>Thank you for choosing us.</p>";
+
+
+                    $this->sendEmail($this->email, "Incomplete Setup");
+
+
+                    echo "Sent Mail To ".$users->name."<hr>";
+
+                }
+
+            }
+
+        } catch (\Throwable $th) {
+            $this->slack('Cron to Merchant Error Module cronToMerchant() line 1473: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+        }
+    }
+
+
+    // Send Messages to consumers...
+    public function cronToConsumers(){
+        try{
+            $getConsumers = User::where('accountType', 'Individual')->where([['accountLevel', '=', 2], ['approval', '<=', 1], ['account_check', '<=', 1]])->get();
+
+            if(count($getConsumers) > 0){
+
+                foreach($getConsumers as $users){
+
+
+                    $this->name = $users->name;
+                    $this->email = $users->email;
+                    // $this->email = 'adenugaadebambo41@gmail.com';
+                    $this->subject = "Its Time to Complete Your Verification on PaySprint";
+
+                    $this->message = "<p>We  wish to remind you that your verification process is yet to be completed.</p><p>You can only RECEIVE funds to your wallet until you have completed the required identity verification process that would enable you 'to Add Money/Top Up Wallet' and 'Send Money from Wallet' and also access other features on PaySprint.</p><p>To Complete the identity verification processes, kindly follow these steps:</p><p>a. Login to your PaySprint Account on your mobile app or at: <a href='https://paysprint.ca'>www.paysprint.ca</a></p><p> b. Go to Profile section and upload the following: <br> 1. Selfie of yourself <br> 2. Government Issued Photo ID (Drivers license or International Passport or National ID card) <br> 3. Utility Bill ( Electricity, Hydro etc. Note that Bank or Credit Card Statements are not accepted)</p><br><p>Thank you for choosing us.</p>";
+
+
+
+
+
+                    $this->sendEmail($this->email, "Incomplete Setup");
+
+
+                    echo "Sent Mail To ".$users->name."<hr>";
+
+                }
+
+            }
+
+        }
+         catch (\Throwable $th) {
+            $this->slack('Cron to Consumers Error Module cronToConsumers() line 1507: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
     }
 
@@ -1312,6 +1548,96 @@ class CheckSetupController extends Controller
                 // DO nothing
             }
         }
+    }
+
+
+
+    public function giveAccountCheckUpgrade(){
+        $users = User::where('account_check', 2)->where('plan', 'basic')->get();
+        
+        if(count($users) > 0){
+            foreach($users as $user){
+                // Update to Classic
+                User::where('id', $user->id)->update(['plan' => 'classic']);
+
+                if ($user->accountType == 'Individual') {
+                    $subType = 'Consumer Monthly Subscription';
+                } else {
+                    $subType = 'Merchant Monthly Subscription';
+                }
+
+                $getSub = TransactionCost::where('country', $user->country)->where('structure', $subType)->first();
+
+                $expire_date = Carbon::now()->addMonth()->toDateTimeString();
+
+                $amount = $getSub->fixed;
+
+                UpgradePlan::updateOrInsert(['userId' => $user->ref_code], ['userId' => $user->ref_code, 'plan' => 'classic', 'amount' => $amount, 'duration' => "monthly", 'expire_date' => $expire_date]);
+
+
+                echo "Updated: ".$user->name." next expiry set for ".$expire_date;
+            }
+        }
+    }
+
+    public function downcheckMerchants(){
+        $users = User::where('account_check', 2)->where('accountType', 'Merchant')->where('plan', 'classic')->get();
+
+        if(count($users) > 0){
+            foreach($users as $user){
+
+                // Get Client Information
+                $getClient = ClientInfo::where('user_id', $user->ref_code)->first();
+
+                if(isset($getClient) && $getClient->accountMode == "test"){
+
+                    // Downgrade to basic...
+
+                    User::where('ref_code', $getClient->user_id)->update(['plan' => 'basic']);
+
+
+                    echo "Updated: ".$getClient->business_name;
+
+                }
+
+            }
+        }
+
+    }
+
+
+
+    // publicizeMerchantToConsumer
+    public function publicizeMerchantToConsumer(Request $req){
+
+        $template = "";
+
+        // Get Merchant's with description....
+        $getClient = ClientInfo::where('description', '!=', NULL)->get();
+
+        if(count($getClient) > 0){
+
+            foreach($getClient as $merchants){
+                // Get Users in the country...
+
+                $getUsers = User::where('country', $merchants->country)->get();
+
+                    
+
+
+                for($i = 0; $i < count($getUsers); $i++){
+                    // echo $getUsers[$i]->name.' | '.$getUsers[$i]->country.' | '.$getUsers[$i]->email."<hr>";
+
+
+                }
+
+
+
+            }
+
+        }
+
+
     }
 
 
@@ -1615,6 +1941,79 @@ class CheckSetupController extends Controller
     }
 
 
+    public function nonMonthlyTransactionHistory()
+    {
+
+        try {
+            // Get Statement Information
+            $getusers = User::inRandomOrder()->orderBy('created_at', 'DESC')->get();
+
+
+            if (count($getusers) > 0) {
+                $from = date('Y-m-01');
+                $nextDay = date('Y-m-d');
+
+                foreach ($getusers as $key => $value) {
+
+                    $email = $value->email;
+
+
+                    $myStatement = Statement::where('user_id', $email)->whereBetween('trans_date', [$from, $nextDay])->orderBy('created_at', 'DESC')->get();
+
+                    if (count($myStatement) > 0) {
+
+                        // Do Nothing ... 
+
+                    }
+                    else{
+                                                // Send Mail
+
+                        $walletBalance = $value->wallet_balance;
+                        $currencyCode = $value->currencyCode;
+
+                        $name = $value->name;
+                        $subject = "Your monthly statement on PaySprint";
+
+                        $tabledetails = "";
+                        $table = "";
+
+
+                        $color = "green";
+                        $amount = "+" . $currencyCode . number_format(0, 2);
+
+
+                        $tabledetails = "<tr>
+		    			<td>" . date('d/F/Y') . "</td>
+		    			<td>No transaction</td>
+		    			<td style='color:" . $color . "; font-weight: bold;' align='center'>" . $amount . "</td>
+		    			<td>Delivered</td>
+		    			</tr>";
+
+                            $table .= $tabledetails;
+
+
+                        $message = "<p>Below is the statement of your transactions on PaySprint for this month.</p> <br> <table width='700' border='1' cellpadding='1' cellspacing='0'><thead><tr><th>Trans. Date</th><th>Desc.</th><th>Amount</th><th>Status</th></tr></thead><tbody>" . $table . "</tbody></table> <br><br> Thanks <br><br> Client Services Team <br> PaySprint <br><br>";
+
+
+
+
+                        $this->mailprocess($email, $name, $subject, $message);
+                        
+                    }
+                }
+
+                echo "Done";
+            } else {
+
+                // Do nothing
+                echo "No user record";
+            }
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+    }
+
+
     public function migrateUsersToLevelOne()
     {
 
@@ -1768,6 +2167,24 @@ class CheckSetupController extends Controller
 
 
         echo "Suspended Account";
+    }
+
+    public function upgradedAccounts()
+    {
+        $getUsers = User::where('plan', 'classic')->inRandomOrder()->get();
+
+        foreach ($getUsers as $users) {
+            if ($users->accountType == "Individual") {
+                $category = "Upgraded Consumers Account";
+            } else {
+                $category = "Upgraded Merchants Account";
+            }
+
+            $this->mailListCategorize($users->name, $users->email, $users->address, $users->telephone, $category, $users->country, 'Subscription');
+        }
+
+
+        echo "Upgraded Account";
     }
 
 

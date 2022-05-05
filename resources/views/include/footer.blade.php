@@ -1153,11 +1153,11 @@
                                         avatar = k.avatar;
                                     } else {
                                         avatar =
-                                            "https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg";
+                                            "https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg";
                                     }
 
                                     datarec = "<tr><td><img src='" + avatar +
-                                        "' style='width:40px; height:40px; border-radius: 100%;'></td><td>" +
+                                        "' style='width:200px; object-fit: contain; border-radius: 100%;'></td><td>" +
                                         k.name + "</td><td>" + k.address + "</td><td>" + k
                                         .ref_code + "</td><td>" + k.city + "</td><td>" + k
                                         .state + "</td><td>" + k.country + "</td><td>" +
@@ -1238,11 +1238,11 @@
                                         avatar = k.avatar;
                                     } else {
                                         avatar =
-                                            "https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg";
+                                            "https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg";
                                     }
 
                                     datarec = "<tr><td><img src='" + avatar +
-                                        "' style='width:40px; height:40px; border-radius: 100%;'></td><td>" +
+                                        "' style='width:200px; object-fit: contain; border-radius: 100%;'></td><td>" +
                                         k.name + "</td><td>" + k.address + "</td><td>" + k
                                         .ref_code + "</td><td>" + k.city + "</td><td>" + k
                                         .state + "</td><td>" + k.country + "</td><td>" +
@@ -1329,11 +1329,11 @@
                                     avatar = k.avatar;
                                 } else {
                                     avatar =
-                                        "https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_ft8qly.jpg";
+                                        "https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg";
                                 }
 
                                 datarec = "<tr><td><img src='" + avatar +
-                                    "' style='width:40px; height:40px; border-radius: 100%;'></td><td>" +
+                                    "' style='width:200px; object-fit: contain; border-radius: 100%;'></td><td>" +
                                     k.name + "</td><td>" + k.address + "</td><td>" +
                                     k.ref_code + "</td><td>" + k.city +
                                     "</td><td>" + k.state + "</td><td>" + k

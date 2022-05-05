@@ -138,6 +138,20 @@ trait AccountNotify
     }
 
 
+    public function notifyAdmin($subject, $message)
+    {
+
+        $this->name = 'Administrator';
+        $this->email = 'accounting@paysprint.ca';
+        $this->subject = $subject;
+
+        $this->message = $message;
+
+
+        $this->myEmailSender($this->email, "Fund remittance");
+    }
+
+
     public function sendMessage($message, $recipients)
     {
 
@@ -161,7 +175,7 @@ trait AccountNotify
         $objDemo = new \stdClass();
         $objDemo->purpose = $purpose;
 
-        if ($purpose == "New Login") {
+        if ($purpose == "New Login" || $purpose == 'Fund remittance') {
             $objDemo->name = $this->name;
             $objDemo->email = $this->email;
             $objDemo->subject = $this->subject;

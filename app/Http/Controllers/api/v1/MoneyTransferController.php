@@ -1226,6 +1226,7 @@ class MoneyTransferController extends Controller
     public function createNewOrder(Request $req)
     {
 
+
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
         if (isset($thisuser)) {

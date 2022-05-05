@@ -9,6 +9,7 @@
         "biscolab/laravel-recaptcha": "5.0.1",
         "botman/botman": "^2.6",
         "braintree/braintree_php": "5.5.0",
+        "cronitor/cronitor-php": "^1.2",
         "currency-cloud/client": "^3.1",
         "dompdf/dompdf": "^1.0",
         "erdemkeren/laravel-otp": "^3.0",
@@ -28,6 +29,7 @@
         "simplesoftwareio/simple-qrcode": "~4",
         "spatie/laravel-newsletter": "^4.10",
         "spatie/laravel-permission": "4.4.0",
+        "spatie/laravel-translatable": "^4.6",
         "stripe/stripe-php": "^7.92",
         "trulioo/trulioo-sdk": "^1.0",
         "twilio/sdk": "^6.20"

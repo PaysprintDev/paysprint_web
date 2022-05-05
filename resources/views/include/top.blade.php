@@ -9,7 +9,6 @@
                 <li><a href="#"><i class="fa fa-clock-o"></i>Mon - Sat 12:00 - 20:00</a></li> --}}
 
             @if ($name == '')
-
                 <li>
                     <a href="{{ route('login') }}">
                         {{ __('Login') }}
@@ -21,11 +20,7 @@
                         {{ __('Sign Up for FREE') }}
                     </a>
                 </li>
-
             @else
-
-
-
             @endif
 
         </ul>
@@ -69,7 +64,7 @@
                 {{-- <a class="navbar-brand" href="{{ route('home') }}"><p style="font-weight: bold; font-size: 30px; color: #f6b60b;"><span style="color: #111f29">Pay</span>Sprint</p></a> --}}
                 <a class="navbar-brand" @guest href="{{ route('home') }}" @endguest @auth
                 href="{{ route('user home') }}" @endauth><img
-                    src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_black_horizotal_fwqo6q.png"
+                    src="https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png"
                     style="top: -13px; position: relative;  width: 200px; height: inherit;"></a>
 
         </div>
@@ -128,6 +123,9 @@
                     <li class="dropdown submenu">
                         <a href="{{ route('contact') }}">Contact</a>
                     </li>
+                    <li class="dropdown submenu">
+                        <a href="{{ route('community') }}">Community</a>
+                    </li>
 
                     <li class="dropdown submenu">
                         <a href="{{ route('login') }}">Login</a>
@@ -137,9 +135,7 @@
                         <a href="{{ route('register') }}">Sign Up for FREE</a>
                         {{-- <a href="https://exbc.ca/Newaccount">Sign Up for FREE</a> --}}
                     </li>
-
                 @else
-
                     @auth
                         <li class="dropdown submenu">
 
@@ -169,7 +165,7 @@
                     <li class="dropdown submenu">
 
                         <a
-                            {{ Auth::user()->accountType != 'Individual' ? 'href=' . route('create single invoice') : 'href=' . route('invoice') }}>Invoice</a>
+                            {{ Auth::user()->accountType != 'Individual'? 'href=' . route('create single invoice'): 'href=' . route('invoice') }}>Invoice</a>
 
                     </li>
 
@@ -177,6 +173,7 @@
                         <a
                             {{ Auth::user()->accountType != 'Individual' ? 'href=' . route('getStatement') : 'href=' . route('statement') }}>Transaction</a>
                     </li>
+
 
 
 
@@ -195,7 +192,6 @@
 
                                 @if (count($account) > 0)
                                     @foreach ($account as $item)
-
                                         @php
                                             $useraccount = \App\User::where('ref_code', $item->link_ref_code)->first();
                                         @endphp
@@ -204,13 +200,11 @@
                                                 {{ $item->link_ref_code }}</a></li>
                                     @endforeach
                                 @else
-
                                     @php
                                         $account = \App\LinkAccount::where('link_ref_code', Auth::user()->ref_code)->get();
                                     @endphp
 
                                     @if (count($account) > 0)
-
                                         @foreach ($account as $item)
                                             @php
                                                 $useraccount = \App\User::where('ref_code', $item->ref_code)->first();
@@ -218,11 +212,8 @@
                                             <li><a href="{{ route('sign out', $useraccount->id) }}">ACCOUNT NO:
                                                     {{ $item->ref_code }}</a></li>
                                         @endforeach
-
                                     @else
-
                                         <li><a href="{{ route('profile') }}">SET UP</a></li>
-
                                     @endif
                                 @endif
                             </ul>
@@ -261,7 +252,11 @@
                     <li class="dropdown submenu">
                         <a href="{{ route('notifications') }}"><img
                                 src="https://img.icons8.com/ios/25/000000/appointment-reminders--v1.png"
-                                class="notificationImage" /> @if (count($data['getfiveNotifications']) > 0 && $data['getfiveNotifications'][0]->notify == 0) <i class="fas fa-circle fa-blink" style="color: rgb(129, 6, 6)"></i> @endif</a>
+                                class="notificationImage" />
+                            @if (count($data['getfiveNotifications']) > 0 && $data['getfiveNotifications'][0]->notify == 0)
+                                <i class="fas fa-circle fa-blink" style="color: rgb(129, 6, 6)"></i>
+                            @endif
+                        </a>
                     </li>
 
                 @endif

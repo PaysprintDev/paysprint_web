@@ -104,6 +104,7 @@ class Controller extends BaseController
         $markuppercent = $this->markupPercentage();
 
         $markValue = (1 + ($markuppercent[0]->percentage / 100));
+        $markdownValue = (1 - ($markuppercent[0]->percentage / 100));
 
         $currency = 'USD' . $curCurrency;
         $amount = $curAmount;
@@ -317,6 +318,7 @@ class Controller extends BaseController
         $markuppercent = $this->markupPercentage();
 
         $markValue = (1 + ($markuppercent[0]->percentage / 100));
+        $markdownValue = (1 - ($markuppercent[0]->percentage / 100));
 
         $currencyA = "USD" . $foreign;
         $currencyB = "USD" . $localcountry;
@@ -347,13 +349,39 @@ class Controller extends BaseController
 
         if ($result->success == true) {
             // This amount is in dollars
-            $convRateA = $result->quotes->$currencyA;
-            $convRateB = $result->quotes->$currencyB;
+            
+            
+
+            if($result->quotes->$currencyA > 1){
+
+                $convRateA = $result->quotes->$currencyA / $markValue;
+
+            }elseif($result->quotes->$currencyA < 1){
+                $convRateA = $result->quotes->$currencyA * $markdownValue;
+            }
+            else{
+                $convRateA = $result->quotes->$currencyA;
+            }
+
+
+            if($result->quotes->$currencyB > 1){
+
+                $convRateB = $result->quotes->$currencyB / $markValue;
+
+            }elseif($result->quotes->$currencyB < 1){
+                $convRateB = $result->quotes->$currencyB * $markdownValue;
+            }
+            else{
+                $convRateB = $result->quotes->$currencyB;
+            }
+
 
             $convRate = $convRateA / $convRateB;
+            
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }
+
 
 
         return $convRate;

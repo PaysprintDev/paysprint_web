@@ -15,6 +15,7 @@ use App\FxPayment;
 use App\FxStatement;
 use App\ImportExcel;
 use App\InvoiceCommission;
+use App\ClientInfo;
 use App\MakeBid;
 use App\Statement;
 use App\Traits\Xwireless;
@@ -27,6 +28,7 @@ class CurrencyFxController extends Controller
 {
 
     use MyFX, Xwireless;
+
 
     public function start(Request $req)
     {
@@ -47,6 +49,12 @@ class CurrencyFxController extends Controller
             return redirect()->back();
         }
 
+        
+        $checker = $this->checkImt(Auth::user()->country);
+
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
 
 
         return view('currencyexchange.start');
@@ -56,6 +64,8 @@ class CurrencyFxController extends Controller
     public function index(Request $req)
     {
 
+
+        
 
 
         if ($req->session()->has('email') == false) {
@@ -75,6 +85,14 @@ class CurrencyFxController extends Controller
             return redirect()->back();
         }
 
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+
+        if(isset($client) && $client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
         // Check if User has a forex account
         $checkUser = User::where('id', Auth::id())->first()->forexAccount;
 
@@ -83,6 +101,14 @@ class CurrencyFxController extends Controller
             // Create Escrow Account
             EscrowAccount::insert(['user_id' => Auth::id(), 'escrow_id' => 'ES_' . uniqid() . '_' . strtoupper(date('D')), 'currencyCode' => Auth::user()->currencyCode, 'currencySymbol' => Auth::user()->currencySymbol, 'wallet_balance' => "0.00", 'country' => Auth::user()->country, 'active' => "true"]);
         }
+
+
+        $checker = $this->checkImt(Auth::user()->country);
+
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
+
 
 
 
@@ -109,6 +135,12 @@ class CurrencyFxController extends Controller
             'mywallet' => Auth::user()->forexAccount
         );
 
+        $checker = $this->checkImt(Auth::user()->country);
+
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
+
         return view('currencyexchange.createwallet')->with(['pages' => 'Create FX Wallet', 'data' => $data]);
     }
 
@@ -133,6 +165,12 @@ class CurrencyFxController extends Controller
             'mywallet' => Auth::user()->forexAccount
         );
 
+        $checker = $this->checkImt(Auth::user()->country);
+
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
+
         return view('currencyexchange.fundaccount')->with(['pages' => 'Fund FX Wallet', 'data' => $data]);
     }
 
@@ -156,6 +194,12 @@ class CurrencyFxController extends Controller
             'mywallet' => Auth::user()->forexAccount
         );
 
+        $checker = $this->checkImt(Auth::user()->country);
+
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
+
         return view('currencyexchange.fundtransfer')->with(['pages' => 'Transfer between FX Wallet', 'data' => $data]);
     }
 
@@ -172,6 +216,11 @@ class CurrencyFxController extends Controller
             Auth::login($user);
         }
 
+        $checker = $this->checkImt(Auth::user()->country);
+
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
 
 
         return view('currencyexchange.marketplace');
@@ -192,9 +241,24 @@ class CurrencyFxController extends Controller
         }
 
 
+        $checker = $this->checkImt(Auth::user()->country);
+
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
 
         return view('currencyexchange.invoices');
     }
+
+    
+        // Get My Client Info
+    public function getMyClientInfo($ref_code)
+    {
+        $data = ClientInfo::where('user_id', $ref_code)->first();
+
+        return $data;
+    }
+
 
 
     public function myCrossBorderPlatform(Request $req)
@@ -210,7 +274,11 @@ class CurrencyFxController extends Controller
             Auth::login($user);
         }
 
+        $checker = $this->checkImt(Auth::user()->country);
 
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
 
         return view('currencyexchange.crossborderplatform');
     }
@@ -229,7 +297,11 @@ class CurrencyFxController extends Controller
             Auth::login($user);
         }
 
+        $checker = $this->checkImt(Auth::user()->country);
 
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
 
         return view('currencyexchange.pendingcrossborderpayment');
     }
@@ -248,7 +320,11 @@ class CurrencyFxController extends Controller
             Auth::login($user);
         }
 
+        $checker = $this->checkImt(Auth::user()->country);
 
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
 
         return view('currencyexchange.paidinvoices');
     }
@@ -266,6 +342,11 @@ class CurrencyFxController extends Controller
         }
 
 
+        $checker = $this->checkImt(Auth::user()->country);
+
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
 
         return view('currencyexchange.pendinginvoices');
     }
@@ -286,6 +367,11 @@ class CurrencyFxController extends Controller
             Auth::login($user);
         }
 
+        $checker = $this->checkImt(Auth::user()->country);
+
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
 
 
         return view('currencyexchange.transactionhistory');
@@ -305,7 +391,11 @@ class CurrencyFxController extends Controller
             Auth::login($user);
         }
 
+        $checker = $this->checkImt(Auth::user()->country);
 
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
 
         return view('currencyexchange.wallethistory');
     }
@@ -324,7 +414,11 @@ class CurrencyFxController extends Controller
             Auth::login($user);
         }
 
+        $checker = $this->checkImt(Auth::user()->country);
 
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
 
         return view('currencyexchange.mywallet');
     }
@@ -343,7 +437,11 @@ class CurrencyFxController extends Controller
             Auth::login($user);
         }
 
+        $checker = $this->checkImt(Auth::user()->country);
 
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
 
         return view('currencyexchange.marketplaceongoing');
     }
@@ -362,7 +460,11 @@ class CurrencyFxController extends Controller
             Auth::login($user);
         }
 
+        $checker = $this->checkImt(Auth::user()->country);
 
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
 
         return view('currencyexchange.marketplacepending');
     }
@@ -381,7 +483,11 @@ class CurrencyFxController extends Controller
             Auth::login($user);
         }
 
+        $checker = $this->checkImt(Auth::user()->country);
 
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
 
         return view('currencyexchange.marketplacemyorder');
     }
@@ -399,7 +505,11 @@ class CurrencyFxController extends Controller
             Auth::login($user);
         }
 
+        $checker = $this->checkImt(Auth::user()->country);
 
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
 
         return view('currencyexchange.marketplacerecentbids');
     }
@@ -418,7 +528,11 @@ class CurrencyFxController extends Controller
             Auth::login($user);
         }
 
+        $checker = $this->checkImt(Auth::user()->country);
 
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
 
         return view('currencyexchange.marketplaceviewmybids');
     }
@@ -445,6 +559,12 @@ class CurrencyFxController extends Controller
             'marketplace' => $this->getMarketBidding($orderId)
         );
 
+        $checker = $this->checkImt(Auth::user()->country);
+
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
+
         return view('currencyexchange.placebid')->with(['pages' => 'Make Bid', 'data' => $data]);
     }
 
@@ -470,6 +590,12 @@ class CurrencyFxController extends Controller
             'marketplace' => $this->getMakeABid($req->get('orderId'), $req->get('buyer_id'))
         );
 
+        $checker = $this->checkImt(Auth::user()->country);
+
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
+
         return view('currencyexchange.acceptbid')->with(['pages' => 'Make Bid', 'data' => $data]);
     }
 
@@ -487,6 +613,13 @@ class CurrencyFxController extends Controller
 
             Auth::login($user);
         }
+        
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if(isset($client) && $client->accountMode == "test"){
+            
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
 
         $data = array(
             'allcountry' => $this->getCountryAndCurrency(),
@@ -494,6 +627,12 @@ class CurrencyFxController extends Controller
             'mywallet' => Auth::user()->forexAccount,
             'allbeneficiary' => $this->getBeneficiaries()
         );
+
+        $checker = $this->checkImt(Auth::user()->country);
+
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
 
         return view('currencyexchange.crossborder')->with(['pages' => 'Cross Border Payment', 'data' => $data]);
     }
@@ -2203,16 +2342,20 @@ class CurrencyFxController extends Controller
                 // Get Bids
                 $data = MakeBid::where('owner_id', $thisuser->id)->groupBy('order_id')->get();
 
+
                 foreach ($data as $value) {
                     $marketPlace = MarketPlace::where('order_id', $value->order_id)->first();
                     $thisbids = MakeBid::where('owner_id', $thisuser->id)->where('order_id', $value->order_id)->count();
 
-                    $value['sell_currencyCode'] = $marketPlace->sell_currencyCode;
-                    $value['buy_currencyCode'] = $marketPlace->buy_currencyCode;
-                    $value['count'] = $thisbids;
-                    $value['buying'] = $marketPlace->buy;
+                    if(isset($marketPlace->sell_currencyCode)){
+                        $value['sell_currencyCode'] = $marketPlace->sell_currencyCode;
+                        $value['buy_currencyCode'] = $marketPlace->buy_currencyCode;
+                        $value['count'] = $thisbids;
+                        $value['buying'] = $marketPlace->buy;
 
-                    $newData[] = $value;
+                        $newData[] = $value;
+                    }
+                    
                 }
 
 
@@ -2300,5 +2443,12 @@ class CurrencyFxController extends Controller
     public function insFXStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $auto_deposit, $country = null, $confirmation)
     {
         FxStatement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route, 'auto_deposit' => $auto_deposit, 'country' => $country, 'confirmation' => $confirmation]);
+    }
+
+
+    public function checkImt($country){
+        $imtCountry = AllCountries::where('name', $country)->first();
+
+        return $imtCountry->imt;
     }
 }
