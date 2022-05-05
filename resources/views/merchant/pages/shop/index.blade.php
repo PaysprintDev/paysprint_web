@@ -8,6 +8,12 @@
         border-radius: 20px;
     }
 
+    .banner-content {
+        background-color: #fff;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
 </style>
 
 @section('content')
