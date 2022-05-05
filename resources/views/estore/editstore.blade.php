@@ -34,13 +34,13 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label>Business Logo</label>
-                                        <img src='{{ asset($data['store']->businessLogo) }}' />
+                                        <img style="width: 45px; height:45px" src='{{ asset($data['store']->businessLogo) }}'/>
                                         <input type="file" name="businessLogo" value="<img src='{{ asset($data['store']->businessLogo) }}' />" class="form-control">
                                         <p>Upload the business logo of the store.</p>
                                     </div>
                                     <div class="col-md-12 mt-3">
                                         <label>Header Content Image</label>
-                                        <img src='{{ asset($data['store']->headerContent) }}' />
+                                        <a href="{{ route('view images', $data['store']->id)}}">View Images</a>
                                         <input type="file" name="headerContent[]" value="<img src='{{ asset($data['store']->headerContent) }}' />"  class="form-control" multiple>
                                         <p>Upload the header content of the shop. MAX 3 pictures will be uploaded</p>
                                     </div>
@@ -54,6 +54,7 @@
                                     </div>
                                     <div class="col-md-12 mt-3">
                                         <label>Advert Section Image</label>
+                                        <a href="{{ route('view advert images', $data['store']->id)}}">View Images</a>
                                         <input type="file" name="advertimage[]" value="{{ $data['store']->advertSectionImage}}" class="form-control" placeholder="Enter header title" multiple>
                                         <p>Upload the advert section image for the shop. MAX 3 pictures will be uploaded</p>
                                     </div>
