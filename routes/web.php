@@ -1019,6 +1019,8 @@ Route::prefix('Admin/estore')->group(function () {
 	Route::get('/refundanddisputereport', ['uses' => 'StoreController@refundDisputeReport', 'as' => 'refund and dispute report']);
 	Route::get('/expiredotp', ['uses' => 'StoreController@expiredOtp', 'as' => 'expired otp']);
 	Route::get('/editstore/{id}', ['uses' => 'StoreController@editStore', 'as' => 'edit store']);
+	Route::get('/images/{id}', ['uses' => 'StoreController@viewImages', 'as' => 'view images']);
+	Route::get('/advertimages/{id}', ['uses' => 'StoreController@viewAdvertImages', 'as' => 'view advert images']);
 	Route::post('/updatestore/{id}',['uses' => 'StoreController@updateStore', 'as' => 'update store' ]);
 	Route::post('/deletestore/{id}',['uses' => 'StoreController@deleteStore', 'as' => 'delete store']);
 	Route::get('/editcategory/{id}',['uses' => 'StoreController@editCategory', 'as' => 'edit category']);
