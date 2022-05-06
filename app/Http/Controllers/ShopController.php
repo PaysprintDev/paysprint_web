@@ -109,7 +109,7 @@ class ShopController extends Controller
                 $category = $req->category == 'Other' ? $req->specifyCategory : $req->category;
 
 
-                if($req->category == 'Other'){
+                if ($req->category == 'Other') {
                     StoreCategory::insert(['category' => $req->specifyCategory, 'state' => false]);
                 }
 
@@ -289,7 +289,7 @@ class ShopController extends Controller
                 $category = $req->category == 'Other' ? $req->specifyCategory : $req->category;
 
 
-                if($req->category == 'Other'){
+                if ($req->category == 'Other') {
                     StoreCategory::insert(['category' => $req->specifyCategory, 'state' => false]);
                 }
 
@@ -439,15 +439,11 @@ class ShopController extends Controller
                 StorePickup::insert($query);
 
                 $status = 'success';
-                $message = 'Pickup address successfully setup for '.$req->state;
-
-            }
-             else {
+                $message = 'Pickup address successfully setup for ' . $req->state;
+            } else {
                 $status = 'error';
                 $message = implode(",", $validator->messages()->all());
             }
-
-
         } catch (\Throwable $th) {
             $status = 'error';
             $message = $th->getMessage();
@@ -485,15 +481,11 @@ class ShopController extends Controller
                 StoreShipping::insert($query);
 
                 $status = 'success';
-                $message = 'Shipping address successfully setup for '.$req->state;
-
-            }
-             else {
+                $message = 'Shipping address successfully setup for ' . $req->state;
+            } else {
                 $status = 'error';
                 $message = implode(",", $validator->messages()->all());
             }
-
-
         } catch (\Throwable $th) {
             $status = 'error';
             $message = $th->getMessage();
@@ -506,6 +498,9 @@ class ShopController extends Controller
 
     public function setupEstore(Request $req)
     {
+
+
+
 
         try {
 
@@ -531,25 +526,30 @@ class ShopController extends Controller
                 $businessLogo = $this->uploadImageFile($req->file('businessLogo'), $routing . "/logo");
 
 
+
+
+
                 if (count($req->file('headerContent')) > 3) {
 
                     $status = 'error';
                     $message = "Your header content file is more than 3";
 
                     return redirect()->back()->with($status, $message);
-
-
                 } else {
-                    if (count($req->file('headerContent')) > 1) {
+
+
+                    if ($req->hasFile('headerContent') && count($req->file('headerContent')) > 1) {
 
                         foreach ($req->file('headerContent') as $headerContentFile) {
 
                             $headContentImage .= $this->uploadImageFile($headerContentFile, $routing . "/headsection") . ", ";
                         }
                     } else {
-                        $headContentImage = $this->uploadImageFile($req->file('headerContent'), $routing . "/headsection");
+                        $headContentImage = $this->uploadImageFile($req->file('headerContent')[0], $routing . "/headsection");
                     }
                 }
+
+
 
 
 
@@ -569,7 +569,7 @@ class ShopController extends Controller
                                 $advertSectionImage .= $this->uploadImageFile($advertSectionFile, $routing . "/advertsection") . ", ";
                             }
                         } else {
-                            $advertSectionImage = $this->uploadImageFile($req->file('advertSectionImage'), $routing . "/advertsection");
+                            $advertSectionImage = $this->uploadImageFile($req->file('advertSectionImage')[0], $routing . "/advertsection");
                         }
                     }
                 }
@@ -592,7 +592,12 @@ class ShopController extends Controller
                     'advertSectionImage' => $advertSectionImage,
                     'advertTitle' => $req->advertTitle,
                     'advertSubtitle' => $req->advertSubtitle,
-                    'refundPolicy' => $req->refundPolicy, 'publish' => $publish
+                    'refundPolicy' => $req->refundPolicy,
+                    'publish' => $publish,
+                    'whatsapp' => $req->whatsapp,
+                    'facebook' => $req->facebook,
+                    'twitter' => $req->twitter,
+                    'instagram' => $req->instagram
                 ];
 
 
@@ -743,12 +748,12 @@ class ShopController extends Controller
                 $getMerchant = User::where('id', $getOrder->merchantId)->first();
 
                 $this->subject = 'Your item ' . $getProduct->productName . ' is out for delivery';
-                $this->message = '<p>We have just dispatched your items from your order ' . $req->orderId . '.</p><p>The package will be delivered by our delivery agent once it gets to the delivery hub at the following address: ' . $getBilling->shippingAddress . ' </p><p>Kindly click on the link: ' . $link . ' and enter the code: <b>' . $code . '</b> to confirm your package as soon as our delivery associate get them to you. This code expires on ' . date('d/m/Y') .' (3 days) if order is not verified.</p>';
+                $this->message = '<p>We have just dispatched your items from your order ' . $req->orderId . '.</p><p>The package will be delivered by our delivery agent once it gets to the delivery hub at the following address: ' . $getBilling->shippingAddress . ' </p><p>Kindly click on the link: ' . $link . ' and enter the code: <b>' . $code . '</b> to confirm your package as soon as our delivery associate get them to you. This code expires on ' . date('d/m/Y') . ' (3 days) if order is not verified.</p>';
 
 
 
 
-                $sendMsg = "Hi " . $getUser->name . ", We have just dispatched your items from your order " . $req->orderId . ". Kindly click on the link: " . $link . " and enter the code: " . $code . " to confirm your package as soon as our delivery associate get them to you. This code expires in " . date('d/m/Y') ." (3 days)  if order is not verified." . $getMerchant->businessname;
+                $sendMsg = "Hi " . $getUser->name . ", We have just dispatched your items from your order " . $req->orderId . ". Kindly click on the link: " . $link . " and enter the code: " . $code . " to confirm your package as soon as our delivery associate get them to you. This code expires in " . date('d/m/Y') . " (3 days)  if order is not verified." . $getMerchant->businessname;
 
                 $getPhone = User::where('email', $getUser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -929,6 +934,7 @@ class ShopController extends Controller
 
     public function uploadImageFile($file, $fileroute)
     {
+
         //Get filename with extension
         $filenameWithExt = $file->getClientOriginalName();
         // Get just filename

@@ -958,9 +958,18 @@
                                                     </p>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <button class="btn btn-success" style="width: 100%;"
-                                                        data-bs-toggle="modal" data-bs-target="#createStoreModal">Setup
-                                                        eStore</button>
+
+                                                    @isset($data['myStore'])
+                                                        <button class="btn btn-primary" style="width: 100%;"
+                                                            data-bs-toggle="modal" data-bs-target="#editStoreModal">Update
+                                                            eStore</button>
+                                                    @else
+                                                        <button class="btn btn-success" style="width: 100%;"
+                                                            data-bs-toggle="modal" data-bs-target="#createStoreModal">Setup
+                                                            eStore</button>
+                                                    @endisset
+
+
                                                 </div>
                                             </div>
                                             <hr>
@@ -1592,6 +1601,45 @@
 
 
 
+                            <div class="form-group">
+                                <label for="facebook">Facebook Link </label>
+                                <input type="text" class="form-control" name="facebook" id="facebook"
+                                    aria-describedby="facebookHelp" placeholder="Enter your facebook link">
+
+                                <small id="facebookHelp" class="form-text text-muted">Let your customers view you on
+                                    facebook</small>
+
+                            </div>
+                            <div class="form-group">
+                                <label for="twitter">Twitter Link </label>
+                                <input type="text" class="form-control" name="twitter" id="twitter"
+                                    aria-describedby="twitterHelp" placeholder="Enter your twitter link">
+
+                                <small id="twitterHelp" class="form-text text-muted">Let your customers view you on
+                                    twitter</small>
+
+                            </div>
+                            <div class="form-group">
+                                <label for="instagram">Instagram Link </label>
+                                <input type="text" class="form-control" name="instagram" id="instagram"
+                                    aria-describedby="instagramHelp" placeholder="Enter your instgram link">
+
+                                <small id="instagramHelp" class="form-text text-muted">Let your customers view you on
+                                    instagram</small>
+
+                            </div>
+                            <div class="form-group">
+                                <label for="Whatsapp">Whatsapp Link </label>
+                                <input type="text" class="form-control" name="Whatsapp" id="Whatsapp"
+                                    aria-describedby="WhatsappHelp" placeholder="Enter your whatsapp business link">
+
+                                <small id="WhatsappHelp" class="form-text text-muted">Let your customers view you on
+                                    Whatsapp</small>
+
+                            </div>
+
+
+
                             <input type="submit" class="btn btn-danger" name="savePreview" value="Save and Preview">
                             <input type="submit" class="btn btn-success" name="publishStore" value="Publish Store">
 
@@ -1707,6 +1755,17 @@
 
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="advertSubtitle">Advert Sub-title Text </label>
+                                    <input type="text" class="form-control" name="advertSubtitle" id="advertSubtitle"
+                                        aria-describedby="advertSubtitleHelp" placeholder="Enter advert sub-title"
+                                        value="{{ $data['myStore']->advertSubtitle }}">
+
+                                    <small id="advertSubtitleHelp" class="form-text text-muted">If ADVERT CONTENT IMAGE is more
+                                        than one (1), separate by comma (,)</small>
+
+                                </div>
+
 
                                 <div class="form-group">
                                     <label for="advertSubtitle">Return and Refund Policy </label>
@@ -1716,6 +1775,48 @@
 
                                     <small id="advertSubtitleHelp" class="form-text text-muted">Here is to assertain your
                                         customers of your return and refund policy</small>
+
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="facebook">Facebook Link </label>
+                                    <input type="text" class="form-control" name="facebook" id="facebook"
+                                        aria-describedby="facebookHelp" placeholder="Enter your facebook link"
+                                        value="{{ $data['myStore']->facebook }}">
+
+                                    <small id="facebookHelp" class="form-text text-muted">Let your customers view you on
+                                        facebook</small>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="twitter">Twitter Link </label>
+                                    <input type="text" class="form-control" name="twitter" id="twitter"
+                                        aria-describedby="twitterHelp" placeholder="Enter your twitter link"
+                                        value="{{ $data['myStore']->twitter }}">
+
+                                    <small id="twitterHelp" class="form-text text-muted">Let your customers view you on
+                                        twitter</small>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="instagram">Instagram Link </label>
+                                    <input type="text" class="form-control" name="instagram" id="instagram"
+                                        aria-describedby="instagramHelp" placeholder="Enter your instagram link"
+                                        value="{{ $data['myStore']->instagram }}">
+
+                                    <small id="instagramHelp" class="form-text text-muted">Let your customers view you on
+                                        instagram</small>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="Whatsapp">Whatsapp Link </label>
+                                    <input type="text" class="form-control" name="Whatsapp" id="Whatsapp"
+                                        aria-describedby="WhatsappHelp" placeholder="Enter your whatsapp business link"
+                                        value="{{ $data['myStore']->whatsapp }}">
+
+                                    <small id="WhatsappHelp" class="form-text text-muted">Let your customers view you on
+                                        Whatsapp</small>
 
                                 </div>
 

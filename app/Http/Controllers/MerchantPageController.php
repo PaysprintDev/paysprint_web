@@ -285,6 +285,10 @@ class MerchantPageController extends Controller
             // If Has Main Store setup
             $merchantStore = $this->getMyStore($getMerchantId->id);
 
+            if(!$merchantStore){
+                return view('errors.comingsoon')->with(['pages' => $req->store.' Shop']);
+            }
+
 
                     $data = [
                         'mystore' => $merchantStore,
