@@ -21,9 +21,9 @@ class EstoreMainShop extends Migration
             $table->string('headerContent');
             $table->string('headerTitle');
             $table->string('headerSubtitle');
-            $table->string('advertSectionImage');
-            $table->string('advertTitle');
-            $table->string('advertSubtitle');
+            $table->string('advertSectionImage')->default('NULL');
+            $table->string('advertTitle')->default('NULL');
+            $table->string('advertSubtitle')->default('NULL');
             $table->string('refundPolicy');
             $table->tinyInteger('publish')->default(false);
             $table->string('status')->default('not active');
