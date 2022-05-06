@@ -47,6 +47,7 @@
                                 <div class="header-main">
                                     <!-- logo start -->
 
+
                                     <div class="header-element logo">
                                         <a href="{{ route('merchant shop now', $data['user']->businessname) }}">
                                             <img src="{{ $data['mystore']->businessLogo }}" alt="logo-image"

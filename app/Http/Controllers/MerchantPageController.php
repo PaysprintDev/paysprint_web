@@ -318,6 +318,11 @@ class MerchantPageController extends Controller
             // If Has Main Store setup
             $merchantStore = $this->getMyStore($getMerchantId->id);
 
+            if(!$merchantStore){
+                 return view('errors.comingsoon')->with(['pages' => $req->store.' Shop']);
+            }
+
+
 
                     $data = [
                         'mystore' => $merchantStore,
@@ -326,6 +331,8 @@ class MerchantPageController extends Controller
                     'mywishlist' => $this->getMyWishlist(Auth::id()),
                     'mycartlist' => $this->getMyCartlist(Auth::id()),
                 ];
+
+
 
 
         return view('merchant.pages.shop.mycheckout')->with(['pages' => $req->store.' Shop', 'data' => $data]);
