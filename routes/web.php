@@ -1014,6 +1014,7 @@ Route::prefix('Admin/aml')->group(function () {
 Route::prefix('Admin/estore')->group(function () {
 	Route::get('/dashboard', ['uses' => 'StoreController@index', 'as' => 'store dashboard']);
 	Route::get('/reviewstore', ['uses' => 'StoreController@reviewStore', 'as' => 'review e-store']);
+	Route::get('/suspendedstore', ['uses' => 'StoreController@suspendedStores', 'as' => 'suspended stores']);
 	Route::get('/productscategory', ['uses' => 'StoreController@productsCategory', 'as' => 'products category']);
 	Route::get('/feedback', ['uses' => 'StoreController@feedback', 'as' => 'feedback']);
 	Route::get('/refundanddisputereport', ['uses' => 'StoreController@refundDisputeReport', 'as' => 'refund and dispute report']);
@@ -1023,6 +1024,7 @@ Route::prefix('Admin/estore')->group(function () {
 	Route::get('/advertimages/{id}', ['uses' => 'StoreController@viewAdvertImages', 'as' => 'view advert images']);
 	Route::post('/updatestore/{id}',['uses' => 'StoreController@updateStore', 'as' => 'update store' ]);
 	Route::post('/deletestore/{id}',['uses' => 'StoreController@deleteStore', 'as' => 'delete store']);
+	Route::post('/restorestore/{id}',['uses' => 'StoreController@restoreStore', 'as' => 'restore store']);
 	Route::get('/editcategory/{id}',['uses' => 'StoreController@editCategory', 'as' => 'edit category']);
 	Route::post('/updatecategory/{id}',['uses' => 'StoreController@updateCategory', 'as' => 'update category']);
 	Route::post('/deletecategory/{id}',['uses' => 'StoreController@deleteCategory', 'as' => 'delete category']);

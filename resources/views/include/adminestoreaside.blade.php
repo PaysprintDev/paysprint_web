@@ -71,6 +71,14 @@
                 </a>
             </li>
             <li class="">
+                <a href="{{ route('suspended stores') }}">
+                    <i class="fa fa-book"></i>
+                    <span>Suspended Stores</span>
+                    <!-- <span class="pull-right-container"> -->
+                    </span>
+                </a>
+            </li>
+            <li class="">
                 <a href="{{ route('products category') }}">
                     <i class="fa fa-book"></i>
                     <span>Products Category</span>
