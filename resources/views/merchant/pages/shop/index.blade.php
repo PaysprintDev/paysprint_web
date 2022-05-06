@@ -299,6 +299,7 @@
                                     <div class="home5-tab swiper-container">
                                         <div class="swiper-wrapper">
 
+
                                             @foreach ($data['myproduct'] as $product)
                                                 <div class="swiper-slide">
                                                     <div class="tab-product">
@@ -362,7 +363,7 @@
                                                         <div class="tab-caption">
                                                             <h3><a href="#">{{ $product->productName }}</a>
                                                             </h3>
-                                                            <div class="rating">
+                                                            <div class="rating disp-0">
                                                                 <i class="fa fa-star e-star"></i>
                                                                 <i class="fa fa-star e-star"></i>
                                                                 <i class="fa fa-star e-star"></i>
@@ -1084,7 +1085,7 @@
                                         <span
                                             style="{{ $data['myproduct'][$i]->previousAmount > 0 ? 'text-decoration: line-through;' : '' }}">{{ $data['myproduct'][$i]->previousAmount > 0 ? $data['user']->currencySymbol . number_format($data['myproduct'][$i]->previousAmount) : '' }}</span>
                                     </div>
-                                    <div class="quick-rating">
+                                    <div class="quick-rating disp-0">
                                         <i class="fa fa-star c-star"></i>
                                         <i class="fa fa-star c-star"></i>
                                         <i class="fa fa-star c-star"></i>
