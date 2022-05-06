@@ -27,6 +27,10 @@ class EstoreMainShop extends Migration
             $table->string('refundPolicy');
             $table->tinyInteger('publish')->default(false);
             $table->string('status')->default('not active');
+            $table->string('whatsapp')->default('NULL');
+            $table->string('facebook')->default('NULL');
+            $table->string('instagram')->default('NULL');
+            $table->string('twitter')->default('NULL');
             $table->softDeletes();
             $table->timestamps();
         });
