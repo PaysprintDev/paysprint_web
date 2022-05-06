@@ -228,11 +228,11 @@
                                                                                         <option value="">Select category
                                                                                         </option>
 
-                                                                                        @foreach ($data['productcategory'] as $item)
+                                                                                        @foreach ($data['productcategory'] as $itemCat)
                                                                                             <option
-                                                                                                value="{{ $item->category }}"
-                                                                                                {{ $product->category == $item->category ? 'selected' : '' }}>
-                                                                                                {{ $item->category }}
+                                                                                                value="{{ $itemCat->category }}"
+                                                                                                {{ $product->category == $itemCat->category ? 'selected' : '' }}>
+                                                                                                {{ $itemCat->category }}
                                                                                             </option>
                                                                                         @endforeach
                                                                                     @endif
@@ -1264,6 +1264,8 @@
                             onclick="$('.modal').modal('hide')"></button>
                     </div>
                     <div class="modal-body">
+
+
                         <form action="{{ route('store product') }}" method="post" enctype="multipart/form-data">
 
                             @csrf
@@ -1273,11 +1275,14 @@
                                 <label for="stock">Category</label>
                                 <select name="category" id="category" class="form-control form-select prodCategory"
                                     required>
+
+
                                     @if (count($data['productcategory']) > 0)
                                         <option value="">Select category</option>
 
-                                        @foreach ($data['productcategory'] as $item)
-                                            <option value="{{ $item->category }}">{{ $item->category }}</option>
+                                        @foreach ($data['productcategory'] as $itemCat)
+                                            <option value="{{ $itemCat->category }}">{{ $itemCat->category }}
+                                            </option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -1350,8 +1355,8 @@
 
                             <div class="form-group">
                                 <label for="deliveryDate">Delivery Period</label>
-                                <input type="text" min="1" class="form-control" name="deliveryDate"
-                                    id="deliveryDate" aria-describedby="deliveryDateHelp" placeholder="6 days" required>
+                                <input type="text" min="1" class="form-control" name="deliveryDate" id="deliveryDate"
+                                    aria-describedby="deliveryDateHelp" placeholder="6 days" required>
                                 <small id="deliveryDateHelp" class="form-text text-muted">How many days would the product
                                     be shipped?</small>
                             </div>
@@ -1599,6 +1604,135 @@
 
 
 
+        {{-- Edit Store --}}
+        @isset($data['myStore'])
+            <div class="modal fade" id="editStoreModal">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Update eStore</h5>
+                            <button class="btn-close" type="button" data-dismiss="modal" aria-label="Close"
+                                onclick="$('.modal').modal('hide')"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ route('setup estore') }}" method="post" enctype="multipart/form-data">
+
+                                @csrf
+
+                                <div class="form-group">
+                                    <label for="businessLogo">Business Logo </label>
+                                    <input type="file" class="form-control" name="businessLogo" id="businessLogo"
+                                        aria-describedby="businessLogoHelp" required>
+
+                                    <small id="businessLogoHelp" class="form-text text-muted">Upload your business logo for
+                                        your shop.</small>
+
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="headerContent">Header Content Image </label>
+                                    <input type="file" class="form-control" name="headerContent[]" id="headerContent"
+                                        aria-describedby="headerContentHelp" required multiple>
+
+                                    <small id="headerContentHelp" class="form-text text-muted">Upload your header content for
+                                        your shop. <strong>MAX 3 pictures will be uploaded</strong> <br> <span
+                                            class="text-danger">Please note
+                                            JPG, PNG and SVG formats are
+                                            only
+                                            allowed.</span></small>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="headerTitle">Header Title Text </label>
+                                    <input type="text" class="form-control" name="headerTitle" id="headerTitle"
+                                        aria-describedby="headerTitleHelp" placeholder="Enter header title"
+                                        value="{{ $data['myStore']->headerTitle }}" required>
+
+                                    <small id="headerTitleHelp" class="form-text text-muted">If HEADER CONTENT IMAGE is more
+                                        than one (1), separate by comma (,)</small>
+
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="headerSubtitle">Header Sub-title Text </label>
+                                    <input type="text" class="form-control" name="headerSubtitle" id="headerSubtitle"
+                                        aria-describedby="headerSubtitleHelp" placeholder="Enter header sub-title"
+                                        value="{{ $data['myStore']->headerSubtitle }}" required>
+
+                                    <small id="headerSubtitleHelp" class="form-text text-muted">If HEADER CONTENT IMAGE is more
+                                        than one (1), separate by comma (,)</small>
+
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="advertSectionImage">Advert Section Image </label>
+                                    <input type="file" class="form-control" name="advertSectionImage[]"
+                                        id="advertSectionImage" aria-describedby="advertSectionImageHelp" multiple>
+
+                                    <small id="advertSectionImageHelp" class="form-text text-muted">Upload your advert section
+                                        image for
+                                        your shop. <strong>MAX 3 pictures will be uploaded</strong> <br> <span
+                                            class="text-danger">Please note
+                                            JPG, PNG and SVG formats are
+                                            only
+                                            allowed.</span></small>
+
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="advertTitle">Advert Title Text </label>
+                                    <input type="text" class="form-control" name="advertTitle" id="advertTitle"
+                                        aria-describedby="advertTitleHelp" placeholder="Enter advert title"
+                                        value="{{ $data['myStore']->advertTitle }}">
+
+                                    <small id="advertTitleHelp" class="form-text text-muted">If ADVERT CONTENT IMAGE is more
+                                        than one (1), separate by comma (,)</small>
+
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="advertSubtitle">Advert Sub-title Text </label>
+                                    <input type="text" class="form-control" name="advertSubtitle" id="advertSubtitle"
+                                        aria-describedby="advertSubtitleHelp" placeholder="Enter advert sub-title"
+                                        value="{{ $data['myStore']->advertSubtitle }}">
+
+                                    <small id="advertSubtitleHelp" class="form-text text-muted">If ADVERT CONTENT IMAGE is more
+                                        than one (1), separate by comma (,)</small>
+
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="advertSubtitle">Return and Refund Policy </label>
+
+                                    <textarea name="refundPolicy" id="refundPolicy" cols="30" rows="10"
+                                        class="form-control">{{ $data['myStore']->refundPolicy }}</textarea>
+
+                                    <small id="advertSubtitleHelp" class="form-text text-muted">Here is to assertain your
+                                        customers of your return and refund policy</small>
+
+                                </div>
+
+
+
+
+
+                                <input type="submit" class="btn btn-danger" name="savePreview" value="Save and Preview">
+                                <input type="submit" class="btn btn-success" name="publishStore" value="Publish Store">
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        @endisset
 
 
     </div>

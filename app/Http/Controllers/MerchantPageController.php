@@ -512,6 +512,7 @@ class MerchantPageController extends Controller
             'myProducts' => $this->getMyProducts(Auth::user()->id),
             'myOrders' => $this->getMyOrders(Auth::user()->id),
             'myDiscounts' => $this->getMyDiscounts(Auth::user()->id),
+            'myStore' => $this->checkMyStore(Auth::user()->id),
             'productcategory' => $this->getProductCategory(),
             'storepickup' => $this->getStorePickupCount(),
             'deliverypickup' => $this->getDeliveryPickupCount(),
