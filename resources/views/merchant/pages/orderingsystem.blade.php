@@ -1204,6 +1204,18 @@
 
                                                                 </div>
 
+                                                                <div class="form-group">
+                                                                    <label for="instore_city">City</label>
+                                                                    <input type="text" class="form-control" name="city"
+                                                                        id="delivery_city"
+                                                                        aria-describedby="instore_cityHelp"
+                                                                        placeholder="Enter delivery city" required>
+                                                                    <small id="instore_cityHelp"
+                                                                        class="form-text text-muted">Please specify the
+                                                                        city</small>
+
+                                                                </div>
+
 
 
                                                                 <div class="form-group">
@@ -1241,10 +1253,20 @@
                                                     </p>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <button class="btn btn-success" style="width: 100%;"
-                                                        data-bs-toggle="modal" data-bs-target="#addProductTax"><small>Add
-                                                            Product
-                                                            Tax</small></button>
+
+                                                    @isset($data['myProductTax'])
+                                                        <button class="btn btn-success" style="width: 100%;"
+                                                            data-bs-toggle="modal" data-bs-target="#editProductTax"><small>Edit
+                                                                Product
+                                                                Tax</small></button>
+                                                    @else
+                                                        <button class="btn btn-success" style="width: 100%;"
+                                                            data-bs-toggle="modal" data-bs-target="#addProductTax"><small>Add
+                                                                Product
+                                                                Tax</small></button>
+                                                    @endisset
+
+
                                                 </div>
                                             </div>
 
@@ -1260,72 +1282,31 @@
                                                                 onclick="$('.modal').modal('hide')"></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <form action="{{ route('store shipping address') }}"
+                                                            <form action="{{ route('store product tax') }}"
                                                                 method="post">
 
                                                                 @csrf
 
                                                                 <div class="form-group">
-                                                                    <label for="instore_address">Country</label>
-                                                                    <select name="country" id="delivery_country"
-                                                                        class="form-control form-select" required>
-
-                                                                    </select>
-                                                                    <small id="delivery_countryHelp"
-                                                                        class="form-text text-muted">Please select
-                                                                        country you deliver to.</small>
+                                                                    <label for="taxName">Tax Name</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="taxName" id="taxName"
+                                                                        aria-describedby="taxNameHelp"
+                                                                        placeholder="Enter tax name" required>
+                                                                    <small id="taxNameHelp"
+                                                                        class="form-text text-muted">Please provide the tax
+                                                                        name</small>
                                                                 </div>
 
-
-
                                                                 <div class="form-group">
-                                                                    <label for="instore_state">Currency Code</label>
-                                                                    <select name="currencyCode" id="category"
-                                                                        class="form-control form-select" required>
-                                                                        @if (count($data['activeCountry']) > 0)
-                                                                            <option value="">Select currency code
-                                                                            </option>
-
-                                                                            @foreach ($data['activeCountry'] as $item)
-                                                                                <option
-                                                                                    value="{{ $item->currencyCode }}">
-                                                                                    {{ $item->name . ' (' . $item->currencyCode . ')' }}
-                                                                                </option>
-                                                                            @endforeach
-                                                                        @endif
-                                                                    </select>
-                                                                    <small id="instore_addressHelp"
-                                                                        class="form-text text-muted">Pick a correct
-                                                                        currency code for the above country</small>
-
-                                                                </div>
-
-
-                                                                <div class="form-group">
-                                                                    <label for="instore_state">State</label>
-                                                                    <select name="state" id="delivery_state"
-                                                                        class="form-control form-select" required>
-
-                                                                    </select>
-                                                                    <small id="instore_addressHelp"
-                                                                        class="form-text text-muted">Select the states
-                                                                        you deliver to</small>
-
-                                                                </div>
-
-
-
-                                                                <div class="form-group">
-                                                                    <label for="instore_state">Delivery Rate</label>
-                                                                    <input type="number" class="form-control"
-                                                                        name="deliveryRate" id="delivery_deliveryRate"
-                                                                        aria-describedby="instore_deliveryRateHelp"
-                                                                        placeholder="Enter delivery rate" value="0.00"
-                                                                        min="0.00" step="0.00" required>
-                                                                    <small id="instore_addressHelp"
-                                                                        class="form-text text-muted">Please set
-                                                                        your store delivery rate</small>
-
+                                                                    <label for="taxValue">Tax Value (%)</label>
+                                                                    <input type="number" min="0.00" step="0.01"
+                                                                        class="form-control" name="taxValue"
+                                                                        id="taxValue" aria-describedby="taxValueHelp"
+                                                                        placeholder="Enter tax value (%)" required>
+                                                                    <small id="taxValueHelp"
+                                                                        class="form-text text-muted">Please provide the tax
+                                                                        name</small>
                                                                 </div>
 
 
@@ -1339,6 +1320,65 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+
+
+                                            @isset($data['myProductTax'])
+                                                <div class="modal fade" id="editProductTax">
+                                                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLongTitle">
+                                                                    Edit Product Tax</h5>
+                                                                <button class="btn-close" type="button"
+                                                                    data-dismiss="modal" aria-label="Close"
+                                                                    onclick="$('.modal').modal('hide')"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form
+                                                                    action="{{ route('edit product tax', $data['myProductTax']->id) }}"
+                                                                    method="post">
+
+                                                                    @csrf
+
+                                                                    <div class="form-group">
+                                                                        <label for="taxName">Tax Name</label>
+                                                                        <input type="text" class="form-control"
+                                                                            name="taxName" id="taxName"
+                                                                            aria-describedby="taxNameHelp"
+                                                                            placeholder="Enter tax name"
+                                                                            value="{{ $data['myProductTax']->taxName }}"
+                                                                            required>
+                                                                        <small id="taxNameHelp"
+                                                                            class="form-text text-muted">Please provide the tax
+                                                                            name</small>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="taxValue">Tax Value (%)</label>
+                                                                        <input type="number" min="0.00" step="0.01"
+                                                                            class="form-control" name="taxValue"
+                                                                            id="taxValue" aria-describedby="taxValueHelp"
+                                                                            placeholder="Enter tax value (%)"
+                                                                            value="{{ $data['myProductTax']->taxValue }}"
+                                                                            required>
+                                                                        <small id="taxValueHelp"
+                                                                            class="form-text text-muted">Please provide the tax
+                                                                            name</small>
+                                                                    </div>
+
+
+
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary">Submit</button>
+
+                                                                </form>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endisset
 
                                         </div>
                                     </div>
@@ -1467,9 +1507,6 @@
                                 <small id="deliveryDateHelp" class="form-text text-muted">How many days would the product
                                     be shipped?</small>
                             </div>
-
-
-
 
 
 

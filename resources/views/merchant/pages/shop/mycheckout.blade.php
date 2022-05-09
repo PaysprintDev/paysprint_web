@@ -106,7 +106,8 @@
                                     <br>
                                     <ul class="billing-ul input-2 mt-3">
                                         <li class="billing-li">
-                                            <label><strong>Add Shipping Details</strong></label> <hr><br>
+                                            <label><strong>Add Shipping Details</strong></label>
+                                            <hr><br>
                                             <input type="checkbox" name="shipping_check" id="shipping_check"> Same as
                                             billing details
                                         </li>
@@ -157,109 +158,139 @@
                             </div>
 
                             <br>
-                 </div>
-                </div>
-                            <div class="col-md-4 order-area card">
-                                <div class="check-pro">
-                                    <h2>In your cart ({{ count($data['mycartlist']) }})</h2>
-                                    <ul class="check-ul">
-
-                                        @php
-                                            
-                                            $totalPrice = 0;
-                                            
-                                        @endphp
-
-                                        @if (count($data['mycartlist']) > 0)
-                                            @foreach ($data['mycartlist'] as $cartItem)
-                                                <li>
-                                                    <div class="check-pro-img">
-                                                        <a href="javascript:void(0)"><img
-                                                                src="{{ $cartItem->productImage }}" class="img-fluid"
-                                                                alt="image"></a>
-                                                    </div>
-                                                    <div class="check-content">
-                                                        <p>Item: <a href="javascript:void(0)">{{ $cartItem->productName }}</a></p>
-                                                        <p class="check-code-blod">Quantity:
-                                                            <span>{{ $cartItem->quantity }}</span>
-                                                        </p>
-                                                        <span
-                                                            class="check-price">{{ $data['user']->currencySymbol . number_format($cartItem->price * $cartItem->quantity, 2) }}</span>
-                                                        <hr>
-                                                    </div>
-                                                </li>
-
-                                                @php $totalPrice += $cartItem->quantity * $cartItem->price; @endphp
-                                            @endforeach
-                                        @else
-                                            <li>No item in cart</li>
-                                        @endif
-
-
-                                    </ul>
-                                </div>
-
-
-                                <h2>Your order</h2>
-                                <hr>
-                                <ul class="order-history row">
-                                    <li class="order-details col-md-6 mb-2">
-                                        <span><strong>Product:</strong></span>
-                                    </li>
-                                    <li class="order-details col-md-6 mb-2" >
-                                        <span><strong>Total</strong></span>
-                                    </li>
-                                    <hr>
-
-                                    @for ($i = 0; $i < count($data['mycartlist']); $i++)
-                                        <li class="order-details col-md-6 mb-2">
-                                            <span>{{ $data['mycartlist'][$i]->productName }}</span>
-                                        </li>
-                                        <li class="order-details col-md-6 mb-2">
-                                            <span>{{ $data['user']->currencySymbol . number_format($data['mycartlist'][$i]->price, 2) }}</span>
-                                        </li>
-                                    @endfor
-
-
-
-
-                                    <li class="order-details col-md-6 mt-2 mb-2">
-                                        <span>Subtotal:</span> 
-                                    </li>
-                                    <li class="order-details col-md-6 mt-2 mb-2">
-                                        <input type="hidden" name="subtotal" value="{{ $totalPrice }}">
-                                        <span>{{ $data['user']->currencySymbol . number_format($totalPrice, 2) }}</span>
-                                    </li>
-                                    <li class="order-details col-md-6 mt-2 mb-2">
-                                        <span>Shipping Charge:</span>
-                                    </li>
-                                    <li class="order-details col-md-6 mt-2 mb-2">
-                                        <input type="hidden" name="shippingCharge" value="0">
-                                        <span class="text-danger"><strong>Free shipping</strong></span>
-                                    </li>
-                                    <li class="order-details col-md-6 mt-2 mb-2">
-                                        <span>Total:</span>
-                                    </li>
-                                    <li class="order-details col-md-6 mt-2 mb-2">
-                                        <input type="hidden" name="total" value="{{ $totalPrice }}">
-                                        <span><strong>{{ $data['user']->currencySymbol . number_format($totalPrice, 2) }}</strong></span>
-                                    </li>
-                                </ul>
-
-                                <div class="checkout-btn">
-
-                                    <button type="submit" class="btn-style1 form-control mt-3">Place order</button>
-                                </div>
-                            </div>
-
-
                         </div>
-
-                    </form>
-
-
                 </div>
+                <div class="col-md-4 order-area card">
+                    <div class="check-pro">
+                        <h2>In your cart ({{ count($data['mycartlist']) }})</h2>
+                        <ul class="check-ul">
+
+                            @php
+
+                                $totalPrice = 0;
+
+                            @endphp
+
+                            @if (count($data['mycartlist']) > 0)
+                                @foreach ($data['mycartlist'] as $cartItem)
+                                    <li>
+                                        <div class="check-pro-img">
+                                            <a href="javascript:void(0)"><img src="{{ $cartItem->productImage }}"
+                                                    class="img-fluid" alt="image"></a>
+                                        </div>
+                                        <div class="check-content">
+                                            <p>Item: <a href="javascript:void(0)">{{ $cartItem->productName }}</a></p>
+                                            <p class="check-code-blod">Quantity:
+                                                <span>{{ $cartItem->quantity }}</span>
+                                            </p>
+                                            <span
+                                                class="check-price">{{ $data['user']->currencySymbol . number_format($cartItem->price * $cartItem->quantity, 2) }}</span>
+                                            <hr>
+                                        </div>
+                                    </li>
+
+                                    @php $totalPrice += $cartItem->quantity * $cartItem->price; @endphp
+                                @endforeach
+                            @else
+                                <li>No item in cart</li>
+                            @endif
+
+
+                        </ul>
+                    </div>
+
+
+                    @isset($data['storeTax'])
+                        @php $totalTax = $totalPrice * $data['storeTax']->taxValue / 100; @endphp
+                    @else
+                        @php $totalTax = 0; @endphp
+                    @endisset
+
+
+                    <h2>Your order</h2>
+                    <hr>
+                    <ul class="order-history row">
+                        <li class="order-details col-md-6 mb-2">
+                            <span><strong>Product:</strong></span>
+                        </li>
+                        <li class="order-details col-md-6 mb-2">
+                            <span><strong>Total</strong></span>
+                        </li>
+                        <hr>
+
+                        @for ($i = 0; $i < count($data['mycartlist']); $i++)
+                            <li class="order-details col-md-6 mb-2">
+                                <span>{{ $data['mycartlist'][$i]->productName }}</span>
+                            </li>
+                            <li class="order-details col-md-6 mb-2">
+                                <span>{{ $data['user']->currencySymbol . number_format($data['mycartlist'][$i]->price, 2) }}</span>
+                            </li>
+                        @endfor
+
+
+
+
+                        <li class="order-details col-md-6 mt-2 mb-2">
+                            <span>Subtotal:</span>
+                        </li>
+                        <li class="order-details col-md-6 mt-2 mb-2">
+                            <input type="hidden" name="subtotal" value="{{ $totalPrice }}">
+                            <span>{{ $data['user']->currencySymbol . number_format($totalPrice, 2) }}</span>
+                        </li>
+
+                        <li class="order-details col-md-6 mt-2 mb-2">
+                            <span>Shipping Charge:</span>
+                        </li>
+                        <li class="order-details col-md-6 mt-2 mb-2">
+                            <input type="hidden" name="shippingCharge" value="0">
+                            <span class="text-danger"><strong>Free shipping</strong></span>
+                        </li>
+
+                        @isset($data['storeTax'])
+                            <li class="order-details col-md-6 mt-2 mb-2">
+                                <span>{{ $data['storeTax']->taxName }} (Tax):</span>
+                            </li>
+                            <li class="order-details col-md-6 mt-2 mb-2">
+                                <input type="hidden" name="shippingCharge" value="0">
+                                <span
+                                    class="text-primary"><strong>{{ $data['user']->currencySymbol . number_format($totalTax, 2) }}</strong></span>
+                            </li>
+                        @else
+                            <li class="order-details col-md-6 mt-2 mb-2">
+                                <span>Tax:</span>
+                            </li>
+                            <li class="order-details col-md-6 mt-2 mb-2">
+                                <input type="hidden" name="shippingCharge" value="0">
+                                <span
+                                    class="text-danger"><strong>{{ $data['user']->currencySymbol . number_format(0, 2) }}</strong></span>
+
+                            </li>
+                        @endisset
+
+
+                        <li class="order-details col-md-6 mt-2 mb-2">
+                            <span>Total:</span>
+                        </li>
+                        <li class="order-details col-md-6 mt-2 mb-2">
+                            <input type="hidden" name="total" value="{{ $totalPrice + $totalTax }}">
+                            <span><strong>{{ $data['user']->currencySymbol . number_format($totalPrice + $totalTax, 2) }}</strong></span>
+                        </li>
+                    </ul>
+
+                    <div class="checkout-btn">
+
+                        <button type="submit" class="btn-style1 form-control mt-3">Place order</button>
+                    </div>
+                </div>
+
+
             </div>
+
+            </form>
+
+
+        </div>
+        </div>
         </div>
     </section>
     <!-- checkout page end -->

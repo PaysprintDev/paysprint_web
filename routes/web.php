@@ -191,7 +191,7 @@ Route::post('/storeanswer', ['uses' => 'HomeController@storeSubMessage', 'as' =>
 
 Route::prefix('shop')->group(function () {
 	Route::get('/{merchant}', ['uses' => 'MerchantPageController@merchantShop', 'as' => 'merchant shop now']);
-	
+
 
 });
 
@@ -377,6 +377,8 @@ Route::prefix('merchant')->group(function () {
 	Route::post('/deletediscount/{id}', [ShopController::class, 'deleteDiscount'])->name('delete discount');
 	Route::post('/storepickupaddress', [ShopController::class, 'storePickupAddress'])->name('store pickup address');
 	Route::post('/storeshippingaddress', [ShopController::class, 'storeShippingAddress'])->name('store shipping address');
+	Route::post('/storeproducttax', [ShopController::class, 'storeProductTax'])->name('store product tax');
+	Route::post('/editproducttax/{id}', [ShopController::class, 'editProductTax'])->name('edit product tax');
 
 
 	Route::post('/setupestore', [ShopController::class, 'setupEstore'])->name('setup estore');
