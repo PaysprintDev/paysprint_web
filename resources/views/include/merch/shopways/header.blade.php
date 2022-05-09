@@ -277,7 +277,7 @@
                                                                 </ul>
                                                             </li>
                                                             <li class="menu-link parent">
-                                                                <a href="javascript:void(0)" class="link-title">
+                                                                <a href="{{ route('checkout item', 'store=' . $data['user']->businessname) }}" class="link-title">
                                                                     <span class="sp-link-title">Checkout</span>
                                                                 </a>
                                                                 <a href="#collapse-top-page-menu"
