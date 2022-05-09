@@ -48,9 +48,12 @@
                         type="button" role="tab" aria-controls="nav-sales" aria-selected="false">Sales</button>
                     <button class="nav-link" id="nav-refund-tab" data-bs-toggle="tab" data-bs-target="#nav-refund"
                         type="button" role="tab" aria-controls="nav-refund" aria-selected="false">Refund</button>
-                    <button class="nav-link" id="nav-discount-tab" data-bs-toggle="tab" data-bs-target="#nav-discount"
-                        type="button" role="tab" aria-controls="nav-discount" aria-selected="false">Discount codes <span
-                            class="text-danger">[coming soon]</span></button>
+                    <button class="nav-link" id="nav-discount-tab" data-bs-toggle="tab"
+                        data-bs-target="#nav-discounts" type="button" role="tab" aria-controls="nav-discounts"
+                        aria-selected="false">Discount codes <span class="text-danger">[coming soon]</span></button>
+                    {{-- <button class="nav-link" id="nav-discount-tab" data-bs-toggle="tab"
+                        data-bs-target="#nav-discount" type="button" role="tab" aria-controls="nav-discount"
+                        aria-selected="false">Discount codes <span class="text-danger">[coming soon]</span></button> --}}
 
                     <button class="nav-link" id="nav-managestore-tab" data-bs-toggle="tab"
                         data-bs-target="#nav-managestore" type="button" role="tab" aria-controls="nav-managestore"
@@ -1238,10 +1241,105 @@
                                                     </p>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <button class="btn btn-success" style="width: 100%;"><small>Add Product
+                                                    <button class="btn btn-success" style="width: 100%;"
+                                                        data-bs-toggle="modal" data-bs-target="#addProductTax"><small>Add
+                                                            Product
                                                             Tax</small></button>
                                                 </div>
                                             </div>
+
+
+                                            <div class="modal fade" id="addProductTax">
+                                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLongTitle">
+                                                                Add Product Tax</h5>
+                                                            <button class="btn-close" type="button"
+                                                                data-dismiss="modal" aria-label="Close"
+                                                                onclick="$('.modal').modal('hide')"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form action="{{ route('store shipping address') }}"
+                                                                method="post">
+
+                                                                @csrf
+
+                                                                <div class="form-group">
+                                                                    <label for="instore_address">Country</label>
+                                                                    <select name="country" id="delivery_country"
+                                                                        class="form-control form-select" required>
+
+                                                                    </select>
+                                                                    <small id="delivery_countryHelp"
+                                                                        class="form-text text-muted">Please select
+                                                                        country you deliver to.</small>
+                                                                </div>
+
+
+
+                                                                <div class="form-group">
+                                                                    <label for="instore_state">Currency Code</label>
+                                                                    <select name="currencyCode" id="category"
+                                                                        class="form-control form-select" required>
+                                                                        @if (count($data['activeCountry']) > 0)
+                                                                            <option value="">Select currency code
+                                                                            </option>
+
+                                                                            @foreach ($data['activeCountry'] as $item)
+                                                                                <option
+                                                                                    value="{{ $item->currencyCode }}">
+                                                                                    {{ $item->name . ' (' . $item->currencyCode . ')' }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        @endif
+                                                                    </select>
+                                                                    <small id="instore_addressHelp"
+                                                                        class="form-text text-muted">Pick a correct
+                                                                        currency code for the above country</small>
+
+                                                                </div>
+
+
+                                                                <div class="form-group">
+                                                                    <label for="instore_state">State</label>
+                                                                    <select name="state" id="delivery_state"
+                                                                        class="form-control form-select" required>
+
+                                                                    </select>
+                                                                    <small id="instore_addressHelp"
+                                                                        class="form-text text-muted">Select the states
+                                                                        you deliver to</small>
+
+                                                                </div>
+
+
+
+                                                                <div class="form-group">
+                                                                    <label for="instore_state">Delivery Rate</label>
+                                                                    <input type="number" class="form-control"
+                                                                        name="deliveryRate" id="delivery_deliveryRate"
+                                                                        aria-describedby="instore_deliveryRateHelp"
+                                                                        placeholder="Enter delivery rate" value="0.00"
+                                                                        min="0.00" step="0.00" required>
+                                                                    <small id="instore_addressHelp"
+                                                                        class="form-text text-muted">Please set
+                                                                        your store delivery rate</small>
+
+                                                                </div>
+
+
+
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">Submit</button>
+
+                                                            </form>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
 
@@ -1629,12 +1727,12 @@
 
                             </div>
                             <div class="form-group">
-                                <label for="Whatsapp">Whatsapp Link </label>
-                                <input type="text" class="form-control" name="Whatsapp" id="Whatsapp"
-                                    aria-describedby="WhatsappHelp" placeholder="Enter your whatsapp business link">
+                                <label for="whatsapp">Whatsapp Link </label>
+                                <input type="text" class="form-control" name="whatsapp" id="whatsapp"
+                                    aria-describedby="whatsappHelp" placeholder="Enter your whatsapp business link">
 
-                                <small id="WhatsappHelp" class="form-text text-muted">Let your customers view you on
-                                    Whatsapp</small>
+                                <small id="whatsappHelp" class="form-text text-muted">Let your customers view you on
+                                    WhatsApp</small>
 
                             </div>
 
@@ -1810,13 +1908,13 @@
 
                                 </div>
                                 <div class="form-group">
-                                    <label for="Whatsapp">Whatsapp Link </label>
-                                    <input type="text" class="form-control" name="Whatsapp" id="Whatsapp"
-                                        aria-describedby="WhatsappHelp" placeholder="Enter your whatsapp business link"
+                                    <label for="whatsapp">Whatsapp Link </label>
+                                    <input type="text" class="form-control" name="whatsapp" id="whatsapp"
+                                        aria-describedby="whatsappHelp" placeholder="Enter your whatsapp business link"
                                         value="{{ $data['myStore']->whatsapp }}">
 
-                                    <small id="WhatsappHelp" class="form-text text-muted">Let your customers view you on
-                                        Whatsapp</small>
+                                    <small id="whatsappHelp" class="form-text text-muted">Let your customers view you on
+                                        WhatsApp</small>
 
                                 </div>
 

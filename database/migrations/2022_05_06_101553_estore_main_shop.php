@@ -43,6 +43,6 @@ class EstoreMainShop extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('estore_main_shop');
     }
 }
