@@ -396,6 +396,7 @@ class MerchantPageController extends Controller
                     $data = [
                         'mystore' => $merchantStore,
                     'myproduct' => $this->getProducts($getMerchantId->id),
+                    'storeTax' => $this->getStoreTax($getMerchantId->id),
                     'user' => $getMerchantId,
                     'mywishlist' => $this->getMyWishlist(Auth::id()),
                     'mycartlist' => $this->getMyCartlist(Auth::id()),
@@ -589,6 +590,7 @@ class MerchantPageController extends Controller
             'myOrders' => $this->getMyOrders(Auth::user()->id),
             'myDiscounts' => $this->getMyDiscounts(Auth::user()->id),
             'myStore' => $this->checkMyStore(Auth::user()->id),
+            'myProductTax' => $this->checkMyProductTax(Auth::user()->id),
             'productcategory' => $this->getProductCategory(),
             'storepickup' => $this->getStorePickupCount(),
             'deliverypickup' => $this->getDeliveryPickupCount(),
@@ -747,6 +749,7 @@ class MerchantPageController extends Controller
 
         return $data;
     }
+
 
     public function getMyProducts($merchantId){
         $data = StoreProducts::where('merchantId', $merchantId)->orderBy('created_at', 'DESC')->get();

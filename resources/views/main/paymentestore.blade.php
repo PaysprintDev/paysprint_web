@@ -140,15 +140,14 @@
                                             @php
                                                 $productCost = 0;
                                                 $shipCost = 0;
-                                                $taxCost = 0;
+                                                $taxCost = $data['storeTax']->taxValue != null ? $data['storeTax']->taxValue / 100 : 0;
                                                 $totalCost = 0;
                                             @endphp
                                             @for ($i = 0; $i < count($data['getCart']); $i++)
                                                 @php
                                                     $productCost += $data['getCart'][$i]->price * $data['getCart'][$i]->quantity;
                                                     $shipCost += $data['getCart'][$i]->shippingFee;
-                                                    $taxCost += $data['getCart'][$i]->taxFee * $data['getCart'][$i]->quantity;
-                                                    
+
                                                 @endphp
                                             @endfor
 
@@ -167,7 +166,7 @@
                                                     <tr>
                                                         <td>Tax</td>
 
-                                                        <td><b>{{ $data['paymentorg']->currencyCode . ' ' . number_format($taxCost, 2) }}</b>
+                                                        <td><b>{{ $data['paymentorg']->currencyCode . ' ' . number_format($productCost * $taxCost, 2) }}</b>
                                                         </td>
                                                     </tr>
 
@@ -175,7 +174,7 @@
                                                         <td colspan="2" align="center">
 
                                                             @php
-                                                                $totalCost = $productCost + $shipCost + $taxCost;
+                                                                $totalCost = $productCost + $shipCost + $productCost * $taxCost;
                                                             @endphp
                                                             <h4><img
                                                                     src="https://img.icons8.com/nolan/25/shopping-cart-promotion.png" />

@@ -15,6 +15,7 @@ class AddProductTax extends Migration
     {
         Schema::create('product_tax', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('merchantId');
             $table->string('taxName');
             $table->string('taxValue');
             $table->softDeletes();

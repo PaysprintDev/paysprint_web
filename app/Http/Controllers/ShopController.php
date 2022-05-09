@@ -14,6 +14,7 @@ use App\StoreMainShop;
 use App\StoreProducts;
 use App\StoreWishList;
 use App\Mail\sendEmail;
+use App\ProductTax;
 use App\Traits\MyEstore;
 use App\Traits\Xwireless;
 
@@ -462,6 +463,7 @@ class ShopController extends Controller
             $validator = Validator::make($req->all(), [
                 'country' => 'required',
                 'state' => 'required',
+                'city' => 'required',
                 'currencyCode' => 'required',
                 'deliveryRate' => 'required'
             ]);
@@ -474,6 +476,7 @@ class ShopController extends Controller
                     'merchantId' => Auth::id(),
                     'country' => $req->country,
                     'state' => $req->state,
+                    'city' => $req->city,
                     'currencyCode' => $req->currencyCode,
                     'deliveryRate' => $req->deliveryRate
                 ];
@@ -481,7 +484,7 @@ class ShopController extends Controller
                 StoreShipping::insert($query);
 
                 $status = 'success';
-                $message = 'Shipping address successfully setup for ' . $req->state;
+                $message = 'Shipping address successfully setup for ' . $req->city.', '.$req->state;
             } else {
                 $status = 'error';
                 $message = implode(",", $validator->messages()->all());
@@ -495,6 +498,40 @@ class ShopController extends Controller
         return redirect()->back()->with($status, $message);
     }
 
+
+    public function storeProductTax(Request $req)
+    {
+        try {
+
+            ProductTax::updateOrCreate(['merchantId' => Auth::id(), 'taxName' => $req->taxName],['merchantId' => Auth::id(), 'taxName' => $req->taxName, 'taxValue' => $req->taxValue, 'created_at' => now(), 'updated_at' => now()]);
+
+            $status = 'success';
+            $message = 'Product tax successfully created';
+
+        } catch (\Throwable $th) {
+            $status = 'error';
+            $message = $th->getMessage();
+        }
+
+         return redirect()->back()->with($status, $message);
+    }
+
+    public function editProductTax(Request $req, $id)
+    {
+        try {
+
+            ProductTax::where('id', $id)->update(['merchantId' => Auth::id(), 'taxName' => $req->taxName, 'taxValue' => $req->taxValue, 'updated_at' => now()]);
+
+            $status = 'success';
+            $message = 'Product tax successfully updated';
+
+        } catch (\Throwable $th) {
+            $status = 'error';
+            $message = $th->getMessage();
+        }
+
+         return redirect()->back()->with($status, $message);
+    }
 
     public function setupEstore(Request $req)
     {
