@@ -191,16 +191,18 @@ Route::post('/storeanswer', ['uses' => 'HomeController@storeSubMessage', 'as' =>
 
 Route::prefix('shop')->group(function () {
 	Route::get('/{merchant}', ['uses' => 'MerchantPageController@merchantShop', 'as' => 'merchant shop now']);
+	
 
 });
 
 
 Route::prefix('product')->group(function () {
+
 	Route::get('/cart', ['uses' => 'MerchantPageController@myCart', 'as' => 'customer shoping cart']);
 	Route::get('/checkout', ['uses' => 'MerchantPageController@myCheckout', 'as' => 'checkout item']);
 	Route::post('/place-order', ['uses' => 'ShopController@placeOrder', 'as' => 'place order']);
 	Route::get('payment', ['uses' => 'HomeController@estorePayment', 'as' => 'estore payment']);
-
+	Route::get('/shop', ['uses' => 'MerchantPageController@merchantShopPage', 'as' => 'product shop']);
 });
 
 
