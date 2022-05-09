@@ -176,7 +176,7 @@
                                                     <div class="check-pro-img">
                                                         <a href="javascript:void(0)"><img
                                                                 src="{{ $cartItem->productImage }}" class="img-fluid"
-                                                                alt="image"></a>
+                                                                alt="image" ></a>
                                                     </div>
                                                     <div class="check-content">
                                                         <p>Item: <a href="javascript:void(0)">{{ $cartItem->productName }}</a></p>

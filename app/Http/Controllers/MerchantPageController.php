@@ -253,7 +253,7 @@ class MerchantPageController extends Controller
                 ];
 
 
-
+                // dd($data);
 
                 return view('merchant.pages.shop.index')->with(['pages' => $merchant.' Shop', 'data' => $data]);
             }
