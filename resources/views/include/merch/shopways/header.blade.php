@@ -70,7 +70,7 @@
 
                                                             </li>
                                                             <li class="menu-link parent">
-                                                                <a href="javascript:void(0)" class="link-title">
+                                                                <a href="{{ route('product shop', 'merchant='.$data['user']->businessname)}}" class="link-title">
                                                                     <span class="sp-link-title">Shop</span>
                                                                     {{-- <i class="fa fa-angle-down"></i> --}}
                                                                 </a>
