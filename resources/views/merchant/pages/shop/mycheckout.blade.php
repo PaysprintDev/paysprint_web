@@ -24,7 +24,7 @@
     <section class="section-tb-padding">
         <div class="container">
             <div class="row">
-                <div class="col">
+                <div class="col-md-8">
 
                     <form action="{{ route('place order') }}" method="post">
                         @csrf
@@ -42,71 +42,71 @@
                                         </li>
 
                                     </ul>
-                                    <ul class="billing-ul">
+                                    <ul class="billing-ul mt-3">
                                         <li class="billing-li">
                                             <label>Company name (Optional)</label>
                                             <input type="text" name="company" class="form-control"
                                                 placeholder="Company name" value="">
                                         </li>
                                     </ul>
-                                    <ul class="billing-ul">
+                                    <ul class="billing-ul mt-3">
                                         <li class="billing-li">
                                             <label>Country</label>
                                             <select name="country" id="country" class="form-control form-select countries"
                                                 required></select>
                                         </li>
                                     </ul>
-                                    <ul class="billing-ul">
+                                    <ul class="billing-ul mt-3">
                                         <li class="billing-li">
                                             <label for="state">Province/State</label>
                                             <select name="state" id="state" class="form-control form-select"
                                                 required></select>
                                         </li>
                                     </ul>
-                                    <ul class="billing-ul">
+                                    <ul class="billing-ul mt-3">
                                         <li class="billing-li">
                                             <label>Street address</label>
                                             <input type="text" name="address" class="form-control"
                                                 placeholder="Street address" required>
                                         </li>
                                     </ul>
-                                    <ul class="billing-ul">
+                                    <ul class="billing-ul mt-3">
                                         <li class="billing-li">
                                             <label>Apartment,suite,unit etc. (Optional)</label>
                                             <input type="text" name="apartment" class="form-control" placeholder="">
                                         </li>
                                     </ul>
 
-                                    <ul class="billing-ul">
+                                    <ul class="billing-ul mt-3">
                                         <li class="billing-li">
                                             <label>Town / City</label>
                                             <input type="text" name="city" class="form-control" placeholder="" required>
                                         </li>
                                     </ul>
 
-                                    <ul class="billing-ul">
+                                    <ul class="billing-ul mt-3">
                                         <li class="billing-li">
                                             <label>Postcode / ZIP</label>
                                             <input type="text" name="postalCode" class="form-control" placeholder=""
                                                 required>
                                         </li>
                                     </ul>
-                                    <ul class="billing-ul input-2">
+                                    <ul class="billing-ul input-2 mt-3">
                                         <li class="billing-li">
                                             <label>Email address</label>
                                             <input type="email" name="email" class="form-control"
                                                 placeholder="Email address" value="{{ Auth::user()->email }}" required>
                                         </li>
-                                        <li class="billing-li">
+                                        <li class="billing-li mt-3">
                                             <label>Phone</label>
                                             <input type="text" name="phone" class="form-control" placeholder="Phone"
                                                 value="{{ Auth::user()->telephone }}" required>
                                         </li>
                                     </ul>
                                     <br>
-                                    <ul class="billing-ul input-2">
+                                    <ul class="billing-ul input-2 mt-3">
                                         <li class="billing-li">
-                                            <label>Add Shipping Details</label> <br>
+                                            <label><strong>Add Shipping Details</strong></label> <hr><br>
                                             <input type="checkbox" name="shipping_check" id="shipping_check"> Same as
                                             billing details
                                         </li>
@@ -117,7 +117,7 @@
 
                                     <div class="shippingInfo">
                                         <h2>Shipping details</h2>
-                                        <ul class="billing-ul input-2">
+                                        <ul class="billing-ul input-2 mt-3">
                                             <li class="billing-li">
                                                 <label>Full name</label>
                                                 <input type="text" name="shippingName" class="form-control"
@@ -125,7 +125,7 @@
                                             </li>
 
                                         </ul>
-                                        <ul class="billing-ul input-2">
+                                        <ul class="billing-ul input-2 mt-3">
                                             <li class="billing-li">
                                                 <label>Address</label>
                                                 <input type="text" name="shippingAddress" class="form-control"
@@ -134,7 +134,7 @@
 
                                         </ul>
 
-                                        <ul class="billing-ul input-2">
+                                        <ul class="billing-ul input-2 mt-3">
                                             <li class="billing-li">
                                                 <label>Email address</label>
                                                 <input type="email" name="shippingEmail" class="form-control"
@@ -142,7 +142,7 @@
                                             </li>
 
                                         </ul>
-                                        <ul class="billing-ul input-2">
+                                        <ul class="billing-ul input-2 mt-3">
                                             <li class="billing-li">
                                                 <label>Phone Number</label>
                                                 <input type="text" name="shippingPhone" class="form-control"
@@ -157,8 +157,9 @@
                             </div>
 
                             <br>
-
-                            <div class="order-area">
+                 </div>
+                </div>
+                            <div class="col-md-4 order-area card">
                                 <div class="check-pro">
                                     <h2>In your cart ({{ count($data['mycartlist']) }})</h2>
                                     <ul class="check-ul">
@@ -178,11 +179,13 @@
                                                                 alt="image"></a>
                                                     </div>
                                                     <div class="check-content">
-                                                        <a href="javascript:void(0)">{{ $cartItem->productName }}</a>
-                                                        <span class="check-code-blod">Quantity:
-                                                            <span>{{ $cartItem->quantity }}</span></span>
+                                                        <p>Item: <a href="javascript:void(0)">{{ $cartItem->productName }}</a></p>
+                                                        <p class="check-code-blod">Quantity:
+                                                            <span>{{ $cartItem->quantity }}</span>
+                                                        </p>
                                                         <span
                                                             class="check-price">{{ $data['user']->currencySymbol . number_format($cartItem->price * $cartItem->quantity, 2) }}</span>
+                                                        <hr>
                                                     </div>
                                                 </li>
 
@@ -198,15 +201,21 @@
 
 
                                 <h2>Your order</h2>
-                                <ul class="order-history">
-                                    <li class="order-details">
-                                        <span>Product:</span>
-                                        <span>Total</span>
+                                <hr>
+                                <ul class="order-history row">
+                                    <li class="order-details col-md-6 mb-2">
+                                        <span><strong>Product:</strong></span>
                                     </li>
+                                    <li class="order-details col-md-6 mb-2" >
+                                        <span><strong>Total</strong></span>
+                                    </li>
+                                    <hr>
 
                                     @for ($i = 0; $i < count($data['mycartlist']); $i++)
-                                        <li class="order-details">
+                                        <li class="order-details col-md-6 mb-2">
                                             <span>{{ $data['mycartlist'][$i]->productName }}</span>
+                                        </li>
+                                        <li class="order-details col-md-6 mb-2">
                                             <span>{{ $data['user']->currencySymbol . number_format($data['mycartlist'][$i]->price, 2) }}</span>
                                         </li>
                                     @endfor
@@ -214,26 +223,32 @@
 
 
 
-                                    <li class="order-details">
-                                        <span>Subtotal:</span>
+                                    <li class="order-details col-md-6 mt-2 mb-2">
+                                        <span>Subtotal:</span> 
+                                    </li>
+                                    <li class="order-details col-md-6 mt-2 mb-2">
                                         <input type="hidden" name="subtotal" value="{{ $totalPrice }}">
                                         <span>{{ $data['user']->currencySymbol . number_format($totalPrice, 2) }}</span>
                                     </li>
-                                    <li class="order-details">
+                                    <li class="order-details col-md-6 mt-2 mb-2">
                                         <span>Shipping Charge:</span>
-                                        <input type="hidden" name="shippingCharge" value="0">
-                                        <span>Free shipping</span>
                                     </li>
-                                    <li class="order-details">
+                                    <li class="order-details col-md-6 mt-2 mb-2">
+                                        <input type="hidden" name="shippingCharge" value="0">
+                                        <span class="text-danger"><strong>Free shipping</strong></span>
+                                    </li>
+                                    <li class="order-details col-md-6 mt-2 mb-2">
                                         <span>Total:</span>
+                                    </li>
+                                    <li class="order-details col-md-6 mt-2 mb-2">
                                         <input type="hidden" name="total" value="{{ $totalPrice }}">
-                                        <span>{{ $data['user']->currencySymbol . number_format($totalPrice, 2) }}</span>
+                                        <span><strong>{{ $data['user']->currencySymbol . number_format($totalPrice, 2) }}</strong></span>
                                     </li>
                                 </ul>
 
                                 <div class="checkout-btn">
 
-                                    <button type="submit" class="btn-style1">Place order</button>
+                                    <button type="submit" class="btn-style1 form-control mt-3">Place order</button>
                                 </div>
                             </div>
 
