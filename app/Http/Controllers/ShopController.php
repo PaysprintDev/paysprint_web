@@ -478,7 +478,9 @@ class ShopController extends Controller
                     'state' => $req->state,
                     'city' => $req->city,
                     'currencyCode' => $req->currencyCode,
-                    'deliveryRate' => $req->deliveryRate
+                    'deliveryRate' => $req->deliveryRate,
+                    'created_at' => now(),
+                    'updated_at' => now()
                 ];
 
                 StoreShipping::insert($query);
