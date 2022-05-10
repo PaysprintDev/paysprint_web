@@ -203,6 +203,7 @@ Route::prefix('product')->group(function () {
 	Route::post('/place-order', ['uses' => 'ShopController@placeOrder', 'as' => 'place order']);
 	Route::get('payment', ['uses' => 'HomeController@estorePayment', 'as' => 'estore payment']);
 	Route::get('/shop', ['uses' => 'MerchantPageController@merchantShopPage', 'as' => 'product shop']);
+	Route::get('/orders', ['uses' => 'MerchantPageController@merchantOrders', 'as' => 'orders']);
 });
 
 

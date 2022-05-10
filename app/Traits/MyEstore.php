@@ -99,5 +99,11 @@ trait MyEstore
         return $data;
     }
 
+    public function getAllMyOrders($merchantid, $userid){
+        $data = StoreOrders::where('userId', $userid)->where('merchantId', $merchantid)->orderBy('updated_at', 'desc')->get();
+
+        return $data;
+    }
+
 
 }
