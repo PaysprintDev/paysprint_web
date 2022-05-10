@@ -118,6 +118,7 @@ Route::post('verify-product-code', ['uses' => 'ShopController@verifyProductCode'
 
 // Vie List of Referred
 Route::get('/myreferredlist/{ref_code}', ['uses' => 'ReferralsController@index', 'as' => 'referrals list of users']);
+// Route::get('/claimedhistory/{ref_code}', ['uses' => 'ReferralsController@index', 'as' => 'show claimed history']);
 
 // Get Path Address
 Route::get('pathaddress', 'CheckSetupController@getPathAddress');

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\InvestorPost;
 use App\Createpost;
+use App\ExpressInterest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Http\Request;
@@ -276,7 +277,36 @@ class InvestorRelationController extends Controller
 
     }
 
+    public function investorInterestPayload (Request $req)
+    {   
+        try {
+        $validator=Validator::make($req->all(),[
+              'button' => 'required'
+        ]);
 
+         if ($validator -> passes()) {
+             $post=CreatePost::get();
+        $data=$post->investment_document;
+        $message='success';
+        $status=200;
+              
+
+         }else{
+             $data=[];
+             $message="error";
+             $status=400;
+         }
+
+        } catch (\Throwable $th){
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;    
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
 
 
     public function investorNews(Request $req)
@@ -367,4 +397,85 @@ class InvestorRelationController extends Controller
         Mail::to($objDemoa)
             ->send(new sendEmail($objDemo));
     }
+
+       public function investorGetSpecificPost(Request $req)
+    {
+
+        // TODO 3: Query the Express Interest model with the postId and the userID from TODO 2...
+        // TODO 4:: Check if TODO 3 exists with DATA...
+        // TODO 5:: If exists with data, Make file accessible and disable express interest button in the view
+        // TODO 6:: Else Do not make file accessible
+      
+
+        try {
+            $users=InvestorRelation::where('apiToken', $req->apiToken)->first();
+
+            if(!$users){
+                $resData = ['data' => [], 'message' => 'Invalid authorization. Please login', 'status' => 400];
+
+        return $this->returnJSON($resData, 400);
+            }
+
+            $userId=$users->id;
+
+            $getInterest = ExpressInterest::where('id', $req->postId)->where('userId', $userId)->first();
+                
+            if(isset($getInterest)){
+
+                $data = $getInterest->investment_document;
+                $message = 'Available';
+                $status = 200;
+            }
+            else{
+                $data = [];
+                $message = 'Not Available';
+                $status = 200;
+            }
+            
+
+
+            
+            
+        } catch (\Throwable $th) {
+            //throw $th;
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+        }
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+        
+
+    }
+
+
+    public function investorExpressInteret(Request $req)
+{
+    $users=InvestorRelation::where('apiToken', $req->apiToken)->first();
+
+    if(isset($users)){
+        ExpressInterest::insert([
+            'userId' => $users->id, 'postId' => $req->postId
+        ]);
+
+        $data = true;
+        $message = 'Request successfully processed';
+        $status = 200;
+    }
+    else{
+        $data = [];
+        $message = 'Not found';
+        $status = 404;
+    }
+
+
+    $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+    return $this->returnJSON($resData, $status);
+
+  
 }
+   
+}
+
