@@ -10,10 +10,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- title -->
-    <link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png"
+    <link rel="icon"
+        href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
         type="image/x-icon">
     <link rel="shortcut icon"
-        href="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png"
+        href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
         type="image/x-icon">
     <title>{{ $pages }}</title>
     <meta name="description"
@@ -67,7 +68,7 @@
         gtag('config', 'G-RVX8CC7GDP');
     </script>
 
-    <script type="text/javascript" id="zsiqchat">
+    {{-- <script type="text/javascript" id="zsiqchat">
         var $zoho = $zoho || {};
         $zoho.salesiq = $zoho.salesiq || {
             widgetcode: "a7ffa31136f6ab021392ea01a2816af0033ebbc69fda5e9fa38407829c8ee302",
@@ -82,7 +83,7 @@
         s.src = "https://salesiq.zoho.com/widget";
         t = d.getElementsByTagName("script")[0];
         t.parentNode.insertBefore(s, t);
-    </script>
+    </script> --}}
 </head>
 
 

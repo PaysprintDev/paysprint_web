@@ -12,7 +12,8 @@
         integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
     <!-- Favicon -->
-    <link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png"
+    <link rel="icon"
+        href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
         type="image/x-icon" />
 
     <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
@@ -86,12 +87,10 @@
                                         <li class="nav-item"> <a data-toggle="pill" href="{{ route('Admin') }}"
                                                 class="nav-link active "> <i class="fas fa-home"></i> Go Back </a>
                                         </li>
-
                                     @else
                                         <li class="nav-item"> <a data-toggle="pill" href="{{ route('home') }}"
                                                 class="nav-link active "> <i class="fas fa-home"></i> Go Back </a>
                                         </li>
-
                                     @endif
 
 
@@ -103,14 +102,14 @@
                                     {{ isset($data['mypoints']) ? $data['mypoints']->current_point : 0 }}</h5>
                                 <h5 align='right' class="text-success">Total Points:
                                     <?php
-                                    
+
                                     $first_number = $data['mypoints']->points_acquired;
                                     $second_number = $data['mypoints']->current_point;
-                                    
+
                                     $sum_total = $second_number + $first_number;
-                                    
+
                                     print $sum_total;
-                                    
+
                                     ?></td>
                                 </h5>
                                 <div class="row">
@@ -167,14 +166,14 @@
                                                     </td>
                                                     <td>{{ $data['getallpoint']->add_money }}</td>
                                                     <td><?php
-                                                    
+
                                                     $first_number = $data['getallpoint']->add_money;
                                                     $second_number = 200;
-                                                    
+
                                                     $sum_total = $second_number * $first_number;
-                                                    
+
                                                     print $sum_total;
-                                                    
+
                                                     ?></td>
                                                 </tr>
                                                 <tr>
@@ -184,14 +183,14 @@
                                                     </td>
                                                     <td>{{ $data['getallpoint']->send_money }}</td>
                                                     <td><?php
-                                                    
+
                                                     $first_number = $data['getallpoint']->send_money;
                                                     $second_number = 140;
-                                                    
+
                                                     $sum_total = $second_number * $first_number;
-                                                    
+
                                                     print $sum_total;
-                                                    
+
                                                     ?></td>
                                                 </tr>
                                                 <tr>
@@ -202,14 +201,14 @@
                                                     </td>
                                                     <td>{{ $data['getallpoint']->receive_money }}</td>
                                                     <td><?php
-                                                    
+
                                                     $first_number = $data['getallpoint']->receive_money;
                                                     $second_number = 120;
-                                                    
+
                                                     $sum_total = $second_number * $first_number;
-                                                    
+
                                                     print $sum_total;
-                                                    
+
                                                     ?></td>
                                                 </tr>
                                                 <tr>
@@ -219,14 +218,14 @@
                                                     </td>
                                                     <td>{{ $data['getallpoint']->pay_invoice }}</td>
                                                     <td><?php
-                                                    
+
                                                     $first_number = $data['getallpoint']->pay_invoice;
                                                     $second_number = 50;
-                                                    
+
                                                     $sum_total = $second_number * $first_number;
-                                                    
+
                                                     print $sum_total;
-                                                    
+
                                                     ?></td>
                                                 </tr>
                                                 <tr>
@@ -236,14 +235,14 @@
                                                     </td>
                                                     <td>{{ $data['getallpoint']->pay_bills }}</td>
                                                     <td><?php
-                                                    
+
                                                     $first_number = $data['getallpoint']->pay_bills;
                                                     $second_number = 50;
-                                                    
+
                                                     $sum_total = $second_number * $first_number;
-                                                    
+
                                                     print $sum_total;
-                                                    
+
                                                     ?></td>
                                                 </tr>
                                                 <tr>
@@ -254,14 +253,14 @@
                                                     </td>
                                                     <td>{{ $data['getallpoint']->create_and_send_invoice }}</td>
                                                     <td><?php
-                                                    
+
                                                     $first_number = $data['getallpoint']->create_and_send_invoice;
                                                     $second_number = 80;
-                                                    
+
                                                     $sum_total = $second_number * $first_number;
-                                                    
+
                                                     print $sum_total;
-                                                    
+
                                                     ?></td>
                                                 </tr>
                                                 <tr>
@@ -272,14 +271,14 @@
                                                     </td>
                                                     <td>{{ $data['getallpoint']->active_rental_property }}</td>
                                                     <td><?php
-                                                    
+
                                                     $first_number = $data['getallpoint']->active_rental_property;
                                                     $second_number = 500;
-                                                    
+
                                                     $sum_total = $second_number * $first_number;
-                                                    
+
                                                     print $sum_total;
-                                                    
+
                                                     ?></td>
                                                 </tr>
                                                 <tr>
@@ -290,14 +289,14 @@
                                                     </td>
                                                     <td>{{ $data['getallpoint']->quick_set_up }}</td>
                                                     <td><?php
-                                                    
+
                                                     $first_number = $data['getallpoint']->quick_set_up;
                                                     $second_number = 200;
-                                                    
+
                                                     $sum_total = $second_number * $first_number;
-                                                    
+
                                                     print $sum_total;
-                                                    
+
                                                     ?></td>
                                                 </tr>
                                                 <tr>
@@ -309,14 +308,14 @@
                                                     </td>
                                                     <td>{{ $data['getallpoint']->approved_customers }}</td>
                                                     <td><?php
-                                                    
+
                                                     $first_number = $data['getallpoint']->approved_customers;
                                                     $second_number = 500;
-                                                    
+
                                                     $sum_total = $second_number * $first_number;
-                                                    
+
                                                     print $sum_total;
-                                                    
+
                                                     ?></td>
                                                 </tr>
                                                 <tr>
@@ -328,14 +327,14 @@
                                                     </td>
                                                     <td>{{ $data['getallpoint']->approved_merchants }}</td>
                                                     <td><?php
-                                                    
+
                                                     $first_number = $data['getallpoint']->approved_merchants;
                                                     $second_number = 700;
-                                                    
+
                                                     $sum_total = $second_number * $first_number;
-                                                    
+
                                                     print $sum_total;
-                                                    
+
                                                     ?></td>
                                                 </tr>
                                                 <tr>
@@ -347,84 +346,84 @@
                                                     </td>
                                                     <td>{{ $data['getallpoint']->promote_business }}</td>
                                                     <td><?php
-                                                    
+
                                                     $first_number = $data['getallpoint']->promote_business;
                                                     $second_number = 150;
-                                                    
+
                                                     $sum_total = $second_number * $first_number;
-                                                    
+
                                                     print $sum_total;
-                                                    
+
                                                     ?></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Activate Ordering System</td>
                                                     <td>{{ $data['getallpoint']->activate_ordering_system }}</td>
                                                     <td><?php
-                                                    
+
                                                     $first_number = $data['getallpoint']->activate_ordering_system;
                                                     $second_number = 0;
-                                                    
+
                                                     $sum_total = $second_number * $first_number;
-                                                    
+
                                                     print $sum_total;
-                                                    
+
                                                     ?></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Identify Verification</td>
                                                     <td>{{ $data['getallpoint']->identify_verification }}</td>
                                                     <td><?php
-                                                    
+
                                                     $first_number = $data['getallpoint']->identify_verification;
                                                     $second_number = 0;
-                                                    
+
                                                     $sum_total = $second_number * $first_number;
-                                                    
+
                                                     print $sum_total;
-                                                    
+
                                                     ?></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Activate RPM</td>
                                                     <td>{{ $data['getallpoint']->activate_rpm }}</td>
                                                     <td><?php
-                                                    
+
                                                     $first_number = $data['getallpoint']->activate_rpm;
                                                     $second_number = 0;
-                                                    
+
                                                     $sum_total = $second_number * $first_number;
-                                                    
+
                                                     print $sum_total;
-                                                    
+
                                                     ?></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Activate Currency Exchange</td>
                                                     <td>{{ $data['getallpoint']->activate_currency_exchange }}</td>
                                                     <td><?php
-                                                    
+
                                                     $first_number = $data['getallpoint']->activate_currency_exchange;
                                                     $second_number = 0;
-                                                    
+
                                                     $sum_total = $second_number * $first_number;
-                                                    
+
                                                     print $sum_total;
-                                                    
+
                                                     ?></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Activate Cash Advance</td>
                                                     <td>{{ $data['getallpoint']->activate_cash_advance }}</td>
                                                     <td><?php
-                                                    
+
                                                     $first_number = $data['getallpoint']->activate_cash_advance;
                                                     $second_number = 0;
-                                                    
+
                                                     $sum_total = $second_number * $first_number;
-                                                    
+
                                                     print $sum_total;
-                                                    
+
                                                     ?></td>
                                                 </tr>
                                                 <tr>
@@ -432,14 +431,14 @@
                                                     <td>{{ $data['getallpoint']->activate_crypto_currency_account }}
                                                     </td>
                                                     <td><?php
-                                                    
+
                                                     $first_number = $data['getallpoint']->activate_crypto_currency_account;
                                                     $second_number = 0;
-                                                    
+
                                                     $sum_total = $second_number * $first_number;
-                                                    
+
                                                     print $sum_total;
-                                                    
+
                                                     ?></td>
                                                 </tr>
                                                 <tr>

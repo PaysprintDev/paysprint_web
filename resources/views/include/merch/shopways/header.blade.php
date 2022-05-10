@@ -47,6 +47,7 @@
                                 <div class="header-main">
                                     <!-- logo start -->
 
+
                                     <div class="header-element logo">
                                         <a href="{{ route('merchant shop now', $data['user']->businessname) }}">
                                             <img src="{{ $data['mystore']->businessLogo }}" alt="logo-image"
@@ -69,7 +70,7 @@
 
                                                             </li>
                                                             <li class="menu-link parent">
-                                                                <a href="javascript:void(0)" class="link-title">
+                                                                <a href="{{ route('product shop', 'merchant='.$data['user']->businessname)}}" class="link-title">
                                                                     <span class="sp-link-title">Shop</span>
                                                                     {{-- <i class="fa fa-angle-down"></i> --}}
                                                                 </a>
@@ -276,7 +277,7 @@
                                                                 </ul>
                                                             </li>
                                                             <li class="menu-link parent">
-                                                                <a href="javascript:void(0)" class="link-title">
+                                                                <a href="{{ route('checkout item', 'store=' . $data['user']->businessname) }}" class="link-title">
                                                                     <span class="sp-link-title">Checkout</span>
                                                                 </a>
                                                                 <a href="#collapse-top-page-menu"

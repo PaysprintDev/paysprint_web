@@ -150,6 +150,7 @@ return [
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Erdemkeren\Otp\OtpServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -220,6 +221,7 @@ return [
         'ReCaptcha' => Biscolab\ReCaptcha\Facades\ReCaptcha::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Newsletter' => Spatie\Newsletter\NewsletterFacade::class,
+        'Image' => Intervention\Image\Facades\Image::class
 
     ],
 

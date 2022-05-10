@@ -135,7 +135,6 @@
                                         <p>
 
                                             @if (isset($data['getCard']) && count($data['getCard']) > 0)
-
                                                 @php
                                                     $others = count($data['getCard']) - 1;
                                                     $cardNo = wordwrap($data['getCard'][0]->card_number, 4, '-', true);
@@ -148,12 +147,14 @@
                                                             $cardImage = '<img src="https://img.icons8.com/color/30/000000/mastercard.png"/>';
                                                         @endphp
                                                     @break
+
                                                     @case('Visa')
                                                         @php
                                                             $alertInfo = 'alert-info';
                                                             $cardImage = '<img src="https://img.icons8.com/color/30/000000/visa.png"/>';
                                                         @endphp
                                                     @break
+
                                                     @default
                                                         @php
                                                             $alertInfo = 'alert-success';
@@ -208,7 +209,7 @@
                                                         <button style="background-color: #000 !important;"
                                                             class="px-2" title="PaySprint Payment Gateway"
                                                             onclick="location.href='{{ route('payment gateway', 'gateway=PaySprint') }}'">
-                                                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png"
+                                                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
                                                                 alt="PaySprint logo" width="50" height="50">
                                                         </button>
                                                         <button class="px-2" title="GooglePay Payment Gateway"
@@ -228,7 +229,7 @@
                                                             type="button" role="tab" aria-controls="v-pills-home"
                                                             aria-selected="true"
                                                             style="background-color: #000 !important;">
-                                                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png"
+                                                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
                                                                 alt="PaySprint logo" width="50" height="50">
                                                         </button>
                                                         <br>
@@ -299,12 +300,7 @@
                                                 </div>
 
                                                 {{-- End Payment Gateway --}}
-
-
-
-
                                             @else
-
                                                 {{-- Add Payment Gateway --}}
                                                 <h4>Payment Method</h4>
                                                 <hr>
@@ -314,7 +310,7 @@
                                                         <button style="background-color: #000 !important;"
                                                             class="px-2" title="PaySprint Payment Gateway"
                                                             onclick="location.href='{{ route('payment gateway', 'gateway=PaySprint') }}'">
-                                                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png"
+                                                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
                                                                 alt="PaySprint logo" width="50" height="50">
                                                         </button>
                                                         <button class="px-2" title="GooglePay Payment Gateway"
@@ -332,7 +328,7 @@
                                                             data-bs-toggle="pill" data-bs-target="#v-pills-home"
                                                             type="button" role="tab" aria-controls="v-pills-home"
                                                             aria-selected="true">
-                                                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png"
+                                                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
                                                                 alt="PaySprint logo" width="50" height="50">
                                                         </button>
                                                         <br>
@@ -403,11 +399,6 @@
                                                 </div>
 
                                                 {{-- End Payment Gateway --}}
-
-
-
-
-
                                             @endif
 
 
@@ -433,7 +424,6 @@
 
 
                                                 @if (isset($data['getBank']) && count($data['getBank']) > 0)
-
                                                     @php
                                                         $otherBanks = count($data['getBank']) - 1;
                                                         $accountNumber = $data['getBank'][0]->accountNumber;
@@ -460,9 +450,7 @@
                                                             Branch Code: {{ $data['getBank'][0]->branchCode }}
                                                         </h6>
                                                     </div>
-
                                                 @else
-
                                                     <div class="col-md-12">
                                                         <h6 class="font-sm">
                                                             Bank Account
@@ -477,7 +465,6 @@
                                                                 Account</a>
                                                         </h4>
                                                     </div>
-
                                                 @endif
 
                                                 <div class="row">
@@ -525,9 +512,6 @@
                                     @if (Auth::user()->approval == 2 && Auth::user()->accountLevel == 3)
 
                                         @if (isset($data['specialInfo']))
-
-
-
                                             <div class="col-md-6 mb-3">
                                                 <a type="button" href="javascript:void()"
                                                     class="btn btn-secondary btn-block"
@@ -535,20 +519,14 @@
                                                     Money <i class="fa fa-credit-card"></i></a>
 
                                             </div>
-
                                         @else
-
                                             <div class="col-md-6 mb-3">
                                                 <a type="button" href="{{ route('Withdraw Money') }}"
                                                     class="btn btn-secondary btn-block">Withdraw Money <i
                                                         class="fa fa-credit-card"></i></a>
                                             </div>
-
                                         @endif
-
-
                                     @else
-
                                         <div class="col-md-6 mb-3">
                                             <a type="button" href="javascript:void()"
                                                 class="btn btn-secondary btn-block"
@@ -562,7 +540,6 @@
                                 </div>
 
                                 @if (isset($data['specialInfo']))
-
                                     <div class="alert alert-danger alert-dismissible show specialText disp-0"
                                         role="alert">
                                         <button type="button" class="close" data-dismiss="alert"
@@ -571,7 +548,6 @@
                                         </button>
                                         {!! $data['specialInfo']->information !!}
                                     </div>
-
                                 @endif
 
 
@@ -634,8 +610,6 @@
                                                             </thead>
                                                             <tbody>
                                                                 @foreach ($data['walletStatement'] as $walletstatements)
-
-
                                                                     <tr>
                                                                         <td><i
                                                                                 class="fas fa-circle {{ $walletstatements->credit != 0 ? 'text-success' : 'text-danger' }}"></i>
@@ -680,7 +654,6 @@
                                                                                 class="{{ $walletstatements->status == 'Delivered' ? 'text-primary' : 'text-secondary' }}"><strong>{{ $walletstatements->status }}</strong></small>
                                                                         </td>
                                                                     </tr>
-
                                                                 @endforeach
                                                             </tbody>
                                                         </table>
@@ -703,7 +676,6 @@
                                                             </thead>
                                                             <tbody>
                                                                 @foreach ($data['walletStatement'] as $walletstatements)
-
                                                                     @if ($walletstatements->credit != 0)
                                                                         <tr>
                                                                             <td><i
@@ -749,11 +721,7 @@
                                                                                     class="{{ $walletstatements->status == 'Delivered' ? 'text-primary' : 'text-secondary' }}"><strong>{{ $walletstatements->status }}</strong></small>
                                                                             </td>
                                                                         </tr>
-
                                                                     @endif
-
-
-
                                                                 @endforeach
                                                             </tbody>
                                                         </table>
@@ -777,7 +745,6 @@
                                                             <tbody>
 
                                                                 @foreach ($data['walletStatement'] as $walletstatements)
-
                                                                     @if ($walletstatements->debit != 0)
                                                                         <tr>
                                                                             <td><i
@@ -807,11 +774,7 @@
                                                                                     class="{{ $walletstatements->status == 'Delivered' ? 'text-primary' : 'text-secondary' }}"><strong>{{ $walletstatements->status }}</strong></small>
                                                                             </td>
                                                                         </tr>
-
                                                                     @endif
-
-
-
                                                                 @endforeach
 
                                                             </tbody>
@@ -819,13 +782,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-
-
-
-
                                         @else
-
                                             <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
                                                 aria-labelledby="nav-home-tab">
                                                 <div class="container">

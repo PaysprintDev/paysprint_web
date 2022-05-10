@@ -8,7 +8,7 @@ use App\ReferredUsers;
 use Illuminate\Support\Facades\Hash;
 
 use App\ClientInfo as ClientInfo;
-
+use App\ProductTax;
 use App\SuperAdmin as SuperAdmin;
 use App\User;
 use App\StoreProducts;
@@ -38,9 +38,22 @@ trait MyEstore
         return $data;
     }
 
+    // Get Product Tax
+    public function checkMyProductTax($id){
+        $data = ProductTax::where('merchantId', $id)->first();
+
+        return $data;
+    }
+
 
     public function getProducts($id){
         $data = StoreProducts::where('merchantId', $id)->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
+
+    public function getStoreTax($id){
+        $data = ProductTax::where('merchantId', $id)->first();
 
         return $data;
     }
@@ -53,7 +66,7 @@ trait MyEstore
 
         return $data;
 
-        
+
     }
     public function getMyCartlist($id){
 

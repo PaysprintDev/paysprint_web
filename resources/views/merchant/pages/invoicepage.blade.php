@@ -39,7 +39,7 @@
                                                 <div class="media-left">
                                                     <a href="{{ route('dashboard') }}"><img class="media-object img-60"
                                                             {{-- src="{{ asset('assets/images/dashboard/01.jpg') }}" --}}
-                                                            src="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png"
+                                                            src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
                                                             alt="" /></a>
                                                 </div>
                                                 <div class="media-body m-l-20">

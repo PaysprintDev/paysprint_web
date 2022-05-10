@@ -11,7 +11,8 @@
         integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
     <!-- Favicon -->
-    <link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png"
+    <link rel="icon"
+        href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
         type="image/x-icon" />
 
     <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
@@ -160,7 +161,7 @@
                                             <select name="card_id" id="card_id" class="form-control" required>
                                                 <option value="NULL">Select option</option>
                                                 {{-- @if (count($data['getCard']) > 0)
-                                                
+
                                                     @foreach ($data['getCard'] as $mycard)
                                                     <option value="{{ $mycard->id }}">{!! wordwrap($mycard->card_number, 4, '-', true).' - ['.$mycard->card_provider.']' !!}</option>
                                                     @endforeach
