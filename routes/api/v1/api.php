@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Route; 
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -73,10 +73,12 @@ Route::prefix('/v1')->group(function () {
 
         Route::get('investor/activatedposts', ['uses' => 'api\v1\InvestorRelationController@investorActivatedPosts']);
         // TODO 2:: Do a post route to send payload to the controller ...
-
+        Route::post('investor/interestpayload',['uses' => 'api\v1\InvestorRelationController@investorInterestPayload']);
 
         
         // TODO 3:: Do a get specific for the users interest.. 
+        Route::get('investor/get-specific',['uses' => 'api\v1\InvestorRelationController@investorGetSpecificPost']);
+        Route::get('investor/express-interest',['uses' => 'api\v1\InvestorRelationController@investorExpressInteret']);
 
 
 
