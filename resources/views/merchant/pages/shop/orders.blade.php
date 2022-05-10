@@ -58,8 +58,10 @@
                 <p>{!! $product->description !!}</p>
                 <p>Order Id: {{$value->orderId}}</p>
                 <p>Quantity: {{ $value->quantity }}</p>
-                <p>{{$value->paymentStatus}}</p>
-                <p>{{$value->deliveryStatus}}</p>
+                <p><span
+                    class="{{ $value->paymentStatus == 'not paid' ? 'text-danger' : 'text-success' }}">{{ $value->paymentStatus == 'not paid' ? 'not Paid' : 'Paid' }}</span></p>
+                <p><span 
+                    class="{{ $value->deliveryStatus == 'off' ? 'text-danger' : 'text-success' }}">{{ $value->deliveryStatus == 'off' ? 'Not Delivered' : 'Delivered' }}</span></p>
             </div>
             <div class="col-md-3">
                 <a href="#" style="color: orange; font-weight:lighter; font-size:18px;">SEE DETAILS</a>
