@@ -286,7 +286,7 @@ Route::prefix('/v1')->group(function () {
         // CurrencyFX Recent Bids
         Route::get('/getrecentbids', ['uses' => 'CurrencyFxController@getMyRecentBids', 'as' => 'currency fx my recent bids']);
 
-        // Get a particular bid 
+        // Get a particular bid
         Route::get('/getthisbids', ['uses' => 'CurrencyFxController@getThisParticularBids', 'as' => 'currency fx this particular bids']);
 
 
@@ -356,7 +356,7 @@ Route::prefix('/v1')->group(function () {
 
 
 
-        // Shop 
+        // Shop
         Route::post('/shop/product/addtowishlist', ['uses' => 'ShopController@addToWishList', 'as' => 'add to wish list']);
         Route::post('/shop/product/addtocart', ['uses' => 'ShopController@addToCart', 'as' => 'add to cart']);
 

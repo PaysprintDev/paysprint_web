@@ -253,7 +253,7 @@ class MerchantPageController extends Controller
                 ];
 
 
-
+                // dd($data);
 
                 return view('merchant.pages.shop.index')->with(['pages' => $merchant.' Shop', 'data' => $data]);
             }
@@ -271,6 +271,71 @@ class MerchantPageController extends Controller
 
     }
 
+    //merchant shop page
+    public function merchantShopPage(Request $req){
+
+        // Get merchant...
+        $thismerchant = ClientInfo::where('business_name', $req->merchant)->first();
+
+        if(isset($thismerchant)){
+                $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
+
+
+                if(Auth::check() == true){
+                    $userId = Auth::id();
+                }
+                else{
+                    $userId = 0;
+                }
+
+                if($userId == $getMerchantId->id){
+                    // If Has Main Store setup
+                $merchantStore = $this->checkMyStore($getMerchantId->id);
+                }
+                else{
+                    // If Has Main Store setup
+                    if(session('role')){
+                        $merchantStore = $this->checkMyStore($getMerchantId->id);
+                    }
+                    else{
+            $merchantStore = $this->getMyStore($getMerchantId->id);
+
+                    }
+                }
+
+
+
+
+            if(isset($merchantStore)){
+
+
+
+                $data = [
+                    'mystore' => $merchantStore,
+                    'myproduct' => $this->getProducts($getMerchantId->id),
+                    'user' => $getMerchantId,
+                    'mywishlist' => $this->getMyWishlist($userId),
+                    'mycartlist' => $this->getMyCartlist($userId),
+                ];
+
+
+
+
+                return view('merchant.pages.shop.shopindex')->with(['pages' => $req->merchant.' Shop', 'data' => $data]);
+            }
+            else{
+                return view('errors.comingsoon')->with(['pages' => $req->merchant.' Shop']);
+            }
+
+        }
+        else{
+            return view('errors.comingsoon')->with(['pages' => $req->merchant.' Shop']);
+        }
+
+
+
+
+    }
 
         // Shopping Cart
     public function myCart(Request $req){
@@ -284,6 +349,10 @@ class MerchantPageController extends Controller
 
             // If Has Main Store setup
             $merchantStore = $this->getMyStore($getMerchantId->id);
+
+            if(!$merchantStore){
+                return view('errors.comingsoon')->with(['pages' => $req->store.' Shop']);
+            }
 
 
                     $data = [
@@ -318,14 +387,22 @@ class MerchantPageController extends Controller
             // If Has Main Store setup
             $merchantStore = $this->getMyStore($getMerchantId->id);
 
+            if(!$merchantStore){
+                 return view('errors.comingsoon')->with(['pages' => $req->store.' Shop']);
+            }
+
+
 
                     $data = [
                         'mystore' => $merchantStore,
                     'myproduct' => $this->getProducts($getMerchantId->id),
+                    'storeTax' => $this->getStoreTax($getMerchantId->id),
                     'user' => $getMerchantId,
                     'mywishlist' => $this->getMyWishlist(Auth::id()),
                     'mycartlist' => $this->getMyCartlist(Auth::id()),
                 ];
+
+
 
 
         return view('merchant.pages.shop.mycheckout')->with(['pages' => $req->store.' Shop', 'data' => $data]);
@@ -512,6 +589,8 @@ class MerchantPageController extends Controller
             'myProducts' => $this->getMyProducts(Auth::user()->id),
             'myOrders' => $this->getMyOrders(Auth::user()->id),
             'myDiscounts' => $this->getMyDiscounts(Auth::user()->id),
+            'myStore' => $this->checkMyStore(Auth::user()->id),
+            'myProductTax' => $this->checkMyProductTax(Auth::user()->id),
             'productcategory' => $this->getProductCategory(),
             'storepickup' => $this->getStorePickupCount(),
             'deliverypickup' => $this->getDeliveryPickupCount(),
@@ -670,6 +749,7 @@ class MerchantPageController extends Controller
 
         return $data;
     }
+
 
     public function getMyProducts($merchantId){
         $data = StoreProducts::where('merchantId', $merchantId)->orderBy('created_at', 'DESC')->get();

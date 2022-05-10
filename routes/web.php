@@ -193,15 +193,17 @@ Route::post('/storeanswer', ['uses' => 'HomeController@storeSubMessage', 'as' =>
 Route::prefix('shop')->group(function () {
 	Route::get('/{merchant}', ['uses' => 'MerchantPageController@merchantShop', 'as' => 'merchant shop now']);
 
+
 });
 
 
 Route::prefix('product')->group(function () {
+
 	Route::get('/cart', ['uses' => 'MerchantPageController@myCart', 'as' => 'customer shoping cart']);
 	Route::get('/checkout', ['uses' => 'MerchantPageController@myCheckout', 'as' => 'checkout item']);
 	Route::post('/place-order', ['uses' => 'ShopController@placeOrder', 'as' => 'place order']);
 	Route::get('payment', ['uses' => 'HomeController@estorePayment', 'as' => 'estore payment']);
-
+	Route::get('/shop', ['uses' => 'MerchantPageController@merchantShopPage', 'as' => 'product shop']);
 });
 
 
@@ -376,6 +378,8 @@ Route::prefix('merchant')->group(function () {
 	Route::post('/deletediscount/{id}', [ShopController::class, 'deleteDiscount'])->name('delete discount');
 	Route::post('/storepickupaddress', [ShopController::class, 'storePickupAddress'])->name('store pickup address');
 	Route::post('/storeshippingaddress', [ShopController::class, 'storeShippingAddress'])->name('store shipping address');
+	Route::post('/storeproducttax', [ShopController::class, 'storeProductTax'])->name('store product tax');
+	Route::post('/editproducttax/{id}', [ShopController::class, 'editProductTax'])->name('edit product tax');
 
 
 	Route::post('/setupestore', [ShopController::class, 'setupEstore'])->name('setup estore');
@@ -1015,17 +1019,22 @@ Route::prefix('Admin/aml')->group(function () {
 Route::prefix('Admin/estore')->group(function () {
 	Route::get('/dashboard', ['uses' => 'StoreController@index', 'as' => 'store dashboard']);
 	Route::get('/reviewstore', ['uses' => 'StoreController@reviewStore', 'as' => 'review e-store']);
+	Route::get('/suspendedstore', ['uses' => 'StoreController@suspendedStores', 'as' => 'suspended stores']);
 	Route::get('/productscategory', ['uses' => 'StoreController@productsCategory', 'as' => 'products category']);
 	Route::get('/feedback', ['uses' => 'StoreController@feedback', 'as' => 'feedback']);
 	Route::get('/refundanddisputereport', ['uses' => 'StoreController@refundDisputeReport', 'as' => 'refund and dispute report']);
 	Route::get('/expiredotp', ['uses' => 'StoreController@expiredOtp', 'as' => 'expired otp']);
 	Route::get('/editstore/{id}', ['uses' => 'StoreController@editStore', 'as' => 'edit store']);
+	Route::get('/images/{id}', ['uses' => 'StoreController@viewImages', 'as' => 'view images']);
+	Route::get('/advertimages/{id}', ['uses' => 'StoreController@viewAdvertImages', 'as' => 'view advert images']);
 	Route::post('/updatestore/{id}',['uses' => 'StoreController@updateStore', 'as' => 'update store' ]);
 	Route::post('/deletestore/{id}',['uses' => 'StoreController@deleteStore', 'as' => 'delete store']);
+	Route::post('/restorestore/{id}',['uses' => 'StoreController@restoreStore', 'as' => 'restore store']);
 	Route::get('/editcategory/{id}',['uses' => 'StoreController@editCategory', 'as' => 'edit category']);
 	Route::post('/updatecategory/{id}',['uses' => 'StoreController@updateCategory', 'as' => 'update category']);
 	Route::post('/deletecategory/{id}',['uses' => 'StoreController@deleteCategory', 'as' => 'delete category']);
 	Route::post('/updatestate/{id}',['uses' => 'StoreController@updateState', 'as' => 'update state']);
+	Route::post('/activate/{id}',['uses' => 'StoreController@activateStore', 'as' => 'activate store']);
 });
 
 

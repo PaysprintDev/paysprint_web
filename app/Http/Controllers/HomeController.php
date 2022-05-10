@@ -822,7 +822,7 @@ class HomeController extends Controller
                 }
 
 
-                
+
             } else {
                 // Redirect to Login
                 return redirect()->route('epsresponseback')->with('error', 'Unable to detect your country. Invoice payment cannot be processed');
@@ -877,7 +877,7 @@ class HomeController extends Controller
 
     public function estorePayment(Request $req)
     {
-        
+
 
         $getMerchant = User::where('id', $req->merchantId)->first();
         $getMerchantKey = ClientInfo::where('user_id', $getMerchant->ref_code)->first();
@@ -912,7 +912,8 @@ class HomeController extends Controller
             'continent' => $this->timezone[0],
             'merchantApiKey' => $getMerchantKey->api_secrete_key,
             'merchantMainApiKey' => $getMerchant->api_token,
-            'paymentgateway' => $this->getPaymentGateway($req->country)
+            'paymentgateway' => $this->getPaymentGateway($req->country),
+            'storeTax' => $this->getStoreTax($getMerchant->id)
         );
 
 
@@ -1115,7 +1116,7 @@ class HomeController extends Controller
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         if(isset($client) && $client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -1170,7 +1171,7 @@ class HomeController extends Controller
             return redirect()->route('dashboard');
         }
 
-        
+
 
         return view('main.myaccount')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
@@ -1490,7 +1491,7 @@ class HomeController extends Controller
                 $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         if(isset($client) && $client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -1696,7 +1697,7 @@ class HomeController extends Controller
 
 
         if(isset($client) && $client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -1740,7 +1741,7 @@ class HomeController extends Controller
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         if(isset($client) && $client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -2113,7 +2114,7 @@ class HomeController extends Controller
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         if(isset($client) && $client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -3752,7 +3753,7 @@ class HomeController extends Controller
                 'continent' => $this->timezone[0]
             ];
 
-            
+
         };
 
 
@@ -3761,7 +3762,7 @@ class HomeController extends Controller
 
 
     public function storeAskedQuestions(Request $request)
-    {  
+    {
 
         // dd($request->all());
 
@@ -3769,7 +3770,7 @@ class HomeController extends Controller
             $path = NULL;
 
             if($request->hasFile('file')){
-    
+
                 // Do your file upload here and set $path
 
                 //Get filename with extension
@@ -3793,7 +3794,7 @@ class HomeController extends Controller
                 $path = route('home').'/communityfile/'.$fileNameToStore;
 
             }
-    
+
 
             if($request->categories == "others"){
                 $categories = $request->specify_categories;
@@ -3804,13 +3805,13 @@ class HomeController extends Controller
             Community::insert([
                 'categories' => $categories, 'question' => $request->question, 'file' => $path, 'description' => $request->description, 'name' => $request->name, 'email' => $request->email
             ]);
-            
+
             $resData = 'Submitted successfully';
                 $resp = "success";
 
                 return redirect()->route('community');
-        }  
-        
+        }
+
         catch (\Throwable $th) {
             $resData = $th->getMessage();
             $resp = "error";
@@ -3821,11 +3822,11 @@ class HomeController extends Controller
 
 
             //return redirect(route('community'));
-        
-        
-        
+
+
+
     }
-   
+
     public function subMessage(Request $req, $id)
     {
 
@@ -3864,30 +3865,30 @@ class HomeController extends Controller
             ];
         };
 
-       
+
 
 
 
 
         return view('main.developer.submessage')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
-   
+
 
     public function storeSubMessage(Request $request)
-    {  
+    {
 
         // dd($request->all());
 
         try{
-        
+
             Answer::insert([
-                'questionId' => $request->questionId, 'comment' => $request->comment, 'name' => $request->name, 
+                'questionId' => $request->questionId, 'comment' => $request->comment, 'name' => $request->name,
             ]);
-            
+
             $resData = 'Success';
                 $resp = "success";
-        }  
-        
+        }
+
         catch (\Throwable $th) {
             $resData = $th->getMessage();
             $resp = "error";
@@ -3896,9 +3897,9 @@ class HomeController extends Controller
 
 
             return redirect()->route('submessage', $request->questionId);
-        
-        
-        
+
+
+
     }
 
     public function service(Request $req)
@@ -5204,7 +5205,7 @@ class HomeController extends Controller
 
 
             /*
-            
+
                 Calculation
 
                 x = Variable * Amount;

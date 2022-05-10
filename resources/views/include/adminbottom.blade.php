@@ -4814,60 +4814,74 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     }
 
-    function deleteStore() {
+    function deleteStore(id) {
 
-swal({
-        title: "Are you sure?",
-        text: "Once deleted, you will not be able to recover this store!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-    })
-    .then((willDelete) => {
-        if (willDelete) {
-            $('#deletestore').submit();
-        }
-    });
-
-
-}
-
-function deleteCategory() {
-
-swal({
-        title: "Are you sure?",
-        text: "Once deleted, you will not be able to recover this category!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-    })
-    .then((willDelete) => {
-        if (willDelete) {
-            $('#deletecategory').submit();
-        }
-    });
+        swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this store!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $('#deletestore'+id).submit();
+                }
+            });
 
 
-}
+    }
 
-function updateState() {
+    function deleteCategory(id) {
 
-swal({
-        title: "Are you sure?",
-        text: "Are you sure you want to update the state of this category?",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-    })
-    .then((willDelete) => {
-        if (willDelete) {
-            $('#updatestate').submit();
-        }
-    });
+        swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this category!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $('#deletecategory'+id).submit();
+                }
+            });
 
 
-}
+    }
 
+    function updateState(id) {
+
+        swal({
+                title: "Are you sure?",
+                text: "Are you sure you want to update the state of this category?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $('#updatestate' + id).submit();
+                }
+            });
+
+
+    }
+
+    function storeActivation(id) {
+        swal({
+                title: "Are you sure?",
+                text: "Click OK to continue",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $('#activation').submit();
+                }
+            });
+    }
 
     function cannotSend() {
         swal('International Transfer Coming Soon!',

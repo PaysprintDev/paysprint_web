@@ -13,7 +13,8 @@
     <link rel="stylesheet" href="{{ asset('ext/plugins/iCheck/square/blue.css') }}">
 
     <!-- Favicon -->
-    <link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1618251695/paysprint_icon_new_kg2h3j.png"
+    <link rel="icon"
+        href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
         type="image/x-icon" />
 
     <!-- Bootstrap 3.3.7 -->
@@ -122,20 +123,16 @@
                             $lname = $name[1];
                             $email = $newuser->email;
                         @endphp
-
                     @else
-
                         @php
                             $ref_code = '';
                             $fname = '';
                             $lname = '';
                             $email = '';
-                            
+
                         @endphp
                     @endif
-
                 @else
-
                     @php
                         $ref_code = '';
                         $fname = '';
@@ -491,7 +488,7 @@
             </div>
             <!-- /.col -->
 
-            
+
         </div>
       </div> --}}
 
@@ -632,8 +629,7 @@
                     <label for=" describe_purpose">Purpose of opening the Account (please describe the purpose)</label>
                     <div class="row">
                         <div class="col-xs-12">
-                            <textarea type="text" name="describe_purpose" id="describe_purpose" class="form-control"
-                                placeholder=""></textarea>
+                            <textarea type="text" name="describe_purpose" id="describe_purpose" class="form-control" placeholder=""></textarea>
                         </div>
                     </div>
                 </div>

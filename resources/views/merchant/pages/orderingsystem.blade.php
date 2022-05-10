@@ -48,9 +48,12 @@
                         type="button" role="tab" aria-controls="nav-sales" aria-selected="false">Sales</button>
                     <button class="nav-link" id="nav-refund-tab" data-bs-toggle="tab" data-bs-target="#nav-refund"
                         type="button" role="tab" aria-controls="nav-refund" aria-selected="false">Refund</button>
-                    <button class="nav-link" id="nav-discount-tab" data-bs-toggle="tab" data-bs-target="#nav-discount"
-                        type="button" role="tab" aria-controls="nav-discount" aria-selected="false">Discount codes <span
-                            class="text-danger">[coming soon]</span></button>
+                    <button class="nav-link" id="nav-discount-tab" data-bs-toggle="tab"
+                        data-bs-target="#nav-discounts" type="button" role="tab" aria-controls="nav-discounts"
+                        aria-selected="false">Discount codes <span class="text-danger">[coming soon]</span></button>
+                    {{-- <button class="nav-link" id="nav-discount-tab" data-bs-toggle="tab"
+                        data-bs-target="#nav-discount" type="button" role="tab" aria-controls="nav-discount"
+                        aria-selected="false">Discount codes <span class="text-danger">[coming soon]</span></button> --}}
 
                     <button class="nav-link" id="nav-managestore-tab" data-bs-toggle="tab"
                         data-bs-target="#nav-managestore" type="button" role="tab" aria-controls="nav-managestore"
@@ -209,7 +212,7 @@
                                                                             </div>
                                                                             <div class="form-group">
                                                                                 <label for="stock">Stock</label>
-                                                                                <input type="number" min="1" max="100"
+                                                                                <input type="number" min="1"
                                                                                     class="form-control" name="stock"
                                                                                     id="stock" aria-describedby="stockHelp"
                                                                                     placeholder="Enter quantity in stock"
@@ -228,11 +231,11 @@
                                                                                         <option value="">Select category
                                                                                         </option>
 
-                                                                                        @foreach ($data['productcategory'] as $item)
+                                                                                        @foreach ($data['productcategory'] as $itemCat)
                                                                                             <option
-                                                                                                value="{{ $item->category }}"
-                                                                                                {{ $product->category == $item->category ? 'selected' : '' }}>
-                                                                                                {{ $item->category }}
+                                                                                                value="{{ $itemCat->category }}"
+                                                                                                {{ $product->category == $itemCat->category ? 'selected' : '' }}>
+                                                                                                {{ $itemCat->category }}
                                                                                             </option>
                                                                                         @endforeach
                                                                                     @endif
@@ -958,9 +961,18 @@
                                                     </p>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <button class="btn btn-success" style="width: 100%;"
-                                                        data-bs-toggle="modal" data-bs-target="#createStoreModal">Setup
-                                                        eStore</button>
+
+                                                    @isset($data['myStore'])
+                                                        <button class="btn btn-primary" style="width: 100%;"
+                                                            data-bs-toggle="modal" data-bs-target="#editStoreModal">Update
+                                                            eStore</button>
+                                                    @else
+                                                        <button class="btn btn-success" style="width: 100%;"
+                                                            data-bs-toggle="modal" data-bs-target="#createStoreModal">Setup
+                                                            eStore</button>
+                                                    @endisset
+
+
                                                 </div>
                                             </div>
                                             <hr>
@@ -1004,8 +1016,8 @@
 
                                                         {!! $data['storepickup'] > 0
     ? '<span class="float-end"><a href="javascript:void(0)"
-                                                                class="text-primary">View
-                                                                pickup address</a></span>'
+                                                                class="text-primary">View/Add
+                                                                pickup addresses</a></span>'
     : '' !!}
 
 
@@ -1095,7 +1107,7 @@
 
                                                         {!! $data['deliverypickup'] > 0
     ? '<span class="float-end"><a href="javascript:void(0)"
-                                                                class="text-danger">View
+                                                                class="text-danger">View/Add
                                                                 delivery rates</a></span>'
     : '' !!}
                                                     </div>
@@ -1192,6 +1204,18 @@
 
                                                                 </div>
 
+                                                                <div class="form-group">
+                                                                    <label for="instore_city">City</label>
+                                                                    <input type="text" class="form-control" name="city"
+                                                                        id="delivery_city"
+                                                                        aria-describedby="instore_cityHelp"
+                                                                        placeholder="Enter delivery city" required>
+                                                                    <small id="instore_cityHelp"
+                                                                        class="form-text text-muted">Please specify the
+                                                                        city</small>
+
+                                                                </div>
+
 
 
                                                                 <div class="form-group">
@@ -1229,10 +1253,133 @@
                                                     </p>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <button class="btn btn-success" style="width: 100%;"><small>Add Product
-                                                            Tax</small></button>
+
+                                                    @isset($data['myProductTax'])
+                                                        <button class="btn btn-success" style="width: 100%;"
+                                                            data-bs-toggle="modal" data-bs-target="#editProductTax"><small>Edit
+                                                                Product
+                                                                Tax</small></button>
+                                                    @else
+                                                        <button class="btn btn-success" style="width: 100%;"
+                                                            data-bs-toggle="modal" data-bs-target="#addProductTax"><small>Add
+                                                                Product
+                                                                Tax</small></button>
+                                                    @endisset
+
+
                                                 </div>
                                             </div>
+
+
+                                            <div class="modal fade" id="addProductTax">
+                                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLongTitle">
+                                                                Add Product Tax</h5>
+                                                            <button class="btn-close" type="button"
+                                                                data-dismiss="modal" aria-label="Close"
+                                                                onclick="$('.modal').modal('hide')"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form action="{{ route('store product tax') }}"
+                                                                method="post">
+
+                                                                @csrf
+
+                                                                <div class="form-group">
+                                                                    <label for="taxName">Tax Name</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="taxName" id="taxName"
+                                                                        aria-describedby="taxNameHelp"
+                                                                        placeholder="Enter tax name" required>
+                                                                    <small id="taxNameHelp"
+                                                                        class="form-text text-muted">Please provide the tax
+                                                                        name</small>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label for="taxValue">Tax Value (%)</label>
+                                                                    <input type="number" min="0.00" step="0.01"
+                                                                        class="form-control" name="taxValue"
+                                                                        id="taxValue" aria-describedby="taxValueHelp"
+                                                                        placeholder="Enter tax value (%)" required>
+                                                                    <small id="taxValueHelp"
+                                                                        class="form-text text-muted">Please provide the tax
+                                                                        name</small>
+                                                                </div>
+
+
+
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">Submit</button>
+
+                                                            </form>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                            @isset($data['myProductTax'])
+                                                <div class="modal fade" id="editProductTax">
+                                                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLongTitle">
+                                                                    Edit Product Tax</h5>
+                                                                <button class="btn-close" type="button"
+                                                                    data-dismiss="modal" aria-label="Close"
+                                                                    onclick="$('.modal').modal('hide')"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form
+                                                                    action="{{ route('edit product tax', $data['myProductTax']->id) }}"
+                                                                    method="post">
+
+                                                                    @csrf
+
+                                                                    <div class="form-group">
+                                                                        <label for="taxName">Tax Name</label>
+                                                                        <input type="text" class="form-control"
+                                                                            name="taxName" id="taxName"
+                                                                            aria-describedby="taxNameHelp"
+                                                                            placeholder="Enter tax name"
+                                                                            value="{{ $data['myProductTax']->taxName }}"
+                                                                            required>
+                                                                        <small id="taxNameHelp"
+                                                                            class="form-text text-muted">Please provide the tax
+                                                                            name</small>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="taxValue">Tax Value (%)</label>
+                                                                        <input type="number" min="0.00" step="0.01"
+                                                                            class="form-control" name="taxValue"
+                                                                            id="taxValue" aria-describedby="taxValueHelp"
+                                                                            placeholder="Enter tax value (%)"
+                                                                            value="{{ $data['myProductTax']->taxValue }}"
+                                                                            required>
+                                                                        <small id="taxValueHelp"
+                                                                            class="form-text text-muted">Please provide the tax
+                                                                            name</small>
+                                                                    </div>
+
+
+
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary">Submit</button>
+
+                                                                </form>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endisset
+
                                         </div>
                                     </div>
 
@@ -1264,6 +1411,8 @@
                             onclick="$('.modal').modal('hide')"></button>
                     </div>
                     <div class="modal-body">
+
+
                         <form action="{{ route('store product') }}" method="post" enctype="multipart/form-data">
 
                             @csrf
@@ -1273,11 +1422,14 @@
                                 <label for="stock">Category</label>
                                 <select name="category" id="category" class="form-control form-select prodCategory"
                                     required>
+
+
                                     @if (count($data['productcategory']) > 0)
                                         <option value="">Select category</option>
 
-                                        @foreach ($data['productcategory'] as $item)
-                                            <option value="{{ $item->category }}">{{ $item->category }}</option>
+                                        @foreach ($data['productcategory'] as $itemCat)
+                                            <option value="{{ $itemCat->category }}">{{ $itemCat->category }}
+                                            </option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -1301,7 +1453,7 @@
                             <div class="form-group">
                                 <label for="code">Product Code </label>
                                 <span class="float-end"><a href="javascript:void(0)" class="text-primary"
-                                        onclick="generateProductCode()">Generate
+                                        onclick="generateProductCode()">Auto Generate
                                         code</a></span>
                                 <input type="text" class="form-control productCode" name="productCode"
                                     aria-describedby="codeHelp" placeholder="Enter a product code" required>
@@ -1327,7 +1479,7 @@
 
                             <div class="form-group">
                                 <label for="stock">Stock</label>
-                                <input type="number" min="1" max="100" class="form-control" name="stock" id="stock"
+                                <input type="number" min="1" class="form-control" name="stock" id="stock"
                                     aria-describedby="stockHelp" placeholder="Enter quantity in stock" required>
                                 <small id="stockHelp" class="form-text text-muted">How many do you have in stock</small>
                             </div>
@@ -1350,14 +1502,11 @@
 
                             <div class="form-group">
                                 <label for="deliveryDate">Delivery Period</label>
-                                <input type="text" min="1" max="100" class="form-control" name="deliveryDate"
-                                    id="deliveryDate" aria-describedby="deliveryDateHelp" placeholder="6 days" required>
+                                <input type="text" min="1" class="form-control" name="deliveryDate" id="deliveryDate"
+                                    aria-describedby="deliveryDateHelp" placeholder="6 days" required>
                                 <small id="deliveryDateHelp" class="form-text text-muted">How many days would the product
                                     be shipped?</small>
                             </div>
-
-
-
 
 
 
@@ -1388,7 +1537,7 @@
                             <div class="form-group">
                                 <label for="code">Discount code </label> <span class="float-end"><a
                                         href="javascript:void(0)" class="text-primary"
-                                        onclick="generateDiscountCode()">Generate
+                                        onclick="generateDiscountCode()">Auto Generate
                                         code</a></span>
                                 <input type="text" class="form-control" name="code" id="code" aria-describedby="codeHelp"
                                     placeholder="Enter a discount code" required>
@@ -1587,6 +1736,45 @@
 
 
 
+                            <div class="form-group">
+                                <label for="facebook">Facebook Link </label>
+                                <input type="text" class="form-control" name="facebook" id="facebook"
+                                    aria-describedby="facebookHelp" placeholder="Enter your facebook link">
+
+                                <small id="facebookHelp" class="form-text text-muted">Let your customers view you on
+                                    facebook</small>
+
+                            </div>
+                            <div class="form-group">
+                                <label for="twitter">Twitter Link </label>
+                                <input type="text" class="form-control" name="twitter" id="twitter"
+                                    aria-describedby="twitterHelp" placeholder="Enter your twitter link">
+
+                                <small id="twitterHelp" class="form-text text-muted">Let your customers view you on
+                                    twitter</small>
+
+                            </div>
+                            <div class="form-group">
+                                <label for="instagram">Instagram Link </label>
+                                <input type="text" class="form-control" name="instagram" id="instagram"
+                                    aria-describedby="instagramHelp" placeholder="Enter your instgram link">
+
+                                <small id="instagramHelp" class="form-text text-muted">Let your customers view you on
+                                    instagram</small>
+
+                            </div>
+                            <div class="form-group">
+                                <label for="whatsapp">Whatsapp Link </label>
+                                <input type="text" class="form-control" name="whatsapp" id="whatsapp"
+                                    aria-describedby="whatsappHelp" placeholder="Enter your whatsapp business link">
+
+                                <small id="whatsappHelp" class="form-text text-muted">Let your customers view you on
+                                    WhatsApp</small>
+
+                            </div>
+
+
+
                             <input type="submit" class="btn btn-danger" name="savePreview" value="Save and Preview">
                             <input type="submit" class="btn btn-success" name="publishStore" value="Publish Store">
 
@@ -1599,6 +1787,188 @@
 
 
 
+        {{-- Edit Store --}}
+        @isset($data['myStore'])
+            <div class="modal fade" id="editStoreModal">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Update eStore</h5>
+                            <button class="btn-close" type="button" data-dismiss="modal" aria-label="Close"
+                                onclick="$('.modal').modal('hide')"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ route('setup estore') }}" method="post" enctype="multipart/form-data">
+
+                                @csrf
+
+                                <div class="form-group">
+                                    <label for="businessLogo">Business Logo </label>
+                                    <input type="file" class="form-control" name="businessLogo" id="businessLogo"
+                                        aria-describedby="businessLogoHelp" required>
+
+                                    <small id="businessLogoHelp" class="form-text text-muted">Upload your business logo for
+                                        your shop.</small>
+
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="headerContent">Header Content Image </label>
+                                    <input type="file" class="form-control" name="headerContent[]" id="headerContent"
+                                        aria-describedby="headerContentHelp" required multiple>
+
+                                    <small id="headerContentHelp" class="form-text text-muted">Upload your header content for
+                                        your shop. <strong>MAX 3 pictures will be uploaded</strong> <br> <span
+                                            class="text-danger">Please note
+                                            JPG, PNG and SVG formats are
+                                            only
+                                            allowed.</span></small>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="headerTitle">Header Title Text </label>
+                                    <input type="text" class="form-control" name="headerTitle" id="headerTitle"
+                                        aria-describedby="headerTitleHelp" placeholder="Enter header title"
+                                        value="{{ $data['myStore']->headerTitle }}" required>
+
+                                    <small id="headerTitleHelp" class="form-text text-muted">If HEADER CONTENT IMAGE is more
+                                        than one (1), separate by comma (,)</small>
+
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="headerSubtitle">Header Sub-title Text </label>
+                                    <input type="text" class="form-control" name="headerSubtitle" id="headerSubtitle"
+                                        aria-describedby="headerSubtitleHelp" placeholder="Enter header sub-title"
+                                        value="{{ $data['myStore']->headerSubtitle }}" required>
+
+                                    <small id="headerSubtitleHelp" class="form-text text-muted">If HEADER CONTENT IMAGE is more
+                                        than one (1), separate by comma (,)</small>
+
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="advertSectionImage">Advert Section Image </label>
+                                    <input type="file" class="form-control" name="advertSectionImage[]"
+                                        id="advertSectionImage" aria-describedby="advertSectionImageHelp" multiple>
+
+                                    <small id="advertSectionImageHelp" class="form-text text-muted">Upload your advert section
+                                        image for
+                                        your shop. <strong>MAX 3 pictures will be uploaded</strong> <br> <span
+                                            class="text-danger">Please note
+                                            JPG, PNG and SVG formats are
+                                            only
+                                            allowed.</span></small>
+
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="advertTitle">Advert Title Text </label>
+                                    <input type="text" class="form-control" name="advertTitle" id="advertTitle"
+                                        aria-describedby="advertTitleHelp" placeholder="Enter advert title"
+                                        value="{{ $data['myStore']->advertTitle }}">
+
+                                    <small id="advertTitleHelp" class="form-text text-muted">If ADVERT CONTENT IMAGE is more
+                                        than one (1), separate by comma (,)</small>
+
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="advertSubtitle">Advert Sub-title Text </label>
+                                    <input type="text" class="form-control" name="advertSubtitle" id="advertSubtitle"
+                                        aria-describedby="advertSubtitleHelp" placeholder="Enter advert sub-title"
+                                        value="{{ $data['myStore']->advertSubtitle }}">
+
+                                    <small id="advertSubtitleHelp" class="form-text text-muted">If ADVERT CONTENT IMAGE is more
+                                        than one (1), separate by comma (,)</small>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="advertSubtitle">Advert Sub-title Text </label>
+                                    <input type="text" class="form-control" name="advertSubtitle" id="advertSubtitle"
+                                        aria-describedby="advertSubtitleHelp" placeholder="Enter advert sub-title"
+                                        value="{{ $data['myStore']->advertSubtitle }}">
+
+                                    <small id="advertSubtitleHelp" class="form-text text-muted">If ADVERT CONTENT IMAGE is more
+                                        than one (1), separate by comma (,)</small>
+
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="advertSubtitle">Return and Refund Policy </label>
+
+                                    <textarea name="refundPolicy" id="refundPolicy" cols="30" rows="10"
+                                        class="form-control">{{ $data['myStore']->refundPolicy }}</textarea>
+
+                                    <small id="advertSubtitleHelp" class="form-text text-muted">Here is to assertain your
+                                        customers of your return and refund policy</small>
+
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="facebook">Facebook Link </label>
+                                    <input type="text" class="form-control" name="facebook" id="facebook"
+                                        aria-describedby="facebookHelp" placeholder="Enter your facebook link"
+                                        value="{{ $data['myStore']->facebook }}">
+
+                                    <small id="facebookHelp" class="form-text text-muted">Let your customers view you on
+                                        facebook</small>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="twitter">Twitter Link </label>
+                                    <input type="text" class="form-control" name="twitter" id="twitter"
+                                        aria-describedby="twitterHelp" placeholder="Enter your twitter link"
+                                        value="{{ $data['myStore']->twitter }}">
+
+                                    <small id="twitterHelp" class="form-text text-muted">Let your customers view you on
+                                        twitter</small>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="instagram">Instagram Link </label>
+                                    <input type="text" class="form-control" name="instagram" id="instagram"
+                                        aria-describedby="instagramHelp" placeholder="Enter your instagram link"
+                                        value="{{ $data['myStore']->instagram }}">
+
+                                    <small id="instagramHelp" class="form-text text-muted">Let your customers view you on
+                                        instagram</small>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="whatsapp">Whatsapp Link </label>
+                                    <input type="text" class="form-control" name="whatsapp" id="whatsapp"
+                                        aria-describedby="whatsappHelp" placeholder="Enter your whatsapp business link"
+                                        value="{{ $data['myStore']->whatsapp }}">
+
+                                    <small id="whatsappHelp" class="form-text text-muted">Let your customers view you on
+                                        WhatsApp</small>
+
+                                </div>
+
+
+
+
+
+                                <input type="submit" class="btn btn-danger" name="savePreview" value="Save and Preview">
+                                <input type="submit" class="btn btn-success" name="publishStore" value="Publish Store">
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        @endisset
 
 
     </div>

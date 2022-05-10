@@ -35,11 +35,12 @@
                         <div class="box-body table table-responsive">
                             <table class="table table-striped">
                                 @php
-                                    $counter=1;
+                                    $counter = 1;
                                 @endphp
                                 <thead>
                                     <tr>
                                         <th>S/N</th>
+                                        <th>Business Logo </th>
                                         <th>Store Name</th>
                                         <th>Store Link</th>
                                         <th>Store Status</th>
@@ -50,43 +51,63 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if(count($data['stores']) > 0)
-                                        @foreach ( $data['stores'] as $value )
+                                    @if (count($data['stores']) > 0)
+                                        @foreach ($data['stores'] as $value)
+                                            @if ($user = \App\User::where('id', $value->merchantId)->first())
+                                                <tr>
+                                                    <td>{{ $counter++ }}</td>
+                                                    <td><img style="width: 45px; height:45px;"
+                                                            src="{{ asset($value->businessLogo) }}"></td>
+                                                    <td>{{ $user->businessname }}</td>
+                                                    <td><a href="{{ route('home') . '/shop/' . $user->businessname }}"
+                                                            target="_blank">View store</a></td>
+                                                    <td>
 
-                                        @if($user = \App\User::where('id', $value->merchantId)->first())
+                                                        <p
+                                                            class="{{ $value->status == 'not active' ? 'text-danger' : 'text-success' }} text-center">
+                                                            {{ $value->status }}</p>
+                                                        <form action="{{ route('activate store', $value->id) }}"
+                                                            method="post" id="activation" class="disp-0">
+                                                            @csrf
+                                                            <input type="text" name="status" value="{{ $value->status }}">
+                                                        </form>
+                                                        <small>
+                                                            <a href="javascript:void(0)"
+                                                                onclick="storeActivation('{{ $value->id }}')"
+                                                                id="btns{{ $value->id }}" type="button"
+                                                                style="font-weight: bold">{{ $value->status == 'not active' ? 'Click to activate' : 'Click to de-activate' }}</a>
+                                                        </small>
 
-                                    <tr>
-                                        <td>{{$counter++ }}</td>
-                                        <td>{{ $user->businessname }}</td>
-                                        <td><a href="{{ route('home').'/shop/'.$user->businessname }}" target="_blank">View store</a></td>
-                                        <td>
+                                                    <td>
+                                                        <span
+                                                            class="{{ $value->publish == false ? 'text-danger' : 'text-success' }}">{{ $value->publish == false ? 'Not published' : 'published' }}</span>
 
-                                            <span class="{{ $value->status == 'not active' ? 'text-danger' : 'text-success' }}">{{ $value->status}}</span>
-                                            
-                                        <td>
-                                            <span class="{{ $value->publish == false ? 'text-danger' : 'text-success' }}">{{ $value->publish == false ? 'Not published' : 'published' }}</span>
-                                               
-                                        </td>
-                                        <td>{{ date('d/M/Y', strtotime($value->created_at)) }}</td>
-                                        <td>{{ date('d/M/Y', strtotime($value->updated_at)) }}</td>
-                                        <td>
-                                            <a href="{{ route('send message', 'id='.$user->id)}}" class="btn btn-success">Message</a>
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('edit store',$value->id)}}" class="btn btn-primary">Edit</a>
-                                        </td> 
-                                        <td>
-                                           <button class="btn btn-danger" id="btns" onclick="deleteStore();">Delete</button>
-                                           <form action="{{ route('delete store', $value->id)}}" method="post" style="visibility: hidden" id="deletestore">
-                                               @csrf
-                                            <input type="hidden" name="storeid" value="{{ $value->id}}" >
-                                           </form>
-                                        </td>
-                                    </tr>
-
-                                    @endif
-
-                                    @endforeach
+                                                    </td>
+                                                    <td>{{ date('d/M/Y', strtotime($value->created_at)) }}</td>
+                                                    <td>{{ date('d/M/Y', strtotime($value->updated_at)) }}</td>
+                                                    <td>
+                                                        <a href="{{ route('send message', 'id=' . $user->id) }}"
+                                                            class="btn btn-success">Message Merchant</a>
+                                                    </td>
+                                                    <td>
+                                                        <a href="{{ route('edit store', $value->id) }}"
+                                                            class="btn btn-primary">Edit Store</a>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-danger" id="btns{{ $value->id }}"
+                                                            onclick="deleteStore('{{ $value->id }}');">Suspend
+                                                            Store</button>
+                                                        <form action="{{ route('delete store', $value->id) }}"
+                                                            method="post" style="visibility: hidden"
+                                                            id="deletestore{{ $value->id }}">
+                                                            @csrf
+                                                            <input type="hidden" name="storeid"
+                                                                value="{{ $value->id }}">
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @endforeach
                                     @endif
                                 </tbody>
                             </table>
