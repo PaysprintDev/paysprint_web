@@ -23,9 +23,9 @@
     <!-- breadcrumb end -->
     <!-- cart start -->
     <section>
-        <div class="container">
+        <div class="container mb-4">
             <div class="row mt-4">
-                <div class="col-md-10">
+                <div class="col-md-9">
                 <div class="card" style="width: 100%;">
                     <div class="card-body">
                         <div class="card-title">
@@ -38,7 +38,7 @@
                       @if (count($data['mycartlist']) > 0)
                       @foreach ($data['mycartlist'] as $cartItem)
                       @if($product = \App\StoreProducts::where('id', $cartItem->productId)->first())
-                      <div class="row mb-4">
+                      <div class="row mb-5">
                         <div class="col-md-3 mb-3">
                             <a href="javascript:void(0)"><img style="width: 150px; border-radius:5px;" src="{{ $cartItem->productImage }}"
                                 class="img-fluid" alt="image"></a>
@@ -59,7 +59,7 @@
                             
                         </div>
                         <div class="col-md-2 mb-3">
-                            <p style="font-size: 20px; font-weight:bold;"><span>{{ $data['user']->currencySymbol . number_format($cartItem->price * $cartItem->quantity, 2) }}</span></p>
+                            <p style="font-size: 18px; font-weight:bold;"><span>{{ $data['user']->currencySymbol . number_format($cartItem->price * $cartItem->quantity, 2) }}</span></p>
                          
                         </div>
                         <hr>
@@ -73,7 +73,7 @@
                     </div>
                 </div>
                 </div>
-                <div class="col-md-2 card ">
+                <div class="col-md-3 card ">
                     <div class="row mt-3">
                     <div class=" col-md-12 ">
                         <p>CART SUMMARY</p>
