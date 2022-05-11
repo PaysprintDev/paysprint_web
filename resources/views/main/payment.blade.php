@@ -12,7 +12,8 @@
         integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
     <!-- Favicon -->
-    <link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1602675914/paysprint_icon_png_ol2z3u.png"
+    <link rel="icon"
+        href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_icon_png_rhxm1e_sqhgj0.png"
         type="image/x-icon" />
 
     <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
@@ -90,22 +91,17 @@
                                             $currencySymb = $data['getinvoice'][0]->invoiced_currency_symbol;
                                             $currencycod = $data['getinvoice'][0]->invoiced_currency;
                                         @endphp
-
                                     @else
-
                                         @php
                                             $currencySymb = $merchant->currencySymbol;
                                             $currencycod = $merchant->currencyCode;
                                         @endphp
-
                                     @endif
 
                                     @php
                                         $countryBase = $merchant->country;
                                     @endphp
-
                                 @else
-
                                     @php
                                         $currencySymb = $data['currencyCode']->currencySymbol;
                                         $currencycod = $data['currencyCode']->currencyCode;
@@ -169,10 +165,8 @@
 
 
                                                 @if ($data['getinvoice'][0]->installpay == 'Yes' && $data['getinvoice'][0]->installlimit == $data['getinvoice'][0]->installcount)
-
                                                     <div class='alert alert-danger'>You can not pay installmentally on
                                                         this invoice as you have exceeded the limit</div>
-
                                                 @endif
 
                                             @endif
@@ -267,8 +261,6 @@
 
 
                                         @if ($countryBase != Auth::user()->country)
-
-
                                             <div class="form-group converter"> <label for="netwmount">
                                                     <h6>Currency Conversion <br><small
                                                             class="text-info"><b>Exchange rate </b> <br> <span
@@ -335,10 +327,7 @@
                                                     <div class="input-group-append"> </div>
                                                 </div>
                                             </div>
-
                                         @else
-
-
                                             <div class="form-group disp-0">
                                                 <div class="input-group">
                                                     <p style="color: red; font-weight: bold;"><input type="checkbox"
@@ -372,7 +361,6 @@
                                                     <div class="input-group-append"> </div>
                                                 </div>
                                             </div>
-
                                         @endif
 
 
@@ -393,7 +381,6 @@
                                             @if ($data['getinvoice'][0]->installpay == 'Yes')
 
                                                 @if ($data['getinvoice'][0]->installlimit > $data['getinvoice'][0]->installcount)
-
                                                     <div class="form-group"> <label for="currency">
                                                             <h6>Do you want to pay intallmentally?</h6>
                                                         </label>
@@ -426,9 +413,7 @@
                                                             <div class="input-group-append"> </div>
                                                         </div>
                                                     </div>
-
                                                 @else
-
                                                     <div class="form-group disp-0"> <label for="currency">
                                                             <h6>Do you want to pay intallmentally?</h6>
                                                         </label>
@@ -460,18 +445,10 @@
                                                             <div class="input-group-append"> </div>
                                                         </div>
                                                     </div>
-
                                                 @endif
 
                                                 {{-- @if ($data['getinvoice'][0]->installpay == 'Yes' && $data['getinvoice'][0]->installlimit == $data['getinvoice'][0]->installcount) --}}
-
                                             @else
-
-
-
-
-
-
                                                 <div class="form-group disp-0"> <label for="currency">
                                                         <h6>Do you want to pay intallmentally?</h6>
                                                     </label>
@@ -507,9 +484,7 @@
 
 
                                             @endif
-
                                         @else
-
                                             <div class="form-group disp-0"> <label for="currency">
                                                     <h6>Do you want to pay intallmentally?</h6>
                                                 </label>
@@ -651,10 +626,7 @@
 
                                     </form>
                                 </div>
-
                             @else
-
-
                                 <div class="alert alert-danger">
                                     No record for this invoice number
                                 </div>

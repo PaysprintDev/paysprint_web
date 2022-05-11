@@ -40,29 +40,42 @@
     <!-- displaying products starts -->
     <section class="container">
         <div class="row">
-           <div class="col-md-12 mb-3">
-               <h1>Order Details</h1>
-           </div>
-           <hr>
-        </div>
-        <div class="row">
-            @if($product = \App\StoreProducts::where('id', $data['orders']->productId)->first())
-                
-            <div class="col-md-12 mb-2">
-                <p> Order No: {{ $data['orders']->orderId }} </p>
-                <p>{{ $data['orders']->quantity}} quantity</p>
-                <p>Placed on {{ $data['orders']->created_at}}</p>
-                <p>Total: {{ $product->amount}}</p>
+            <div class="col-md-12 mb-3">
+                <h1>Order Details</h1>
             </div>
             <hr>
-            <div class="col-md-12 mt-2">
-                <p style="font-size: 20px; font-weight:bold">ITEMS IN YOUR ORDER</p>
-            </div>  
+        </div>
+        <div class="row">
+            @if ($product = \App\StoreProducts::where('id', $data['orders']->productId)->first())
+                <div class="col-md-12 mb-2">
+                    <table class="table" style="width: 50% !important;">
+                        <tbody>
+                            <tr>
+                                <td>Order No:</td>
+                                <td>{{ $data['orders']->orderId }}</td>
+                            </tr>
+                            <tr>
+                                <td>Quantity:</td>
+                                <td>{{ $data['orders']->quantity }}</td>
+                            </tr>
+                            <tr>
+                                <td>Placed on:</td>
+                                <td>{{ date('d-m-Y H:i a', strtotime($data['orders']->created_at)) }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h4 style="font-weight: bold;">Total: {{ $data['user']->currencySymbol . $product->amount }}</h4>
+                </div>
+                <hr>
+                <div class="col-md-12 mt-2">
+                    <p style="font-size: 20px; font-weight:bold">ITEMS IN YOUR ORDER</p>
+                </div>
         </div>
         <div class="row mt-2 mb-3">
             <div class="col-md-12 card-body">
-                <p><span 
-                    class="{{ $data['orders']->deliveryStatus == 'off' ? 'text-danger' : 'text-success' }}">{{ $data['orders']->deliveryStatus == 'off' ? 'Not Delivered' : 'Delivered' }}</span></p>
+                <p><span
+                        class="{{ $data['orders']->deliveryStatus == 'off' ? 'badge bg-danger' : 'badge bg-success' }}">{{ $data['orders']->deliveryStatus == 'off' ? 'Not Delivered' : 'Delivered' }}</span>
+                </p>
                 <p>{{ $data['orders']->deliveryDate }}</p>
             </div>
             <div class="col-md-4">
@@ -70,7 +83,7 @@
             </div>
             <div class="col-md-8">
                 <p>{!! $product->description !!}</p>
-            </div>    
+            </div>
             @endif
         </div>
 
@@ -80,28 +93,20 @@
                 <hr>
                 <p><strong>Payment Details</strong></p>
                 <p class="mt-2 mb-1">Payment Status: <span
-                    class="{{ $data['orders']->paymentStatus == 'not paid' ? 'text-danger' : 'text-success' }}">{{ $data['orders']->paymentStatus == 'not paid' ? 'not Paid' : 'Paid' }}</span> 
+                        class="{{ $data['orders']->paymentStatus == 'not paid' ? 'badge bg-danger' : 'badge bg-success' }}">{{ $data['orders']->paymentStatus == 'not paid' ? 'not Paid' : 'Paid' }}</span>
                 </p>
-                <p class="mt-2">Price: {{ $product->amount}}</p>
+                <h4 style="font-weight: bold;">Price: {{ $data['user']->currencySymbol . $product->amount }}</h4>
             </div>
             <div class="col-md-6 mb-4">
                 <p style="font-size: 18px"><strong>DELIVERY INFORMATION</strong></p>
                 <hr>
                 <p><strong>Delivery Details</strong></p>
-                <p>{{$data['orders']->address }}</p>
-                <p class="mt-2">Postal Code: {{$data['orders']->postalCode }}</p>
+                <p>{{ $data['orders']->address }}</p>
+                <p class="mt-2">Postal Code: {{ $data['orders']->postalCode }}</p>
+                <p class="mt-2">Additional Information: {!! $data['orders']->additionalInfo !!}</p>
             </div>
         </div>
 
-       
+
     </section>
-
-
-
-
-
-  
-
-
-
 @endsection
