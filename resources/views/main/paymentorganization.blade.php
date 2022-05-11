@@ -11,7 +11,8 @@
         integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
     <!-- Favicon -->
-    <link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1602675914/paysprint_icon_png_ol2z3u.png"
+    <link rel="icon"
+        href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_icon_png_rhxm1e_sqhgj0.png"
         type="image/x-icon" />
 
     <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
@@ -173,8 +174,6 @@
                                                 <select name="card_id" id="card_id" class="form-control" required>
                                                     @if (count($data['getCard']) > 0)
                                                         @foreach ($data['getCard'] as $mycard)
-
-
                                                             <option value="{{ $mycard->id }}">{!! wordwrap($mycard->card_number, 4, '-', true) !!}
                                                             </option>
                                                         @endforeach
@@ -266,7 +265,6 @@
                                         </div>
 
                                         @if (Request::get('country') != $data['paymentorg']->country)
-
                                             <div class="form-group"> <label for="netwmount">
                                                     <h6>Currency Conversion <br><small
                                                             class="text-info"><b>Exchange rate </b></small></h6>
@@ -310,10 +308,7 @@
                                                         id="conversionamount" value="" placeholder="0.00" readonly>
                                                 </div>
                                             </div>
-
-
                                         @else
-
                                             <div class="form-group disp-0"> <label for="netwmount">
                                                     <h6>Currency Conversion <br><small
                                                             class="text-info"><b>Exchange rate </b></small></h6>
@@ -327,15 +322,11 @@
                                                         id="conversionamount" value="" placeholder="0.00" readonly>
                                                 </div>
                                             </div>
-
-
-
                                         @endif
 
 
 
                                         @if (Request::get('country') == $data['paymentorg']->country)
-
                                             <div class="form-group"> <label for="netwmount">
                                                     <h6>Amount To Receive <br><small class="text-success"><b>Total
                                                                 amount that would be received</b></small></h6>
@@ -345,7 +336,6 @@
                                                         id="amounttosend" value="" placeholder="0.00" readonly>
                                                 </div>
                                             </div>
-
                                         @endif
 
 
@@ -386,7 +376,6 @@
                                                 {{-- <span class="text-success">Please note that International transfer are sent in USD conversion</span> --}}
                                                 <span class="text-success">Alert: </span>
                                             </div>
-
                                         @endif
 
 
@@ -495,12 +484,10 @@
                                                             class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn">
                                                             Send Money </button>
                                                     @else
-
                                                         <button type="button"
                                                             onclick="restriction('sendmoney', '{{ Auth::user()->name }}')"
                                                             class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn">
                                                             Send Money </button>
-
                                                     @endif
 
 
@@ -516,10 +503,7 @@
 
                                     </form>
                                 </div>
-
                             @else
-
-
                                 <div class="alert alert-danger">
                                     No record for this invoice number
                                 </div>
@@ -1111,8 +1095,7 @@
 
         {{-- Google Pay API --}}
 
-        <script async src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()">
-        </script>
+        <script async src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script>
 
 </body>
 

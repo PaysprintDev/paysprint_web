@@ -12,7 +12,8 @@
         integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
     <!-- Favicon -->
-    <link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1602675914/paysprint_icon_png_ol2z3u.png"
+    <link rel="icon"
+        href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_icon_png_rhxm1e_sqhgj0.png"
         type="image/x-icon" />
 
     <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
@@ -21,18 +22,14 @@
 
 
     @if ($data['currencyCode']->gateway == 'Stripe')
-
         <script src="https://js.stripe.com/v3/"></script>
         <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
-
     @endif
 
     @if ($data['currencyCode']->gateway == 'PayPal')
-
         <script
                 src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ $data['currencyCode']->currencyCode }}">
         </script>
-
     @endif
 
     <title>PaySprint | Invoice Payment</title>
@@ -97,21 +94,17 @@
                             @if (count($data['getinvoice']) > 0)
 
                                 @if ($merchant = \App\User::where('ref_code', $data['getinvoice'][0]->uploaded_by)->first())
-
                                     @php
                                         $currencySymb = $merchant->currencySymbol;
                                         $currencycod = $merchant->currencyCode;
                                         $countryBase = $merchant->country;
                                     @endphp
-
                                 @else
-
                                     @php
                                         $currencySymb = $data['currencyCode']->currencySymbol;
                                         $currencycod = $data['currencyCode']->currencyCode;
                                         $countryBase = $data['getinvoice'][0]->country;
                                     @endphp
-
                                 @endif
 
 
@@ -170,10 +163,8 @@
 
 
                                                 @if ($data['getinvoice'][0]->installpay == 'Yes' && $data['getinvoice'][0]->installlimit == $data['getinvoice'][0]->installcount)
-
                                                     <div class='alert alert-danger'>You can not pay installmentally on
                                                         this invoice as you have exceeded the limit</div>
-
                                                 @endif
 
                                             @endif
@@ -206,8 +197,6 @@
 
 
                                         @if ($countryBase != $data['currencyCode']->name)
-
-
                                             <div class="form-group converter"> <label for="netwmount">
                                                     <h6>Currency Conversion <br><small
                                                             class="text-info"><b>Exchange rate </b> <br> <span
@@ -273,10 +262,7 @@
                                                     <div class="input-group-append"> </div>
                                                 </div>
                                             </div>
-
                                         @else
-
-
                                             <div class="form-group disp-0">
                                                 <div class="input-group">
                                                     <p style="color: red; font-weight: bold;"><input type="checkbox"
@@ -310,7 +296,6 @@
                                                     <div class="input-group-append"> </div>
                                                 </div>
                                             </div>
-
                                         @endif
 
 
@@ -330,7 +315,6 @@
                                             @if ($data['getinvoice'][0]->installpay == 'Yes')
 
                                                 @if ($data['getinvoice'][0]->installlimit > $data['getinvoice'][0]->installcount)
-
                                                     <div class="form-group"> <label for="currency">
                                                             <h6>Do you want to pay intallmentally?</h6>
                                                         </label>
@@ -363,9 +347,7 @@
                                                             <div class="input-group-append"> </div>
                                                         </div>
                                                     </div>
-
                                                 @else
-
                                                     <div class="form-group disp-0"> <label for="currency">
                                                             <h6>Do you want to pay intallmentally?</h6>
                                                         </label>
@@ -397,18 +379,10 @@
                                                             <div class="input-group-append"> </div>
                                                         </div>
                                                     </div>
-
                                                 @endif
 
                                                 {{-- @if ($data['getinvoice'][0]->installpay == 'Yes' && $data['getinvoice'][0]->installlimit == $data['getinvoice'][0]->installcount) --}}
-
                                             @else
-
-
-
-
-
-
                                                 <div class="form-group disp-0"> <label for="currency">
                                                         <h6>Do you want to pay intallmentally?</h6>
                                                     </label>
@@ -444,9 +418,7 @@
 
 
                                             @endif
-
                                         @else
-
                                             <div class="form-group disp-0"> <label for="currency">
                                                     <h6>Do you want to pay intallmentally?</h6>
                                                 </label>
@@ -570,7 +542,6 @@
                                         {{-- Pay Using Stripe --}}
 
                                         @if ($data['currencyCode']->gateway == 'Stripe')
-
                                             <input type="hidden" name="name" class="form-control" id="nameInput"
                                                 value="{{ $name }}" readonly>
 
@@ -588,14 +559,12 @@
                                             <div class="card-footer"> <button type="submit"
                                                     class="subscribe btn btn-info btn-block shadow-sm {{ $countryBase == $data['currencyCode']->name ? 'cardSubmit' : 'sendmoneyBtn' }}">
                                                     Pay Invoice</button></div>
-
                                         @endif
 
 
                                         {{-- Pay Using PayPal --}}
 
                                         @if ($data['currencyCode']->gateway == 'PayPal')
-
                                             {{-- @php
                                 if($data['remaining_invoice'] > 0){
                                     $amountInvoiced = $data['remaining_invoice'];
@@ -611,15 +580,12 @@
 
 
                                             <div class="card-footer" id="paypal-button-container"></div>
-
-
                                         @endif
 
 
 
                                         {{-- Pay Using PayStack, Express Payment Solution --}}
                                         @if ($data['currencyCode']->gateway == 'PayStack' || $data['currencyCode']->gateway == 'Express Payment Solution')
-
                                             @php
                                                 if ($data['remaining_invoice'] > 0) {
                                                     $amountInvoiced = $data['remaining_invoice'];
@@ -638,7 +604,6 @@
                                                     onclick="payWithPaystack('{{ $email }}')"
                                                     class="subscribe btn btn-info btn-block shadow-sm {{ $countryBase == $data['currencyCode']->name ? 'cardSubmit' : 'sendmoneyBtn' }}">
                                                     Pay Invoice </button></div>
-
                                         @endif
 
 
@@ -646,10 +611,7 @@
 
                                     </form>
                                 </div>
-
                             @else
-
-
                                 <div class="alert alert-danger">
                                     No record for this invoice number
                                 </div>
@@ -727,15 +689,11 @@
 
                 // PayPal Integration End
             </script>
-
-
-
         @endif
 
 
 
         @if ($data['currencyCode']->gateway == 'Stripe')
-
             <script>
                 // Stripe Integration Starts
 
@@ -817,7 +775,7 @@
                                                 setTimeout(() => {
                                                     handShake(
                                                         'payinvoicelink'
-                                                        );
+                                                    );
                                                 }, 1000);
 
                                             } else {
@@ -875,7 +833,6 @@
 
                 // Stripe Integration Ends
             </script>
-
         @endif
 
         <script>
@@ -1060,7 +1017,8 @@
                     amount: amount * 100,
                     currency: "NGN",
                     ref: '' + Math.floor((Math.random() * 1000000000) +
-                    1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+                        1
+                        ), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
                     metadata: {
                         custom_fields: [{
                                 display_name: "Full Name",
