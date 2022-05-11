@@ -49,7 +49,7 @@ class CurrencyFxController extends Controller
             return redirect()->back();
         }
 
-        
+
         $checker = $this->checkImt(Auth::user()->country);
 
         if($checker == "false"){
@@ -65,7 +65,7 @@ class CurrencyFxController extends Controller
     {
 
 
-        
+
 
 
         if ($req->session()->has('email') == false) {
@@ -89,7 +89,7 @@ class CurrencyFxController extends Controller
 
 
         if(isset($client) && $client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -250,7 +250,7 @@ class CurrencyFxController extends Controller
         return view('currencyexchange.invoices');
     }
 
-    
+
         // Get My Client Info
     public function getMyClientInfo($ref_code)
     {
@@ -613,11 +613,11 @@ class CurrencyFxController extends Controller
 
             Auth::login($user);
         }
-        
+
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         if(isset($client) && $client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -1057,7 +1057,7 @@ class CurrencyFxController extends Controller
 
                 $walletBal = $getescrow->wallet_balance;
 
-                // Credit Wallet 
+                // Credit Wallet
                 $creditWallet = $walletBal + $value->sell;
 
 
@@ -2355,7 +2355,7 @@ class CurrencyFxController extends Controller
 
                         $newData[] = $value;
                     }
-                    
+
                 }
 
 

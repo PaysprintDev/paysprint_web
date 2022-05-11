@@ -810,7 +810,7 @@
                                                                                                                         id="1617200960035100001_imgsrc_url_1"
                                                                                                                         alt="Play Store"
                                                                                                                         style="width :  150px; "
-                                                                                                                        src="https://res.cloudinary.com/pilstech/image/upload/v1623072511/paysprint_asset/googlePAY_c60zhd.png"></a>
+                                                                                                                        src="https://res.cloudinary.com/paysprint/image/upload/v1651130087/assets/googlePAY_c60zhd_yqycqs.png"></a>
                                                                                                             </li>
 
                                                                                                             <li>
@@ -820,7 +820,7 @@
                                                                                                                         id="1617200960035100001_imgsrc_url_2"
                                                                                                                         alt="App Store"
                                                                                                                         style="width :  150px; "
-                                                                                                                        src="https://res.cloudinary.com/pilstech/image/upload/v1623072511/paysprint_asset/appleStore_yy6tld.png"></a>
+                                                                                                                        src="https://res.cloudinary.com/paysprint/image/upload/v1651130085/assets/appleStore_yy6tld_piwilz.png"></a>
                                                                                                             </li>
                                                                                                         </ul> <br>
                                                                                                         Visit our

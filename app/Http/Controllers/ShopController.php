@@ -198,7 +198,7 @@ class ShopController extends Controller
 
 
 
-            return redirect()->route('estore payment', ['merchantId' => $cartItem->merchantId, 'userId' => $req->userId, 'country' => $req->country]);
+            return redirect()->route('estore payment', ['merchantId' => $cartItem->merchantId, 'userId' => $req->userId, 'country' => $req->country, 'fee' => base64_encode($req->shippingCharge)]);
         } catch (\Throwable $th) {
             $status = 'error';
             $message = $th->getMessage();
@@ -827,6 +827,37 @@ class ShopController extends Controller
             $resData = ['data' => [], 'message' => $th->getMessage()];
         }
 
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+    public function deliveryOptionDetails(Request $req){
+        try {
+            if($req->userSelection == "Home Delivery"){
+                $data = StoreShipping::where('merchantId', $req->merchantId)->where('city', $req->city)->orWhere('state', $req->state)->first();
+                $message = 'Success';
+            }
+            elseif($req->userSelection == "In Store Pick Up"){
+                $data = StorePickup::where('merchantId', $req->merchantId)->first();
+                $message = 'Success';
+            }
+            else{
+                $data = [];
+                $message = 'No delivery options available';
+            }
+
+
+            // Fetch data information...
+
+            $status = 200;
+            $resData = ['data' => $data, 'message' => $message];
+
+
+        } catch (\Throwable $th) {
+            $status = 400;
+            $resData = ['data' => [], 'message' => $th->getMessage()];
+        }
 
         return $this->returnJSON($resData, $status);
     }
