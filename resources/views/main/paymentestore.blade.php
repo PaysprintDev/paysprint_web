@@ -139,14 +139,13 @@
 
                                             @php
                                                 $productCost = 0;
-                                                $shipCost = 0;
+                                                $shipCost = Request::get('fee') != null ? base64_decode(Request::get('fee')) : 0;
                                                 $taxCost = $data['storeTax']->taxValue != null ? $data['storeTax']->taxValue / 100 : 0;
                                                 $totalCost = 0;
                                             @endphp
                                             @for ($i = 0; $i < count($data['getCart']); $i++)
                                                 @php
                                                     $productCost += $data['getCart'][$i]->price * $data['getCart'][$i]->quantity;
-                                                    $shipCost += $data['getCart'][$i]->shippingFee;
 
                                                 @endphp
                                             @endfor
@@ -784,13 +783,13 @@
                                                                 <a href="https://play.google.com/store/apps/details?id=com.fursee.damilare.sprint_mobile"
                                                                     target="_blank"
                                                                     class="btn text-white gr-hover-y px-lg-9">
-                                                                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1620148943/paysprint_asset/l6-download-gplay_o9rcfj.png"
+                                                                    <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130088/assets/l6-download-gplay_o9rcfj_l6erwf.png"
                                                                         alt="play store" width="100%">
                                                                 </a>
                                                                 <a href="https://apps.apple.com/gb/app/paysprint/id1567742130"
                                                                     target="_blank"
                                                                     class="btn text-white gr-hover-y px-lg-9">
-                                                                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1620148943/paysprint_asset/l6-download-appstore_odcskf.png"
+                                                                    <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130088/assets/l6-download-appstore_odcskf_atgygf.png"
                                                                         alt="apple store" width="100%">
                                                                 </a>
                                                             </div>

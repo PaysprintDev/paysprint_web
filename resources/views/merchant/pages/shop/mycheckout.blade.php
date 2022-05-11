@@ -80,7 +80,8 @@
                                     <ul class="billing-ul mt-3">
                                         <li class="billing-li">
                                             <label>Town / City</label>
-                                            <input type="text" name="city" class="form-control" placeholder="" required>
+                                            <input type="text" name="city" id="city" class="form-control" placeholder=""
+                                                required>
                                         </li>
                                     </ul>
 
@@ -103,7 +104,57 @@
                                                 value="{{ Auth::user()->telephone }}" required>
                                         </li>
                                     </ul>
+
                                     <br>
+
+                                    <ul class="billing-ul input-2 mt-3">
+                                        <li class="billing-li">
+                                            <label><strong>Shipping Region</strong></label>
+                                        </li>
+
+                                    </ul>
+
+
+                                    <br>
+
+                                    <div>
+                                        <h2>Delivery Option</h2>
+                                        <ul class="billing-ul input-2 mt-3">
+                                            <li class="billing-li">
+                                                <select name="deliveryOption" id="deliveryOption"
+                                                    class="form-control form-select" required
+                                                    onChange="changeDeliveryOption('{{ $data['user']->id }}', '{{ $data['user']->currencySymbol }}')">
+                                                    <option value="">Select delivery option</option>
+                                                    <option value="Home Delivery">Home Delivery</option>
+                                                    <option value="In Store Pick Up">In Store Pick Up</option>
+                                                </select>
+                                            </li>
+
+
+                                            <br>
+                                            <div class="card storeDetails disp-0">
+                                                <div class="card-body">
+                                                    <p class="instoreAddress">
+
+                                                    </p>
+                                                    <br>
+                                                    <p class="amountToDeliveryAddress">
+
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                        </ul>
+
+
+
+                                        </ul>
+
+
+                                    </div>
+
+                                    <br>
+
                                     <ul class="billing-ul input-2 mt-3">
                                         <li class="billing-li">
                                             <label><strong>Add Shipping Details</strong></label>
@@ -152,6 +203,12 @@
 
                                         </ul>
                                     </div>
+
+
+
+
+
+                                    <br>
 
                                 </div>
 
@@ -242,8 +299,8 @@
                             <span>Shipping Charge:</span>
                         </li>
                         <li class="order-details col-md-6 mt-2 mb-2">
-                            <input type="hidden" name="shippingCharge" value="0">
-                            <span class="text-danger"><strong>Free shipping</strong></span>
+                            <input type="hidden" name="shippingCharge" id="shippingCharge" value="">
+                            <span class="shippingChargeClass"></span>
                         </li>
 
                         @isset($data['storeTax'])
@@ -251,7 +308,6 @@
                                 <span>{{ $data['storeTax']->taxName }} (Tax):</span>
                             </li>
                             <li class="order-details col-md-6 mt-2 mb-2">
-                                <input type="hidden" name="shippingCharge" value="0">
                                 <span
                                     class="text-primary"><strong>{{ $data['user']->currencySymbol . number_format($totalTax, 2) }}</strong></span>
                             </li>
@@ -260,7 +316,6 @@
                                 <span>Tax:</span>
                             </li>
                             <li class="order-details col-md-6 mt-2 mb-2">
-                                <input type="hidden" name="shippingCharge" value="0">
                                 <span
                                     class="text-danger"><strong>{{ $data['user']->currencySymbol . number_format(0, 2) }}</strong></span>
 
@@ -272,8 +327,9 @@
                             <span>Total:</span>
                         </li>
                         <li class="order-details col-md-6 mt-2 mb-2">
-                            <input type="hidden" name="total" value="{{ $totalPrice + $totalTax }}">
-                            <span><strong>{{ $data['user']->currencySymbol . number_format($totalPrice + $totalTax, 2) }}</strong></span>
+                            <input type="hidden" name="total" id="total" value="{{ $totalPrice + $totalTax }}">
+                            <span
+                                class="totalCost"><strong>{{ $data['user']->currencySymbol . number_format($totalPrice + $totalTax, 2) }}</strong></span>
                         </li>
                     </ul>
 
