@@ -64,7 +64,7 @@
                     class="{{ $value->deliveryStatus == 'off' ? 'text-danger' : 'text-success' }}">{{ $value->deliveryStatus == 'off' ? 'Not Delivered' : 'Delivered' }}</span></p>
             </div>
             <div class="col-md-3">
-                <a href="#" style="color: orange; font-weight:lighter; font-size:18px;">SEE DETAILS</a>
+                <a href="{{ route('single orders', 'merchant='.$data['user']->businessname.'&orderid='.$value->orderId)}}" style="color: orange; font-weight:lighter; font-size:18px;">SEE DETAILS</a>
             </div>
         </div>
         <hr>

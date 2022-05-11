@@ -204,6 +204,7 @@ Route::prefix('product')->group(function () {
 	Route::get('payment', ['uses' => 'HomeController@estorePayment', 'as' => 'estore payment']);
 	Route::get('/shop', ['uses' => 'MerchantPageController@merchantShopPage', 'as' => 'product shop']);
 	Route::get('/orders', ['uses' => 'MerchantPageController@merchantOrders', 'as' => 'orders']);
+	Route::get('/order-details', ['uses' => 'MerchantPageController@singleOrder', 'as' => 'single orders']);
 });
 
 
