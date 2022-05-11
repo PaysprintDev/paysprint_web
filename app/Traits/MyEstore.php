@@ -105,5 +105,11 @@ trait MyEstore
         return $data;
     }
 
+    public function getSpecificOrder($orderid){
+        $data = StoreOrders::where('orderId', $orderid)->first();
+
+        return $data;
+    }
+
 
 }
