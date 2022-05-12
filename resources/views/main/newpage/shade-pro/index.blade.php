@@ -687,12 +687,12 @@
 
                         <a href="https://play.google.com/store/apps/details?id=com.fursee.damilare.sprint_mobile"
                             target="_blank" class="btn text-white gr-hover-y px-lg-9">
-                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1620148943/paysprint_asset/l6-download-gplay_o9rcfj.png"
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130088/assets/l6-download-gplay_o9rcfj_l6erwf.png"
                                 alt="play store">
                         </a>
                         <a href="https://apps.apple.com/gb/app/paysprint/id1567742130" target="_blank"
                             class="btn text-white gr-hover-y px-lg-9">
-                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1620148943/paysprint_asset/l6-download-appstore_odcskf.png"
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130088/assets/l6-download-appstore_odcskf_atgygf.png"
                                 alt="apple store">
                         </a>
                         <p class="gr-text-11 mb-0 mt-6" style="color: #433d3d;">It takes only 2 mins!</p>

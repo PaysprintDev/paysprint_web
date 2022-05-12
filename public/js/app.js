@@ -14,21 +14,23 @@
 			);
 
 			/***/
-		},
-
-		/***/ /*!*************************************!*\
+		} /*!*************************************!*\
   !*** ./node_modules/axios/index.js ***!
-  \*************************************/
-		/***/ './node_modules/axios/index.js': (module, __unused_webpack_exports, __webpack_require__) => {
+  \*************************************/,
+
+		/***/ /***/ './node_modules/axios/index.js': (module, __unused_webpack_exports, __webpack_require__) => {
 			module.exports = __webpack_require__(/*! ./lib/axios */ './node_modules/axios/lib/axios.js');
 
 			/***/
-		},
-
-		/***/ /*!************************************************!*\
+		} /*!************************************************!*\
   !*** ./node_modules/axios/lib/adapters/xhr.js ***!
-  \************************************************/
-		/***/ './node_modules/axios/lib/adapters/xhr.js': (module, __unused_webpack_exports, __webpack_require__) => {
+  \************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/adapters/xhr.js': (
+			module,
+			__unused_webpack_exports,
+			__webpack_require__
+		) => {
 			'use strict';
 
 			var utils = __webpack_require__(/*! ./../utils */ './node_modules/axios/lib/utils.js');
@@ -248,12 +250,11 @@
 			};
 
 			/***/
-		},
-
-		/***/ /*!*****************************************!*\
+		} /*!*****************************************!*\
   !*** ./node_modules/axios/lib/axios.js ***!
-  \*****************************************/
-		/***/ './node_modules/axios/lib/axios.js': (module, __unused_webpack_exports, __webpack_require__) => {
+  \*****************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/axios.js': (module, __unused_webpack_exports, __webpack_require__) => {
 			'use strict';
 
 			var utils = __webpack_require__(/*! ./utils */ './node_modules/axios/lib/utils.js');
@@ -320,12 +321,11 @@
 			module.exports['default'] = axios;
 
 			/***/
-		},
-
-		/***/ /*!*************************************************!*\
+		} /*!*************************************************!*\
   !*** ./node_modules/axios/lib/cancel/Cancel.js ***!
-  \*************************************************/
-		/***/ './node_modules/axios/lib/cancel/Cancel.js': (module) => {
+  \*************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/cancel/Cancel.js': (module) => {
 			'use strict';
 
 			/**
@@ -347,12 +347,11 @@
 			module.exports = Cancel;
 
 			/***/
-		},
-
-		/***/ /*!******************************************************!*\
+		} /*!******************************************************!*\
   !*** ./node_modules/axios/lib/cancel/CancelToken.js ***!
-  \******************************************************/
-		/***/ './node_modules/axios/lib/cancel/CancelToken.js': (
+  \******************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/cancel/CancelToken.js': (
 			module,
 			__unused_webpack_exports,
 			__webpack_require__
@@ -416,12 +415,11 @@
 			module.exports = CancelToken;
 
 			/***/
-		},
-
-		/***/ /*!***************************************************!*\
+		} /*!***************************************************!*\
   !*** ./node_modules/axios/lib/cancel/isCancel.js ***!
-  \***************************************************/
-		/***/ './node_modules/axios/lib/cancel/isCancel.js': (module) => {
+  \***************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/cancel/isCancel.js': (module) => {
 			'use strict';
 
 			module.exports = function isCancel(value) {
@@ -429,12 +427,15 @@
 			};
 
 			/***/
-		},
-
-		/***/ /*!**********************************************!*\
+		} /*!**********************************************!*\
   !*** ./node_modules/axios/lib/core/Axios.js ***!
-  \**********************************************/
-		/***/ './node_modules/axios/lib/core/Axios.js': (module, __unused_webpack_exports, __webpack_require__) => {
+  \**********************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/core/Axios.js': (
+			module,
+			__unused_webpack_exports,
+			__webpack_require__
+		) => {
 			'use strict';
 
 			var utils = __webpack_require__(/*! ./../utils */ './node_modules/axios/lib/utils.js');
@@ -600,12 +601,11 @@
 			module.exports = Axios;
 
 			/***/
-		},
-
-		/***/ /*!***********************************************************!*\
+		} /*!***********************************************************!*\
   !*** ./node_modules/axios/lib/core/InterceptorManager.js ***!
-  \***********************************************************/
-		/***/ './node_modules/axios/lib/core/InterceptorManager.js': (
+  \***********************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/core/InterceptorManager.js': (
 			module,
 			__unused_webpack_exports,
 			__webpack_require__
@@ -666,12 +666,11 @@
 			module.exports = InterceptorManager;
 
 			/***/
-		},
-
-		/***/ /*!******************************************************!*\
+		} /*!******************************************************!*\
   !*** ./node_modules/axios/lib/core/buildFullPath.js ***!
-  \******************************************************/
-		/***/ './node_modules/axios/lib/core/buildFullPath.js': (
+  \******************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/core/buildFullPath.js': (
 			module,
 			__unused_webpack_exports,
 			__webpack_require__
@@ -702,12 +701,11 @@
 			};
 
 			/***/
-		},
-
-		/***/ /*!****************************************************!*\
+		} /*!****************************************************!*\
   !*** ./node_modules/axios/lib/core/createError.js ***!
-  \****************************************************/
-		/***/ './node_modules/axios/lib/core/createError.js': (
+  \****************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/core/createError.js': (
 			module,
 			__unused_webpack_exports,
 			__webpack_require__
@@ -734,12 +732,11 @@
 			};
 
 			/***/
-		},
-
-		/***/ /*!********************************************************!*\
+		} /*!********************************************************!*\
   !*** ./node_modules/axios/lib/core/dispatchRequest.js ***!
-  \********************************************************/
-		/***/ './node_modules/axios/lib/core/dispatchRequest.js': (
+  \********************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/core/dispatchRequest.js': (
 			module,
 			__unused_webpack_exports,
 			__webpack_require__
@@ -827,12 +824,11 @@
 			};
 
 			/***/
-		},
-
-		/***/ /*!*****************************************************!*\
+		} /*!*****************************************************!*\
   !*** ./node_modules/axios/lib/core/enhanceError.js ***!
-  \*****************************************************/
-		/***/ './node_modules/axios/lib/core/enhanceError.js': (module) => {
+  \*****************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/core/enhanceError.js': (module) => {
 			'use strict';
 
 			/**
@@ -877,12 +873,11 @@
 			};
 
 			/***/
-		},
-
-		/***/ /*!****************************************************!*\
+		} /*!****************************************************!*\
   !*** ./node_modules/axios/lib/core/mergeConfig.js ***!
-  \****************************************************/
-		/***/ './node_modules/axios/lib/core/mergeConfig.js': (
+  \****************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/core/mergeConfig.js': (
 			module,
 			__unused_webpack_exports,
 			__webpack_require__
@@ -991,12 +986,15 @@
 			};
 
 			/***/
-		},
-
-		/***/ /*!***********************************************!*\
+		} /*!***********************************************!*\
   !*** ./node_modules/axios/lib/core/settle.js ***!
-  \***********************************************/
-		/***/ './node_modules/axios/lib/core/settle.js': (module, __unused_webpack_exports, __webpack_require__) => {
+  \***********************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/core/settle.js': (
+			module,
+			__unused_webpack_exports,
+			__webpack_require__
+		) => {
 			'use strict';
 
 			var createError = __webpack_require__(/*! ./createError */ './node_modules/axios/lib/core/createError.js');
@@ -1026,12 +1024,11 @@
 			};
 
 			/***/
-		},
-
-		/***/ /*!******************************************************!*\
+		} /*!******************************************************!*\
   !*** ./node_modules/axios/lib/core/transformData.js ***!
-  \******************************************************/
-		/***/ './node_modules/axios/lib/core/transformData.js': (
+  \******************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/core/transformData.js': (
 			module,
 			__unused_webpack_exports,
 			__webpack_require__
@@ -1060,12 +1057,11 @@
 			};
 
 			/***/
-		},
-
-		/***/ /*!********************************************!*\
+		} /*!********************************************!*\
   !*** ./node_modules/axios/lib/defaults.js ***!
-  \********************************************/
-		/***/ './node_modules/axios/lib/defaults.js': (module, __unused_webpack_exports, __webpack_require__) => {
+  \********************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/defaults.js': (module, __unused_webpack_exports, __webpack_require__) => {
 			'use strict';
 			/* provided dependency */ var process = __webpack_require__(
 				/*! process/browser */ './node_modules/process/browser.js'
@@ -1216,12 +1212,11 @@
 			module.exports = defaults;
 
 			/***/
-		},
-
-		/***/ /*!************************************************!*\
+		} /*!************************************************!*\
   !*** ./node_modules/axios/lib/helpers/bind.js ***!
-  \************************************************/
-		/***/ './node_modules/axios/lib/helpers/bind.js': (module) => {
+  \************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/helpers/bind.js': (module) => {
 			'use strict';
 
 			module.exports = function bind(fn, thisArg) {
@@ -1235,12 +1230,11 @@
 			};
 
 			/***/
-		},
-
-		/***/ /*!****************************************************!*\
+		} /*!****************************************************!*\
   !*** ./node_modules/axios/lib/helpers/buildURL.js ***!
-  \****************************************************/
-		/***/ './node_modules/axios/lib/helpers/buildURL.js': (
+  \****************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/helpers/buildURL.js': (
 			module,
 			__unused_webpack_exports,
 			__webpack_require__
@@ -1317,12 +1311,11 @@
 			};
 
 			/***/
-		},
-
-		/***/ /*!*******************************************************!*\
+		} /*!*******************************************************!*\
   !*** ./node_modules/axios/lib/helpers/combineURLs.js ***!
-  \*******************************************************/
-		/***/ './node_modules/axios/lib/helpers/combineURLs.js': (module) => {
+  \*******************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/helpers/combineURLs.js': (module) => {
 			'use strict';
 
 			/**
@@ -1337,12 +1330,11 @@
 			};
 
 			/***/
-		},
-
-		/***/ /*!***************************************************!*\
+		} /*!***************************************************!*\
   !*** ./node_modules/axios/lib/helpers/cookies.js ***!
-  \***************************************************/
-		/***/ './node_modules/axios/lib/helpers/cookies.js': (
+  \***************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/helpers/cookies.js': (
 			module,
 			__unused_webpack_exports,
 			__webpack_require__
@@ -1400,12 +1392,11 @@
 					})();
 
 			/***/
-		},
-
-		/***/ /*!*********************************************************!*\
+		} /*!*********************************************************!*\
   !*** ./node_modules/axios/lib/helpers/isAbsoluteURL.js ***!
-  \*********************************************************/
-		/***/ './node_modules/axios/lib/helpers/isAbsoluteURL.js': (module) => {
+  \*********************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/helpers/isAbsoluteURL.js': (module) => {
 			'use strict';
 
 			/**
@@ -1422,12 +1413,11 @@
 			};
 
 			/***/
-		},
-
-		/***/ /*!********************************************************!*\
+		} /*!********************************************************!*\
   !*** ./node_modules/axios/lib/helpers/isAxiosError.js ***!
-  \********************************************************/
-		/***/ './node_modules/axios/lib/helpers/isAxiosError.js': (module) => {
+  \********************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/helpers/isAxiosError.js': (module) => {
 			'use strict';
 
 			/**
@@ -1441,12 +1431,11 @@
 			};
 
 			/***/
-		},
-
-		/***/ /*!***********************************************************!*\
+		} /*!***********************************************************!*\
   !*** ./node_modules/axios/lib/helpers/isURLSameOrigin.js ***!
-  \***********************************************************/
-		/***/ './node_modules/axios/lib/helpers/isURLSameOrigin.js': (
+  \***********************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/helpers/isURLSameOrigin.js': (
 			module,
 			__unused_webpack_exports,
 			__webpack_require__
@@ -1517,12 +1506,11 @@
 					})();
 
 			/***/
-		},
-
-		/***/ /*!***************************************************************!*\
+		} /*!***************************************************************!*\
   !*** ./node_modules/axios/lib/helpers/normalizeHeaderName.js ***!
-  \***************************************************************/
-		/***/ './node_modules/axios/lib/helpers/normalizeHeaderName.js': (
+  \***************************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/helpers/normalizeHeaderName.js': (
 			module,
 			__unused_webpack_exports,
 			__webpack_require__
@@ -1541,12 +1529,11 @@
 			};
 
 			/***/
-		},
-
-		/***/ /*!********************************************************!*\
+		} /*!********************************************************!*\
   !*** ./node_modules/axios/lib/helpers/parseHeaders.js ***!
-  \********************************************************/
-		/***/ './node_modules/axios/lib/helpers/parseHeaders.js': (
+  \********************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/helpers/parseHeaders.js': (
 			module,
 			__unused_webpack_exports,
 			__webpack_require__
@@ -1621,12 +1608,11 @@
 			};
 
 			/***/
-		},
-
-		/***/ /*!**************************************************!*\
+		} /*!**************************************************!*\
   !*** ./node_modules/axios/lib/helpers/spread.js ***!
-  \**************************************************/
-		/***/ './node_modules/axios/lib/helpers/spread.js': (module) => {
+  \**************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/helpers/spread.js': (module) => {
 			'use strict';
 
 			/**
@@ -1656,12 +1642,11 @@
 			};
 
 			/***/
-		},
-
-		/***/ /*!*****************************************************!*\
+		} /*!*****************************************************!*\
   !*** ./node_modules/axios/lib/helpers/validator.js ***!
-  \*****************************************************/
-		/***/ './node_modules/axios/lib/helpers/validator.js': (
+  \*****************************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/helpers/validator.js': (
 			module,
 			__unused_webpack_exports,
 			__webpack_require__
@@ -1781,12 +1766,11 @@
 			};
 
 			/***/
-		},
-
-		/***/ /*!*****************************************!*\
+		} /*!*****************************************!*\
   !*** ./node_modules/axios/lib/utils.js ***!
-  \*****************************************/
-		/***/ './node_modules/axios/lib/utils.js': (module, __unused_webpack_exports, __webpack_require__) => {
+  \*****************************************/,
+
+		/***/ /***/ './node_modules/axios/lib/utils.js': (module, __unused_webpack_exports, __webpack_require__) => {
 			'use strict';
 
 			var bind = __webpack_require__(/*! ./helpers/bind */ './node_modules/axios/lib/helpers/bind.js');
@@ -2144,12 +2128,15 @@
 			};
 
 			/***/
-		},
-
-		/***/ /*!*****************************!*\
+		} /*!*****************************!*\
   !*** ./resources/js/app.js ***!
-  \*****************************/
-		/***/ './resources/js/app.js': (__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+  \*****************************/,
+
+		/***/ /***/ './resources/js/app.js': (
+			__unused_webpack_module,
+			__unused_webpack_exports,
+			__webpack_require__
+		) => {
 			/**
  * First we will load all of this project's JavaScript dependencies which
  * includes React and other helpers. It's a great starting point while
@@ -2167,12 +2154,11 @@
 			__webpack_require__(/*! ./components/Example */ './resources/js/components/Example.js');
 
 			/***/
-		},
-
-		/***/ /*!***********************************!*\
+		} /*!***********************************!*\
   !*** ./resources/js/bootstrap.js ***!
-  \***********************************/
-		/***/ './resources/js/bootstrap.js': (
+  \***********************************/,
+
+		/***/ /***/ './resources/js/bootstrap.js': (
 			__unused_webpack_module,
 			__unused_webpack_exports,
 			__webpack_require__
@@ -2215,12 +2201,11 @@
 			// });
 
 			/***/
-		},
-
-		/***/ /*!****************************************!*\
+		} /*!****************************************!*\
   !*** ./resources/js/components/App.js ***!
-  \****************************************/
-		/***/ './resources/js/components/App.js': (
+  \****************************************/,
+
+		/***/ /***/ './resources/js/components/App.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -2458,12 +2443,11 @@
 			}
 
 			/***/
-		},
-
-		/***/ /*!********************************************!*\
+		} /*!********************************************!*\
   !*** ./resources/js/components/Example.js ***!
-  \********************************************/
-		/***/ './resources/js/components/Example.js': (
+  \********************************************/,
+
+		/***/ /***/ './resources/js/components/Example.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -2519,12 +2503,11 @@
 			}
 
 			/***/
-		},
-
-		/***/ /*!***************************************************************!*\
+		} /*!***************************************************************!*\
   !*** ./resources/js/components/constraints/HeaderFunction.js ***!
-  \***************************************************************/
-		/***/ './resources/js/components/constraints/HeaderFunction.js': (
+  \***************************************************************/,
+
+		/***/ /***/ './resources/js/components/constraints/HeaderFunction.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -2776,12 +2759,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = HeaderFunction;
 
 			/***/
-		},
-
-		/***/ /*!*********************************************************!*\
+		} /*!*********************************************************!*\
   !*** ./resources/js/components/constraints/MyOrders.js ***!
-  \*********************************************************/
-		/***/ './resources/js/components/constraints/MyOrders.js': (
+  \*********************************************************/,
+
+		/***/ /***/ './resources/js/components/constraints/MyOrders.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -3835,12 +3817,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = MyOrders;
 
 			/***/
-		},
-
-		/***/ /*!**************************************************************!*\
+		} /*!**************************************************************!*\
   !*** ./resources/js/components/constraints/OngoingOrders.js ***!
-  \**************************************************************/
-		/***/ './resources/js/components/constraints/OngoingOrders.js': (
+  \**************************************************************/,
+
+		/***/ /***/ './resources/js/components/constraints/OngoingOrders.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -4988,12 +4969,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = OngoingOrders;
 
 			/***/
-		},
-
-		/***/ /*!************************************************************!*\
+		} /*!************************************************************!*\
   !*** ./resources/js/components/constraints/PaidInvoice.js ***!
-  \************************************************************/
-		/***/ './resources/js/components/constraints/PaidInvoice.js': (
+  \************************************************************/,
+
+		/***/ /***/ './resources/js/components/constraints/PaidInvoice.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -5990,12 +5970,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = Invoice;
 
 			/***/
-		},
-
-		/***/ /*!***************************************************************!*\
+		} /*!***************************************************************!*\
   !*** ./resources/js/components/constraints/PendingInvoice.js ***!
-  \***************************************************************/
-		/***/ './resources/js/components/constraints/PendingInvoice.js': (
+  \***************************************************************/,
+
+		/***/ /***/ './resources/js/components/constraints/PendingInvoice.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -6992,12 +6971,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = Invoice;
 
 			/***/
-		},
-
-		/***/ /*!**************************************************************!*\
+		} /*!**************************************************************!*\
   !*** ./resources/js/components/constraints/PendingOrders.js ***!
-  \**************************************************************/
-		/***/ './resources/js/components/constraints/PendingOrders.js': (
+  \**************************************************************/,
+
+		/***/ /***/ './resources/js/components/constraints/PendingOrders.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -8146,12 +8124,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = PendingOrders;
 
 			/***/
-		},
-
-		/***/ /*!***********************************************************!*\
+		} /*!***********************************************************!*\
   !*** ./resources/js/components/constraints/RecentBids.js ***!
-  \***********************************************************/
-		/***/ './resources/js/components/constraints/RecentBids.js': (
+  \***********************************************************/,
+
+		/***/ /***/ './resources/js/components/constraints/RecentBids.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -9197,12 +9174,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = RecentBids;
 
 			/***/
-		},
-
-		/***/ /*!***********************************************************!*\
+		} /*!***********************************************************!*\
   !*** ./resources/js/components/constraints/ViewMyBids.js ***!
-  \***********************************************************/
-		/***/ './resources/js/components/constraints/ViewMyBids.js': (
+  \***********************************************************/,
+
+		/***/ /***/ './resources/js/components/constraints/ViewMyBids.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -10206,12 +10182,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ViewMyBids;
 
 			/***/
-		},
-
-		/***/ /*!**********************************************************!*\
+		} /*!**********************************************************!*\
   !*** ./resources/js/components/includes/ActiveOrders.js ***!
-  \**********************************************************/
-		/***/ './resources/js/components/includes/ActiveOrders.js': (
+  \**********************************************************/,
+
+		/***/ /***/ './resources/js/components/includes/ActiveOrders.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -11113,12 +11088,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ActiveOrders;
 
 			/***/
-		},
-
-		/***/ /*!***************************************************!*\
+		} /*!***************************************************!*\
   !*** ./resources/js/components/includes/Aside.js ***!
-  \***************************************************/
-		/***/ './resources/js/components/includes/Aside.js': (
+  \***************************************************/,
+
+		/***/ /***/ './resources/js/components/includes/Aside.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -12869,12 +12843,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = Aside;
 
 			/***/
-		},
-
-		/***/ /*!****************************************************!*\
+		} /*!****************************************************!*\
   !*** ./resources/js/components/includes/Header.js ***!
-  \****************************************************/
-		/***/ './resources/js/components/includes/Header.js': (
+  \****************************************************/,
+
+		/***/ /***/ './resources/js/components/includes/Header.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -15028,12 +15001,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = Header;
 
 			/***/
-		},
-
-		/***/ /*!****************************************************!*\
+		} /*!****************************************************!*\
   !*** ./resources/js/components/includes/Notify.js ***!
-  \****************************************************/
-		/***/ './resources/js/components/includes/Notify.js': (
+  \****************************************************/,
+
+		/***/ /***/ './resources/js/components/includes/Notify.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -15459,12 +15431,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = Notify;
 
 			/***/
-		},
-
-		/***/ /*!**************************************************************!*\
+		} /*!**************************************************************!*\
   !*** ./resources/js/components/pages/CrossBorderPlatform.js ***!
-  \**************************************************************/
-		/***/ './resources/js/components/pages/CrossBorderPlatform.js': (
+  \**************************************************************/,
+
+		/***/ /***/ './resources/js/components/pages/CrossBorderPlatform.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -16220,12 +16191,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = CrossBorderPlatform;
 
 			/***/
-		},
-
-		/***/ /*!****************************************************!*\
+		} /*!****************************************************!*\
   !*** ./resources/js/components/pages/Dashboard.js ***!
-  \****************************************************/
-		/***/ './resources/js/components/pages/Dashboard.js': (
+  \****************************************************/,
+
+		/***/ /***/ './resources/js/components/pages/Dashboard.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -17206,7 +17176,7 @@
 																																	className:
 																																		'avatar-img',
 																																	src:
-																																		'https://res.cloudinary.com/pilstech/image/upload/v1633681766/paysprint_asset/wallet-balance_qluod6.svg',
+																																		'https://res.cloudinary.com/paysprint/image/upload/v1651130091/assets/wallet-balance_qluod6_mtzkno.svg',
 																																	alt:
 																																		'Avatars'
 																																}
@@ -17717,12 +17687,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = Dashboard;
 
 			/***/
-		},
-
-		/***/ /*!**************************************************!*\
+		} /*!**************************************************!*\
   !*** ./resources/js/components/pages/EWallet.js ***!
-  \**************************************************/
-		/***/ './resources/js/components/pages/EWallet.js': (
+  \**************************************************/,
+
+		/***/ /***/ './resources/js/components/pages/EWallet.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -18451,12 +18420,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = EWallet;
 
 			/***/
-		},
-
-		/***/ /*!**************************************************!*\
+		} /*!**************************************************!*\
   !*** ./resources/js/components/pages/Invoice.js ***!
-  \**************************************************/
-		/***/ './resources/js/components/pages/Invoice.js': (
+  \**************************************************/,
+
+		/***/ /***/ './resources/js/components/pages/Invoice.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -19453,12 +19421,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = Invoice;
 
 			/***/
-		},
-
-		/***/ /*!******************************************************!*\
+		} /*!******************************************************!*\
   !*** ./resources/js/components/pages/MarketPlace.js ***!
-  \******************************************************/
-		/***/ './resources/js/components/pages/MarketPlace.js': (
+  \******************************************************/,
+
+		/***/ /***/ './resources/js/components/pages/MarketPlace.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -20544,12 +20511,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = MarketPlace;
 
 			/***/
-		},
-
-		/***/ /*!********************************************************************!*\
+		} /*!********************************************************************!*\
   !*** ./resources/js/components/pages/PendingCrossBorderPayment.js ***!
-  \********************************************************************/
-		/***/ './resources/js/components/pages/PendingCrossBorderPayment.js': (
+  \********************************************************************/,
+
+		/***/ /***/ './resources/js/components/pages/PendingCrossBorderPayment.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -21308,12 +21274,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = PendingCrossBorderPayment;
 
 			/***/
-		},
-
-		/***/ /*!************************************************!*\
+		} /*!************************************************!*\
   !*** ./resources/js/components/pages/Start.js ***!
-  \************************************************/
-		/***/ './resources/js/components/pages/Start.js': (
+  \************************************************/,
+
+		/***/ /***/ './resources/js/components/pages/Start.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -21635,12 +21600,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = Start;
 
 			/***/
-		},
-
-		/***/ /*!*************************************************************!*\
+		} /*!*************************************************************!*\
   !*** ./resources/js/components/pages/TransactionHistory.js ***!
-  \*************************************************************/
-		/***/ './resources/js/components/pages/TransactionHistory.js': (
+  \*************************************************************/,
+
+		/***/ /***/ './resources/js/components/pages/TransactionHistory.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -22560,12 +22524,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = TransactionHistory;
 
 			/***/
-		},
-
-		/***/ /*!********************************************************!*\
+		} /*!********************************************************!*\
   !*** ./resources/js/components/pages/WalletHistory.js ***!
-  \********************************************************/
-		/***/ './resources/js/components/pages/WalletHistory.js': (
+  \********************************************************/,
+
+		/***/ /***/ './resources/js/components/pages/WalletHistory.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -23462,12 +23425,11 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = WalletHistory;
 
 			/***/
-		},
-
-		/***/ /*!*****************************************************!*\
+		} /*!*****************************************************!*\
   !*** ./node_modules/bootstrap/dist/js/bootstrap.js ***!
-  \*****************************************************/
-		/***/ './node_modules/bootstrap/dist/js/bootstrap.js': function(
+  \*****************************************************/,
+
+		/***/ /***/ './node_modules/bootstrap/dist/js/bootstrap.js': function(
 			__unused_webpack_module,
 			exports,
 			__webpack_require__
@@ -28267,12 +28229,11 @@
 			//# sourceMappingURL=bootstrap.js.map
 
 			/***/
-		},
-
-		/***/ /*!*********************************************!*\
+		} /*!*********************************************!*\
   !*** ./node_modules/history/esm/history.js ***!
-  \*********************************************/
-		/***/ './node_modules/history/esm/history.js': (
+  \*********************************************/,
+
+		/***/ /***/ './node_modules/history/esm/history.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -29346,12 +29307,11 @@
 			}
 
 			/***/
-		},
-
-		/***/ /*!**********************************************************************************!*\
+		} /*!**********************************************************************************!*\
   !*** ./node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js ***!
-  \**********************************************************************************/
-		/***/ './node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js': (
+  \**********************************************************************************/,
+
+		/***/ /***/ './node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js': (
 			module,
 			__unused_webpack_exports,
 			__webpack_require__
@@ -29465,12 +29425,11 @@
 			module.exports = hoistNonReactStatics;
 
 			/***/
-		},
-
-		/***/ /*!********************************************!*\
+		} /*!********************************************!*\
   !*** ./node_modules/jquery/dist/jquery.js ***!
-  \********************************************/
-		/***/ './node_modules/jquery/dist/jquery.js': function(module, exports) {
+  \********************************************/,
+
+		/***/ /***/ './node_modules/jquery/dist/jquery.js': function(module, exports) {
 			var __WEBPACK_AMD_DEFINE_ARRAY__,
 				__WEBPACK_AMD_DEFINE_RESULT__; /*!
  * jQuery JavaScript Library v3.6.0
@@ -40165,12 +40124,11 @@
 			});
 
 			/***/
-		},
-
-		/***/ /*!***************************************!*\
+		} /*!***************************************!*\
   !*** ./node_modules/lodash/lodash.js ***!
-  \***************************************/
-		/***/ './node_modules/lodash/lodash.js': function(module, exports, __webpack_require__) {
+  \***************************************/,
+
+		/***/ /***/ './node_modules/lodash/lodash.js': function(module, exports, __webpack_require__) {
 			/* module decorator */ module = __webpack_require__.nmd(module);
 			var __WEBPACK_AMD_DEFINE_RESULT__; /**
  * @license
@@ -57773,12 +57731,11 @@
 			}.call(this));
 
 			/***/
-		},
-
-		/***/ /*!******************************************************************!*\
+		} /*!******************************************************************!*\
   !*** ./node_modules/mini-create-react-context/dist/esm/index.js ***!
-  \******************************************************************/
-		/***/ './node_modules/mini-create-react-context/dist/esm/index.js': (
+  \******************************************************************/,
+
+		/***/ /***/ './node_modules/mini-create-react-context/dist/esm/index.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -58005,23 +57962,25 @@
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = index;
 
 			/***/
-		},
-
-		/***/ /*!*********************************!*\
+		} /*!*********************************!*\
   !*** ./resources/sass/app.scss ***!
-  \*********************************/
-		/***/ './resources/sass/app.scss': (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+  \*********************************/,
+
+		/***/ /***/ './resources/sass/app.scss': (
+			__unused_webpack_module,
+			__webpack_exports__,
+			__webpack_require__
+		) => {
 			'use strict';
 			__webpack_require__.r(__webpack_exports__);
 			// extracted by mini-css-extract-plugin
 
 			/***/
-		},
-
-		/***/ /*!*********************************************!*\
+		} /*!*********************************************!*\
   !*** ./node_modules/object-assign/index.js ***!
-  \*********************************************/
-		/***/ './node_modules/object-assign/index.js': (module) => {
+  \*********************************************/,
+
+		/***/ /***/ './node_modules/object-assign/index.js': (module) => {
 			'use strict';
 			/*
 object-assign
@@ -58115,12 +58074,11 @@ object-assign
 					};
 
 			/***/
-		},
-
-		/***/ /*!***************************************************!*\
+		} /*!***************************************************!*\
   !*** ./node_modules/popper.js/dist/esm/popper.js ***!
-  \***************************************************/
-		/***/ './node_modules/popper.js/dist/esm/popper.js': (
+  \***************************************************/,
+
+		/***/ /***/ './node_modules/popper.js/dist/esm/popper.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -60904,12 +60862,11 @@ object-assign
 			//# sourceMappingURL=popper.js.map
 
 			/***/
-		},
-
-		/***/ /*!*****************************************!*\
+		} /*!*****************************************!*\
   !*** ./node_modules/process/browser.js ***!
-  \*****************************************/
-		/***/ './node_modules/process/browser.js': (module) => {
+  \*****************************************/,
+
+		/***/ /***/ './node_modules/process/browser.js': (module) => {
 			// shim for using process in browser
 			var process = (module.exports = {});
 
@@ -61097,12 +61054,11 @@ object-assign
 			};
 
 			/***/
-		},
-
-		/***/ /*!***************************************************!*\
+		} /*!***************************************************!*\
   !*** ./node_modules/prop-types/checkPropTypes.js ***!
-  \***************************************************/
-		/***/ './node_modules/prop-types/checkPropTypes.js': (
+  \***************************************************/,
+
+		/***/ /***/ './node_modules/prop-types/checkPropTypes.js': (
 			module,
 			__unused_webpack_exports,
 			__webpack_require__
@@ -61232,12 +61188,11 @@ object-assign
 			module.exports = checkPropTypes;
 
 			/***/
-		},
-
-		/***/ /*!************************************************************!*\
+		} /*!************************************************************!*\
   !*** ./node_modules/prop-types/factoryWithTypeCheckers.js ***!
-  \************************************************************/
-		/***/ './node_modules/prop-types/factoryWithTypeCheckers.js': (
+  \************************************************************/,
+
+		/***/ /***/ './node_modules/prop-types/factoryWithTypeCheckers.js': (
 			module,
 			__unused_webpack_exports,
 			__webpack_require__
@@ -62013,12 +61968,11 @@ object-assign
 			};
 
 			/***/
-		},
-
-		/***/ /*!******************************************!*\
+		} /*!******************************************!*\
   !*** ./node_modules/prop-types/index.js ***!
-  \******************************************/
-		/***/ './node_modules/prop-types/index.js': (module, __unused_webpack_exports, __webpack_require__) => {
+  \******************************************/,
+
+		/***/ /***/ './node_modules/prop-types/index.js': (module, __unused_webpack_exports, __webpack_require__) => {
 			/**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -62039,12 +61993,11 @@ object-assign
 			}
 
 			/***/
-		},
-
-		/***/ /*!*************************************************************!*\
+		} /*!*************************************************************!*\
   !*** ./node_modules/prop-types/lib/ReactPropTypesSecret.js ***!
-  \*************************************************************/
-		/***/ './node_modules/prop-types/lib/ReactPropTypesSecret.js': (module) => {
+  \*************************************************************/,
+
+		/***/ /***/ './node_modules/prop-types/lib/ReactPropTypesSecret.js': (module) => {
 			'use strict';
 			/**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -62058,12 +62011,11 @@ object-assign
 			module.exports = ReactPropTypesSecret;
 
 			/***/
-		},
-
-		/***/ /*!*************************************************************!*\
+		} /*!*************************************************************!*\
   !*** ./node_modules/react-dom/cjs/react-dom.development.js ***!
-  \*************************************************************/
-		/***/ './node_modules/react-dom/cjs/react-dom.development.js': (
+  \*************************************************************/,
+
+		/***/ /***/ './node_modules/react-dom/cjs/react-dom.development.js': (
 			__unused_webpack_module,
 			exports,
 			__webpack_require__
@@ -91310,12 +91262,11 @@ object-assign
 			}
 
 			/***/
-		},
-
-		/***/ /*!*****************************************!*\
+		} /*!*****************************************!*\
   !*** ./node_modules/react-dom/index.js ***!
-  \*****************************************/
-		/***/ './node_modules/react-dom/index.js': (module, __unused_webpack_exports, __webpack_require__) => {
+  \*****************************************/,
+
+		/***/ /***/ './node_modules/react-dom/index.js': (module, __unused_webpack_exports, __webpack_require__) => {
 			'use strict';
 
 			function checkDCE() {
@@ -91354,12 +91305,11 @@ object-assign
 			}
 
 			/***/
-		},
-
-		/***/ /*!***********************************************************!*\
+		} /*!***********************************************************!*\
   !*** ./node_modules/react-is/cjs/react-is.development.js ***!
-  \***********************************************************/
-		/***/ './node_modules/react-is/cjs/react-is.development.js': (__unused_webpack_module, exports) => {
+  \***********************************************************/,
+
+		/***/ /***/ './node_modules/react-is/cjs/react-is.development.js': (__unused_webpack_module, exports) => {
 			'use strict';
 			/** @license React v16.13.1
  * react-is.development.js
@@ -91562,12 +91512,11 @@ object-assign
 			}
 
 			/***/
-		},
-
-		/***/ /*!****************************************!*\
+		} /*!****************************************!*\
   !*** ./node_modules/react-is/index.js ***!
-  \****************************************/
-		/***/ './node_modules/react-is/index.js': (module, __unused_webpack_exports, __webpack_require__) => {
+  \****************************************/,
+
+		/***/ /***/ './node_modules/react-is/index.js': (module, __unused_webpack_exports, __webpack_require__) => {
 			'use strict';
 
 			if (false) {
@@ -91578,12 +91527,11 @@ object-assign
 			}
 
 			/***/
-		},
-
-		/***/ /*!***************************************************************!*\
+		} /*!***************************************************************!*\
   !*** ./node_modules/react-router-dom/esm/react-router-dom.js ***!
-  \***************************************************************/
-		/***/ './node_modules/react-router-dom/esm/react-router-dom.js': (
+  \***************************************************************/,
+
+		/***/ /***/ './node_modules/react-router-dom/esm/react-router-dom.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -92067,12 +92015,11 @@ object-assign
 			//# sourceMappingURL=react-router-dom.js.map
 
 			/***/
-		},
-
-		/***/ /*!*******************************************************!*\
+		} /*!*******************************************************!*\
   !*** ./node_modules/react-router/esm/react-router.js ***!
-  \*******************************************************/
-		/***/ './node_modules/react-router/esm/react-router.js': (
+  \*******************************************************/,
+
+		/***/ /***/ './node_modules/react-router/esm/react-router.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -93148,12 +93095,11 @@ object-assign
 			//# sourceMappingURL=react-router.js.map
 
 			/***/
-		},
-
-		/***/ /*!*****************************************************************!*\
+		} /*!*****************************************************************!*\
   !*** ./node_modules/react-router/node_modules/isarray/index.js ***!
-  \*****************************************************************/
-		/***/ './node_modules/react-router/node_modules/isarray/index.js': (module) => {
+  \*****************************************************************/,
+
+		/***/ /***/ './node_modules/react-router/node_modules/isarray/index.js': (module) => {
 			module.exports =
 				Array.isArray ||
 				function(arr) {
@@ -93161,12 +93107,11 @@ object-assign
 				};
 
 			/***/
-		},
-
-		/***/ /*!************************************************************************!*\
+		} /*!************************************************************************!*\
   !*** ./node_modules/react-router/node_modules/path-to-regexp/index.js ***!
-  \************************************************************************/
-		/***/ './node_modules/react-router/node_modules/path-to-regexp/index.js': (
+  \************************************************************************/,
+
+		/***/ /***/ './node_modules/react-router/node_modules/path-to-regexp/index.js': (
 			module,
 			__unused_webpack_exports,
 			__webpack_require__
@@ -93629,12 +93574,11 @@ object-assign
 			}
 
 			/***/
-		},
-
-		/***/ /*!*****************************************************************!*\
+		} /*!*****************************************************************!*\
   !*** ./node_modules/react/cjs/react-jsx-runtime.development.js ***!
-  \*****************************************************************/
-		/***/ './node_modules/react/cjs/react-jsx-runtime.development.js': (
+  \*****************************************************************/,
+
+		/***/ /***/ './node_modules/react/cjs/react-jsx-runtime.development.js': (
 			__unused_webpack_module,
 			exports,
 			__webpack_require__
@@ -94982,12 +94926,11 @@ object-assign
 			}
 
 			/***/
-		},
-
-		/***/ /*!*****************************************************!*\
+		} /*!*****************************************************!*\
   !*** ./node_modules/react/cjs/react.development.js ***!
-  \*****************************************************/
-		/***/ './node_modules/react/cjs/react.development.js': (
+  \*****************************************************/,
+
+		/***/ /***/ './node_modules/react/cjs/react.development.js': (
 			__unused_webpack_module,
 			exports,
 			__webpack_require__
@@ -97553,12 +97496,11 @@ object-assign
 			}
 
 			/***/
-		},
-
-		/***/ /*!*************************************!*\
+		} /*!*************************************!*\
   !*** ./node_modules/react/index.js ***!
-  \*************************************/
-		/***/ './node_modules/react/index.js': (module, __unused_webpack_exports, __webpack_require__) => {
+  \*************************************/,
+
+		/***/ /***/ './node_modules/react/index.js': (module, __unused_webpack_exports, __webpack_require__) => {
 			'use strict';
 
 			if (false) {
@@ -97569,12 +97511,11 @@ object-assign
 			}
 
 			/***/
-		},
-
-		/***/ /*!*******************************************!*\
+		} /*!*******************************************!*\
   !*** ./node_modules/react/jsx-runtime.js ***!
-  \*******************************************/
-		/***/ './node_modules/react/jsx-runtime.js': (module, __unused_webpack_exports, __webpack_require__) => {
+  \*******************************************/,
+
+		/***/ /***/ './node_modules/react/jsx-runtime.js': (module, __unused_webpack_exports, __webpack_require__) => {
 			'use strict';
 
 			if (false) {
@@ -97585,12 +97526,11 @@ object-assign
 			}
 
 			/***/
-		},
-
-		/***/ /*!*****************************************************!*\
+		} /*!*****************************************************!*\
   !*** ./node_modules/regenerator-runtime/runtime.js ***!
-  \*****************************************************/
-		/***/ './node_modules/regenerator-runtime/runtime.js': (module) => {
+  \*****************************************************/,
+
+		/***/ /***/ './node_modules/regenerator-runtime/runtime.js': (module) => {
 			/**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -98343,12 +98283,11 @@ object-assign
 			}
 
 			/***/
-		},
-
-		/***/ /*!***************************************************************!*\
+		} /*!***************************************************************!*\
   !*** ./node_modules/resolve-pathname/esm/resolve-pathname.js ***!
-  \***************************************************************/
-		/***/ './node_modules/resolve-pathname/esm/resolve-pathname.js': (
+  \***************************************************************/,
+
+		/***/ /***/ './node_modules/resolve-pathname/esm/resolve-pathname.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -98432,12 +98371,14 @@ object-assign
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = resolvePathname;
 
 			/***/
-		},
-
-		/***/ /*!*********************************************************************!*\
+		} /*!*********************************************************************!*\
   !*** ./node_modules/scheduler/cjs/scheduler-tracing.development.js ***!
-  \*********************************************************************/
-		/***/ './node_modules/scheduler/cjs/scheduler-tracing.development.js': (__unused_webpack_module, exports) => {
+  \*********************************************************************/,
+
+		/***/ /***/ './node_modules/scheduler/cjs/scheduler-tracing.development.js': (
+			__unused_webpack_module,
+			exports
+		) => {
 			'use strict';
 			/** @license React v0.20.2
  * scheduler-tracing.development.js
@@ -98786,12 +98727,11 @@ object-assign
 			}
 
 			/***/
-		},
-
-		/***/ /*!*************************************************************!*\
+		} /*!*************************************************************!*\
   !*** ./node_modules/scheduler/cjs/scheduler.development.js ***!
-  \*************************************************************/
-		/***/ './node_modules/scheduler/cjs/scheduler.development.js': (__unused_webpack_module, exports) => {
+  \*************************************************************/,
+
+		/***/ /***/ './node_modules/scheduler/cjs/scheduler.development.js': (__unused_webpack_module, exports) => {
 			'use strict';
 			/** @license React v0.20.2
  * scheduler.development.js
@@ -99444,12 +99384,11 @@ object-assign
 			}
 
 			/***/
-		},
-
-		/***/ /*!*****************************************!*\
+		} /*!*****************************************!*\
   !*** ./node_modules/scheduler/index.js ***!
-  \*****************************************/
-		/***/ './node_modules/scheduler/index.js': (module, __unused_webpack_exports, __webpack_require__) => {
+  \*****************************************/,
+
+		/***/ /***/ './node_modules/scheduler/index.js': (module, __unused_webpack_exports, __webpack_require__) => {
 			'use strict';
 
 			if (false) {
@@ -99460,12 +99399,11 @@ object-assign
 			}
 
 			/***/
-		},
-
-		/***/ /*!*******************************************!*\
+		} /*!*******************************************!*\
   !*** ./node_modules/scheduler/tracing.js ***!
-  \*******************************************/
-		/***/ './node_modules/scheduler/tracing.js': (module, __unused_webpack_exports, __webpack_require__) => {
+  \*******************************************/,
+
+		/***/ /***/ './node_modules/scheduler/tracing.js': (module, __unused_webpack_exports, __webpack_require__) => {
 			'use strict';
 
 			if (false) {
@@ -99476,12 +99414,11 @@ object-assign
 			}
 
 			/***/
-		},
-
-		/***/ /*!****************************************************************!*\
+		} /*!****************************************************************!*\
   !*** ./node_modules/tiny-invariant/dist/tiny-invariant.esm.js ***!
-  \****************************************************************/
-		/***/ './node_modules/tiny-invariant/dist/tiny-invariant.esm.js': (
+  \****************************************************************/,
+
+		/***/ /***/ './node_modules/tiny-invariant/dist/tiny-invariant.esm.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -99507,12 +99444,11 @@ object-assign
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = invariant;
 
 			/***/
-		},
-
-		/***/ /*!************************************************************!*\
+		} /*!************************************************************!*\
   !*** ./node_modules/tiny-warning/dist/tiny-warning.esm.js ***!
-  \************************************************************/
-		/***/ './node_modules/tiny-warning/dist/tiny-warning.esm.js': (
+  \************************************************************/,
+
+		/***/ /***/ './node_modules/tiny-warning/dist/tiny-warning.esm.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -99545,12 +99481,11 @@ object-assign
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = warning;
 
 			/***/
-		},
-
-		/***/ /*!*****************************************************!*\
+		} /*!*****************************************************!*\
   !*** ./node_modules/value-equal/esm/value-equal.js ***!
-  \*****************************************************/
-		/***/ './node_modules/value-equal/esm/value-equal.js': (
+  \*****************************************************/,
+
+		/***/ /***/ './node_modules/value-equal/esm/value-equal.js': (
 			__unused_webpack_module,
 			__webpack_exports__,
 			__webpack_require__
@@ -99599,12 +99534,11 @@ object-assign
 			/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = valueEqual;
 
 			/***/
-		},
-
-		/***/ /*!************************************************************!*\
+		} /*!************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/extends.js ***!
-  \************************************************************/
-		/***/ './node_modules/@babel/runtime/helpers/esm/extends.js': (
+  \************************************************************/,
+
+		/***/ /***/ './node_modules/@babel/runtime/helpers/esm/extends.js': (
 			__unused_webpack___webpack_module__,
 			__webpack_exports__,
 			__webpack_require__
@@ -99636,12 +99570,11 @@ object-assign
 			}
 
 			/***/
-		},
-
-		/***/ /*!******************************************************************!*\
+		} /*!******************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/inheritsLoose.js ***!
-  \******************************************************************/
-		/***/ './node_modules/@babel/runtime/helpers/esm/inheritsLoose.js': (
+  \******************************************************************/,
+
+		/***/ /***/ './node_modules/@babel/runtime/helpers/esm/inheritsLoose.js': (
 			__unused_webpack___webpack_module__,
 			__webpack_exports__,
 			__webpack_require__
@@ -99663,12 +99596,11 @@ object-assign
 			}
 
 			/***/
-		},
-
-		/***/ /*!*********************************************************************************!*\
+		} /*!*********************************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js ***!
-  \*********************************************************************************/
-		/***/ './node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js': (
+  \*********************************************************************************/,
+
+		/***/ /***/ './node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js': (
 			__unused_webpack___webpack_module__,
 			__webpack_exports__,
 			__webpack_require__
@@ -99695,12 +99627,11 @@ object-assign
 			}
 
 			/***/
-		},
-
-		/***/ /*!*******************************************************************!*\
+		} /*!*******************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js ***!
-  \*******************************************************************/
-		/***/ './node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js': (
+  \*******************************************************************/,
+
+		/***/ /***/ './node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js': (
 			__unused_webpack___webpack_module__,
 			__webpack_exports__,
 			__webpack_require__
@@ -99723,12 +99654,11 @@ object-assign
 			}
 
 			/***/
-		},
-
-		/***/ /*!*****************************************!*\
+		} /*!*****************************************!*\
   !*** ./node_modules/axios/package.json ***!
-  \*****************************************/
-		/***/ './node_modules/axios/package.json': (module) => {
+  \*****************************************/,
+
+		/***/ /***/ './node_modules/axios/package.json': (module) => {
 			'use strict';
 			module.exports = JSON.parse(
 				'{"name":"axios","version":"0.21.4","description":"Promise based HTTP client for the browser and node.js","main":"index.js","scripts":{"test":"grunt test","start":"node ./sandbox/server.js","build":"NODE_ENV=production grunt build","preversion":"npm test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json","postversion":"git push && git push --tags","examples":"node ./examples/server.js","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","fix":"eslint --fix lib/**/*.js"},"repository":{"type":"git","url":"https://github.com/axios/axios.git"},"keywords":["xhr","http","ajax","promise","node"],"author":"Matt Zabriskie","license":"MIT","bugs":{"url":"https://github.com/axios/axios/issues"},"homepage":"https://axios-http.com","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"jsdelivr":"dist/axios.min.js","unpkg":"dist/axios.min.js","typings":"./index.d.ts","dependencies":{"follow-redirects":"^1.14.0"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}]}'
@@ -99909,20 +99839,11 @@ object-assign
 			/******/ '/js/app': 0,
 			/******/ 'css/app': 0
 			/******/
-		}; // no chunk on demand loading // no prefetching // no preloaded // no HMR // no HMR manifest
+		}; /******/ /******/ /******/ /******/ /******/ // no chunk on demand loading // no prefetching // no preloaded // no HMR // no HMR manifest
 		/******/
 
-		/******/ /******/
-
-		/******/ /******/
-
-		/******/ /******/
-
-		/******/ /******/
-
-		/******/ /******/
-
-		/******/ __webpack_require__.O.j = (chunkId) => installedChunks[chunkId] === 0; // install a JSONP callback for chunk loading
+		/******/ /******/ /******/ /******/ /******/ /******/ __webpack_require__.O.j = (chunkId) =>
+			installedChunks[chunkId] === 0; // install a JSONP callback for chunk loading
 		/******/
 
 		/******/ /******/ var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {

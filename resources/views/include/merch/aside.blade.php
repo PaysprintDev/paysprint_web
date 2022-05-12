@@ -3,7 +3,7 @@
             <div class="sidebar-user text-center">
                 <a class="setting-primary" href="javascript:void(0)"><i data-feather="settings"></i></a><img
                     class="img-90 rounded-circle"
-                    src="{{ Auth::user()->avatar != null? Auth::user()->avatar: 'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png' }}"
+                    src="{{ Auth::user()->avatar != null ? Auth::user()->avatar : 'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png' }}"
                     alt="" />
                 <div class="badge-bottom"><span class="badge badge-primary"></span></div>
                 <a href="{{ route('profile') }}">
@@ -58,7 +58,7 @@
                         <p class="text-success" style="font-weight: bold; font-size: 16px;">Next Renewal:
                             {{ date('d-m-Y', strtotime($data['myplan']->expire_date)) }}</p>
                         <p class="text-danger" style="font-weight: bold; font-size: 16px;">
-                            {{ round($datediff / (60 * 60 * 24)) > 1? round($datediff / (60 * 60 * 24)) . 'days': round($datediff / (60 * 60 * 24)) . 'day' }}
+                            {{ round($datediff / (60 * 60 * 24)) > 1 ? round($datediff / (60 * 60 * 24)) . 'days' : round($datediff / (60 * 60 * 24)) . 'day' }}
                             left</p>
                     @endisset
                 @endif
@@ -153,7 +153,7 @@
 
                             <li>
                                 <a class="nav-link"
-                                    href="{{ Auth::user()->country == 'Nigeria'? route('utility bills'): route('select utility bills country', 'country=' . Auth::user()->country) }}"><i
+                                    href="{{ Auth::user()->country == 'Nigeria' ? route('utility bills') : route('select utility bills country', 'country=' . Auth::user()->country) }}"><i
                                         data-feather="shopping-bag"></i><span>Bill Payments</span></a>
                             </li>
 
@@ -351,9 +351,11 @@
                                         data-feather="file-text"></i><span>API Integration</span></a>
                             </li>
                             <li class="dropdown">
-                                <a class="nav-link menu-title link-nav "
-                                    href="https://paysprintworkspace.slack.com/archives/C02TBVDV37B" target="_blank"><i
+                                <a class="nav-link menu-title link-nav " href="javascript:void(Tawk_API.toggle())"><i
                                         data-feather="file-text"></i><span>Get Support</span></a>
+                                {{-- <a class="nav-link menu-title link-nav "
+                                    href="https://paysprintworkspace.slack.com/archives/C02TBVDV37B" target="_blank"><i
+                                        data-feather="file-text"></i><span>Get Support</span></a> --}}
                             </li>
 
                             <li class="sidebar-main-title">

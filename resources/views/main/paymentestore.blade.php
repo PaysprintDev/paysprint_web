@@ -11,7 +11,8 @@
         integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
     <!-- Favicon -->
-    <link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1602675914/paysprint_icon_png_ol2z3u.png"
+    <link rel="icon"
+        href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_icon_png_rhxm1e_sqhgj0.png"
         type="image/x-icon" />
 
     <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
@@ -139,14 +140,13 @@
 
                                             @php
                                                 $productCost = 0;
-                                                $shipCost = 0;
+                                                $shipCost = Request::get('fee') != null ? base64_decode(Request::get('fee')) : 0;
                                                 $taxCost = $data['storeTax']->taxValue != null ? $data['storeTax']->taxValue / 100 : 0;
                                                 $totalCost = 0;
                                             @endphp
                                             @for ($i = 0; $i < count($data['getCart']); $i++)
                                                 @php
                                                     $productCost += $data['getCart'][$i]->price * $data['getCart'][$i]->quantity;
-                                                    $shipCost += $data['getCart'][$i]->shippingFee;
 
                                                 @endphp
                                             @endfor
@@ -201,7 +201,7 @@
                                         <button class="nav-link active" id="haveAccount" data-toggle="tab"
                                             data-target="#home" type="button" role="tab" aria-controls="home"
                                             aria-selected="true" onclick="setCardType('Wallet')"><img
-                                                src="https://res.cloudinary.com/pilstech/image/upload/v1602675914/paysprint_icon_png_ol2z3u.png"
+                                                src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_icon_png_rhxm1e_sqhgj0.png"
                                                 style="width:25px; height: 25px;" />
                                             I have a PaySprint Wallet</button>
                                     </li>
@@ -784,13 +784,13 @@
                                                                 <a href="https://play.google.com/store/apps/details?id=com.fursee.damilare.sprint_mobile"
                                                                     target="_blank"
                                                                     class="btn text-white gr-hover-y px-lg-9">
-                                                                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1620148943/paysprint_asset/l6-download-gplay_o9rcfj.png"
+                                                                    <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130088/assets/l6-download-gplay_o9rcfj_l6erwf.png"
                                                                         alt="play store" width="100%">
                                                                 </a>
                                                                 <a href="https://apps.apple.com/gb/app/paysprint/id1567742130"
                                                                     target="_blank"
                                                                     class="btn text-white gr-hover-y px-lg-9">
-                                                                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1620148943/paysprint_asset/l6-download-appstore_odcskf.png"
+                                                                    <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130088/assets/l6-download-appstore_odcskf_atgygf.png"
                                                                         alt="apple store" width="100%">
                                                                 </a>
                                                             </div>
