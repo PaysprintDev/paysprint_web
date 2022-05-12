@@ -21,7 +21,7 @@
 
     <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
 
-    <title>PaySprint | Currency FX</title>
+    <title>PaySprint | PaySprint FX</title>
 
     <style>
         body {

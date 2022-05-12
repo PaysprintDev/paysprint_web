@@ -298,8 +298,8 @@
                              <ul class="treeview-menu">
                                  <li title="Invoice Commission"><a href="{{ route('invoice commission') }}"><i
                                              class="fa fa-circle-o text-red"></i> Invoice</a></li>
-                                 <li title="Currency FX Commission"><a href="#"><i class="fa fa-circle-o text-red"></i>
-                                         Currency FX</a></li>
+                                 <li title="PaySprint FX"><a href="#"><i class="fa fa-circle-o text-red"></i>
+                                         PaySprint FX</a></li>
                                  <li title="Move Money Commission"><a href="#"><i class="fa fa-circle-o text-red"></i>
                                          Move
                                          Money</a></li>

@@ -9,25 +9,35 @@
             <div class="page-header">
                 <div class="row">
 
-                    <div class="col-lg-6 float-right">
+                    <div class="col-lg-12 float-right">
                         <!-- Bookmark Start-->
+                        <br>
+                        <div style="background-color: rgb(241 187 45) !important; margin-top: 20px;">
+                            <table class="table table-striped">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <h5><strong>eStore Escrow Balance</strong></h5>
+                                        </td>
+                                        <td style="font-weight: bold;">
+                                            <h5> {{ Auth::user()->currencySymbol . '' . number_format(Auth::user()->escrow_balance, 2) }}
+                                            </h5>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h5><strong>Dispute Balance</strong></h5>
+                                        </td>
+                                        <td style="font-weight: bold;">
+                                            <h5>{{ Auth::user()->currencySymbol . '' . number_format(Auth::user()->dispute_balance, 2) }}
+                                            </h5>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
-                        <table class="table table-striped">
-                            <tbody>
-                                <tr>
-                                    <td>eStore Escrow Balance</td>
-                                    <td style="font-weight: bold;">
-                                        {{ Auth::user()->currencySymbol . '' . number_format(Auth::user()->escrow_balance, 2) }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Dispute Balance</td>
-                                    <td style="font-weight: bold;">
-                                        {{ Auth::user()->currencySymbol . '' . number_format(Auth::user()->dispute_balance, 2) }}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <br>
 
                         <!-- Bookmark Ends-->
                     </div>
