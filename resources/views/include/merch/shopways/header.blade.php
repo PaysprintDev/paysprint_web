@@ -236,7 +236,7 @@
                                                                 </ul>
                                                             </li>
                                                             <li class="menu-link parent">
-                                                                <a href="javascript:void(0)" class="link-title">
+                                                                <a href="{{ route('wishlist','merchant='.$data['user']->businessname)}}" class="link-title">
                                                                     <span class="sp-link-title">My Wishlist</span>
                                                                     {{-- <i class="fa fa-angle-down"></i> --}}
                                                                 </a>

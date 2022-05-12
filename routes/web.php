@@ -118,6 +118,7 @@ Route::post('verify-product-code', ['uses' => 'ShopController@verifyProductCode'
 
 // Vie List of Referred
 Route::get('/myreferredlist/{ref_code}', ['uses' => 'ReferralsController@index', 'as' => 'referrals list of users']);
+// Route::get('/claimedhistory/{ref_code}', ['uses' => 'ReferralsController@index', 'as' => 'show claimed history']);
 
 // Get Path Address
 Route::get('pathaddress', 'CheckSetupController@getPathAddress');
@@ -205,6 +206,8 @@ Route::prefix('product')->group(function () {
 	Route::get('/shop', ['uses' => 'MerchantPageController@merchantShopPage', 'as' => 'product shop']);
 	Route::get('/orders', ['uses' => 'MerchantPageController@merchantOrders', 'as' => 'orders']);
 	Route::get('/order-details', ['uses' => 'MerchantPageController@singleOrder', 'as' => 'single orders']);
+	Route::get('/wishlist', ['uses' => 'MerchantPageController@wishlist', 'as' => 'wishlist']);
+	
 });
 
 

@@ -83,7 +83,7 @@
         gtag('config', 'G-RVX8CC7GDP');
     </script>
 
-    <script type="text/javascript" id="zsiqchat">
+    {{-- <script type="text/javascript" id="zsiqchat">
         var $zoho = $zoho || {};
         $zoho.salesiq = $zoho.salesiq || {
             widgetcode: "a7ffa31136f6ab021392ea01a2816af0033ebbc69fda5e9fa38407829c8ee302",
@@ -98,7 +98,23 @@
         s.src = "https://salesiq.zoho.com/widget";
         t = d.getElementsByTagName("script")[0];
         t.parentNode.insertBefore(s, t);
+    </script> --}}
+
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API = Tawk_API || {},
+            Tawk_LoadStart = new Date();
+        (function() {
+            var s1 = document.createElement("script"),
+                s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/60e32cb8649e0a0a5ccaa278/1f9rmdccf';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
     </script>
+    <!--End of Tawk.to Script-->
 
 </head>
 

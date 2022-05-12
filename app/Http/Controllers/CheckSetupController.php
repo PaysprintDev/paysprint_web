@@ -57,7 +57,7 @@ class CheckSetupController extends Controller
                 $info = $this->accountInfo($value->id);
 
                 if ($value->approval == 0) {
-                    $approval = "<li>Upload a copy of Government Issued Photo ID</li>";
+                    $approval = "<li>Upload a copy of Government Issued Photo ID, Utility bill and Selfie of yourself taking with your Government issued photo ID</li>";
                 } else {
                     $approval = "";
                 }
@@ -67,6 +67,12 @@ class CheckSetupController extends Controller
                     $transaction = "<li>Set Up Transaction Pin-You will need the PIN to Send Money, Pay Invoice/Bill or Withdraw Money from Your PaySprint Account</li>";
                 } else {
                     $transaction = "";
+                }
+
+                if ($value->avatar == null) {
+                    $avatar = "<li>Upload a selfie of yourself</li>";
+                } else {
+                    $avatar = "";
                 }
                 if ($value->securityQuestion == null) {
                     $security = "<li>Set up Security Question and Answer-You will need this to reset your PIN code or Login Password</li>";
@@ -92,12 +98,12 @@ class CheckSetupController extends Controller
                     $this->email = $value->email;
                     $this->subject = "You have some incomplete information on your PaySprint account";
 
-                    $this->message = '<p>We noticed you are yet to properly complete the set-up your PaySprint Account. You need to provide the outstanding information and complete the quick set up in order to enjoy the full benefits of a PaySprint Account.</p><p><ul>' . $approval . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card . '</ul></p><p>Kindly complete these important steps in your profile. <a href=' . route('profile') . ' class="text-primary" style="text-decoration: underline">Click here to login to your account</a></p>';
+                    $this->message = '<p>We noticed you are yet to properly complete the set-up your PaySprint Account. You need to provide the outstanding information and complete the quick set up in order to enjoy the full benefits of a PaySprint Account.</p><p><ul>' . $approval . '' . $avatar . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card . '</ul></p><p>Kindly complete these important steps in your profile. <a href=' . route('profile') . ' class="text-primary" style="text-decoration: underline">Click here to login to your account</a></p>';
 
 
-                    $this->mailListCategorize($this->name, $this->email, $value->address, $value->telephone, 'Quick Setup', $value->country, 'Subscription');
+                    // $this->mailListCategorize($this->name, $this->email, $value->address, $value->telephone, 'Quick Setup', $value->country, 'Subscription');
 
-                    // $this->sendEmail($this->email, "Incomplete Setup");
+                    $this->sendEmail($this->email, "Incomplete Setup");
                     // $this->sendCampaign($this->subject, $this->message, $this->email, $this->name);
 
                     // Log::info('Quick wallet set up cron sent to '.$this->name);
@@ -1103,7 +1109,7 @@ class CheckSetupController extends Controller
                     RequestRefund::where('user_id', $value->id)->update(['country' => $value->country]);
                 }
             } else {
-                // 
+                //
             }
         } catch (\Throwable $th) {
             // Log::error($th->getMessage());
@@ -1294,7 +1300,7 @@ class CheckSetupController extends Controller
             $this->slack('EXBC Card Request Error Module checkExbcCardRequest() line 1235: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
 
-        
+
     }
 
 
@@ -1306,7 +1312,7 @@ class CheckSetupController extends Controller
 
 
             foreach($getUsers as $user){
-                
+
                 $getthis = $this->getTransRec($user->transactionRecordId);
 
 
@@ -1314,7 +1320,7 @@ class CheckSetupController extends Controller
 
                 if(gettype($getthis) == 'string' || gettype($getthis) == NULL){
                     $newresponse = $this->transStatus($user->transactionRecordId);
-                    
+
                     $checker = $this->getTransRec($newresponse->TransactionRecordId);
 
 
@@ -1363,7 +1369,7 @@ class CheckSetupController extends Controller
     public function moveFromFailedToPass(){
 
         try {
-            
+
             $getFailedUsers = User::where([['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->where('country', 'Nigeria')->get();
 
 
@@ -1389,7 +1395,7 @@ class CheckSetupController extends Controller
 
                 }
 
-                
+
             }
 
 
@@ -1404,7 +1410,7 @@ class CheckSetupController extends Controller
     public function moveFromPassedToCompletedPending(){
 
         try {
-            
+
             $getPassedUsers = User::where([['accountLevel', '=', 2], ['approval', '=', 1], ['account_check', '=', 0]])->where('country', 'India')->get();
 
             dd($getPassedUsers);
@@ -1432,7 +1438,7 @@ class CheckSetupController extends Controller
 
                 }
 
-                
+
             }
 
 
@@ -1554,7 +1560,7 @@ class CheckSetupController extends Controller
 
     public function giveAccountCheckUpgrade(){
         $users = User::where('account_check', 2)->where('plan', 'basic')->get();
-        
+
         if(count($users) > 0){
             foreach($users as $user){
                 // Update to Classic
@@ -1622,7 +1628,7 @@ class CheckSetupController extends Controller
 
                 $getUsers = User::where('country', $merchants->country)->get();
 
-                    
+
 
 
                 for($i = 0; $i < count($getUsers); $i++){
@@ -1962,7 +1968,7 @@ class CheckSetupController extends Controller
 
                     if (count($myStatement) > 0) {
 
-                        // Do Nothing ... 
+                        // Do Nothing ...
 
                     }
                     else{
@@ -1998,7 +2004,7 @@ class CheckSetupController extends Controller
 
 
                         $this->mailprocess($email, $name, $subject, $message);
-                        
+
                     }
                 }
 
