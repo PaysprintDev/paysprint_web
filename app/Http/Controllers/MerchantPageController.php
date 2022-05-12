@@ -473,6 +473,73 @@ class MerchantPageController extends Controller
 
         }
 
+        //wishlist
+        public function wishlist(Request $req){
+
+            // Get merchant...
+            $thismerchant = ClientInfo::where('business_name', $req->merchant)->first();
+    
+            if(isset($thismerchant)){
+                    $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
+        
+    
+                    if(Auth::check() == true){
+                        $userId = Auth::id();
+                    }
+                    else{
+                        $userId = 0;
+                    }
+
+            
+    
+                    if($userId == $getMerchantId->id){
+                        // If Has Main Store setup
+                    $merchantStore = $this->checkMyStore($getMerchantId->id);
+                    }
+                    else{
+                        // If Has Main Store setup
+                        if(session('role')){
+                            $merchantStore = $this->checkMyStore($getMerchantId->id);
+                        }
+                        else{
+                $merchantStore = $this->getMyStore($getMerchantId->id);
+    
+                        }
+                    }
+    
+    
+    
+    
+                if(isset($merchantStore)){
+    
+    
+    
+                    $data = [
+                        'mystore' => $merchantStore,
+                        'myproduct' => $this->getProducts($getMerchantId->id),
+                        'user' => $getMerchantId,
+                        'mywishlist' => $this->getMyWishlist($userId),
+                        'mycartlist' => $this->getMyCartlist($userId),
+                    ];
+
+                  
+    
+    
+                    return view('merchant.pages.shop.wishlist')->with(['pages' => $req->merchant.' Shop', 'data' => $data]);
+                }
+                else{
+                    return view('errors.comingsoon')->with(['pages' => $req->merchant.' Shop']);
+                }
+    
+            }
+            else{
+                return view('errors.comingsoon')->with(['pages' => $req->merchant.' Shop']);
+            }
+    
+    
+    
+    
+        }
         // Shopping Cart
     public function myCart(Request $req){
 
