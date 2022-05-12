@@ -72,7 +72,7 @@
                 </div>
                 <div class="col-md-3">
                     <a class="text-center"
-                        href="#"
+                        href=""javascript:void(0)" onclick="addCart($wishlist->productId, $wishlist->merchantId)"
                         style="color: orange; font-weight:lighter; font-size:18px;">ADD TO CART</a>
                 </div>
             </div>
