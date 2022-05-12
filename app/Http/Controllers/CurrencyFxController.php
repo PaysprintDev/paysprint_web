@@ -659,6 +659,29 @@ class CurrencyFxController extends Controller
     }
 
 
+    public function getCrossBorderBeneficiaries(){
+        $data = $this->getBeneficiaries();
+
+            $message = 'success';
+            $status = 200;
+
+         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+    public function paysprintAccountDetails(){
+         $data = $this->getPSAccountDetails();
+
+            $message = 'success';
+            $status = 200;
+
+         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
     // Get My Escrow Account
     public function getEscrow(Request $req)
     {
@@ -743,6 +766,30 @@ class CurrencyFxController extends Controller
 
         try {
             $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+
+
+                    // Check if User has a forex account
+        $checkUser = User::where('id', $thisuser->id)->first()->forexAccount;
+
+
+
+        if (count($checkUser) <= 0) {
+            // Create Escrow Account
+            EscrowAccount::insert(['user_id' => $thisuser->id, 'escrow_id' => 'ES_' . uniqid() . '_' . strtoupper(date('D')), 'currencyCode' => $thisuser->currencyCode, 'currencySymbol' => $thisuser->currencySymbol, 'wallet_balance' => "0.00", 'country' => $thisuser->country, 'active' => "true"]);
+        }
+
+
+        $checker = $this->checkImt($thisuser->country);
+
+        if($checker == "false"){
+            $data = [];
+            $message = 'This feature is not yet available for your country';
+            $status = 400;
+            $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+            return $this->returnJSON($resData, $status);
+        }
+
 
             if (isset($req->country)) {
                 $getmywallet = EscrowAccount::where('user_id', $thisuser->id)->where('country', $req->country)->get();
@@ -895,7 +942,6 @@ class CurrencyFxController extends Controller
     public function makeABid(Request $req)
     {
 
-
         try {
             // Check who is in
             $thisuser = User::where('api_token', $req->bearerToken())->first();
@@ -933,6 +979,7 @@ class CurrencyFxController extends Controller
                         } else {
 
                             $mywalletCheck = EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $market->buy_currencyCode)->first();
+
 
                             if (isset($mywalletCheck)) {
 

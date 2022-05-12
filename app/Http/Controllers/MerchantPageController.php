@@ -51,7 +51,7 @@ class MerchantPageController extends Controller
 
     public function index()
     {
-        
+
 
         $data = [
             'receivedInvoice' => $this->receivedInvoice(Auth::user()->email),
@@ -338,7 +338,7 @@ class MerchantPageController extends Controller
 
     }
 
-    //merchant orders 
+    //merchant orders
      public function merchantOrders(Request $req){
 
         // Get merchant...
@@ -409,11 +409,11 @@ class MerchantPageController extends Controller
 
             // Get merchant...
             $thismerchant = ClientInfo::where('business_name', $req->merchant)->first();
-    
+
             if(isset($thismerchant)){
                     $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
-        
-    
+
+
                     if(Auth::check() == true){
                         $userId = Auth::id();
                     }
@@ -421,8 +421,8 @@ class MerchantPageController extends Controller
                         $userId = 0;
                     }
 
-            
-    
+
+
                     if($userId == $getMerchantId->id){
                         // If Has Main Store setup
                     $merchantStore = $this->checkMyStore($getMerchantId->id);
@@ -434,17 +434,17 @@ class MerchantPageController extends Controller
                         }
                         else{
                 $merchantStore = $this->getMyStore($getMerchantId->id);
-    
+
                         }
                     }
-    
-    
-    
-    
+
+
+
+
                 if(isset($merchantStore)){
-    
-    
-    
+
+
+
                     $data = [
                         'mystore' => $merchantStore,
                         'myproduct' => $this->getProducts($getMerchantId->id),
@@ -454,23 +454,23 @@ class MerchantPageController extends Controller
                         'orders' => $this->getSpecificOrder($req->orderid)
                     ];
 
-                  
-    
-    
+
+
+
                     return view('merchant.pages.shop.singleorder')->with(['pages' => $req->merchant.' Shop', 'data' => $data]);
                 }
                 else{
                     return view('errors.comingsoon')->with(['pages' => $req->merchant.' Shop']);
                 }
-    
+
             }
             else{
                 return view('errors.comingsoon')->with(['pages' => $req->merchant.' Shop']);
             }
-    
-    
-    
-    
+
+
+
+
         }
 
         // Shopping Cart
@@ -483,12 +483,30 @@ class MerchantPageController extends Controller
 
             $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
 
-            // If Has Main Store setup
+
+
+             if(Auth::check() == true){
+                    $userId = Auth::id();
+                }
+                else{
+                    $userId = 0;
+                }
+
+
+            if($userId == $getMerchantId->id){
+                    // If Has Main Store setup
+                $merchantStore = $this->checkMyStore($getMerchantId->id);
+                }
+                else{
+                    // If Has Main Store setup
+                    if(session('role')){
+                        $merchantStore = $this->checkMyStore($getMerchantId->id);
+                    }
+                    else{
             $merchantStore = $this->getMyStore($getMerchantId->id);
 
-            if(!$merchantStore){
-                return view('errors.comingsoon')->with(['pages' => $req->store.' Shop']);
-            }
+                    }
+                }
 
 
                     $data = [
@@ -520,12 +538,31 @@ class MerchantPageController extends Controller
 
             $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
 
-            // If Has Main Store setup
+
+
+            if(Auth::check() == true){
+                    $userId = Auth::id();
+                }
+                else{
+                    $userId = 0;
+                }
+
+
+            if($userId == $getMerchantId->id){
+                    // If Has Main Store setup
+                $merchantStore = $this->checkMyStore($getMerchantId->id);
+                }
+                else{
+                    // If Has Main Store setup
+                    if(session('role')){
+                        $merchantStore = $this->checkMyStore($getMerchantId->id);
+                    }
+                    else{
             $merchantStore = $this->getMyStore($getMerchantId->id);
 
-            if(!$merchantStore){
-                 return view('errors.comingsoon')->with(['pages' => $req->store.' Shop']);
-            }
+                    }
+                }
+
 
 
 
