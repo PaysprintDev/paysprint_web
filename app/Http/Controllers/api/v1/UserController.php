@@ -612,7 +612,7 @@ class UserController extends Controller
                     }
 
 
-                    $data = User::where('api_token', $request->bearerToken())->first();;
+                    $data = User::where('api_token', $request->bearerToken())->first();
                     $status = 200;
                     $message = 'Account successfully updated.';
                 } else {
@@ -628,6 +628,32 @@ class UserController extends Controller
         }
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+    public function getMySubscription(Request $request)
+    {
+
+        try{
+            $thisuser = User::where('api_token', $request->bearerToken())->first();
+
+            $data = UpgradePlan::where('userId', $thisuser->ref_code)->first();
+
+
+            $status = 200;
+            $message = 'Success';
+
+        }
+         catch (\Throwable $th) {
+            $data = [];
+            $status = 400;
+            $message = $th->getMessage();
+        }
+
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
 
         return $this->returnJSON($resData, $status);
     }
@@ -1312,7 +1338,7 @@ class UserController extends Controller
 
     public function bvnVerification(Request $req)
     {
-        
+
 
         try {
 

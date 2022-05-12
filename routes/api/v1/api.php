@@ -91,6 +91,8 @@ Route::prefix('/v1')->group(function () {
 
         Route::post('changeplan',  ['uses' => 'api\v1\UserController@changePlan'])->name('change plan');
 
+        Route::get('getsubscriptionplan',  ['uses' => 'api\v1\UserController@getMySubscription'])->name('get my subscription');
+
 
         Route::post('linkaccount',  ['uses' => 'api\v1\UserController@linkAccount'])->name('link account');
 
@@ -339,6 +341,11 @@ Route::prefix('/v1')->group(function () {
         Route::get('/getallcrossborderpayment', ['uses' => 'CurrencyFxController@getAllCrossBorderPayment', 'as' => 'currency fx get all cross border payment']);
         Route::get('/getpendingcrossborderpayment', ['uses' => 'CurrencyFxController@getPendingCrossBorderPayment', 'as' => 'currency fx get pending cross border payment']);
 
+
+
+        Route::get('/cross-border-beneficiary', ['uses' => 'CurrencyFxController@getCrossBorderBeneficiaries', 'as' => 'get cross border beneficiary']);
+
+
         // Convert Money to Send
 
         Route::post('/convertmoneytosend', ['uses' => 'CurrencyFxController@convertMoneyToTransfer', 'as' => 'currency fx convert money to transfer']);
@@ -387,4 +394,7 @@ Route::prefix('/v1')->group(function () {
     Route::post('walletbalance',  ['uses' => 'api\v1\MerchantApiController@getMyWalletBalance', 'as' => 'check customer wallet balance']);
 
     Route::get('/userdata', ['uses' => 'CurrencyFxController@getUserData', 'as' => 'currency user data']);
+
+    Route::get('/ps-account-details', ['uses' => 'CurrencyFxController@paysprintAccountDetails', 'as' => 'get paysprint account details']);
+
 });
