@@ -200,7 +200,7 @@
                                         @endphp
 
                                         <p class="text-danger">
-                                            {{ round($datediff / (60 * 60 * 24)) > 1? round($datediff / (60 * 60 * 24)) . 'days': round($datediff / (60 * 60 * 24)) . 'day' }}
+                                            {{ round($datediff / (60 * 60 * 24)) > 1 ? round($datediff / (60 * 60 * 24)) . 'days' : round($datediff / (60 * 60 * 24)) . 'day' }}
                                             left</p>
                                     @endisset
                                 @else
@@ -216,7 +216,7 @@
                                         @endphp
 
                                         <p class="text-danger">
-                                            {{ round($datediff / (60 * 60 * 24)) > 1? round($datediff / (60 * 60 * 24)) . 'days': round($datediff / (60 * 60 * 24)) . 'day' }}
+                                            {{ round($datediff / (60 * 60 * 24)) > 1 ? round($datediff / (60 * 60 * 24)) . 'days' : round($datediff / (60 * 60 * 24)) . 'day' }}
                                             left</p>
                                     @endisset
                                 @endif
@@ -245,7 +245,7 @@
                                 @if ($data['imtAccess']->imt == 'false')
                                     <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit"
                                         disabled>PaySprint
-                                        Currency FX</a>
+                                        FX</a>
 
                                     <hr>
 
@@ -253,7 +253,7 @@
                                 @else
                                     <a type="button" class="btn btn-primary"
                                         href="{{ route('paysprint currency exchange') }}" id="cardSubmit">PaySprint
-                                        Currency FX</a>
+                                        FX</a>
 
                                     <hr>
 
@@ -338,7 +338,7 @@
 
                                                 <td style="font-weight: 700"
                                                     class="{{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}">
-                                                    {{ $sendRecData->credit != 0? '+' . $data['currencyCode']->currencySymbol . number_format($sendRecData->credit, 2): '-' . $data['currencyCode']->currencySymbol . number_format($sendRecData->debit, 2) }}
+                                                    {{ $sendRecData->credit != 0 ? '+' . $data['currencyCode']->currencySymbol . number_format($sendRecData->credit, 2) : '-' . $data['currencyCode']->currencySymbol . number_format($sendRecData->debit, 2) }}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -536,7 +536,7 @@
                                                 </td>
                                                 <td style="font-weight: 700"
                                                     class="{{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}">
-                                                    {{ $sendRecData->credit != 0? '+' . $data['currencyCode']->currencySymbol . number_format($sendRecData->credit, 2): '-' . $data['currencyCode']->currencySymbol . number_format($sendRecData->debit, 2) }}
+                                                    {{ $sendRecData->credit != 0 ? '+' . $data['currencyCode']->currencySymbol . number_format($sendRecData->credit, 2) : '-' . $data['currencyCode']->currencySymbol . number_format($sendRecData->debit, 2) }}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -696,7 +696,7 @@
                 </div>
 
                 {{-- <div class="card" style="width: 100%;">
-                    
+
                     <ul class="list-group list-group-flush">
 
                         <li class="list-group-item" title="total points">
@@ -726,7 +726,7 @@
                                     enctype="multipart/form-data">
                                     @csrf
                                     <div class="col-md-12">
-                                        
+
 
                                         <button type="submit" class="btn btn-default btn-block">Claim
                                             Points</button>

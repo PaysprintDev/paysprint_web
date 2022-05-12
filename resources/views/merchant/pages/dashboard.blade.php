@@ -524,7 +524,7 @@
 
                                                     <a type="button" class="btn btn-success"
                                                         href="{{ route('paysprint currency exchange') }}">PaySprint
-                                                        Currency FX</a>
+                                                        FX</a>
 
 
                                                     <hr>
@@ -712,7 +712,7 @@
 
                                                     <a type="button" class="btn btn-success"
                                                         href="javascript:void()">PaySprint
-                                                        Currency FX</a>
+                                                        FX</a>
 
 
                                                     <hr>
