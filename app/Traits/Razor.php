@@ -34,8 +34,13 @@ trait Razor{
 
     }
 
-    public function 
+    public function razorPayment($paymentId, $amount){
+        $api = $this->initConfig();
 
+        $result = $api->payment->fetch($paymentId)->capture(array('amount'=>$amount,'currency' => 'INR'));;
+
+        return $result;
+    }
 
 
     public function initConfig(){
