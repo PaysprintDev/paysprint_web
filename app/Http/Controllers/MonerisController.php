@@ -133,13 +133,14 @@ use App\Traits\PaysprintPoint;
 use App\Traits\IDVCheck;
 use App\Traits\SpecialInfo;
 use App\Traits\AccountNotify;
+use App\Traits\Razor;
 
 use Throwable;
 
 class MonerisController extends Controller
 {
 
-    use PaymentGateway, PaystackPayment, ExpressPayment, ElavonPayment, Xwireless, PaysprintPoint, IDVCheck, SpecialInfo, AccountNotify;
+    use PaymentGateway, PaystackPayment, ExpressPayment, ElavonPayment, Xwireless, PaysprintPoint, IDVCheck, SpecialInfo, AccountNotify, Razor;
 
     public $to;
     public $name;
@@ -167,6 +168,13 @@ class MonerisController extends Controller
 
     public function __construct(Request $request)
     {
+    }
+
+    public function testRazor(){
+
+        $data = $this->createPayment(100, 'Skimma', 'Payment for test');
+
+        dd($data);
     }
 
 
