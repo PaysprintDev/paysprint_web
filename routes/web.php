@@ -24,6 +24,10 @@ use App\Http\Controllers\ShopController;
 // App Logger
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
+
+Route::get('testrazor', 'MonerisController@testRazor');
+
+
 // Route::get('feecharge', 'MaintenanceFeeCharge@monthlyMaintenaceFee');
 Route::get('renewsub', 'MaintenanceFeeCharge@renewSubscription');
 Route::get('refreshbid', 'CurrencyFxController@refreshBids');
