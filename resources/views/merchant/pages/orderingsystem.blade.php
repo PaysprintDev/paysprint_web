@@ -9,7 +9,7 @@
             <div class="page-header">
                 <div class="row">
 
-                    <div class="col-lg-12 float-right">
+                    <div class="col-lg-6 float-right">
                         <!-- Bookmark Start-->
                         <br>
                         <div style="background-color: rgb(241 187 45) !important; margin-top: 20px;">
@@ -50,7 +50,7 @@
                     <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact"
                         type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Product
                         Categories</button>
-                    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
+                    <button class="nav-link" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
                         type="button" role="tab" aria-controls="nav-home" aria-selected="true">Products</button>
                     <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
                         type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Orders</button>
@@ -65,9 +65,9 @@
                         data-bs-target="#nav-discount" type="button" role="tab" aria-controls="nav-discount"
                         aria-selected="false">Discount codes <span class="text-danger">[coming soon]</span></button> --}}
 
-                    <button class="nav-link" id="nav-managestore-tab" data-bs-toggle="tab"
+                    <button class="nav-link active" id="nav-managestore-tab" data-bs-toggle="tab"
                         data-bs-target="#nav-managestore" type="button" role="tab" aria-controls="nav-managestore"
-                        aria-selected="false">Manage eStore</button>
+                        aria-selected="false">Setup and Manage eStore</button>
                     <button class="nav-link btn btn-success" type="button" data-bs-toggle="modal"
                         data-bs-target="#addProductModal">Add product + </button>
 
@@ -78,7 +78,7 @@
             </nav>
 
             <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div class="tab-pane fade" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                     <div class="row">
                         <!-- Individual column searching (text inputs) Starts-->
                         <div class="col-sm-12">
@@ -926,7 +926,7 @@
 
                 {{-- Manage Store Start --}}
 
-                <div class="tab-pane fade" id="nav-managestore" role="tabpanel" aria-labelledby="nav-managestore-tab">
+                <div class="tab-pane fade show active" id="nav-managestore" role="tabpanel" aria-labelledby="nav-managestore-tab">
 
                     <!-- Container-fluid starts-->
                     <div class="container-fluid">
@@ -961,16 +961,22 @@
                                         <div class="card-body">
 
                                             <div class="row">
-                                                <div class="col-md-9">
-                                                    <h5 class="card-text">
-                                                        Setup Your eStore
-                                                    </h5>
+                                                <div class="col-md-6">
+                                                    @isset($data['myStore'])
+                                                        <button class="btn btn-primary" style="width: 100%;"
+                                                            data-bs-toggle="modal" data-bs-target="#editStoreModal">Update
+                                                            eStore</button>
+                                                    @else
+                                                        <button class="btn btn-success" style="width: 100%;"
+                                                            data-bs-toggle="modal" data-bs-target="#createStoreModal">Setup
+                                                            eStore (For Sale of Goods only)</button>
+                                                    @endisset
                                                     <p>
                                                         You can now setup your store for your customers to see how your
                                                         estore look like
                                                     </p>
                                                 </div>
-                                                <div class="col-md-3">
+                                                {{-- <div class="col-md-3">
 
                                                     @isset($data['myStore'])
                                                         <button class="btn btn-primary" style="width: 100%;"
@@ -983,26 +989,31 @@
                                                     @endisset
 
 
-                                                </div>
+                                                </div> --}}
                                             </div>
                                             <hr>
 
                                             <div class="row">
-                                                <div class="col-md-9">
-                                                    <h5 class="card-text">
+                                                <div class="col-md-6">
+
+                                                    <button class="btn btn-warning" style="width: 100%;"
+                                                        onclick="comingSoon()">Announcements (Coming
+                                                        soon)</button>
+
+                                                    {{-- <h5 class="card-text">
                                                         Announcements
-                                                    </h5>
+                                                    </h5> --}}
                                                     <p>
                                                         You can now activate announcements to be able to share information
                                                         on your
                                                         eStore with new and existing customers.
                                                     </p>
                                                 </div>
-                                                <div class="col-md-3">
+                                                {{-- <div class="col-md-3">
                                                     <button class="btn btn-warning" style="width: 100%;"
                                                         onclick="comingSoon()">Coming
                                                         soon</button>
-                                                </div>
+                                                </div> --}}
                                             </div>
                                             <hr>
 
@@ -1128,15 +1139,24 @@
                                             </div>
                                             <hr>
                                             <div class="row">
-                                                <div class="col-md-9">
-                                                    <h5 class="card-text">
+                                                <div class="col-md-6">
+
+                                                    <button class="btn btn-danger btn-block" style="width: 100%;"
+                                                        onclick="shippingWithRate()"><small>Add Shipping Regions &
+                                                            Rates</small></button>
+
+
+                                                    <button class="deliveryshippingbtn d-none" data-bs-toggle="modal"
+                                                        data-bs-target="#instoreShipping">Click button</button>
+
+                                                    {{-- <h5 class="card-text">
                                                         Shipping Regions & Rates
-                                                    </h5>
+                                                    </h5> --}}
                                                     <p>
 
                                                     </p>
                                                 </div>
-                                                <div class="col-md-3">
+                                                {{-- <div class="col-md-3">
                                                     <button class="btn btn-danger btn-block" style="width: 100%;"
                                                         onclick="shippingWithRate()"><small>Add Shipping
                                                             Fee</small></button>
@@ -1144,7 +1164,7 @@
 
                                                     <button class="deliveryshippingbtn d-none" data-bs-toggle="modal"
                                                         data-bs-target="#instoreShipping">Click button</button>
-                                                </div>
+                                                </div> --}}
 
 
 
@@ -1254,15 +1274,28 @@
                                             </div>
                                             <hr>
                                             <div class="row">
-                                                <div class="col-md-9">
-                                                    <h5 class="card-text">
+                                                <div class="col-md-6">
+
+                                                    @isset($data['myProductTax'])
+                                                        <button class="btn btn-success" style="width: 100%;"
+                                                            data-bs-toggle="modal" data-bs-target="#editProductTax"><small>Edit
+                                                                Product
+                                                                Tax</small></button>
+                                                    @else
+                                                        <button class="btn btn-success" style="width: 100%;"
+                                                            data-bs-toggle="modal" data-bs-target="#addProductTax"><small>Add
+                                                                Product
+                                                                Tax</small></button>
+                                                    @endisset
+
+                                                    {{-- <h5 class="card-text">
                                                         Product Tax
-                                                    </h5>
+                                                    </h5> --}}
                                                     <p>
 
                                                     </p>
                                                 </div>
-                                                <div class="col-md-3">
+                                                {{-- <div class="col-md-3">
 
                                                     @isset($data['myProductTax'])
                                                         <button class="btn btn-success" style="width: 100%;"
@@ -1277,7 +1310,7 @@
                                                     @endisset
 
 
-                                                </div>
+                                                </div> --}}
                                             </div>
 
 

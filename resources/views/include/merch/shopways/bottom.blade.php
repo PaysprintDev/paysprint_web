@@ -176,6 +176,111 @@
 
 
             }
+
+
+            async function changeDeliveryOption(merchantId, currencySymbol) {
+
+
+                try {
+                    $('.storeDetails').addClass('disp-0');
+                    $('.instoreAddress').html(``);
+                    $('.amountToDeliveryAddress').html(``);
+                    $('.shippingChargeClass').html(``);
+                    // Check for merchant delivery rates from users selection
+                    var userSelection = $('#deliveryOption').val();
+                    var city = $('#city').val();
+                    var state = $('#state').val();
+                    var totalCost = $('#total').val();
+                    route = `${baseUrl}/product/deliveryoption`;
+
+                    headers.Authorization = "Bearer {{ Auth::user()->api_token }}"
+
+                    data = new FormData();
+                    data.append('merchantId', merchantId);
+                    data.append('userSelection', userSelection);
+                    data.append('city', city);
+                    data.append('state', state);
+
+                    config = {
+                        method: 'post',
+                        headers: headers,
+                        url: route,
+                        data: data
+                    };
+
+
+                    const response = await axios(config);
+                    $('.storeDetails').removeClass('disp-0');
+
+                    if (response.status === 200) {
+
+                        if (response.data.message != 'No delivery options available') {
+                            if (userSelection != "Home Delivery") {
+                                $('.instoreAddress').html(
+                                    `<h6 class='text-success'>Address: ${response.data.data.address}</h6>`);
+                            }
+
+                            $('.amountToDeliveryAddress').html(
+                                `<h6 class='text-success'>Delivery Fee: ${currencySymbol+''+parseFloat(response.data.data.deliveryRate).toFixed(2)}</h6>`
+                            );
+
+                            $('.shippingChargeClass').html(
+                                `<strong>${currencySymbol+''+parseFloat(response.data.data.deliveryRate).toFixed(2)}</strong>`
+                            );
+
+                            $('#shippingCharge').val(parseFloat(response.data.data.deliveryRate).toFixed(2));
+                            $('.shippingChargeClass').addClass('text-info');
+
+
+                            $('.totalCost').html(
+                                `<strong>${currencySymbol+''+(Number(totalCost) + Number(response.data.data.deliveryRate)).toFixed(2)}</strong>`
+                            );
+
+                        } else {
+                            $('.instoreAddress').html(`<h6 class='text-danger'>Note: ${response.data.message}</h6>`);
+                            $('.amountToDeliveryAddress').html(``);
+                            $('.shippingChargeClass').html(
+                                `<strong>${currencySymbol+''+parseFloat(0).toFixed(2)}</strong>`);
+                            $('#shippingCharge').val(parseFloat(0).toFixed(2));
+                            $('.shippingChargeClass').addClass('text-danger');
+
+                            $('.totalCost').html(`<strong>${currencySymbol+''+Number(totalCost).toFixed(2)}</strong>`);
+                        }
+
+
+                    } else {
+                        $('.instoreAddress').html(``);
+                        $('.amountToDeliveryAddress').html(
+                            `<h6>Delivery Fee: ${currencySymbol+''+parseFloat(0).toFixed(2)}</h6>`);
+                        $('.shippingChargeClass').html(`<strong>${currencySymbol+''+parseFloat(0).toFixed(2)}</strong>`);
+                        $('#shippingCharge').val(parseFloat(0).toFixed(2));
+                        $('.shippingChargeClass').addClass('text-danger');
+
+                        $('.totalCost').html(`<strong>${currencySymbol+''+Number(totalCost).toFixed(2)}</strong>`);
+                    }
+
+                } catch (error) {
+                    $('.storeDetails').addClass('disp-0');
+
+                    if (error.response) {
+
+                        messageAlert('failed', `${error.response.statusText}`, `${error.response.data.message}`);
+
+                    } else {
+
+                        messageAlert('failed', 'Oops', `${error.message}`);
+
+
+                    }
+
+                }
+
+
+
+
+
+
+            }
         </script>
     @endauth
 
@@ -209,111 +314,6 @@
                 $('.shippingInfo').removeClass('disp-0');
             }
         })
-
-
-
-        async function changeDeliveryOption(merchantId, currencySymbol) {
-
-
-            try {
-                $('.storeDetails').addClass('disp-0');
-                $('.instoreAddress').html(``);
-                $('.amountToDeliveryAddress').html(``);
-                $('.shippingChargeClass').html(``);
-                // Check for merchant delivery rates from users selection
-                var userSelection = $('#deliveryOption').val();
-                var city = $('#city').val();
-                var state = $('#state').val();
-                var totalCost = $('#total').val();
-                route = `${baseUrl}/product/deliveryoption`;
-                headers.Authorization = "Bearer {{ Auth::user()->api_token }}"
-
-                data = new FormData();
-                data.append('merchantId', merchantId);
-                data.append('userSelection', userSelection);
-                data.append('city', city);
-                data.append('state', state);
-
-                config = {
-                    method: 'post',
-                    headers: headers,
-                    url: route,
-                    data: data
-                };
-
-
-                const response = await axios(config);
-                $('.storeDetails').removeClass('disp-0');
-
-                if (response.status === 200) {
-
-                    if (response.data.message != 'No delivery options available') {
-                        if (userSelection != "Home Delivery") {
-                            $('.instoreAddress').html(
-                                `<h6 class='text-success'>Address: ${response.data.data.address}</h6>`);
-                        }
-
-                        $('.amountToDeliveryAddress').html(
-                            `<h6 class='text-success'>Delivery Fee: ${currencySymbol+''+parseFloat(response.data.data.deliveryRate).toFixed(2)}</h6>`
-                        );
-
-                        $('.shippingChargeClass').html(
-                            `<strong>${currencySymbol+''+parseFloat(response.data.data.deliveryRate).toFixed(2)}</strong>`
-                        );
-
-                        $('#shippingCharge').val(parseFloat(response.data.data.deliveryRate).toFixed(2));
-                        $('.shippingChargeClass').addClass('text-info');
-
-
-                        $('.totalCost').html(
-                            `<strong>${currencySymbol+''+(Number(totalCost) + Number(response.data.data.deliveryRate)).toFixed(2)}</strong>`
-                        );
-
-                    } else {
-                        $('.instoreAddress').html(`<h6 class='text-danger'>Note: ${response.data.message}</h6>`);
-                        $('.amountToDeliveryAddress').html(``);
-                        $('.shippingChargeClass').html(
-                            `<strong>${currencySymbol+''+parseFloat(0).toFixed(2)}</strong>`);
-                        $('#shippingCharge').val(parseFloat(0).toFixed(2));
-                        $('.shippingChargeClass').addClass('text-danger');
-
-                        $('.totalCost').html(`<strong>${currencySymbol+''+Number(totalCost).toFixed(2)}</strong>`);
-                    }
-
-
-                } else {
-                    $('.instoreAddress').html(``);
-                    $('.amountToDeliveryAddress').html(
-                        `<h6>Delivery Fee: ${currencySymbol+''+parseFloat(0).toFixed(2)}</h6>`);
-                    $('.shippingChargeClass').html(`<strong>${currencySymbol+''+parseFloat(0).toFixed(2)}</strong>`);
-                    $('#shippingCharge').val(parseFloat(0).toFixed(2));
-                    $('.shippingChargeClass').addClass('text-danger');
-
-                    $('.totalCost').html(`<strong>${currencySymbol+''+Number(totalCost).toFixed(2)}</strong>`);
-                }
-
-            } catch (error) {
-                $('.storeDetails').addClass('disp-0');
-
-                if (error.response) {
-
-                    messageAlert('failed', `${error.response.statusText}`, `${error.response.data.message}`);
-
-                } else {
-
-                    messageAlert('failed', 'Oops', `${error.message}`);
-
-
-                }
-
-            }
-
-
-
-
-
-
-        }
     </script>
 
 
