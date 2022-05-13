@@ -141,7 +141,7 @@
                                             @php
                                                 $productCost = 0;
                                                 $shipCost = Request::get('fee') != null ? base64_decode(Request::get('fee')) : 0;
-                                                $taxCost = $data['storeTax']->taxValue != null ? $data['storeTax']->taxValue / 100 : 0;
+                                                $taxCost = isset($data['storeTax']->taxValue) ? $data['storeTax']->taxValue / 100 : 0;
                                                 $totalCost = 0;
                                             @endphp
                                             @for ($i = 0; $i < count($data['getCart']); $i++)

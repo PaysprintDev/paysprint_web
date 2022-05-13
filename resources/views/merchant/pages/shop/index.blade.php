@@ -23,9 +23,12 @@
             <div class="home5-slider swiper-container">
                 <div class="swiper-wrapper">
 
+
                     @for ($i = 0; $i < count(array_filter(explode(', ', $data['mystore']->headerContent))); $i++)
                         @if (count(array_filter(explode(', ', $data['mystore']->headerTitle))) == count(array_filter(explode(', ', $data['mystore']->headerContent))) && count(array_filter(explode(', ', $data['mystore']->headerSubtitle))) == count(array_filter(explode(', ', $data['mystore']->headerContent))) && array_key_exists($i, array_filter(explode(', ', $data['mystore']->headerContent))))
                             <div class="swiper-slide">
+
+
 
 
                                 @if (array_key_exists($i, array_filter(explode(', ', $data['mystore']->headerContent))))
@@ -81,9 +84,12 @@
                                     style="background-image:url('{{ array_filter(explode(', ', $data['mystore']->headerContent))[0] }}');">
                                     <div class="h-s-content">
 
-                                        <h1>{{ array_filter(explode(', ', $data['mystore']->headerTitle))[0] }}</h1>
+                                        <h1>{{ count(array_filter(explode(', ', $data['mystore']->headerTitle))) > 0 ? array_filter(explode(', ', $data['mystore']->headerTitle))[0] : '' }}
+                                        </h1>
 
-                                        <h3>{{ array_filter(explode(', ', $data['mystore']->headerSubtitle))[0] }}</h3>
+                                        <h3>
+                                            {{ count(array_filter(explode(', ', $data['mystore']->headerSubtitle))) > 0 ? array_filter(explode(', ', $data['mystore']->headerSubtitle))[0] : '' }}
+                                        </h3>
 
                                         <a href="#">Shop now</a>
                                     </div>
@@ -144,8 +150,11 @@
                                                 style="width: 100%; height: 280px; object-fit:cover;">
                                         </a>
                                         <div class="banner-content">
-                                            <span>{{ array_filter(explode(', ', $data['mystore']->advertTitle))[0] }}</span>
-                                            <h2>{{ array_filter(explode(', ', $data['mystore']->advertSubtitle))[0] }}
+                                            <span>
+                                                {{ count(array_filter(explode(', ', $data['mystore']->advertTitle))) > 0 ? array_filter(explode(', ', $data['mystore']->advertTitle))[0] : '' }}
+                                            </span>
+                                            <h2>{{ count(array_filter(explode(', ', $data['mystore']->advertSubtitle))) > 0 ? array_filter(explode(', ', $data['mystore']->advertSubtitle))[0] : '' }}
+                                            </h2>
                                             </h2>
                                             <a href="#">Shop now <i class="fa fa-angle-right"></i></a>
                                         </div>
