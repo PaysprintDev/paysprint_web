@@ -172,7 +172,9 @@ class MonerisController extends Controller
 
     public function testRazor(){
 
-        $data = $this->createPayment(100, 'Skimma', 'Payment for test');
+        $item = $this->createPayment(100, 'Skimma', 'Payment for test');
+
+        $data = $this->razorPayment($item["id"], 100);
 
         dd($data);
     }
