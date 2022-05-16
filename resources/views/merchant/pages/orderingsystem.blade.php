@@ -57,7 +57,8 @@
                     <button class="nav-link" id="nav-sales-tab" data-bs-toggle="tab" data-bs-target="#nav-sales"
                         type="button" role="tab" aria-controls="nav-sales" aria-selected="false">Sales</button>
                     <button class="nav-link" id="nav-refund-tab" data-bs-toggle="tab" data-bs-target="#nav-refund"
-                        type="button" role="tab" aria-controls="nav-refund" aria-selected="false">Refund</button>
+                        type="button" role="tab" aria-controls="nav-refund" aria-selected="false">Refund <span
+                            class="text-danger">[coming soon]</span></button>
                     <button class="nav-link" id="nav-discount-tab" data-bs-toggle="tab"
                         data-bs-target="#nav-discounts" type="button" role="tab" aria-controls="nav-discounts"
                         aria-selected="false">Discount codes <span class="text-danger">[coming soon]</span></button>
@@ -926,7 +927,8 @@
 
                 {{-- Manage Store Start --}}
 
-                <div class="tab-pane fade show active" id="nav-managestore" role="tabpanel" aria-labelledby="nav-managestore-tab">
+                <div class="tab-pane fade show active" id="nav-managestore" role="tabpanel"
+                    aria-labelledby="nav-managestore-tab">
 
                     <!-- Container-fluid starts-->
                     <div class="container-fluid">
@@ -1038,7 +1040,7 @@
                                                         {!! $data['storepickup'] > 0
     ? '<span class="float-end"><a href="javascript:void(0)"
                                                                 class="text-primary">View/Add
-                                                                pickup addresses</a></span>'
+                                                                pickup addresses <span class="text-danger">[coming soon]</span></a></span>'
     : '' !!}
 
 
@@ -1128,8 +1130,8 @@
 
                                                         {!! $data['deliverypickup'] > 0
     ? '<span class="float-end"><a href="javascript:void(0)"
-                                                                class="text-danger">View/Add
-                                                                delivery rates</a></span>'
+                                                                class="text-primary">View/Add
+                                                                delivery rates <span class="text-danger">[coming soon]</span></a></span>'
     : '' !!}
                                                     </div>
 

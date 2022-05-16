@@ -253,20 +253,26 @@
                                             data-feather="shopping-bag"></i><span>Merchant Cash Advance <br><small
                                                 class="text-danger text-center">[Upgrade account]</small></span></a>
                                 </li>
-                            @endif
-                            <li>
 
-                                <a class="nav-link menu-title link-nav " href="javascript:void()"><i
-                                        data-feather="database"></i><span>Manage eStore <br><small
-                                            class="text-danger text-center">[Coming
-                                            Soon]</small></span></a>
-                                {{-- <a class="nav-link menu-title link-nav " href="{{ route('ordering system') }}"><i
-                                        data-feather="database"></i><span>Manage eStore <br><small
-                                            class="text-danger text-center">[Coming
-                                            Soon]</small></span></a> --}}
-                            </li>
+                                <li>
+
+                                    <a class="nav-link menu-title link-nav " href="javascript:void()"><i
+                                            data-feather="database"></i><span>Manage eStore <br><small
+                                                class="text-danger text-center">[Upgrade account]</small></span></a>
+
+                                </li>
+                            @endif
+
 
                             @if (Auth::user()->plan == 'classic')
+                                <li>
+
+                                    <a class="nav-link menu-title link-nav " href="{{ route('ordering system') }}"><i
+                                            data-feather="database"></i><span>Manage eStore <br><small
+                                                class="text-danger text-center">[Beta]</small></span></a>
+
+                                </li>
+
                                 <li>
 
                                     <a class="nav-link menu-title link-nav" href="javascript:void()"
