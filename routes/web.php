@@ -845,6 +845,7 @@ Route::prefix('Admin/')->group(function () {
 
 	Route::get('gatewayactivity', ['uses' => 'AdminController@gatewayActivity', 'as' => 'gateway activity']);
 	Route::get('bvncheckdetails', ['uses' => 'AdminController@bvnCheckDetails', 'as' => 'bvncheckdetails']);
+	Route::get('utilityandbills', ['uses' => 'AdminController@utilityAndBills', 'as' => 'utilityandbills']);
 	Route::get('checktransaction/{id}', ['uses' => 'AdminController@checkTransaction', 'as' => 'check transaction']);
 	Route::get('supportactivity', ['uses' => 'AdminController@supportPlatformActivity', 'as' => 'support activity']);
 	Route::get('activityperday', ['uses' => 'AdminController@platformActivityPerDay', 'as' => 'activity per day']);
@@ -859,6 +860,7 @@ Route::prefix('Admin/')->group(function () {
 	Route::post('generateusersupportagent', ['uses' => 'AdminController@generateSupportAgent', 'as' => 'generate account for support']);
 	Route::post('editthisusersupportagent', ['uses' => 'AdminController@editThisSupportAgent', 'as' => 'edit account for support']);
 	Route::post('deletesupport/{id}', ['uses' => 'AdminController@deleteSupportAgent', 'as' => 'delete support agent']);
+	Route::post('integrationaction/{id}', ['uses' => 'AdminController@integrationAction', 'as' => 'integration action']);
 
 
 	// Create referrers

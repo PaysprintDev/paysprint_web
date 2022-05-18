@@ -70,6 +70,11 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
+    <script type='text/javascript'
+        src='https://platform-api.sharethis.com/js/sharethis.js#property=62837dc55d7558001495d1e7&product=sop'
+        async='async'></script>
+
+
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RVX8CC7GDP"></script>
     <script>

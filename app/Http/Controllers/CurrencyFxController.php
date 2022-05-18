@@ -1898,6 +1898,9 @@ class CurrencyFxController extends Controller
                         InvoiceCommission::insert($commissionQuery);
 
 
+                        $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+
                         $data = true;
                         $message = 'Transaction successful';
                         $status = 200;

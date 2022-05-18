@@ -230,6 +230,22 @@
                                      </ul>
                                  </li>
 
+                                 <li class="treeview">
+                                     <a href="#">
+                                         <i class="fa fa-book"></i>
+                                         <span>Integration</span>
+                                         <span class="pull-right-container">
+                                             <i class="fa fa-angle-left pull-right"></i>
+                                         </span>
+                                     </a>
+                                     <ul class="treeview-menu">
+                                         <li title="Utility & Bills"><a href="{{ route('utilityandbills') }}"><i
+                                                     class="fa fa-circle-o text-red"></i> Utility & Bills</a></li>
+
+
+                                     </ul>
+                                 </li>
+
                              </ul>
                          </li>
 

@@ -959,7 +959,15 @@
                                                             stroke="#2D9CDB" stroke-linecap="round" stroke-linejoin="round">
                                                         </path>
                                                     </svg></span></a>
+                                            <!-- ShareThis BEGIN -->
+                                            <div class="sharethis-inline-share-buttons"
+                                                data-url="{{ route('home') . '/shop/' . Auth::user()->businessname }}">
+                                            </div><!-- ShareThis END -->
+
+
                                         </div>
+
+
                                         <div class="card-body">
 
                                             <div class="row">

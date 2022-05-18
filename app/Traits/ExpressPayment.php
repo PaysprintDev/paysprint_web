@@ -28,7 +28,7 @@ use App\Mail\sendEmail;
 use Twilio\Rest\Client;
 
 use App\Traits\PaymentGateway;
-
+use App\ThirdPartyIntegration;
 
 trait ExpressPayment
 {
@@ -189,7 +189,7 @@ trait ExpressPayment
                 'transactionId' => $paymentToken,
             ]);
 
-            
+
 
             $data = $this->doPayPost();
             return $data;
@@ -203,66 +203,12 @@ trait ExpressPayment
     public function processTransaction($postRequest, $bearerToken)
     {
 
+        $getActive = ThirdPartyIntegration::where('platform', 'Express Solution')->first();
 
-        // $responseCode = 00;
-        // $responseMessage = "Utility payment is currently under maintenance. Please try again later";
-        // $status = 400;
-
-        // $data = [
-        //     'responseCode' => $responseCode,
-        //     'responseMessage' => $responseMessage,
-        //     'status' => $status
-        // ];
-
-        // $result = json_encode($data);
-
-        // return json_decode($result);
-
-
-        $checks = $this->checkAccount($postRequest, $bearerToken);
-
-
-        if ($checks == true) {
-            $this->Base_Url = env('EXPRESS_PAY_ENDPOINT_URL') . '/process-transaction';
-            $transaction = [];
-
-            for ($i = 0; $i < count($postRequest['fieldName']); $i++) {
-
-
-
-                if ($postRequest['fieldName'] != null) {
-
-                    $transaction[] = [
-                        'fieldName' => $postRequest['fieldName'][$i],
-                        'fieldValue' => $postRequest['fieldValue'][$i],
-                        'fieldControlType' => $postRequest['fieldControlType'][$i],
-                    ];
-                } else {
-                    $transaction[] = [
-                        'fieldName' => $postRequest['fieldName'],
-                        'fieldValue' => $postRequest['fieldValue'],
-                        'fieldControlType' => $postRequest['fieldControlType'],
-                    ];
-                }
-            }
-
-
-
-            $this->curlPost = json_encode([
-                'billerCode' => $postRequest['billerCode'],
-                'productId' => $postRequest['productId'],
-                'transDetails' => $transaction,
-            ]);
-
-
-
-            $data = $this->doPost();
-
-            return $data;
-        } else {
+        if ($getActive->status == false) {
 
             $responseCode = 00;
-            $responseMessage = "Your wallet balance is low for this transaction. Please add money";
+            $responseMessage = "Utility payment is currently under maintenance. Please try again later";
             $status = 400;
 
             $data = [
@@ -274,6 +220,65 @@ trait ExpressPayment
             $result = json_encode($data);
 
             return json_decode($result);
+        } else {
+
+
+            $checks = $this->checkAccount($postRequest, $bearerToken);
+
+
+            if ($checks == true) {
+                $this->Base_Url = env('EXPRESS_PAY_ENDPOINT_URL') . '/process-transaction';
+                $transaction = [];
+
+                for ($i = 0; $i < count($postRequest['fieldName']); $i++) {
+
+
+
+                    if ($postRequest['fieldName'] != null) {
+
+                        $transaction[] = [
+                            'fieldName' => $postRequest['fieldName'][$i],
+                            'fieldValue' => $postRequest['fieldValue'][$i],
+                            'fieldControlType' => $postRequest['fieldControlType'][$i],
+                        ];
+                    } else {
+                        $transaction[] = [
+                            'fieldName' => $postRequest['fieldName'],
+                            'fieldValue' => $postRequest['fieldValue'],
+                            'fieldControlType' => $postRequest['fieldControlType'],
+                        ];
+                    }
+                }
+
+
+
+                $this->curlPost = json_encode([
+                    'billerCode' => $postRequest['billerCode'],
+                    'productId' => $postRequest['productId'],
+                    'transDetails' => $transaction,
+                ]);
+
+
+
+                $data = $this->doPost();
+
+                return $data;
+            } else {
+
+                $responseCode = 00;
+                $responseMessage = "Your wallet balance is low for this transaction. Please add money";
+                $status = 400;
+
+                $data = [
+                    'responseCode' => $responseCode,
+                    'responseMessage' => $responseMessage,
+                    'status' => $status
+                ];
+
+                $result = json_encode($data);
+
+                return json_decode($result);
+            }
         }
     }
 
@@ -524,7 +529,7 @@ trait ExpressPayment
 
     public function doPayPost()
     {
-        
+
 
 
         $curl = curl_init();
@@ -550,8 +555,6 @@ trait ExpressPayment
         curl_close($curl);
 
         return json_decode($response);
-
-
     }
 
 
@@ -604,7 +607,7 @@ trait ExpressPayment
             // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
             $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
 
-            // Converting your USD value to other currency ie CAD * Y 
+            // Converting your USD value to other currency ie CAD * Y
             $convRate = $result->quotes->$currency * $convertLocal;
 
 
