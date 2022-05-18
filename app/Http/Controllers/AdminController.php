@@ -1672,7 +1672,7 @@ class AdminController extends Controller
         return view('admin.editinvestorpost')->with(['pages' => 'Dashboard', 'transCost' => $transCost,  'data' => $data]);
     }
 
-        public function deleteInvestorPost($id){
+        public function deleteInvestorPost(Request $req, $id){
             $post=Createpost::where('id',$id)->delete();
             return back()->with("msg", "<div class='alert alert-success'>Post Deleted Successfully</div>");
         }
