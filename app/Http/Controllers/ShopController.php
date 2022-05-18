@@ -423,6 +423,7 @@ class ShopController extends Controller
             $validator = Validator::make($req->all(), [
                 'address' => 'required',
                 'state' => 'required',
+                'city' => 'required',
                 'deliveryRate' => 'required'
             ]);
 
@@ -434,6 +435,7 @@ class ShopController extends Controller
                     'merchantId' => Auth::id(),
                     'address' => $req->address,
                     'state' => $req->state,
+                    'city' => $req->city,
                     'deliveryRate' => $req->deliveryRate
                 ];
 
@@ -441,6 +443,47 @@ class ShopController extends Controller
 
                 $status = 'success';
                 $message = 'Pickup address successfully setup for ' . $req->state;
+            } else {
+                $status = 'error';
+                $message = implode(",", $validator->messages()->all());
+            }
+        } catch (\Throwable $th) {
+            $status = 'error';
+            $message = $th->getMessage();
+        }
+
+
+        return redirect()->back()->with($status, $message);
+    }
+
+    public function editStorePickupAddress(Request $req, $id)
+    {
+        try {
+
+            // Validate
+            $validator = Validator::make($req->all(), [
+                'address' => 'required',
+                'state' => 'required',
+                'city' => 'required',
+                'deliveryRate' => 'required'
+            ]);
+
+
+            if ($validator->passes()) {
+
+                // Store the address...
+                $query =  [
+                    'merchantId' => Auth::id(),
+                    'address' => $req->address,
+                    'state' => $req->state,
+                    'city' => $req->city,
+                    'deliveryRate' => $req->deliveryRate
+                ];
+
+                StorePickup::where('id', $id)->update($query);
+
+                $status = 'success';
+                $message = 'Pickup address successfully updated for ' . $req->state;
             } else {
                 $status = 'error';
                 $message = implode(",", $validator->messages()->all());
@@ -487,6 +530,51 @@ class ShopController extends Controller
 
                 $status = 'success';
                 $message = 'Shipping address successfully setup for ' . $req->city.', '.$req->state;
+            } else {
+                $status = 'error';
+                $message = implode(",", $validator->messages()->all());
+            }
+        } catch (\Throwable $th) {
+            $status = 'error';
+            $message = $th->getMessage();
+        }
+
+
+        return redirect()->back()->with($status, $message);
+    }
+
+
+    public function editStoreShippingAddress(Request $req, $id)
+    {
+        try {
+
+            // Validate
+            $validator = Validator::make($req->all(), [
+                'country' => 'required',
+                'state' => 'required',
+                'city' => 'required',
+                'currencyCode' => 'required',
+                'deliveryRate' => 'required'
+            ]);
+
+
+            if ($validator->passes()) {
+
+                // Store the address...
+                $query =  [
+                    'merchantId' => Auth::id(),
+                    'country' => $req->country,
+                    'state' => $req->state,
+                    'city' => $req->city,
+                    'currencyCode' => $req->currencyCode,
+                    'deliveryRate' => $req->deliveryRate,
+                    'updated_at' => now()
+                ];
+
+                StoreShipping::where('id', $id)->update($query);
+
+                $status = 'success';
+                $message = 'Shipping address successfully updated for ' . $req->city.', '.$req->state;
             } else {
                 $status = 'error';
                 $message = implode(",", $validator->messages()->all());

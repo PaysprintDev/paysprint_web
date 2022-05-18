@@ -373,6 +373,8 @@ Route::prefix('merchant')->group(function () {
 	Route::get('/invoicepage', [MerchantPageController::class, 'invoicePage'])->name('invoice page');
 	Route::get('/paymentgateway', [MerchantPageController::class, 'paymentGateway'])->name('new merchant payment gateway');
 	Route::get('/estore', [MerchantPageController::class, 'orderingSystem'])->name('ordering system');
+	Route::get('/storepickupaddress', [MerchantPageController::class, 'storepickupAddress'])->name('storepickup address');
+	Route::get('/deliverypickupaddress', [MerchantPageController::class, 'deliverypickupAddress'])->name('deliverypickup address');;
 
 
 	Route::get('businessprofile/{id}', [MerchantPageController::class, 'businessProfile'])->name('merchant business profile');
@@ -386,7 +388,9 @@ Route::prefix('merchant')->group(function () {
 	Route::post('/updatediscount/{id}', [ShopController::class, 'updateDiscount'])->name('update discount');
 	Route::post('/deletediscount/{id}', [ShopController::class, 'deleteDiscount'])->name('delete discount');
 	Route::post('/storepickupaddress', [ShopController::class, 'storePickupAddress'])->name('store pickup address');
+	Route::post('/editstorepickupaddress/{id}', [ShopController::class, 'editStorePickupAddress'])->name('edit pickup address');
 	Route::post('/storeshippingaddress', [ShopController::class, 'storeShippingAddress'])->name('store shipping address');
+	Route::post('/editstoreshippingaddress/{id}', [ShopController::class, 'editStoreShippingAddress'])->name('edit shipping address');
 	Route::post('/storeproducttax', [ShopController::class, 'storeProductTax'])->name('store product tax');
 	Route::post('/editproducttax/{id}', [ShopController::class, 'editProductTax'])->name('edit product tax');
 

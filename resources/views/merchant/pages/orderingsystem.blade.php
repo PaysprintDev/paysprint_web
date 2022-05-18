@@ -1046,9 +1046,11 @@
                                                             data-bs-target="#instorePickup">Click button</button>
 
                                                         {!! $data['storepickup'] > 0
-    ? '<span class="float-end"><a href="javascript:void(0)"
+    ? '<span class="float-end"><a href="' .
+        route('storepickup address') .
+        '"
                                                                 class="text-primary">View/Add
-                                                                pickup addresses <span class="text-danger">[coming soon]</span></a></span>'
+                                                                pickup addresses</a></span>'
     : '' !!}
 
 
@@ -1084,6 +1086,19 @@
 
 
                                                                         <div class="form-group">
+                                                                            <label for="instore_city">City</label>
+                                                                            <input type="text" class="form-control"
+                                                                                name="city" id="instore_city"
+                                                                                aria-describedby="instore_cityHelp"
+                                                                                placeholder="E.g {{ Auth::user()->city }}"
+                                                                                required>
+                                                                            <small id="instore_addressHelp"
+                                                                                class="form-text text-muted">Note that this
+                                                                                city should match with the address above</small>
+
+                                                                        </div>
+
+                                                                        <div class="form-group">
                                                                             <label for="instore_state">State</label>
                                                                             <input type="text" class="form-control"
                                                                                 name="state" id="instore_state"
@@ -1092,7 +1107,7 @@
                                                                                 required>
                                                                             <small id="instore_addressHelp"
                                                                                 class="form-text text-muted">Note that this
-                                                                                should match with the address above</small>
+                                                                                state should match with the address above</small>
 
                                                                         </div>
 
@@ -1137,9 +1152,11 @@
 
 
                                                         {!! $data['deliverypickup'] > 0
-    ? '<span class="float-end"><a href="javascript:void(0)"
+    ? '<span class="float-end"><a href="' .
+        route('deliverypickup address') .
+        '"
                                                                 class="text-primary">View/Add
-                                                                delivery rates <span class="text-danger">[coming soon]</span></a></span>'
+                                                                delivery rates</a></span>'
     : '' !!}
                                                     </div>
 
@@ -1282,6 +1299,8 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+
                                             <hr>
                                             <div class="row">
                                                 <div class="col-md-6">
