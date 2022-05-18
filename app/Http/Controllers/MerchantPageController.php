@@ -478,11 +478,11 @@ class MerchantPageController extends Controller
 
             // Get merchant...
             $thismerchant = ClientInfo::where('business_name', $req->merchant)->first();
-    
+
             if(isset($thismerchant)){
                     $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
-        
-    
+
+
                     if(Auth::check() == true){
                         $userId = Auth::id();
                     }
@@ -490,8 +490,8 @@ class MerchantPageController extends Controller
                         $userId = 0;
                     }
 
-            
-    
+
+
                     if($userId == $getMerchantId->id){
                         // If Has Main Store setup
                     $merchantStore = $this->checkMyStore($getMerchantId->id);
@@ -503,17 +503,17 @@ class MerchantPageController extends Controller
                         }
                         else{
                 $merchantStore = $this->getMyStore($getMerchantId->id);
-    
+
                         }
                     }
-    
-    
-    
-    
+
+
+
+
                 if(isset($merchantStore)){
-    
-    
-    
+
+
+
                     $data = [
                         'mystore' => $merchantStore,
                         'myproduct' => $this->getProducts($getMerchantId->id),
@@ -522,23 +522,23 @@ class MerchantPageController extends Controller
                         'mycartlist' => $this->getMyCartlist($userId),
                     ];
 
-                  
-    
-    
+
+
+
                     return view('merchant.pages.shop.wishlist')->with(['pages' => $req->merchant.' Shop', 'data' => $data]);
                 }
                 else{
                     return view('errors.comingsoon')->with(['pages' => $req->merchant.' Shop']);
                 }
-    
+
             }
             else{
                 return view('errors.comingsoon')->with(['pages' => $req->merchant.' Shop']);
             }
-    
-    
-    
-    
+
+
+
+
         }
         // Shopping Cart
     public function myCart(Request $req){
@@ -808,7 +808,7 @@ class MerchantPageController extends Controller
             'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
         ];
 
-        return view('merchant.pages.paymentmethod')->with(['pages' => 'invoice page', 'data' => $data]);
+        return view('merchant.pages.paymentmethod')->with(['pages' => 'payment gateway', 'data' => $data]);
     }
 
     public function orderingSystem()
@@ -838,7 +838,66 @@ class MerchantPageController extends Controller
         ];
 
 
-        return view('merchant.pages.orderingsystem')->with(['pages' => 'invoice page', 'data' => $data]);
+        return view('merchant.pages.orderingsystem')->with(['pages' => 'estore', 'data' => $data]);
+    }
+
+
+    public function storepickupAddress(){
+
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+
+        if(isset($client) && $client->accountMode == "test"){
+
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
+            'myProducts' => $this->getMyProducts(Auth::user()->id),
+            'myOrders' => $this->getMyOrders(Auth::user()->id),
+            'myDiscounts' => $this->getMyDiscounts(Auth::user()->id),
+            'myStore' => $this->checkMyStore(Auth::user()->id),
+            'myProductTax' => $this->checkMyProductTax(Auth::user()->id),
+            'productcategory' => $this->getProductCategory(),
+            'storepickup' => $this->getStorePickup(Auth::user()->id),
+            'deliverypickup' => $this->getDeliveryPickupCount(),
+            'activeCountry' => $this->getActiveCountries(),
+        ];
+
+
+        return view('merchant.pages.storepickupaddress')->with(['pages' => 'store pickup address', 'data' => $data]);
+    }
+
+    public function deliverypickupAddress(){
+
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+
+        if(isset($client) && $client->accountMode == "test"){
+
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
+            'myProducts' => $this->getMyProducts(Auth::user()->id),
+            'myOrders' => $this->getMyOrders(Auth::user()->id),
+            'myDiscounts' => $this->getMyDiscounts(Auth::user()->id),
+            'myStore' => $this->checkMyStore(Auth::user()->id),
+            'myProductTax' => $this->checkMyProductTax(Auth::user()->id),
+            'productcategory' => $this->getProductCategory(),
+            'storepickup' => $this->getStorePickupCount(),
+            'deliverypickup' => $this->getDeliveryPickup(Auth::user()->id),
+            'activeCountry' => $this->getActiveCountries(),
+        ];
+
+
+        return view('merchant.pages.deliverypickupaddress')->with(['pages' => 'delivery pickup address', 'data' => $data]);
     }
 
 
@@ -1025,8 +1084,20 @@ class MerchantPageController extends Controller
         return $data;
     }
 
+    public function getStorePickup($id){
+        $data = StorePickup::where('merchantId', $id)->get();
+
+        return $data;
+    }
+
     public function getDeliveryPickupCount(){
         $data = StoreShipping::count();
+
+        return $data;
+    }
+
+    public function getDeliveryPickup($id){
+        $data = StoreShipping::where('merchantId', $id)->get();
 
         return $data;
     }
