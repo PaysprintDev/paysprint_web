@@ -26,7 +26,7 @@
             <button class="btn btn-secondary btn-block bg-red" onclick="goBack()"><i class="fas fa-chevron-left"></i> Go
                 back</button>
             <br>
-
+                {!! session('msg') !!}
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box">
@@ -74,11 +74,18 @@
                                                 </td>
                                                 <td>{{ date('d/m/Y', strtotime($theposts->created_at)) }}</td>
                                                 <td>
-                                                    <a href="" class="btn btn-primary">Edit</a>
+                                                    <a href="{{ route('edit investor post',$theposts->id)}}" class="btn btn-primary">Edit</a>
                                                 </td>
                                                 <td>
-                                                    <button class="btn btn-danger">Delete</button>
-
+                                                    <button type="button" class="btn btn-danger" id="btns"
+                                                    onclick="deleteInvestorPost('{{ $theposts->id }}');">Delete</button>
+                                                <form action="{{ route('delete investor post', $theposts->id) }}"
+                                                    method="post" style="visibility: hidden"
+                                                    id="deletepost{{ $theposts->id }}">
+                                                    @csrf
+                                                    <input type="hidden" name="postid"
+                                                        value="{{ $theposts->id }}">
+                                                </form>
                                                 </td>
                                             </tr>
                                         @endforeach

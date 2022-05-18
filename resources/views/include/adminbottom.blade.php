@@ -4796,7 +4796,7 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     }
 
 
-    function deleteInvestorPost() {
+    function deleteInvestorPost(id) {
 
         swal({
                 title: "Are you sure?",
@@ -4807,7 +4807,7 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
             })
             .then((willDelete) => {
                 if (willDelete) {
-                    $('#delete').submit();
+                    $('#deletepost'+id).submit();
                 }
             });
 
