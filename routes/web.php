@@ -163,6 +163,7 @@ Route::get('/clear', function () {
 
 // Major Routes
 
+
 Route::get('/', ['uses' => 'HomeController@homePage', 'as' => 'home']);
 
 Route::get('/merchant-home', ['uses' => 'HomeController@merchantIndex', 'as' => 'merchant home']);
@@ -769,7 +770,7 @@ Route::prefix('Admin/')->group(function () {
 		Route::post('createpost', ['uses' => 'AdminController@createInvestorPosts', 'as' => 'create investor posts']);
         Route::get('editpost/{id}', ['uses' => 'AdminController@editInvestorPost', 'as' => 'edit investor post' ]);
         Route::post('editpost/{id}', ['uses' => 'AdminController@editInvestorPosts', 'as' => 'edit investor posts' ]);
-        Route::post('deletepost/{id}', ['uses' => 'AdminController@deleteInvestorPosts', 'as' => 'delete investor post' ]);
+        Route::post('deletepost/{id}', ['uses' => 'AdminController@deleteInvestorPost', 'as' => 'delete investor post' ]);
 
 	});
 
