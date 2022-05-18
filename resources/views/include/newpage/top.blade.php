@@ -43,6 +43,11 @@
     <link rel="stylesheet" href="{{ asset('newpage/css/theme-mode-custom.css') }}">
     <!-- Custom stylesheet -->
 
+
+    <script type='text/javascript'
+        src='https://platform-api.sharethis.com/js/sharethis.js#property=62837dc55d7558001495d1e7&product=sop'
+        async='async'></script>
+
     <style>
         .disp-0 {
             display: none !important;

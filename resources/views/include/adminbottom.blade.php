@@ -4825,7 +4825,26 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
             })
             .then((willDelete) => {
                 if (willDelete) {
-                    $('#deletestore'+id).submit();
+                    $('#deletestore' + id).submit();
+                }
+            });
+
+
+    }
+
+
+    function integration(id) {
+
+        swal({
+                title: "Are you sure?",
+                text: "Click on OK to continue",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $('#integration' + id).submit();
                 }
             });
 
@@ -4843,7 +4862,7 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
             })
             .then((willDelete) => {
                 if (willDelete) {
-                    $('#deletecategory'+id).submit();
+                    $('#deletecategory' + id).submit();
                 }
             });
 

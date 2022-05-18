@@ -268,7 +268,7 @@
                                 <li>
 
                                     <a class="nav-link menu-title link-nav " href="{{ route('ordering system') }}"><i
-                                            data-feather="database"></i><span>Manage eStore <br><small
+                                            data-feather="database"></i><span>Manage eStore <small
                                                 class="text-danger text-center">[Beta]</small></span></a>
 
                                 </li>

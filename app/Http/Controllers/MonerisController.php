@@ -440,7 +440,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         //     $data = [];
                         //     $status = 400;
                         //     $message = $response;
-                        // } 
+                        // }
 
                         else {
                             // Get My Wallet Balance
@@ -448,7 +448,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                             // User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBalance]);
 
-                            // Update Merchant Wallet 
+                            // Update Merchant Wallet
 
                             if ($thisuser->country != $thismerchant->country) {
                                 $paidinvoiceamount = $req->merchantpay;
@@ -569,7 +569,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                                             // My Statement
-                                            // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country, 0); 
+                                            // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country, 0);
 
                                             $this->name = $thisuser->name;
                                             $this->email = $thisuser->email;
@@ -790,7 +790,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
 
-                                            // Update Merchant Wallet 
+                                            // Update Merchant Wallet
                                             $getthisinvoice = ImportExcel::where('invoice_no', $req->invoice_no)->first();
 
 
@@ -1437,7 +1437,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
 
-                                            // Update Merchant Wallet 
+                                            // Update Merchant Wallet
                                             $getthisinvoice = ImportExcel::where('invoice_no', $req->invoice_no)->first();
 
 
@@ -2160,7 +2160,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         //     $data = [];
                         //     $status = 400;
                         //     $message = $response;
-                        // } 
+                        // }
 
                         else {
                             // Get My Wallet Balance
@@ -2168,7 +2168,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                             // User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBalance]);
 
-                            // Update Merchant Wallet 
+                            // Update Merchant Wallet
 
                             if ($thisuser->country != $thismerchant->country) {
                                 $paidinvoiceamount = $req->merchantpay;
@@ -2289,7 +2289,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                                             // My Statement
-                                            // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country, 0); 
+                                            // $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 0, $statement_route, $thisuser->country, 0);
 
                                             $this->name = $thisuser->name;
                                             $this->email = $thisuser->email;
@@ -2419,7 +2419,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 }
             } else {
 
-                // dd($req->all());
+                // dd($req->all());'
+
+
 
                 $validator = Validator::make($req->all(), [
                     'receivers_name' => 'required|string',
@@ -2528,7 +2530,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                     // Check Wallet Balance if up to amount
 
-                                    if (isset($req->select_wallet) && $req->select_wallet == "FX Wallet") {
+
+
+                                    if (isset($req->select_wallet) && $req->select_wallet == "FX Wallet" || isset($req->select_wallet) && $req->select_wallet == "Fx Wallet") {
 
                                         $routing = 'fx';
 
@@ -2669,6 +2673,14 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                         if ($req->amount > ($thisuser->wallet_balance - $minBal)) {
                                             // Insufficient amount for withdrawal
+
+
+                                            $this->slack(
+                                                'Oops!, ' . $thisuser->wallet_balance . ' has ' . $minBal,
+                                                $room = "success-logs",
+                                                $icon = ":longbox:",
+                                                env('LOG_SLACK_SUCCESS_URL')
+                                            );
 
                                             $data = [];
                                             $message = "Insufficient wallet balance";
@@ -2881,19 +2893,19 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
         try {
 
             if (isset($getInvoice)) {
-                $merchantId = $getInvoice->uploaded_by; 
+                $merchantId = $getInvoice->uploaded_by;
                 $merchantName = $getInvoice->merchantName;
                 $thisuser = User::where('ref_code', $merchantId)->where('businessname', $merchantName)->first();
 
                 if ($req->paymentToken != null && $thisuser->country != "Canada") {
 
-                   
+
                     $amount = $req->amountinvoiced;
                     $merchantpay = $req->merchantpay;
 
 
 
-                   
+
 
 
                     // Credit Merchant Wallet and Add Statement
@@ -2985,7 +2997,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     // Process payment for moneris gateway
 
                     $creditcard_no = $req->creditcard_no;
-                   
+
 
                     $month = $req->month;
                     $expirydate = $req->expirydate;
@@ -3230,8 +3242,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $adminMessage = "<p>Transaction ID: ".$reference_code."</p><p>Name: ".$thisuser->name."</p><p>Account Number: ".$thisuser->ref_code."</p><p>Country: ".$thisuser->country."</p><p>Date: ".date('d/m/Y h:i:a')."</p><p>Amount: ".$req->currencyCode . ' ' . number_format($req->amount, 2)."</p><p>Status: Successful</p>";
 
                         $this->notifyAdmin($gateway." inflow", $adminMessage);
-                        
-                        }   
+
+                        }
                         else{
                             $data = false;
                             $message = "Merchant information not found. | Contact support with payment receipt for complaint";
@@ -3249,7 +3261,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 $action = 'error';
             }
 
-            
+
         } catch (\Throwable $th) {
             $data = [];
             $message = "Payment not received | ".$th->getMessage();
@@ -3259,7 +3271,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
         $resData = ['res' => $data, 'message' => $message, 'status' => $status];
-        
+
 
         return redirect()->route('epsresponseback')->with($action, $message);
     }
@@ -3452,7 +3464,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             }
                     }
 
-            
+
         } catch (\Throwable $th) {
             $data = [];
             $message = $th->getMessage();
@@ -3608,7 +3620,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     public function addMoneyToWallet(Request $req)
     {
 
-        // Write for Test 
+        // Write for Test
 
         if (isset($req->mode) && $req->mode == "test") {
 
@@ -3772,7 +3784,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                     $this->updatePoints($thisuser->id, 'Add money');
 
-                    
+
 
                     // $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country);
 
@@ -4527,7 +4539,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                          $adminMessage = "<p>Transaction ID: ".$reference_code."</p><p>Name: ".$thisuser->name."</p><p>Account Number: ".$thisuser->ref_code."</p><p>Country: ".$thisuser->country."</p><p>Date: ".date('d/m/Y h:i:a')."</p><p>Amount: ".$req->currencyCode . ' ' . number_format($req->amounttosend, 2)."</p><p>Status: Successful</p>";
 
                         $this->notifyAdmin($gateway." inflow", $adminMessage);
-                        
+
                     } else {
 
 
@@ -4788,7 +4800,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     // Update Wallet Balance
                                     $walletBal = $thisuser->wallet_balance;
                                     $holdBal = $thisuser->hold_balance + $req->amounttosend;
-                                    
+
                                     User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBal, 'hold_balance' => $holdBal]);
 
                                     $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
@@ -4843,7 +4855,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     $this->sendEmail($this->email, "Fund remittance");
 
 
-                                    
+
 
                                     $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
 
@@ -4950,8 +4962,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                     $this->sendEmail($this->email, "Fund remittance");
 
-                                    
-                                    
+
+
 
                                     $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
 
@@ -5070,7 +5082,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 }
 
                                 $this->sendEmail($this->email, "Fund remittance");
-                                
+
 
                                 $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
 
@@ -5289,7 +5301,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     'transaction_id' => $transaction_id,
                                                     'reference_code' => $reference_code,
                                                     'email' => $thisuser->email,
-                                                    // 'amount' => $req->amounttosend, 
+                                                    // 'amount' => $req->amounttosend,
                                                     'amount' => $req->amount,
                                                     'card_number' => $cardDetails->card_number,
                                                     'name' => $thisuser->name,
@@ -5400,7 +5412,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                                 $bankDetails = AddBank::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
 
-                                                // Log::info("Card ID: ".$req->card_id." Type: ".$req->card_type); 
+                                                // Log::info("Card ID: ".$req->card_id." Type: ".$req->card_type);
 
                                                 $this->slack("Card ID: " . $req->card_id . " Type: " . $req->card_type, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
@@ -5636,7 +5648,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                         'transaction_id' => $transaction_id,
                                                         'reference_code' => $reference_code,
                                                         'email' => $thisuser->email,
-                                                        // 'amount' => $req->amounttosend, 
+                                                        // 'amount' => $req->amounttosend,
                                                         'amount' => $req->amount,
                                                         'card_number' => $cardDetails->card_number,
                                                         'name' => $thisuser->name,
@@ -6132,7 +6144,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                         'transaction_id' => $transaction_id,
                                                         'reference_code' => $reference_code,
                                                         'email' => $thisuser->email,
-                                                        // 'amount' => $req->amounttosend, 
+                                                        // 'amount' => $req->amounttosend,
                                                         'amount' => $req->amount,
                                                         'card_number' => $cardDetails->card_number,
                                                         'name' => $thisuser->name,
@@ -6250,7 +6262,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                                     $bankDetails = AddBank::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
 
-                                                    // Log::info("Card ID: ".$req->card_id." Type: ".$req->card_type); 
+                                                    // Log::info("Card ID: ".$req->card_id." Type: ".$req->card_type);
 
                                                     $this->slack("Card ID: " . $req->card_id . " Type: " . $req->card_type, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
@@ -6493,7 +6505,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                             'transaction_id' => $transaction_id,
                                                             'reference_code' => $reference_code,
                                                             'email' => $thisuser->email,
-                                                            // 'amount' => $req->amounttosend, 
+                                                            // 'amount' => $req->amounttosend,
                                                             'amount' => $req->amount,
                                                             'card_number' => $cardDetails->card_number,
                                                             'name' => $thisuser->name,
@@ -6816,7 +6828,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $message = $checkIdv['response'];
                     }
 
-                    
+
                 } else {
 
                     $error = implode(",", $validator->messages()->all());
@@ -6961,11 +6973,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
         try {
             // Get Transaction Info
             $data = Statement::where('reference_code', $req->reference_code)->first();
-            
+
 
             $thisuser = User::where('email', $data->user_id)->first();
 
-            
+
 
             $transDeduct = $thisuser->hold_balance - $data->credit;
 
@@ -7599,7 +7611,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
         }
 
 
-        
+
 
 
 
@@ -7646,7 +7658,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
 
-        
+
 
 
 
@@ -7685,8 +7697,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
             'crypt_type' => $crypt,
             'dynamic_descriptor' => $dynamic_descriptor
         );
-        
-        
+
+
         $this->slack(json_encode($txnArray), $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
         // dd($txnArray);
@@ -7713,7 +7725,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
         /******************************* Response ************************************/
         $mpgResponse = $mpgHttpPost->getMpgResponse();
 
-        
+
         $this->slack("Name: ".$thisuser->name." | Mode: ".$mode, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
@@ -8567,7 +8579,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
         $resData = ['res' => $data, 'message' => $message, 'status' => $status];
-        
+
 
         return redirect()->route('epsresponseback')->with($action, $message);
 
@@ -8625,7 +8637,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 // Update Wallet Balance
                 $walletBal = $thisuser->wallet_balance;
 
-    
+
 
 
                 $activity = "Transfer of " . $req->currencyCode . " " . number_format($req->amount, 2) . " to " . $thisuser->businessname . " for " . $req->purpose . " on PaySprint Wallet from ".$req->name;
@@ -8653,7 +8665,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 $sendMsg = "Hi " . $req->name . ", You have successfully transferred " . $req->currencyCode . " " . number_format($req->amount, 2) . " to " . $thisuser->businessname." for ".$req->purpose." and a transaction fee of ".$req->currencyCode." ".number_format($req->commissiondeduct, 2)." inclusively charged from your card. Open a PaySprint account today to pay at a lesser rate.";
 
                 $sendPhone = $req->phone;
-                
+
                 if ($req->country == "Nigeria") {
 
                     $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
@@ -8701,7 +8713,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                     $orderItems .= "<tr>
-                    
+
                     <td>".($i + 1)."</td>
                     <td>
                         <img src='".$cartItemDetails->productImage."' />
@@ -8718,7 +8730,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     <td>
                         ".date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2))."
                     </td>
-                    
+
                     </tr>";
 
                 }
@@ -8804,7 +8816,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
         $resData = ['res' => $data, 'message' => $message, 'status' => $status];
-        
+
 
         return redirect()->route('epsresponseback')->with($action, $message);
 

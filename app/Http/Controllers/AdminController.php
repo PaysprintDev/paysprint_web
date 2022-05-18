@@ -2,133 +2,134 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-
-use Illuminate\Support\Facades\Log;
-
-use Rap2hpoutre\FastExcel\FastExcel;
-use App\Exports\WalletStatementExport;
-use Illuminate\Support\Facades\Auth;
-//Session
 use Session;
-
-use Maatwebsite\Excel\Facades\Excel;
-
-use App\Mail\sendEmail;
-
-use App\User as User;
-
-use App\CreateEvent as CreateEvent;
-
-use App\Admin as Admin;
-
-use App\SuperAdmin as SuperAdmin;
-
-use App\ImportExcel as ImportExcel;
-
-use App\ClientInfo as ClientInfo;
-
-use App\InvoicePayment as InvoicePayment;
-
-use App\OrganizationPay as OrganizationPay;
-
-use App\Epaywithdraw as Epaywithdraw;
-
-use App\PaycaWithdraw as PaycaWithdraw;
-
-use App\TransactionCost as TransactionCost;
-
-use App\CollectionFee as CollectionFee;
-
-use App\ServiceType as ServiceType;
-
-use App\Statement as Statement;
-use App\Createpost as Createpost;
-
-use App\BankWithdrawal as BankWithdrawal;
-
-use App\CcWithdrawal as CcWithdrawal;
-
-use App\AddBank as AddBank;
-
-use App\CardIssuer as CardIssuer;
-
-use App\AddCard as AddCard;
-
-use App\DeletedCards as DeletedCards;
-
-use App\MerchantService as MerchantService;
-
-use App\AnonUsers as AnonUsers;
-
-use App\Notifications as Notifications;
-
-use App\RequestRefund as RequestRefund;
-
-use App\MonthlyFee as MonthlyFee;
+use App\MarkUp;
+use App\Points;
+use Carbon\Carbon;
 
 use App\Tax as Tax;
 
-use App\AllCountries as AllCountries;
-use App\EscrowAccount;
 use App\FxStatement;
-use App\Points;
-use App\ClaimedPoints;
-use App\HistoryReport;
-use App\InAppMessage as InAppMessage;
-
-use App\ImportExcelLink as ImportExcelLink;
-use App\InvoiceCommission;
-use App\MonerisActivity as MonerisActivity;
-
-use App\SupportActivity as SupportActivity;
-
-use App\CashAdvance as CashAdvance;
-
-use App\BVNVerificationList as BVNVerificationList;
-
-use App\CrossBorder as CrossBorder;
+use App\Traits\MyFX;
 use App\InvestorPost;
-use App\InvestorRelation;
-use App\UserClosed as UserClosed;
+//Session
+use App\User as User;
 
-use App\PricingSetup as PricingSetup;
+use App\ClaimedPoints;
 
-use App\MailCampaign as MailCampaign;
-use App\UpgradePlan as UpgradePlan;
-use Carbon\Carbon;
+use App\EscrowAccount;
 
-use App\MarkUp;
-use App\ReferralGenerate;
+use App\HistoryReport;
+
 use App\ReferredUsers;
+
+use App\Admin as Admin;
+
+use App\Mail\sendEmail;
+
 use App\Traits\Trulioo;
 
-use App\Traits\AccountNotify;
+use App\InvestorRelation;
 
-use App\Traits\SpecialInfo;
-
-use App\Traits\PaystackPayment;
-
-use App\Traits\PaymentGateway;
-
-use App\Traits\FlagPayment;
+use App\ReferralGenerate;
 
 use App\Traits\Xwireless;
 
-use App\Traits\MailChimpNewsLetter;
+use App\InvoiceCommission;
 
-use App\Traits\PaysprintPoint;
+use App\AddBank as AddBank;
+
+use App\AddCard as AddCard;
+
+use App\Traits\FlagPayment;
 
 use App\Traits\GenerateOtp;
 
+use App\Traits\PointsClaim;
+use App\Traits\SpecialInfo;
+
+use Illuminate\Http\Request;
+
+use App\Traits\AccountNotify;
+
 use App\Traits\PointsHistory;
 
-use App\Traits\PointsClaim;
+use App\ThirdPartyIntegration;
 
-use App\Traits\MyFX;
+use App\Traits\PaymentGateway;
+
+use App\Traits\PaysprintPoint;
+
+use App\AnonUsers as AnonUsers;
+
+use App\Statement as Statement;
+
+use App\Traits\PaystackPayment;
+
+use App\CardIssuer as CardIssuer;
+
+use App\ClientInfo as ClientInfo;
+
+use App\Createpost as Createpost;
+
+use App\MonthlyFee as MonthlyFee;
+use App\SuperAdmin as SuperAdmin;
+use App\UserClosed as UserClosed;
+use Illuminate\Support\Facades\DB;
+use App\CashAdvance as CashAdvance;
+use App\CreateEvent as CreateEvent;
+use App\CrossBorder as CrossBorder;
+
+use App\ImportExcel as ImportExcel;
+use App\ServiceType as ServiceType;
+use App\Traits\MailChimpNewsLetter;
+
+use App\UpgradePlan as UpgradePlan;
+
+use Illuminate\Support\Facades\Log;
+
+use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
+use Rap2hpoutre\FastExcel\FastExcel;
+
+use App\AllCountries as AllCountries;
+
+use App\CcWithdrawal as CcWithdrawal;
+use App\DeletedCards as DeletedCards;
+use App\Epaywithdraw as Epaywithdraw;
+
+use App\InAppMessage as InAppMessage;
+use App\MailCampaign as MailCampaign;
+use App\PricingSetup as PricingSetup;
+use App\Exports\WalletStatementExport;
+
+use App\CollectionFee as CollectionFee;
+
+use App\Notifications as Notifications;
+
+use App\PaycaWithdraw as PaycaWithdraw;
+
+use App\RequestRefund as RequestRefund;
+
+use App\BankWithdrawal as BankWithdrawal;
+
+use App\InvoicePayment as InvoicePayment;
+
+use App\ImportExcelLink as ImportExcelLink;
+
+use App\MerchantService as MerchantService;
+
+use App\MonerisActivity as MonerisActivity;
+
+use App\OrganizationPay as OrganizationPay;
+
+use App\SupportActivity as SupportActivity;
+
+use App\TransactionCost as TransactionCost;
+use App\BVNVerificationList as BVNVerificationList;
 
 class AdminController extends Controller
 {
@@ -1678,9 +1679,9 @@ class AdminController extends Controller
         }
 
     public function editInvestorPosts(Request $req, $id){
-       
+
         $getPost = Createpost::where('id', $id)->first();
-            
+
         $docPath = $getPost;
 
         if($req->hasFile('investment_document')){
@@ -1724,7 +1725,7 @@ class AdminController extends Controller
     public function createInvestorPosts(Request $req)
     {
 
-            
+
 
 
         $docPath = "";
@@ -6341,6 +6342,66 @@ class AdminController extends Controller
         }
     }
 
+
+    public function utilityAndBills(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+
+            $data = array(
+                'integration' => $this->thirdPartyIntegration()
+            );
+
+
+
+            return view('admin.pages.integration')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
     public function checkTransaction(Request $req, $id)
     {
 
@@ -6805,6 +6866,31 @@ class AdminController extends Controller
         $data = $this->deletecurrentSupportAgent($id);
 
         return redirect()->route('view user support agent')->with('success', 'Successfully deleted!');
+    }
+
+
+    public function integrationAction($id)
+    {
+        $data = $this->integrationConclusion($id);
+
+        return redirect()->back()->with('success', 'Successfully updated!');
+    }
+
+    public function integrationConclusion($id)
+    {
+        $data = ThirdPartyIntegration::where('id', $id)->first();
+
+        if($data->status == true){
+            $status = false;
+        }
+        else{
+            $status = true;
+        }
+
+
+        $result = ThirdPartyIntegration::where('id', $id)->update(['status' => $status]);
+
+        return $result;
     }
 
 
@@ -16060,6 +16146,15 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     {
 
         $data = BVNVerificationList::orderBy('created_at', 'DESC')->take(2000)->get();
+
+        return $data;
+    }
+
+
+    public function thirdPartyIntegration()
+    {
+
+        $data = ThirdPartyIntegration::orderBy('created_at', 'DESC')->get();
 
         return $data;
     }
