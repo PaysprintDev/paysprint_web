@@ -832,8 +832,8 @@ class MerchantPageController extends Controller
             'myStore' => $this->checkMyStore(Auth::user()->id),
             'myProductTax' => $this->checkMyProductTax(Auth::user()->id),
             'productcategory' => $this->getProductCategory(),
-            'storepickup' => $this->getStorePickupCount(),
-            'deliverypickup' => $this->getDeliveryPickupCount(),
+            'storepickup' => $this->getStorePickupCount(Auth::user()->id),
+            'deliverypickup' => $this->getDeliveryPickupCount(Auth::user()->id),
             'activeCountry' => $this->getActiveCountries(),
         ];
 
@@ -863,7 +863,7 @@ class MerchantPageController extends Controller
             'myProductTax' => $this->checkMyProductTax(Auth::user()->id),
             'productcategory' => $this->getProductCategory(),
             'storepickup' => $this->getStorePickup(Auth::user()->id),
-            'deliverypickup' => $this->getDeliveryPickupCount(),
+            'deliverypickup' => $this->getDeliveryPickupCount(Auth::user()->id),
             'activeCountry' => $this->getActiveCountries(),
         ];
 
@@ -891,7 +891,7 @@ class MerchantPageController extends Controller
             'myStore' => $this->checkMyStore(Auth::user()->id),
             'myProductTax' => $this->checkMyProductTax(Auth::user()->id),
             'productcategory' => $this->getProductCategory(),
-            'storepickup' => $this->getStorePickupCount(),
+            'storepickup' => $this->getStorePickupCount(Auth::user()->id),
             'deliverypickup' => $this->getDeliveryPickup(Auth::user()->id),
             'activeCountry' => $this->getActiveCountries(),
         ];
@@ -1078,8 +1078,8 @@ class MerchantPageController extends Controller
     }
 
 
-    public function getStorePickupCount(){
-        $data = StorePickup::count();
+    public function getStorePickupCount($id){
+        $data = StorePickup::where('merchantId', $id)->count();
 
         return $data;
     }
@@ -1090,8 +1090,8 @@ class MerchantPageController extends Controller
         return $data;
     }
 
-    public function getDeliveryPickupCount(){
-        $data = StoreShipping::count();
+    public function getDeliveryPickupCount($id){
+        $data = StoreShipping::where('merchantId', $id)->count();
 
         return $data;
     }

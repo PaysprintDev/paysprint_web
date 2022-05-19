@@ -232,12 +232,9 @@
                                 @foreach ($data['mycartlist'] as $cartItem)
                                     <li>
                                         <div class="check-pro-img">
-                                            <center>
-                                                <a href="javascript:void(0)"><img
-                                                        style="border-radius: 10px; width: 100%; height: 200px; object-fit: contain; "
-                                                        src="{{ $cartItem->productImage }}" class="img-fluid"
-                                                        alt="image"></a>
-                                            </center>
+                                            <a href="javascript:void(0)"><img style="height: 150px;"
+                                                    src="{{ $cartItem->productImage }}" class="img-fluid"
+                                                    alt="image"></a>
                                         </div>
                                         <div class="check-content">
                                             <p>Item: <a href="javascript:void(0)">{{ $cartItem->productName }}</a></p>

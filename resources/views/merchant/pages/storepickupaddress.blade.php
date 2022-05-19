@@ -124,6 +124,10 @@
                                                             <a href="#" type="button" class="btn btn-primary"
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#instorePickup{{ $item->id }}">Edit</a>
+
+
+
+
                                                             <a href="#" type="button" class="btn btn-danger">Delete</a>
                                                         </td>
 

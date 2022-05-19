@@ -290,6 +290,42 @@
                                                                             </div>
 
 
+                                                                            <div class="form-group">
+                                                                                <label for="deliveryDate">Delivery
+                                                                                    Period</label>
+
+                                                                                <div class="row">
+                                                                                    <div class="col-md-6">
+                                                                                        <input type="text"
+                                                                                            class="form-control"
+                                                                                            name="deliveryDate"
+                                                                                            id="deliveryDate"
+                                                                                            aria-describedby="deliveryDateHelp"
+                                                                                            required
+                                                                                            value="{{ $product->deliveryDate }}">
+                                                                                        <small id="deliveryDateHelp"
+                                                                                            class="form-text text-muted">Specify
+                                                                                            number of
+                                                                                            days</small>
+                                                                                    </div>
+                                                                                    <div class="col-md-6">
+                                                                                        <input type="time"
+                                                                                            class="form-control"
+                                                                                            name="deliveryTime"
+                                                                                            id="deliveryTime"
+                                                                                            aria-describedby="deliveryTimeHelp"
+                                                                                            required
+                                                                                            value="{{ $product->deliveryTime }}">
+                                                                                        <small id="deliveryTimeHelp"
+                                                                                            class="form-text text-muted">Specify
+                                                                                            the time</small>
+                                                                                    </div>
+                                                                                </div>
+
+
+                                                                            </div>
+
+
                                                                             <button type="submit"
                                                                                 class="btn btn-primary">Update</button>
 
@@ -1094,7 +1130,8 @@
                                                                                 required>
                                                                             <small id="instore_addressHelp"
                                                                                 class="form-text text-muted">Note that this
-                                                                                city should match with the address above</small>
+                                                                                city should match with the address
+                                                                                above</small>
 
                                                                         </div>
 
@@ -1107,7 +1144,8 @@
                                                                                 required>
                                                                             <small id="instore_addressHelp"
                                                                                 class="form-text text-muted">Note that this
-                                                                                state should match with the address above</small>
+                                                                                state should match with the address
+                                                                                above</small>
 
                                                                         </div>
 
@@ -1574,10 +1612,22 @@
 
                             <div class="form-group">
                                 <label for="deliveryDate">Delivery Period</label>
-                                <input type="text" min="1" class="form-control" name="deliveryDate" id="deliveryDate"
-                                    aria-describedby="deliveryDateHelp" placeholder="6 days" required>
-                                <small id="deliveryDateHelp" class="form-text text-muted">How many days would the product
-                                    be shipped?</small>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="deliveryDate" id="deliveryDate"
+                                            aria-describedby="deliveryDateHelp" placeholder="6 days" required>
+                                        <small id="deliveryDateHelp" class="form-text text-muted">Specify number of
+                                            days</small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="time" class="form-control" name="deliveryTime" id="deliveryTime"
+                                            aria-describedby="deliveryTimeHelp" required>
+                                        <small id="deliveryTimeHelp" class="form-text text-muted">Specify the time</small>
+                                    </div>
+                                </div>
+
+
                             </div>
 
 
