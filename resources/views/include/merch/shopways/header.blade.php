@@ -1,5 +1,5 @@
         <!-- header area start -->
-        <section class="top-5">
+        <section class="top-5" style="position: relative;">
             <!-- top notificationbar start -->
             <div class="container">
                 <div class="row">
@@ -70,7 +70,8 @@
 
                                                             </li>
                                                             <li class="menu-link parent">
-                                                                <a href="{{ route('product shop', 'merchant='.$data['user']->businessname)}}" class="link-title">
+                                                                <a href="{{ route('product shop', 'merchant=' . $data['user']->businessname) }}"
+                                                                    class="link-title">
                                                                     <span class="sp-link-title">Shop</span>
                                                                     {{-- <i class="fa fa-angle-down"></i> --}}
                                                                 </a>
@@ -195,7 +196,8 @@
                                                                 </ul>
                                                             </li>
                                                             <li class="menu-link parent">
-                                                                <a href="{{route('orders','merchant='.$data['user']->businessname)}}" class="link-title">
+                                                                <a href="{{ route('orders', 'merchant=' . $data['user']->businessname) }}"
+                                                                    class="link-title">
                                                                     <span class="sp-link-title">Orders</span>
                                                                     {{-- <i class="fa fa-angle-down"></i> --}}
                                                                 </a>
@@ -236,7 +238,8 @@
                                                                 </ul>
                                                             </li>
                                                             <li class="menu-link parent">
-                                                                <a href="{{ route('wishlist','merchant='.$data['user']->businessname)}}" class="link-title">
+                                                                <a href="{{ route('wishlist', 'merchant=' . $data['user']->businessname) }}"
+                                                                    class="link-title">
                                                                     <span class="sp-link-title">My Wishlist</span>
                                                                     {{-- <i class="fa fa-angle-down"></i> --}}
                                                                 </a>
@@ -277,7 +280,8 @@
                                                                 </ul>
                                                             </li>
                                                             <li class="menu-link parent">
-                                                                <a href="{{ route('checkout item', 'store=' . $data['user']->businessname) }}" class="link-title">
+                                                                <a href="{{ route('checkout item', 'store=' . $data['user']->businessname) }}"
+                                                                    class="link-title">
                                                                     <span class="sp-link-title">Checkout</span>
                                                                 </a>
                                                                 <a href="#collapse-top-page-menu"
@@ -423,7 +427,8 @@
 
 
                                                 <li class="side-wrap wishlist-wrap">
-                                                    <a href="#" class="header-wishlist">
+                                                    <a href="{{ route('wishlist', 'merchant=' . $data['user']->businessname) }}"
+                                                        class="header-wishlist">
                                                         <span class="wishlist-icon"><i class="icon-heart"></i></span>
                                                         <span
                                                             class="wishlist-counter">{{ count($data['mywishlist']) }}</span>

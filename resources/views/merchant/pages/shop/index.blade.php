@@ -8,6 +8,7 @@
         border-radius: 20px;
     }
 
+
     .banner-content {
         background-color: #fff;
         padding: 10px;
@@ -315,9 +316,9 @@
                                                         <div class="tred-pro">
                                                             <div class="tr-pro-img">
                                                                 <a href="#">
-                                                                    <img src="{{ $product->image }}" alt="pro-img1"
-                                                                        class="img-fluid"
-                                                                        style="width: 100%;height: auto;object-fit: contain;">
+                                                                    <img src="{{ $product->image }}"
+                                                                        alt="{{ $product->productName }}"
+                                                                        class="img-fluid">
                                                                     <img src="{{ $product->image }}"
                                                                         alt="additional image"
                                                                         class="img-fluid additional-image">
@@ -394,24 +395,12 @@
                                             @endforeach
 
 
-
-
-
-
-
-
-
-
-
-
-
-
                                         </div>
                                     </div>
-                                    <div class="swiper-buttons">
+                                    {{-- <div class="swiper-buttons">
                                         <div class="swiper-button-prev"></div>
                                         <div class="swiper-button-next"></div>
-                                    </div>
+                                    </div> --}}
                                 </div>
 
                             </div>

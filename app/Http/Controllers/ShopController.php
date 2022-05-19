@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Intervention\Image\Facades\Image;
+
 use App\User;
 use App\StoreCart;
 use App\StoreOrders;
@@ -95,7 +97,8 @@ class ShopController extends Controller
                 'file' => 'required',
                 'description' => 'required',
                 'category' => 'required',
-                'deliveryDate' => 'required'
+                'deliveryDate' => 'required',
+                'deliveryTime' => 'required'
 
             ]);
 
@@ -104,7 +107,7 @@ class ShopController extends Controller
 
                 $routing = Auth::user()->businessname . "/myproduct";
 
-                $docPath = $this->uploadImageFile($req->file('file'), $routing);
+                $docPath = $this->uploadImageFile($req->file('file'), $routing, 300, 300);
 
 
                 $category = $req->category == 'Other' ? $req->specifyCategory : $req->category;
@@ -125,7 +128,8 @@ class ShopController extends Controller
                     'image' => $docPath,
                     'description' => $req->description,
                     'category' => $category,
-                    'deliveryDate' => $req->deliveryDate
+                    'deliveryDate' => $req->deliveryDate,
+                    'deliveryTime' => $req->deliveryTime
                 ];
 
                 // Insert record
@@ -280,7 +284,7 @@ class ShopController extends Controller
 
                     $routing = Auth::user()->businessname . "/myproduct";
 
-                    $docPath = $this->uploadImageFile($req->file('file'), $routing);
+                    $docPath = $this->uploadImageFile($req->file('file'), $routing, 300, 300);
                 } else {
 
                     $docPath = $getProduct->image;
@@ -305,7 +309,8 @@ class ShopController extends Controller
                     'image' => $docPath,
                     'description' => $req->description,
                     'category' => $category,
-                    'deliveryDate' => $req->deliveryDate
+                    'deliveryDate' => $req->deliveryDate,
+                    'deliveryTime' => $req->deliveryTime
                 ];
 
 
@@ -650,10 +655,7 @@ class ShopController extends Controller
                 $headContentImage = "";
                 $advertSectionImage = "";
 
-                $businessLogo = $this->uploadImageFile($req->file('businessLogo'), $routing . "/logo");
-
-
-
+                $businessLogo = $this->uploadImageFile($req->file('businessLogo'), $routing . "/logo", 100, 100);
 
 
                 if (count($req->file('headerContent')) > 3) {
@@ -669,10 +671,10 @@ class ShopController extends Controller
 
                         foreach ($req->file('headerContent') as $headerContentFile) {
 
-                            $headContentImage .= $this->uploadImageFile($headerContentFile, $routing . "/headsection") . ", ";
+                            $headContentImage .= $this->uploadImageFile($headerContentFile, $routing . "/headsection", 1900, 800) . ", ";
                         }
                     } else {
-                        $headContentImage = $this->uploadImageFile($req->file('headerContent')[0], $routing . "/headsection");
+                        $headContentImage = $this->uploadImageFile($req->file('headerContent')[0], $routing . "/headsection", 1900, 800);
                     }
                 }
 
@@ -693,10 +695,10 @@ class ShopController extends Controller
 
                             foreach ($req->file('advertSectionImage') as $advertSectionFile) {
 
-                                $advertSectionImage .= $this->uploadImageFile($advertSectionFile, $routing . "/advertsection") . ", ";
+                                $advertSectionImage .= $this->uploadImageFile($advertSectionFile, $routing . "/advertsection", 400, 400) . ", ";
                             }
                         } else {
-                            $advertSectionImage = $this->uploadImageFile($req->file('advertSectionImage')[0], $routing . "/advertsection");
+                            $advertSectionImage = $this->uploadImageFile($req->file('advertSectionImage')[0], $routing . "/advertsection", 400, 400);
                         }
                     }
                 }
@@ -1090,7 +1092,7 @@ class ShopController extends Controller
     }
 
 
-    public function uploadImageFile($file, $fileroute)
+    public function uploadImageFile($file, $fileroute, $width = null, $height = null)
     {
 
         //Get filename with extension
@@ -1102,8 +1104,13 @@ class ShopController extends Controller
         // Filename to store
         $fileNameToStore = rand() . '_' . time() . '.' . $extension;
 
+        $img = Image::make($file)->fit($width, $height);
 
-        $file->move(public_path('../../shopstore/' . $fileroute . '/'), $fileNameToStore);
+        $img->save('shopstore/' . $fileroute . '/'.$fileNameToStore);
+        // $img->save('shopstore/' . $fileroute . '/'.$fileNameToStore);
+
+
+        // $file->move(public_path('../../shopstore/' . $fileroute . '/'), $fileNameToStore);
 
 
         $docPath = route('home') . "/shopstore/" . $fileroute . "/" . $fileNameToStore;
