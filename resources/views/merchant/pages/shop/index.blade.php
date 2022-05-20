@@ -192,14 +192,34 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="service-box">
+                        <div class="service-box" style="cursor: pointer;">
                             <div class="s-box">
                                 <i class="ti-money"></i>
-                                <div class="service-content">
+                                <div class="service-content" data-bs-toggle="modal" data-bs-target="#refundModal">
                                     <span>Return & refund</span>
-                                    <p>Money back guarantee</p>
+                                    <p>Click to read</p>
                                 </div>
                             </div>
+
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="refundModal" tabindex="-1" aria-labelledby="refundModalLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="refundModalLabel">Return & refund</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            {!! $data['mystore']->refundPolicy !!}
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                         <div class="service-box">
                             <div class="s-box">
@@ -311,7 +331,7 @@
 
 
                                             @foreach ($data['myproduct'] as $product)
-                                                <div class="swiper-slide">
+                                                <div class="swiper-slideqqq" style="padding: 10px 10px 50px;">
                                                     <div class="tab-product">
                                                         <div class="tred-pro">
                                                             <div class="tr-pro-img">

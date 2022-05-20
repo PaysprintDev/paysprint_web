@@ -1649,22 +1649,28 @@ class CurrencyFxController extends Controller
                     }
 
 
-                    if ($toWallet->currencyCode == 'USD' || $toWallet->currencyCode == 'EUR' || $toWallet->currencyCode == 'GBP') {
-                        //Convert Money
-                        $getconvertion = $this->getOfficialConversionRate($toWallet->currencyCode, $fromWallet->currencyCode);
+                    // if ($toWallet->currencyCode == 'USD' || $toWallet->currencyCode == 'EUR' || $toWallet->currencyCode == 'GBP') {
+                    //     //Convert Money
+                    //     $getconvertion = $this->getOfficialConversionRate($toWallet->currencyCode, $fromWallet->currencyCode);
 
-                        // Mark up here ...
+                    //     // Mark up here ...
 
-                        $convInfo = $markValue * ($req->amount / $getconvertion);
-                    } else {
-                        //Convert Money
-                        $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
+                    //     $convInfo = $markValue * ($req->amount / $getconvertion);
+                    // } else {
+                    //     //Convert Money
+                    //     $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
 
-                        // Mark down here ...
+                    //     // Mark down here ...
 
-                        $convInfo = ($getconvertion * $req->amount) / $markValue;
-                    }
+                    //     $convInfo = ($getconvertion * $req->amount) / $markValue;
+                    // }
 
+                    //Convert Money
+                    $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
+
+                    // Mark down here ...
+
+                    $convInfo = ($getconvertion * $req->amount) / $markValue;
 
 
                     $respData = [
@@ -1778,21 +1784,28 @@ class CurrencyFxController extends Controller
                         $markValue = (1 + ($markuppercent[0]->percentage / 100));
 
 
-                        if ($toWallet->currencyCode == 'USD' || $toWallet->currencyCode == 'EUR' || $toWallet->currencyCode == 'GBP') {
-                            //Convert Money
-                            $getconvertion = $this->getOfficialConversionRate($toWallet->currencyCode, $fromWallet->currencyCode);
+                        // if ($toWallet->currencyCode == 'USD' || $toWallet->currencyCode == 'EUR' || $toWallet->currencyCode == 'GBP') {
+                        //     //Convert Money
+                        //     $getconvertion = $this->getOfficialConversionRate($toWallet->currencyCode, $fromWallet->currencyCode);
 
-                            // Mark up here ...
+                        //     // Mark up here ...
 
-                            $convamount = $markValue * ($req->amount / $getconvertion);
-                        } else {
-                            //Convert Money
+                        //     $convamount = $markValue * ($req->amount / $getconvertion);
+                        // } else {
+                        //     //Convert Money
+                        //     $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
+
+                        //     // Mark down here ...
+
+                        //     $convamount = ($getconvertion * $req->amount) / $markValue;
+                        // }
+
+                        //Convert Money
                             $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
 
                             // Mark down here ...
 
                             $convamount = ($getconvertion * $req->amount) / $markValue;
-                        }
 
 
 
