@@ -26,6 +26,7 @@ use App\StoreCategory;
 use App\StoreDiscount;
 use App\StoreMainShop;
 use App\StoreProducts;
+use App\StoreWishList;
 
 use App\Traits\MyEstore;
 use App\TransactionCost;
@@ -524,7 +525,6 @@ class MerchantPageController extends Controller
 
 
 
-
                     return view('merchant.pages.shop.wishlist')->with(['pages' => $req->merchant.' Shop', 'data' => $data]);
                 }
                 else{
@@ -540,6 +540,14 @@ class MerchantPageController extends Controller
 
 
         }
+
+        //deletewishlist item
+
+        public function deleteWishlist(Request $req, $id){
+            StoreWishList::where('id',$id)->delete();
+            return back();
+        }
+
         // Shopping Cart
     public function myCart(Request $req){
 
