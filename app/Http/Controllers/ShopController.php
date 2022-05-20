@@ -1092,6 +1092,28 @@ class ShopController extends Controller
     }
 
 
+    public function removeCartItem(Request $req){
+        try {
+
+            // Delete This Cart Item...
+
+            StoreCart::where('id', $req->id)->delete();
+
+
+            $resData = ['data' => true, 'message' => 'Deleted'];
+            $status = 200;
+
+        } catch (\Throwable $th) {
+            $status = 400;
+            $resData = ['data' => [], 'message' => $th->getMessage()];
+        }
+
+        return $this->returnJSON($resData, $status);
+
+
+    }
+
+
     public function uploadImageFile($file, $fileroute, $width = null, $height = null)
     {
 
