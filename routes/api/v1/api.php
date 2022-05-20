@@ -369,6 +369,9 @@ Route::prefix('/v1')->group(function () {
         Route::post('/shop/product/deliveryoption', ['uses' => 'ShopController@deliveryOptionDetails', 'as' => 'delivery option details']);
 
 
+        Route::post('/shop/product/removecartitem', ['uses' => 'ShopController@removeCartItem', 'as' => 'remove cart item']);
+
+
         // Estore
          Route::post('/order/out-for-delivery', ['uses' => 'ShopController@outForDelivery', 'as' => 'out for delivery or pickup']);
     });

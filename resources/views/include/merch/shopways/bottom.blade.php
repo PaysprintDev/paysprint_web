@@ -281,6 +281,44 @@
 
 
             }
+
+
+            async function deleteFromCart(id) {
+                try {
+
+                    route = `${baseUrl}/product/removecartitem?id=${id}`;
+
+                    headers.Authorization = "Bearer {{ Auth::user()->api_token }}";
+
+
+                    config = {
+                        method: 'post',
+                        headers: headers,
+                        url: route
+                    };
+
+
+                    const response = await axios(config);
+
+
+                    console.log(response);
+
+
+                } catch (error) {
+
+                    if (error.response) {
+
+                        messageAlert('failed', `${error.response.statusText}`, `${error.response.data.message}`);
+
+                    } else {
+
+                        messageAlert('failed', 'Oops', `${error.message}`);
+
+
+                    }
+
+                }
+            }
         </script>
     @endauth
 
