@@ -71,9 +71,21 @@
 
                 </div>
                 <div class="col-md-3">
-                    <a class="text-center"
+                    <span><a class=" text-center"
                         href=""javascript:void(0)" onclick="addCart($wishlist->productId, $wishlist->merchantId)"
-                        style="color: orange; font-weight:lighter; font-size:18px;">ADD TO CART</a>
+                        style="color: orange; font-weight:lighter; font-size:18px;">ADD TO CART</a></span>
+                        <br>
+                        <span class="mt-4">
+                            <button class="btn btn-danger" id="btns{{ $wishlist->id}}"
+                                onclick="deleteWishlist('{{ $wishlist->id }}');">Remove from wishlist</button>
+                            <form action="{{ route('delete wishlist',$wishlist->id)}}"
+                                method="post" style="visibility: hidden"
+                                id="deletewish{{ $wishlist->id }}">
+                                @csrf
+                                <input type="hidden" name="storeid"
+                                    value="{{ $wishlist->id }}">
+                            </form>
+                        </span>
                 </div>
             </div>
             <hr>
