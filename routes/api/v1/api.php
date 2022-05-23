@@ -89,6 +89,11 @@ Route::prefix('/v1')->group(function () {
 
         Route::post('profile',  ['uses' => 'api\v1\UserController@updateProfile'])->name('update profile');
 
+        // Points and Reward
+        Route::get('/acquiredpoints', ['uses' => 'api\v1\UserController@acquiredPoints', 'as' => 'acquired points']);
+
+        Route::post('/claimmypoints', ['uses' => 'api\v1\UserController@claimMyPoints', 'as' => 'claim my points']);
+
         Route::post('changeplan',  ['uses' => 'api\v1\UserController@changePlan'])->name('change plan');
 
         Route::get('getsubscriptionplan',  ['uses' => 'api\v1\UserController@getMySubscription'])->name('get my subscription');
@@ -349,6 +354,7 @@ Route::prefix('/v1')->group(function () {
         // Convert Money to Send
 
         Route::post('/convertmoneytosend', ['uses' => 'CurrencyFxController@convertMoneyToTransfer', 'as' => 'currency fx convert money to transfer']);
+
 
 
 
