@@ -41,6 +41,7 @@
         populateCountries("country", "state");
     </script>
 
+
     @guest
 
         <script>
@@ -60,6 +61,9 @@
 
 
     @auth
+
+
+
         <script>
             const baseUrl = "{{ route('home') }}/api/v1/shop";
             let config, route, data;
@@ -325,23 +329,23 @@
 
 
     <script>
-           function deleteWishlist(id) {
+        function deleteWishlist(id) {
 
-swal({
-        title: "Are you sure?",
-        text: "Once deleted, you will not be able to recover this item!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-    })
-    .then((willDelete) => {
-        if (willDelete) {
-            $('#deletewish' + id).submit();
+            swal({
+                    title: "Are you sure?",
+                    text: "Once deleted, you will not be able to recover this item!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $('#deletewish' + id).submit();
+                    }
+                });
+
+
         }
-    });
-
-
-}
 
 
 
