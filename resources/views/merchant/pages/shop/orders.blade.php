@@ -110,6 +110,8 @@
                     </div>
                 @endif
             @endforeach
+            @else
+                    <div class="col-md-12 text-center mt-3 mb-4" style="font-size: 20px; font-weight:bold">No orders</div>
         @endif
     </section>
 
