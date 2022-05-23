@@ -212,6 +212,8 @@ Route::prefix('product')->group(function () {
 	Route::get('/orders', ['uses' => 'MerchantPageController@merchantOrders', 'as' => 'orders']);
 	Route::get('/order-details', ['uses' => 'MerchantPageController@singleOrder', 'as' => 'single orders']);
 	Route::get('/wishlist', ['uses' => 'MerchantPageController@wishlist', 'as' => 'wishlist']);
+	Route::post('/deletelist/{id}', ['uses' => 'MerchantPageController@deleteWishlist', 'as' => 'delete wishlist']);
+
 
 });
 

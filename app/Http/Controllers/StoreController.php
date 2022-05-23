@@ -762,7 +762,7 @@ class StoreController extends Controller
 
         $data=StoreMainShop::withTrashed()->find($id)->restore();
 
-        return back()->with("msg","<div class='alert alert-success'>Store Suspended Successfully</div>");
+        return back()->with("msg","<div class='alert alert-success'>Store restored Successfully</div>");
     }
 
     //delete productCategory
