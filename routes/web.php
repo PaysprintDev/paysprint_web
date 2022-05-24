@@ -38,6 +38,8 @@ Route::get('accountactivity', 'CheckSetupController@checkAccountAcvtivity');
 Route::get('updatestatementcountry', 'CheckSetupController@statementCountry');
 Route::get('chargefee', 'CheckSetupController@chargeFee');
 Route::get('insertcountry', 'CheckSetupController@insertCountry');
+Route::get('merchanttest', 'CheckSetupController@merchantTestMode');
+Route::get('merchantlive', 'CheckSetupController@merchantLiveMode');
 Route::get('reportstatus', 'CheckSetupController@reportStatus');
 Route::get('updatefee', 'CheckSetupController@updateMonthlyFee');
 Route::get('refundbycountryupdate', 'CheckSetupController@refundbyCountry');

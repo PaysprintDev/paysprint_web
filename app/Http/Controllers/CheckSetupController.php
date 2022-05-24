@@ -2193,6 +2193,33 @@ class CheckSetupController extends Controller
         echo "Upgraded Account";
     }
 
+        //public function for merchant test mode
+
+        public function merchantTestMode()
+        {
+            $getUsers=ClientInfo::where('accountMode', 'test')->get();
+
+            foreach ($getUsers as $users){
+
+                $this->mailListCategorize($users->business_name, $users->email, $users->address, $users->telephone, "Test Mode Merchant", $users->country, 'Subscription');   
+            }
+
+            echo "Done";
+        }
+
+        //public function for merchant Live mode
+
+        public function merchantLiveMode()
+        {
+            $getUsers=ClientInfo::where('accountMode', 'live')->get();
+
+            foreach ($getUsers as $users){
+
+                $this->mailListCategorize($users->business_name, $users->email, $users->address, $users->telephone, "Live Mode Merchant", $users->country, 'Subscription');   
+            }
+            echo "Done";
+        }
+    
 
 
     public function mailprocess($email, $name, $subject, $message)
