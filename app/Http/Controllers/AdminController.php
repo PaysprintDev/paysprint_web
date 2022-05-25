@@ -15285,7 +15285,7 @@ class AdminController extends Controller
             $thisuser = $userclosed->where('user_id', $req->id)->first();
 
             $subject = 'Account currently closed on PaySprint';
-            $message = "This is to inform you that your account is currenctly closed on PaySprint. You will not be able to login or conduct any transaction both on the mobile app and on the web during this period. Kindly attach a copy of your Utility bill and send to compliance@paysprint.ca . We regret any inconvenience this action might caused you. If you have any concern, please send us a message on : compliance@paysprint.ca";
+            $message = "This is to inform you that your account is currently closed on PaySprint. You will not be able to login or conduct any transaction both on the mobile app and on the web during this period. Kindly attach a copy of your Utility bill and send to compliance@paysprint.ca . We regret any inconvenience this action might caused you. If you have any concern, please send us a message on : compliance@paysprint.ca";
 
             // Send Mail to Receiver
             $this->name = $thisuser->name;
