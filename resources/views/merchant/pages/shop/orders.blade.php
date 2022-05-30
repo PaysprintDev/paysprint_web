@@ -18,9 +18,9 @@
 
 @section('content')
     <!--home page slider start-->
-    <section class="about-breadcrumb" style="margin-top: 150px;">
+    <section class="about-breadcrumb">
         <div class="about-back section-tb-padding"
-            style="background-image: url({{ asset('shopassets/image/about-image.jpg') }})">
+            style="background-image: url('{{ array_filter(explode(', ', $data['mystore']->headerContent))[0] }}')">
             <div class="container">
                 <div class="row">
                     <div class="col">
@@ -40,7 +40,7 @@
     <!-- displaying products starts -->
     <section class="container">
         <div class="row">
-            <div class="col-md-12 mb-3">
+            <div class="col-md-12 mb-3 mt-5">
                 <h1>Orders</h1>
             </div>
         </div>

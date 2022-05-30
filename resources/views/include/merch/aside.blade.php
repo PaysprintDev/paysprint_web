@@ -242,50 +242,28 @@
                             @endif
 
 
-                            @if (Auth::user()->plan == 'classic')
-                                <li>
-                                    <a class="nav-link menu-title" href="{{ route('cash advance') }}"><i
-                                            data-feather="shopping-bag"></i><span>Merchant Cash Advance</span></a>
-                                </li>
-                            @else
-                                <li>
-                                    <a class="nav-link menu-title" href="#"><i
-                                            data-feather="shopping-bag"></i><span>Merchant Cash Advance <br><small
-                                                class="text-danger text-center">[Upgrade account]</small></span></a>
-                                </li>
-
-                                <li>
-
-                                    <a class="nav-link menu-title link-nav " href="javascript:void()"><i
-                                            data-feather="database"></i><span>Manage eStore <br><small
-                                                class="text-danger text-center">[Upgrade account]</small></span></a>
-
-                                </li>
-                            @endif
+                            <li>
+                                <a class="nav-link menu-title" href="{{ route('cash advance') }}"><i
+                                        data-feather="shopping-bag"></i><span>Merchant Cash Advance</span></a>
+                            </li>
 
 
-                            @if (Auth::user()->plan == 'classic')
-                                <li>
+                            <li>
 
-                                    <a class="nav-link menu-title link-nav " href="{{ route('ordering system') }}"><i
-                                            data-feather="database"></i><span>Manage eStore <small
-                                                class="text-danger text-center">[Beta]</small></span></a>
+                                <a class="nav-link menu-title link-nav " href="{{ route('ordering system') }}"><i
+                                        data-feather="database"></i><span>Manage eStore <small
+                                            class="text-danger text-center">[Beta]</small></span></a>
 
-                                </li>
+                            </li>
 
-                                <li>
 
-                                    <a class="nav-link menu-title link-nav" href="javascript:void()"
-                                        onclick="whatyouOffer('{{ Auth::user()->email }}')"><i
-                                            data-feather="database"></i><span>Manage Rental Property </span></a>
-                                </li>
-                            @else
-                                <li>
-                                    <a class="nav-link menu-title" href="#"><i
-                                            data-feather="shopping-bag"></i><span>Manage Rental Property <br><small
-                                                class="text-danger text-center">[Upgrade account]</small></span></a>
-                                </li>
-                            @endif
+                            <li>
+
+                                <a class="nav-link menu-title link-nav" href="javascript:void()"
+                                    onclick="whatyouOffer('{{ Auth::user()->email }}')"><i
+                                        data-feather="database"></i><span>Manage Rental Property </span></a>
+                            </li>
+
 
 
                             <li class="sidebar-main-title">

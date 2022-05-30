@@ -77,6 +77,8 @@
 
                 try {
 
+
+
                     $('.modalspinner' + productId).removeClass('disp-0');
                     $('.carty' + productId).addClass('disp-0');
 
@@ -85,6 +87,8 @@
                     data.append('productId', productId);
                     data.append('userId', userId);
                     data.append('quantity', $('#quantity' + productId).val());
+
+
 
                     headers.Authorization = "Bearer {{ Auth::user()->api_token }}"
 
@@ -103,6 +107,12 @@
 
                     $('.modalspinner' + productId).addClass('disp-0');
                     $('.carty' + productId).removeClass('disp-0');
+
+                    var cartNo = Number($('#cart-total').text()) + 1;
+
+                    $('#cart-total').text(cartNo);
+
+                    await loadCart(userId);
 
                     messageAlert('success', `${response.statusText}`, `${response.data.message}`);
 
@@ -157,6 +167,11 @@
                     $('.wishes' + productId).removeClass('disp-0');
 
 
+                    var wishCount = Number($('#wish-total').text()) + 1;
+
+                    $('#wish-total').text(wishCount);
+
+
                     messageAlert('success', `${response.statusText}`, `${response.data.message}`);
 
                 } catch (error) {
@@ -180,6 +195,49 @@
 
 
 
+            }
+
+
+
+            // Load Cart Information
+            async function loadCart(userId) {
+
+                try {
+
+                    data = new FormData();
+
+                    data.append('userId', userId);
+
+                    headers.Authorization = "Bearer {{ Auth::user()->api_token }}"
+
+                    route = `${baseUrl}/product/loadmycart?userId=${userId}`;
+
+
+                    config = {
+                        method: 'get',
+                        headers: headers,
+                        url: route,
+                        data: data
+                    };
+
+                    const response = await axios(config);
+
+                    console.log(response);
+
+
+                } catch (error) {
+
+                    if (error.response) {
+
+                        messageAlert('failed', `${error.response.statusText}`, `${error.response.data.message}`);
+
+                    } else {
+
+                        messageAlert('failed', 'Oops', `${error.message}`);
+
+
+                    }
+                }
             }
 
 
@@ -306,7 +364,9 @@
                     const response = await axios(config);
 
 
-                    console.log(response);
+                    var cartNo = Number($('#cart-total').text()) - 1;
+
+                    $('#cart-total').text(cartNo);
 
 
                 } catch (error) {
@@ -330,6 +390,8 @@
 
     <script>
         function deleteWishlist(id) {
+
+
 
             swal({
                     title: "Are you sure?",
