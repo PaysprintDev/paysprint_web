@@ -774,11 +774,16 @@ Route::prefix('Admin/')->group(function () {
 		Route::get('newpost', ['uses' => 'AdminController@newInvestorPost', 'as' => 'new investors post']);
 		Route::get('subscribers', ['uses' => 'AdminController@investorSubscriber', 'as' => 'new investor subscriber']);
 		Route::get('investorposts', ['uses' => 'AdminController@investorPosts', 'as' => 'investorposts']);
+		Route::post('createnews', ['uses' => 'AdminController@createInvestorNews', 'as' => 'create investor news']);
 		Route::get('createpost', ['uses' => 'AdminController@createInvestorPost', 'as' => 'create investor post']);
 		Route::post('createpost', ['uses' => 'AdminController@createInvestorPosts', 'as' => 'create investor posts']);
         Route::get('editpost/{id}', ['uses' => 'AdminController@editInvestorPost', 'as' => 'edit investor post' ]);
         Route::post('editpost/{id}', ['uses' => 'AdminController@editInvestorPosts', 'as' => 'edit investor posts' ]);
         Route::post('deletepost/{id}', ['uses' => 'AdminController@deleteInvestorPost', 'as' => 'delete investor post' ]);
+		Route::get('/investorsnews',['uses' => 'AdminController@FetchInvestorNews', 'as' => 'investors news' ] );
+		Route::get('editnews/{id}', ['uses' => 'AdminController@editInvestorNews', 'as' => 'edit investor news' ]);
+		Route::post('updatenews/{id}', ['uses' => 'AdminController@updateInvestorNews', 'as' => 'update investor news' ]);
+		Route::post('deletenews/{id}', ['uses' => 'AdminController@deleteInvestorNews', 'as' => 'delete investor news' ]);
 
 	});
 
