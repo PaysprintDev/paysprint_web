@@ -313,7 +313,7 @@ class MerchantApiController extends Controller
 
 
                                                     $orderItems .= "<tr>
-                                                    
+
                                                     <td>" . ($i + 1) . "</td>
                                                     <td>
                                                         <img src='" . $cartItemDetails->productImage . "' />
@@ -330,7 +330,7 @@ class MerchantApiController extends Controller
                                                     <td>
                                                         " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
                                                     </td>
-                                                    
+
                                                     </tr>";
                                                 }
 
@@ -387,7 +387,7 @@ class MerchantApiController extends Controller
                                         }
                                     } else {
                                         // Currency converter
-                                        $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode);
+                                        $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode, 'API PS_Users');
                                         $mywallet_balance = $this->convertCurrency($thismerchant->currencyCode, $thisuser->wallet_balance, $thisuser->currencyCode);
                                         $myCurrency = $thismerchant->currencyCode;
 
@@ -548,7 +548,7 @@ class MerchantApiController extends Controller
 
 
                                                     $orderItems .= "<tr>
-                                                    
+
                                                     <td>" . ($i + 1) . "</td>
                                                     <td>
                                                         <img src='" . $cartItemDetails->productImage . "' />
@@ -565,7 +565,7 @@ class MerchantApiController extends Controller
                                                     <td>
                                                         " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
                                                     </td>
-                                                    
+
                                                     </tr>";
                                                 }
 
@@ -817,7 +817,7 @@ class MerchantApiController extends Controller
                                         }
                                     } else {
                                         // Currency converter
-                                        $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode);
+                                        $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode, 'API PS_Users');
                                         $mywallet_balance = $this->convertCurrency($thismerchant->currencyCode, $thisuser->wallet_balance, $thisuser->currencyCode);
                                         $myCurrency = $thismerchant->currencyCode;
 
@@ -1186,7 +1186,7 @@ class MerchantApiController extends Controller
 
 
                                                     $orderItems .= "<tr>
-                                                    
+
                                                     <td>" . ($i + 1) . "</td>
                                                     <td>
                                                         <img src='" . $cartItemDetails->productImage . "' />
@@ -1203,7 +1203,7 @@ class MerchantApiController extends Controller
                                                     <td>
                                                         " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
                                                     </td>
-                                                    
+
                                                     </tr>";
                                                 }
 
@@ -1257,7 +1257,7 @@ class MerchantApiController extends Controller
                                         }
                                     } else {
                                         // Currency converter
-                                        $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode);
+                                        $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode, 'API PS_Users');
                                         $mywallet_balance = $this->convertCurrency($thismerchant->currencyCode, $thisuser->wallet_balance, $thisuser->currencyCode);
                                         $myCurrency = $thismerchant->currencyCode;
 
@@ -1416,7 +1416,7 @@ class MerchantApiController extends Controller
 
 
                                                     $orderItems .= "<tr>
-                                                    
+
                                                     <td>" . ($i + 1) . "</td>
                                                     <td>
                                                         <img src='" . $cartItemDetails->productImage . "' />
@@ -1433,7 +1433,7 @@ class MerchantApiController extends Controller
                                                     <td>
                                                         " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
                                                     </td>
-                                                    
+
                                                     </tr>";
                                                 }
 
@@ -1665,7 +1665,7 @@ class MerchantApiController extends Controller
                                         }
                                     } else {
                                         // Currency converter
-                                        $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode);
+                                        $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode, 'API PS_Users');
                                         $mywallet_balance = $this->convertCurrency($thismerchant->currencyCode, $thisuser->wallet_balance, $thisuser->currencyCode);
                                         $myCurrency = $thismerchant->currencyCode;
 
@@ -2021,7 +2021,7 @@ class MerchantApiController extends Controller
 
 
                                             $orderItems .= "<tr>
-                                                    
+
                                                     <td>" . ($i + 1) . "</td>
                                                     <td>
                                                         <img src='" . $cartItemDetails->productImage . "' />
@@ -2038,7 +2038,7 @@ class MerchantApiController extends Controller
                                                     <td>
                                                         " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
                                                     </td>
-                                                    
+
                                                     </tr>";
                                         }
 
@@ -2094,7 +2094,7 @@ class MerchantApiController extends Controller
                                     }
                                 } else {
                                     // Currency converter
-                                    $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode);
+                                    $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode, 'API ESTORE_GUEST_Users');
                                     $myCurrency = $thismerchant->currencyCode;
 
 
@@ -2235,7 +2235,7 @@ class MerchantApiController extends Controller
 
 
                                             $orderItems .= "<tr>
-                                                    
+
                                                     <td>" . ($i + 1) . "</td>
                                                     <td>
                                                         <img src='" . $cartItemDetails->productImage . "' />
@@ -2252,7 +2252,7 @@ class MerchantApiController extends Controller
                                                     <td>
                                                         " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
                                                     </td>
-                                                    
+
                                                     </tr>";
                                         }
 
@@ -2326,7 +2326,7 @@ class MerchantApiController extends Controller
                 $merchantInfo = ClientInfo::where('api_secrete_key', $req->bearerToken())->first();
 
                 if (isset($merchantInfo)) {
-                    
+
 
                     // Moneris Payment Here...
 
@@ -2486,7 +2486,7 @@ class MerchantApiController extends Controller
 
 
                                             $orderItems .= "<tr>
-                                                    
+
                                                     <td>" . ($i + 1) . "</td>
                                                     <td>
                                                         <img src='" . $cartItemDetails->productImage . "' />
@@ -2503,7 +2503,7 @@ class MerchantApiController extends Controller
                                                     <td>
                                                         " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
                                                     </td>
-                                                    
+
                                                     </tr>";
                                         }
 
@@ -2559,7 +2559,7 @@ class MerchantApiController extends Controller
                                     }
                                 } else {
                                     // Currency converter
-                                    $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode);
+                                    $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode, 'API ESTORE_GUEST_Users');
                                     $myCurrency = $thismerchant->currencyCode;
 
 
@@ -2700,7 +2700,7 @@ class MerchantApiController extends Controller
 
 
                                             $orderItems .= "<tr>
-                                                    
+
                                                     <td>" . ($i + 1) . "</td>
                                                     <td>
                                                         <img src='" . $cartItemDetails->productImage . "' />
@@ -2717,7 +2717,7 @@ class MerchantApiController extends Controller
                                                     <td>
                                                         " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
                                                     </td>
-                                                    
+
                                                     </tr>";
                                         }
 
@@ -2883,7 +2883,7 @@ class MerchantApiController extends Controller
                                 $myCurrency = $currencyCode;
                             } else {
                                 // Currency converter
-                                $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $currencyCode);
+                                $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $currencyCode, 'API GUEST_Users');
                                 $myCurrency = $thismerchant->currencyCode;
                             }
 
@@ -3051,7 +3051,7 @@ class MerchantApiController extends Controller
                                 $myCurrency = $currencyCode;
                             } else {
                                 // Currency converter
-                                $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $currencyCode);
+                                $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $currencyCode, 'API GUEST_Users');
                                 $myCurrency = $thismerchant->currencyCode;
                             }
 
@@ -3346,7 +3346,7 @@ class MerchantApiController extends Controller
     }
 
 
-    public function convertCurrency($currency, $amount, $localcurrency)
+    public function convertCurrency($currency, $amount, $localcurrency, $route = null)
     {
 
         // Get Markup
@@ -3392,7 +3392,7 @@ class MerchantApiController extends Controller
             // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
             $convertLocal = $amount / $result->quotes->$localCurrency;
 
-            // Converting your USD value to other currency ie CAD * Y 
+            // Converting your USD value to other currency ie CAD * Y
             $convRate = $result->quotes->$currency * $convertLocal;
 
             $message = 'success';
@@ -3404,6 +3404,10 @@ class MerchantApiController extends Controller
 
 
         $amountConvert = $convRate;
+        $convRate = $amountConvert * 95/100;
+
+
+        $this->calculateBufferedTransaction($amountConvert, $convRate, $route);
 
 
         return $amountConvert;

@@ -8992,6 +8992,62 @@ class AdminController extends Controller
         return redirect()->back()->with($resp, $resData);
     }
 
+    public function deleteEsPay(Request $req)
+    {
+
+        try {
+            $getTrans = FxStatement::where('user_id', $req->escrow_id)->first();
+
+
+
+            // Update Confirmation and update Wallet
+            $getwallet = EscrowAccount::where('escrow_id', $getTrans->user_id)->first();
+
+
+
+            $wallet_balance = $getwallet->wallet_balance + 0;
+
+
+            $thisuser = User::where('id', $getwallet->user_id)->first();
+
+            FxStatement::where('user_id', $req->escrow_id)->update(['confirmation' => 'declined']);
+
+            EscrowAccount::where('escrow_id', $req->escrow_id)->update(['wallet_balance' => $wallet_balance]);
+
+            $activity = $getwallet->currencyCode . '' . number_format($getTrans->credit, 2) . " to Escrow Wallet is declined.";
+
+
+            $sendMsg = "Hi " . $thisuser->name . ", " . $activity . " Your current escrow balance is " . $getwallet->currencyCode . ' ' . number_format($wallet_balance, 2) . ".";
+
+            $usergetPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+            if (isset($usergetPhone)) {
+
+                $sendPhone = $thisuser->telephone;
+            } else {
+                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+            }
+
+            if ($thisuser->country == "Nigeria") {
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                $this->sendSms($sendMsg, $correctPhone);
+            } else {
+                $this->sendMessage($sendMsg, $sendPhone);
+            }
+
+
+            $resData = "Payment Declined Successfully";
+            $resp = "success";
+        } catch (\Throwable $th) {
+            $resData = $th->getMessage();
+            $resp = "error";
+        }
+
+
+        return redirect()->back()->with($resp, $resData);
+    }
+
 
     public function refundMoneyRequestByCountry(Request $req)
     {
@@ -15485,7 +15541,7 @@ class AdminController extends Controller
             $thisuser = $userclosed->where('user_id', $req->id)->first();
 
             $subject = 'Account currently closed on PaySprint';
-            $message = "This is to inform you that your account is currenctly closed on PaySprint. You will not be able to login or conduct any transaction both on the mobile app and on the web during this period. Kindly attach a copy of your Utility bill and send to compliance@paysprint.ca . We regret any inconvenience this action might caused you. If you have any concern, please send us a message on : compliance@paysprint.ca";
+            $message = "This is to inform you that your account is currently closed on PaySprint. You will not be able to login or conduct any transaction both on the mobile app and on the web during this period. Kindly attach a copy of your Utility bill and send to compliance@paysprint.ca . We regret any inconvenience this action might caused you. If you have any concern, please send us a message on : compliance@paysprint.ca";
 
             // Send Mail to Receiver
             $this->name = $thisuser->name;

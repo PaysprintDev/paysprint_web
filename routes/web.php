@@ -597,6 +597,8 @@ Route::prefix('Admin/wallet')->group(function () {
 
 	Route::post('confirmespay', ['uses' => 'AdminController@confirmEsPay', 'as' => 'confirm es pay']);
 
+	Route::post('deleteespay', ['uses' => 'AdminController@deleteEsPay', 'as' => 'delete es pay']);
+
 	Route::get('refundmoneyrequestbycountry', ['uses' => 'AdminController@refundMoneyRequestByCountry', 'as' => 'refund details by country']);
 	Route::get('processedrefund', ['uses' => 'AdminController@processedRefundMoneyRequest', 'as' => 'refund processed']);
 

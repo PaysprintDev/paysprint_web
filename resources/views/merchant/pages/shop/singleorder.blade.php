@@ -18,9 +18,9 @@
 
 @section('content')
     <!--home page slider start-->
-    <section class="about-breadcrumb" style="margin-top: 150px;">
+    <section class="about-breadcrumb">
         <div class="about-back section-tb-padding"
-            style="background-image: url({{ asset('shopassets/image/about-image.jpg') }})">
+            style="background-image: url('{{ array_filter(explode(', ', $data['mystore']->headerContent))[0] }}')">
             <div class="container">
                 <div class="row">
                     <div class="col">
@@ -89,7 +89,7 @@
 
         <div class="row">
             <div class="col-md-6 mb-4">
-                <p style="font-size: 18px"><strong>PAYMENTINFORMATION</strong></p>
+                <p style="font-size: 18px"><strong>PAYMENT INFORMATION</strong></p>
                 <hr>
                 <p><strong>Payment Details</strong></p>
                 <p class="mt-2 mb-1">Payment Status: <span

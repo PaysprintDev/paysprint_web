@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AllCountries;
+use App\Buffer;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -103,8 +104,8 @@ class Controller extends BaseController
         // Get Markup
         $markuppercent = $this->markupPercentage();
 
-        $markValue = (1 + ($markuppercent[0]->percentage / 100));
-        $markdownValue = (1 - ($markuppercent[0]->percentage / 100));
+        // $markValue = (1 + ($markuppercent[0]->percentage / 100));
+        // $markdownValue = (1 - ($markuppercent[0]->percentage / 100));
 
         $currency = 'USD' . $curCurrency;
         $amount = $curAmount;
@@ -135,7 +136,8 @@ class Controller extends BaseController
 
         if ($result->success == true) {
             // This amount is in dollars
-            $convRate = ($amount / $result->quotes->$currency) * $markValue;
+            // $convRate = ($amount / $result->quotes->$currency) * $markValue;
+            $convRate = ($amount / $result->quotes->$currency);
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }
@@ -258,7 +260,7 @@ class Controller extends BaseController
     }
 
 
-    public function getConversionRate($localcountry, $foreign)
+    public function getConversionRate($localcountry, $foreign, $route = null)
     {
 
 
@@ -296,10 +298,17 @@ class Controller extends BaseController
 
         if ($result->success == true) {
             // This amount is in dollars
-            $convRateA = $result->quotes->$currencyA * $markValue;
-            $convRateB = $result->quotes->$currencyB * $markValue;
+            $convRateA = $result->quotes->$currencyA;
+            // $convRateA = $result->quotes->$currencyA * $markValue;
+            $convRateB = $result->quotes->$currencyB;
+            // $convRateB = $result->quotes->$currencyB * $markValue;
 
-            $convRate = $convRateA / $convRateB;
+            $actualRate = $convRateA / $convRateB;
+
+            $convRate = $actualRate * 95 / 100;
+
+
+            $this->calculateBufferedTransaction($actualRate, $convRate, $route);
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }
@@ -310,7 +319,7 @@ class Controller extends BaseController
 
 
 
-    public function getOfficialConversionRate($localcountry, $foreign)
+    public function getOfficialConversionRate($localcountry, $foreign, $route = null)
     {
 
 
@@ -349,35 +358,38 @@ class Controller extends BaseController
 
         if ($result->success == true) {
             // This amount is in dollars
-            
-            
 
-            if($result->quotes->$currencyA > 1){
 
-                $convRateA = $result->quotes->$currencyA / $markValue;
 
-            }elseif($result->quotes->$currencyA < 1){
-                $convRateA = $result->quotes->$currencyA * $markdownValue;
-            }
-            else{
+            if ($result->quotes->$currencyA > 1) {
+
+                // $convRateA = $result->quotes->$currencyA / $markValue;
+                $convRateA = $result->quotes->$currencyA;
+            } elseif ($result->quotes->$currencyA < 1) {
+                // $convRateA = $result->quotes->$currencyA * $markdownValue;
+                $convRateA = $result->quotes->$currencyA;
+            } else {
                 $convRateA = $result->quotes->$currencyA;
             }
 
 
-            if($result->quotes->$currencyB > 1){
+            if ($result->quotes->$currencyB > 1) {
 
-                $convRateB = $result->quotes->$currencyB / $markValue;
-
-            }elseif($result->quotes->$currencyB < 1){
-                $convRateB = $result->quotes->$currencyB * $markdownValue;
-            }
-            else{
+                // $convRateB = $result->quotes->$currencyB / $markValue;
+                $convRateB = $result->quotes->$currencyB;
+            } elseif ($result->quotes->$currencyB < 1) {
+                // $convRateB = $result->quotes->$currencyB * $markdownValue;
+                $convRateB = $result->quotes->$currencyB;
+            } else {
                 $convRateB = $result->quotes->$currencyB;
             }
 
+            $actualRate = $convRateA / $convRateB;
 
-            $convRate = $convRateA / $convRateB;
-            
+            $convRate = $actualRate * 95 / 100;
+
+
+            $this->calculateBufferedTransaction($actualRate, $convRate, $route);
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }
@@ -385,6 +397,18 @@ class Controller extends BaseController
 
 
         return $convRate;
+    }
+
+
+    public function calculateBufferedTransaction($actualRate, $buffered, $route)
+    {
+
+        if ($route != null) {
+            $profit = $actualRate - $buffered;
+            Buffer::insert([
+                'actualRate' => $actualRate, 'buffered' => $buffered, 'profit' => $profit, 'route' => $route, 'created_at' => now(), 'updated_at' => now()
+            ]);
+        }
     }
 
     public function detectMobile()

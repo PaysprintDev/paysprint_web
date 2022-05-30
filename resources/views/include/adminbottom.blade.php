@@ -1727,6 +1727,26 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     }
 
 
+    function declineEsPay(escrow_id) {
+        swal({
+                title: "Are you sure?",
+                text: "Click on OK to decline",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+
+                    $("#delthisform" + escrow_id).submit();
+
+                } else {
+
+                }
+            });
+    }
+
+
 
     function confirmPay(transactionid, user_id, coy_id) {
         var thisdata;

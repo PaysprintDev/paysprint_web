@@ -1670,7 +1670,8 @@ class CurrencyFxController extends Controller
 
                     // Mark down here ...
 
-                    $convInfo = ($getconvertion * $req->amount) / $markValue;
+                    // $convInfo = ($getconvertion * $req->amount) / $markValue;
+                    $convInfo = ($getconvertion * $req->amount);
 
 
                     $respData = [
@@ -1748,6 +1749,7 @@ class CurrencyFxController extends Controller
     {
         try {
 
+
             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
             if (isset($thisuser)) {
@@ -1801,11 +1803,12 @@ class CurrencyFxController extends Controller
                         // }
 
                         //Convert Money
-                            $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
+                            $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode, 'transferfx');
 
                             // Mark down here ...
 
-                            $convamount = ($getconvertion * $req->amount) / $markValue;
+                            // $convamount = ($getconvertion * $req->amount) / $markValue;
+                            $convamount = ($getconvertion * $req->amount);
 
 
 
@@ -1883,28 +1886,39 @@ class CurrencyFxController extends Controller
 
                         // Markup value to sender local currency i.e USD/NGN = 584.33
 
-                        $markedupRate = $this->getConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
+                        // $markedupRate = $this->getConversionRate($fromWallet->currencyCode, $toWallet->currencyCode, 'transferfx');
 
                         // Customer Official rate i.e USD/CAD = 1.22
-                        $officialRate = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
+                        // $officialRate = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode, 'transferfx');
+
+
+
 
 
                         // Get Rate to Merchant currency
-                        $convertedRate = $markedupRate / $officialRate;
-
-
-                        $newProfit = $markedupRate - $convertedRate;
+                        // $convertedRate = $markedupRate / $officialRate;
 
 
 
-                        $profit_sender = $markedupRate - $getconvertion;
 
-                        $profit_receiver = $markedupRate / $profit_sender;
+                        // $newProfit = $markedupRate - $convertedRate;
+                        $newProfit = $getconvertion;
+
+
+
+
+
+
+                        // $profit_sender = $markedupRate - $getconvertion;
+                        $profit_sender = $getconvertion;
+
+                        $profit_receiver = $newProfit / $profit_sender;
+
 
 
                         // Insert Commission Info
                         $commissionQuery = [
-                            'invoice_no' => $fromWallet->escrow_id, 'sender' => $thisuser->name, 'receiver' => $thisuser->name, 'invoice_amount' => $req->amount, 'invoiced_currency' => $fromWallet->currencyCode, 'official_rate' => $getconvertion, 'markedup_rate' => $markedupRate, 'profit_sender' => $newProfit, 'sender_currency' => $thisuser->currencyCode, 'profit_receiver' => $profit_receiver, 'receiver_currency' => $thisuser->currencyCode, 'holder' => 'currency fx'
+                            'invoice_no' => $fromWallet->escrow_id, 'sender' => $thisuser->name, 'receiver' => $thisuser->name, 'invoice_amount' => $req->amount, 'invoiced_currency' => $fromWallet->currencyCode, 'official_rate' => $getconvertion, 'markedup_rate' => $getconvertion, 'profit_sender' => $newProfit, 'sender_currency' => $thisuser->currencyCode, 'profit_receiver' => $profit_receiver, 'receiver_currency' => $thisuser->currencyCode, 'holder' => 'currency fx'
                         ];
 
 

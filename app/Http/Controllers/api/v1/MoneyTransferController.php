@@ -264,7 +264,7 @@ class MoneyTransferController extends Controller
         if ($validator->passes()) {
             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
-            // Check if invoice 
+            // Check if invoice
             $getStatement = Statement::where('reference_code', $req->transaction_id)->where('activity', 'LIKE', '%Payment for %')->where('activity', 'LIKE', '%Invoice on %')->first();
 
             if (isset($getStatement) == true) {
@@ -880,7 +880,7 @@ class MoneyTransferController extends Controller
                                             //     $resData = ['data' => [], 'message' => 'International money transfer is not available at the moment', 'status' => $status];
 
                                             //     Log::info("International Transfer  between " . $sender->name . " and " . $receiver->name . ". Not available.");
-                                            // }  
+                                            // }
 
                                             else {
 
@@ -1273,7 +1273,7 @@ class MoneyTransferController extends Controller
 
                     $resData = ['data' => [], 'message' => 'You do not have sufficient balance for this transaction', 'status' => $status];
                 } else {
-                    // Debit Wallet 
+                    // Debit Wallet
                     $debitWallet = $walletBal - $req->sellAmount;
 
                     EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $req->sellCurrency)->update(['wallet_balance' => $debitWallet]);
@@ -1417,14 +1417,25 @@ class MoneyTransferController extends Controller
                 $convertLocal = $amount / $result->quotes->$localCurrency;
 
 
-                $convRate = $result->quotes->$currency * $convertLocal;
+                $actualRate = $result->quotes->$currency * $convertLocal;
+                $convRate = $actualRate * 95/100;
+
+
+                $this->calculateBufferedTransaction($actualRate, $convRate, $route."invoice/money");
+
+
             } elseif ($route == "pay") {
 
                 // Conversion Rate USD to Local currency
-                $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
+                // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
+                $convertLocal = ($amount / $result->quotes->$localCurrency);
+
+                $actualRate = $result->quotes->$currency * $convertLocal;
+                $convRate = $actualRate * 95/100;
 
 
-                $convRate = $result->quotes->$currency * $convertLocal;
+                $this->calculateBufferedTransaction($actualRate, $convRate, $route."invoice/money");
+
             } else {
             }
         } else {
