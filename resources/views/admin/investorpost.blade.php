@@ -7,11 +7,11 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Create Investor Post
+                Create Investor News
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active">Create Investor Post</li>
+                <li class="active">Create Investor News</li>
             </ol>
         </section>
 
@@ -22,9 +22,9 @@
             <div class="box">
 
                 <div class="box-body">
-
+                            {!! session('msg') !!}
                     {{-- Provide Form --}}
-                    <form role="form" action="{{ route('create investor post') }}" method="POST">
+                    <form role="form" action="{{ route('create investor news') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="box-body">
 

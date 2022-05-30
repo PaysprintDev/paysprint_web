@@ -4814,6 +4814,24 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     }
 
+    function deleteInvestorNews(id) {
+
+swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this news!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            $('#deletenews'+id).submit();
+        }
+    });
+
+
+}
+
     function deleteStore(id) {
 
         swal({
