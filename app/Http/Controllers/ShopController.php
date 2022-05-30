@@ -844,10 +844,19 @@ class ShopController extends Controller
 
         try {
 
-            $data = StoreCart::where('userId', $req->userId)->orderBy('created_at', 'DESC');
+            $data = StoreCart::where('userId', $req->userId)->orderBy('created_at', 'DESC')->get();
+
+            if(count($data) > 0){
+            $merchant = User::where('id', $data[0]->merchantId)->first();
+
+            }
+            else{
+                $merchant = [];
+            }
+
 
            $status = 200;
-            $resData = ['data' => $data, 'message' => 'Success'];
+            $resData = ['data' => $data, 'message' => 'Success', 'merchant' => $merchant ];
         } catch (\Throwable $th) {
             $status = 400;
             $resData = ['data' => [], 'message' => $th->getMessage()];

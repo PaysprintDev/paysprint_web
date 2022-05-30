@@ -1,7 +1,7 @@
        <!-- mini cart start -->
 
 
-       <div class="mini-cart">
+       <div class="mini-cart" id="cartRec">
            <a href="javascript:void(0)" class="shopping-cart-close"><i class="ion-close-round"></i></a>
            <div class="cart-item-title">
                <p>
