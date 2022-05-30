@@ -430,7 +430,7 @@
                                                     <a href="{{ route('wishlist', 'merchant=' . $data['user']->businessname) }}"
                                                         class="header-wishlist">
                                                         <span class="wishlist-icon"><i class="icon-heart"></i></span>
-                                                        <span
+                                                        <span id="wish-total"
                                                             class="wishlist-counter">{{ count($data['mywishlist']) }}</span>
                                                     </a>
                                                 </li>
@@ -450,6 +450,8 @@
                                                     </div>
                                                 </li>
                                             @endauth
+
+
 
 
                                             @guest
@@ -509,29 +511,34 @@
                             <div class="mainwrap">
                                 <ul class="main-menu">
                                     <li class="ms-3 mt-3 menu-banner-img" style="font-size: 14px; font-weight:lighter">
-                                        <a href="{{ route('merchant shop now', $data['user']->businessname) }}" class="link-title">
+                                        <a href="{{ route('merchant shop now', $data['user']->businessname) }}"
+                                            class="link-title">
                                             <span class="sp-link-title">HOME</span>
                                         </a>
                                     </li>
                                     <li class="ms-3 mt-3 menu-banner-img" style="font-size: 14px; font-weight:lighter">
-                                        <a href="{{ route('product shop', 'merchant=' . $data['user']->businessname) }}" class="link-title">
+                                        <a href="{{ route('product shop', 'merchant=' . $data['user']->businessname) }}"
+                                            class="link-title">
                                             <span class="sp-link-title">SHOP</span>
                                         </a>
                                     </li>
                                     <li class="ms-3 mt-3 menu-banner-img" style="font-size: 14px; font-weight:lighter">
-                                        <a href="{{ route('orders', 'merchant=' . $data['user']->businessname) }}" class="link-title">
+                                        <a href="{{ route('orders', 'merchant=' . $data['user']->businessname) }}"
+                                            class="link-title">
                                             <span class="sp-link-title">ORDERS</span>
                                         </a>
                                     </li>
                                     <li class="ms-3 mt-3 menu-banner-img" style="font-size: 14px; font-weight:lighter">
-                                        <a href="{{ route('wishlist', 'merchant=' . $data['user']->businessname) }}" class="link-title">
+                                        <a href="{{ route('wishlist', 'merchant=' . $data['user']->businessname) }}"
+                                            class="link-title">
                                             <span class="sp-link-title">MY WISHLIST</span>
                                         </a>
                                     </li>
                                     <li class="ms-3 mt-3 menu-banner-img" style="font-size: 14px; font-weight:lighter">
-                                        <a href="{{ route('checkout item', 'store=' . $data['user']->businessname) }}" class="link-title">
+                                        <a href="{{ route('checkout item', 'store=' . $data['user']->businessname) }}"
+                                            class="link-title">
                                             <span>CHECKOUT</span>
-                                       
+
                                         </a>
                                     </li>
                                 </ul>

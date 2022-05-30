@@ -822,13 +822,8 @@ class MerchantPageController extends Controller
     public function orderingSystem()
     {
 
-        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+        // $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-
-        if(isset($client) && $client->accountMode == "test"){
-
-            return redirect()->route('dashboard')->with('error', 'You are in test mode');
-        }
 
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),

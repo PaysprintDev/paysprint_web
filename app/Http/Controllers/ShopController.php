@@ -839,6 +839,25 @@ class ShopController extends Controller
     }
 
 
+    public function loadMyCart(Request $req)
+    {
+
+        try {
+
+            $data = StoreCart::where('userId', $req->userId)->orderBy('created_at', 'DESC');
+
+           $status = 200;
+            $resData = ['data' => $data, 'message' => 'Success'];
+        } catch (\Throwable $th) {
+            $status = 400;
+            $resData = ['data' => [], 'message' => $th->getMessage()];
+        }
+
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
 
     public function outForDelivery(Request $req)
     {

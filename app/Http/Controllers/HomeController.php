@@ -1113,12 +1113,7 @@ class HomeController extends Controller
             $this->email = Auth::user()->email;
         }
 
-        $client = $this->getMyClientInfo(Auth::user()->ref_code);
-
-        if(isset($client) && $client->accountMode == "test"){
-
-            return redirect()->route('dashboard')->with('error', 'You are in test mode');
-        }
+        // $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         // Insert Record for cash advance and redirect to cash advance page
         CashAdvance::updateOrInsert([
@@ -2109,13 +2104,6 @@ class HomeController extends Controller
                 'continent' => $this->timezone[0],
                 'getmyfacility' => $this->getMyFacility(base64_decode($email)),
             );
-        }
-
-        $client = $this->getMyClientInfo(Auth::user()->ref_code);
-
-        if(isset($client) && $client->accountMode == "test"){
-
-            return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
         return view('main.myrentalmanagementfacility')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -5403,7 +5391,8 @@ class HomeController extends Controller
         if ($result->success == true) {
 
             // Conversion Rate USD to Local currency
-            $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
+            // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
+            $convertLocal = ($amount / $result->quotes->$localCurrency);
 
 
 

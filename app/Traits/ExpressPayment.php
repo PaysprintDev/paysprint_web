@@ -307,7 +307,7 @@ trait ExpressPayment
             $myamount = ($data['commissiondeduct'] + 0.01) + $data['amounttosend'];
 
             // Convert currency to Dollar
-            $inputamount = $this->payBillCurrencyConvert("NGN", $thisuser->currencyCode, $myamount);
+            $inputamount = $this->payBillCurrencyConvert("NGN", $thisuser->currencyCode, $myamount, 'utilitypurchase');
         }
 
 
@@ -559,7 +559,7 @@ trait ExpressPayment
 
 
 
-    public function payBillCurrencyConvert($billerCurrency, $myCurrency, $amount)
+    public function payBillCurrencyConvert($billerCurrency, $myCurrency, $amount, $route = null)
     {
 
         // Get Markup
@@ -605,10 +605,18 @@ trait ExpressPayment
         if ($result->success == true) {
 
             // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
-            $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
+            // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
+            $convertLocal = ($amount / $result->quotes->$localCurrency);
 
             // Converting your USD value to other currency ie CAD * Y
             $convRate = $result->quotes->$currency * $convertLocal;
+
+
+            $actualRate = $result->quotes->$currency * $convertLocal;
+                $convRate = $actualRate * 95/100;
+
+
+                $this->calculateBufferedTransaction($actualRate, $convRate, $route);
 
 
             $message = 'success';
