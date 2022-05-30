@@ -66,7 +66,7 @@
                                         @foreach ($data['posts'] as $theposts)
                                             <tr>
                                                 <td>{{ $i++ }}</td>
-                                                <td>{{ $theposts->title }}</td>
+                                                <td>{{ $theposts->post_title }}</td>
                                                 <td>{!! $theposts->description !!}</td>
                                                 <td>
                                                     <a
