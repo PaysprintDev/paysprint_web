@@ -1841,6 +1841,47 @@ class AdminController extends Controller
 
     }
 
+    public function editInvestorPosts(Request $req, $id){
+
+        $getPost = CreatePost::where('id', $id)->first();
+
+        $docPath = $getPost->investment_document;
+
+        if($req->hasFile('investment_document')){
+            //Get filename with extension
+        $filenameWithExt = $req->file('investment_document')->getClientOriginalName();
+        // Get just filename
+        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        // Get just extension
+        $extension = $req->file('investment_document')->getClientOriginalExtension();
+        // Filename to store
+        $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+
+
+        $path = $req->file('investment_document')->move(public_path('../../investorreldocs/'), $fileNameToStore);
+
+
+        $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/investorreldocs/" . $fileNameToStore;
+        }
+
+        $post=CreatePost::where('id', $id)->update([
+            'ref_code' => $req->reference_code,
+            'post_title' => $req->post_title,
+             'description' => $req->description,
+             'minimum_acount' => $req->minimum_amount,
+             'locked_in_return' => $req->locked_return,
+             'term' => $req->term,
+             'liquidation_amouunt' => $req->liquidation_amouunt,
+             'offer_open_date' => $req->offer_open_date,
+             'offer_end_date' => $req->offer_end_date,
+             'investment_activation_date' => $req->investment_activation_date,
+             'investment_document' => $docPath,
+             'activate_post'=>$req->activate_post
+        ]);
+
+        return redirect()->route('investorposts')->with("msg", "<div class='alert alert-success'>Post Updated Successfully</div>");
+
+    }
 
 
 
