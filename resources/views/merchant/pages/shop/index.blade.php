@@ -1069,6 +1069,7 @@
         {{-- Product Open Modal Here --}}
         <section class="quick-view">
 
+
             @for ($i = 0; $i < count($data['myproduct']); $i++)
                 <div class="modal fade" id="productModal{{ $data['myproduct'][$i]->id }}" tabindex="-1"
                     aria-labelledby="productModalLabel" aria-hidden="true">
@@ -1163,12 +1164,10 @@
 
         </section>
 
-
-
-
-
         {{-- End Product Open Modal Here --}}
     @endif
+
+
 
 
 @endsection

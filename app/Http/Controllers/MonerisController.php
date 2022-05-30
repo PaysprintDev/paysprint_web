@@ -803,9 +803,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                                                     if ($thisuser->currencyCode == $getthisinvoice->invoiced_currency) {
-                                                        $getRate = $this->getOfficialConversionRate($req->currencyCode, $thismerchant->currencyCode);
+                                                        $getRate = $this->getOfficialConversionRate($req->currencyCode, $thismerchant->currencyCode, 'payinvoice');
                                                     } else {
-                                                        $getRate = $this->getOfficialConversionRate($getthisinvoice->invoiced_currency, $thismerchant->currencyCode);
+                                                        $getRate = $this->getOfficialConversionRate($getthisinvoice->invoiced_currency, $thismerchant->currencyCode, 'payinvoice');
                                                     }
 
 

@@ -371,6 +371,7 @@ Route::prefix('/v1')->group(function () {
         // Shop
         Route::post('/shop/product/addtowishlist', ['uses' => 'ShopController@addToWishList', 'as' => 'add to wish list']);
         Route::post('/shop/product/addtocart', ['uses' => 'ShopController@addToCart', 'as' => 'add to cart']);
+        Route::get('/shop/product/loadmycart', ['uses' => 'ShopController@loadMyCart', 'as' => 'load my cart']);;
 
         Route::post('/shop/product/deliveryoption', ['uses' => 'ShopController@deliveryOptionDetails', 'as' => 'delivery option details']);
 

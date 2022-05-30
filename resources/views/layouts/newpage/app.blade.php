@@ -5,10 +5,10 @@
 
 @include('include.newpage.footer')
 @include('include.modal')
-{{--  This Tawk plugin is meant for Africa  --}}
+{{-- This Tawk plugin is meant for Africa --}}
 
-@isset($data['continent'])
-    @if ($data['continent'] == "Africa")
+{{-- @isset($data['continent'])
+    @if ($data['continent'] == 'Africa')
         <!--Start of Tawk.to Script-->
         <script type="text/javascript">
         var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
@@ -23,8 +23,8 @@
         </script>
         <!--End of Tawk.to Script-->
     @endif
-@endisset
+@endisset --}}
 
-{{--  End Tawk Plugin for Africa  --}}
+{{-- End Tawk Plugin for Africa --}}
 
 @include('include.newpage.footerjs')
