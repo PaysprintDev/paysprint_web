@@ -88,6 +88,8 @@ use App\UpgradePlan as UpgradePlan;
 
 use Illuminate\Support\Facades\Log;
 
+use Illuminate\Support\Facades\Validation;
+
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Hash;
@@ -1510,6 +1512,56 @@ class AdminController extends Controller
     }
 
 
+        public function newInvestorPost(Request $req){
+            if ($req->session()->has('username') == true) {
+                // dd(Session::all());
+    
+                if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                    $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                    $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                    $payInvoice = DB::table('client_info')
+                        ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                        ->orderBy('invoice_payment.created_at', 'DESC')
+                        ->get();
+    
+                    $otherPays = DB::table('organization_pay')
+                        ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                        ->orderBy('organization_pay.created_at', 'DESC')
+                        ->get();
+                } else {
+                    $adminUser = Admin::where('username', session('username'))->get();
+                    $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                    $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                    $otherPays = DB::table('organization_pay')
+                        ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                        ->where('organization_pay.coy_id', session('user_id'))
+                        ->orderBy('organization_pay.created_at', 'DESC')
+                        ->get();
+                }
+    
+                // dd($payInvoice);
+    
+                $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+    
+                $transCost = $this->transactionCost();
+    
+                $getwithdraw = $this->withdrawRemittance();
+                $collectfee = $this->allcollectionFee();
+                $getClient = $this->getallClient();
+                $getCustomer = $this->getCustomer($req->route('id'));
+    
+    
+                // Get all xpaytransactions where state = 1;
+    
+                $getxPay = $this->getxpayTrans();
+    
+    
+                return view('admin.investorpost')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay]);
+            } else {
+                return redirect()->route('AdminLogin');
+            }
+            
+        }
 
     public function investorSubscriber(Request $req)
     {
@@ -1639,6 +1691,64 @@ class AdminController extends Controller
         }
     }
 
+        public function fetchInvestorNews(Request $req){
+            if ($req->session()->has('username') == true) {
+                // dd(Session::all());
+    
+                if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                    $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                    $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                    $payInvoice = DB::table('client_info')
+                        ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                        ->orderBy('invoice_payment.created_at', 'DESC')
+                        ->get();
+    
+                    $otherPays = DB::table('organization_pay')
+                        ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                        ->orderBy('organization_pay.created_at', 'DESC')
+                        ->get();
+                } else {
+                    $adminUser = Admin::where('username', session('username'))->get();
+                    $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                    $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                    $otherPays = DB::table('organization_pay')
+                        ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                        ->where('organization_pay.coy_id', session('user_id'))
+                        ->orderBy('organization_pay.created_at', 'DESC')
+                        ->get();
+                }
+    
+                // dd($payInvoice);
+    
+                $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+    
+                $transCost = $this->transactionCost();
+    
+                $getwithdraw = $this->withdrawRemittance();
+                $collectfee = $this->allcollectionFee();
+                $getClient = $this->getallClient();
+                $getCustomer = $this->getCustomer($req->route('id'));
+    
+    
+                // Get all xpaytransactions where state = 1;
+    
+                $getxPay = $this->getxpayTrans();
+    
+                $data = [
+    
+                    'posts' => InvestorPost::orderBy('created_at', 'DESC')->get()
+    
+                ];
+    
+                return view('admin.investorsnews')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'data' => $data]);
+            } else {
+                return redirect()->route('AdminLogin');
+            }
+        }
+
+
+
+
 
     public function createInvestorPost(Request $req)
     {
@@ -1673,49 +1783,61 @@ class AdminController extends Controller
         return view('admin.editinvestorpost')->with(['pages' => 'Dashboard', 'transCost' => $transCost,  'data' => $data]);
     }
 
+    public function editInvestorNews(Request $req, $id){
+
+        $transCost = $this->transactionCost();
+
+        $data = array(
+              'byStructure' => TransactionCost::select('structure')->groupBy('structure')->get(),
+              'byMethod' => TransactionCost::select('method')->groupBy('method')->get(),
+              'countryprice' => $this->getCountryPricing($req->get('country')),
+              'post' => InvestorPost::where('id', $id)->first()
+
+          );
+
+      return view('admin.editinvestornews')->with(['pages' => 'Dashboard', 'transCost' => $transCost,  'data' => $data]);
+  }
+
         public function deleteInvestorPost(Request $req, $id){
             $post=Createpost::where('id',$id)->delete();
             return back()->with("msg", "<div class='alert alert-success'>Post Deleted Successfully</div>");
         }
 
-    public function editInvestorPosts(Request $req, $id){
+        public function deleteInvestorNews(Request $req, $id){
+            $post=InvestorPost::where('id',$id)->delete();
+            return back()->with("msg", "<div class='alert alert-success'>News Deleted Successfully</div>");
+        }
 
-        $getPost = Createpost::where('id', $id)->first();
+    public function updateInvestorNews(Request $req, $id){
 
-        $docPath = $getPost;
+        $getPost = InvestorPost::where('id', $id)->first();
 
-        if($req->hasFile('investment_document')){
+        $docPath = $getPost->file;
+
+        if($req->hasFile('file')){
             //Get filename with extension
-        $filenameWithExt = $req->file('investment_document')->getClientOriginalName();
+        $filenameWithExt = $req->file('file')->getClientOriginalName();
         // Get just filename
         $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
         // Get just extension
-        $extension = $req->file('investment_document')->getClientOriginalExtension();
+        $extension = $req->file('file')->getClientOriginalExtension();
         // Filename to store
         $fileNameToStore = rand() . '_' . time() . '.' . $extension;
 
 
-        $path = $req->file('investment_document')->move(public_path('../../investorreldocs/'), $fileNameToStore);
+        $path = $req->file('file')->move(public_path('../../investorrelnews/'), $fileNameToStore);
 
 
-        $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/investorreldocs/" . $fileNameToStore;
+        $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/investorrelnews/" . $fileNameToStore;
         }
 
-        $post=Createpost::where('id', $id)->update([
-        'ref_code' => $req->reference_code,
-       'post_title' => $req->post_title,
-        'description' => $req->description,
-        'minimum_acount' => $req->minimum_amount,
-        'locked_in_return' => $req->locked_return,
-        'term' => $req->term,
-        'liquidation_amouunt' => $req->liquidation_amouunt,
-        'offer_open_date' => $req->offer_open_date,
-        'offer_end_date' => $req->offer_end_date,
-        'investment_activation_date' => $req->investment_activation_date,
-        'investment_document' => $docPath
+        $post=InvestorPost::where('id', $id)->update([
+       'title' => $req->title,
+        'description' => $req->description, 
+        'file' => $docPath
         ]);
 
-        return back()->with("msg", "<div class='alert alert-success'>Post Updated Successfully</div>");
+        return redirect()->route('investors news')->with("msg", "<div class='alert alert-success'>News Updated Successfully</div>");
 
     }
 
@@ -1724,9 +1846,7 @@ class AdminController extends Controller
 
     public function createInvestorPosts(Request $req)
     {
-
-
-
+        
 
         $docPath = "";
 
@@ -1773,6 +1893,45 @@ class AdminController extends Controller
 
 
             //return view('admin.createpost')->with(['pages' => 'Dashboard', 'transCost' => $transCost,  'data' => $data]);
+
+    }
+
+    public function createInvestorNews(Request $req){
+
+
+        $validation=$req->validate([
+            'title' => 'required',
+            'description' => 'required'
+        ]);
+
+        $docPath = "";
+
+        if($req->hasFile('file')){
+            //Get filename with extension
+        $filenameWithExt = $req->file('file')->getClientOriginalName();
+        // Get just filename
+        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        // Get just extension
+        $extension = $req->file('file')->getClientOriginalExtension();
+        // Filename to store
+        $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+
+
+        $path = $req->file('file')->move(public_path('../../investorrelnews/'), $fileNameToStore);
+
+
+        $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/investorreldocs/" . $fileNameToStore;
+        }
+
+        $post = InvestorPost::insert([
+        'title' => $req->title,
+        'description' => $req->description,
+        'file' => $docPath,
+
+        ]);
+
+        return back()->with("msg","<div class='alert alert-success'>News Created Successfully</div>");
+
 
     }
 
