@@ -75,7 +75,7 @@
                         </div>
                         <div class="col-md-3">
                             <span><a class=" text-center" href="javascript:void(0)"
-                                    onclick="addCart('{{ $wishlist->productId }}', '{{ Auth::id() }}')"
+                                    onclick="addCart('{{ $product->id }}', '{{ Auth::id() }}')"
                                     style="color: orange; font-weight:lighter; font-size:18px;">ADD TO CART</a></span>
                             <br>
                             <span class="mt-4">
