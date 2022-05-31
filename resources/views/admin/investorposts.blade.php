@@ -70,7 +70,7 @@
                                                 <td>{!! $theposts->description !!}</td>
                                                 <td>
                                                     <a
-                                                        href="{{ $theposts->file != null ? $theposts->file : 'javascript:void()' }}">{{ $theposts->file != null ? 'Open file' : 'NILL' }}</a>
+                                                        href="{{ $theposts->investment_document != null ? $theposts->investment_document : 'javascript:void()' }}">{{ $theposts->investment_document != null ? 'Open file' : 'NILL' }}</a>
                                                 </td>
                                                 <td>{{ date('d/m/Y', strtotime($theposts->created_at)) }}</td>
                                                 <td>

@@ -2,7 +2,7 @@
 
 @section('dashContent')
 
-
+    <?php use \Illuminate\Support\Str; ?>
     <?php use App\Http\Controllers\User; ?>
     <?php use App\Http\Controllers\AddCard; ?>
 
@@ -67,7 +67,7 @@
                                             <tr>
                                                 <td>{{ $i++ }}</td>
                                                 <td>{{ $theposts->title }}</td>
-                                                <td>{!! $theposts->description !!}</td>
+                                                <td>{!! str::limit($theposts->description, 400) !!}</td>
                                                 <td>
                                                     <a
                                                         href="{{ $theposts->file != null ? $theposts->file : 'javascript:void()' }}">{{ $theposts->file != null ? 'Open file' : 'NILL' }}</a>
