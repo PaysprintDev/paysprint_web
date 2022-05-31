@@ -352,15 +352,16 @@
 
 
                                                                 @guest
-                                                                    <a href="javascript:void(0)" class="w-c-q-icn"
+                                                                    <a title="add to wishlist" href="javascript:void(0)"
+                                                                        class="w-c-q-icn"
                                                                         onclick="addWishlist('{{ $product->id }}', 0)"><i
                                                                             class="fa fa-heart"></i></a>
-                                                                    <a href="javascript:void(0)"
+                                                                    <a title="add to cart" href="javascript:void(0)"
                                                                         onclick="addCart('{{ $product->id }}', 0)"
                                                                         class="w-c-q-icn"><i
                                                                             class="fa fa-shopping-bag"></i></a>
-                                                                    <a href="javascript:void(0)" class="w-c-q-icn"
-                                                                        data-bs-toggle="modal"
+                                                                    <a title="view product" href="javascript:void(0)"
+                                                                        class="w-c-q-icn" data-bs-toggle="modal"
                                                                         data-bs-target="#productModal{{ $product->id }}"><i
                                                                             class="fa fa-eye"></i></a>
 
@@ -368,16 +369,16 @@
 
 
                                                                 @auth
-                                                                    <a href="javascript:void(0)"
+                                                                    <a title="add to wishlist" href="javascript:void(0)"
                                                                         class="w-c-q-icn wishes{{ $product->id }}"
                                                                         onclick="addWishlist('{{ $product->id }}', {{ Auth::id() }})"><i
                                                                             class="fa fa-heart"></i></a>
-                                                                    <a href="javascript:void(0)"
+                                                                    <a title="add to cart" href="javascript:void(0)"
                                                                         onclick="addCart('{{ $product->id }}', {{ Auth::id() }})"
                                                                         class="w-c-q-icn carty{{ $product->id }}"><i
                                                                             class="fa fa-shopping-bag "></i></a>
-                                                                    <a href="javascript:void(0)" class="w-c-q-icn"
-                                                                        data-bs-toggle="modal"
+                                                                    <a title="view product" href="javascript:void(0)"
+                                                                        class="w-c-q-icn" data-bs-toggle="modal"
                                                                         data-bs-target="#productModal{{ $product->id }}"><i
                                                                             class="fa fa-eye"></i></a>
 

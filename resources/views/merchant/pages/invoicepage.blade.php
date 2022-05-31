@@ -10,7 +10,7 @@
                     <div class="col-lg-6">
                         <h3>Invoice</h3>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="../dashboard.html">Home</a></li>
+                            <li class="breadcrumb-item"><a href="../{{ route('dashboard') }}">Home</a></li>
                             <li class="breadcrumb-item">Pages</li>
                             <li class="breadcrumb-item">Ecommerce</li>
                             <li class="breadcrumb-item active">Invoice</li>
