@@ -108,9 +108,7 @@
                     $('.modalspinner' + productId).addClass('disp-0');
                     $('.carty' + productId).removeClass('disp-0');
 
-                    var cartNo = Number($('#cart-total').text()) + 1;
 
-                    $('#cart-total').text(cartNo);
 
                     await loadCart(userId);
 
@@ -204,6 +202,8 @@
 
                 try {
 
+                    $('#cartRec').html('');
+
                     data = new FormData();
 
                     data.append('userId', userId);
@@ -222,7 +222,99 @@
 
                     const response = await axios(config);
 
+
                     console.log(response);
+
+                    var cartNo = response.data.data.length;
+
+                    $('#cart-total').text(cartNo);
+
+                    var totalCost = 0;
+                    var itemResult = "";
+                    var subInfo = "";
+
+                    if (cartNo > 0) {
+                        for (let i = 0; i < response.data.data.length; i++) {
+                            const element = response.data.data[i];
+
+                            itemResult += `
+                        <li class="cart-item">
+                            <div class="cart-img">
+                               <a href="javascript:void(0)">
+                                   <img src="${element.productImage}" alt="cart-image" class="img-fluid">
+                               </a>
+                           </div>
+
+                           <div class="cart-title">
+                               <h6><a href="javascript:void(0)">${element.productName}</a></h6>
+                               <div class="cart-pro-info">
+                                   <div class="cart-qty-price">
+                                       <span class="quantity">${element.quantity} x </span>
+                                       <span
+                                           class="price-box"> ${response.data.merchant.currencySymbol+''+element.price.toLocaleString()}</span>
+                                       <hr>
+                                       <span
+                                           class="price-box"> ${response.data.merchant.currencySymbol+''+Number(element.price * element.quantity).toLocaleString()}</span>
+                                   </div>
+                                   <div class="delete-item-cart">
+                                       <a href="javascript:void(0)" onclick="deleteFromCart('${element.id}')"><i
+                                               class="icon-trash icons"></i></a>
+                                   </div>
+                               </div>
+                           </div>
+
+
+                        </li>
+                        `;
+
+
+                            totalCost += Number(element.price * element.quantity);
+
+                        }
+
+                        subInfo = `<li class="subtotal-info">
+                   <div class="subtotal-titles">
+                       <h6>Sub total:</h6>
+                       <span
+                           class="subtotal-price"> ${response.data.merchant.currencySymbol+''+totalCost.toLocaleString()}</span>
+                   </div>
+               </li>
+               <li class="mini-cart-btns">
+                   <div class="cart-btns">
+                       <a href="/product/cart?store=${response.data.merchant.businessname}"
+                           class="btn btn-style1">View cart</a>
+                       <a href="/product/checkout?store=${response.data.merchant.businessname}"
+                           class="btn btn-style1">Checkout</a>
+                   </div>
+               </li>`;
+                    } else {
+                        itemResult = `<li class="cart-item">
+                       <h4 class="text-center">No item in cart</h4>
+                   </li>`;
+
+                        subInfo = ``;
+
+                    }
+
+
+
+                    $('#cartRec').html(`
+                        <a href="javascript:void(0)" class="shopping-cart-close"><i class="ion-close-round"></i></a>
+                        <div class="cart-item-title">
+                            <p>
+                                <span class="cart-count-desc">There are</span>
+                                <span class="cart-count-item bigcounter">${cartNo}</span>
+                                <span class="cart-count-desc">Products</span>
+                            </p>
+                        </div>
+
+                        <ul class="cart-item-loop">${itemResult}</ul>
+
+                        <ul class="subtotal-title-area">
+               ${subInfo}
+           </ul>
+
+                    `);
 
 
                 } catch (error) {
@@ -363,10 +455,7 @@
 
                     const response = await axios(config);
 
-
-                    var cartNo = Number($('#cart-total').text()) - 1;
-
-                    $('#cart-total').text(cartNo);
+                    await loadCart('{{ Auth::user()->id }}');
 
 
                 } catch (error) {
