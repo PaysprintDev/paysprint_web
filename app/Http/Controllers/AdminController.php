@@ -1842,7 +1842,7 @@ class AdminController extends Controller
     }
 
     public function editInvestorPosts(Request $req, $id){
-
+                dd($req->all());
         $getPost = CreatePost::where('id', $id)->first();
 
         $docPath = $getPost->investment_document;
