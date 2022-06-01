@@ -1090,13 +1090,28 @@ class CurrencyFxController extends Controller
     public function refreshBids()
     {
         // Get all expired bids in market place...
-        $today = Carbon::now()->subDay();
-        $getMarkets = MarketPlace::whereDate('expiry', '<=', $today)->where('status', 'Bid Pending')->get();
+        // $today = Carbon::now()->subDay();
+
+        $today = date('Y-m-d');
+
+
+        // $getMarkets = MarketPlace::whereDate('expiry', '<=', $today)->where('status', 'Bid Pending')->get();
+        $getMarkets = MarketPlace::where('status', 'Bid Pending')->get();
+
+
 
         if (count($getMarkets) > 0) {
 
             foreach ($getMarkets as $value) {
 
+
+                $expiry = date('Y-m-d', strtotime($value->expiry));
+
+                $now = time();
+                $your_date = strtotime($expiry);
+                $datediff = $your_date - $now;
+
+                if($datediff <= 0){
 
                 $thisuser = User::where('id', $value->user_id)->first();
 
@@ -1116,7 +1131,7 @@ class CurrencyFxController extends Controller
                 $transaction_id = "es-wallet-" . date('dmY') . time();
 
                 // Insert Escrow Statement
-                $activity = "Wallet credit of " . $thisuser->currencyCode . " " . number_format($value->sell, 2) . " from PaySprint wallet to FX wallet ";
+                $activity = "Wallet deposit of " . $thisuser->currencyCode . " " . number_format($value->sell, 2) . " for a bid has been refunded back to your (".$thisuser->currencyCode.") wallet on PaySprint FX";
                 $credit = $value->sell;
                 $debit = 0;
                 $reference_code = $transaction_id;
@@ -1133,7 +1148,6 @@ class CurrencyFxController extends Controller
                 $this->insFXStatement($getescrow->escrow_id, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $thisuser->country, "confirmed");
 
 
-                MarketPlace::whereDate('expiry', '<=', $today)->where('user_id', $value->user_id)->where('status', 'Bid Pending')->delete();
 
 
                 // This works even if bid is accepted but still pending...
@@ -1198,12 +1212,20 @@ class CurrencyFxController extends Controller
                 }
 
 
+                MarketPlace::where('order_id', $value->order_id)->where('user_id', $value->user_id)->where('status', 'Bid Pending')->delete();
+
+
+
                 Log::info("Currency exchange transaction of " . $getWallet->currencyCode . " " . number_format($value->sell, 2) . " by " . $thisuser->name . " returned back to wallet");
 
                 $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $sendMsg);
 
-                echo "Done";
+                echo "Done for ".$expiry."<hr>";
+                }
+
             }
+
+            echo "Finally done";
         } else {
             Log::info('No expired market today: ' . $today);
 

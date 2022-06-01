@@ -36,6 +36,7 @@ class ShopController extends Controller
 
     public $to;
     public $name;
+    public $email;
     public $subject;
     public $message;
 
@@ -902,15 +903,22 @@ class ShopController extends Controller
 
                 // SEND MAIL......
                 $getUser = User::where('id', $getOrder->userId)->first();
+
+
                 $getMerchant = User::where('id', $getOrder->merchantId)->first();
 
+
+                $stop_date = date('Y-m-d');
+                $expDate = date('Y-m-d', strtotime($stop_date . ' +'.$getProduct->deliveryDate));
+
+
                 $this->subject = 'Your item ' . $getProduct->productName . ' is out for delivery';
-                $this->message = '<p>We have just dispatched your items from your order ' . $req->orderId . '.</p><p>The package will be delivered by our delivery agent once it gets to the delivery hub at the following address: ' . $getBilling->shippingAddress . ' </p><p>Kindly click on the link: ' . $link . ' and enter the code: <b>' . $code . '</b> to confirm your package as soon as our delivery associate get them to you. This code expires on ' . date('d/m/Y') . ' (3 days) if order is not verified.</p>';
+                $this->message = '<p>We have just dispatched your items from your order ' . $req->orderId . '.</p><p>The package will be delivered by our delivery agent once it gets to the delivery hub at the following address: ' . $getBilling->shippingAddress . ' </p><p>Kindly click on the link: ' . $link . ' and enter the code: <b>' . $code . '</b> to confirm your package as soon as our delivery associate get them to you. This code expires on ' . date('d/m/Y', strtotime($expDate)) . ' ('.$getProduct->deliveryDate.') if order is not verified.</p>';
 
 
 
 
-                $sendMsg = "Hi " . $getUser->name . ", We have just dispatched your items from your order " . $req->orderId . ". Kindly click on the link: " . $link . " and enter the code: " . $code . " to confirm your package as soon as our delivery associate get them to you. This code expires in " . date('d/m/Y') . " (3 days)  if order is not verified." . $getMerchant->businessname;
+                $sendMsg = "Hi " . $getUser->name . ", We have just dispatched your items from your order " . $req->orderId . ". Kindly click on the link: " . $link . " and enter the code: " . $code . " to confirm your package as soon as our delivery associate get them to you. This code expires in " . date('d/m/Y', strtotime($expDate)) . " (".$getProduct->deliveryDate.")  if order is not verified." . $getMerchant->businessname;
 
                 $getPhone = User::where('email', $getUser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -941,6 +949,7 @@ class ShopController extends Controller
                 $resData = ['data' => [], 'message' => 'Order not found'];
             }
         } catch (\Throwable $th) {
+
             $status = 400;
             $resData = ['data' => [], 'message' => $th->getMessage()];
         }
@@ -1193,6 +1202,9 @@ class ShopController extends Controller
     {
         $objDemo = new \stdClass();
         $objDemo->purpose = $purpose;
+
+
+
 
         if ($purpose == 'Fund remittance') {
             $objDemo->name = $this->name;

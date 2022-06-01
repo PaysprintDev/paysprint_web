@@ -115,6 +115,7 @@ class MerchantApiController extends Controller
     {
 
 
+
         $validator = Validator::make($req->all(), [
             'accountNumber' => 'required',
             'amount' => 'required',
@@ -300,6 +301,9 @@ class MerchantApiController extends Controller
                                                     // Get Cart Item
                                                     $cartItemDetails = StoreCart::where('productId', $myOrderDetails[$i]->productId)->where('userId', $thisuser->id)->first();
                                                     $productItems = StoreProducts::where('id', $myOrderDetails[$i]->productId)->first();
+
+
+
 
 
                                                     $productCat = ($productItems->stock - $cartItemDetails->quantity);
@@ -1103,6 +1107,8 @@ class MerchantApiController extends Controller
 
 
 
+
+
                                                 // thisconsumer Statement
                                                 $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $req->amount, $balance, $trans_date, $wallet_status, $action, $thisuser->ref_code, 1, $statement_route, $thisuser->auto_deposit, $thisuser->country, $mode);
 
@@ -1165,17 +1171,29 @@ class MerchantApiController extends Controller
 
                                                 $myOrderDetails = StoreOrders::where('userId', $thisuser->id)->where('merchantId', $thismerchant->id)->where('paymentStatus', 'not paid')->get();
 
+
+
+
                                                 $orderIds = "";
                                                 $orderItems = "";
 
                                                 for ($i = 0; $i < count($myOrderDetails); $i++) {
 
+
+
                                                     // Get Cart Item
                                                     $cartItemDetails = StoreCart::where('productId', $myOrderDetails[$i]->productId)->where('userId', $thisuser->id)->first();
+
+
                                                     $productItems = StoreProducts::where('id', $myOrderDetails[$i]->productId)->first();
 
 
+
+
                                                     $productCat = ($productItems->stock - $cartItemDetails->quantity);
+
+
+
 
                                                     StoreProducts::where('id', $myOrderDetails[$i]->productId)->update([
                                                         'stock' => $productCat
@@ -3212,6 +3230,7 @@ class MerchantApiController extends Controller
 
             if ($validator->passes()) {
                 $thisuser = User::select('id', 'ref_code', 'wallet_balance', 'currencySymbol', 'currencyCode')->where('ref_code', $req->accountNumber)->first();
+
 
                 if (isset($thisuser)) {
                     // Get Account Balance

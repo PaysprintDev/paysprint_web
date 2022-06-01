@@ -1153,6 +1153,7 @@
                         data: data
                     });
 
+
                     $('.errorBalance').text('');
 
                     if (result.status === 200) {
@@ -1188,10 +1189,12 @@
 
 
         async function handShake(val) {
+            $('.sendmoneyBtn').text('Please wait...');
+
+
 
             try {
 
-                $('.sendmoneyBtn').text('Processing...');
 
                 var data = new FormData(forVisitors);
                 var headers = {
@@ -1208,10 +1211,12 @@
 
 
 
-                $('.sendmoneyBtn').text('Make Payment');
 
 
                 const response = await axios(config);
+
+                $('.sendmoneyBtn').text('Make Payment');
+
 
 
                 swal("Great", response.data.message, "success");
@@ -1292,6 +1297,7 @@
 
         function runCommission() {
 
+
             $('.commissionInfo').html("");
             $(".convertedCommission").html("");
             var amount = $("#amounttosend").val();
@@ -1313,10 +1319,12 @@
 
 
 
+
+
             Pace.restart();
             Pace.track(function() {
 
-                mainHeaders();
+                authHeaders();
 
                 jQuery.ajax({
                     url: route,
@@ -1331,7 +1339,6 @@
                     success: function(result) {
 
 
-                        console.log(result);
 
                         var totalCharge;
 
@@ -1602,6 +1609,16 @@
                 headers: {
                     'X-CSRF-TOKEN': "{{ csrf_token() }}",
                     'Authorization': 'Bearer {{ $data['merchantMainApiKey'] }}'
+                }
+            });
+        }
+
+
+        function authHeaders() {
+            jQuery.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                    'Authorization': 'Bearer {{ Auth::user()->api_token }}'
                 }
             });
         }
