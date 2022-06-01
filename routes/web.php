@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\MerchantPageController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\WalletCreditController;
+use App\Http\Controllers\AdminController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -967,6 +969,12 @@ Route::post('create_facility', ['uses' => 'BuildingController@createFacility', '
 Route::post('exporttoExcel', ['uses' => 'HomeController@exportToExcel', 'as' => 'export to excel']);
 Route::post('exportstatementtoExcel', ['uses' => 'AdminController@exportStatementToExcel', 'as' => 'export statement to excel']);
 Route::post('exporttoPdf', ['uses' => 'HomeController@exportToPdf', 'as' => 'export to pdf']);
+
+
+//testng upload excel to DB skima
+Route::get('/promopage',['uses' => 'AdminController@promoPage', 'as' => 'promo page']);
+Route::post('/uploadpromousers',['uses' => 'AdminController@uploadPromoUsers', 'as' => 'upload promo users']);
+Route::get('/promousers',['uses' => 'AdminController@promoUsers', 'as' => 'promo users']);
 
 
 

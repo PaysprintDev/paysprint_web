@@ -196,6 +196,23 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
             ]
         });
 
+        $('#promousers').DataTable({
+            'paging': true,
+            'pageLength': 20,
+            'lengthChange': true,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': true,
+            dom: 'Bfrtip',
+            buttons: [
+                'copyHtml5',
+                'excelHtml5',
+                'csvHtml5',
+                'pdfHtml5'
+            ]
+        });
+
 
 
         //Initialize Select2 Elements
