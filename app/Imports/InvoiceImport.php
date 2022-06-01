@@ -51,30 +51,6 @@ class InvoiceImport implements ToModel, WithHeadingRow
             $invoice_no = $row['invoice'];
         }
 
-        // $dataInfo []= array(
-        //     'transaction_date' => $trans_date->format('d-m-Y'), 
-        //     'invoice_no' => $invoice_no,
-        //     'payee_ref_no' => $row['customer_id'],
-        //     'name' => $row['name'],
-        //     'transaction_ref' => $row['transaction_ref'],
-        //     'description' => $row['description'],
-        //     'amount' => $row['amount'],
-        //     'payment_due_date' => $payment_due_date->format('d-m-Y'),
-        //     'payee_email' => $row['customer_email'],
-        //     'address' => $row['customer_address'],
-        //     'customer_id' => $row['customer_id'],
-        //     'service' => $this->queryData['service'],
-        //     'installpay' => $this->queryData['installpay'],
-        //     'installlimit' => $this->queryData['installlimit'],
-        //     'uploaded_by' => $this->queryData['ref_code'],
-        //     'merchantName' => $this->queryData['client_realname'],
-        //     'recurring' => $this->queryData['recurring_service'],
-        //     'reminder' => $this->queryData['reminder_service'],
-        //     'tax' => $this->queryData['single_tax'],
-        //     'tax_amount' => $taxAmount,
-        //     'total_amount' => $totalAmount, 
-        //     'remaining_balance' => $totalAmount
-        // );
 
         return new ImportExcel([
             'transaction_date' => $trans_date->format('d-m-Y'), 
