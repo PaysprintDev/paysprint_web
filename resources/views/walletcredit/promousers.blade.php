@@ -58,14 +58,35 @@
                             <td>{{ $counter++}}</td>
                             <td>{{ $promousers->date}}</td>
                             <td>{{ $promousers->email}}</td>
-                            <td><button class="btn btn-primary">Top-up</button></td>
+                            <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop">Top-up</button></td>
                         </tr>
                     @endforeach
                     @endif
+                    <!-- modal -->
+                    <!-- Button trigger modal -->
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          ...
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button type="button" class="btn btn-primary">Understood</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+  
                     </tbody>
                 </table>
             </div>
-                
             </div>
             
 
