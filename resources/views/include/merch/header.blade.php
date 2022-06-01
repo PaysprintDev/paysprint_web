@@ -2,11 +2,11 @@
       <div class="page-main-header">
           <div class="main-header-right row m-0">
               <div class="main-header-left">
-                  {{-- <div class="logo-wrapper"><a href="dashboard.html"><img class="img-fluid" src="{{ asset('assets/images/logo/logo.png') }}" alt=""></a></div> --}}
-                  <div class="logo-wrapper"><a href="dashboard.html"><img class="img-fluid"
+                  {{-- <div class="logo-wrapper"><a href="{{ route('dashboard') }}"><img class="img-fluid" src="{{ asset('assets/images/logo/logo.png') }}" alt=""></a></div> --}}
+                  <div class="logo-wrapper"><a href="{{ route('dashboard') }}"><img class="img-fluid"
                               src="https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png"
                               alt=""></a></div>
-                  <div class="dark-logo-wrapper"><a href="dashboard.html"><img class="img-fluid"
+                  <div class="dark-logo-wrapper"><a href="{{ route('dashboard') }}"><img class="img-fluid"
                               src=" https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png"
                               alt=""></a></div>
                   <div class="toggle-sidebar"><i class="status_toggle middle" data-feather="align-center"

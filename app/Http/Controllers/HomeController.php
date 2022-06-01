@@ -5169,6 +5169,7 @@ class HomeController extends Controller
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
 
+
         if ($req->pay_method != "Wallet") {
 
             if ($req->foreigncurrency != $req->localcurrency) {

@@ -4,7 +4,7 @@
     <!-- breadcrumb start -->
     <section class="about-breadcrumb" style="margin-top: 150px;">
         <div class="about-back section-tb-padding"
-            style="background-image: url({{ asset('shopassets/image/about-image.jpg') }})">
+            style="background-image: url('{{ array_filter(explode(', ', $data['mystore']->headerContent))[0] }}')">
 
             <div class="container">
                 <div class="row">
