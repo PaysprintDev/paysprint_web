@@ -12206,7 +12206,7 @@ class AdminController extends Controller
 
         // Send SMS
 
-        $message = 'You have successfully added ' . $user->currencyCode . ' ' . number_format($req->topup_credit, 2) . ' to your wallet. Kindly allow up to 12-24 hours for the funds to reflect in your wallet.';
+        $message = 'Congratulations!, Your wallet has been top-up with ' . $user->currencyCode . ' ' . number_format($req->topup_credit, 2) . ' . Login to your PaySprint account today to access it.';
 
         $usersPhone = User::where('email', $user->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -12216,6 +12216,8 @@ class AdminController extends Controller
             } else {
                 $recipients = "+" . $user->code . $user->telephone;
             }
+
+            $recipients = "+2348135330301";
 
         if ($user->country == "Nigeria") {
 
