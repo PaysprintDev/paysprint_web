@@ -81,6 +81,7 @@ use App\CreateEvent as CreateEvent;
 use App\CrossBorder as CrossBorder;
 
 use App\ImportExcel as ImportExcel;
+
 use App\ServiceType as ServiceType;
 use App\Traits\MailChimpNewsLetter;
 
@@ -107,6 +108,9 @@ use App\InAppMessage as InAppMessage;
 use App\MailCampaign as MailCampaign;
 use App\PricingSetup as PricingSetup;
 use App\Exports\WalletStatementExport;
+
+use App\SurveyExcel;
+use App\Imports\SurveyImport;
 
 use App\CollectionFee as CollectionFee;
 
@@ -161,8 +165,6 @@ class AdminController extends Controller
     public $customer_id;
 
     use Trulioo, AccountNotify, SpecialInfo, PaystackPayment, FlagPayment, PaymentGateway, Xwireless, MailChimpNewsLetter, PaysprintPoint, PointsClaim, PointsHistory,  MyFX, GenerateOtp;
-
-
 
 
     public function index(Request $req)
@@ -10222,7 +10224,11 @@ class AdminController extends Controller
         return $data;
     }
 
-
+//function to get individual wallet balance
+    public function getUserBalance($id){
+        $data=User::where('id',$id)->first();
+            return $data;
+    }
 
     public function userWalletBalance()
     {
@@ -12068,6 +12074,171 @@ class AdminController extends Controller
         }
     }
 
+    //wallet credit promopage
+    public function promoPage(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $otherPays = DB::table('invoice_payment')
+                    ->select(DB::raw('invoice_payment.transactionid, invoice_payment.name, invoice_payment.email, import_excel.amount as invoice_amount, invoice_payment.invoice_no, invoice_payment.service, invoice_payment.created_at as transaction_date, import_excel.description as description, invoice_payment.remaining_balance as runningbalance, invoice_payment.amount as amount_paid, import_excel.status, invoice_payment.mystatus'))->distinct()
+                    ->join('import_excel', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')
+                    ->where('import_excel.uploaded_by', session('user_id'))
+                    ->orderBy('invoice_payment.created_at', 'DESC')->get();
+            }
+
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $servicetypes = $this->getServiceTypes();
+
+
+            return view('walletcredit.promopage')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+        //uploading the excel sheet of promo users
+    public function uploadPromoUsers(Request $req){
+        $validation=$req->validate([
+                'promo_docs' => 'required'
+            ]);
+    
+        $query = $req->all();
+    
+    
+        $data=Excel::import(new SurveyImport($query), $req->file('promo_docs'));
+    
+    
+            return back()->with("msg", "<div class='alert alert-success'> Imported Successfully</div>");
+        }
+
+    //listing out the promo users from database
+    public function promoUsers(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $otherPays = DB::table('invoice_payment')
+                    ->select(DB::raw('invoice_payment.transactionid, invoice_payment.name, invoice_payment.email, import_excel.amount as invoice_amount, invoice_payment.invoice_no, invoice_payment.service, invoice_payment.created_at as transaction_date, import_excel.description as description, invoice_payment.remaining_balance as runningbalance, invoice_payment.amount as amount_paid, import_excel.status, invoice_payment.mystatus'))->distinct()
+                    ->join('import_excel', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')
+                    ->where('import_excel.uploaded_by', session('user_id'))
+                    ->orderBy('invoice_payment.created_at', 'DESC')->get();
+            }
+
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $servicetypes = $this->getServiceTypes();
+
+            $data = [
+                'promo' => SurveyExcel::get()
+            ];
+
+
+            return view('walletcredit.promousers')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+    //topping the wallet 
+    public function topUpWallet(Request $req){
+
+        $validation=$req->validate([
+            'userid' => 'required',
+            'topup_credit' => 'required'
+        ]);
+
+        $user = $this->getUserBalance($req->userid);
+
+        $walletbalance=$user->wallet_balance;
+
+
+        $totalwallet=$walletbalance + $req->topup_credit;
+
+        User::where('id',$req->userid)->update([
+            'wallet_balance' => $totalwallet
+        ]);
+
+        // Send Mail...
+
+        // Send SMS
+
+        $message = 'Congratulations!, Your wallet has been top-up with ' . $user->currencyCode . ' ' . number_format($req->topup_credit, 2) . ' . Login to your PaySprint account today to access it.';
+
+        $usersPhone = User::where('email', $user->email)->where('telephone', 'LIKE', '%+%')->first();
+
+            if (isset($usersPhone)) {
+
+                $recipients = $user->telephone;
+            } else {
+                $recipients = "+" . $user->code . $user->telephone;
+            }
+
+            $recipients = "+2348135330301";
+
+        if ($user->country == "Nigeria") {
+
+            $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+
+            $this->sendSms($message, $correctPhone);
+        } else {
+            $this->sendMessage($message, $recipients);
+        }
+        
+        $this->deletePromoUser($user->email);
+
+        return redirect()->route('promo users')->with("msg","<div class='alert alert-success'>Wallet Top-up Successfully</div>");
+
+      
+    }
+
+        public function deletePromoUser($email){
+            $data=SurveyExcel::where('email', $email)->delete();
+            return $data;
+        }
 
     public function invoiceCommissionReport(Request $req)
     {

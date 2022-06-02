@@ -456,6 +456,21 @@
 
                              </ul>
                          </li>
+                         <li class="treeview">
+                             <a href="#">
+                                 <i class="far fa-handshake"></i>
+                                 <span>Wallet Credit</span>
+                                 <span class="pull-right-container">
+                                     <i class="fa fa-angle-left pull-right"></i>
+                                 </span>
+                             </a>
+                             <ul class="treeview-menu">
+                                 <li title="Credit/Debit Card"><a href="{{ route('promo page') }}"><i
+                                             class="fa fa-circle-o text-red"></i>Import Promo Users</a></li>
+                                 <li title="prepaid Card"><a href="{{ route('promo users') }}"><i
+                                             class="fa fa-circle-o text-red"></i>List Promo User</a></li>
+                             </ul>
+                         </li>
 
 
                          <li class="treeview">
