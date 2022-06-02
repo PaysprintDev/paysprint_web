@@ -127,13 +127,16 @@
                                                             <div class="row">
                                                                 <div class="col-md-12">
                                                                     <h4>
-                                                                        {{ wordwrap($mycard->card_number, 4, ' - ', true) }}
+                                                                        {{ wordwrap(substr($mycard->card_number, 0, 4) . str_repeat('*', strlen($mycard->card_number) - 8) . substr($mycard->card_number, -4), 4, ' - ', true) }}
+
+
                                                                     </h4>
                                                                 </div>
                                                                 <br>
                                                                 <div class="col-md-6">
                                                                     <h6>
-                                                                        Expiry: {{ $mycard->month . '/' . $mycard->year }}
+                                                                        Expiry:
+                                                                        {{ $mycard->month . '/' . $mycard->year }}
                                                                     </h6>
                                                                 </div>
                                                                 <div class="col-md-6">
@@ -178,7 +181,7 @@
                                                             <div class="row">
                                                                 <div class="col-md-12">
                                                                     <h4>
-                                                                        {{ wordwrap($mycard->card_number, 4, ' - ', true) }}
+                                                                        {{ wordwrap(substr($mycard->card_number, 0, 4) . str_repeat('*', strlen($mycard->card_number) - 8) . substr($mycard->card_number, -4), 4, ' - ', true) }}
                                                                     </h4>
                                                                 </div>
                                                                 <br>
@@ -231,7 +234,7 @@
                                                             <div class="row">
                                                                 <div class="col-md-12">
                                                                     <h4>
-                                                                        {{ wordwrap($mycard->card_number, 4, ' - ', true) }}
+                                                                        {{ wordwrap(substr($mycard->card_number, 0, 4) . str_repeat('*', strlen($mycard->card_number) - 8) . substr($mycard->card_number, -4), 4, ' - ', true) }}
                                                                     </h4>
                                                                 </div>
                                                                 <br>

@@ -9,7 +9,7 @@
         "biscolab/laravel-recaptcha": "5.0.1",
         "botman/botman": "^2.6",
         "braintree/braintree_php": "5.5.0",
-        "cronitor/cronitor-php": "^1.2",
+        "cronitor/cronitor-php": "^1.3",
         "currency-cloud/client": "^3.1",
         "dompdf/dompdf": "^1.0",
         "erdemkeren/laravel-otp": "^3.0",

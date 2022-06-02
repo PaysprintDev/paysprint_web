@@ -139,7 +139,7 @@
                                                         </span> </div>
                                                     <select name="card_id" id="card_id" class="form-control" required>
                                                         {{-- @foreach ($data['getCard'] as $mycard)
-                                                    <option value="{{ $mycard->id }}">{!! wordwrap($mycard->card_number, 4, '-', true) !!}</option>
+                                                    <option value="{{ $mycard->id }}">{!! wordwrap(substr($mycard->card_number, 0, 4) . str_repeat('*', strlen($mycard->card_number) - 8) . substr($mycard->card_number, -4), 4, ' - ', true) !!}</option>
                                                 @endforeach --}}
                                                     </select>
 
@@ -491,13 +491,13 @@
                                     $.each(res, function(v, k) {
                                         $('#card_id').append(
                                             `<option value="${k.id}">${k.bankName} - ${k.accountNumber}</option>`
-                                            );
+                                        );
                                     });
                                 } else {
                                     $.each(res, function(v, k) {
                                         $('#card_id').append(
-                                            `<option value="${k.id}">${k.card_number} - ${k.card_provider}</option>`
-                                            );
+                                            `<option value="${k.id}">${cardHide(k.card_number)} - ${k.card_provider}</option>`
+                                        );
                                     });
                                 }
 
@@ -520,6 +520,19 @@
 
                 });
 
+            }
+
+
+            function cardHide(card) {
+                let hideNum = [];
+                for (let i = 0; i < card.length; i++) {
+                    if (i < card.length - 4) {
+                        hideNum.push("*");
+                    } else {
+                        hideNum.push(card[i]);
+                    }
+                }
+                return hideNum.join("");
             }
 
             function runCommission() {

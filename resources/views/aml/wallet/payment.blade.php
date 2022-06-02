@@ -130,9 +130,7 @@
                                         <select name="card_id" id="card_id" class="form-control" required>
                                             @if (count($data['getCard']) > 0)
                                                 @foreach ($data['getCard'] as $mycard)
-
-
-                                                    <option value="{{ $mycard->id }}">{!! wordwrap($mycard->card_number, 4, '-', true) !!}</option>
+                                                    <option value="{{ $mycard->id }}">{!! wordwrap(substr($mycard->card_number, 0, 4) . str_repeat('*', strlen($mycard->card_number) - 8) . substr($mycard->card_number, -4), 4, ' - ', true) !!}</option>
                                                 @endforeach
                                             @else
                                                 <option value="">Add a new card</option>
@@ -223,14 +221,13 @@
                                         </div>
 
 
-                                        
+
                                     @endif --}}
 
 
 
 
                                 @if (Request::get('country') != $data['paymentorg']->country)
-
                                     <div class="form-group"> <label for="netwmount">
                                             <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate
                                                     </b></small></h6>
@@ -264,10 +261,7 @@
                                         <input type="text" name="conversionamount" class="form-control"
                                             id="conversionamount" value="" placeholder="0.00" readonly>
                                     </div>
-
-
                                 @else
-
                                     <div class="form-group disp-0"> <label for="netwmount">
                                             <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate
                                                     </b></small></h6>
@@ -289,9 +283,6 @@
                                         <input type="text" name="amounttosend" class="form-control" id="amounttosend"
                                             value="" placeholder="0.00" readonly>
                                     </div>
-
-
-
                                 @endif
 
 
@@ -327,7 +318,6 @@
                                         <span class="text-success disp-0">Please note that International transfer are sent
                                             in USD conversion</span>
                                     </div>
-
                                 @endif
 
 
@@ -429,12 +419,10 @@
                                                     class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Send
                                                     Money </button>
                                             @else
-
                                                 <button type="button"
                                                     onclick="restriction('sendmoney', '{{ $data['getuserDetail']->name }}')"
                                                     class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn"> Send
                                                     Money </button>
-
                                             @endif
 
 
@@ -449,10 +437,7 @@
                                 </div>
 
                             </form>
-
                         @else
-
-
                             <div class="alert alert-danger">
                                 No record for this invoice number
                             </div>
@@ -1037,7 +1022,6 @@
 
     {{-- Google Pay API --}}
 
-    <script async src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()">
-    </script>
+    <script async src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script>
 
 @endsection

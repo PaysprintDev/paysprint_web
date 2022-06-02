@@ -2012,16 +2012,7 @@
 
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="advertSubtitle">Advert Sub-title Text </label>
-                                    <input type="text" class="form-control" name="advertSubtitle" id="advertSubtitle"
-                                        aria-describedby="advertSubtitleHelp" placeholder="Enter advert sub-title"
-                                        value="{{ $data['myStore']->advertSubtitle }}">
 
-                                    <small id="advertSubtitleHelp" class="form-text text-muted">If ADVERT CONTENT IMAGE is more
-                                        than one (1), separate by comma (,)</small>
-
-                                </div>
 
 
                                 <div class="form-group">

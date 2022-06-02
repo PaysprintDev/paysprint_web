@@ -2197,11 +2197,11 @@ class CheckSetupController extends Controller
 
         public function merchantTestMode()
         {
-            $getUsers=ClientInfo::where('accountMode', 'test')->get();
+            $getUsers=ClientInfo::where('accountMode', 'test')->inRandomOrder()->take(15)->get();
 
             foreach ($getUsers as $users){
 
-                $this->mailListCategorize($users->business_name, $users->email, $users->address, $users->telephone, "Test Mode Merchant", $users->country, 'Subscription');   
+                $this->mailListCategorize($users->business_name, $users->email, $users->address, $users->telephone, "Test Mode Merchant", $users->country, 'Subscription');
             }
 
             echo "Done";
@@ -2211,15 +2211,15 @@ class CheckSetupController extends Controller
 
         public function merchantLiveMode()
         {
-            $getUsers=ClientInfo::where('accountMode', 'live')->get();
+            $getUsers=ClientInfo::where('accountMode', 'live')->inRandomOrder()->take(15)->get();
 
             foreach ($getUsers as $users){
 
-                $this->mailListCategorize($users->business_name, $users->email, $users->address, $users->telephone, "Live Mode Merchant", $users->country, 'Subscription');   
+                $this->mailListCategorize($users->business_name, $users->email, $users->address, $users->telephone, "Live Mode Merchant", $users->country, 'Subscription');
             }
             echo "Done";
         }
-    
+
 
 
     public function mailprocess($email, $name, $subject, $message)

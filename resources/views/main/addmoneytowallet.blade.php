@@ -409,7 +409,7 @@
 
                                 $.each(res, function(v, k) {
                                     $('#card_id').append(
-                                        `<option value="${k.id}">${k.card_number} - ${k.card_type}</option>`
+                                        `<option value="${k.id}">${cardHide(k.card_number)} - ${k.card_type}</option>`
                                     );
                                 });
 
@@ -429,6 +429,18 @@
 
                 });
 
+            }
+
+            function cardHide(card) {
+                let hideNum = [];
+                for (let i = 0; i < card.length; i++) {
+                    if (i < card.length - 4) {
+                        hideNum.push("*");
+                    } else {
+                        hideNum.push(card[i]);
+                    }
+                }
+                return hideNum.join("");
             }
 
 
