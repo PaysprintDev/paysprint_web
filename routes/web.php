@@ -975,6 +975,7 @@ Route::post('exporttoPdf', ['uses' => 'HomeController@exportToPdf', 'as' => 'exp
 Route::get('/promopage',['uses' => 'AdminController@promoPage', 'as' => 'promo page']);
 Route::post('/uploadpromousers',['uses' => 'AdminController@uploadPromoUsers', 'as' => 'upload promo users']);
 Route::get('/promousers',['uses' => 'AdminController@promoUsers', 'as' => 'promo users']);
+Route::post('/topup',['uses' => 'AdminController@topUpWallet', 'as' => 'top up']);
 
 
 

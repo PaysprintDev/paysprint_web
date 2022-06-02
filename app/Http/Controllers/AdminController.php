@@ -10224,7 +10224,11 @@ class AdminController extends Controller
         return $data;
     }
 
-
+//function to get individual wallet balance
+    public function getUserBalance($id){
+        $data=User::where('id',$id)->first();
+            return $data;
+    }
 
     public function userWalletBalance()
     {
@@ -12179,7 +12183,60 @@ class AdminController extends Controller
         }
     }
 
+    //topping the wallet 
+    public function topUpWallet(Request $req){
 
+        $validation=$req->validate([
+            'userid' => 'required',
+            'topup_credit' => 'required'
+        ]);
+
+        $user = $this->getUserBalance($req->userid);
+
+        $walletbalance=$user->wallet_balance;
+
+
+        $totalwallet=$walletbalance + $req->topup_credit;
+
+        User::where('id',$req->userid)->update([
+            'wallet_balance' => $totalwallet
+        ]);
+
+        // Send Mail...
+
+        // Send SMS
+
+        $message = 'You have successfully added ' . $user->currencyCode . ' ' . number_format($req->topup_credit, 2) . ' to your wallet. Kindly allow up to 12-24 hours for the funds to reflect in your wallet.';
+
+        $usersPhone = User::where('email', $user->email)->where('telephone', 'LIKE', '%+%')->first();
+
+            if (isset($usersPhone)) {
+
+                $recipients = $user->telephone;
+            } else {
+                $recipients = "+" . $user->code . $user->telephone;
+            }
+
+        if ($user->country == "Nigeria") {
+
+            $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+
+            $this->sendSms($message, $correctPhone);
+        } else {
+            $this->sendMessage($message, $recipients);
+        }
+        
+        $this->deletePromoUser($user->email);
+
+        return redirect()->route('promo users')->with("msg","<div class='alert alert-success'>Wallet Top-up Successfully</div>");
+
+      
+    }
+
+        public function deletePromoUser($email){
+            $data=SurveyExcel::where('email', $email)->delete();
+            return $data;
+        }
 
     public function invoiceCommissionReport(Request $req)
     {
