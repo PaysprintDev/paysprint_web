@@ -12188,11 +12188,12 @@ class AdminController extends Controller
 
         $validation=$req->validate([
             'userid' => 'required',
-            'topup_credit' => 'required'
+            'topup_credit' => 'required',
+            'topup_reason' =>'required'
         ]);
-
+        
         $user = $this->getUserBalance($req->userid);
-
+        $reason=$req->topup_reason;
         $walletbalance=$user->wallet_balance;
 
 
@@ -12206,8 +12207,10 @@ class AdminController extends Controller
 
         // Send SMS
 
-        $message = 'Congratulations!, Your wallet has been top-up with ' . $user->currencyCode . ' ' . number_format($req->topup_credit, 2) . ' . Login to your PaySprint account today to access it.';
+        $message = 'Congratulations!,You have received a wallet credit of ' . $user->currencyCode . ' ' . number_format($req->topup_credit, 2) . ' from PaySprint for ' .$reason . '. Your wallet balance is '.$user->wallet_balance.'. Thanks for Choosing PaySprint.';
 
+        
+ 
         $usersPhone = User::where('email', $user->email)->where('telephone', 'LIKE', '%+%')->first();
 
             if (isset($usersPhone)) {
@@ -12217,13 +12220,12 @@ class AdminController extends Controller
                 $recipients = "+" . $user->code . $user->telephone;
             }
 
-            $recipients = "+2348135330301";
-
         if ($user->country == "Nigeria") {
 
             $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
 
             $this->sendSms($message, $correctPhone);
+
         } else {
             $this->sendMessage($message, $recipients);
         }
