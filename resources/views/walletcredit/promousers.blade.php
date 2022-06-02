@@ -89,6 +89,10 @@
                                 <label>Top-up Credit</label>
                                 <input type="text" name="topup_credit" class="form-control"> 
                               </div>
+                              <div class="col-md-12 form-group">
+                                <label>Reasons for Topping</label>
+                                <input type="text" name="topup_reason" class="form-control"> 
+                              </div>
                               <input type="hidden" name="userid" value="{{ $user->id}}">
                           </div>
                           @endif
