@@ -47,7 +47,7 @@
       <div class="row">
 
 
-        
+
 
 
 
@@ -68,14 +68,14 @@
           </div>
         </div>
 
-                    <div class="form-group cardform"> 
+                    <div class="form-group cardform">
                         <form role="form" action="#" method="POST" id="formElem">
                                 @csrf
 
 
-                                <div @if($data['paymentgateway']->gateway == "Moneris") class="form-group" @else class="form-group disp-0" @endif> 
+                                <div @if($data['paymentgateway']->gateway == "Moneris") class="form-group" @else class="form-group disp-0" @endif>
                                     <label for="card_id">
-                                            
+
                                         Select Payment Gateway
                                         </label>
                                             <select name="gateway" id="gateway" class="form-control" required>
@@ -83,13 +83,13 @@
                                                 <option value="PaySprint" selected>PaySprint</option>
                                                 {{--  <option value="Google Pay">Google Pay</option>  --}}
                                             </select>
-                                            
+
                                     </div>
 
 
-                                <div  @if($data['paymentgateway']->gateway == "Moneris") class="form-group" @else class="form-group disp-0" @endif> 
+                                <div  @if($data['paymentgateway']->gateway == "Moneris") class="form-group" @else class="form-group disp-0" @endif>
                                     <label for="card_id">
-                                            
+
                                         Select Card Type/ Bank Account
                                         </label>
                                             <select name="card_type" id="card_type" class="form-control" required>
@@ -101,7 +101,7 @@
                                                 {{--  <option value="Prepaid Card">Prepaid Card</option>
                                                 <option value="Bank Account">Bank Account</option>  --}}
                                             </select>
-                                            
+
                                     </div>
 
 
@@ -115,7 +115,7 @@
                                     </div>
 
 
-                                    
+
 
 
                                 <div class="form-group">
@@ -131,7 +131,7 @@
                                     <input type="hidden" name="paymentToken" class="form-control" id="paymentToken" value="" readonly>
 
                                     <input type="hidden" name="mode" class="form-control" id="mode" value="live" readonly>
-                                    
+
 
                                 </div>
 
@@ -143,7 +143,7 @@
 
                                 <div class="form-group"> <label for="netwmount">
                                         Net Amount
-                                        
+
                                     </label>
                                         <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
                                 </div>
@@ -167,7 +167,7 @@
                                             {{ $data['getuserDetail']->currencyCode }} <=> CAD
                                         </p>
                                     </label>
-                                    <div class="input-group"> 
+                                    <div class="input-group">
                                         <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
                                     </div>
                                 </div>
@@ -207,7 +207,7 @@
 
                                 @endif
 
-                                
+
 
 
                                 <div class="col-md-12 withCardGoogle disp-0">
@@ -264,7 +264,7 @@ $('#card_type').change(function(){
         $(".card-footer").addClass('disp-0');
         $(".withCardGoogle").removeClass('disp-0');
     }
-    
+
 });
 
 
@@ -280,20 +280,20 @@ function runCardType(){
     Pace.track(function(){
 
         setHeaders();
-        
+
         jQuery.ajax({
         url: route,
         method: 'get',
         data: thisdata,
         dataType: 'JSON',
-        
+
         success: function(result){
             if(result.message == "success"){
                 var res = result.data;
 
 
                 $.each(res, function(v, k){
-                    $('#card_id').append(`<option value="${k.id}">${k.card_number} - ${k.card_type}</option>`);
+                    $('#card_id').append(`<option value="${k.id}">${cardHide(k.card_number)} - ${k.card_type}</option>`);
                 });
 
             }
@@ -305,7 +305,7 @@ function runCardType(){
         error: function(err) {
             $('#card_id').append(`<option value="">${$('#card_type').val()} not available</option>`);
             // swal("Oops", err.responseJSON.message, "error");
-        } 
+        }
 
     });
 
@@ -313,9 +313,21 @@ function runCardType(){
 
 }
 
+        function cardHide(card) {
+            let hideNum = [];
+            for (let i = 0; i < card.length; i++) {
+                if (i < card.length - 4) {
+                    hideNum.push("*");
+                } else {
+                    hideNum.push(card[i]);
+                }
+            }
+            return hideNum.join("");
+        }
+
 
 function runCommission(){
-    
+
     $('.commissionInfo').html("");
     var amount = $("#amount").val();
     // var amount = $("#conversionamount").val();
@@ -329,7 +341,7 @@ function runCommission(){
     Pace.track(function(){
 
         setHeaders();
-        
+
         jQuery.ajax({
         url: route,
         method: 'post',
@@ -338,7 +350,7 @@ function runCommission(){
         beforeSend: function(){
             $('.commissionInfo').addClass('');
         },
-        
+
         success: function(result){
 
 
@@ -351,7 +363,7 @@ function runCommission(){
 
                 if(result.walletCheck != ""){
                     $(".sendmoneyBtn").attr("disabled", true);
-                    
+
 
                 }
                 else{
@@ -413,7 +425,7 @@ function runCommission(){
     var netamount = $('#amounttosend').val();
     var feeamount = $('#commissiondeduct').val();
 
-    
+
 
       var amount = (+netamount + +feeamount).toFixed(2);
     var handler = PaystackPop.setup({
@@ -437,7 +449,7 @@ function runCommission(){
          ]
       },
       callback: function(response){
-          
+
           $('#paymentToken').val(response.reference);
 
             setTimeout(() => {
@@ -500,7 +512,7 @@ function currencyConvert(amount){
           apiVersion: 2,
           apiVersionMinor: 0
         };
-        
+
         /**
          * Card networks supported by your site and your gateway
          *
@@ -508,7 +520,7 @@ function currencyConvert(amount){
          * @todo confirm card networks supported by your site and gateway
          */
         const allowedCardNetworks = ["AMEX", "DISCOVER", "INTERAC", "JCB", "MASTERCARD", "VISA"];
-        
+
         /**
          * Card authentication methods supported by your site and your gateway
          *
@@ -517,7 +529,7 @@ function currencyConvert(amount){
          * supported card networks
          */
         const allowedCardAuthMethods = ["PAN_ONLY", "CRYPTOGRAM_3DS"];
-        
+
         /**
          * Identify your gateway and your site's gateway merchant identifier
          *
@@ -535,7 +547,7 @@ function currencyConvert(amount){
             'gatewayMerchantId': 'monca04155'
           }
         };
-        
+
         /**
          * Describe your site's support for the CARD payment method and its required
          * fields
@@ -549,7 +561,7 @@ function currencyConvert(amount){
             allowedCardNetworks: allowedCardNetworks
           }
         };
-        
+
         /**
          * Describe your site's support for the CARD payment method including optional
          * fields
@@ -563,14 +575,14 @@ function currencyConvert(amount){
             tokenizationSpecification: tokenizationSpecification
           }
         );
-        
+
         /**
          * An initialized google.payments.api.PaymentsClient object or null if not yet set
          *
          * @see {@link getGooglePaymentsClient}
          */
         let paymentsClient = null;
-        
+
         /**
          * Configure your site's support for payment methods supported by the Google Pay
          * API.
@@ -590,7 +602,7 @@ function currencyConvert(amount){
               }
           );
         }
-        
+
         /**
          * Configure support for the Google Pay API
          *
@@ -609,7 +621,7 @@ function currencyConvert(amount){
           };
           return paymentDataRequest;
         }
-        
+
         /**
          * Return an active PaymentsClient or initialize
          *
@@ -623,7 +635,7 @@ function currencyConvert(amount){
           }
           return paymentsClient;
         }
-        
+
         /**
          * Initialize Google PaymentsClient after Google-hosted JavaScript has loaded
          *
@@ -646,7 +658,7 @@ function currencyConvert(amount){
                 alert(err.statusMessage);
               });
         }
-        
+
         /**
          * Add a Google Pay purchase button alongside an existing checkout button
          *
@@ -659,7 +671,7 @@ function currencyConvert(amount){
               paymentsClient.createButton({onClick: onGooglePaymentButtonClicked, buttonType: 'plain'});
           document.getElementById('container').appendChild(button);
         }
-        
+
         /**
          * Provide Google Pay API with a payment amount, currency, and amount status
          *
@@ -680,13 +692,13 @@ function currencyConvert(amount){
           };
         }
 
-        
+
         function ParseFloat(str,val) {
             str = str.toString();
-            str = str.slice(0, (str.indexOf(".")) + val + 1); 
-            return Number(str);   
+            str = str.slice(0, (str.indexOf(".")) + val + 1);
+            return Number(str);
         }
-        
+
         /**
          * Prefetch payment data to improve performance
          *
@@ -702,14 +714,14 @@ function currencyConvert(amount){
           const paymentsClient = getGooglePaymentsClient();
           paymentsClient.prefetchPaymentData(paymentDataRequest);
         }
-        
+
         /**
          * Show Google Pay payment sheet when Google Pay payment button is clicked
          */
         function onGooglePaymentButtonClicked() {
           const paymentDataRequest = getGooglePaymentDataRequest();
           paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
-        
+
           const paymentsClient = getGooglePaymentsClient();
           paymentsClient.loadPaymentData(paymentDataRequest)
               .then(function(paymentData) {
@@ -747,7 +759,7 @@ function currencyConvert(amount){
                 // var thistoken = JSON.parse(paymentToken);
 
 
-                
+
             var orderId = "ord-"+d.getTime();
 
 
@@ -782,10 +794,10 @@ function currencyConvert(amount){
                 }
                 });
 
-            
-                
 
-            
+
+
+
 
         }
 
@@ -863,7 +875,7 @@ paypal.Buttons({
         alert(err);
     }
   }).render('#paypal-button-container');
-  
+
 
 // PayPal Integration End
 </script>
@@ -897,7 +909,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     var feeamount = $('#commissiondeduct').val();
     var amount = (+netamount + +feeamount).toFixed(2);
 
-     var route = '/create-payment-intent';   
+     var route = '/create-payment-intent';
 
      var formData = new FormData(formElem);
 
@@ -968,7 +980,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             $('.cardSubmit').text('Pay Now');
             swal("Oops", err.responseJSON.message, "error");
 
-        } 
+        }
 
     });
     });
@@ -986,12 +998,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     //       currency: $('#curCurrency').val(),
     //       amount: amount,
     //     }),
-        
+
     //   }).then(resp=>resp.json);
 
 
 
-      
+
 
     //   console.log(paymentIntent);
 
@@ -1011,7 +1023,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
         {{-- Google Pay API --}}
-        
+
 <script async
   src="https://pay.google.com/gp/p/js/pay.js"
   onload="onGooglePayLoaded()"></script>

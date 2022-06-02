@@ -145,7 +145,7 @@
                                             <select name="card_id" id="card_id" class="form-control" required>
                                                 @if (count($data['getCard']) > 0)
                                                     @foreach ($data['getCard'] as $mycard)
-                                                        <option value="{{ $mycard->id }}">{!! wordwrap($mycard->card_number, 4, '-', true) !!}
+                                                        <option value="{{ $mycard->id }}">{!! wordwrap(substr($mycard->card_number, 0, 4) . str_repeat('*', strlen($mycard->card_number) - 8) . substr($mycard->card_number, -4), 4, ' - ', true) !!}
                                                         </option>
                                                     @endforeach
                                                 @else
