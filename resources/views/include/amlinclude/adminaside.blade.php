@@ -205,6 +205,7 @@
                      </li>
                  @endif
 
+         
 
                  @if (session('role') == 'Super')
                      <li class="treeview">
@@ -227,6 +228,9 @@
                      <li>
                  @endif
 
+                        <!-- Wallet Credit -->
+                        
+
 
                  @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only')
                      <li>
@@ -236,6 +240,8 @@
                          </a>
 
                      </li>
+
+                
 
 
 
@@ -350,28 +356,6 @@
                                          class="fa fa-circle-o text-red"></i> Prepaid Card</a></li>
                              <li title="Bank Account"><a href="{{ route('bank request withdrawal') }}"><i
                                          class="fa fa-circle-o text-red"></i> Bank Account</a></li>
-
-                         </ul>
-                     </li>
-
-
-                     <li class="treeview">
-                         <a href="#">
-                             <i class="far fa-handshake"></i>
-                             <span>Processed Withdrawals</span>
-                             <span class="pull-right-container">
-                                 <i class="fa fa-angle-left pull-right"></i>
-                             </span>
-                         </a>
-                         <ul class="treeview-menu">
-                             <li title="Credit/Debit Card"><a href="{{ route('card processed withdrawal') }}"><i
-                                         class="fa fa-circle-o text-red"></i>Credit/Debit Card</a></li>
-
-                             <li title="Bank Account"><a href="{{ route('bank processed withdrawal') }}"><i
-                                         class="fa fa-circle-o text-red"></i> Bank Account</a></li>
-
-                             <li title="Processed Refunds"><a href="{{ route('refund processed') }}"><i
-                                         class="fa fa-circle-o text-red"></i> Processed Refunds</a></li>
 
                          </ul>
                      </li>
