@@ -469,6 +469,8 @@
                                              class="fa fa-circle-o text-red"></i>Import Promo Users</a></li>
                                  <li title="prepaid Card"><a href="{{ route('promo users') }}"><i
                                              class="fa fa-circle-o text-red"></i>List Promo User</a></li>
+                                <li title="prepaid Card"><a href="{{ route('promo report') }}"><i
+                                             class="fa fa-circle-o text-red"></i>Report</a></li>
                              </ul>
                          </li>
 
