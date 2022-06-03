@@ -58,7 +58,7 @@
                             <td>{{ $counter++}}</td>
                             <td>{{ $promousers->date}}</td>
                             <td>{{ $promousers->email}}</td>
-                            <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop{{ $promousers->id }}">Top-up</button></td>
+                            <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop{{ $promousers->id }}">Credit Wallet</button></td>
                         </tr>
 
                         <!-- Modal -->
@@ -66,7 +66,7 @@
                     <div class="modal-dialog">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h5 class="modal-title" id="staticBackdropLabel">Top-up Credit</h5>
+                          <h5 class="modal-title" id="staticBackdropLabel">Wallet Credit</h5>
                         </div>
                         <div class="modal-body">
                           <form action="{{route('top up')}}" method="post">
@@ -86,12 +86,18 @@
                               </div>
                             
                               <div class="col-md-12 form-group">
-                                <label>Top-up Credit</label>
+                                <label>Wallet Credit</label>
                                 <input type="text" name="topup_credit" class="form-control"> 
                               </div>
                               <div class="col-md-12 form-group">
-                                <label>Reasons for Topping</label>
-                                <input type="text" name="topup_reason" class="form-control"> 
+                                <label>Reasons for Wallet Credit</label>
+                                <select name="topup_reason" class="form-control">
+                                    <option value="">Select A Reason</option>
+                                    <option value="promo">Promo</option>
+                                    <option value="survey">Survey</option>
+                                    <option value="referral">Referral</option>
+                                    <option value="reward">Reward</option>
+                                </select>
                               </div>
                               <input type="hidden" name="userid" value="{{ $user->id}}">
                           </div>
@@ -99,7 +105,7 @@
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-primary">Top-up</button>
+                          <button type="submit" class="btn btn-primary">Credit Wallet</button>
                         </div>
                       </form>
                       </div>
