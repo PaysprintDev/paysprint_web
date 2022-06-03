@@ -1,7 +1,10 @@
 {
     "name": "laravel/laravel",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "type": "project",
     "require": {
@@ -34,7 +37,8 @@
         "spatie/laravel-translatable": "^4.6",
         "stripe/stripe-php": "^7.92",
         "trulioo/trulioo-sdk": "^1.0",
-        "twilio/sdk": "^6.20"
+        "twilio/sdk": "^6.20",
+        "pusher/pusher-php-server": "*"
     },
     "require-dev": {
         "filp/whoops": "^2.0",
@@ -59,8 +63,7 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": [
-            ]
+            "dont-discover": []
         }
     },
     "scripts": {

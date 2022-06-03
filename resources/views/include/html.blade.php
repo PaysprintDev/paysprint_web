@@ -53,7 +53,25 @@
 
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 
+
+    <script>
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var appId = `${env('APP_ENV') == 'local' ? env('PUSHER_APP_KEY_DEV') : env('PUSHER_APP_KEY')}`;
+        var cluster = `${env('APP_ENV') == 'local' ? env('PUSHER_APP_CLUSTER_DEV') : env('PUSHER_APP_CLUSTER')}`;
+
+        var pusher = new Pusher(appId, {
+            cluster: cluster
+        });
+
+        var channel = pusher.subscribe('my-channel');
+        channel.bind('my-event', function(data) {
+            console.log(JSON.stringify(data));
+        });
+    </script>
 
 
     <style>
