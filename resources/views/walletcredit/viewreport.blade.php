@@ -38,51 +38,79 @@
             </div>
             <!-- /.box-header -->
             {!! session('msg') !!}
-
-
-            <!--report table-->
+            <!--report filter-->
             <div class="container-fluid">
-                <table class="table table-striped table-responsiveness" id="promousers">
-                    <thead>
-                        <tr>
-                            <th>S/N</th>
-                            <th>Name of User</th>
-                            <th>Amount Credited</th>
-                            <th>Reasons for Wallet Credit</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @php
-                        $counter=1;
-                        // $total = 0;
-                    @endphp
-                    @if (isset($data['report']))
-                    @foreach ( $data['report'] as $promoreport )
-                    @if($user= App\User::where('id', $promoreport->user_id)->first())
-                        
-                    
-
-                        {{-- @php
-                            $total += $promoreport->wallet_credit_amount;
-                        @endphp --}}
-
-                        <tr>
-                            <td>{{ $counter++}}</td>
-                            <td>{{ $user->name}}</td>
-                            <td>{{ $promoreport->wallet_credit_amount }}</td>
-                            <td>{{ $promoreport->credit_reason }}</td>
-                        </tr>
-                        @endif
-                    @endforeach
-                    @endif
-                    <!-- modal -->
-                    <!-- Button trigger modal -->
-
-                  
-  
-                    </tbody>
-                </table>
+                <form action="{{route('view report')}}" method="get">
+                  @csrf
+                      <div class="row">
+                        <div class="col-md-12" style="margin-bottom:20px;">
+                          <label>Wallet-Credit Type</label>
+                          <select name="topup_type" class="form-control">
+                            <option value="">Select A Reason</option>
+                            <option value="promo">Promo</option>
+                            <option value="survey">Survey</option>
+                            <option value="referral">Referral</option>
+                            <option value="reward">Reward</option>
+                        </select>
+                        </div>
+                        <div class="col-md-12" style="margin-top: 10px; ">
+                          <label>Start-Date</label>
+                          <input type="date" name="start_date" class="form-control">
+                        </div>
+                        <div class="col-md-12" style="margin-top: 20px; ">
+                          <label>End-Date</label>
+                          <input type="date" name="end_date" class="form-control">
+                        </div>
+                        <input type="hidden" name="country" value="{{ Request::get('country')}}">
+                        <div class="col-md-12" style="margin-top: 20px; margin-bottom:20px ">
+                          <button class="btn btn-primary form-control" type="submit" >Submit</button>
+                        </div>
+                      </div>
+                </form>
             </div>
+              <hr>
+            <!-- report Table -->
+              <div class="container-fluid" style="margin-top: 30px">
+                  <table class="table table-responsive table-striped" id="promousers">
+                      <thead>
+                        <tr>
+                          <th>S/N</th>
+                          <th>Account Number</th>
+                          <th>Email</th>
+                          <th>Full-Name</th>
+                          <th>Account Type</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @php
+                        $counter=1;
+                      @endphp
+
+
+                   @if(count($data['report']) > 0)
+
+                     @foreach ( $data['report'] as $reports)
+                     {{-- User Data table... --}}
+                     @if($user= \App\User::where('id',$reports->user_id)->first())
+                      
+                     
+                     <tr>
+                      <td>{{ $counter++}}</td>
+                      <td>{{$user->ref_code}}</td>
+                      <td>{{$user->email}}</td>
+                      <td>{{$user->name}}</td>
+                      <td>{{$user->accountType}}</td>
+                  </tr>
+                       
+                     @endif
+
+
+                        @endforeach 
+                   @endif
+
+                      </tbody>
+                  </table>
+              </div>
             </div>
             
 
