@@ -981,6 +981,7 @@ Route::get('/viewreport',['uses' => 'AdminController@viewReport', 'as' => 'view 
 
 
 
+
 // Logout manually
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

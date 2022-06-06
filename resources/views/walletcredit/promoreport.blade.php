@@ -67,7 +67,7 @@
                             <td>{{ $counter++}}</td>
                             <td>{{ $promoreport->country}}</td>
                             <td>{{ $data['total'] }}</td>
-                            <td><a class="btn btn-primary" href="{{route('view report', 'country='.$promoreport->country)}}">View Report</a></td>
+                            <td><a class="btn btn-primary" href="{{route('view report', 'country='.$promoreport->country.'&start_date=null&end_date=null&topup_type=null')}}">View Report</a></td>
                         </tr>
                     @endforeach
                     @endif

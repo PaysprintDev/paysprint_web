@@ -56,7 +56,7 @@
                     @foreach ( $data['promo'] as $promousers )
                         <tr>
                             <td>{{ $counter++}}</td>
-                            <td>{{ $promousers->date}}</td>
+                            <td>{{ $promousers->created_at}}</td>
                             <td>{{ $promousers->email}}</td>
                             <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop{{ $promousers->id }}">Credit Wallet</button></td>
                         </tr>
@@ -98,6 +98,10 @@
                                     <option value="referral">Referral</option>
                                     <option value="reward">Reward</option>
                                 </select>
+                              </div>
+                              <div class="col-md-12 form-group">
+                                <label>Short Description for Wallet Crediting</label>
+                                <textarea class="form-control" name="topup_description"></textarea>
                               </div>
                               <input type="hidden" name="userid" value="{{ $user->id}}">
                           </div>
