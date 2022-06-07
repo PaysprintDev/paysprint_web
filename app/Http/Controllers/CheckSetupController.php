@@ -1459,16 +1459,22 @@ class CheckSetupController extends Controller
 
                 foreach($getMerchants as $users){
 
+                    // Get Business Profile Information...
+
+                    $client = ClientInfo::where('user_id', $users->ref_code)->first();
+
 
                     $this->name = $users->name;
                     $this->email = $users->email;
                     // $this->email = 'adenugaadebambo41@gmail.com';
                     $this->subject = "Complete your business profile today";
 
-                    $this->message = "<p>Do you know that merchants with complete profile has 20x chance of driving more traffic to their business on PaySprint.</p><p>Complete your business profile today and drive more traffic to your business page.</p><br><p>Thank you for choosing us.</p>";
+                    // $this->message = "<p>Do you know that merchants with complete profile has 20x chance of driving more traffic to their business on PaySprint.</p><p>Complete your business profile today and drive more traffic to your business page.</p><br><p>Thank you for choosing us.</p>";
+                    $this->message = "<p>We want to inform you that your business page on PaySprint is receiving below the average visitors' traffic when compared to other businesses listed
+in the your business category.</p> <p>This means your competitors are receiving more business leads from PaySprint.</p><br><p>The information provided on your business page is as shown below:</p><div class='container-box'> <div class='small-box'> <h4>Business Name: ".$client->business_name."</h4> <p><b>Industry:</b> (".$client->industry.") </p> <p><b>Tel:</b> ".$client->telephone." </p> <p><b>Website:</b> $client->website</p> </div> <div class='content-box'> <p class='address'><b>Address:</b> ".$client->address."</p> <p class='location'><b>Location:</b> ".$client->state.", ".$client->country." </p>  <div class='description'><b>Description:</b> ".$client->description." </div> </div> </div><br><p>Visitors to your business page need to know more about you and your business.</p><p><a href='".route('AdminLogin')."'>Click HERE to Login to your merchant account</a> and complete the business profile today</p>";
 
 
-                    $this->sendEmail($this->email, "Incomplete Setup");
+                    $this->sendEmail($this->email, "Business Page Setup");
 
 
                     echo "Sent Mail To ".$users->name."<hr>";
@@ -1936,6 +1942,8 @@ class CheckSetupController extends Controller
                         $this->mailprocess($email, $name, $subject, $message);
                     }
                 }
+
+                 $this->slack('Monthly Transaction Cron triggered', $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
             } else {
 
                 // Do nothing
@@ -2009,6 +2017,8 @@ class CheckSetupController extends Controller
                 }
 
                 echo "Done";
+
+                $this->slack('Monthly Transaction Cron triggered', $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
             } else {
 
                 // Do nothing
@@ -2300,7 +2310,7 @@ class CheckSetupController extends Controller
         $objDemo = new \stdClass();
         $objDemo->purpose = $purpose;
 
-        if ($purpose == 'Incomplete Setup') {
+        if ($purpose == 'Incomplete Setup' || $purpose == 'Business Page Setup') {
             $objDemo->name = $this->name;
             $objDemo->email = $this->email;
             $objDemo->subject = $this->subject;

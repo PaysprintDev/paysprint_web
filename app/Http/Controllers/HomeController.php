@@ -4,125 +4,126 @@ namespace App\Http\Controllers;
 
 use Session;
 
-use App\Mail\sendEmail;
-use App\Exports\TransactionExport;
+use App\Answer;
+use App\Points;
 
-use App\Classes\MyCurrencyCloud;
+use App\Community;
 
-use Illuminate\Http\Request;
+use App\CashAdvance;
 
-use Illuminate\Support\Facades\Hash;
+use App\UpgradePlan;
 
-use Illuminate\Support\Facades\DB;
-
-use Illuminate\Support\Facades\Auth;
-
-use Illuminate\Support\Facades\Storage;
-
-use Rap2hpoutre\FastExcel\FastExcel;
-
-use Illuminate\Support\Facades\Mail;
-
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
-
-use Illuminate\Support\Facades\Log;
-
-use Maatwebsite\Excel\Facades\Excel;
-
+use App\Events\Event;
 
 use App\User as User;
 
-use App\UserClosed as UserClosed;
-
-use App\AnonUsers as AnonUsers;
-
-use App\CreateEvent as CreateEvent;
-
-use App\ImportExcel as ImportExcel;
-
-use App\SetupBilling as SetupBilling;
-
-use App\InvoicePayment as InvoicePayment;
-
-use App\ClientInfo as ClientInfo;
-
-use App\OrganizationPay as OrganizationPay;
-
-use App\Contactus as Contactus;
-
-use App\Bronchure as Bronchure;
-
-use App\ServiceType as ServiceType;
-
-use App\Statement as Statement;
-
-use App\MaintenanceRequest as MaintenanceRequest;
-
-use App\Consultant as Consultant;
-
-use App\Workorder as Workorder;
-
-use App\RentalQuote as RentalQuote;
-
-use App\Building as Building;
-
-use App\TransactionCost as TransactionCost;
-
-use App\AddCard as AddCard;
-
-use App\AddBank as AddBank;
-
-
-use App\CardIssuer as CardIssuer;
-
-use App\Notifications as Notifications;
-
-use App\AllCountries as AllCountries;
-use App\CashAdvance;
-use App\ImportExcelLink;
-use App\PricingSetup as PricingSetup;
-
-use App\Points;
-
 use App\ClaimedPoints;
-use App\UpgradePlan;
-
-use App\Community;
-use App\Answer;
-
-
 
 use App\HistoryReport;
-use App\ReferralGenerate;
+
 use App\ReferredUsers;
-use App\Traits\PaysprintPoint;
-
-use App\Traits\PointsHistory;
-
-use App\Traits\IDVCheck;
-
 
 use App\Traits\RpmApp;
 
+use App\Mail\sendEmail;
+
 use App\Traits\Trulioo;
 
-use App\Traits\AccountNotify;
 
-use App\Traits\PaystackPayment;
+use App\ImportExcelLink;
 
-use App\Traits\ExpressPayment;
+use App\Traits\IDVCheck;
 
-use App\Traits\SpecialInfo;
+use App\Traits\MyEstore;
+
+use App\ReferralGenerate;
 
 use App\Traits\Xwireless;
 
-use App\Traits\PaymentGateway;
+use App\VerificationCode;
 
-use App\Traits\MailChimpNewsLetter;
+use App\AddBank as AddBank;
+
+use App\AddCard as AddCard;
 
 use App\Traits\GenerateOtp;
-use App\VerificationCode;
-use App\Traits\MyEstore;
+
+use App\Traits\SpecialInfo;
+
+use Illuminate\Http\Request;
+
+use App\Building as Building;
+
+use App\Traits\AccountNotify;
+
+use App\Traits\PointsHistory;
+
+use App\Traits\ExpressPayment;
+
+use App\Traits\PaymentGateway;
+
+use App\Traits\PaysprintPoint;
+
+use App\AnonUsers as AnonUsers;
+
+use App\Bronchure as Bronchure;
+
+use App\Contactus as Contactus;
+
+use App\Statement as Statement;
+
+
+use App\Traits\PaystackPayment;
+
+use App\Workorder as Workorder;
+
+use App\Classes\MyCurrencyCloud;
+use App\CardIssuer as CardIssuer;
+use App\ClientInfo as ClientInfo;
+use App\Consultant as Consultant;
+
+use App\UserClosed as UserClosed;
+
+use App\Exports\TransactionExport;
+use Illuminate\Support\Facades\DB;
+
+use App\CreateEvent as CreateEvent;
+use App\ImportExcel as ImportExcel;
+
+
+
+use App\RentalQuote as RentalQuote;
+use App\ServiceType as ServiceType;
+use App\Traits\MailChimpNewsLetter;
+use Illuminate\Support\Facades\Log;
+
+use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Support\Facades\Hash;
+
+
+use Illuminate\Support\Facades\Mail;
+
+use Maatwebsite\Excel\Facades\Excel;
+
+use Rap2hpoutre\FastExcel\FastExcel;
+
+use App\AllCountries as AllCountries;
+
+use App\PricingSetup as PricingSetup;
+
+use App\SetupBilling as SetupBilling;
+
+use App\Notifications as Notifications;
+
+use Illuminate\Support\Facades\Storage;
+
+use App\InvoicePayment as InvoicePayment;
+
+use App\OrganizationPay as OrganizationPay;
+use App\TransactionCost as TransactionCost;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\MaintenanceRequest as MaintenanceRequest;
 
 class HomeController extends Controller
 {
@@ -166,6 +167,9 @@ class HomeController extends Controller
 
     public function homePage()
     {
+
+        event(new Event('hello world'));
+
 
         // To get the actual link from users click
 
