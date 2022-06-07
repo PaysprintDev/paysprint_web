@@ -325,4 +325,14 @@ trait PaysprintPoint
 
         return $data;
     }
+
+    public function referral($id){
+        $data = User::where('referred_by',$id)->get();
+            return count($data);
+    }
+
+    public function referralPoints($id){
+        $data = User::where('id',$id)->first();
+        return $data;
+    }
 }
