@@ -16,7 +16,7 @@
         <br>
         <br>
         <div class="row builder_all">
-            <div class="col-md-4 col-sm-6 builder walletInformation">
+            <div class="col-md-3 col-sm-6 builder walletInformation">
                 <div class="alert alert-warning">
                     <div class="row">
                         <div class="col-md-12">
@@ -33,7 +33,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 col-sm-6 builder walletInformation">
+            <div class="col-md-3 col-sm-6 builder walletInformation">
                 <div class="alert alert-info">
                     <div class="row">
                         <div class="col-md-12">
@@ -49,7 +49,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 col-sm-6 builder walletInformation">
+            <div class="col-md-3 col-sm-6 builder walletInformation">
                 <div class="alert alert-success">
                     <div class="row">
                         <div class="col-md-12">
@@ -90,6 +90,42 @@
                             </form>
                         </div>
 
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 builder walletInformation">
+                <div class="alert alert-success">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <small class="font-sm">
+                                Number of Referred
+                            </small>
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <h3>
+
+                            
+
+                                {{ isset($data['referred']) ? $data['referred'] : 0 }}
+
+                            </h3>
+                        </div>
+
+                        <div class="col-md-4">
+                            <small>
+                                <a style="font-weight: 700; font-size: 11px" href="{{ route('referred details') }}">
+                                    View More
+                                </a>
+                            </small>
+                        </div>
                     </div>
 
                 </div>
