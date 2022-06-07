@@ -80,6 +80,7 @@ use App\Notifications as Notifications;
 use App\AllCountries as AllCountries;
 use App\CashAdvance;
 use App\ImportExcelLink;
+use App\ReferralClaim;
 use App\PricingSetup as PricingSetup;
 
 use App\Points;
@@ -192,7 +193,8 @@ class HomeController extends Controller
                     'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
                     'pointsclaim' => $this->getClaimedHistory(Auth::user()->id),
                     'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
-                    'imtAccess' => AllCountries::where('name', Auth::user()->country)->first()
+                    'imtAccess' => AllCountries::where('name', Auth::user()->country)->first(),
+                    'referred' => $this->referral(Auth::user()->ref_code)
                 );
 
                 $view = 'home';
@@ -252,7 +254,8 @@ class HomeController extends Controller
                     'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
                     'pointsclaim' => $this->getClaimedHistory(Auth::user()->user_id),
                     'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
-                    'imtAccess' => AllCountries::where('name', Auth::user()->country)->first()
+                    'imtAccess' => AllCountries::where('name', Auth::user()->country)->first(),
+                    'referred' => $this->referral(Auth::user()->ref_code)
                 );
 
                 $view = 'home';
@@ -303,7 +306,8 @@ class HomeController extends Controller
                     'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
                     'pointsclaim' => $this->getClaimedHistory(Auth::user()->user_id),
                     'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
-                    'imtAccess' => AllCountries::where('name', Auth::user()->country)->first()
+                    'imtAccess' => AllCountries::where('name', Auth::user()->country)->first(),
+                    'referred' => $this->referral(Auth::user()->ref_code)
 
                 );
             } else {
@@ -4601,6 +4605,100 @@ class HomeController extends Controller
         return redirect()->back()->with($resp, $resData);
     }
 
+    public function claimedReferralPoints(Request $req)
+    {
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Claim Point';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            } else {
+
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+
+            $this->page = 'Claim Point';
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+        }
+
+        // Get Bill
+        $getPoint = User::where('id', Auth::user()->id)->first();
+            
+
+
+        if (isset($getPoint)) {
+
+            if (Auth::user()->accountType == "Merchant") {
+
+                $max = 500;
+            } else {
+
+                $max = 500;
+            }
+
+
+            $totPointLeft = $getPoint->referral_points - $max;
+            
+
+            $pointtoget = $max - $getPoint->referral_points;
+
+            // Process claims and update user
+
+            if ($getPoint->referral_points >= $max) {
+
+
+
+                // This is when you can claim points...
+                // Points::where('user_id', Auth::user()->id)->update(['add_money' => 0, 'send_money' => 0, 'receive_money' => 0, 'pay_invoice' => 0, 'pay_bills' => 0, 'create_and_send_invoice' => 0, 'active_rental_property' => 0, 'quick_set_up' => 0, 'identity_verification' => 0, 'business_verification' => 0, 'promote_business' => 0, 'activate_ordering_system' => 0, 'identify_verification' => 0, 'activate_rpm' => 0, 'activate_currency_exchange' => 0, 'activate_cash_advance' => 0, 'activate_crypto_currency_account' => 0, 'approved_customers' => 0, 'approved_merchants' => 0, 'points_acquired' => $totPointLeft, 'current_point' => $getPoint->points_acquired]);
+
+
+
+                ReferralClaim::insert([
+                    'user_id' => Auth::user()->id,
+                    'points_acquired' => $getPoint->referral_points,
+                    'points_left' => $totPointLeft,
+                    'status' => 'pending'
+                ]);
+
+                HistoryReport::insert([
+                    'user_id' => Auth::user()->id,
+                    'points' => $getPoint->referral_points,
+                    'point_activity' => "You have claimed " . $getPoint->referral_points . " points today " . date('d/m/y')
+
+                ]);
+
+                User::where('id',Auth::user()->id)->update([
+                    'referral_points'=>$totPointLeft,
+                ]);
+
+                $resData = 'Your points claimed has been submitted successfully. The reward will be processed within the next 24hrs';
+                $resp = "success";
+            } else {
+
+                $resData = 'You need to have ' . $pointtoget . ' to be able to claim reward';
+                $resp = "error";
+            }
+        } else {
+
+            $resData = 'You do not have any acquired points';
+            $resp = "error";
+        }
+
+
+
+
+        return redirect()->back()->with($resp, $resData);
+    }
+
+
+
     public function claimedHistory(Request $req)
     {
 
@@ -4680,6 +4778,51 @@ class HomeController extends Controller
 
 
         return view('main.consumerpoints')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email,  'data' => $data]);
+    }
+
+    public function referredDetails(Request $req)
+    {
+
+
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Consumer Points';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            } else {
+                $this->page = 'Consumer Points';
+                $this->name = '';
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+
+            $this->page = 'Consumer Points';
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+        }
+
+        // Get Bill
+        $getAllPoint = Points::where('user_id', Auth::user()->id)->first();
+
+
+
+        $data = array(
+            'getallpoint' => $getAllPoint,
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'referred' => $this->referral(Auth::user()->ref_code),
+            'referral point' => $this->referralPoints(Auth::user()->id),
+
+        );
+
+       
+
+
+
+        return view('main.referred')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email,  'data' => $data]);
     }
 
 
