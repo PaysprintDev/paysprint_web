@@ -173,6 +173,7 @@ Route::get('/', ['uses' => 'HomeController@homePage', 'as' => 'home']);
 Route::get('/merchant-home', ['uses' => 'HomeController@merchantIndex', 'as' => 'merchant home']);
 
 Route::get('/home', ['uses' => 'HomeController@authIndex', 'as' => 'user home']);
+Route::get('/referred', ['uses' => 'HomeController@referredDetails', 'as' => 'referred details']);
 
 
 
@@ -799,6 +800,7 @@ Route::prefix('Admin/')->group(function () {
 	// Routes for claiming points
 
 	Route::post('claimpoints', ['uses' => 'HomeController@claimedPoints', 'as' => 'claim point']);
+	Route::post('claimreferralpoints', ['uses' => 'HomeController@claimedReferralPoints', 'as' => 'claim referral point']);
 
 	Route::post('claimpointsadmin', ['uses' => 'AdminController@claimedPointsAdmin', 'as' => 'claim point admin']);
 
