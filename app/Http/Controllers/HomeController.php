@@ -38,6 +38,8 @@ use App\Traits\MyEstore;
 
 use App\ReferralGenerate;
 
+use App\ReferralClaim;
+
 use App\Traits\Xwireless;
 
 use App\VerificationCode;
