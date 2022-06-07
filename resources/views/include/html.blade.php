@@ -57,9 +57,6 @@
 
 
     <script>
-        // Enable pusher logging - don't include this in production
-        Pusher.logToConsole = true;
-
         var appId = `${env('APP_ENV') == 'local' ? env('PUSHER_APP_KEY_DEV') : env('PUSHER_APP_KEY')}`;
         var cluster = `${env('APP_ENV') == 'local' ? env('PUSHER_APP_CLUSTER_DEV') : env('PUSHER_APP_CLUSTER')}`;
 
