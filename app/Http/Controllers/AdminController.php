@@ -12234,17 +12234,20 @@ class AdminController extends Controller
         }
     }
 
+
     //topping the wallet 
     public function topUpWallet(Request $req){
            
         $validation=$req->validate([
             'userid' => 'required',
             'topup_credit' => 'required',
-            'topup_reason' =>'required'
+            'topup_reason' =>'required',
+            'topup_description' => 'required'
         ]);
         
         $user = $this->getUserBalance($req->userid);
         $reason=$req->topup_reason;
+        $description=$req->topup_description;
         $walletbalance=$user->wallet_balance;
 
 
@@ -12263,9 +12266,35 @@ class AdminController extends Controller
 
         // Send Mail...
 
+
+
         // Send SMS
 
-        $message = 'Congratulations!,You have received a wallet credit of ' . $user->currencyCode . ' ' . number_format($req->topup_credit, 2) . ' from PaySprint for ' .$reason . '. Your wallet balance is '.$user->wallet_balance.'. Thanks for Choosing PaySprint.';
+        $message = 'Congratulations!, You have received a wallet credit of ' . $user->currencyCode . ' ' . number_format($req->topup_credit, 2) . ' from PaySprint for ' .$reason . $description. '. Your wallet balance is '.$user->wallet_balance.'. Thanks for Choosing PaySprint.';
+
+        $this->name = $user->name;
+        // $this->email = "youngskima@gmail.com";
+        $this->to = $user->email;
+        $this->subject = "PaySprint Wallet Credit for ".$reason;
+
+        $this->message = $message;
+
+
+        $this->sendEmail($this->to, "Refund Request");
+        $this->createNotification($user->ref_code, $message);
+        $activity="Wallet credit from paysprint for".$reason;
+        $credit = $req->topup_credit;
+        $debit = 0;
+        $reference_number = "wallet-" . date('dmY') . time();
+        $balance = 0;
+        $trans_date = date('Y-m-d');
+        $status = "Delivered";
+        $action = "Wallet credit";
+        $regards = $user->ref_code;
+        $statement_route = "wallet";
+
+        // Senders statement
+         $this->insStatement($user->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $user->country, 0);
 
         
  
@@ -12278,7 +12307,7 @@ class AdminController extends Controller
                 $recipients = "+" . $user->code . $user->telephone;
             }
 
-        $recipients='+2348135330301';
+           
 
         if ($user->country == "Nigeria") {
 
@@ -12289,6 +12318,7 @@ class AdminController extends Controller
         } else {
             $this->sendMessage($message, $recipients);
         }
+
         
         $this->deletePromoUser($user->email);
 
@@ -12300,6 +12330,7 @@ class AdminController extends Controller
     //view report
     public function viewReport(Request $req){
         if ($req->session()->has('username') == true) {
+            // dd($req->all());
             // dd(Session::all());
 
             if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
@@ -12332,10 +12363,28 @@ class AdminController extends Controller
             $transCost = $this->transactionCost();
 
             $servicetypes = $this->getServiceTypes();
+
+            $startDate = $req->start_date;
+            $endDate = $req->end_date;
+            $promotype = $req->topup_type;
+
+
+            if($startDate == null){
+                $report = SurveyReport::where('country',$req->country)->get();
+            }
+            else{
+                $report= SurveyReport::where('country',$req->country)
+                ->where('credit_reason',$promotype)
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->get();
+            }
             
             $data = [
-                'report' => SurveyReport::where('country',$req->country)->get()
+                'report' => $report
             ];
+
+
+            // dd($req->all());
 
 
             return view('walletcredit.viewreport')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes, 'data' => $data]);

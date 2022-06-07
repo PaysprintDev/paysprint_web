@@ -27,6 +27,7 @@ use App\StoreDiscount;
 use App\StoreMainShop;
 use App\StoreProducts;
 use App\StoreWishList;
+use App\ActivationEstore;
 
 use App\Traits\MyEstore;
 use App\TransactionCost;
@@ -840,7 +841,10 @@ class MerchantPageController extends Controller
             'activeCountry' => $this->getActiveCountries(),
         ];
 
-
+        ActivationEstore::updateOrCreate([
+            'user_id' => Auth::user()->id,
+        ]);
+       
         return view('merchant.pages.orderingsystem')->with(['pages' => 'estore', 'data' => $data]);
     }
 
