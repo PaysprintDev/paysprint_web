@@ -474,7 +474,8 @@ class Controller extends BaseController
             $minimumBalance = TransactionCost::where('structure', $subType)->where('country', $country)->first();
 
             if (isset($minimumBalance) == true) {
-                $data = $minimumBalance->fixed;
+                // $data = $minimumBalance->fixed;
+                $data = 0;
             } else {
                 $data = 0;
             }
