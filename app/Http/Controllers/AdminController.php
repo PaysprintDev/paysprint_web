@@ -174,14 +174,11 @@ class AdminController extends Controller
         if (session('role') == 'Merchant') {
 
             return redirect()->route('dashboard');
-        }
-        elseif(session('role') == 'Aml compliance'){
+        } elseif (session('role') == 'Aml compliance') {
             return redirect()->route('aml dashboard');
-        }
-        elseif(session('role') == 'estore manager'){
+        } elseif (session('role') == 'estore manager') {
             return redirect()->route('store dashboard');
-        }
-         else {
+        } else {
             if ($req->session()->has('username') == true) {
 
 
@@ -1515,56 +1512,56 @@ class AdminController extends Controller
     }
 
 
-        public function newInvestorPost(Request $req){
-            if ($req->session()->has('username') == true) {
-                // dd(Session::all());
-    
-                if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
-                    $adminUser = Admin::orderBy('created_at', 'DESC')->get();
-                    $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
-                    $payInvoice = DB::table('client_info')
-                        ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
-                        ->orderBy('invoice_payment.created_at', 'DESC')
-                        ->get();
-    
-                    $otherPays = DB::table('organization_pay')
-                        ->join('users', 'organization_pay.user_id', '=', 'users.email')
-                        ->orderBy('organization_pay.created_at', 'DESC')
-                        ->get();
-                } else {
-                    $adminUser = Admin::where('username', session('username'))->get();
-                    $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
-                    $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
-                    $otherPays = DB::table('organization_pay')
-                        ->join('users', 'organization_pay.user_id', '=', 'users.email')
-                        ->where('organization_pay.coy_id', session('user_id'))
-                        ->orderBy('organization_pay.created_at', 'DESC')
-                        ->get();
-                }
-    
-                // dd($payInvoice);
-    
-                $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
-    
-                $transCost = $this->transactionCost();
-    
-                $getwithdraw = $this->withdrawRemittance();
-                $collectfee = $this->allcollectionFee();
-                $getClient = $this->getallClient();
-                $getCustomer = $this->getCustomer($req->route('id'));
-    
-    
-                // Get all xpaytransactions where state = 1;
-    
-                $getxPay = $this->getxpayTrans();
-    
-    
-                return view('admin.investorpost')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay]);
+    public function newInvestorPost(Request $req)
+    {
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
             } else {
-                return redirect()->route('AdminLogin');
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
             }
-            
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+
+
+            return view('admin.investorpost')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay]);
+        } else {
+            return redirect()->route('AdminLogin');
         }
+    }
 
     public function investorSubscriber(Request $req)
     {
@@ -1694,60 +1691,61 @@ class AdminController extends Controller
         }
     }
 
-        public function fetchInvestorNews(Request $req){
-            if ($req->session()->has('username') == true) {
-                // dd(Session::all());
-    
-                if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
-                    $adminUser = Admin::orderBy('created_at', 'DESC')->get();
-                    $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
-                    $payInvoice = DB::table('client_info')
-                        ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
-                        ->orderBy('invoice_payment.created_at', 'DESC')
-                        ->get();
-    
-                    $otherPays = DB::table('organization_pay')
-                        ->join('users', 'organization_pay.user_id', '=', 'users.email')
-                        ->orderBy('organization_pay.created_at', 'DESC')
-                        ->get();
-                } else {
-                    $adminUser = Admin::where('username', session('username'))->get();
-                    $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
-                    $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
-                    $otherPays = DB::table('organization_pay')
-                        ->join('users', 'organization_pay.user_id', '=', 'users.email')
-                        ->where('organization_pay.coy_id', session('user_id'))
-                        ->orderBy('organization_pay.created_at', 'DESC')
-                        ->get();
-                }
-    
-                // dd($payInvoice);
-    
-                $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
-    
-                $transCost = $this->transactionCost();
-    
-                $getwithdraw = $this->withdrawRemittance();
-                $collectfee = $this->allcollectionFee();
-                $getClient = $this->getallClient();
-                $getCustomer = $this->getCustomer($req->route('id'));
-    
-    
-                // Get all xpaytransactions where state = 1;
-    
-                $getxPay = $this->getxpayTrans();
-    
-                $data = [
-    
-                    'posts' => InvestorPost::orderBy('created_at', 'DESC')->get()
-    
-                ];
-    
-                return view('admin.investorsnews')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'data' => $data]);
+    public function fetchInvestorNews(Request $req)
+    {
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
             } else {
-                return redirect()->route('AdminLogin');
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
             }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+
+            $data = [
+
+                'posts' => InvestorPost::orderBy('created_at', 'DESC')->get()
+
+            ];
+
+            return view('admin.investorsnews')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
         }
+    }
 
 
 
@@ -1758,157 +1756,160 @@ class AdminController extends Controller
 
         $transCost = $this->transactionCost();
 
-            $data = array(
-                'byStructure' => TransactionCost::select('structure')->groupBy('structure')->get(),
-                'byMethod' => TransactionCost::select('method')->groupBy('method')->get(),
-                'countryprice' => $this->getCountryPricing($req->get('country'))
+        $data = array(
+            'byStructure' => TransactionCost::select('structure')->groupBy('structure')->get(),
+            'byMethod' => TransactionCost::select('method')->groupBy('method')->get(),
+            'countryprice' => $this->getCountryPricing($req->get('country'))
 
-            );
+        );
 
 
 
-            return view('admin.createpost')->with(['pages' => 'Dashboard', 'transCost' => $transCost,  'data' => $data]);
-
+        return view('admin.createpost')->with(['pages' => 'Dashboard', 'transCost' => $transCost,  'data' => $data]);
     }
 
-    public function editInvestorPost(Request $req, $id){
-
-          $transCost = $this->transactionCost();
-
-          $data = array(
-                'byStructure' => TransactionCost::select('structure')->groupBy('structure')->get(),
-                'byMethod' => TransactionCost::select('method')->groupBy('method')->get(),
-                'countryprice' => $this->getCountryPricing($req->get('country')),
-                'post' => Createpost::where('id', $id)->first()
-
-            );
-
-        return view('admin.editinvestorpost')->with(['pages' => 'Dashboard', 'transCost' => $transCost,  'data' => $data]);
-    }
-
-    public function editInvestorNews(Request $req, $id){
+    public function editInvestorPost(Request $req, $id)
+    {
 
         $transCost = $this->transactionCost();
 
         $data = array(
-              'byStructure' => TransactionCost::select('structure')->groupBy('structure')->get(),
-              'byMethod' => TransactionCost::select('method')->groupBy('method')->get(),
-              'countryprice' => $this->getCountryPricing($req->get('country')),
-              'post' => InvestorPost::where('id', $id)->first()
+            'byStructure' => TransactionCost::select('structure')->groupBy('structure')->get(),
+            'byMethod' => TransactionCost::select('method')->groupBy('method')->get(),
+            'countryprice' => $this->getCountryPricing($req->get('country')),
+            'post' => Createpost::where('id', $id)->first()
 
-          );
+        );
 
-      return view('admin.editinvestornews')->with(['pages' => 'Dashboard', 'transCost' => $transCost,  'data' => $data]);
-  }
+        return view('admin.editinvestorpost')->with(['pages' => 'Dashboard', 'transCost' => $transCost,  'data' => $data]);
+    }
 
-        public function deleteInvestorPost(Request $req, $id){
-            $post=Createpost::where('id',$id)->delete();
-            return back()->with("msg", "<div class='alert alert-success'>Post Deleted Successfully</div>");
-        }
+    public function editInvestorNews(Request $req, $id)
+    {
 
-        public function deleteInvestorNews(Request $req, $id){
-            $post=InvestorPost::where('id',$id)->delete();
-            return back()->with("msg", "<div class='alert alert-success'>News Deleted Successfully</div>");
-        }
+        $transCost = $this->transactionCost();
 
-    public function updateInvestorNews(Request $req, $id){
+        $data = array(
+            'byStructure' => TransactionCost::select('structure')->groupBy('structure')->get(),
+            'byMethod' => TransactionCost::select('method')->groupBy('method')->get(),
+            'countryprice' => $this->getCountryPricing($req->get('country')),
+            'post' => InvestorPost::where('id', $id)->first()
+
+        );
+
+        return view('admin.editinvestornews')->with(['pages' => 'Dashboard', 'transCost' => $transCost,  'data' => $data]);
+    }
+
+    public function deleteInvestorPost(Request $req, $id)
+    {
+        $post = Createpost::where('id', $id)->delete();
+        return back()->with("msg", "<div class='alert alert-success'>Post Deleted Successfully</div>");
+    }
+
+    public function deleteInvestorNews(Request $req, $id)
+    {
+        $post = InvestorPost::where('id', $id)->delete();
+        return back()->with("msg", "<div class='alert alert-success'>News Deleted Successfully</div>");
+    }
+
+    public function updateInvestorNews(Request $req, $id)
+    {
 
         $getPost = InvestorPost::where('id', $id)->first();
 
         $docPath = $getPost->file;
 
-        if($req->hasFile('file')){
+        if ($req->hasFile('file')) {
             //Get filename with extension
-        $filenameWithExt = $req->file('file')->getClientOriginalName();
-        // Get just filename
-        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-        // Get just extension
-        $extension = $req->file('file')->getClientOriginalExtension();
-        // Filename to store
-        $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+            $filenameWithExt = $req->file('file')->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just extension
+            $extension = $req->file('file')->getClientOriginalExtension();
+            // Filename to store
+            $fileNameToStore = rand() . '_' . time() . '.' . $extension;
 
 
-        $path = $req->file('file')->move(public_path('../../investorrelnews/'), $fileNameToStore);
+            $path = $req->file('file')->move(public_path('../../investorrelnews/'), $fileNameToStore);
 
 
-        $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/investorrelnews/" . $fileNameToStore;
+            $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/investorrelnews/" . $fileNameToStore;
         }
 
-        $post=InvestorPost::where('id', $id)->update([
-       'title' => $req->title,
-        'description' => $req->description, 
-        'file' => $docPath
+        $post = InvestorPost::where('id', $id)->update([
+            'title' => $req->title,
+            'description' => $req->description,
+            'file' => $docPath
         ]);
 
         return redirect()->route('investors news')->with("msg", "<div class='alert alert-success'>News Updated Successfully</div>");
-
     }
 
-    public function editInvestorPosts(Request $req, $id){
-                dd($req->all());
+    public function editInvestorPosts(Request $req, $id)
+    {
+        dd($req->all());
         $getPost = CreatePost::where('id', $id)->first();
 
         $docPath = $getPost->investment_document;
 
-        if($req->hasFile('investment_document')){
+        if ($req->hasFile('investment_document')) {
             //Get filename with extension
-        $filenameWithExt = $req->file('investment_document')->getClientOriginalName();
-        // Get just filename
-        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-        // Get just extension
-        $extension = $req->file('investment_document')->getClientOriginalExtension();
-        // Filename to store
-        $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+            $filenameWithExt = $req->file('investment_document')->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just extension
+            $extension = $req->file('investment_document')->getClientOriginalExtension();
+            // Filename to store
+            $fileNameToStore = rand() . '_' . time() . '.' . $extension;
 
 
-        $path = $req->file('investment_document')->move(public_path('../../investorreldocs/'), $fileNameToStore);
+            $path = $req->file('investment_document')->move(public_path('../../investorreldocs/'), $fileNameToStore);
 
 
-        $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/investorreldocs/" . $fileNameToStore;
+            $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/investorreldocs/" . $fileNameToStore;
         }
 
-        $post=CreatePost::where('id', $id)->update([
+        $post = CreatePost::where('id', $id)->update([
             'ref_code' => $req->reference_code,
             'post_title' => $req->post_title,
-             'description' => $req->description,
-             'minimum_acount' => $req->minimum_amount,
-             'locked_in_return' => $req->locked_return,
-             'term' => $req->term,
-             'liquidation_amouunt' => $req->liquidation_amouunt,
-             'offer_open_date' => $req->offer_open_date,
-             'offer_end_date' => $req->offer_end_date,
-             'investment_activation_date' => $req->investment_activation_date,
-             'investment_document' => $docPath,
-             'activate_post'=>$req->activate_post
+            'description' => $req->description,
+            'minimum_acount' => $req->minimum_amount,
+            'locked_in_return' => $req->locked_return,
+            'term' => $req->term,
+            'liquidation_amouunt' => $req->liquidation_amouunt,
+            'offer_open_date' => $req->offer_open_date,
+            'offer_end_date' => $req->offer_end_date,
+            'investment_activation_date' => $req->investment_activation_date,
+            'investment_document' => $docPath,
+            'activate_post' => $req->activate_post
         ]);
 
         return redirect()->route('investorposts')->with("msg", "<div class='alert alert-success'>Post Updated Successfully</div>");
-
     }
 
 
 
     public function createInvestorPosts(Request $req)
     {
-        
+
 
         $docPath = "";
 
-        if($req->hasFile('investment_document')){
+        if ($req->hasFile('investment_document')) {
             //Get filename with extension
-        $filenameWithExt = $req->file('investment_document')->getClientOriginalName();
-        // Get just filename
-        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-        // Get just extension
-        $extension = $req->file('investment_document')->getClientOriginalExtension();
-        // Filename to store
-        $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+            $filenameWithExt = $req->file('investment_document')->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just extension
+            $extension = $req->file('investment_document')->getClientOriginalExtension();
+            // Filename to store
+            $fileNameToStore = rand() . '_' . time() . '.' . $extension;
 
 
-        $path = $req->file('investment_document')->move(public_path('../../investorreldocs/'), $fileNameToStore);
+            $path = $req->file('investment_document')->move(public_path('../../investorreldocs/'), $fileNameToStore);
 
 
-        $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/investorreldocs/" . $fileNameToStore;
+            $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/investorreldocs/" . $fileNameToStore;
         }
 
 
@@ -1916,67 +1917,66 @@ class AdminController extends Controller
 
 
         $post = Createpost::insert([
-        'ref_code' => $req->reference_code,
-       'post_title' => $req->post_title,
-        'description' => $req->description,
-        'minimum_acount' => $req->minimum_amount,
-        'locked_in_return' => $req->locked_return,
-        'term' => $req->term,
-        'liquidation_amouunt' => $req->liquidation_amouunt,
-        'offer_open_date' => $req->offer_open_date,
-        'offer_end_date' => $req->offer_end_date,
-        'investment_activation_date' => $req->investment_activation_date,
-        'investment_document' => $docPath,
-        'activate_post'=>$req->activate_post
+            'ref_code' => $req->reference_code,
+            'post_title' => $req->post_title,
+            'description' => $req->description,
+            'minimum_acount' => $req->minimum_amount,
+            'locked_in_return' => $req->locked_return,
+            'term' => $req->term,
+            'liquidation_amouunt' => $req->liquidation_amouunt,
+            'offer_open_date' => $req->offer_open_date,
+            'offer_end_date' => $req->offer_end_date,
+            'investment_activation_date' => $req->investment_activation_date,
+            'investment_document' => $docPath,
+            'activate_post' => $req->activate_post
 
         ]);
 
-        return back()->with("msg","<div class='alert alert-success'>Post Created Successfully</div>");
+        return back()->with("msg", "<div class='alert alert-success'>Post Created Successfully</div>");
 
 
 
 
-            //return view('admin.createpost')->with(['pages' => 'Dashboard', 'transCost' => $transCost,  'data' => $data]);
+        //return view('admin.createpost')->with(['pages' => 'Dashboard', 'transCost' => $transCost,  'data' => $data]);
 
     }
 
-    public function createInvestorNews(Request $req){
+    public function createInvestorNews(Request $req)
+    {
 
 
-        $validation=$req->validate([
+        $validation = $req->validate([
             'title' => 'required',
             'description' => 'required'
         ]);
 
         $docPath = "";
 
-        if($req->hasFile('file')){
+        if ($req->hasFile('file')) {
             //Get filename with extension
-        $filenameWithExt = $req->file('file')->getClientOriginalName();
-        // Get just filename
-        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-        // Get just extension
-        $extension = $req->file('file')->getClientOriginalExtension();
-        // Filename to store
-        $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+            $filenameWithExt = $req->file('file')->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just extension
+            $extension = $req->file('file')->getClientOriginalExtension();
+            // Filename to store
+            $fileNameToStore = rand() . '_' . time() . '.' . $extension;
 
 
-        $path = $req->file('file')->move(public_path('../../investorrelnews/'), $fileNameToStore);
+            $path = $req->file('file')->move(public_path('../../investorrelnews/'), $fileNameToStore);
 
 
-        $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/investorreldocs/" . $fileNameToStore;
+            $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/investorreldocs/" . $fileNameToStore;
         }
 
         $post = InvestorPost::insert([
-        'title' => $req->title,
-        'description' => $req->description,
-        'file' => $docPath,
+            'title' => $req->title,
+            'description' => $req->description,
+            'file' => $docPath,
 
         ]);
 
-        return back()->with("msg","<div class='alert alert-success'>News Created Successfully</div>");
-
-
+        return back()->with("msg", "<div class='alert alert-success'>News Created Successfully</div>");
     }
 
 
@@ -2480,10 +2480,10 @@ class AdminController extends Controller
 
             $client = $this->getMyClientInfo(session('user_id'));
 
-        if($client->accountMode == "test"){
+            if ($client->accountMode == "test") {
 
-            return redirect()->route('dashboard')->with('error', 'You are in test mode');
-        }
+                return redirect()->route('dashboard')->with('error', 'You are in test mode');
+            }
 
 
             // dd(Session::all());
@@ -2549,10 +2549,10 @@ class AdminController extends Controller
 
             $client = $this->getMyClientInfo(session('user_id'));
 
-        if($client->accountMode == "test"){
+            if ($client->accountMode == "test") {
 
-            return redirect()->route('dashboard')->with('error', 'You are in test mode');
-        }
+                return redirect()->route('dashboard')->with('error', 'You are in test mode');
+            }
 
             if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
                 $adminUser = Admin::orderBy('created_at', 'DESC')->get();
@@ -7083,10 +7083,9 @@ class AdminController extends Controller
     {
         $data = ThirdPartyIntegration::where('id', $id)->first();
 
-        if($data->status == true){
+        if ($data->status == true) {
             $status = false;
-        }
-        else{
+        } else {
             $status = true;
         }
 
@@ -7662,7 +7661,7 @@ class AdminController extends Controller
             $data = array(
                 'allthecountries' => $this->getAllCountries(),
                 'messageUser' => $this->allUserMessage(),
-                'user' => $this->thisparticularUser($req->get('id'))
+                'user' => $this->thisparticularUser($req->get('id'), $req->get('route'))
             );
 
 
@@ -7688,9 +7687,13 @@ class AdminController extends Controller
         return $data;
     }
 
-    public function thisparticularUser($id)
+    public function thisparticularUser($id, $route = null)
     {
-        $data = User::where('id', $id)->first();
+        if ($route == "Closed") {
+            $data = UserClosed::where('id', $id)->first();
+        } else {
+            $data = User::where('id', $id)->first();
+        }
 
         return $data;
     }
@@ -10225,10 +10228,11 @@ class AdminController extends Controller
         return $data;
     }
 
-//function to get individual wallet balance
-    public function getUserBalance($id){
-        $data=User::where('id',$id)->first();
-            return $data;
+    //function to get individual wallet balance
+    public function getUserBalance($id)
+    {
+        $data = User::where('id', $id)->first();
+        return $data;
     }
 
     public function userWalletBalance()
@@ -10290,10 +10294,9 @@ class AdminController extends Controller
     public function userBankDetailsByCountry()
     {
 
-        if(session('role') == 'Aml compliance'){
+        if (session('role') == 'Aml compliance') {
             $data = AddBank::where('country', 'Canada')->orWhere('country', 'United States')->orderBy('created_at', 'DESC')->groupBy('country')->get();
-        }
-        else{
+        } else {
             $data = AddBank::orderBy('created_at', 'DESC')->groupBy('country')->get();
         }
 
@@ -11034,10 +11037,10 @@ class AdminController extends Controller
 
             $client = $this->getMyClientInfo(session('user_id'));
 
-        if($client->accountMode == "test"){
+            if ($client->accountMode == "test") {
 
-            return redirect()->route('dashboard')->with('error', 'You are in test mode');
-        }
+                return redirect()->route('dashboard')->with('error', 'You are in test mode');
+            }
 
 
             $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
@@ -11414,10 +11417,10 @@ class AdminController extends Controller
 
             $client = $this->getMyClientInfo(session('user_id'));
 
-        if($client->accountMode == "test"){
+            if ($client->accountMode == "test") {
 
-            return redirect()->route('dashboard')->with('error', 'You are in test mode');
-        }
+                return redirect()->route('dashboard')->with('error', 'You are in test mode');
+            }
 
             $data = [
                 'getsentInvoice' => $this->getSentInvoice(session('user_id')),
@@ -11522,10 +11525,10 @@ class AdminController extends Controller
 
             $client = $this->getMyClientInfo(session('user_id'));
 
-        if($client->accountMode == "test"){
+            if ($client->accountMode == "test") {
 
-            return redirect()->route('dashboard')->with('error', 'You are in test mode');
-        }
+                return redirect()->route('dashboard')->with('error', 'You are in test mode');
+            }
 
             $data = [
                 'getpaidInvoice' => $this->getPaidInvoice(session('user_id')),
@@ -11628,10 +11631,10 @@ class AdminController extends Controller
 
             $client = $this->getMyClientInfo(session('user_id'));
 
-        if($client->accountMode == "test"){
+            if ($client->accountMode == "test") {
 
-            return redirect()->route('dashboard')->with('error', 'You are in test mode');
-        }
+                return redirect()->route('dashboard')->with('error', 'You are in test mode');
+            }
 
             $data = [
                 'getunpaidInvoice' => $this->getUnpaidInvoice(session('user_id')),
@@ -11734,10 +11737,10 @@ class AdminController extends Controller
 
             $client = $this->getMyClientInfo(session('user_id'));
 
-        if($client->accountMode == "test"){
+            if ($client->accountMode == "test") {
 
-            return redirect()->route('dashboard')->with('error', 'You are in test mode');
-        }
+                return redirect()->route('dashboard')->with('error', 'You are in test mode');
+            }
 
             $data = [
                 'getcustomerBalance' => $this->getcustomerBalance(session('user_id')),
@@ -11843,10 +11846,10 @@ class AdminController extends Controller
 
             $client = $this->getMyClientInfo(session('user_id'));
 
-        if($client->accountMode == "test"){
+            if ($client->accountMode == "test") {
 
-            return redirect()->route('dashboard')->with('error', 'You are in test mode');
-        }
+                return redirect()->route('dashboard')->with('error', 'You are in test mode');
+            }
 
             $data = [
                 'gettotalTax' => $this->getSentInvoice(session('user_id')),
@@ -11901,10 +11904,10 @@ class AdminController extends Controller
 
             $client = $this->getMyClientInfo(session('user_id'));
 
-        if($client->accountMode == "test"){
+            if ($client->accountMode == "test") {
 
-            return redirect()->route('dashboard')->with('error', 'You are in test mode');
-        }
+                return redirect()->route('dashboard')->with('error', 'You are in test mode');
+            }
 
             $data = [
                 'getinvoiceType' => $this->getinvoiceType(session('user_id')),
@@ -11958,10 +11961,10 @@ class AdminController extends Controller
 
             $client = $this->getMyClientInfo(session('user_id'));
 
-        if($client->accountMode == "test"){
+            if ($client->accountMode == "test") {
 
-            return redirect()->route('dashboard')->with('error', 'You are in test mode');
-        }
+                return redirect()->route('dashboard')->with('error', 'You are in test mode');
+            }
 
             $data = [
                 'getrecurringReport' => $this->getrecurringReport(session('user_id')),
@@ -12120,20 +12123,21 @@ class AdminController extends Controller
         }
     }
 
-        //uploading the excel sheet of promo users
-    public function uploadPromoUsers(Request $req){
-        $validation=$req->validate([
-                'promo_docs' => 'required'
-            ]);
-    
+    //uploading the excel sheet of promo users
+    public function uploadPromoUsers(Request $req)
+    {
+        $validation = $req->validate([
+            'promo_docs' => 'required'
+        ]);
+
         $query = $req->all();
-    
-    
-        $data=Excel::import(new SurveyImport($query), $req->file('promo_docs'));
-    
-    
-            return back()->with("msg", "<div class='alert alert-success'> Imported Successfully</div>");
-        }
+
+
+        $data = Excel::import(new SurveyImport($query), $req->file('promo_docs'));
+
+
+        return back()->with("msg", "<div class='alert alert-success'> Imported Successfully</div>");
+    }
 
     //listing out the promo users from database
     public function promoUsers(Request $req)
@@ -12235,31 +12239,32 @@ class AdminController extends Controller
     }
 
 
-    //topping the wallet 
-    public function topUpWallet(Request $req){
-           
-        $validation=$req->validate([
+    //topping the wallet
+    public function topUpWallet(Request $req)
+    {
+
+        $validation = $req->validate([
             'userid' => 'required',
             'topup_credit' => 'required',
-            'topup_reason' =>'required',
+            'topup_reason' => 'required',
             'topup_description' => 'required'
         ]);
-        
+
         $user = $this->getUserBalance($req->userid);
-        $reason=$req->topup_reason;
-        $description=$req->topup_description;
-        $walletbalance=$user->wallet_balance;
+        $reason = $req->topup_reason;
+        $description = $req->topup_description;
+        $walletbalance = $user->wallet_balance;
 
 
-        $totalwallet=$walletbalance + $req->topup_credit;
+        $totalwallet = $walletbalance + $req->topup_credit;
 
-        User::where('id',$req->userid)->update([
+        User::where('id', $req->userid)->update([
             'wallet_balance' => $totalwallet
         ]);
 
         SurveyReport::insert([
             'user_id' => $req->userid,
-            'country' =>$user->country,
+            'country' => $user->country,
             'wallet_credit_amount' => $req->topup_credit,
             'credit_reason' => $req->topup_reason
         ]);
@@ -12270,19 +12275,19 @@ class AdminController extends Controller
 
         // Send SMS
 
-        $message = 'Congratulations!, You have received a wallet credit of ' . $user->currencyCode . ' ' . number_format($req->topup_credit, 2) . ' from PaySprint for ' .$reason . $description. '. Your wallet balance is '.$user->wallet_balance.'. Thanks for Choosing PaySprint.';
+        $message = 'Congratulations!, You have received a wallet credit of ' . $user->currencyCode . ' ' . number_format($req->topup_credit, 2) . ' from PaySprint for ' . $reason . $description . '. Your wallet balance is ' . $user->wallet_balance . '. Thanks for Choosing PaySprint.';
 
         $this->name = $user->name;
         // $this->email = "youngskima@gmail.com";
         $this->to = $user->email;
-        $this->subject = "PaySprint Wallet Credit for ".$reason;
+        $this->subject = "PaySprint Wallet Credit for " . $reason;
 
         $this->message = $message;
 
 
         $this->sendEmail($this->to, "Refund Request");
         $this->createNotification($user->ref_code, $message);
-        $activity="Wallet credit from paysprint for".$reason;
+        $activity = "Wallet credit from paysprint for" . $reason;
         $credit = $req->topup_credit;
         $debit = 0;
         $reference_number = "wallet-" . date('dmY') . time();
@@ -12294,41 +12299,39 @@ class AdminController extends Controller
         $statement_route = "wallet";
 
         // Senders statement
-         $this->insStatement($user->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $user->country, 0);
+        $this->insStatement($user->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $user->country, 0);
 
-        
- 
+
+
         $usersPhone = User::where('email', $user->email)->where('telephone', 'LIKE', '%+%')->first();
 
-            if (isset($usersPhone)) {
+        if (isset($usersPhone)) {
 
-                $recipients = $user->telephone;
-            } else {
-                $recipients = "+" . $user->code . $user->telephone;
-            }
+            $recipients = $user->telephone;
+        } else {
+            $recipients = "+" . $user->code . $user->telephone;
+        }
 
-           
+
 
         if ($user->country == "Nigeria") {
 
             $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
 
             $this->sendSms($message, $correctPhone);
-
         } else {
             $this->sendMessage($message, $recipients);
         }
 
-        
+
         $this->deletePromoUser($user->email);
 
-        return redirect()->route('promo users')->with("msg","<div class='alert alert-success'>Wallet Top-up Successfully</div>");
-
-      
+        return redirect()->route('promo users')->with("msg", "<div class='alert alert-success'>Wallet Top-up Successfully</div>");
     }
 
     //view report
-    public function viewReport(Request $req){
+    public function viewReport(Request $req)
+    {
         if ($req->session()->has('username') == true) {
             // dd($req->all());
             // dd(Session::all());
@@ -12369,16 +12372,15 @@ class AdminController extends Controller
             $promotype = $req->topup_type;
 
 
-            if($startDate == null){
-                $report = SurveyReport::where('country',$req->country)->get();
+            if ($startDate == null) {
+                $report = SurveyReport::where('country', $req->country)->get();
+            } else {
+                $report = SurveyReport::where('country', $req->country)
+                    ->where('credit_reason', $promotype)
+                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->get();
             }
-            else{
-                $report= SurveyReport::where('country',$req->country)
-                ->where('credit_reason',$promotype)
-                ->whereBetween('created_at', [$startDate, $endDate])
-                ->get();
-            }
-            
+
             $data = [
                 'report' => $report
             ];
@@ -12393,10 +12395,11 @@ class AdminController extends Controller
         }
     }
 
-        public function deletePromoUser($email){
-            $data=SurveyExcel::where('email', $email)->delete();
-            return $data;
-        }
+    public function deletePromoUser($email)
+    {
+        $data = SurveyExcel::where('email', $email)->delete();
+        return $data;
+    }
 
     public function invoiceCommissionReport(Request $req)
     {
@@ -13307,10 +13310,10 @@ class AdminController extends Controller
 
             $client = $this->getMyClientInfo(session('user_id'));
 
-        if($client->accountMode == "test"){
+            if ($client->accountMode == "test") {
 
-            return redirect()->route('dashboard')->with('error', 'You are in test mode');
-        }
+                return redirect()->route('dashboard')->with('error', 'You are in test mode');
+            }
 
             // dd($otherPays);
 
@@ -14357,7 +14360,6 @@ class AdminController extends Controller
 
 
                                     Auth::login($getMerchant);
-
                                 } else {
                                     $message = "success";
                                     $title = "Great";
@@ -14398,25 +14400,20 @@ class AdminController extends Controller
                             $this->sendEmail($this->to, "Refund Request");
 
 
-                            if($req->country == "India"){
+                            if ($req->country == "India") {
 
                                 $this->name = $req->firstname . ' ' . $req->lastname;
                                 // $this->email = "bambo@vimfile.com";
                                 $this->email = $req->email;
                                 $this->subject = "Special Notice";
 
-                                $mailmessage = "Dear ".$req->fname.", If you are presenting India Aadhaar Card as the form of identification, kindly upload your India Permanent Account Number card as well using same icon.Thanks";
+                                $mailmessage = "Dear " . $req->fname . ", If you are presenting India Aadhaar Card as the form of identification, kindly upload your India Permanent Account Number card as well using same icon.Thanks";
 
                                 $this->message = '<p>' . $mailmessage . '</p>';
 
 
                                 $this->sendEmail($this->email, "Fund remittance");
-
-
-
                             }
-
-
                         } else {
                             $message = "error";
                             $title = "Oops!";
@@ -14567,7 +14564,6 @@ class AdminController extends Controller
                                     User::where('id', $getMerchant->id)->update(['accountLevel' => 0, 'countryapproval' => 1, 'transactionRecordId' => $info->TransactionID]);
 
                                     Auth::login($getMerchant);
-
                                 } else {
                                     $message = "success";
                                     $title = "Great";
@@ -15501,10 +15497,10 @@ class AdminController extends Controller
             $user->where('id', $req->id)->update(['approval' => 2, 'accountLevel' => 3, 'disableAccount' => 'off', 'account_check' => 2, 'plan' => 'classic']);
 
             if ($data->accountType == 'Individual') {
-                    $subType = 'Consumer Monthly Subscription';
-                } else {
-                    $subType = 'Merchant Monthly Subscription';
-                }
+                $subType = 'Consumer Monthly Subscription';
+            } else {
+                $subType = 'Merchant Monthly Subscription';
+            }
 
             $getSub = TransactionCost::where('country', $data->country)->where('structure', $subType)->first();
 
@@ -16428,8 +16424,38 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
             $resData = "Message Sent";
             $resp = "success";
         } else {
-            $resData = "We cannot locate this receiver information!";
-            $resp = "error";
+
+
+            $user = UserClosed::where('email', $req->send_to)->first();
+
+            if (isset($user)) {
+
+                // Send Message
+
+                InAppMessage::insert([
+                    'send_to' => $req->send_to,
+                    'subject' => $req->subject,
+                    'message' => $req->message,
+                ]);
+
+                $this->name = $user->name;
+                $this->to = $user->email;
+
+                $this->subject = $req->subject;
+                $this->message = $req->message;
+
+
+                $this->createNotification($user->ref_code, strip_tags($req->message));
+
+
+                $this->sendEmail($this->to, "Refund Request");
+
+                $resData = "Message Sent";
+                $resp = "success";
+            } else {
+                $resData = "We cannot locate this receiver information!";
+                $resp = "error";
+            }
         }
 
 
@@ -16524,9 +16550,10 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
         return redirect()->back()->with($resp, $resData);
     }
 
-    public function activatemerchantaccount(Request $req){
+    public function activatemerchantaccount(Request $req)
+    {
 
-        try{
+        try {
             $thisuser = ClientInfo::where('user_id', $req->id)->first();
 
             // Update account to live mode..
@@ -16534,27 +16561,24 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
 
             // Send Mail to the support agent
-        $this->name = $thisuser->business_name;
-        $this->email = $thisuser->email;
-        $this->info = "Fund remittance";
-        $this->subject = "Account activated for live";
+            $this->name = $thisuser->business_name;
+            $this->email = $thisuser->email;
+            $this->info = "Fund remittance";
+            $this->subject = "Account activated for live";
 
-        if($req->val == "live"){
-            $this->message = '<p>Hello ' . $this->name .'!, </p><p>This is a confirmation that the merchant account has been activated.</p><p>The PaySprint Merchant Account default Subscription Plan is FREE Plan.</p><p>You will need to upgrade the subscription to access other features.</p><p>We welcome you to PaySprint for Merchant</p>';
+            if ($req->val == "live") {
+                $this->message = '<p>Hello ' . $this->name . '!, </p><p>This is a confirmation that the merchant account has been activated.</p><p>The PaySprint Merchant Account default Subscription Plan is FREE Plan.</p><p>You will need to upgrade the subscription to access other features.</p><p>We welcome you to PaySprint for Merchant</p>';
 
-        $this->sendEmail($this->email, "Fund remittance");
-
-        }
+                $this->sendEmail($this->email, "Fund remittance");
+            }
 
 
 
 
             $message = "success";
-            $res = "Account successfully moved to ".$req->val;
+            $res = "Account successfully moved to " . $req->val;
             $status = 200;
-
-        }
-         catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             $message = 'error';
             $res = $th->getMessage();
             $status = 400;
@@ -16564,7 +16588,6 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
         $resData = ['res' => $res, 'message' => $message];
 
         return $this->returnJSON($resData, $status);
-
     }
 
     public function ajaxSingleInvoiceUserCheck(Request $req)
@@ -17044,28 +17067,28 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
         return $data;
     }
 
-    public function merchantAccountDetails($country, $mode){
+    public function merchantAccountDetails($country, $mode)
+    {
 
         $data = [];
         $client = ClientInfo::where('country', $country)->where('accountMode', $mode)->get();
 
 
 
-        for ($i=0; $i < count($client); $i++){
+        for ($i = 0; $i < count($client); $i++) {
             $element = $client[$i];
 
             // Get the Users Info
             $users = User::where('ref_code', $element->user_id)->first();
 
 
-            $data []= [
+            $data[] = [
                 'users' => $users
             ];
         }
 
 
         return $data;
-
     }
 
 
@@ -17143,13 +17166,10 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     public function closedUsersByCountry()
     {
 
-        if(session('role') == 'Aml compliance'){
-        $data = UserClosed::where('country', 'Canada')->orWhere('country', 'United States')->orderBy('created_at', 'DESC')->groupBy('country')->get();
-
-        }
-        else{
-        $data = UserClosed::orderBy('created_at', 'DESC')->groupBy('country')->get();
-
+        if (session('role') == 'Aml compliance') {
+            $data = UserClosed::where('country', 'Canada')->orWhere('country', 'United States')->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        } else {
+            $data = UserClosed::orderBy('created_at', 'DESC')->groupBy('country')->get();
         }
 
 
@@ -17160,12 +17180,10 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     public function suspendedUsersByCountry()
     {
 
-        if(session('role') == 'Aml compliance'){
-        $data = User::where('flagged', 1)->where('country', 'Canada')->orWhere('country', 'United States')->orderBy('created_at', 'DESC')->groupBy('country')->get();
-
-        }
-        else{
-        $data = User::where('flagged', 1)->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        if (session('role') == 'Aml compliance') {
+            $data = User::where('flagged', 1)->where('country', 'Canada')->orWhere('country', 'United States')->orderBy('created_at', 'DESC')->groupBy('country')->get();
+        } else {
+            $data = User::where('flagged', 1)->orderBy('created_at', 'DESC')->groupBy('country')->get();
         }
 
         return $data;
@@ -17506,7 +17524,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     }
 
 
-        // Get My Client Info
+    // Get My Client Info
     public function getMyClientInfo($ref_code)
     {
         $data = ClientInfo::where('user_id', $ref_code)->first();

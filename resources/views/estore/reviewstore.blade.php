@@ -86,7 +86,7 @@
                                                     <td>{{ date('d/M/Y', strtotime($value->created_at)) }}</td>
                                                     <td>{{ date('d/M/Y', strtotime($value->updated_at)) }}</td>
                                                     <td>
-                                                        <a href="{{ route('send message', 'id=' . $user->id) }}"
+                                                        <a href="{{ route('send message', 'id=' . $user->id . '&route=') }}"
                                                             class="btn btn-success">Message Merchant</a>
                                                     </td>
                                                     <td>

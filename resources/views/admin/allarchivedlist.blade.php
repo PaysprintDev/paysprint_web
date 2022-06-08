@@ -14,7 +14,6 @@
             <h1>
                 @if (Request::get('country') != null)
                     All Archived {{ strtoupper(Request::get('user')) }} In {{ Request::get('country') }}
-
                 @else
                     All Archived {{ strtoupper(Request::get('user')) }}
                 @endif
@@ -24,7 +23,6 @@
                 <li class="active">
                     @if (Request::get('country') != null)
                         All Archived {{ strtoupper(Request::get('user')) }} In {{ Request::get('country') }}
-
                     @else
                         All Archived {{ strtoupper(Request::get('user')) }}
                     @endif
@@ -83,9 +81,7 @@
                                                 ->where('archive', 1)
                                                 ->get();
                                         @endphp
-
                                     @else
-
                                         @php
                                             $allusersdata = \App\User::where('accountType', 'Merchant')
                                                 ->where('country', Request::get('country'))
@@ -186,28 +182,18 @@
                                                 @if ($datainfo->approval == 2 && $datainfo->accountLevel > 0 && $datainfo->account_check == 2)
                                                     <td style="color: green; font-weight: bold;" align="center">Approved
                                                     </td>
-
                                                 @elseif ($datainfo->approval >= 2 && $datainfo->accountLevel >= 0 && $datainfo->account_check == 1)
-
                                                     <td style="color: darkorange; font-weight: bold;" align="center">
                                                         Awaiting Approval</td>
-
                                                 @elseif ($datainfo->approval >= 2 && $datainfo->accountLevel >= 0 && $datainfo->account_check == 0)
-
                                                     <td style="color: darkorange; font-weight: bold;" align="center">
                                                         Awaiting Approval</td>
-
-
                                                 @elseif ($datainfo->approval == 1 && $datainfo->accountLevel > 0)
-
                                                     <td style="color: darkorange; font-weight: bold;" align="center">
                                                         Awaiting Approval</td>
-
                                                 @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)
-
                                                     <td style="color: navy; font-weight: bold;" align="center">Override
                                                         Level 1</td>
-
                                                 @else
                                                     <td style="color: red; font-weight: bold;" align="center">Not Approved
                                                     </td>
@@ -220,7 +206,7 @@
                                                             title="More details"></i></strong></a>
 
 
-                                                    <a href="{{ route('send message', 'id=' . $datainfo->id) }}"
+                                                    <a href="{{ route('send message', 'id=' . $datainfo->id . '&route=') }}"
                                                         class="text-info"><i class="far fa-envelope text-success"
                                                             style="font-size: 20px;" title="Send Mail"></i></a>
 
@@ -238,9 +224,6 @@
 
                                             </tr>
                                         @endforeach
-
-
-
                                     @else
                                         <tr>
                                             <td colspan="9" align="center">No record available</td>
