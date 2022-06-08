@@ -326,6 +326,9 @@
                      @endif
 
 
+                     @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only' || session('role') == 'Access to Level 1 only')
+
+
                      @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only')
                          <li>
                              <a href="{{ route('all countries') }}">
@@ -458,6 +461,8 @@
                              </ul>
                          </li>
 
+                         @endif
+
                          @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only')
                              <li class="treeview">
                                  <a href="#">
@@ -477,6 +482,8 @@
                                  </ul>
                              </li>
                          @endif
+
+                          @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only')
 
 
                          <li class="treeview">
@@ -557,6 +564,7 @@
                                              class="fa fa-circle-o text-red"></i> Deleted Cards</a></li>
                              </ul>
                          </li>
+                     @endif
                      @endif
 
                      @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access to Level 1 and 2 only')
