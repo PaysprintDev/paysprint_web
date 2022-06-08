@@ -115,7 +115,6 @@ class MerchantApiController extends Controller
     {
 
 
-
         $validator = Validator::make($req->all(), [
             'accountNumber' => 'required',
             'amount' => 'required',
