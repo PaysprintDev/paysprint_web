@@ -79,6 +79,7 @@
                           <th>Email</th>
                           <th>Full-Name</th>
                           <th>Account Type</th>
+                          <th>Amount Credited</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -100,6 +101,7 @@
                       <td>{{$user->email}}</td>
                       <td>{{$user->name}}</td>
                       <td>{{$user->accountType}}</td>
+                      <td>{{$reports->wallet_credit_amount}}</td>
                   </tr>
                        
                      @endif
