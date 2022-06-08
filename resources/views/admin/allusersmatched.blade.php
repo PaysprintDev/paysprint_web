@@ -13,7 +13,6 @@
             <h1>
                 @if (Request::get('country') != null)
                     All Matched In {{ Request::get('country') }}
-
                 @else
                     All Matched
                 @endif
@@ -23,7 +22,6 @@
                 <li class="active">
                     @if (Request::get('country') != null)
                         All Matched In {{ Request::get('country') }}
-
                     @else
                         All Matched
                     @endif
@@ -220,27 +218,18 @@
                                                     @if ($datainfo->approval == 2 && $datainfo->accountLevel > 0 && $datainfo->account_check == 2)
                                                         <td style="color: green; font-weight: bold;" align="center">Approved
                                                         </td>
-
                                                     @elseif ($datainfo->approval == 2 && $datainfo->accountLevel > 0 && $datainfo->account_check == 1)
-
                                                         <td style="color: darkorange; font-weight: bold;" align="center">
                                                             Awaiting Approval</td>
-
-
                                                     @elseif ($datainfo->approval == 2 && $datainfo->accountLevel > 0 && $datainfo->account_check == 0)
-
                                                         <td style="color: darkorange; font-weight: bold;" align="center">
                                                             Awaiting Approval</td>
-
                                                     @elseif ($datainfo->approval == 1 && $datainfo->accountLevel > 0)
-
                                                         <td style="color: darkorange; font-weight: bold;" align="center">
                                                             Awaiting Approval</td>
-
                                                     @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)
                                                         <td style="color: navy; font-weight: bold;" align="center">Override
                                                             Level 1</td>
-
                                                     @else
                                                         <td style="color: red; font-weight: bold;" align="center">Not
                                                             Approved</td>
@@ -266,10 +255,7 @@
                                                                     class="spindowngrade{{ $datainfo->id }} disp-0"
                                                                     src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
                                                                     style="width: 20px; height: 20px;"></a>
-
-
                                                         @elseif($datainfo->approval == 1 && $datainfo->accountLevel > 0)
-
                                                             <a href="javascript:void()"
                                                                 onclick="approveaccount('{{ $datainfo->id }}')"
                                                                 class="text-danger"><i
@@ -287,10 +273,7 @@
                                                                 <img class="spindis{{ $datainfo->id }} disp-0"
                                                                     src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
                                                                     style="width: 20px; height: 20px;"></a>
-
-
                                                         @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)
-
                                                             <a href="javascript:void()"
                                                                 onclick="approveaccount('{{ $datainfo->id }}')"
                                                                 class="text-danger"><i
@@ -299,10 +282,7 @@
                                                                 <img class="spin{{ $datainfo->id }} disp-0"
                                                                     src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
                                                                     style="width: 20px; height: 20px;"></a>
-
                                                         @else
-
-
                                                             <a href="javascript:void()"
                                                                 onclick="approveaccount('{{ $datainfo->id }}')"
                                                                 class="text-primary"><i
@@ -313,7 +293,7 @@
                                                                     style="width: 20px; height: 20px;"></a>
                                                         @endif
 
-                                                        <a href="{{ route('send message', 'id=' . $datainfo->id) }}"
+                                                        <a href="{{ route('send message', 'id=' . $datainfo->id . '&route=') }}"
                                                             class="text-info"><i class="far fa-envelope text-success"
                                                                 style="font-size: 20px;" title="Send Mail"></i></a>
 
@@ -332,16 +312,11 @@
 
                                                 </tr>
                                             @endforeach
-
-
-
                                         @else
                                             <tr>
                                                 <td colspan="11" align="center">No record available</td>
                                             </tr>
                                         @endif
-
-
                                     @else
                                         @if (count($allusers) > 0)
                                             <?php $i = 1; ?>
@@ -426,8 +401,9 @@
                                                                     style="font-size: 20px;" title="Disapprove"></i> <img
                                                                     class="spin{{ $data->id }} disp-0"
                                                                     src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
-                                                                style="width: 20px; height: 20px;"></a> @else <a
-                                                                href="javascript:void()"
+                                                                    style="width: 20px; height: 20px;"></a>
+                                                        @else
+                                                            <a href="javascript:void()"
                                                                 onclick="approveaccount('{{ $data->id }}')"
                                                                 class="text-primary"><i
                                                                     class="far fa-lightbulb text-success"
@@ -449,9 +425,6 @@
 
                                                 </tr>
                                             @endforeach
-
-
-
                                         @else
                                             <tr>
                                                 <td colspan="9" align="center">No record available</td>
