@@ -4635,7 +4635,7 @@ class HomeController extends Controller
 
         // Get Bill
         $getPoint = User::where('id', Auth::user()->id)->first();
-            
+
 
 
         if (isset($getPoint)) {
@@ -4650,7 +4650,7 @@ class HomeController extends Controller
 
 
             $totPointLeft = $getPoint->referral_points - $max;
-            
+
 
             $pointtoget = $max - $getPoint->referral_points;
 
@@ -4823,7 +4823,7 @@ class HomeController extends Controller
 
         );
 
-       
+
 
 
 
