@@ -4103,16 +4103,16 @@ class HomeController extends Controller
 
         if (isset($getRef)) {
 
-            $referral_points = $getRef->referral_points + 100;
-
+            $referral_points = $getRef->referral_points + 10;
+                dd($referral_points);
             User::where('id', $getRef->id)->update([
                 'referral_points' => $referral_points
             ]);
 
 
+
             // Add to generate link
             $refGen = ReferralGenerate::where('ref_code', $req->referred_by)->first();
-
             if (isset($refGen)) {
                 $ref_count = $refGen->referred_count + 1;
 
