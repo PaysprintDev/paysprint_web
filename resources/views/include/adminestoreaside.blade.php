@@ -110,6 +110,14 @@
                     </span>
                 </a>
             </li>
+            <li class="">
+                <a href="{{ route('activate e-store') }}">
+                    <i class="fa fa-book"></i>
+                    <span>Activate Estore</span>
+                    <span class="pull-right-container">
+                    </span>
+                </a>
+            </li>
 
 
 
