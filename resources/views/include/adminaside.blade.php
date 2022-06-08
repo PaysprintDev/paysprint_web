@@ -106,7 +106,8 @@
                                  <ul class="treeview-menu">
                                      <li><a href="{{ route('new investors post') }}"><i class="fa fa-circle-o"></i>
                                              Post Investor News</a></li>
-                                     <li><a href="{{ route('investors news')}}"><i class="fa fa-circle-o"></i> My News Posts</a></li>
+                                     <li><a href="{{ route('investors news') }}"><i class="fa fa-circle-o"></i> My
+                                             News Posts</a></li>
                                      <li><a href="{{ route('new investor subscriber') }}"><i
                                                  class="fa fa-circle-o"></i> Subscribers</a></li>
                                      <li><a href="{{ route('create investor post') }}"><i class="fa fa-circle-o"></i>
@@ -456,23 +457,26 @@
 
                              </ul>
                          </li>
-                         <li class="treeview">
-                             <a href="#">
-                                 <i class="far fa-handshake"></i>
-                                 <span>Wallet Credit</span>
-                                 <span class="pull-right-container">
-                                     <i class="fa fa-angle-left pull-right"></i>
-                                 </span>
-                             </a>
-                             <ul class="treeview-menu">
-                                 <li title="Credit/Debit Card"><a href="{{ route('promo page') }}"><i
-                                             class="fa fa-circle-o text-red"></i>Import Promo Users</a></li>
-                                 <li title="prepaid Card"><a href="{{ route('promo users') }}"><i
-                                             class="fa fa-circle-o text-red"></i>List Promo User</a></li>
-                                <li title="prepaid Card"><a href="{{ route('promo report') }}"><i
-                                             class="fa fa-circle-o text-red"></i>Report</a></li>
-                             </ul>
-                         </li>
+
+                         @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only')
+                             <li class="treeview">
+                                 <a href="#">
+                                     <i class="far fa-handshake"></i>
+                                     <span>Wallet Credit</span>
+                                     <span class="pull-right-container">
+                                         <i class="fa fa-angle-left pull-right"></i>
+                                     </span>
+                                 </a>
+                                 <ul class="treeview-menu">
+                                     <li title="Credit/Debit Card"><a href="{{ route('promo page') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>Import Promo Users</a></li>
+                                     <li title="prepaid Card"><a href="{{ route('promo users') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>List Promo User</a></li>
+                                     <li title="prepaid Card"><a href="{{ route('promo report') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>Report</a></li>
+                                 </ul>
+                             </li>
+                         @endif
 
 
                          <li class="treeview">
