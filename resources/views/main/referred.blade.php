@@ -96,23 +96,25 @@
 
                                 </ul>
 
-                                <h5 align='right' class="text-success">Total People Referred:
+                                <h5 align='right' class="text-success">Total Users Referred:
                                     {{ isset($data['referred']) ? $data['referred'] : 0 }}
                                     </h5>
-                                <h5 align='right' class="text-success">Total Point Earned:
+                                <h5 align='right' class="text-success">Total Points Earned:
                                     <?php
                                             if(isset($data['referred']) ? $data['referred'] : 0){
                                                 $number=$data['referred'];
                                                 $amount=10;
                                                 $total= $number * $amount;
                                                 echo $total;
+                                            }else{
+                                                echo 0;
                                             }
                                            
                                     ?>
                                 </h5>
-                                <h5 align='right' class="text-success">Total Reward Claimed:
+                                <h5 align='right' class="text-success">Total  Referral Points Claimed:
                                     {{ isset($data['point claimed']) ? $data['point claimed'] : 0 }}</h5>
-                                <h5 align='right' class="text-success">Balance:
+                                <h5 align='right' class="text-success">Referral Points Balance:
                                     {{ isset($data['referral point']) ? $data['referral point']->referral_points : 0 }}</h5>
 
                                     
