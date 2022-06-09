@@ -45,6 +45,7 @@
                             <th>S/N</th>
                             <th>Date</th>
                             <th>Email</th>
+                            <th>Country</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -54,13 +55,16 @@
                     @endphp
                     @if (isset($data['promo']))
                     @foreach ( $data['promo'] as $promousers )
+                    @if($user= \App\User::where('email',$promousers->email)->first())
+
                         <tr>
                             <td>{{ $counter++}}</td>
                             <td>{{ $promousers->created_at}}</td>
                             <td>{{ $promousers->email}}</td>
+                            <td>{{$user->country}}</td>
                             <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop{{ $promousers->id }}">Credit Wallet</button></td>
                         </tr>
-
+                        @endif
                         <!-- Modal -->
                   <div class="modal fade" id="staticBackdrop{{ $promousers->id }}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog">

@@ -329,20 +329,20 @@
                      @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only' || session('role') == 'Access to Level 1 only')
 
 
-                     @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only')
-                         <li>
-                             <a href="{{ route('all countries') }}">
-                                 <i class="fa fa-book"></i>
-                                 <span>All Countries</span>
-                             </a>
+                         @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only')
+                             <li>
+                                 <a href="{{ route('all countries') }}">
+                                     <i class="fa fa-book"></i>
+                                     <span>All Countries</span>
+                                 </a>
 
-                         </li>
-
-
+                             </li>
 
 
 
-                         {{-- <li class="treeview">
+
+
+                             {{-- <li class="treeview">
           <a href="#">
             <i class="fa fa-book"></i>
             <span>Business Report</span>
@@ -361,106 +361,107 @@
           </ul>
         </li> --}}
 
-                         <li class="treeview disp-0">
-                             <a href="#">
-                                 <i class="fa fa-book"></i>
-                                 <span>Transaction History & Invoicing</span>
-                                 <span class="pull-right-container">
-                                     <i class="fa fa-angle-left pull-right"></i>
-                                 </span>
-                             </a>
-                             <ul class="treeview-menu">
-                                 <li onclick="openModal('singleDoc1')"><a href="#"><i
-                                             class="fa fa-circle-o text-green"></i>
-                                         Single </a></li>
-                                 <li onclick="openModal('uploadDoc')"><a href="#"><i
-                                             class="fa fa-circle-o text-red"></i>
-                                         Batch</a></li>
+                             <li class="treeview disp-0">
+                                 <a href="#">
+                                     <i class="fa fa-book"></i>
+                                     <span>Transaction History & Invoicing</span>
+                                     <span class="pull-right-container">
+                                         <i class="fa fa-angle-left pull-right"></i>
+                                     </span>
+                                 </a>
+                                 <ul class="treeview-menu">
+                                     <li onclick="openModal('singleDoc1')"><a href="#"><i
+                                                 class="fa fa-circle-o text-green"></i>
+                                             Single </a></li>
+                                     <li onclick="openModal('uploadDoc')"><a href="#"><i
+                                                 class="fa fa-circle-o text-red"></i>
+                                             Batch</a></li>
 
-                                 {{-- <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
-                             </ul>
-                         </li>
+                                     {{-- <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
+                                 </ul>
+                             </li>
 
-                         <li class="treeview disp-0">
-                             <a href="#">
-                                 <i class="fa fa-book"></i>
-                                 <span>Remittance Report</span>
-                                 <span class="pull-right-container">
-                                     <i class="fa fa-angle-left pull-right"></i>
-                                 </span>
-                             </a>
-                             <ul class="treeview-menu">
-                                 <li><a href="{{ route('paycaremittance') }}"><i
-                                             class="fa fa-circle-o text-green"></i>
-                                         Invoice </a></li>
-                                 <li><a href="{{ route('remittance') }}"><i class="fa fa-circle-o text-red"></i>
-                                         Money
-                                         Transfer</a></li>
-                                 {{-- <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
-                             </ul>
-                         </li>
+                             <li class="treeview disp-0">
+                                 <a href="#">
+                                     <i class="fa fa-book"></i>
+                                     <span>Remittance Report</span>
+                                     <span class="pull-right-container">
+                                         <i class="fa fa-angle-left pull-right"></i>
+                                     </span>
+                                 </a>
+                                 <ul class="treeview-menu">
+                                     <li><a href="{{ route('paycaremittance') }}"><i
+                                                 class="fa fa-circle-o text-green"></i>
+                                             Invoice </a></li>
+                                     <li><a href="{{ route('remittance') }}"><i class="fa fa-circle-o text-red"></i>
+                                             Money
+                                             Transfer</a></li>
+                                     {{-- <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
+                                 </ul>
+                             </li>
 
-                         <li class="treeview disp-0">
-                             <a href="#">
-                                 <i class="fa fa-book"></i>
-                                 <span>Remitted Report</span>
-                                 <span class="pull-right-container">
-                                     <i class="fa fa-angle-left pull-right"></i>
-                                 </span>
-                             </a>
-                             <ul class="treeview-menu">
-                                 <li><a href="{{ route('remittancepaycareport') }}"><i
-                                             class="fa fa-circle-o text-green"></i> Invoice </a></li>
-                                 <li><a href="{{ route('remittanceepayreport') }}"><i
-                                             class="fa fa-circle-o text-red"></i> Money Transfer</a></li>
+                             <li class="treeview disp-0">
+                                 <a href="#">
+                                     <i class="fa fa-book"></i>
+                                     <span>Remitted Report</span>
+                                     <span class="pull-right-container">
+                                         <i class="fa fa-angle-left pull-right"></i>
+                                     </span>
+                                 </a>
+                                 <ul class="treeview-menu">
+                                     <li><a href="{{ route('remittancepaycareport') }}"><i
+                                                 class="fa fa-circle-o text-green"></i> Invoice </a></li>
+                                     <li><a href="{{ route('remittanceepayreport') }}"><i
+                                                 class="fa fa-circle-o text-red"></i> Money Transfer</a></li>
 
-                                 {{-- <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
-                             </ul>
-                         </li>
+                                     {{-- <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
+                                 </ul>
+                             </li>
 
-                         <li class="treeview disp-0">
-                             <a href="#">
-                                 <i class="fa fa-book"></i>
-                                 <span>In-house Report</span>
-                                 <span class="pull-right-container">
-                                     <i class="fa fa-angle-left pull-right"></i>
-                                 </span>
-                             </a>
-                             <ul class="treeview-menu">
-                                 <li><a href="{{ route('clientfeereport') }}"><i
-                                             class="fa fa-circle-o text-red"></i>
-                                         Client Fee Report</a></li>
-                                 <li><a href="{{ route('collectionfee') }}"><i class="fa fa-circle-o text-red"></i>
-                                         General Fee Report</a></li>
-                                 <li><a href="{{ route('comissionreport') }}"><i
-                                             class="fa fa-circle-o text-red"></i>
-                                         Commission Report</a></li>
+                             <li class="treeview disp-0">
+                                 <a href="#">
+                                     <i class="fa fa-book"></i>
+                                     <span>In-house Report</span>
+                                     <span class="pull-right-container">
+                                         <i class="fa fa-angle-left pull-right"></i>
+                                     </span>
+                                 </a>
+                                 <ul class="treeview-menu">
+                                     <li><a href="{{ route('clientfeereport') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>
+                                             Client Fee Report</a></li>
+                                     <li><a href="{{ route('collectionfee') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>
+                                             General Fee Report</a></li>
+                                     <li><a href="{{ route('comissionreport') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>
+                                             Commission Report</a></li>
 
-                                 {{-- <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
-                             </ul>
-                         </li>
+                                     {{-- <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
+                                 </ul>
+                             </li>
 
 
 
-                         <li class="treeview">
-                             <a href="#">
-                                 <i class="far fa-handshake"></i>
-                                 <span>Withdrawal Request</span>
-                                 <span class="pull-right-container">
-                                     <i class="fa fa-angle-left pull-right"></i>
-                                 </span>
-                             </a>
-                             <ul class="treeview-menu">
-                                 <li title="Credit/Debit Card"><a href="{{ route('card request withdrawal') }}"><i
-                                             class="fa fa-circle-o text-red"></i> Credit/Debit Card</a></li>
-                                 <li title="prepaid Card"><a href="{{ route('prepaid request withdrawal') }}"><i
-                                             class="fa fa-circle-o text-red"></i> Prepaid Card</a></li>
-                                 <li title="Bank Account"><a href="{{ route('bank request withdrawal') }}"><i
-                                             class="fa fa-circle-o text-red"></i> Bank Account</a></li>
+                             <li class="treeview">
+                                 <a href="#">
+                                     <i class="far fa-handshake"></i>
+                                     <span>Withdrawal Request</span>
+                                     <span class="pull-right-container">
+                                         <i class="fa fa-angle-left pull-right"></i>
+                                     </span>
+                                 </a>
+                                 <ul class="treeview-menu">
+                                     <li title="Credit/Debit Card"><a
+                                             href="{{ route('card request withdrawal') }}"><i
+                                                 class="fa fa-circle-o text-red"></i> Credit/Debit Card</a></li>
+                                     <li title="prepaid Card"><a href="{{ route('prepaid request withdrawal') }}"><i
+                                                 class="fa fa-circle-o text-red"></i> Prepaid Card</a></li>
+                                     <li title="Bank Account"><a href="{{ route('bank request withdrawal') }}"><i
+                                                 class="fa fa-circle-o text-red"></i> Bank Account</a></li>
 
-                             </ul>
-                         </li>
-
+                                 </ul>
+                             </li>
                          @endif
 
                          @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only')
@@ -479,92 +480,98 @@
                                                  class="fa fa-circle-o text-red"></i>List Promo User</a></li>
                                      <li title="prepaid Card"><a href="{{ route('promo report') }}"><i
                                                  class="fa fa-circle-o text-red"></i>Report</a></li>
+                                     <li title="prepaid Card"><a href="{{ route('claim reward') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>Points Claimed</a></li>
+                                     <li title="prepaid Card"><a href="{{ route('referral claim') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>Referral Claims</a></li>
                                  </ul>
                              </li>
                          @endif
 
-                          @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only')
+
+                         @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only')
+                             <li class="treeview">
+                                 <a href="#">
+                                     <i class="far fa-handshake"></i>
+                                     <span>Processed Withdrawals</span>
+                                     <span class="pull-right-container">
+                                         <i class="fa fa-angle-left pull-right"></i>
+                                     </span>
+                                 </a>
+                                 <ul class="treeview-menu">
+                                     <li title="Credit/Debit Card"><a
+                                             href="{{ route('card processed withdrawal') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>Credit/Debit Card</a></li>
+
+                                     <li title="Bank Account"><a href="{{ route('bank processed withdrawal') }}"><i
+                                                 class="fa fa-circle-o text-red"></i> Bank Account</a></li>
+
+                                     <li title="Processed Refunds"><a href="{{ route('refund processed') }}"><i
+                                                 class="fa fa-circle-o text-red"></i> Processed Refunds</a></li>
+
+                                 </ul>
+                             </li>
 
 
-                         <li class="treeview">
-                             <a href="#">
-                                 <i class="far fa-handshake"></i>
-                                 <span>Processed Withdrawals</span>
-                                 <span class="pull-right-container">
-                                     <i class="fa fa-angle-left pull-right"></i>
-                                 </span>
-                             </a>
-                             <ul class="treeview-menu">
-                                 <li title="Credit/Debit Card"><a href="{{ route('card processed withdrawal') }}"><i
-                                             class="fa fa-circle-o text-red"></i>Credit/Debit Card</a></li>
+                             <li class="treeview">
+                                 <a href="#">
+                                     <i class="far fa-handshake"></i>
+                                     <span>Pending Transactions</span>
+                                     <span class="pull-right-container">
+                                         <i class="fa fa-angle-left pull-right"></i>
+                                     </span>
+                                 </a>
+                                 <ul class="treeview-menu">
+                                     <li title="Transfers"><a href="{{ route('pending transfer') }}"><i
+                                                 class="fa fa-circle-o text-red"></i> Transfers</a></li>
+                                     <li title="Text-Transfer"><a href="{{ route('text to transfer') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>Text-Transfer</a></li>
 
-                                 <li title="Bank Account"><a href="{{ route('bank processed withdrawal') }}"><i
-                                             class="fa fa-circle-o text-red"></i> Bank Account</a></li>
+                                 </ul>
+                             </li>
 
-                                 <li title="Processed Refunds"><a href="{{ route('refund processed') }}"><i
-                                             class="fa fa-circle-o text-red"></i> Processed Refunds</a></li>
+                             <li class="treeview">
+                                 <a href="#">
+                                     <i class="far fa-money-bill-alt"></i>
+                                     <span>Refund</span>
+                                     <span class="pull-right-container">
+                                         <i class="fa fa-angle-left pull-right"></i>
+                                     </span>
+                                 </a>
+                                 <ul class="treeview-menu">
+                                     <li title="Text-to-Transfer Refund"><a
+                                             href="{{ route('refund money request') }}"><i
+                                                 class="fa fa-circle-o text-red"></i> Text-to-Transfer</a></li>
+                                     <li title="Wallet Purchase Refund"><a
+                                             href="{{ route('purchase refund request') }}"><i
+                                                 class="fa fa-circle-o text-red"></i> Wallet Purchase</a></li>
+                                     {{-- <li title="To Bank Account"><a href="#"><i class="fa fa-circle-o text-red"></i> To Bank Account</a></li> --}}
 
-                             </ul>
-                         </li>
-
-
-                         <li class="treeview">
-                             <a href="#">
-                                 <i class="far fa-handshake"></i>
-                                 <span>Pending Transactions</span>
-                                 <span class="pull-right-container">
-                                     <i class="fa fa-angle-left pull-right"></i>
-                                 </span>
-                             </a>
-                             <ul class="treeview-menu">
-                                 <li title="Transfers"><a href="{{ route('pending transfer') }}"><i
-                                             class="fa fa-circle-o text-red"></i> Transfers</a></li>
-                                 <li title="Text-Transfer"><a href="{{ route('text to transfer') }}"><i
-                                             class="fa fa-circle-o text-red"></i>Text-Transfer</a></li>
-
-                             </ul>
-                         </li>
-
-                         <li class="treeview">
-                             <a href="#">
-                                 <i class="far fa-money-bill-alt"></i>
-                                 <span>Refund</span>
-                                 <span class="pull-right-container">
-                                     <i class="fa fa-angle-left pull-right"></i>
-                                 </span>
-                             </a>
-                             <ul class="treeview-menu">
-                                 <li title="Text-to-Transfer Refund"><a href="{{ route('refund money request') }}"><i
-                                             class="fa fa-circle-o text-red"></i> Text-to-Transfer</a></li>
-                                 <li title="Wallet Purchase Refund"><a
-                                         href="{{ route('purchase refund request') }}"><i
-                                             class="fa fa-circle-o text-red"></i> Wallet Purchase</a></li>
-                                 {{-- <li title="To Bank Account"><a href="#"><i class="fa fa-circle-o text-red"></i> To Bank Account</a></li> --}}
-
-                             </ul>
-                         </li>
+                                 </ul>
+                             </li>
 
 
-                         <li class="treeview">
-                             <a href="#">
-                                 <i class="fa fa-credit-card"></i>
-                                 <span>Card</span>
-                                 <span class="pull-right-container">
-                                     <i class="fa fa-angle-left pull-right"></i>
-                                 </span>
-                             </a>
-                             <ul class="treeview-menu">
-                                 <li title="Prepaid Card Issuer"><a href="{{ route('card issuer') }}"><i
-                                             class="fa fa-circle-o text-red"></i> Prepaid Card Issuer</a></li>
-                                 <li title="Prepaid Card Request"><a href="{{ route('prepaid card request') }}"><i
-                                             class="fa fa-circle-o text-red"></i> Prepaid Card Request</a></li>
-                                 <li title="Added Cards"><a href="{{ route('all added cards') }}"><i
-                                             class="fa fa-circle-o text-red"></i> Added Cards</a></li>
-                                 <li title="Deleted Cards"><a href="{{ route('all deleted cards') }}"><i
-                                             class="fa fa-circle-o text-red"></i> Deleted Cards</a></li>
-                             </ul>
-                         </li>
-                     @endif
+                             <li class="treeview">
+                                 <a href="#">
+                                     <i class="fa fa-credit-card"></i>
+                                     <span>Card</span>
+                                     <span class="pull-right-container">
+                                         <i class="fa fa-angle-left pull-right"></i>
+                                     </span>
+                                 </a>
+                                 <ul class="treeview-menu">
+                                     <li title="Prepaid Card Issuer"><a href="{{ route('card issuer') }}"><i
+                                                 class="fa fa-circle-o text-red"></i> Prepaid Card Issuer</a></li>
+                                     <li title="Prepaid Card Request"><a
+                                             href="{{ route('prepaid card request') }}"><i
+                                                 class="fa fa-circle-o text-red"></i> Prepaid Card Request</a></li>
+                                     <li title="Added Cards"><a href="{{ route('all added cards') }}"><i
+                                                 class="fa fa-circle-o text-red"></i> Added Cards</a></li>
+                                     <li title="Deleted Cards"><a href="{{ route('all deleted cards') }}"><i
+                                                 class="fa fa-circle-o text-red"></i> Deleted Cards</a></li>
+                                 </ul>
+                             </li>
+                         @endif
                      @endif
 
                      @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access to Level 1 and 2 only')

@@ -807,6 +807,7 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('claimpointhistory', ['uses' => 'HomeController@claimedHistory', 'as' => 'claim history']);
 
 	Route::get('claimpointhistoryadmin', ['uses' => 'HomeController@claimedHistoryAdmin', 'as' => 'claim history admin']);
+	
 
 
 
@@ -980,6 +981,7 @@ Route::get('/promousers',['uses' => 'AdminController@promoUsers', 'as' => 'promo
 Route::get('/promoreport',['uses' => 'AdminController@promoReport', 'as' => 'promo report']);
 Route::post('/topup',['uses' => 'AdminController@topUpWallet', 'as' => 'top up']);
 Route::get('/viewreport',['uses' => 'AdminController@viewReport', 'as' => 'view report']);
+Route::get('/referralclaim', ['uses' => 'AdminController@referralClaim', 'as' => 'referral claim']);
 
 
 
