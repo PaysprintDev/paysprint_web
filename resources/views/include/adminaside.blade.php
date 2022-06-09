@@ -471,6 +471,10 @@
                                              class="fa fa-circle-o text-red"></i>List Promo User</a></li>
                                 <li title="prepaid Card"><a href="{{ route('promo report') }}"><i
                                              class="fa fa-circle-o text-red"></i>Report</a></li>
+                                 <li title="prepaid Card"><a href="{{ route('claim reward') }}"><i
+                                             class="fa fa-circle-o text-red"></i>Points Claimed</a></li>
+                                             <li title="prepaid Card"><a href="{{ route('referral claim') }}"><i
+                                                class="fa fa-circle-o text-red"></i>Referral Claims</a></li>
                              </ul>
                          </li>
 
