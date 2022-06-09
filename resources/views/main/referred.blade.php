@@ -99,24 +99,27 @@
                                 <h5 align='right' class="text-success">Total People Referred:
                                     {{ isset($data['referred']) ? $data['referred'] : 0 }}
                                     </h5>
-                                <h5 align='right' class="text-success">Point Balance
-                                    {{ isset($data['referral point']) ? $data['referral point']->referral_points : 0 }}</h5>
-                                <h5 align='right' class="text-success">Redeemed Point:
-                                    {{ isset($data['mypoint']) ? $data['mypoint']->current_point : 0 }}</h5>
-                                <h5 align='right' class="text-success">Total Points:
+                                <h5 align='right' class="text-success">Total Point Earned:
                                     <?php
-
-                                    $first_number = $data['referral point']->referral_points;
-                                    $second_number = 0;
-
-                                    $sum_total = $first_number-$second_number;
-
-                                    print $sum_total;
-
-                                    ?></td>
+                                            if(isset($data['referred']) ? $data['referred'] : 0){
+                                                $number=$data['referred'];
+                                                $amount=10;
+                                                $total= $number * $amount;
+                                                echo $total;
+                                            }
+                                           
+                                    ?>
                                 </h5>
-                                <div class="row">
-                                    <div class="col-md-2">
+                                <h5 align='right' class="text-success">Total Reward Claimed:
+                                    {{ isset($data['point claimed']) ? $data['point claimed'] : 0 }}</h5>
+                                <h5 align='right' class="text-success">Balance:
+                                    {{ isset($data['referral point']) ? $data['referral point']->referral_points : 0 }}</h5>
+
+                                    
+
+                                </h5>
+                                <div class="row justify-content-center">
+                                    <div class="col-md-4">
                                         {{-- <button href="#">Claim Points</button> --}}
                                         <form action="{{ route('claim referral point') }}" method="POST">
                                             @csrf
@@ -125,7 +128,7 @@
 
                                         </form>
                                     </div>
-                                    <div class="col-md-3">
+                                    {{-- <div class="col-md-3">
 
 
                                         <a href="{{ route('claim history') }}" class="btn btn-success btn-block">View
@@ -133,7 +136,7 @@
                                             History</a>
 
 
-                                    </div>
+                                    </div> --}}
                                 </div>
 
                             </div> <!-- End -->
@@ -144,321 +147,44 @@
                                 <div id="credit-card" class="tab-pane fade show active pt-3">
 
                                     <div class="table table-responsive">
+                                            <h3>Claimed Point History</h3>
                                         <table class="table table-bordered table-striped" id="example3">
                                             <thead>
                                                 <tr>
                                                     <td>
-                                                        <h5>Action</h5>
+                                                        <h5>Date</h5>
                                                     </td>
                                                     <td>
-                                                        <h5>Activity Count</h5>
+                                                        <h5>Points Claimed</h5>
                                                     </td>
                                                     <td>
-                                                        <h5>Points</h5>
+                                                        <h5>Balance</h5>
+                                                    </td>
+                                                    <td>
+                                                        <h5>Status</h5>
                                                     </td>
 
                                                 </tr>
                                             </thead>
                                             <tbody>
-
+                                                @if(count($data['points_history']) > 0)
+                                                @foreach ( $data['points_history'] as $pointhistory)
+                                                    
                                                 <tr>
 
-                                                    <td>Add Money <br>
-                                                        <small class="text-danger"><em>Add money points attracts 200
-                                                                reward points</em></small>
-                                                    </td>
-                                                    <td>{{ $data['getallpoint']->add_money }}</td>
-                                                    <td><?php
-
-                                                    $first_number = $data['getallpoint']->add_money;
-                                                    $second_number = 200;
-
-                                                    $sum_total = $second_number * $first_number;
-
-                                                    print $sum_total;
-
-                                                    ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Send Money <br>
-                                                        <small class="text-danger"><em>Send money points attracts 140
-                                                                reward points</em></small>
-                                                    </td>
-                                                    <td>{{ $data['getallpoint']->send_money }}</td>
-                                                    <td><?php
-
-                                                    $first_number = $data['getallpoint']->send_money;
-                                                    $second_number = 140;
-
-                                                    $sum_total = $second_number * $first_number;
-
-                                                    print $sum_total;
-
-                                                    ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Receive Money <br>
-                                                        <small class="text-danger"><em>Receive money points attracts
-                                                                120
-                                                                reward points</em></small>
-                                                    </td>
-                                                    <td>{{ $data['getallpoint']->receive_money }}</td>
-                                                    <td><?php
-
-                                                    $first_number = $data['getallpoint']->receive_money;
-                                                    $second_number = 120;
-
-                                                    $sum_total = $second_number * $first_number;
-
-                                                    print $sum_total;
-
-                                                    ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Pay Invoice <br>
-                                                        <small class="text-danger"><em>Pay Invoice points attracts 50
-                                                                reward points</em></small>
-                                                    </td>
-                                                    <td>{{ $data['getallpoint']->pay_invoice }}</td>
-                                                    <td><?php
-
-                                                    $first_number = $data['getallpoint']->pay_invoice;
-                                                    $second_number = 50;
-
-                                                    $sum_total = $second_number * $first_number;
-
-                                                    print $sum_total;
-
-                                                    ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Pay Bills <br>
-                                                        <small class="text-danger"><em>Pay Bills points attracts 50
-                                                                reward points</em></small>
-                                                    </td>
-                                                    <td>{{ $data['getallpoint']->pay_bills }}</td>
-                                                    <td><?php
-
-                                                    $first_number = $data['getallpoint']->pay_bills;
-                                                    $second_number = 50;
-
-                                                    $sum_total = $second_number * $first_number;
-
-                                                    print $sum_total;
-
-                                                    ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Create And Send Invoice <br>
-                                                        <small class="text-danger"><em>Create and Send Invoice points
-                                                                attracts 80
-                                                                reward points</em></small>
-                                                    </td>
-                                                    <td>{{ $data['getallpoint']->create_and_send_invoice }}</td>
-                                                    <td><?php
-
-                                                    $first_number = $data['getallpoint']->create_and_send_invoice;
-                                                    $second_number = 80;
-
-                                                    $sum_total = $second_number * $first_number;
-
-                                                    print $sum_total;
-
-                                                    ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Active Rental Property <br>
-                                                        <small class="text-danger"><em>Active Rental Property points
-                                                                attracts 500
-                                                                reward points</em></small>
-                                                    </td>
-                                                    <td>{{ $data['getallpoint']->active_rental_property }}</td>
-                                                    <td><?php
-
-                                                    $first_number = $data['getallpoint']->active_rental_property;
-                                                    $second_number = 500;
-
-                                                    $sum_total = $second_number * $first_number;
-
-                                                    print $sum_total;
-
-                                                    ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Quick Set Up <br>
-                                                        <small class="text-danger"><em>Quick Set Up points attracts
-                                                                200
-                                                                reward points</em></small>
-                                                    </td>
-                                                    <td>{{ $data['getallpoint']->quick_set_up }}</td>
-                                                    <td><?php
-
-                                                    $first_number = $data['getallpoint']->quick_set_up;
-                                                    $second_number = 200;
-
-                                                    $sum_total = $second_number * $first_number;
-
-                                                    print $sum_total;
-
-                                                    ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Approved Customers <br>
-                                                        <small class="text-danger"><em>Approved Customers points
-                                                                attracts
-                                                                500
-                                                                reward points</em></small>
-                                                    </td>
-                                                    <td>{{ $data['getallpoint']->approved_customers }}</td>
-                                                    <td><?php
-
-                                                    $first_number = $data['getallpoint']->approved_customers;
-                                                    $second_number = 500;
-
-                                                    $sum_total = $second_number * $first_number;
-
-                                                    print $sum_total;
-
-                                                    ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Approved Merchants <br>
-                                                        <small class="text-danger"><em>Approved Merchants points
-                                                                attracts
-                                                                700
-                                                                reward points</em></small>
-                                                    </td>
-                                                    <td>{{ $data['getallpoint']->approved_merchants }}</td>
-                                                    <td><?php
-
-                                                    $first_number = $data['getallpoint']->approved_merchants;
-                                                    $second_number = 700;
-
-                                                    $sum_total = $second_number * $first_number;
-
-                                                    print $sum_total;
-
-                                                    ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Promote Business <br>
-                                                        <small class="text-danger"><em>Promote Business points
-                                                                attracts
-                                                                150
-                                                                reward points</em></small>
-                                                    </td>
-                                                    <td>{{ $data['getallpoint']->promote_business }}</td>
-                                                    <td><?php
-
-                                                    $first_number = $data['getallpoint']->promote_business;
-                                                    $second_number = 150;
-
-                                                    $sum_total = $second_number * $first_number;
-
-                                                    print $sum_total;
-
-                                                    ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Activate Ordering System</td>
-                                                    <td>{{ $data['getallpoint']->activate_ordering_system }}</td>
-                                                    <td><?php
-
-                                                    $first_number = $data['getallpoint']->activate_ordering_system;
-                                                    $second_number = 0;
-
-                                                    $sum_total = $second_number * $first_number;
-
-                                                    print $sum_total;
-
-                                                    ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Identify Verification</td>
-                                                    <td>{{ $data['getallpoint']->identify_verification }}</td>
-                                                    <td><?php
-
-                                                    $first_number = $data['getallpoint']->identify_verification;
-                                                    $second_number = 0;
-
-                                                    $sum_total = $second_number * $first_number;
-
-                                                    print $sum_total;
-
-                                                    ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Activate RPM</td>
-                                                    <td>{{ $data['getallpoint']->activate_rpm }}</td>
-                                                    <td><?php
-
-                                                    $first_number = $data['getallpoint']->activate_rpm;
-                                                    $second_number = 0;
-
-                                                    $sum_total = $second_number * $first_number;
-
-                                                    print $sum_total;
-
-                                                    ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Activate Currency Exchange</td>
-                                                    <td>{{ $data['getallpoint']->activate_currency_exchange }}</td>
-                                                    <td><?php
-
-                                                    $first_number = $data['getallpoint']->activate_currency_exchange;
-                                                    $second_number = 0;
-
-                                                    $sum_total = $second_number * $first_number;
-
-                                                    print $sum_total;
-
-                                                    ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Activate Cash Advance</td>
-                                                    <td>{{ $data['getallpoint']->activate_cash_advance }}</td>
-                                                    <td><?php
-
-                                                    $first_number = $data['getallpoint']->activate_cash_advance;
-                                                    $second_number = 0;
-
-                                                    $sum_total = $second_number * $first_number;
-
-                                                    print $sum_total;
-
-                                                    ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Activate Crypto Currency Account</td>
-                                                    <td>{{ $data['getallpoint']->activate_crypto_currency_account }}
-                                                    </td>
-                                                    <td><?php
-
-                                                    $first_number = $data['getallpoint']->activate_crypto_currency_account;
-                                                    $second_number = 0;
-
-                                                    $sum_total = $second_number * $first_number;
-
-                                                    print $sum_total;
-
-                                                    ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Total Points</td>
-                                                    <td>{{ $data['getallpoint']->add_money + $data['getallpoint']->send_money + $data['getallpoint']->receive_money + $data['getallpoint']->pay_invoice + $data['getallpoint']->pay_bills + $data['getallpoint']->create_and_send_invoice + $data['getallpoint']->active_rental_property + $data['getallpoint']->approved_customers + $data['getallpoint']->approved_merchants + $data['getallpoint']->promote_business + $data['getallpoint']->activate_ordering_system + $data['getallpoint']->identify_verification + $data['getallpoint']->activate_rpm + $data['getallpoint']->activate_currency_exchange + $data['getallpoint']->activate_cash_advance + $data['getallpoint']->activate_crypto_currency_account }}
-                                                    </td>
-                                                    <td>{{ $data['getallpoint']->points_acquired }}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Balance Points</td>
                                                     <td>
-                                                        &nbsp;
+                                                        {{ date('d/M/Y', strtotime($pointhistory->created_at)) }}
+                                                        {{-- <small class="text-danger"><em>Request for claim</em></small> --}}
                                                     </td>
-                                                    <td>{{ isset($data['mypoints']) ? $data['mypoints']->points_acquired : 0 }}
-                                                    </td>
+                                                    <td>{{ $pointhistory->points_claimed }}</td>
+                                                    <td>{{$pointhistory->points_left}}</td>
+                                                    <td>{{$pointhistory->status}}</td>
                                                 </tr>
+                                              
+                                                @endforeach
+                                                @endif
+                                               
+                                            
 
                                             </tbody>
 
@@ -473,16 +199,16 @@
 
 
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             {{-- <button href="#">Claim Points</button> --}}
-                                            <form action="{{ route('claim point') }}" method="POST">
+                                            <form action="{{ route('claim referral point') }}" method="POST">
                                                 @csrf
                                                 <button type="submit" class="btn btn-primary btn-block">Redeem
                                                     Points</button>
 
                                             </form>
                                         </div>
-                                        <div class="col-md-6">
+                                        {{-- <div class="col-md-6">
 
 
                                             <a href="{{ route('claim history') }}"
@@ -491,7 +217,7 @@
                                                 History</a>
 
 
-                                        </div>
+                                        </div> --}}
                                     </div>
 
 

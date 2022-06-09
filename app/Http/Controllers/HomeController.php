@@ -4104,7 +4104,7 @@ class HomeController extends Controller
         if (isset($getRef)) {
 
             $referral_points = $getRef->referral_points + 10;
-                dd($referral_points);
+            
             User::where('id', $getRef->id)->update([
                 'referral_points' => $referral_points
             ]);
@@ -4610,6 +4610,8 @@ class HomeController extends Controller
         return redirect()->back()->with($resp, $resData);
     }
 
+    
+
     public function claimedReferralPoints(Request $req)
     {
 
@@ -4668,6 +4670,7 @@ class HomeController extends Controller
                 ReferralClaim::insert([
                     'user_id' => Auth::user()->id,
                     'points_acquired' => $getPoint->referral_points,
+                    'points_claimed' => $max,
                     'points_left' => $totPointLeft,
                     'status' => 'pending'
                 ]);
@@ -4687,7 +4690,7 @@ class HomeController extends Controller
                 $resp = "success";
             } else {
 
-                $resData = 'You need to have ' . $pointtoget . ' to be able to claim reward';
+                $resData = 'You need to have ' . $pointtoget . ' more to be able to claim reward';
                 $resp = "error";
             }
         } else {
@@ -4820,6 +4823,8 @@ class HomeController extends Controller
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'referred' => $this->referral(Auth::user()->ref_code),
             'referral point' => $this->referralPoints(Auth::user()->id),
+            'point claimed'=> $this->pointsClaimed(Auth::user()->id),
+            'points_history' => $this->pointHistory(Auth::user()->id),
 
         );
 
