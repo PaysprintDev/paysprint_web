@@ -5186,7 +5186,10 @@ table tbody .border-bottom-warning td {
       padding: 30px;
       position: relative;
       border-bottom: 1px solid #e6edef;
-      margin-bottom: 20px; }
+      margin-bottom: 20px;
+        height: 50%;
+        overflow-y: auto;
+    }
       .page-wrapper.compact-wrapper .page-body-wrapper header.main-nav .sidebar-user img {
         border: 10px solid rgb(242 253 251 / 20%); }
       .page-wrapper.compact-wrapper .page-body-wrapper header.main-nav .sidebar-user .setting-primary {
@@ -5248,7 +5251,7 @@ table tbody .border-bottom-warning td {
       display: none; }
     .page-wrapper.compact-wrapper .page-body-wrapper header.main-nav .main-navbar .nav-menu {
       border-radius: 0;
-      height: calc(100vh - 500px);
+      height: calc(100vh - 630px);
       left: -300px;
       z-index: 99;
       -webkit-transition: color 1s ease;

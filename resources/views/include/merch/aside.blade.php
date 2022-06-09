@@ -68,7 +68,7 @@
                     Pricing</a>
 
             </div>
-            <nav>
+            <nav style="overflow-y: auto">
                 <div class="main-navbar">
                     <div class="left-arrow" id="left-arrow"><i data-feather="arrow-left"></i></div>
                     <div id="mainnav">
@@ -354,7 +354,7 @@
                             </li>
                             <li class="dropdown">
                                 <a class="nav-link menu-title " href="{{ route('consumer points') }}"><i
-                                        data-feather="server"></i><span>Refer and Earn</span></a>
+                                        data-feather="server"></i><span>Reward Points</span></a>
                             </li>
 
                     </div>
