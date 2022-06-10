@@ -71,6 +71,12 @@
               <hr>
             <!-- report Table -->
               <div class="container-fluid" style="margin-top: 30px">
+                  {{-- @if(isset($data['start_date']))
+                  @if(isset($data['end_date']))
+                    <h1>Start Date:{{$data['start_date']}} - End Date:{{$data['end_date']}} </h1>
+                    <hr>
+                  @endif
+                  @endif --}}
                   <table class="table table-responsive table-striped" id="promousers">
                       <thead>
                         <tr>
@@ -101,7 +107,7 @@
                       <td>{{$user->email}}</td>
                       <td>{{$user->name}}</td>
                       <td>{{$user->accountType}}</td>
-                      <td>{{$reports->wallet_credit_amount}}</td>
+                      <td>{{$reports->wallet_credit_amount}}{{$user->currencySymbol}}</td>
                   </tr>
                        
                      @endif
