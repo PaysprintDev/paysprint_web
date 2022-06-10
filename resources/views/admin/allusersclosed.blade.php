@@ -17,7 +17,7 @@
 
         @else
          All Closed Users
-            
+
         @endif
       </h1>
       <ol class="breadcrumb">
@@ -28,7 +28,7 @@
 
         @else
          All Closed Users
-            
+
         @endif
         </li>
       </ol>
@@ -45,7 +45,7 @@
                 <button class="btn btn-secondary btn-block bg-red" onclick="goBack()"><i class="fas fa-chevron-left"></i> Go back</button>
             </div>
             </div>
-              
+
             </div>
             <!-- /.box-header -->
             <div class="box-body table table-responsive">
@@ -87,7 +87,7 @@
                         @foreach ($allusersdata as $datainfo)
                         <tr>
                             <td>{{ $i++ }}</td>
-                            
+
                             <td style="color: green; font-weight: bold;">{{ $datainfo->ref_code }}</td>
                             <td>{{ $datainfo->name }}</td>
                             @if($user = \App\Admin::where('email', $datainfo->email)->first())
@@ -105,7 +105,7 @@
                                     Selfie : @if($datainfo->avatar != null) <a href="{{ $datainfo->avatar }}" target="_blank">View Avatar</a> @endif
                                 </small>
                                 <hr>
-                                    
+
                                 @endif
 
                                 @if (($datainfo->nin_front != null || $datainfo->nin_back != null))
@@ -113,7 +113,7 @@
                                     Govnt. issued photo ID : @if($datainfo->nin_front != null) <a href="{{ $datainfo->nin_front }}" target="_blank">Front view</a> @endif | @if($datainfo->nin_back != null) <a href="{{ $datainfo->nin_back }}" target="_blank">Back view</a> @endif
                                 </small>
                                 <hr>
-                                    
+
                                 @endif
 
                                 @if (($datainfo->drivers_license_front != null || $datainfo->drivers_license_back != null))
@@ -121,7 +121,7 @@
                                     Driver's License : @if($datainfo->drivers_license_front != null) <a href="{{ $datainfo->drivers_license_front }}" target="_blank">Front view</a> @endif | @if($datainfo->drivers_license_back != null) <a href="{{ $datainfo->drivers_license_back }}" target="_blank">Back view</a> @endif
                                 </small>
                                 <hr>
-                                    
+
                                 @endif
 
 
@@ -130,7 +130,7 @@
                                     International Passport : @if($datainfo->international_passport_front != null) <a href="{{ $datainfo->international_passport_front }}" target="_blank">Front view</a> @endif | @if($datainfo->international_passport_back != null) <a href="{{ $datainfo->international_passport_back }}" target="_blank">Back view</a> @endif
                                 </small>
                                 <hr>
-                                    
+
                                 @endif
 
 
@@ -139,11 +139,11 @@
                                     Document : @if($datainfo->incorporation_doc_front != null) <a href="{{ $datainfo->incorporation_doc_front }}" target="_blank">View Document</a> @endif
                                 </small>
                                 <hr>
-                                    
-                                @endif
-                                
 
-                                
+                                @endif
+
+
+
                             </td>
 
                             <td>{{ $datainfo->platform }}</td>
@@ -158,38 +158,38 @@
                             </td>
 
 
-                            
+
 
                             @if ($datainfo->approval == 1 && $datainfo->accountLevel > 0)
 
                             <td style="color: green; font-weight: bold;" align="center">Approved</td>
-                                
+
                             @elseif ($datainfo->approval == 0 && $datainfo->accountLevel > 0)
                             <td style="color: navy; font-weight: bold;" align="center">Override Level 1</td>
 
                             @else
                             <td style="color: red; font-weight: bold;" align="center">Not Approved</td>
-                                
+
                             @endif
-                            
+
                             <td align="center">
 
-                              <a href="{{ route('closed user more detail', $datainfo->id) }}"><i class="far fa-eye text-primary" style="font-size: 20px;" title="More details"></i></strong></a> 
+                              <a href="{{ route('closed user more detail', $datainfo->id) }}"><i class="far fa-eye text-primary" style="font-size: 20px;" title="More details"></i></strong></a>
 
 
 
-                                <a href="{{ route('send message', 'id='.$datainfo->id) }}" class="text-info"><i class="far fa-envelope text-success" style="font-size: 20px;" title="Send Mail"></i></a> 
+                                <a href="{{ route('send message', 'id='.$datainfo->id.'&route=Closed') }}" class="text-info"><i class="far fa-envelope text-success" style="font-size: 20px;" title="Send Mail"></i></a>
 
-                                <a href="javascript:void()" onclick="openAccount('{{ $datainfo->id }}')" class="text-success"><i class="fas fa-lock-open text-success" style="font-size: 20px;" title="Open Account"></i> <img class="spinopen{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a> 
+                                <a href="javascript:void()" onclick="openAccount('{{ $datainfo->id }}')" class="text-success"><i class="fas fa-lock-open text-success" style="font-size: 20px;" title="Open Account"></i> <img class="spinopen{{ $datainfo->id }} disp-0" src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" style="width: 20px; height: 20px;"></a>
 
-                              
+
                             </td>
 
 
                         </tr>
                         @endforeach
 
-                        
+
 
                     @else
                     <tr>
@@ -199,7 +199,7 @@
 
 
 
-                       
+
 
 
                     @endif
