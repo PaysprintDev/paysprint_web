@@ -1413,9 +1413,6 @@ class CheckSetupController extends Controller
 
             $getPassedUsers = User::where([['accountLevel', '=', 2], ['approval', '=', 1], ['account_check', '=', 0]])->where('country', 'India')->get();
 
-            dd($getPassedUsers);
-
-
             if(count($getPassedUsers) > 0){
                 foreach($getPassedUsers as $users){
                     // Move them to passed...

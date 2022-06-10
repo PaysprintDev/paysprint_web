@@ -4104,7 +4104,7 @@ class HomeController extends Controller
         if (isset($getRef)) {
 
             $referral_points = $getRef->referral_points + 10;
-            
+
             User::where('id', $getRef->id)->update([
                 'referral_points' => $referral_points
             ]);
@@ -4610,7 +4610,7 @@ class HomeController extends Controller
         return redirect()->back()->with($resp, $resData);
     }
 
-    
+
 
     public function claimedReferralPoints(Request $req)
     {

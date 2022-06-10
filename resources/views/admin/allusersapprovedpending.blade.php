@@ -331,7 +331,7 @@
                                                                     style="width: 20px; height: 20px;"></a>
                                                         @endif
 
-                                                        <a href="{{ route('send message', 'id=' . $datainfo->id) }}"
+                                                        <a href="{{ route('send message', 'id=' . $datainfo->id . '&route=') }}"
                                                             class="text-info"><i class="far fa-envelope text-success"
                                                                 style="font-size: 20px;" title="Send Mail"></i></a>
 
