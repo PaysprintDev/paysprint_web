@@ -112,7 +112,7 @@
                         <div class="col-md-4">
                             <h3>
 
-                            
+
 
                                 {{ isset($data['referred']) ? $data['referred'] : 0 }}
 
@@ -200,7 +200,7 @@
 
         <div class="row">
 
-            <div class="col-md-6">
+            <div @if (Auth::user()->plan == 'classic') class="col-md-4" @else class="col-md-6" @endif>
                 <div class="card" style="width: 100%;">
 
                     <ul class="list-group list-group-flush">
@@ -256,8 +256,6 @@
                                             left</p>
                                     @endisset
                                 @endif
-
-
                             @endif
 
                             <hr>
@@ -269,9 +267,27 @@
                     </ul>
                 </div>
             </div>
+            <div @if (Auth::user()->plan == 'classic') class="col-md-4" @else class="col-md-6" @endif>
+                <div class="card" style="width: 100%;">
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            PaySprint e-Store (<span class="text-danger">Beta</span>) <br><br>
+
+                            <p>
+                                Purchase using your wallet with e-Store
+                            </p>
+                            <hr>
+                            <a type="button" class="btn btn-primary" href="{{ route('paysprint estore') }}"
+                                id="cardSubmit">Check Stores</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
 
             @if (Auth::user()->plan == 'classic')
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="card" style="width: 100%;">
 
                         <ul class="list-group list-group-flush">
@@ -295,8 +311,6 @@
 
                                     <a href="#">Learn more about trading on PaySprint</a>
                                 @endif
-
-
                             </li>
 
                         </ul>
@@ -861,8 +875,8 @@
 
                             @if (count($data['getmerchantsByCategory']) == 8)
                                 <a href="{{ route('all merchant') }}" type="button"
-                                    class="btn btn-danger btn-block">View more <i class="fa fa-arrow-circle-o-right"
-                                        aria-hidden="true"></i></a>
+                                    class="btn btn-danger btn-block">View
+                                    more <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></a>
                             @endif
                         @else
                             <li class="list-group-item" title="No available merchant">

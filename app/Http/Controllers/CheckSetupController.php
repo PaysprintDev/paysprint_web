@@ -1303,6 +1303,73 @@ class CheckSetupController extends Controller
 
     }
 
+    public function idvNotifationMessage(){
+        try{
+
+            // Get the IDV Completed Pending User
+            $getUsers = User::where('account_check', 1)->inRandomOrder()->take(500)->get();
+
+            foreach ($getUsers as $value) {
+                // Send Mail...
+
+                $info = $this->accountInfo($value->id);
+
+                if ($value->approval == 0) {
+                    $approval = "<li>Upload a copy of Government Issued Photo ID, Utility bill and Selfie of yourself taking with your Government issued photo ID</li>";
+                } else {
+                    $approval = "";
+                }
+
+
+                if ($value->transaction_pin == null) {
+                    $transaction = "<li>Set Up Transaction Pin-You will need the PIN to Send Money, Pay Invoice/Bill or Withdraw Money from Your PaySprint Account</li>";
+                } else {
+                    $transaction = "";
+                }
+
+                if ($value->avatar == null) {
+                    $avatar = "<li>Upload a selfie of yourself</li>";
+                } else {
+                    $avatar = "";
+                }
+                if ($value->securityQuestion == null) {
+                    $security = "<li>Set up Security Question and Answer-You will need this to reset your PIN code or Login Password</li>";
+                } else {
+                    $security = "";
+                }
+                if ($value->country == "Nigeria" && $value->bvn_verification == null) {
+                    $bankVerify = "<li>Verify your account with your bank verification number</li>";
+                } else {
+                    $bankVerify = "";
+                }
+                if ($info == 0) {
+                    $card = "<li>Add Credit Card/Prepaid Card/Bank Account-You need this to add money to your PaySprint Wallet.</li>";
+                } else {
+                    $card = "";
+                }
+
+                if ($value->approval == 0 || $value->transaction_pin == null || $value->securityQuestion == null || $info == 0) {
+
+
+                    $sendMsg = 'Your PaySprint Account is Ready for Approval. Kindly upload the below listed files now. ' . $approval . '' . $avatar . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card . '. Try uploading on www.paysprint.ca if you have difficulty in uploading on the mobile app. Compliance Team';
+
+                    $this->createNotification($value->ref_code, $sendMsg);
+
+
+                }
+
+            }
+
+
+            echo "Done uploading!";
+
+
+        }
+        catch(\Throwable $th){
+
+        }
+    }
+
 
     public function checkTrullioVerification(){
         // Get Users with transactionRecordID..
