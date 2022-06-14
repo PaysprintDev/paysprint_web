@@ -151,7 +151,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage', 'storeAskedQuestions', 'expressResponseback']]);
+        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage', 'storeAskedQuestions', 'expressResponseback']]);
 
         $location = $this->myLocation();
 
@@ -169,10 +169,6 @@ class HomeController extends Controller
 
     public function homePage()
     {
-
-        event(new Event('hello world'));
-
-
         // To get the actual link from users click
 
         // $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
@@ -222,6 +218,29 @@ class HomeController extends Controller
 
 
         return view($view)->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function estores(){
+
+        if(Auth::check() == true){
+            $this->page = 'e-Store';
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+        }
+        else{
+            $this->page = 'e-Store';
+            $this->name = '';
+            $this->email = '';
+        }
+
+
+            $data = [
+                'activeStores' => $this->activeStores(),
+            ];
+
+
+             return view('main.estores')->with(['pages' => 'e-Store', 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
     public function merchantIndex()

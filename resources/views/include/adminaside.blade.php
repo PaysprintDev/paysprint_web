@@ -464,6 +464,7 @@
                              </li>
                          @endif
 
+<<<<<<< HEAD
                          @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only')
                              <li class="treeview">
                                  <a href="#">
@@ -491,6 +492,8 @@
                              </li>
                          @endif
 
+=======
+>>>>>>> bb7d290174f63eafe5033e655329bb5ae0f9e2aa
 
                          @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only')
                              <li class="treeview">
@@ -578,6 +581,32 @@
                      @endif
 
                      @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access to Level 1 and 2 only')
+
+                         @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only')
+                             <li class="treeview">
+                                 <a href="#">
+                                     <i class="far fa-handshake"></i>
+                                     <span>Wallet Credit</span>
+                                     <span class="pull-right-container">
+                                         <i class="fa fa-angle-left pull-right"></i>
+                                     </span>
+                                 </a>
+                                 <ul class="treeview-menu">
+                                     <li title="Credit/Debit Card"><a href="{{ route('promo page') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>Import Promo Users</a></li>
+                                     <li title="prepaid Card"><a href="{{ route('promo users') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>List Promo User</a></li>
+                                     <li title="prepaid Card"><a href="{{ route('promo report') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>Report</a></li>
+                                     <li title="prepaid Card"><a href="{{ route('claim reward') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>Points Claimed</a></li>
+                                     <li title="prepaid Card"><a href="{{ route('referral claim') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>Referral Claims</a></li>
+                                 </ul>
+                             </li>
+                         @endif
+
+
                          <li class="treeview">
                              <a href="#">
                                  <i class="fas fa-wallet"></i>
