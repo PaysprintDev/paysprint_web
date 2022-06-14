@@ -484,6 +484,9 @@
                                                  class="fa fa-circle-o text-red"></i>Points Claimed</a></li>
                                      <li title="prepaid Card"><a href="{{ route('referral claim') }}"><i
                                                  class="fa fa-circle-o text-red"></i>Referral Claims</a></li>
+                                                 <li title="prepaid Card"><a href="{{ route('referral report') }}"><i
+                                                    class="fa fa-circle-o text-red"></i>Referral Reports</a></li>
+                                                 
                                  </ul>
                              </li>
                          @endif
