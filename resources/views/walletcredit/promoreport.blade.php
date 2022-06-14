@@ -58,17 +58,20 @@
                     @endphp
                     @if (isset($data['report']))
                     @foreach ( $data['report'] as $promoreport )
-
+                    {{-- @foreach ( $data['total'] as $totalsum ) --}}
                         {{-- @php
                             $total += $promoreport->wallet_credit_amount;
                         @endphp --}}
 
+                       
+
                         <tr>
                             <td>{{ $counter++}}</td>
                             <td>{{ $promoreport->country}}</td>
-                            <td>{{ $data['total'] }}</td>
+                            <td>{{ $data['total'][$promoreport->country]}}</td>
                             <td><a class="btn btn-primary" href="{{route('view report', 'country='.$promoreport->country.'&start_date=null&end_date=null&topup_type=null')}}">View Report</a></td>
                         </tr>
+                     {{-- @endforeach --}}
                     @endforeach
                     @endif
                     <!-- modal -->
