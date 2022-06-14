@@ -68,6 +68,10 @@ Route::get('giveaccountcheck', 'CheckSetupController@giveAccountCheckUpgrade');
 Route::get('downcheckmerchant', 'CheckSetupController@downcheckMerchants');
 
 
+// In-App Notifications Controller
+Route::get('idvnotificationmessage', 'CheckSetupController@idvNotifationMessage');
+
+
 // Send Notice to Users and Merchants...
 Route::get('publicizemerchant', 'CheckSetupController@publicizeMerchantToConsumer');
 Route::get('notify-merchant-page', 'CheckSetupController@notifyMerchantPage');
@@ -169,6 +173,7 @@ Route::get('/clear', function () {
 
 
 Route::get('/', ['uses' => 'HomeController@homePage', 'as' => 'home']);
+Route::get('/estore', ['uses' => 'HomeController@estores', 'as' => 'paysprint estore']);
 
 Route::get('/merchant-home', ['uses' => 'HomeController@merchantIndex', 'as' => 'merchant home']);
 
@@ -807,7 +812,7 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('claimpointhistory', ['uses' => 'HomeController@claimedHistory', 'as' => 'claim history']);
 
 	Route::get('claimpointhistoryadmin', ['uses' => 'HomeController@claimedHistoryAdmin', 'as' => 'claim history admin']);
-	
+
 
 
 
