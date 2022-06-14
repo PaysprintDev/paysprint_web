@@ -12229,16 +12229,31 @@ class AdminController extends Controller
 
             $data = [
                 'report' => SurveyReport::groupBy('country')->get(),
-                'total' => SurveyReport::groupBy('country')->sum('wallet_credit_amount'),
+                'total' => SurveyReport::groupBy('country')->selectRaw('sum(wallet_credit_amount) as sum, country')->pluck('sum', 'country'),
             ];
 
-            dd($data);
+            // dd($data['total']);
+
+            
 
 
             return view('walletcredit.promoreport')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes, 'data' => $data]);
         } else {
             return redirect()->route('AdminLogin');
         }
+    }
+
+    //total sum by country
+    public function totalCountrySum(){
+        $data=SurveyReport::groupBy('country')->get();
+        if(isset($data)){
+            $result =  SurveyReport::groupBy('country')->get()->sum('wallet_credit_amount');
+        }
+        else{
+            $result = 0;
+        }
+
+        return $result;
     }
 
     //Referral claims
@@ -12423,6 +12438,7 @@ class AdminController extends Controller
             $startDate = $req->start_date;
             $endDate = $req->end_date;
             $promotype = $req->topup_type;
+            
 
 
             if ($startDate == null) {
@@ -12435,11 +12451,13 @@ class AdminController extends Controller
             }
 
             $data = [
-                'report' => $report
+                'report' => $report,
+                'start_date' => $startDate,
+                'end_date' => $endDate,
             ];
 
 
-            // dd($req->all());
+
 
 
             return view('walletcredit.viewreport')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes, 'data' => $data]);
