@@ -21,6 +21,14 @@ use App\StoreCart;
 trait MyEstore
 {
 
+    public function activeStores()
+    {
+
+        $data = StoreMainShop::where('publish', true)->where('status', 'active')->get();
+
+        return $data;
+    }
+
     public function getMyStore($id)
     {
 
