@@ -102,7 +102,7 @@
                      {{-- User Data table... --}}
                      @if($user= \App\User::where('referred_by', $reports->ref_code)->get()->count())
 
-                     <tr>
+                    <tr>
                       <td>{{ $counter++}}</td>
                       <td>{{$reports->ref_code}}</td>
                       <td>{{$reports->email}}</td>
@@ -110,12 +110,10 @@
                       <td>{{$reports->country}}</td>
                       <td>{{$reports->accountType}}</td>
                       <td>{{$user}}</td>
-                      <td>View Details</td>
-                  </tr>
+                      <td><a class="btn btn-success" href="{{ route('view referral details','refcode='.$reports->ref_code)}}">View Details</a></td>
+                    </tr>
                        
                      @endif
-
-
                         @endforeach 
                    @endif
 

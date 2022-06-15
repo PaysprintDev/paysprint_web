@@ -12232,7 +12232,7 @@ class AdminController extends Controller
                 'total' => SurveyReport::groupBy('country')->selectRaw('sum(wallet_credit_amount) as sum, country')->pluck('sum', 'country'),
             ];
 
-            // dd($data['total']);
+            // dd($data);
 
             
 
@@ -12459,7 +12459,7 @@ class AdminController extends Controller
 
         // Send SMS
 
-        $message = 'Congratulations!, You have received a wallet credit of ' . $user->currencyCode . ' ' . number_format($req->topup_credit, 2) . ' from PaySprint for ' . $reason . $description . '. Your wallet balance is ' . $totalwallet . '. Thanks for Choosing PaySprint.';
+        $message = 'Congratulations!, You have received a wallet credit of ' . $user->currencyCode . ' ' . number_format($req->topup_credit, 2) . ' from PaySprint for ' . $reason .' | Desc: '. $description . '. Your wallet balance is ' .$user->currencyCode.' '.$totalwallet . '. Thanks for Choosing PaySprint.';
 
         $this->name = $user->name;
         // $this->email = "youngskima@gmail.com";
