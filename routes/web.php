@@ -991,6 +991,7 @@ Route::get('/referralclaim', ['uses' => 'AdminController@referralClaim', 'as' =>
 Route::get('/referralreport', ['uses' => 'AdminController@referralReport', 'as' => 'referral report']);
 Route::get('/viewreferralreport',['uses' => 'AdminController@viewReferralReport', 'as' => 'view referral report']);
 Route::get('/referraldetails',['uses' => 'AdminController@viewReferralDetails', 'as' => 'view referral details']);
+Route::post('/processreferralclaim',['uses' => 'AdminController@processReferralClaim', 'as' => 'process referral claim']);
 
 
 

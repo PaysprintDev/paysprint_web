@@ -38,77 +38,87 @@
                         <div class="box-body">
                             <div class="row">
 
-                                @if (count($data['claim']) > 0)
-                                    <?php $i = 1; ?>
 
 
-                                    @foreach ($data['claim'] as $points)
-                                        <div class="col-md-4">
+                                   
+                                        {{-- <div class="col-md-4">
                                             <div class="card" style="width: 100%; ">
                                                 <div class="card-body"
-                                                    style="background-color:#f6f6f6; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
+                                                    style="background-color:#f6f6f6; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;"> --}}
 
 
-                                                    <h5 class="card-title">{{ $i++ }}</h5>
+                                                    {!! session('msg') !!}
                                                     <h6 class="card-subtitle mb-2 text-muted">Referral Claims Reward</h6>
+                                                        
                                                     <table class="table table-striped table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>S/N</th>
+                                                                <th>Full Name</th>
+                                                                <th>Email</th>
+                                                                <th>Phone</th>
+                                                                <th>Country</th>
+                                                                <th>Account Type</th>
+                                                                <th>Date</th>
+                                                                <th>Points Claimed</th>
+                                                                {{-- <th>Remaining Points</th> --}}
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
                                                         <tbody>
-
+                                                            
+                                                              @if (count($data['claim']) > 0)
+                                                               <?php $i = 1; ?>
+                                                            @foreach ($data['claim'] as $points)
                                                             @if ($userdata = \App\User::where('id', $points->user_id)->first())
 
                                                                 <tr>
-                                                                    <td>Fullname</td>
+                                                                    <td>{{ $i++ }}</td>
                                                                     <td>{{ $userdata->accountType == 'Merchant' ? $userdata->businessname : $userdata->name }}
                                                                     </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Email</td>
                                                                     <td title="{{ $userdata->email }}"><?php $string = $userdata->email;
 $output = strlen($string) > 10 ? substr($string, 0, 10) . '...' : $string;
 echo $output; ?>
                                                                     </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Phone</td>
                                                                     <td>{{ $userdata->telephone }}</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Date</td>
+                                                                    <td>{{$userdata->country}}</td>
+                                                                    <td>{{$userdata->accountType}}</td>
                                                                     <td>{{ date('d/M/Y', strtotime($points->created_at)) }}</td>
+                                                                    <td>{{ $points->points_claimed }}</td>
+                                                                    {{-- <td>{{ $points->points_left }}</td> --}}
+                                                                    <td>
+                                                                        <form action="{{route('process referral claim')}}" method="post">
+                                                                            @csrf
+                                                                            <input type="hidden" name="id" value="{{ $points->id }}">
+                                                                            <button type="submit" class="btn btn-primary btn-block">Process
+                                                                                claim</button>
+                                                                            </form>
+                                                                    </td>
                                                                 </tr>
 
                                                             @endif
-
-
-                                                            <tr>
-                                                                <td>Points Claimed</td>
-                                                                <td>{{ $points->points_claimed }}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Remaining Points</td>
-                                                                <td>{{ $points->points_left }}</td>
-                                                            </tr>
-
-
-
-
-
+                                                            @endforeach
+                                                            @else
+                                                            <div class="col-md-12">
+                                                                <p class="text-center">No new record</p>
+                                                            </div>
+                                                          
+                                                            @endif
                                                         </tbody>
                                                     </table>
-                                                    <button href="#" class="btn btn-primary btn-block">Process
-                                                        claim</button>
-
+                                                   
+{{--                                                     
                                                 </div>
                                             </div>
                                         </div>
 
-                                    @endforeach
+                                   --}}
 
 
 
-                                @else
+                               
 
-                                    <div class="col-md-12">
+                                    {{-- <div class="col-md-12">
                                         <div class="card" style="width: 100%; ">
                                             <div class="card-body"
                                                 style="background-color:#f6f6f6; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
@@ -116,13 +126,13 @@ echo $output; ?>
                                                 <h5 class="card-title">&nbsp;</h5>
                                                 <h6 class="card-subtitle mb-2 text-muted">&nbsp;</h6>
 
-                                                <p class="text-center">No new record</p>
+                                               
 
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
 
-                                @endif
+                               
 
                             </div>
                         </div>
