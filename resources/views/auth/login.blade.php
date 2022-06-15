@@ -71,7 +71,6 @@
         .disp-0 {
             display: none !important;
         }
-
     </style>
 
 </head>
@@ -237,6 +236,15 @@
                                     <a class="btn btn-link" href="{{ route('register') }}">
                                         {{ __('Don\'t have an account? Sign Up for FREE now') }}
                                     </a>
+
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <p style="font-size: 20px; font-weight: 600;"><img
+                                                src="https://img.icons8.com/cute-clipart/40/undefined/security-checked.png" />
+                                            Protected by bank-level security</p>
+                                    </div>
 
                                 </div>
 
