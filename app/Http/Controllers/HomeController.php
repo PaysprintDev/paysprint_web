@@ -4688,6 +4688,8 @@ class HomeController extends Controller
 
                 ReferralClaim::insert([
                     'user_id' => Auth::user()->id,
+                    'country' => Auth::user()->country,
+                    'user_type' => Auth::user()->accountType,
                     'points_acquired' => $getPoint->referral_points,
                     'points_claimed' => $max,
                     'points_left' => $totPointLeft,

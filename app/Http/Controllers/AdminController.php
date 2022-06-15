@@ -12306,6 +12306,122 @@ class AdminController extends Controller
         }
     }
 
+    //Referral Report
+    public function referralReport(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $otherPays = DB::table('invoice_payment')
+                    ->select(DB::raw('invoice_payment.transactionid, invoice_payment.name, invoice_payment.email, import_excel.amount as invoice_amount, invoice_payment.invoice_no, invoice_payment.service, invoice_payment.created_at as transaction_date, import_excel.description as description, invoice_payment.remaining_balance as runningbalance, invoice_payment.amount as amount_paid, import_excel.status, invoice_payment.mystatus'))->distinct()
+                    ->join('import_excel', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')
+                    ->where('import_excel.uploaded_by', session('user_id'))
+                    ->orderBy('invoice_payment.created_at', 'DESC')->get();
+            }
+
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $servicetypes = $this->getServiceTypes();
+
+            $data = [
+                'report'=>ReferralClaim::groupBy('country')->get(),
+                'total' => ReferralClaim::groupBy('country')->selectRaw('sum(points_claimed) as sum, country')->pluck('sum', 'country'),
+                'userlist'=> User::where('referred_by','!=',null)->groupBy('country')->get(),
+                
+            ];
+
+                // dd($data['userlist']);
+
+            return view('walletcredit.referralreport')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+    //View Referral Report
+    public function viewReferralReport(Request $req)
+    {
+        if ($req->session()->has('username') == true) {
+            // dd($req->all());
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $otherPays = DB::table('invoice_payment')
+                    ->select(DB::raw('invoice_payment.transactionid, invoice_payment.name, invoice_payment.email, import_excel.amount as invoice_amount, invoice_payment.invoice_no, invoice_payment.service, invoice_payment.created_at as transaction_date, import_excel.description as description, invoice_payment.remaining_balance as runningbalance, invoice_payment.amount as amount_paid, import_excel.status, invoice_payment.mystatus'))->distinct()
+                    ->join('import_excel', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')
+                    ->where('import_excel.uploaded_by', session('user_id'))
+                    ->orderBy('invoice_payment.created_at', 'DESC')->get();
+            }
+
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $servicetypes = $this->getServiceTypes();
+
+            
+             $report = User::where('referral_points','!=',null)->where('country', $req->country)->get();
+            
+            // } else {
+            //     $report = SurveyReport::where('country', $req->country)
+            //         ->where('credit_reason', $promotype)
+            //         ->whereBetween('created_at', [$startDate, $endDate])
+            //         ->get();
+            // }
+
+            $data = [
+                'report' => $report,
+            ];
+
+                // dd($data['report']);
+
+
+
+
+            return view('walletcredit.viewreferralreport')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
 
     //topping the wallet
     public function topUpWallet(Request $req)
@@ -12343,7 +12459,7 @@ class AdminController extends Controller
 
         // Send SMS
 
-        $message = 'Congratulations!, You have received a wallet credit of ' . $user->currencyCode . ' ' . number_format($req->topup_credit, 2) . ' from PaySprint for ' . $reason . $description . '. Your wallet balance is ' . $user->wallet_balance . '. Thanks for Choosing PaySprint.';
+        $message = 'Congratulations!, You have received a wallet credit of ' . $user->currencyCode . ' ' . number_format($req->topup_credit, 2) . ' from PaySprint for ' . $reason . $description . '. Your wallet balance is ' . $totalwallet . '. Thanks for Choosing PaySprint.';
 
         $this->name = $user->name;
         // $this->email = "youngskima@gmail.com";
@@ -12355,7 +12471,7 @@ class AdminController extends Controller
 
         $this->sendEmail($this->to, "Refund Request");
         $this->createNotification($user->ref_code, $message);
-        $activity = "Wallet credit from paysprint for" . $reason;
+        $activity = 'Wallet credit of '.$user->currencyCode.''.$req->topup_credit.'in wallet for ' . $reason;
         $credit = $req->topup_credit;
         $debit = 0;
         $reference_number = "wallet-" . date('dmY') . time();
