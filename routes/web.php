@@ -990,6 +990,7 @@ Route::get('/viewreport',['uses' => 'AdminController@viewReport', 'as' => 'view 
 Route::get('/referralclaim', ['uses' => 'AdminController@referralClaim', 'as' => 'referral claim']);
 Route::get('/referralreport', ['uses' => 'AdminController@referralReport', 'as' => 'referral report']);
 Route::get('/viewreferralreport',['uses' => 'AdminController@viewReferralReport', 'as' => 'view referral report']);
+Route::get('/referraldetails',['uses' => 'AdminController@viewReferralDetails', 'as' => 'view referral details']);
 
 
 

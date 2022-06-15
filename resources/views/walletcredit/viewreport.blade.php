@@ -53,11 +53,11 @@
                             <option value="reward">Reward</option>
                         </select>
                         </div>
-                        <div class="col-md-12" style="margin-top: 10px; ">
+                        <div class="col-md-6" style="margin-top: 10px; ">
                           <label>Start-Date</label>
                           <input type="date" name="start_date" class="form-control">
                         </div>
-                        <div class="col-md-12" style="margin-top: 20px; ">
+                        <div class="col-md-6" style="margin-top: 10px; ">
                           <label>End-Date</label>
                           <input type="date" name="end_date" class="form-control">
                         </div>
