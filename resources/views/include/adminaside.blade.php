@@ -464,7 +464,6 @@
                              </li>
                          @endif
 
-<<<<<<< HEAD
                          @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only')
                              <li class="treeview">
                                  <a href="#">
@@ -492,8 +491,6 @@
                              </li>
                          @endif
 
-=======
->>>>>>> bb7d290174f63eafe5033e655329bb5ae0f9e2aa
 
                          @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only')
                              <li class="treeview">

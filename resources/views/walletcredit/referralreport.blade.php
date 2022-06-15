@@ -71,7 +71,7 @@
                             <td>{{ $counter++}}</td>
                             <td>{{ $referralreport->country}}</td>
                             <td>{{ $data['total'][$referralreport->country]}}</td>
-                            <td><a class="btn btn-primary" href="{{route('view report', 'country='.$referralreport->country.'&start_date=null&end_date=null&topup_type=null')}}">View Report</a></td>
+                            <td><a class="btn btn-primary" href="{{route('view referral report','country='.$referralreport->country)}}">View Report</a></td>
                         </tr>
                     {{-- @endforeach --}}
                     @endforeach

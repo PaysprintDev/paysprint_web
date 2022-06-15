@@ -989,6 +989,7 @@ Route::post('/topup',['uses' => 'AdminController@topUpWallet', 'as' => 'top up']
 Route::get('/viewreport',['uses' => 'AdminController@viewReport', 'as' => 'view report']);
 Route::get('/referralclaim', ['uses' => 'AdminController@referralClaim', 'as' => 'referral claim']);
 Route::get('/referralreport', ['uses' => 'AdminController@referralReport', 'as' => 'referral report']);
+Route::get('/viewreferralreport',['uses' => 'AdminController@viewReferralReport', 'as' => 'view referral report']);
 
 
 
