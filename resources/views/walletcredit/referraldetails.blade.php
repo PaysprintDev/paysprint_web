@@ -12,11 +12,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Wallet Credit Report
+       Referral Report
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Wallet Credit Report</li>
+        <li class="active">Referral Report</li>
       </ol>
     </section>
 
@@ -40,7 +40,7 @@
             {!! session('msg') !!}
             <!--report filter-->
             <div class="container-fluid">
-                <form action="{{route('view report')}}" method="get">
+                {{-- <form action="{{route('view report')}}" method="get">
                   @csrf
                       <div class="row">
                         <div class="col-md-12" style="margin-bottom:20px;">
@@ -53,11 +53,11 @@
                             <option value="reward">Reward</option>
                         </select>
                         </div>
-                        <div class="col-md-6" style="margin-top: 10px; ">
+                        <div class="col-md-12" style="margin-top: 10px; ">
                           <label>Start-Date</label>
                           <input type="date" name="start_date" class="form-control">
                         </div>
-                        <div class="col-md-6" style="margin-top: 10px; ">
+                        <div class="col-md-12" style="margin-top: 20px; ">
                           <label>End-Date</label>
                           <input type="date" name="end_date" class="form-control">
                         </div>
@@ -66,7 +66,7 @@
                           <button class="btn btn-primary form-control" type="submit" >Submit</button>
                         </div>
                       </div>
-                </form>
+                </form> --}}
             </div>
               <hr>
             <!-- report Table -->
@@ -84,8 +84,8 @@
                           <th>Account Number</th>
                           <th>Email</th>
                           <th>Full-Name</th>
+                          <th>Country</th>
                           <th>Account Type</th>
-                          <th>Amount Credited</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -98,21 +98,18 @@
 
                      @foreach ( $data['report'] as $reports)
                      {{-- User Data table... --}}
-                     @if($user= \App\User::where('id',$reports->user_id)->first())
-                      
-                     
-                     <tr>
+                     {{-- @if($user= \App\User::where('referred_by', $reports->ref_code)->get()->count()) --}}
+
+                    <tr>
                       <td>{{ $counter++}}</td>
-                      <td>{{$user->ref_code}}</td>
-                      <td>{{$user->email}}</td>
-                      <td>{{$user->name}}</td>
-                      <td>{{$user->accountType}}</td>
-                      <td>{{$user->currencySymbol}}{{$reports->wallet_credit_amount}}</td>
-                  </tr>
+                      <td>{{$reports->ref_code}}</td>
+                      <td>{{$reports->email}}</td>
+                      <td>{{$reports->name}}</td>
+                      <td>{{$reports->country}}</td>
+                      <td>{{$reports->accountType}}</td>
+                    </tr>
                        
-                     @endif
-
-
+                     {{-- @endif --}}
                         @endforeach 
                    @endif
 
