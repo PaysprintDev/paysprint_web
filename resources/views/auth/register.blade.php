@@ -75,7 +75,6 @@
             color: red;
             font-weight: bold;
         }
-
     </style>
 
 </head>
@@ -475,8 +474,7 @@
                                         purpose)</label>
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <textarea type="text" name="describe_purpose" id="describe_purpose" class="form-control input_box"
-                                                placeholder=""></textarea>
+                                            <textarea type="text" name="describe_purpose" id="describe_purpose" class="form-control input_box" placeholder=""></textarea>
                                         </div>
                                     </div>
 
@@ -601,6 +599,15 @@
                                     onclick="register('Individual')" style="width: 100% !important">Sign Up</button>
                                 <img src="https://cdn.dribbble.com/users/608059/screenshots/2032455/spinner.gif"
                                     class="spinner disp-0" style="width: auto; height: 50px;">
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-md-12">
+                                <p style="font-size: 20px; font-weight: 600;"><img
+                                        src="https://img.icons8.com/cute-clipart/40/undefined/security-checked.png" />
+                                    Protected by bank-level security</p>
+                            </div>
+
                         </div>
 
 

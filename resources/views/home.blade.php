@@ -275,11 +275,11 @@
                             PaySprint e-Store (<span class="text-danger">Beta</span>) <br><br>
 
                             <p>
-                                Purchase using your wallet with e-Store
+                                Shop with ease on PaySprint eStore
                             </p>
                             <hr>
                             <a type="button" class="btn btn-primary" href="{{ route('paysprint estore') }}"
-                                id="cardSubmit">Check Stores</a>
+                                id="cardSubmit">Visit Stores</a>
                         </li>
 
                     </ul>
