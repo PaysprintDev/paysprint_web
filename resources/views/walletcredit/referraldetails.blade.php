@@ -86,8 +86,6 @@
                           <th>Full-Name</th>
                           <th>Country</th>
                           <th>Account Type</th>
-                          <th>Number of Referred</th>
-                          <th>Action</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -100,7 +98,7 @@
 
                      @foreach ( $data['report'] as $reports)
                      {{-- User Data table... --}}
-                     @if($user= \App\User::where('referred_by', $reports->ref_code)->get()->count())
+                     {{-- @if($user= \App\User::where('referred_by', $reports->ref_code)->get()->count()) --}}
 
                     <tr>
                       <td>{{ $counter++}}</td>
@@ -109,11 +107,9 @@
                       <td>{{$reports->name}}</td>
                       <td>{{$reports->country}}</td>
                       <td>{{$reports->accountType}}</td>
-                      <td>{{$user}}</td>
-                      <td><a class="btn btn-success" href="{{ route('view referral details','refcode='.$reports->ref_code)}}">View Details</a></td>
                     </tr>
                        
-                     @endif
+                     {{-- @endif --}}
                         @endforeach 
                    @endif
 
