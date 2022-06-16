@@ -47,7 +47,7 @@
                         <tr>
                             <th>S/N</th>
                             <th>Country</th>
-                            <th>Total Number Referred</th>
+                            {{-- <th>Total Number Referred</th> --}}
                             {{-- <th>Consumer</th>
                             <th>Merchant</th> --}}
                             <th>Action</th>
@@ -70,7 +70,7 @@
                         <tr>
                             <td>{{ $counter++}}</td>
                             <td>{{ $referralreport->country}}</td>
-                            <td>{{ $data['total'][$referralreport->country]}}</td>
+                            {{-- <td>{{ $data['total'][$referralreport->country]}}</td> --}}
                             <td><a class="btn btn-primary" href="{{route('view referral report','country='.$referralreport->country)}}">View Report</a></td>
                         </tr>
                     {{-- @endforeach --}}

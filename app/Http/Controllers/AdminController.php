@@ -12326,26 +12326,34 @@ class AdminController extends Controller
                 $userinfo= User::where('id',$client)->first();
                 $walletbalance=$userinfo->wallet_balance;
                    $bonus=$walletbalance + $referralclaim;  
+
                 User::where('id',$client)->update([
                     'wallet_balance' => $bonus,
                 ]);
+
                 ReferralClaim::where('id',$user)->update([
                     'status' => 'Completed',
-                ]);
-
-                return back()->with("msg","<div class='alert alert-success'>Referral Claim Successful</div>");
-                
+                ]);          
         }
-
-
-        
-
-
-             
-      
-           
-
+    
+        if( $usertype == 'Merchant' && $country==$usercountry){
+            $referralclaim=$merchantfee/2;
+            $userinfo= User::where('id',$client)->first();
+            $walletbalance=$userinfo->wallet_balance;
+               $bonus=$walletbalance + $referralclaim;  
+            User::where('id',$client)->update([
+                'wallet_balance' => $bonus,
+            ]);
+            ReferralClaim::where('id',$user)->update([
+                'status' => 'Completed',
+            ]);          
     }
+
+
+        return back()->with("msg","<div class='alert alert-success'>Referral Claim Successful</div>");
+    }
+
+
     //Referral Report
     public function referralReport(Request $req)
     {
@@ -12391,7 +12399,7 @@ class AdminController extends Controller
                 
             ];
 
-                // dd($data['userlist']);
+                
 
             return view('walletcredit.referralreport')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes, 'data' => $data]);
         } else {

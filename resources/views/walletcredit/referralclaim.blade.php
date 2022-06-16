@@ -50,7 +50,7 @@
                                                     {!! session('msg') !!}
                                                     <h6 class="card-subtitle mb-2 text-muted">Referral Claims Reward</h6>
                                                         
-                                                    <table class="table table-striped table-bordered">
+                                                    <table class="table table-striped table-bordered table-responsive" id="promousers">
                                                         <thead>
                                                             <tr>
                                                                 <th>S/N</th>
@@ -98,10 +98,10 @@ echo $output; ?>
 
                                                             @endif
                                                             @endforeach
-                                                            @else
+                                                            {{-- @else
                                                             <div class="col-md-12">
                                                                 <p class="text-center">No new record</p>
-                                                            </div>
+                                                            </div> --}}
                                                           
                                                             @endif
                                                         </tbody>
