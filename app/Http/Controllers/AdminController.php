@@ -12234,7 +12234,7 @@ class AdminController extends Controller
 
             // dd($data['total']);
 
-            
+
 
 
             return view('walletcredit.promoreport')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes, 'data' => $data]);
@@ -12296,7 +12296,7 @@ class AdminController extends Controller
 
             $data = [
                 'claim' => ReferralClaim::get(),
-                
+
             ];
 
 
@@ -12348,7 +12348,7 @@ class AdminController extends Controller
                 'report'=>ReferralClaim::groupBy('country')->get(),
                 'total' => ReferralClaim::groupBy('country')->selectRaw('sum(points_claimed) as sum, country')->pluck('sum', 'country'),
                 'userlist'=> User::where('referred_by','!=',null)->groupBy('country')->get(),
-                
+
             ];
 
                 // dd($data['userlist']);
@@ -12397,9 +12397,9 @@ class AdminController extends Controller
 
             $servicetypes = $this->getServiceTypes();
 
-            
+
              $report = User::where('referral_points','!=',null)->where('country', $req->country)->get();
-            
+
             // } else {
             //     $report = SurveyReport::where('country', $req->country)
             //         ->where('credit_reason', $promotype)
@@ -12554,7 +12554,7 @@ class AdminController extends Controller
             $startDate = $req->start_date;
             $endDate = $req->end_date;
             $promotype = $req->topup_type;
-            
+
 
 
             if ($startDate == null) {
