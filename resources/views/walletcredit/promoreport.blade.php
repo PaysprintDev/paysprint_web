@@ -63,14 +63,17 @@
                             $total += $promoreport->wallet_credit_amount;
                         @endphp --}}
 
+                        @if($code= \App\AllCountries::where('name', $promoreport->country)->first())
+                          
                        
 
                         <tr>
                             <td>{{ $counter++}}</td>
                             <td>{{ $promoreport->country}}</td>
-                            <td>{{ $data['total'][$promoreport->country]}}</td>
+                            <td>{{ $code->currencyCode.' '.number_format($data['total'][$promoreport->country], 2)}}</td>
                             <td><a class="btn btn-primary" href="{{route('view report', 'country='.$promoreport->country.'&start_date=null&end_date=null&topup_type=null')}}">View Report</a></td>
                         </tr>
+                        @endif
                      {{-- @endforeach --}}
                     @endforeach
                     @endif
