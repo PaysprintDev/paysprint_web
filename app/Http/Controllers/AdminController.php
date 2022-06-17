@@ -12234,7 +12234,7 @@ class AdminController extends Controller
 
             // dd($data);
 
-            
+
 
 
             return view('walletcredit.promoreport')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes, 'data' => $data]);
@@ -12296,7 +12296,7 @@ class AdminController extends Controller
 
             $data = [
                 'claim' => ReferralClaim::where('status','pending')->get(),
-                
+
             ];
 
 
@@ -12368,14 +12368,18 @@ class AdminController extends Controller
             $consumerfee=$consumer->fixed;
             $merchantfee= $merchant->fixed;
             $country= $consumer->country;
-       
+
 
 
         if( $usertype == 'Individual' && $country==$usercountry){
                 $referralclaim=$consumerfee/2;
                 $userinfo= User::where('id',$client)->first();
                 $walletbalance=$userinfo->wallet_balance;
+<<<<<<< HEAD
+                   $bonus=$walletbalance + $referralclaim;
+=======
                    $totalwalletbalance=$walletbalance + $referralclaim;  
+>>>>>>> 72e86089a669f13f841b787774c4156b15989ee5
 
                 User::where('id',$client)->update([
                     'wallet_balance' => $totalwalletbalance,
@@ -12383,20 +12387,24 @@ class AdminController extends Controller
 
                 ReferralClaim::where('id',$user)->update([
                     'status' => 'Completed',
-                ]);          
+                ]);
         }
-    
+
         if( $usertype == 'Merchant' && $country==$usercountry){
             $referralclaim=$merchantfee/2;
             $userinfo= User::where('id',$client)->first();
             $walletbalance=$userinfo->wallet_balance;
+<<<<<<< HEAD
+               $bonus=$walletbalance + $referralclaim;
+=======
                $totalwalletbalance=$walletbalance + $referralclaim;  
+>>>>>>> 72e86089a669f13f841b787774c4156b15989ee5
             User::where('id',$client)->update([
                 'wallet_balance' => $totalwalletbalance,
             ]);
             ReferralClaim::where('id',$user)->update([
                 'status' => 'Completed',
-            ]);          
+            ]);
     }
 
             // Send SMS
@@ -12496,10 +12504,10 @@ class AdminController extends Controller
                 'report'=>ReferralClaim::groupBy('country')->get(),
                 'total' => ReferralClaim::groupBy('country')->selectRaw('sum(points_claimed) as sum, country')->pluck('sum', 'country'),
                 'userlist'=> User::where('referred_by','!=',null)->groupBy('country')->get(),
-                
+
             ];
 
-                
+
 
             return view('walletcredit.referralreport')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes, 'data' => $data]);
         } else {
@@ -12545,9 +12553,9 @@ class AdminController extends Controller
 
             $servicetypes = $this->getServiceTypes();
 
-            
+
              $report = User::where('referral_points','!=',null)->where('country', $req->country)->get();
-            
+
             // } else {
             //     $report = SurveyReport::where('country', $req->country)
             //         ->where('credit_reason', $promotype)
@@ -12608,9 +12616,9 @@ class AdminController extends Controller
 
             $servicetypes = $this->getServiceTypes();
 
-            
+
              $report = User::where('referred_by', $req->refcode)->get();
-            
+
             // } else {
             //     $report = SurveyReport::where('country', $req->country)
             //         ->where('credit_reason', $promotype)
@@ -12765,7 +12773,7 @@ class AdminController extends Controller
             $startDate = $req->start_date;
             $endDate = $req->end_date;
             $promotype = $req->topup_type;
-            
+
 
 
             if ($startDate == null) {
