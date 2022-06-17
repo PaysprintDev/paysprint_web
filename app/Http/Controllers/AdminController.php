@@ -12781,6 +12781,7 @@ class AdminController extends Controller
                 'report' => $report,
                 'start_date' => $startDate,
                 'end_date' => $endDate,
+                'promo_type' => $promotype,
             ];
 
 
