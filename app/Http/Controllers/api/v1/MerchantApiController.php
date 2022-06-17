@@ -198,7 +198,7 @@ class MerchantApiController extends Controller
                                                 $this->amount = $myCurrency . " " . number_format($amount, 2);
                                                 $this->paypurpose = $service;
                                                 $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                                 // Mail to thismerchant
                                                 $this->sendEmail($this->to, "Payment Received");
@@ -433,7 +433,7 @@ class MerchantApiController extends Controller
                                                 $this->amount = $myCurrency . " " . number_format($amount, 2);
                                                 $this->paypurpose = $service;
                                                 $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                                 // Mail to thismerchant
                                                 $this->sendEmail($this->to, "Payment Received");
@@ -741,7 +741,7 @@ class MerchantApiController extends Controller
                                                     $this->amount = $myCurrency . " " . number_format($amount, 2);
                                                     $this->paypurpose = $service;
                                                     $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                                    $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                                    $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                                     // Mail to thismerchant
                                                     $this->sendEmail($this->to, "Payment Received");
@@ -902,7 +902,7 @@ class MerchantApiController extends Controller
                                                     $this->amount = $myCurrency . " " . number_format($amount, 2);
                                                     $this->paypurpose = $service;
                                                     $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                                    $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                                    $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                                     // Mail to thismerchant
                                                     $this->sendEmail($this->to, "Payment Received");
@@ -1069,7 +1069,7 @@ class MerchantApiController extends Controller
                                                 $this->amount = $myCurrency . " " . number_format($amount, 2);
                                                 $this->paypurpose = $service;
                                                 $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                                 // Mail to thismerchant
                                                 $this->sendEmail($this->to, "Payment Received");
@@ -1316,7 +1316,7 @@ class MerchantApiController extends Controller
                                                 $this->amount = $myCurrency . " " . number_format($amount, 2);
                                                 $this->paypurpose = $service;
                                                 $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                                 // Mail to thismerchant
                                                 $this->sendEmail($this->to, "Payment Received");
@@ -1578,7 +1578,7 @@ class MerchantApiController extends Controller
                                                 $this->amount = $myCurrency . " " . number_format($amount, 2);
                                                 $this->paypurpose = $service;
                                                 $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                                 // Mail to thismerchant
                                                 $this->sendEmail($this->to, "Payment Received");
@@ -1724,7 +1724,7 @@ class MerchantApiController extends Controller
                                                 $this->amount = $myCurrency . " " . number_format($amount, 2);
                                                 $this->paypurpose = $service;
                                                 $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                                 // Mail to thismerchant
                                                 $this->sendEmail($this->to, "Payment Received");
@@ -1926,7 +1926,7 @@ class MerchantApiController extends Controller
                                         $this->amount = $myCurrency . " " . number_format($amount, 2);
                                         $this->paypurpose = $service;
                                         $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                        $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                        $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                         // Mail to thismerchant
                                         $this->sendEmail($this->to, "Payment Received");
@@ -2136,7 +2136,7 @@ class MerchantApiController extends Controller
                                         $this->amount = $myCurrency . " " . number_format($amount, 2);
                                         $this->paypurpose = $service;
                                         $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                        $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                        $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                         // Mail to thismerchant
                                         $this->sendEmail($this->to, "Payment Received");
@@ -2391,7 +2391,7 @@ class MerchantApiController extends Controller
                                         $this->amount = $myCurrency . " " . number_format($amount, 2);
                                         $this->paypurpose = $service;
                                         $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                        $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                        $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                         // Mail to thismerchant
                                         $this->sendEmail($this->to, "Payment Received");
@@ -2601,7 +2601,7 @@ class MerchantApiController extends Controller
                                         $this->amount = $myCurrency . " " . number_format($amount, 2);
                                         $this->paypurpose = $service;
                                         $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                        $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                        $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                         // Mail to thismerchant
                                         $this->sendEmail($this->to, "Payment Received");
@@ -2951,7 +2951,7 @@ class MerchantApiController extends Controller
                             $this->amount = $myCurrency . " " . number_format($amount, 2);
                             $this->paypurpose = $service;
                             $this->subject = "Payment Received from " . $req->firstname . " " . $req->lastname . " for " . $service;
-                            $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                            $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                             // Mail to thismerchant
                             $this->sendEmail($this->to, "Payment Received");
@@ -3083,7 +3083,7 @@ class MerchantApiController extends Controller
                             $this->amount = $myCurrency . " " . number_format($amount, 2);
                             $this->paypurpose = $service;
                             $this->subject = "Payment Received from " . $req->firstname . " " . $req->lastname . " for " . $service;
-                            $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                            $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                             // Mail to thismerchant
                             $this->sendEmail($this->to, "Payment Received");

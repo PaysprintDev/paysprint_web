@@ -745,7 +745,7 @@
                                                                                                             {{ $maildata->coy_name }}
                                                                                                             on PaySprint
                                                                                                             was
-                                                                                                            successful.
+                                                                                                            SUCCESSFUL.
                                                                                                             Here are the
                                                                                                             Payment
                                                                                                             information
