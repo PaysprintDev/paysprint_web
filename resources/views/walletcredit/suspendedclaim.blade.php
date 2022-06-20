@@ -62,7 +62,7 @@
                                                                 <th>Date</th>
                                                                 <th>Points Claimed</th>
                                                                 {{-- <th>Remaining Points</th> --}}
-                                                                <th colspan="2" class="text-center">Action</th>
+                                                                <th>Action</th>
                                                               
                                                             </tr>
                                                         </thead>
@@ -87,21 +87,21 @@ echo $output; ?>
                                                                     <td>{{ date('d/M/Y', strtotime($points->created_at)) }}</td>
                                                                     <td>{{ $points->points_claimed }}</td>
                                                                     {{-- <td>{{ $points->points_left }}</td> --}}
-                                                                    <td>
+                                                                    {{-- <td>
                                                                         <form action="{{route('process referral claim')}}" method="post">
                                                                             @csrf
                                                                             <input type="hidden" name="id" value="{{ $points->id }}">
                                                                             <button type="submit" class="btn btn-primary btn-block">Process
                                                                                 claim</button>
                                                                             </form>
-                                                                    </td>
+                                                                    </td> --}}
                                                                     <td>
                                                                         <button class="btn btn-danger" id="btns{{ $points->id }}"
-                                                                            onclick="deleteClaim('{{ $points->id }}');">Suspend
+                                                                            onclick="restoreClaim('{{ $points->id }}');">Restore
                                                                             Claim</button>
-                                                                        <form action="{{ route('delete claim', $points->id) }}"
+                                                                        <form action="{{ route('restore claim', $points->id) }}"
                                                                             method="post" style="visibility: hidden"
-                                                                            id="deleteclaim{{ $points->id }}">
+                                                                            id="restoreclaim{{ $points->id }}">
                                                                             @csrf
                                                                             <input type="hidden" name="claimid"
                                                                                 value="{{ $points->id }}">

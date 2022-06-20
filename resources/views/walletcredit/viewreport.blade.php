@@ -76,7 +76,7 @@
                     <h1>Start Date:{{$data['start_date']}} - End Date:{{$data['end_date']}} </h1>
                     <hr>
                   @endif
-                  @endif --}}
+                  @endif --}}s
                   <table class="table table-responsive table-striped" id="promousers">
                       <thead>
                         <tr>

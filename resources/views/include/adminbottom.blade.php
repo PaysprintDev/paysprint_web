@@ -4889,6 +4889,42 @@ swal({
 
     }
 
+    function deleteClaim(id) {
+
+swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this claim!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            $('#deleteclaim' + id).submit();
+        }
+    });
+
+
+}
+
+function restoreClaim(id) {
+
+swal({
+        title: "Are you sure?",
+        text: "You are about to restore this Claim!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            $('#restoreclaim' + id).submit();
+        }
+    });
+
+
+}
+
 
     function integration(id) {
 
