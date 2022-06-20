@@ -4990,7 +4990,7 @@ swal({
             })
             .then((willDelete) => {
                 if (willDelete) {
-                    $('#activation').submit();
+                    $('#activation'+ id).submit();
                 }
             });
     }

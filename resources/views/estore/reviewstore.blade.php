@@ -67,7 +67,7 @@
                                                             class="{{ $value->status == 'not active' ? 'text-danger' : 'text-success' }} text-center">
                                                             {{ $value->status }}</p>
                                                         <form action="{{ route('activate store', $value->id) }}"
-                                                            method="post" id="activation" class="disp-0">
+                                                            method="post" id="activation{{ $value->id }}" class="disp-0">
                                                             @csrf
                                                             <input type="text" name="status" value="{{ $value->status }}">
                                                         </form>
