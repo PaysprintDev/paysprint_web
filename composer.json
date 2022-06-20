@@ -14,6 +14,7 @@
         "braintree/braintree_php": "5.5.0",
         "cronitor/cronitor-php": "^1.3",
         "currency-cloud/client": "^3.1",
+        "doctrine/dbal": "^3.3",
         "dompdf/dompdf": "^1.0",
         "erdemkeren/laravel-otp": "^3.0",
         "fideloper/proxy": "^4.0",
@@ -28,6 +29,7 @@
         "mailchimp/mailchimp": "^2.0",
         "mobiledetect/mobiledetectlib": "^2.8",
         "paypal/rest-api-sdk-php": "*",
+        "pusher/pusher-php-server": "*",
         "rap2hpoutre/fast-excel": "^1.7",
         "rap2hpoutre/laravel-log-viewer": "^1.7",
         "razorpay/razorpay": "2.*",
@@ -37,8 +39,7 @@
         "spatie/laravel-translatable": "^4.6",
         "stripe/stripe-php": "^7.92",
         "trulioo/trulioo-sdk": "^1.0",
-        "twilio/sdk": "^6.20",
-        "pusher/pusher-php-server": "*"
+        "twilio/sdk": "^6.20"
     },
     "require-dev": {
         "filp/whoops": "^2.0",
