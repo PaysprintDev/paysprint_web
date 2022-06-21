@@ -571,7 +571,6 @@ class InvoiceController extends Controller
 
         // dd($req->all());
 
-        $queryData;
 
         $validator = Validator::make($req->all(), [
             'excel_file' => ['required', 'mimes:xls,xlsx'],
@@ -637,7 +636,6 @@ class InvoiceController extends Controller
 
                         $data = Excel::import(new InvoiceImport($query), $req->file('excel_file'));
 
-                        dd($data);
 
                         if ($data->count() > 0) {
                             foreach ($data->toArray() as $key) {

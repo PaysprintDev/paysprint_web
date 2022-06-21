@@ -6,18 +6,14 @@
 
 
     @if ($data['paymentgateway']->gateway == 'Stripe')
-
         <script src="https://js.stripe.com/v3/"></script>
         <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
-
     @endif
 
     @if ($data['paymentgateway']->gateway == 'PayPal')
-
         <script
                 src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ $data['getuserDetail']->currencyCode }}">
         </script>
-
     @endif
 
 
@@ -77,7 +73,8 @@
                             @csrf
 
 
-                            <div @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group" @else class="form-group disp-0" @endif>
+                            <div
+                                @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group" @else class="form-group disp-0" @endif>
                                 <label for="card_id">
 
                                     Select Payment Gateway
@@ -91,7 +88,8 @@
                             </div>
 
 
-                            <div @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group" @else class="form-group disp-0" @endif>
+                            <div
+                                @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group" @else class="form-group disp-0" @endif>
                                 <label for="card_id">
 
                                     Select Card Type/ Bank Account
@@ -216,20 +214,16 @@
                                         <button type="button" class="btn btn-primary btn-block cardSubmit"
                                             onclick="payWithPaystack('{{ session('email') }}')">Confirm</button>
                                     </div>
-                                @elseif($data['paymentgateway']->gateway == "Stripe")
+                                @elseif($data['paymentgateway']->gateway == 'Stripe')
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-primary btn-block cardSubmit"> Pay Now</button>
                                     </div>
-
-                                @elseif($data['paymentgateway']->gateway == "PayPal")
+                                @elseif($data['paymentgateway']->gateway == 'PayPal')
                                     {{-- PayPal --}}
                                     <div class="form-group text-center" id="paypal-button-container"></div>
-
                                 @else
-
                                     <div class="form-group"> <button type="button" onclick="handShake('addmoney')"
                                             class="btn btn-primary btn-block cardSubmit"> Confirm </button></div>
-
                                 @endif
                             @else
                                 <div class="form-group"> <button type="button"
@@ -330,7 +324,7 @@
 
                             $.each(res, function(v, k) {
                                 $('#card_id').append(
-                                    `<option value="${k.id}">${k.card_number} - ${k.card_type}</option>`
+                                    `<option value="${k.id}">${cardHide(k.card_number)} - ${k.card_type}</option>`
                                 );
                             });
 
@@ -350,6 +344,18 @@
 
             });
 
+        }
+
+        function cardHide(card) {
+            let hideNum = [];
+            for (let i = 0; i < card.length; i++) {
+                if (i < card.length - 4) {
+                    hideNum.push("*");
+                } else {
+                    hideNum.push(card[i]);
+                }
+            }
+            return hideNum.join("");
         }
 
 
@@ -869,7 +875,6 @@
 
 
     @if ($data['paymentgateway']->gateway == 'PayPal')
-
         <script>
             // Paypal Integration Start
 
@@ -917,13 +922,11 @@
 
             // PayPal Integration End
         </script>
-
     @endif
 
 
 
     @if ($data['paymentgateway']->gateway == 'Stripe')
-
         <script>
             // Stripe Integration Starts
             document.addEventListener('DOMContentLoaded', async () => {
@@ -1056,7 +1059,6 @@
 
             // Stripe Integration Ends
         </script>
-
     @endif
 
 

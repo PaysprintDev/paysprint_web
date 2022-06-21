@@ -53,6 +53,13 @@
             display: none !important;
         }
 
+        .about-l {
+            background: #fff;
+            width: 20%;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
     </style>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->

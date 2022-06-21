@@ -16,7 +16,7 @@
         <br>
         <br>
         <div class="row builder_all">
-            <div class="col-md-4 col-sm-6 builder walletInformation">
+            <div class="col-md-3 col-sm-6 builder walletInformation">
                 <div class="alert alert-warning">
                     <div class="row">
                         <div class="col-md-12">
@@ -33,7 +33,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 col-sm-6 builder walletInformation">
+            <div class="col-md-3 col-sm-6 builder walletInformation">
                 <div class="alert alert-info">
                     <div class="row">
                         <div class="col-md-12">
@@ -49,7 +49,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 col-sm-6 builder walletInformation">
+            <div class="col-md-3 col-sm-6 builder walletInformation">
                 <div class="alert alert-success">
                     <div class="row">
                         <div class="col-md-12">
@@ -90,6 +90,42 @@
                             </form>
                         </div>
 
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 builder walletInformation">
+                <div class="alert alert-success">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <small class="font-sm">
+                                Number of Referred
+                            </small>
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <h3>
+
+
+
+                                {{ isset($data['referred']) ? $data['referred'] : 0 }}
+
+                            </h3>
+                        </div>
+
+                        <div class="col-md-4">
+                            <small>
+                                <a style="font-weight: 700; font-size: 11px" href="{{ route('referred details') }}">
+                                    View More
+                                </a>
+                            </small>
+                        </div>
                     </div>
 
                 </div>
@@ -164,7 +200,7 @@
 
         <div class="row">
 
-            <div class="col-md-6">
+            <div @if (Auth::user()->plan == 'classic') class="col-md-4" @else class="col-md-6" @endif>
                 <div class="card" style="width: 100%;">
 
                     <ul class="list-group list-group-flush">
@@ -200,7 +236,7 @@
                                         @endphp
 
                                         <p class="text-danger">
-                                            {{ round($datediff / (60 * 60 * 24)) > 1? round($datediff / (60 * 60 * 24)) . 'days': round($datediff / (60 * 60 * 24)) . 'day' }}
+                                            {{ round($datediff / (60 * 60 * 24)) > 1 ? round($datediff / (60 * 60 * 24)) . 'days' : round($datediff / (60 * 60 * 24)) . 'day' }}
                                             left</p>
                                     @endisset
                                 @else
@@ -216,12 +252,10 @@
                                         @endphp
 
                                         <p class="text-danger">
-                                            {{ round($datediff / (60 * 60 * 24)) > 1? round($datediff / (60 * 60 * 24)) . 'days': round($datediff / (60 * 60 * 24)) . 'day' }}
+                                            {{ round($datediff / (60 * 60 * 24)) > 1 ? round($datediff / (60 * 60 * 24)) . 'days' : round($datediff / (60 * 60 * 24)) . 'day' }}
                                             left</p>
                                     @endisset
                                 @endif
-
-
                             @endif
 
                             <hr>
@@ -233,9 +267,27 @@
                     </ul>
                 </div>
             </div>
+            <div @if (Auth::user()->plan == 'classic') class="col-md-4" @else class="col-md-6" @endif>
+                <div class="card" style="width: 100%;">
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            PaySprint e-Store (<span class="text-danger">Beta</span>) <br><br>
+
+                            <p>
+                                Shop with ease on PaySprint eStore
+                            </p>
+                            <hr>
+                            <a type="button" class="btn btn-primary" href="{{ route('paysprint estore') }}"
+                                id="cardSubmit">Visit Stores</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
 
             @if (Auth::user()->plan == 'classic')
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="card" style="width: 100%;">
 
                         <ul class="list-group list-group-flush">
@@ -245,7 +297,7 @@
                                 @if ($data['imtAccess']->imt == 'false')
                                     <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit"
                                         disabled>PaySprint
-                                        Currency FX</a>
+                                        FX</a>
 
                                     <hr>
 
@@ -253,14 +305,12 @@
                                 @else
                                     <a type="button" class="btn btn-primary"
                                         href="{{ route('paysprint currency exchange') }}" id="cardSubmit">PaySprint
-                                        Currency FX</a>
+                                        FX</a>
 
                                     <hr>
 
                                     <a href="#">Learn more about trading on PaySprint</a>
                                 @endif
-
-
                             </li>
 
                         </ul>
@@ -338,7 +388,7 @@
 
                                                 <td style="font-weight: 700"
                                                     class="{{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}">
-                                                    {{ $sendRecData->credit != 0? '+' . $data['currencyCode']->currencySymbol . number_format($sendRecData->credit, 2): '-' . $data['currencyCode']->currencySymbol . number_format($sendRecData->debit, 2) }}
+                                                    {{ $sendRecData->credit != 0 ? '+' . $data['currencyCode']->currencySymbol . number_format($sendRecData->credit, 2) : '-' . $data['currencyCode']->currencySymbol . number_format($sendRecData->debit, 2) }}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -536,7 +586,7 @@
                                                 </td>
                                                 <td style="font-weight: 700"
                                                     class="{{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}">
-                                                    {{ $sendRecData->credit != 0? '+' . $data['currencyCode']->currencySymbol . number_format($sendRecData->credit, 2): '-' . $data['currencyCode']->currencySymbol . number_format($sendRecData->debit, 2) }}
+                                                    {{ $sendRecData->credit != 0 ? '+' . $data['currencyCode']->currencySymbol . number_format($sendRecData->credit, 2) : '-' . $data['currencyCode']->currencySymbol . number_format($sendRecData->debit, 2) }}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -696,7 +746,7 @@
                 </div>
 
                 {{-- <div class="card" style="width: 100%;">
-                    
+
                     <ul class="list-group list-group-flush">
 
                         <li class="list-group-item" title="total points">
@@ -726,7 +776,7 @@
                                     enctype="multipart/form-data">
                                     @csrf
                                     <div class="col-md-12">
-                                        
+
 
                                         <button type="submit" class="btn btn-default btn-block">Claim
                                             Points</button>
@@ -825,8 +875,8 @@
 
                             @if (count($data['getmerchantsByCategory']) == 8)
                                 <a href="{{ route('all merchant') }}" type="button"
-                                    class="btn btn-danger btn-block">View more <i class="fa fa-arrow-circle-o-right"
-                                        aria-hidden="true"></i></a>
+                                    class="btn btn-danger btn-block">View
+                                    more <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></a>
                             @endif
                         @else
                             <li class="list-group-item" title="No available merchant">

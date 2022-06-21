@@ -543,6 +543,7 @@
 
                 var route = "{{ URL('/api/v1/convertmoneytosend') }}";
 
+
                 var amount = $('#amount').val();
                 const fromWallet = $('#fx_wallet_from').val();
                 const toWallet = $('#fx_wallet_to').val();

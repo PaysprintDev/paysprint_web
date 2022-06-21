@@ -4,125 +4,128 @@ namespace App\Http\Controllers;
 
 use Session;
 
-use App\Mail\sendEmail;
-use App\Exports\TransactionExport;
+use App\Answer;
+use App\Points;
 
-use App\Classes\MyCurrencyCloud;
+use App\Community;
 
-use Illuminate\Http\Request;
+use App\CashAdvance;
 
-use Illuminate\Support\Facades\Hash;
+use App\UpgradePlan;
 
-use Illuminate\Support\Facades\DB;
-
-use Illuminate\Support\Facades\Auth;
-
-use Illuminate\Support\Facades\Storage;
-
-use Rap2hpoutre\FastExcel\FastExcel;
-
-use Illuminate\Support\Facades\Mail;
-
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
-
-use Illuminate\Support\Facades\Log;
-
-use Maatwebsite\Excel\Facades\Excel;
-
+use App\Events\Event;
 
 use App\User as User;
 
-use App\UserClosed as UserClosed;
-
-use App\AnonUsers as AnonUsers;
-
-use App\CreateEvent as CreateEvent;
-
-use App\ImportExcel as ImportExcel;
-
-use App\SetupBilling as SetupBilling;
-
-use App\InvoicePayment as InvoicePayment;
-
-use App\ClientInfo as ClientInfo;
-
-use App\OrganizationPay as OrganizationPay;
-
-use App\Contactus as Contactus;
-
-use App\Bronchure as Bronchure;
-
-use App\ServiceType as ServiceType;
-
-use App\Statement as Statement;
-
-use App\MaintenanceRequest as MaintenanceRequest;
-
-use App\Consultant as Consultant;
-
-use App\Workorder as Workorder;
-
-use App\RentalQuote as RentalQuote;
-
-use App\Building as Building;
-
-use App\TransactionCost as TransactionCost;
-
-use App\AddCard as AddCard;
-
-use App\AddBank as AddBank;
-
-
-use App\CardIssuer as CardIssuer;
-
-use App\Notifications as Notifications;
-
-use App\AllCountries as AllCountries;
-use App\CashAdvance;
-use App\ImportExcelLink;
-use App\PricingSetup as PricingSetup;
-
-use App\Points;
-
 use App\ClaimedPoints;
-use App\UpgradePlan;
-
-use App\Community;
-use App\Answer;
-
-
 
 use App\HistoryReport;
-use App\ReferralGenerate;
+
 use App\ReferredUsers;
-use App\Traits\PaysprintPoint;
-
-use App\Traits\PointsHistory;
-
-use App\Traits\IDVCheck;
-
 
 use App\Traits\RpmApp;
 
+use App\Mail\sendEmail;
+
 use App\Traits\Trulioo;
 
-use App\Traits\AccountNotify;
 
-use App\Traits\PaystackPayment;
+use App\ImportExcelLink;
 
-use App\Traits\ExpressPayment;
+use App\Traits\IDVCheck;
 
-use App\Traits\SpecialInfo;
+use App\Traits\MyEstore;
+
+use App\ReferralGenerate;
+
+use App\ReferralClaim;
 
 use App\Traits\Xwireless;
 
-use App\Traits\PaymentGateway;
+use App\VerificationCode;
 
-use App\Traits\MailChimpNewsLetter;
+use App\AddBank as AddBank;
+
+use App\AddCard as AddCard;
 
 use App\Traits\GenerateOtp;
-use App\VerificationCode;
-use App\Traits\MyEstore;
+
+use App\Traits\SpecialInfo;
+
+use Illuminate\Http\Request;
+
+use App\Building as Building;
+
+use App\Traits\AccountNotify;
+
+use App\Traits\PointsHistory;
+
+use App\Traits\ExpressPayment;
+
+use App\Traits\PaymentGateway;
+
+use App\Traits\PaysprintPoint;
+
+use App\AnonUsers as AnonUsers;
+
+use App\Bronchure as Bronchure;
+
+use App\Contactus as Contactus;
+
+use App\Statement as Statement;
+
+
+use App\Traits\PaystackPayment;
+
+use App\Workorder as Workorder;
+
+use App\Classes\MyCurrencyCloud;
+use App\CardIssuer as CardIssuer;
+use App\ClientInfo as ClientInfo;
+use App\Consultant as Consultant;
+
+use App\UserClosed as UserClosed;
+
+use App\Exports\TransactionExport;
+use Illuminate\Support\Facades\DB;
+
+use App\CreateEvent as CreateEvent;
+use App\ImportExcel as ImportExcel;
+
+
+
+use App\RentalQuote as RentalQuote;
+use App\ServiceType as ServiceType;
+use App\Traits\MailChimpNewsLetter;
+use Illuminate\Support\Facades\Log;
+
+use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Support\Facades\Hash;
+
+
+use Illuminate\Support\Facades\Mail;
+
+use Maatwebsite\Excel\Facades\Excel;
+
+use Rap2hpoutre\FastExcel\FastExcel;
+
+use App\AllCountries as AllCountries;
+
+use App\PricingSetup as PricingSetup;
+
+use App\SetupBilling as SetupBilling;
+
+use App\Notifications as Notifications;
+
+use Illuminate\Support\Facades\Storage;
+
+use App\InvoicePayment as InvoicePayment;
+
+use App\OrganizationPay as OrganizationPay;
+use App\TransactionCost as TransactionCost;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\MaintenanceRequest as MaintenanceRequest;
 
 class HomeController extends Controller
 {
@@ -148,7 +151,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage', 'storeAskedQuestions', 'expressResponseback']]);
+        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage', 'storeAskedQuestions', 'expressResponseback']]);
 
         $location = $this->myLocation();
 
@@ -166,7 +169,6 @@ class HomeController extends Controller
 
     public function homePage()
     {
-
         // To get the actual link from users click
 
         // $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
@@ -192,7 +194,8 @@ class HomeController extends Controller
                     'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
                     'pointsclaim' => $this->getClaimedHistory(Auth::user()->id),
                     'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
-                    'imtAccess' => AllCountries::where('name', Auth::user()->country)->first()
+                    'imtAccess' => AllCountries::where('name', Auth::user()->country)->first(),
+                    'referred' => $this->referral(Auth::user()->ref_code)
                 );
 
                 $view = 'home';
@@ -215,6 +218,29 @@ class HomeController extends Controller
 
 
         return view($view)->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function estores(){
+
+        if(Auth::check() == true){
+            $this->page = 'e-Store';
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+        }
+        else{
+            $this->page = 'e-Store';
+            $this->name = '';
+            $this->email = '';
+        }
+
+
+            $data = [
+                'activeStores' => $this->activeStores(),
+            ];
+
+
+             return view('main.estores')->with(['pages' => 'e-Store', 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
     public function merchantIndex()
@@ -252,7 +278,8 @@ class HomeController extends Controller
                     'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
                     'pointsclaim' => $this->getClaimedHistory(Auth::user()->user_id),
                     'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
-                    'imtAccess' => AllCountries::where('name', Auth::user()->country)->first()
+                    'imtAccess' => AllCountries::where('name', Auth::user()->country)->first(),
+                    'referred' => $this->referral(Auth::user()->ref_code)
                 );
 
                 $view = 'home';
@@ -303,7 +330,8 @@ class HomeController extends Controller
                     'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
                     'pointsclaim' => $this->getClaimedHistory(Auth::user()->user_id),
                     'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
-                    'imtAccess' => AllCountries::where('name', Auth::user()->country)->first()
+                    'imtAccess' => AllCountries::where('name', Auth::user()->country)->first(),
+                    'referred' => $this->referral(Auth::user()->ref_code)
 
                 );
             } else {
@@ -1113,12 +1141,7 @@ class HomeController extends Controller
             $this->email = Auth::user()->email;
         }
 
-        $client = $this->getMyClientInfo(Auth::user()->ref_code);
-
-        if(isset($client) && $client->accountMode == "test"){
-
-            return redirect()->route('dashboard')->with('error', 'You are in test mode');
-        }
+        // $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         // Insert Record for cash advance and redirect to cash advance page
         CashAdvance::updateOrInsert([
@@ -2109,13 +2132,6 @@ class HomeController extends Controller
                 'continent' => $this->timezone[0],
                 'getmyfacility' => $this->getMyFacility(base64_decode($email)),
             );
-        }
-
-        $client = $this->getMyClientInfo(Auth::user()->ref_code);
-
-        if(isset($client) && $client->accountMode == "test"){
-
-            return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
         return view('main.myrentalmanagementfacility')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -4106,16 +4122,16 @@ class HomeController extends Controller
 
         if (isset($getRef)) {
 
-            $referral_points = $getRef->referral_points + 100;
+            $referral_points = $getRef->referral_points + 10;
 
             User::where('id', $getRef->id)->update([
                 'referral_points' => $referral_points
             ]);
 
 
+
             // Add to generate link
             $refGen = ReferralGenerate::where('ref_code', $req->referred_by)->first();
-
             if (isset($refGen)) {
                 $ref_count = $refGen->referred_count + 1;
 
@@ -4613,6 +4629,105 @@ class HomeController extends Controller
         return redirect()->back()->with($resp, $resData);
     }
 
+
+
+    public function claimedReferralPoints(Request $req)
+    {
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Claim Point';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            } else {
+
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+
+            $this->page = 'Claim Point';
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+        }
+
+        // Get Bill
+        $getPoint = User::where('id', Auth::user()->id)->first();
+
+
+
+        if (isset($getPoint)) {
+
+            if (Auth::user()->accountType == "Merchant") {
+
+                $max = 500;
+            } else {
+
+                $max = 500;
+            }
+
+
+            $totPointLeft = $getPoint->referral_points - $max;
+
+
+            $pointtoget = $max - $getPoint->referral_points;
+
+            // Process claims and update user
+
+            if ($getPoint->referral_points >= $max) {
+
+
+
+                // This is when you can claim points...
+                // Points::where('user_id', Auth::user()->id)->update(['add_money' => 0, 'send_money' => 0, 'receive_money' => 0, 'pay_invoice' => 0, 'pay_bills' => 0, 'create_and_send_invoice' => 0, 'active_rental_property' => 0, 'quick_set_up' => 0, 'identity_verification' => 0, 'business_verification' => 0, 'promote_business' => 0, 'activate_ordering_system' => 0, 'identify_verification' => 0, 'activate_rpm' => 0, 'activate_currency_exchange' => 0, 'activate_cash_advance' => 0, 'activate_crypto_currency_account' => 0, 'approved_customers' => 0, 'approved_merchants' => 0, 'points_acquired' => $totPointLeft, 'current_point' => $getPoint->points_acquired]);
+
+
+
+                ReferralClaim::insert([
+                    'user_id' => Auth::user()->id,
+                    'country' => Auth::user()->country,
+                    'user_type' => Auth::user()->accountType,
+                    'points_acquired' => $getPoint->referral_points,
+                    'points_claimed' => $max,
+                    'points_left' => $totPointLeft,
+                    'status' => 'pending'
+                ]);
+
+                HistoryReport::insert([
+                    'user_id' => Auth::user()->id,
+                    'points' => $getPoint->referral_points,
+                    'point_activity' => "You have claimed " . $getPoint->referral_points . " points today " . date('d/m/y')
+
+                ]);
+
+                User::where('id',Auth::user()->id)->update([
+                    'referral_points'=>$totPointLeft,
+                ]);
+
+                $resData = 'Your points claimed has been submitted successfully. The reward will be processed within the next 24hrs';
+                $resp = "success";
+            } else {
+
+                $resData = 'You need to have ' . $pointtoget . ' more to be able to claim reward';
+                $resp = "error";
+            }
+        } else {
+
+            $resData = 'You do not have any acquired points';
+            $resp = "error";
+        }
+
+
+
+
+        return redirect()->back()->with($resp, $resData);
+    }
+
+
+
     public function claimedHistory(Request $req)
     {
 
@@ -4692,6 +4807,53 @@ class HomeController extends Controller
 
 
         return view('main.consumerpoints')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email,  'data' => $data]);
+    }
+
+    public function referredDetails(Request $req)
+    {
+
+
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Consumer Points';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            } else {
+                $this->page = 'Consumer Points';
+                $this->name = '';
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+
+            $this->page = 'Consumer Points';
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+        }
+
+        // Get Bill
+        $getAllPoint = Points::where('user_id', Auth::user()->id)->first();
+
+
+
+        $data = array(
+            'getallpoint' => $getAllPoint,
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'referred' => $this->referral(Auth::user()->ref_code),
+            'referral point' => $this->referralPoints(Auth::user()->id),
+            'point claimed'=> $this->pointsClaimed(Auth::user()->id),
+            'points_history' => $this->pointHistory(Auth::user()->id),
+
+        );
+
+
+
+
+
+        return view('main.referred')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email,  'data' => $data]);
     }
 
 
@@ -5181,6 +5343,7 @@ class HomeController extends Controller
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
 
+
         if ($req->pay_method != "Wallet") {
 
             if ($req->foreigncurrency != $req->localcurrency) {
@@ -5403,7 +5566,8 @@ class HomeController extends Controller
         if ($result->success == true) {
 
             // Conversion Rate USD to Local currency
-            $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
+            // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
+            $convertLocal = ($amount / $result->quotes->$localCurrency);
 
 
 

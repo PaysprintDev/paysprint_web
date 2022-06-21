@@ -21,6 +21,14 @@ use App\StoreCart;
 trait MyEstore
 {
 
+    public function activeStores()
+    {
+
+        $data = StoreMainShop::where('publish', true)->where('status', 'active')->get();
+
+        return $data;
+    }
+
     public function getMyStore($id)
     {
 
@@ -95,6 +103,18 @@ trait MyEstore
 
     public function getOrders($merchantid, $userid){
         $data = StoreOrders::where('userId', $userid)->where('merchantId', $merchantid)->where('paymentStatus', 'not paid')->get();
+
+        return $data;
+    }
+
+    public function getAllMyOrders($merchantid, $userid){
+        $data = StoreOrders::where('userId', $userid)->where('merchantId', $merchantid)->orderBy('updated_at', 'desc')->get();
+
+        return $data;
+    }
+
+    public function getSpecificOrder($orderid){
+        $data = StoreOrders::where('orderId', $orderid)->first();
 
         return $data;
     }

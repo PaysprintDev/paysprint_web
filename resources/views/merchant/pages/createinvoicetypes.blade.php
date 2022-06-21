@@ -10,7 +10,7 @@
                     {{-- <div class="col-lg-6">
                         <h3>Plugin DataTable</h3>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="../dashboard.html">Home</a></li>
+                            <li class="breadcrumb-item"><a href="../{{ route('dashboard') }}">Home</a></li>
                             <li class="breadcrumb-item">Tables</li>
                             <li class="breadcrumb-item">Data Tables</li>
                             <li class="breadcrumb-item active">Plug in</li>
@@ -100,13 +100,11 @@
                                                     $i = 1;
                                                 @endphp
                                                 @foreach ($data['getServiceType'] as $item)
-
                                                     <tr>
                                                         <td>{{ $i++ }}</td>
                                                         <td>{{ $item->name }}</td>
 
                                                     </tr>
-
                                                 @endforeach
                                             @else
                                                 <tr>

@@ -198,7 +198,7 @@ class MerchantApiController extends Controller
                                                 $this->amount = $myCurrency . " " . number_format($amount, 2);
                                                 $this->paypurpose = $service;
                                                 $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                                 // Mail to thismerchant
                                                 $this->sendEmail($this->to, "Payment Received");
@@ -302,6 +302,9 @@ class MerchantApiController extends Controller
                                                     $productItems = StoreProducts::where('id', $myOrderDetails[$i]->productId)->first();
 
 
+
+
+
                                                     $productCat = ($productItems->stock - $cartItemDetails->quantity);
 
                                                     StoreProducts::where('id', $myOrderDetails[$i]->productId)->update([
@@ -313,7 +316,7 @@ class MerchantApiController extends Controller
 
 
                                                     $orderItems .= "<tr>
-                                                    
+
                                                     <td>" . ($i + 1) . "</td>
                                                     <td>
                                                         <img src='" . $cartItemDetails->productImage . "' />
@@ -330,7 +333,7 @@ class MerchantApiController extends Controller
                                                     <td>
                                                         " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
                                                     </td>
-                                                    
+
                                                     </tr>";
                                                 }
 
@@ -387,7 +390,7 @@ class MerchantApiController extends Controller
                                         }
                                     } else {
                                         // Currency converter
-                                        $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode);
+                                        $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode, 'API PS_Users');
                                         $mywallet_balance = $this->convertCurrency($thismerchant->currencyCode, $thisuser->wallet_balance, $thisuser->currencyCode);
                                         $myCurrency = $thismerchant->currencyCode;
 
@@ -430,7 +433,7 @@ class MerchantApiController extends Controller
                                                 $this->amount = $myCurrency . " " . number_format($amount, 2);
                                                 $this->paypurpose = $service;
                                                 $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                                 // Mail to thismerchant
                                                 $this->sendEmail($this->to, "Payment Received");
@@ -548,7 +551,7 @@ class MerchantApiController extends Controller
 
 
                                                     $orderItems .= "<tr>
-                                                    
+
                                                     <td>" . ($i + 1) . "</td>
                                                     <td>
                                                         <img src='" . $cartItemDetails->productImage . "' />
@@ -565,7 +568,7 @@ class MerchantApiController extends Controller
                                                     <td>
                                                         " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
                                                     </td>
-                                                    
+
                                                     </tr>";
                                                 }
 
@@ -738,7 +741,7 @@ class MerchantApiController extends Controller
                                                     $this->amount = $myCurrency . " " . number_format($amount, 2);
                                                     $this->paypurpose = $service;
                                                     $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                                    $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                                    $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                                     // Mail to thismerchant
                                                     $this->sendEmail($this->to, "Payment Received");
@@ -817,7 +820,7 @@ class MerchantApiController extends Controller
                                         }
                                     } else {
                                         // Currency converter
-                                        $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode);
+                                        $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode, 'API PS_Users');
                                         $mywallet_balance = $this->convertCurrency($thismerchant->currencyCode, $thisuser->wallet_balance, $thisuser->currencyCode);
                                         $myCurrency = $thismerchant->currencyCode;
 
@@ -899,7 +902,7 @@ class MerchantApiController extends Controller
                                                     $this->amount = $myCurrency . " " . number_format($amount, 2);
                                                     $this->paypurpose = $service;
                                                     $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                                    $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                                    $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                                     // Mail to thismerchant
                                                     $this->sendEmail($this->to, "Payment Received");
@@ -1066,7 +1069,7 @@ class MerchantApiController extends Controller
                                                 $this->amount = $myCurrency . " " . number_format($amount, 2);
                                                 $this->paypurpose = $service;
                                                 $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                                 // Mail to thismerchant
                                                 $this->sendEmail($this->to, "Payment Received");
@@ -1099,6 +1102,8 @@ class MerchantApiController extends Controller
                                                     'escrow_balance' => $escrowBalance,
                                                     'dispute_balance' => $disputeBalance
                                                 ]);
+
+
 
 
 
@@ -1165,17 +1170,29 @@ class MerchantApiController extends Controller
 
                                                 $myOrderDetails = StoreOrders::where('userId', $thisuser->id)->where('merchantId', $thismerchant->id)->where('paymentStatus', 'not paid')->get();
 
+
+
+
                                                 $orderIds = "";
                                                 $orderItems = "";
 
                                                 for ($i = 0; $i < count($myOrderDetails); $i++) {
 
+
+
                                                     // Get Cart Item
                                                     $cartItemDetails = StoreCart::where('productId', $myOrderDetails[$i]->productId)->where('userId', $thisuser->id)->first();
+
+
                                                     $productItems = StoreProducts::where('id', $myOrderDetails[$i]->productId)->first();
 
 
+
+
                                                     $productCat = ($productItems->stock - $cartItemDetails->quantity);
+
+
+
 
                                                     StoreProducts::where('id', $myOrderDetails[$i]->productId)->update([
                                                         'stock' => $productCat
@@ -1186,7 +1203,7 @@ class MerchantApiController extends Controller
 
 
                                                     $orderItems .= "<tr>
-                                                    
+
                                                     <td>" . ($i + 1) . "</td>
                                                     <td>
                                                         <img src='" . $cartItemDetails->productImage . "' />
@@ -1203,7 +1220,7 @@ class MerchantApiController extends Controller
                                                     <td>
                                                         " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
                                                     </td>
-                                                    
+
                                                     </tr>";
                                                 }
 
@@ -1257,7 +1274,7 @@ class MerchantApiController extends Controller
                                         }
                                     } else {
                                         // Currency converter
-                                        $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode);
+                                        $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode, 'API PS_Users');
                                         $mywallet_balance = $this->convertCurrency($thismerchant->currencyCode, $thisuser->wallet_balance, $thisuser->currencyCode);
                                         $myCurrency = $thismerchant->currencyCode;
 
@@ -1299,7 +1316,7 @@ class MerchantApiController extends Controller
                                                 $this->amount = $myCurrency . " " . number_format($amount, 2);
                                                 $this->paypurpose = $service;
                                                 $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                                 // Mail to thismerchant
                                                 $this->sendEmail($this->to, "Payment Received");
@@ -1416,7 +1433,7 @@ class MerchantApiController extends Controller
 
 
                                                     $orderItems .= "<tr>
-                                                    
+
                                                     <td>" . ($i + 1) . "</td>
                                                     <td>
                                                         <img src='" . $cartItemDetails->productImage . "' />
@@ -1433,7 +1450,7 @@ class MerchantApiController extends Controller
                                                     <td>
                                                         " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
                                                     </td>
-                                                    
+
                                                     </tr>";
                                                 }
 
@@ -1561,7 +1578,7 @@ class MerchantApiController extends Controller
                                                 $this->amount = $myCurrency . " " . number_format($amount, 2);
                                                 $this->paypurpose = $service;
                                                 $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                                 // Mail to thismerchant
                                                 $this->sendEmail($this->to, "Payment Received");
@@ -1665,7 +1682,7 @@ class MerchantApiController extends Controller
                                         }
                                     } else {
                                         // Currency converter
-                                        $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode);
+                                        $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode, 'API PS_Users');
                                         $mywallet_balance = $this->convertCurrency($thismerchant->currencyCode, $thisuser->wallet_balance, $thisuser->currencyCode);
                                         $myCurrency = $thismerchant->currencyCode;
 
@@ -1707,7 +1724,7 @@ class MerchantApiController extends Controller
                                                 $this->amount = $myCurrency . " " . number_format($amount, 2);
                                                 $this->paypurpose = $service;
                                                 $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                                $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                                 // Mail to thismerchant
                                                 $this->sendEmail($this->to, "Payment Received");
@@ -1909,7 +1926,7 @@ class MerchantApiController extends Controller
                                         $this->amount = $myCurrency . " " . number_format($amount, 2);
                                         $this->paypurpose = $service;
                                         $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                        $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                        $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                         // Mail to thismerchant
                                         $this->sendEmail($this->to, "Payment Received");
@@ -2021,7 +2038,7 @@ class MerchantApiController extends Controller
 
 
                                             $orderItems .= "<tr>
-                                                    
+
                                                     <td>" . ($i + 1) . "</td>
                                                     <td>
                                                         <img src='" . $cartItemDetails->productImage . "' />
@@ -2038,7 +2055,7 @@ class MerchantApiController extends Controller
                                                     <td>
                                                         " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
                                                     </td>
-                                                    
+
                                                     </tr>";
                                         }
 
@@ -2094,7 +2111,7 @@ class MerchantApiController extends Controller
                                     }
                                 } else {
                                     // Currency converter
-                                    $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode);
+                                    $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode, 'API ESTORE_GUEST_Users');
                                     $myCurrency = $thismerchant->currencyCode;
 
 
@@ -2119,7 +2136,7 @@ class MerchantApiController extends Controller
                                         $this->amount = $myCurrency . " " . number_format($amount, 2);
                                         $this->paypurpose = $service;
                                         $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                        $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                        $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                         // Mail to thismerchant
                                         $this->sendEmail($this->to, "Payment Received");
@@ -2235,7 +2252,7 @@ class MerchantApiController extends Controller
 
 
                                             $orderItems .= "<tr>
-                                                    
+
                                                     <td>" . ($i + 1) . "</td>
                                                     <td>
                                                         <img src='" . $cartItemDetails->productImage . "' />
@@ -2252,7 +2269,7 @@ class MerchantApiController extends Controller
                                                     <td>
                                                         " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
                                                     </td>
-                                                    
+
                                                     </tr>";
                                         }
 
@@ -2326,7 +2343,7 @@ class MerchantApiController extends Controller
                 $merchantInfo = ClientInfo::where('api_secrete_key', $req->bearerToken())->first();
 
                 if (isset($merchantInfo)) {
-                    
+
 
                     // Moneris Payment Here...
 
@@ -2374,7 +2391,7 @@ class MerchantApiController extends Controller
                                         $this->amount = $myCurrency . " " . number_format($amount, 2);
                                         $this->paypurpose = $service;
                                         $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                        $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                        $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                         // Mail to thismerchant
                                         $this->sendEmail($this->to, "Payment Received");
@@ -2486,7 +2503,7 @@ class MerchantApiController extends Controller
 
 
                                             $orderItems .= "<tr>
-                                                    
+
                                                     <td>" . ($i + 1) . "</td>
                                                     <td>
                                                         <img src='" . $cartItemDetails->productImage . "' />
@@ -2503,7 +2520,7 @@ class MerchantApiController extends Controller
                                                     <td>
                                                         " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
                                                     </td>
-                                                    
+
                                                     </tr>";
                                         }
 
@@ -2559,7 +2576,7 @@ class MerchantApiController extends Controller
                                     }
                                 } else {
                                     // Currency converter
-                                    $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode);
+                                    $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode, 'API ESTORE_GUEST_Users');
                                     $myCurrency = $thismerchant->currencyCode;
 
 
@@ -2584,7 +2601,7 @@ class MerchantApiController extends Controller
                                         $this->amount = $myCurrency . " " . number_format($amount, 2);
                                         $this->paypurpose = $service;
                                         $this->subject = "Payment Received from " . $thisuser->name . " for " . $service;
-                                        $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                                        $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                                         // Mail to thismerchant
                                         $this->sendEmail($this->to, "Payment Received");
@@ -2700,7 +2717,7 @@ class MerchantApiController extends Controller
 
 
                                             $orderItems .= "<tr>
-                                                    
+
                                                     <td>" . ($i + 1) . "</td>
                                                     <td>
                                                         <img src='" . $cartItemDetails->productImage . "' />
@@ -2717,7 +2734,7 @@ class MerchantApiController extends Controller
                                                     <td>
                                                         " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
                                                     </td>
-                                                    
+
                                                     </tr>";
                                         }
 
@@ -2883,7 +2900,7 @@ class MerchantApiController extends Controller
                                 $myCurrency = $currencyCode;
                             } else {
                                 // Currency converter
-                                $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $currencyCode);
+                                $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $currencyCode, 'API GUEST_Users');
                                 $myCurrency = $thismerchant->currencyCode;
                             }
 
@@ -2934,7 +2951,7 @@ class MerchantApiController extends Controller
                             $this->amount = $myCurrency . " " . number_format($amount, 2);
                             $this->paypurpose = $service;
                             $this->subject = "Payment Received from " . $req->firstname . " " . $req->lastname . " for " . $service;
-                            $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                            $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                             // Mail to thismerchant
                             $this->sendEmail($this->to, "Payment Received");
@@ -3051,7 +3068,7 @@ class MerchantApiController extends Controller
                                 $myCurrency = $currencyCode;
                             } else {
                                 // Currency converter
-                                $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $currencyCode);
+                                $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $currencyCode, 'API GUEST_Users');
                                 $myCurrency = $thismerchant->currencyCode;
                             }
 
@@ -3066,7 +3083,7 @@ class MerchantApiController extends Controller
                             $this->amount = $myCurrency . " " . number_format($amount, 2);
                             $this->paypurpose = $service;
                             $this->subject = "Payment Received from " . $req->firstname . " " . $req->lastname . " for " . $service;
-                            $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successfull";
+                            $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
 
                             // Mail to thismerchant
                             $this->sendEmail($this->to, "Payment Received");
@@ -3213,6 +3230,7 @@ class MerchantApiController extends Controller
             if ($validator->passes()) {
                 $thisuser = User::select('id', 'ref_code', 'wallet_balance', 'currencySymbol', 'currencyCode')->where('ref_code', $req->accountNumber)->first();
 
+
                 if (isset($thisuser)) {
                     // Get Account Balance
                     $status = 200;
@@ -3346,7 +3364,7 @@ class MerchantApiController extends Controller
     }
 
 
-    public function convertCurrency($currency, $amount, $localcurrency)
+    public function convertCurrency($currency, $amount, $localcurrency, $route = null)
     {
 
         // Get Markup
@@ -3392,7 +3410,7 @@ class MerchantApiController extends Controller
             // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
             $convertLocal = $amount / $result->quotes->$localCurrency;
 
-            // Converting your USD value to other currency ie CAD * Y 
+            // Converting your USD value to other currency ie CAD * Y
             $convRate = $result->quotes->$currency * $convertLocal;
 
             $message = 'success';
@@ -3404,6 +3422,10 @@ class MerchantApiController extends Controller
 
 
         $amountConvert = $convRate;
+        $convRate = $amountConvert * 95/100;
+
+
+        $this->calculateBufferedTransaction($amountConvert, $convRate, $route);
 
 
         return $amountConvert;

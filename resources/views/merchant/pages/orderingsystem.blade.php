@@ -11,23 +11,33 @@
 
                     <div class="col-lg-6 float-right">
                         <!-- Bookmark Start-->
+                        <br>
+                        <div style="background-color: rgb(241 187 45) !important; margin-top: 20px;">
+                            <table class="table table-striped">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <h5><strong>eStore Escrow Balance</strong></h5>
+                                        </td>
+                                        <td style="font-weight: bold;">
+                                            <h5> {{ Auth::user()->currencySymbol . '' . number_format(Auth::user()->escrow_balance, 2) }}
+                                            </h5>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h5><strong>Dispute Balance</strong></h5>
+                                        </td>
+                                        <td style="font-weight: bold;">
+                                            <h5>{{ Auth::user()->currencySymbol . '' . number_format(Auth::user()->dispute_balance, 2) }}
+                                            </h5>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
-                        <table class="table table-striped">
-                            <tbody>
-                                <tr>
-                                    <td>eStore Escrow Balance</td>
-                                    <td style="font-weight: bold;">
-                                        {{ Auth::user()->currencySymbol . '' . number_format(Auth::user()->escrow_balance, 2) }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Dispute Balance</td>
-                                    <td style="font-weight: bold;">
-                                        {{ Auth::user()->currencySymbol . '' . number_format(Auth::user()->dispute_balance, 2) }}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <br>
 
                         <!-- Bookmark Ends-->
                     </div>
@@ -40,14 +50,15 @@
                     <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact"
                         type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Product
                         Categories</button>
-                    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
+                    <button class="nav-link" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
                         type="button" role="tab" aria-controls="nav-home" aria-selected="true">Products</button>
                     <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
                         type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Orders</button>
                     <button class="nav-link" id="nav-sales-tab" data-bs-toggle="tab" data-bs-target="#nav-sales"
                         type="button" role="tab" aria-controls="nav-sales" aria-selected="false">Sales</button>
                     <button class="nav-link" id="nav-refund-tab" data-bs-toggle="tab" data-bs-target="#nav-refund"
-                        type="button" role="tab" aria-controls="nav-refund" aria-selected="false">Refund</button>
+                        type="button" role="tab" aria-controls="nav-refund" aria-selected="false">Refund <span
+                            class="text-danger">[coming soon]</span></button>
                     <button class="nav-link" id="nav-discount-tab" data-bs-toggle="tab"
                         data-bs-target="#nav-discounts" type="button" role="tab" aria-controls="nav-discounts"
                         aria-selected="false">Discount codes <span class="text-danger">[coming soon]</span></button>
@@ -55,9 +66,9 @@
                         data-bs-target="#nav-discount" type="button" role="tab" aria-controls="nav-discount"
                         aria-selected="false">Discount codes <span class="text-danger">[coming soon]</span></button> --}}
 
-                    <button class="nav-link" id="nav-managestore-tab" data-bs-toggle="tab"
+                    <button class="nav-link active" id="nav-managestore-tab" data-bs-toggle="tab"
                         data-bs-target="#nav-managestore" type="button" role="tab" aria-controls="nav-managestore"
-                        aria-selected="false">Manage eStore</button>
+                        aria-selected="false">Setup and Manage eStore</button>
                     <button class="nav-link btn btn-success" type="button" data-bs-toggle="modal"
                         data-bs-target="#addProductModal">Add product + </button>
 
@@ -68,7 +79,7 @@
             </nav>
 
             <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div class="tab-pane fade" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                     <div class="row">
                         <!-- Individual column searching (text inputs) Starts-->
                         <div class="col-sm-12">
@@ -276,6 +287,42 @@
                                                                                     class="form-text text-muted">Give your
                                                                                     customers the
                                                                                     description about this product</small>
+                                                                            </div>
+
+
+                                                                            <div class="form-group">
+                                                                                <label for="deliveryDate">Delivery
+                                                                                    Period</label>
+
+                                                                                <div class="row">
+                                                                                    <div class="col-md-6">
+                                                                                        <input type="text"
+                                                                                            class="form-control"
+                                                                                            name="deliveryDate"
+                                                                                            id="deliveryDate"
+                                                                                            aria-describedby="deliveryDateHelp"
+                                                                                            required
+                                                                                            value="{{ $product->deliveryDate }}">
+                                                                                        <small id="deliveryDateHelp"
+                                                                                            class="form-text text-muted">Specify
+                                                                                            number of
+                                                                                            days</small>
+                                                                                    </div>
+                                                                                    <div class="col-md-6">
+                                                                                        <input type="time"
+                                                                                            class="form-control"
+                                                                                            name="deliveryTime"
+                                                                                            id="deliveryTime"
+                                                                                            aria-describedby="deliveryTimeHelp"
+                                                                                            required
+                                                                                            value="{{ $product->deliveryTime }}">
+                                                                                        <small id="deliveryTimeHelp"
+                                                                                            class="form-text text-muted">Specify
+                                                                                            the time</small>
+                                                                                    </div>
+                                                                                </div>
+
+
                                                                             </div>
 
 
@@ -916,7 +963,8 @@
 
                 {{-- Manage Store Start --}}
 
-                <div class="tab-pane fade" id="nav-managestore" role="tabpanel" aria-labelledby="nav-managestore-tab">
+                <div class="tab-pane fade show active" id="nav-managestore" role="tabpanel"
+                    aria-labelledby="nav-managestore-tab">
 
                     <!-- Container-fluid starts-->
                     <div class="container-fluid">
@@ -947,20 +995,34 @@
                                                             stroke="#2D9CDB" stroke-linecap="round" stroke-linejoin="round">
                                                         </path>
                                                     </svg></span></a>
+                                            <!-- ShareThis BEGIN -->
+                                            <div class="sharethis-inline-share-buttons"
+                                                data-url="{{ route('home') . '/shop/' . Auth::user()->businessname }}">
+                                            </div><!-- ShareThis END -->
+
+
                                         </div>
+
+
                                         <div class="card-body">
 
                                             <div class="row">
-                                                <div class="col-md-9">
-                                                    <h5 class="card-text">
-                                                        Setup Your eStore
-                                                    </h5>
+                                                <div class="col-md-6">
+                                                    @isset($data['myStore'])
+                                                        <button class="btn btn-primary" style="width: 100%;"
+                                                            data-bs-toggle="modal" data-bs-target="#editStoreModal">Update
+                                                            eStore</button>
+                                                    @else
+                                                        <button class="btn btn-success" style="width: 100%;"
+                                                            data-bs-toggle="modal" data-bs-target="#createStoreModal">Setup
+                                                            eStore (For Sale of Goods only)</button>
+                                                    @endisset
                                                     <p>
                                                         You can now setup your store for your customers to see how your
                                                         estore look like
                                                     </p>
                                                 </div>
-                                                <div class="col-md-3">
+                                                {{-- <div class="col-md-3">
 
                                                     @isset($data['myStore'])
                                                         <button class="btn btn-primary" style="width: 100%;"
@@ -973,26 +1035,31 @@
                                                     @endisset
 
 
-                                                </div>
+                                                </div> --}}
                                             </div>
                                             <hr>
 
                                             <div class="row">
-                                                <div class="col-md-9">
-                                                    <h5 class="card-text">
+                                                <div class="col-md-6">
+
+                                                    <button class="btn btn-warning" style="width: 100%;"
+                                                        onclick="comingSoon()">Announcements (Coming
+                                                        soon)</button>
+
+                                                    {{-- <h5 class="card-text">
                                                         Announcements
-                                                    </h5>
+                                                    </h5> --}}
                                                     <p>
                                                         You can now activate announcements to be able to share information
                                                         on your
                                                         eStore with new and existing customers.
                                                     </p>
                                                 </div>
-                                                <div class="col-md-3">
+                                                {{-- <div class="col-md-3">
                                                     <button class="btn btn-warning" style="width: 100%;"
                                                         onclick="comingSoon()">Coming
                                                         soon</button>
-                                                </div>
+                                                </div> --}}
                                             </div>
                                             <hr>
 
@@ -1015,7 +1082,9 @@
                                                             data-bs-target="#instorePickup">Click button</button>
 
                                                         {!! $data['storepickup'] > 0
-    ? '<span class="float-end"><a href="javascript:void(0)"
+    ? '<span class="float-end"><a href="' .
+        route('storepickup address') .
+        '"
                                                                 class="text-primary">View/Add
                                                                 pickup addresses</a></span>'
     : '' !!}
@@ -1053,6 +1122,20 @@
 
 
                                                                         <div class="form-group">
+                                                                            <label for="instore_city">City</label>
+                                                                            <input type="text" class="form-control"
+                                                                                name="city" id="instore_city"
+                                                                                aria-describedby="instore_cityHelp"
+                                                                                placeholder="E.g {{ Auth::user()->city }}"
+                                                                                required>
+                                                                            <small id="instore_addressHelp"
+                                                                                class="form-text text-muted">Note that this
+                                                                                city should match with the address
+                                                                                above</small>
+
+                                                                        </div>
+
+                                                                        <div class="form-group">
                                                                             <label for="instore_state">State</label>
                                                                             <input type="text" class="form-control"
                                                                                 name="state" id="instore_state"
@@ -1061,7 +1144,8 @@
                                                                                 required>
                                                                             <small id="instore_addressHelp"
                                                                                 class="form-text text-muted">Note that this
-                                                                                should match with the address above</small>
+                                                                                state should match with the address
+                                                                                above</small>
 
                                                                         </div>
 
@@ -1106,8 +1190,10 @@
 
 
                                                         {!! $data['deliverypickup'] > 0
-    ? '<span class="float-end"><a href="javascript:void(0)"
-                                                                class="text-danger">View/Add
+    ? '<span class="float-end"><a href="' .
+        route('deliverypickup address') .
+        '"
+                                                                class="text-primary">View/Add
                                                                 delivery rates</a></span>'
     : '' !!}
                                                     </div>
@@ -1118,15 +1204,24 @@
                                             </div>
                                             <hr>
                                             <div class="row">
-                                                <div class="col-md-9">
-                                                    <h5 class="card-text">
+                                                <div class="col-md-6">
+
+                                                    <button class="btn btn-danger btn-block" style="width: 100%;"
+                                                        onclick="shippingWithRate()"><small>Add Shipping Regions &
+                                                            Rates</small></button>
+
+
+                                                    <button class="deliveryshippingbtn d-none" data-bs-toggle="modal"
+                                                        data-bs-target="#instoreShipping">Click button</button>
+
+                                                    {{-- <h5 class="card-text">
                                                         Shipping Regions & Rates
-                                                    </h5>
+                                                    </h5> --}}
                                                     <p>
 
                                                     </p>
                                                 </div>
-                                                <div class="col-md-3">
+                                                {{-- <div class="col-md-3">
                                                     <button class="btn btn-danger btn-block" style="width: 100%;"
                                                         onclick="shippingWithRate()"><small>Add Shipping
                                                             Fee</small></button>
@@ -1134,7 +1229,7 @@
 
                                                     <button class="deliveryshippingbtn d-none" data-bs-toggle="modal"
                                                         data-bs-target="#instoreShipping">Click button</button>
-                                                </div>
+                                                </div> --}}
 
 
 
@@ -1242,17 +1337,32 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+
                                             <hr>
                                             <div class="row">
-                                                <div class="col-md-9">
-                                                    <h5 class="card-text">
+                                                <div class="col-md-6">
+
+                                                    @isset($data['myProductTax'])
+                                                        <button class="btn btn-success" style="width: 100%;"
+                                                            data-bs-toggle="modal" data-bs-target="#editProductTax"><small>Edit
+                                                                Product
+                                                                Tax</small></button>
+                                                    @else
+                                                        <button class="btn btn-success" style="width: 100%;"
+                                                            data-bs-toggle="modal" data-bs-target="#addProductTax"><small>Add
+                                                                Product
+                                                                Tax</small></button>
+                                                    @endisset
+
+                                                    {{-- <h5 class="card-text">
                                                         Product Tax
-                                                    </h5>
+                                                    </h5> --}}
                                                     <p>
 
                                                     </p>
                                                 </div>
-                                                <div class="col-md-3">
+                                                {{-- <div class="col-md-3">
 
                                                     @isset($data['myProductTax'])
                                                         <button class="btn btn-success" style="width: 100%;"
@@ -1267,7 +1377,7 @@
                                                     @endisset
 
 
-                                                </div>
+                                                </div> --}}
                                             </div>
 
 
@@ -1502,10 +1612,22 @@
 
                             <div class="form-group">
                                 <label for="deliveryDate">Delivery Period</label>
-                                <input type="text" min="1" class="form-control" name="deliveryDate" id="deliveryDate"
-                                    aria-describedby="deliveryDateHelp" placeholder="6 days" required>
-                                <small id="deliveryDateHelp" class="form-text text-muted">How many days would the product
-                                    be shipped?</small>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="deliveryDate" id="deliveryDate"
+                                            aria-describedby="deliveryDateHelp" placeholder="6 days" required>
+                                        <small id="deliveryDateHelp" class="form-text text-muted">Specify number of
+                                            days</small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="time" class="form-control" name="deliveryTime" id="deliveryTime"
+                                            aria-describedby="deliveryTimeHelp" required>
+                                        <small id="deliveryTimeHelp" class="form-text text-muted">Specify the time</small>
+                                    </div>
+                                </div>
+
+
                             </div>
 
 
@@ -1890,16 +2012,7 @@
 
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="advertSubtitle">Advert Sub-title Text </label>
-                                    <input type="text" class="form-control" name="advertSubtitle" id="advertSubtitle"
-                                        aria-describedby="advertSubtitleHelp" placeholder="Enter advert sub-title"
-                                        value="{{ $data['myStore']->advertSubtitle }}">
 
-                                    <small id="advertSubtitleHelp" class="form-text text-muted">If ADVERT CONTENT IMAGE is more
-                                        than one (1), separate by comma (,)</small>
-
-                                </div>
 
 
                                 <div class="form-group">

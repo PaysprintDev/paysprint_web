@@ -1646,9 +1646,7 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
             const response = await axios(config);
 
-            console.log(response);
-
-            swal("Great!", response.message, "success");
+            swal("Great!", response.data.message, "success");
 
             setTimeout(function() {
                 location.reload();

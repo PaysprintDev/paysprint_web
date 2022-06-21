@@ -2,14 +2,15 @@
 
 namespace App\Traits;
 
-use App\AllCountries;
 use App\User;
-use App\MarketPlace;
-use App\EscrowAccount;
+use App\MakeBid;
 use App\FxPayment;
 use App\FxStatement;
-use App\MakeBid;
+use App\MarketPlace;
+use App\AllCountries;
+use App\EscrowAccount;
 use App\CrossBorderBeneficiary;
+use App\PaySprintAccountDetails;
 
 trait MyFX
 {
@@ -84,6 +85,12 @@ trait MyFX
     public function getThisBeneficiary($id)
     {
         $data = CrossBorderBeneficiary::where('id', $id)->first();
+
+        return $data;
+    }
+
+    public function getPSAccountDetails(){
+        $data = PaySprintAccountDetails::first();
 
         return $data;
     }

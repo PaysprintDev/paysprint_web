@@ -160,7 +160,7 @@ class GooglePaymentController extends Controller
 
                 if (isset($user)) {
 
-                    // Do IDV 
+                    // Do IDV
 
                     $checking = $this->checkUsersPassAccount($user->id);
 
@@ -925,7 +925,7 @@ class GooglePaymentController extends Controller
                     if (isset($thisuser)) {
 
 
-                        // Do IDV 
+                        // Do IDV
 
                         $checking = $this->checkUsersPassAccount($thisuser->id);
 
@@ -1301,7 +1301,8 @@ class GooglePaymentController extends Controller
         if ($result->success == true) {
 
             // Conversion Rate USD to Local currency
-            $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
+            // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
+            $convertLocal = ($amount / $result->quotes->$localCurrency);
 
 
             $convRate = $result->quotes->$currency * $convertLocal;

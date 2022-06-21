@@ -45,7 +45,7 @@
 
         </div>
         <div class="icon">
-            <i class="ion ion-person-add"></i>
+            <span style="font-size: 60px">@if(isset($data['stores'])) {{$data['stores']}} @endif</span> <i class="ion ion-person-add"></i>
         </div>
         <a href="{{ route('review e-store') }}" class="small-box-footer">View all <i
                 class="fa fa-arrow-circle-right"></i></a>
@@ -73,7 +73,7 @@
 </div>
 
 
-<div class="col-lg-3 col-xs-6">
+{{-- <div class="col-lg-3 col-xs-6">
     <!-- small box -->
     <div class="small-box bg-red">
         <div class="inner">
@@ -90,7 +90,7 @@
         <a href="{{ route('feedback') }}" class="small-box-footer">View all <i
                 class="fa fa-arrow-circle-right"></i></a>
     </div>
-</div>
+</div> --}}
 
 
 <div class="col-lg-3 col-xs-6">
@@ -127,6 +127,23 @@
             <i class="ion ion-person-add"></i>
         </div>
         <a href="{{ route('expired otp') }}" class="small-box-footer">View
+            details <i class="fa fa-arrow-circle-right"></i></a>
+    </div>
+</div>
+
+<div class="col-lg-3 col-xs-6">
+    <!-- small box -->
+    <div class="small-box bg-purple">
+        <div class="inner">
+            <h3>&nbsp;</h3>
+
+            <p>Activate E-store</p>
+
+        </div>
+        <div class="icon">
+            <span style="font-size: 60px">@if(isset($data['activate'])) {{$data['activate']}} @endif</span> <i class="ion ion-person-add"></i>
+        </div>
+        <a href="{{ route('activate e-store') }}" class="small-box-footer">View
             details <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>

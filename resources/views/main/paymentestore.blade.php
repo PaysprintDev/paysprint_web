@@ -11,7 +11,8 @@
         integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
     <!-- Favicon -->
-    <link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1602675914/paysprint_icon_png_ol2z3u.png"
+    <link rel="icon"
+        href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_icon_png_rhxm1e_sqhgj0.png"
         type="image/x-icon" />
 
     <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
@@ -139,14 +140,13 @@
 
                                             @php
                                                 $productCost = 0;
-                                                $shipCost = 0;
-                                                $taxCost = $data['storeTax']->taxValue != null ? $data['storeTax']->taxValue / 100 : 0;
+                                                $shipCost = Request::get('fee') != null ? base64_decode(Request::get('fee')) : 0;
+                                                $taxCost = isset($data['storeTax']->taxValue) ? $data['storeTax']->taxValue / 100 : 0;
                                                 $totalCost = 0;
                                             @endphp
                                             @for ($i = 0; $i < count($data['getCart']); $i++)
                                                 @php
                                                     $productCost += $data['getCart'][$i]->price * $data['getCart'][$i]->quantity;
-                                                    $shipCost += $data['getCart'][$i]->shippingFee;
 
                                                 @endphp
                                             @endfor
@@ -201,7 +201,7 @@
                                         <button class="nav-link active" id="haveAccount" data-toggle="tab"
                                             data-target="#home" type="button" role="tab" aria-controls="home"
                                             aria-selected="true" onclick="setCardType('Wallet')"><img
-                                                src="https://res.cloudinary.com/pilstech/image/upload/v1602675914/paysprint_icon_png_ol2z3u.png"
+                                                src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_icon_png_rhxm1e_sqhgj0.png"
                                                 style="width:25px; height: 25px;" />
                                             I have a PaySprint Wallet</button>
                                     </li>
@@ -395,356 +395,397 @@
                                         aria-labelledby="dontHaveAccount">
 
 
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <div class="mt-3">
-                                                    <form action="#" method="post" id="forVisitors">
-                                                        @csrf
+                                        {{-- Check if validated account --}}
 
-                                                        <div class="form-group"> <label for="firstname">
-                                                                <h6><span style="color: red;">*</span> Please enter your
-                                                                    First Name</h6>
-                                                            </label>
-                                                            <div class="input-group">
+                                        @if (Auth::user()->accountLevel == 3 && Auth::user()->approval == 2)
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="mt-3">
+                                                        <form action="#" method="post" id="forVisitors">
+                                                            @csrf
 
-                                                                <div class="input-group-append"> <span
-                                                                        class="input-group-text text-muted">
-                                                                        <img
-                                                                            src="https://img.icons8.com/stickers/25/000000/user.png" /></span>
-                                                                </div> <input type="text" name="firstname"
-                                                                    id="firstname" class="form-control"
-                                                                    placeholder="First Name:" required>
-
-                                                                <input type="hidden" name="route" value="estore">
-                                                                <input type="hidden" name="accountNumber"
-                                                                    value="{{ Auth::user()->ref_code }}">
-                                                                <input type="hidden" name="mode"
-                                                                    value="{{ env('APP_ENV') == 'local' ? 'test' : 'live' }}">
-                                                                <input type="hidden" name="paymentToken"
-                                                                    class="form-control" id="paymentToken" value=""
-                                                                    readonly>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="form-group"> <label for="lastname">
-                                                                <h6><span style="color: red;">*</span> Please enter your
-                                                                    Last Name</h6>
-                                                            </label>
-                                                            <div class="input-group">
-
-                                                                <div class="input-group-append"> <span
-                                                                        class="input-group-text text-muted">
-                                                                        <img
-                                                                            src="https://img.icons8.com/stickers/25/000000/user.png" /></span>
-                                                                </div> <input type="text" name="lastname" id="lastname"
-                                                                    class="form-control" placeholder="Last Name:"
-                                                                    required>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group"> <label for="email">
-                                                                <h6><span style="color: red;">*</span> Email Address
-                                                                </h6>
-                                                            </label>
-                                                            <div class="input-group">
-
-                                                                <div class="input-group-append"> <span
-                                                                        class="input-group-text text-muted">
-                                                                        <img
-                                                                            src="https://img.icons8.com/color/25/000000/email-sign.png" /></span>
-                                                                </div> <input type="email" name="email" id="email"
-                                                                    class="form-control" placeholder="Email Address:"
-                                                                    required>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group"> <label for="phone">
-                                                                <h6><span style="color: red;">*</span> Phone Number</h6>
-                                                            </label>
-                                                            <div class="input-group">
-
-                                                                <div class="input-group-append"> <span
-                                                                        class="input-group-text text-muted">
-                                                                        <img
-                                                                            src="https://img.icons8.com/external-icongeek26-flat-icongeek26/25/000000/external-phone-essentials-icongeek26-flat-icongeek26.png" /></span>
-                                                                </div> <input type="text" name="phone" id="phone"
-                                                                    class="form-control" placeholder="Phone Number:"
-                                                                    required>
-                                                            </div>
-                                                        </div>
-
-
-                                                        <div
-                                                            class="form-group @if ($data['currencyCode']->currencyCode != $data['paymentorg']->currencyCode) disp-0 @endif ">
-                                                            <label for="amount">
-                                                                <h6><span style="color: red;">*</span>Amount</h6>
-                                                            </label>
-                                                            <div class="input-group">
-
-                                                                <div class="input-group-append"> <span
-                                                                        class="input-group-text text-muted">
-                                                                        {{ $data['currencyCode']->currencySymbol }}</span>
-                                                                </div>
-                                                                <input type="text" name="amount" class="form-control"
-                                                                    id="amounttosend"
-                                                                    value="{{ sprintf('%.2f', $totalCost) }}"
-                                                                    placeholder="0.00" readonly>
-
-                                                                <input type="hidden" name="conversionamount"
-                                                                    class="form-control" id="conversionamount"
-                                                                    value="" placeholder="0.00" readonly>
-                                                            </div>
-                                                        </div>
-
-
-                                                        <div
-                                                            class="form-group @if ($data['currencyCode']->currencyCode == $data['paymentorg']->currencyCode) disp-0 @endif">
-                                                            <label for="amount">
-                                                                <h6><span style="color: red;">*</span>Amount</h6>
-                                                            </label>
-                                                            <div class="input-group">
-
-                                                                <div class="input-group-append"> <span
-                                                                        class="input-group-text text-muted">
-                                                                        {{ $data['currencyCode']->currencySymbol }}</span>
-                                                                </div>
-
-                                                                <input type="text" name="conversionamount"
-                                                                    class="form-control conversionamount"
-                                                                    id="conversionamount" value="" placeholder="0.00"
-                                                                    readonly>
-                                                            </div>
-                                                        </div>
-
-
-                                                        <div class="form-group disp-0"> <label for="commissiondeduct">
-                                                                <h6>Fee Charge</h6>
-                                                            </label>
-                                                            <div class="input-group">
-                                                                <input type="text" name="commissiondeduct"
-                                                                    class="form-control commissiondeduct"
-                                                                    id="commissiondeduct" value="" placeholder="0.00"
-                                                                    readonly>
-
-                                                                <input type="hidden" name="totalcharge"
-                                                                    class="form-control" id="totalcharge" value=""
-                                                                    placeholder="0.00" readonly>
-
-                                                            </div>
-                                                        </div>
-
-
-                                                        <div class="form-group"> <label for="country">
-                                                                <h6><span style="color: red;">*</span> Country</h6>
-                                                            </label>
-                                                            <div class="input-group">
-
-                                                                <div class="input-group-append"> <span
-                                                                        class="input-group-text text-muted">
-                                                                        <img
-                                                                            src="https://img.icons8.com/external-flat-icons-inmotus-design/25/000000/external-country-globe-geography-flat-icons-inmotus-design.png" /></span>
-                                                                </div>
-                                                                <select name="country" id="country"
-                                                                    class="form-control" required>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="form-group"> <label for="state">
-                                                                <h6><span style="color: red;">*</span> State/Province
-                                                                </h6>
-                                                            </label>
-                                                            <div class="input-group">
-
-                                                                <div class="input-group-append"> <span
-                                                                        class="input-group-text text-muted">
-                                                                        <img
-                                                                            src="https://img.icons8.com/external-flat-icons-inmotus-design/25/000000/external-country-globe-geography-flat-icons-inmotus-design.png" /></span>
-                                                                </div>
-                                                                <select name="state" id="state" class="form-control"
-                                                                    required>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-
-
-                                                        <div class="form-group"> <label for="purpose">
-                                                                <h6><span style="color: red;">*</span> Purpose of
-                                                                    Payment</h6>
-                                                            </label>
-                                                            <div class="input-group">
-
-                                                                <div class="input-group-append"> <span
-                                                                        class="input-group-text text-muted">
-                                                                        <img
-                                                                            src="https://img.icons8.com/nolan/25/shopping-cart-promotion.png" /></span>
-                                                                </div>
-                                                                <input type="text" name="purpose"
-                                                                    class="form-control" id="purpose"
-                                                                    value="Purchase of {{ count($data['getCart']) }} items from {{ $data['paymentorg']->businessname }}"
-                                                                    readonly>
-                                                            </div>
-                                                        </div>
-
-
-
-                                                        {{-- Condition Payment Gateway --}}
-
-                                                        @if ($data['paymentgateway']->gateway == 'Moneris')
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group"> <label for="cardType">
-                                                                            <h6><span style="color: red;">*</span>
-                                                                                Select
-                                                                                Card Type
-                                                                            </h6>
-                                                                        </label>
-                                                                        <div class="input-group">
-
-                                                                            <div class="input-group-append"> <span
-                                                                                    class="input-group-text text-muted">
-                                                                                    <img
-                                                                                        src="https://img.icons8.com/office/25/000000/mastercard-credit-card.png" /></span>
-                                                                            </div>
-                                                                            <select name="cardType" id="cardType"
-                                                                                class="form-control" required>
-                                                                                <option value="">Select Card Type
-                                                                                </option>
-                                                                                <option value="Credit Card">Credit Card
-                                                                                </option>
-                                                                                <option value="Debit Card">Debit Card
-                                                                                </option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group"> <label
-                                                                            for="cardNumber">
-                                                                            <h6><span style="color: red;">*</span> Card
-                                                                                Number
-                                                                            </h6>
-                                                                        </label>
-                                                                        <div class="input-group">
-
-                                                                            <div class="input-group-append"> <span
-                                                                                    class="input-group-text text-muted">
-                                                                                    <img
-                                                                                        src="https://img.icons8.com/external-prettycons-flat-prettycons/25/000000/external-payment-method-shopping-prettycons-flat-prettycons.png" /></span>
-                                                                            </div>
-                                                                            <input type="number" name="cardNumber"
-                                                                                class="form-control" id="cardNumber"
-                                                                                value="" placeholder="5411331234212345">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group"> <label
-                                                                            for="cardMonth">
-                                                                            <h6><span style="color: red;">*</span> Month
-                                                                            </h6>
-                                                                        </label>
-                                                                        <div class="input-group">
-
-                                                                            <div class="input-group-append"> <span
-                                                                                    class="input-group-text text-muted">
-                                                                                    <img
-                                                                                        src="https://img.icons8.com/external-flaticons-flat-flat-icons/25/000000/external-month-morning-flaticons-flat-flat-icons-2.png" /></span>
-                                                                            </div>
-                                                                            <input type="number" name="cardMonth"
-                                                                                class="form-control" id="cardMonth"
-                                                                                value="" placeholder="Expiry Month:"
-                                                                                min="01" step="01">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group"> <label for="cardYear">
-                                                                            <h6><span style="color: red;">*</span> Card
-                                                                                Year
-                                                                            </h6>
-                                                                        </label>
-                                                                        <div class="input-group">
-
-                                                                            <div class="input-group-append"> <span
-                                                                                    class="input-group-text text-muted">
-                                                                                    <img
-                                                                                        src="https://img.icons8.com/external-flaticons-flat-flat-icons/25/000000/external-year-morning-flaticons-flat-flat-icons.png" /></span>
-                                                                            </div>
-                                                                            <input type="number" name="cardYear"
-                                                                                class="form-control" id="cardYear"
-                                                                                value="" placeholder="Expiry Year:"
-                                                                                min="01" step="01">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        @endif
-
-                                                        @if ($data['paymentgateway']->gateway == 'Stripe')
-                                                            <div class="form-group"> <label for="card-elemet">
-                                                                    <h6>Card Detail</h6>
+                                                            <div class="form-group"> <label for="firstname">
+                                                                    <h6><span style="color: red;">*</span> Please enter
+                                                                        your
+                                                                        First Name</h6>
                                                                 </label>
-                                                                <div id="card-element"></div>
+                                                                <div class="input-group">
+
+                                                                    <div class="input-group-append"> <span
+                                                                            class="input-group-text text-muted">
+                                                                            <img
+                                                                                src="https://img.icons8.com/stickers/25/000000/user.png" /></span>
+                                                                    </div> <input type="text" name="firstname"
+                                                                        id="firstname" class="form-control"
+                                                                        placeholder="First Name:" required>
+
+                                                                    <input type="hidden" name="route" value="estore">
+                                                                    <input type="hidden" name="accountNumber"
+                                                                        value="{{ Auth::user()->ref_code }}">
+                                                                    <input type="hidden" name="mode"
+                                                                        value="{{ env('APP_ENV') == 'local' ? 'test' : 'live' }}">
+                                                                    <input type="hidden" name="paymentToken"
+                                                                        class="form-control" id="paymentToken"
+                                                                        value="" readonly>
+                                                                </div>
                                                             </div>
-                                                        @endif
 
+                                                            <div class="form-group"> <label for="lastname">
+                                                                    <h6><span style="color: red;">*</span> Please enter
+                                                                        your
+                                                                        Last Name</h6>
+                                                                </label>
+                                                                <div class="input-group">
 
-
-
-                                                        <div class="form-group">
-                                                            <div class="commissionInfo"></div>
-                                                        </div>
-
-
-                                                        <div class="form-group disp-0">
-                                                            <div class="input-group">
-                                                                <p style="color: red; font-weight: bold;"><input
-                                                                        type="checkbox" name="commission"
-                                                                        id="commission" checked="checked"> Include fee
-                                                                </p>
-
+                                                                    <div class="input-group-append"> <span
+                                                                            class="input-group-text text-muted">
+                                                                            <img
+                                                                                src="https://img.icons8.com/stickers/25/000000/user.png" /></span>
+                                                                    </div> <input type="text" name="lastname"
+                                                                        id="lastname" class="form-control"
+                                                                        placeholder="Last Name:" required>
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                            <div class="form-group"> <label for="email">
+                                                                    <h6><span style="color: red;">*</span> Email Address
+                                                                    </h6>
+                                                                </label>
+                                                                <div class="input-group">
 
-
-                                                        @if ($data['paymentgateway']->gateway == 'PayStack' || $data['paymentgateway']->gateway == 'Express Payment Solution')
-                                                            <div class="form-group mt-4">
-
-                                                                <button type="button" onclick="estoreWithEPS()"
-                                                                    class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn">
-                                                                    Make Payment </button>
+                                                                    <div class="input-group-append"> <span
+                                                                            class="input-group-text text-muted">
+                                                                            <img
+                                                                                src="https://img.icons8.com/color/25/000000/email-sign.png" /></span>
+                                                                    </div> <input type="email" name="email" id="email"
+                                                                        class="form-control"
+                                                                        placeholder="Email Address:" required>
+                                                                </div>
                                                             </div>
-                                                        @elseif($data['paymentgateway']->gateway == 'Stripe')
-                                                            <div class="form-group mt-4">
+                                                            <div class="form-group"> <label for="phone">
+                                                                    <h6><span style="color: red;">*</span> Phone Number
+                                                                    </h6>
+                                                                </label>
+                                                                <div class="input-group">
 
-                                                                <button type="submit"
-                                                                    class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn">
-                                                                    Make Payment </button>
+                                                                    <div class="input-group-append"> <span
+                                                                            class="input-group-text text-muted">
+                                                                            <img
+                                                                                src="https://img.icons8.com/external-icongeek26-flat-icongeek26/25/000000/external-phone-essentials-icongeek26-flat-icongeek26.png" /></span>
+                                                                    </div> <input type="text" name="phone" id="phone"
+                                                                        class="form-control"
+                                                                        placeholder="Phone Number:" required>
+                                                                </div>
                                                             </div>
-                                                        @elseif($data['paymentgateway']->gateway == 'PayPal')
-                                                            {{-- PayPal --}}
-                                                            <div class="card-footer" id="paypal-button-container">
+
+
+                                                            <div
+                                                                class="form-group @if ($data['currencyCode']->currencyCode != $data['paymentorg']->currencyCode) disp-0 @endif ">
+                                                                <label for="amount">
+                                                                    <h6><span style="color: red;">*</span>Amount</h6>
+                                                                </label>
+                                                                <div class="input-group">
+
+                                                                    <div class="input-group-append"> <span
+                                                                            class="input-group-text text-muted">
+                                                                            {{ $data['currencyCode']->currencySymbol }}</span>
+                                                                    </div>
+                                                                    <input type="text" name="amount"
+                                                                        class="form-control" id="amounttosend"
+                                                                        value="{{ sprintf('%.2f', $totalCost) }}"
+                                                                        placeholder="0.00" readonly>
+
+                                                                    <input type="hidden" name="conversionamount"
+                                                                        class="form-control" id="conversionamount"
+                                                                        value="" placeholder="0.00" readonly>
+                                                                </div>
                                                             </div>
-                                                        @else
-                                                            <div class="form-group mt-4">
 
-                                                                <button type="button"
-                                                                    onclick="handShake('estore_payment')"
-                                                                    class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn">
-                                                                    Make Payment </button>
+
+                                                            <div
+                                                                class="form-group @if ($data['currencyCode']->currencyCode == $data['paymentorg']->currencyCode) disp-0 @endif">
+                                                                <label for="amount">
+                                                                    <h6><span style="color: red;">*</span>Amount</h6>
+                                                                </label>
+                                                                <div class="input-group">
+
+                                                                    <div class="input-group-append"> <span
+                                                                            class="input-group-text text-muted">
+                                                                            {{ $data['currencyCode']->currencySymbol }}</span>
+                                                                    </div>
+
+                                                                    <input type="text" name="conversionamount"
+                                                                        class="form-control conversionamount"
+                                                                        id="conversionamount" value=""
+                                                                        placeholder="0.00" readonly>
+                                                                </div>
                                                             </div>
-                                                        @endif
+
+
+                                                            <div class="form-group disp-0"> <label
+                                                                    for="commissiondeduct">
+                                                                    <h6>Fee Charge</h6>
+                                                                </label>
+                                                                <div class="input-group">
+                                                                    <input type="text" name="commissiondeduct"
+                                                                        class="form-control commissiondeduct"
+                                                                        id="commissiondeduct" value=""
+                                                                        placeholder="0.00" readonly>
+
+                                                                    <input type="hidden" name="totalcharge"
+                                                                        class="form-control" id="totalcharge"
+                                                                        value="" placeholder="0.00" readonly>
+
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="form-group"> <label for="country">
+                                                                    <h6><span style="color: red;">*</span> Country</h6>
+                                                                </label>
+                                                                <div class="input-group">
+
+                                                                    <div class="input-group-append"> <span
+                                                                            class="input-group-text text-muted">
+                                                                            <img
+                                                                                src="https://img.icons8.com/external-flat-icons-inmotus-design/25/000000/external-country-globe-geography-flat-icons-inmotus-design.png" /></span>
+                                                                    </div>
+                                                                    <select name="country" id="country"
+                                                                        class="form-control" required>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group"> <label for="state">
+                                                                    <h6><span style="color: red;">*</span>
+                                                                        State/Province
+                                                                    </h6>
+                                                                </label>
+                                                                <div class="input-group">
+
+                                                                    <div class="input-group-append"> <span
+                                                                            class="input-group-text text-muted">
+                                                                            <img
+                                                                                src="https://img.icons8.com/external-flat-icons-inmotus-design/25/000000/external-country-globe-geography-flat-icons-inmotus-design.png" /></span>
+                                                                    </div>
+                                                                    <select name="state" id="state"
+                                                                        class="form-control" required>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="form-group"> <label for="purpose">
+                                                                    <h6><span style="color: red;">*</span> Purpose of
+                                                                        Payment</h6>
+                                                                </label>
+                                                                <div class="input-group">
+
+                                                                    <div class="input-group-append"> <span
+                                                                            class="input-group-text text-muted">
+                                                                            <img
+                                                                                src="https://img.icons8.com/nolan/25/shopping-cart-promotion.png" /></span>
+                                                                    </div>
+                                                                    <input type="text" name="purpose"
+                                                                        class="form-control" id="purpose"
+                                                                        value="Purchase of {{ count($data['getCart']) }} items from {{ $data['paymentorg']->businessname }}"
+                                                                        readonly>
+                                                                </div>
+                                                            </div>
+
+
+
+                                                            {{-- Condition Payment Gateway --}}
+
+                                                            @if ($data['paymentgateway']->gateway == 'Moneris')
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group"> <label
+                                                                                for="cardType">
+                                                                                <h6><span style="color: red;">*</span>
+                                                                                    Select
+                                                                                    Card Type
+                                                                                </h6>
+                                                                            </label>
+                                                                            <div class="input-group">
+
+                                                                                <div class="input-group-append"> <span
+                                                                                        class="input-group-text text-muted">
+                                                                                        <img
+                                                                                            src="https://img.icons8.com/office/25/000000/mastercard-credit-card.png" /></span>
+                                                                                </div>
+                                                                                <select name="cardType" id="cardType"
+                                                                                    class="form-control" required>
+                                                                                    <option value="">Select Card Type
+                                                                                    </option>
+                                                                                    <option value="Credit Card">Credit
+                                                                                        Card
+                                                                                    </option>
+                                                                                    <option value="Debit Card">Debit
+                                                                                        Card
+                                                                                    </option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group"> <label
+                                                                                for="cardNumber">
+                                                                                <h6><span style="color: red;">*</span>
+                                                                                    Card
+                                                                                    Number
+                                                                                </h6>
+                                                                            </label>
+                                                                            <div class="input-group">
+
+                                                                                <div class="input-group-append"> <span
+                                                                                        class="input-group-text text-muted">
+                                                                                        <img
+                                                                                            src="https://img.icons8.com/external-prettycons-flat-prettycons/25/000000/external-payment-method-shopping-prettycons-flat-prettycons.png" /></span>
+                                                                                </div>
+                                                                                <input type="number" name="cardNumber"
+                                                                                    class="form-control"
+                                                                                    id="cardNumber" value=""
+                                                                                    placeholder="5411331234212345">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group"> <label
+                                                                                for="cardMonth">
+                                                                                <h6><span style="color: red;">*</span>
+                                                                                    Month
+                                                                                </h6>
+                                                                            </label>
+                                                                            <div class="input-group">
+
+                                                                                <div class="input-group-append"> <span
+                                                                                        class="input-group-text text-muted">
+                                                                                        <img
+                                                                                            src="https://img.icons8.com/external-flaticons-flat-flat-icons/25/000000/external-month-morning-flaticons-flat-flat-icons-2.png" /></span>
+                                                                                </div>
+                                                                                <input type="number" name="cardMonth"
+                                                                                    class="form-control"
+                                                                                    id="cardMonth" value=""
+                                                                                    placeholder="Expiry Month:" min="01"
+                                                                                    step="01">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group"> <label
+                                                                                for="cardYear">
+                                                                                <h6><span style="color: red;">*</span>
+                                                                                    Card
+                                                                                    Year
+                                                                                </h6>
+                                                                            </label>
+                                                                            <div class="input-group">
+
+                                                                                <div class="input-group-append"> <span
+                                                                                        class="input-group-text text-muted">
+                                                                                        <img
+                                                                                            src="https://img.icons8.com/external-flaticons-flat-flat-icons/25/000000/external-year-morning-flaticons-flat-flat-icons.png" /></span>
+                                                                                </div>
+                                                                                <input type="number" name="cardYear"
+                                                                                    class="form-control"
+                                                                                    id="cardYear" value=""
+                                                                                    placeholder="Expiry Year:" min="01"
+                                                                                    step="01">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @endif
+
+                                                            @if ($data['paymentgateway']->gateway == 'Stripe')
+                                                                <div class="form-group"> <label for="card-elemet">
+                                                                        <h6>Card Detail</h6>
+                                                                    </label>
+                                                                    <div id="card-element"></div>
+                                                                </div>
+                                                            @endif
 
 
 
 
-                                                    </form>
+                                                            <div class="form-group">
+                                                                <div class="commissionInfo"></div>
+                                                            </div>
+
+
+                                                            <div class="form-group disp-0">
+                                                                <div class="input-group">
+                                                                    <p style="color: red; font-weight: bold;"><input
+                                                                            type="checkbox" name="commission"
+                                                                            id="commission" checked="checked"> Include
+                                                                        fee
+                                                                    </p>
+
+                                                                </div>
+                                                            </div>
+
+
+                                                            @if ($data['paymentgateway']->gateway == 'PayStack' || $data['paymentgateway']->gateway == 'Express Payment Solution')
+                                                                <div class="form-group mt-4">
+
+                                                                    <button type="button" onclick="estoreWithEPS()"
+                                                                        class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn">
+                                                                        Make Payment </button>
+                                                                </div>
+                                                            @elseif($data['paymentgateway']->gateway == 'Stripe')
+                                                                <div class="form-group mt-4">
+
+                                                                    <button type="submit"
+                                                                        class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn">
+                                                                        Make Payment </button>
+                                                                </div>
+                                                            @elseif($data['paymentgateway']->gateway == 'PayPal')
+                                                                {{-- PayPal --}}
+                                                                <div class="card-footer"
+                                                                    id="paypal-button-container">
+                                                                </div>
+                                                            @else
+                                                                <div class="form-group mt-4">
+
+                                                                    <button type="button"
+                                                                        onclick="handShake('estore_payment')"
+                                                                        class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn">
+                                                                        Make Payment </button>
+                                                                </div>
+                                                            @endif
+
+
+
+
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        @else
+                                            <div class="alert alert-danger mt-5">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+
+                                                        <h5 class="text-center">
+                                                            This Service is available only to PaySprint Users that have
+                                                            been verified
+                                                        </h5>
+
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        @endif
+
+
+
+
 
 
 
@@ -784,13 +825,13 @@
                                                                 <a href="https://play.google.com/store/apps/details?id=com.fursee.damilare.sprint_mobile"
                                                                     target="_blank"
                                                                     class="btn text-white gr-hover-y px-lg-9">
-                                                                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1620148943/paysprint_asset/l6-download-gplay_o9rcfj.png"
+                                                                    <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130088/assets/l6-download-gplay_o9rcfj_l6erwf.png"
                                                                         alt="play store" width="100%">
                                                                 </a>
                                                                 <a href="https://apps.apple.com/gb/app/paysprint/id1567742130"
                                                                     target="_blank"
                                                                     class="btn text-white gr-hover-y px-lg-9">
-                                                                    <img src="https://res.cloudinary.com/pilstech/image/upload/v1620148943/paysprint_asset/l6-download-appstore_odcskf.png"
+                                                                    <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130088/assets/l6-download-appstore_odcskf_atgygf.png"
                                                                         alt="apple store" width="100%">
                                                                 </a>
                                                             </div>
@@ -1112,6 +1153,7 @@
                         data: data
                     });
 
+
                     $('.errorBalance').text('');
 
                     if (result.status === 200) {
@@ -1147,10 +1189,12 @@
 
 
         async function handShake(val) {
+            $('.sendmoneyBtn').text('Please wait...');
+
+
 
             try {
 
-                $('.sendmoneyBtn').text('Processing...');
 
                 var data = new FormData(forVisitors);
                 var headers = {
@@ -1167,10 +1211,12 @@
 
 
 
-                $('.sendmoneyBtn').text('Make Payment');
 
 
                 const response = await axios(config);
+
+                $('.sendmoneyBtn').text('Make Payment');
+
 
 
                 swal("Great", response.data.message, "success");
@@ -1251,6 +1297,7 @@
 
         function runCommission() {
 
+
             $('.commissionInfo').html("");
             $(".convertedCommission").html("");
             var amount = $("#amounttosend").val();
@@ -1272,10 +1319,12 @@
 
 
 
+
+
             Pace.restart();
             Pace.track(function() {
 
-                mainHeaders();
+                authHeaders();
 
                 jQuery.ajax({
                     url: route,
@@ -1290,7 +1339,6 @@
                     success: function(result) {
 
 
-                        console.log(result);
 
                         var totalCharge;
 
@@ -1561,6 +1609,16 @@
                 headers: {
                     'X-CSRF-TOKEN': "{{ csrf_token() }}",
                     'Authorization': 'Bearer {{ $data['merchantMainApiKey'] }}'
+                }
+            });
+        }
+
+
+        function authHeaders() {
+            jQuery.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                    'Authorization': 'Bearer {{ Auth::user()->api_token }}'
                 }
             });
         }

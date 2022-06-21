@@ -314,7 +314,7 @@ class Dashboard extends Component {
 														<div className="col-auto">
 															<img
 																className="avatar-img"
-																src="https://res.cloudinary.com/pilstech/image/upload/v1633681766/paysprint_asset/wallet-balance_qluod6.svg"
+																src="https://res.cloudinary.com/paysprint/image/upload/v1651130091/assets/wallet-balance_qluod6_mtzkno.svg"
 																alt="Avatars"
 															/>
 														</div>

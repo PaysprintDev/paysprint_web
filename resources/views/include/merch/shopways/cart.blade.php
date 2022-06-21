@@ -1,5 +1,7 @@
        <!-- mini cart start -->
-       <div class="mini-cart">
+
+
+       <div class="mini-cart" id="cartRec">
            <a href="javascript:void(0)" class="shopping-cart-close"><i class="ion-close-round"></i></a>
            <div class="cart-item-title">
                <p>
@@ -11,9 +13,9 @@
            <ul class="cart-item-loop">
 
                @php
-                   
+
                    $totalPrice = 0;
-                   
+
                @endphp
 
                @if (count($data['mycartlist']) > 0)
@@ -39,7 +41,8 @@
                                            class="price-box">{{ $data['user']->currencySymbol . number_format($cartList->price * $cartList->quantity, 2) }}</span>
                                    </div>
                                    <div class="delete-item-cart">
-                                       <a href="javascript:void(0)"><i class="icon-trash icons"></i></a>
+                                       <a href="javascript:void(0)" onclick="deleteFromCart('{{ $cartList->id }}')"><i
+                                               class="icon-trash icons"></i></a>
                                    </div>
                                </div>
                            </div>

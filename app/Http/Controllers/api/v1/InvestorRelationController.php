@@ -46,9 +46,9 @@ class InvestorRelationController extends Controller
                     'country' => $req->country,
                     'state' => $req->state,
                     'city' => $req->city
-                ] 
-            
-                
+                ]
+
+
             );
 
 
@@ -111,11 +111,11 @@ class InvestorRelationController extends Controller
 
                         InvestorRelation::where('email', $req->email)->update(['apiToken' => $apiToken]);
 
-                        
+
                         $data = InvestorRelation::where('email', $req->email)->first();
                         $status = 200;
                         $message = "Success";
-                        
+
 
                     }
                     else{
@@ -127,7 +127,7 @@ class InvestorRelationController extends Controller
 
                 }
                 else{
-                    
+
                     $data = [];
                     $status = 400;
                     $message = "Invalid email address or password";
@@ -153,7 +153,7 @@ class InvestorRelationController extends Controller
 
         return $this->returnJSON($resData, $status);
 
-        
+
 
     }
 
@@ -169,7 +169,7 @@ class InvestorRelationController extends Controller
 
             if ($validator->passes()) {
 
-                
+
             $getInvestor = InvestorRelation::where('email', $req->email)->first();
 
             if(isset($getInvestor)){
@@ -209,7 +209,7 @@ class InvestorRelationController extends Controller
 
 
 
-            
+
         } catch (\Throwable $th) {
             $data = [];
             $message = $th->getMessage();
@@ -236,7 +236,7 @@ class InvestorRelationController extends Controller
 
 
                 if($req->newPassword != $req->confirmPassword){
-                    
+
                     $data = [];
                     $status = 400;
                     $message = "Confirm passwords do not match";
@@ -245,9 +245,9 @@ class InvestorRelationController extends Controller
 
                     $email = base64_decode($req->email);
                     $password = Hash::make($req->newPassword);
-                    
+
                    InvestorRelation::where('email', $email)->update(['password' => $password]);
-                   
+
 
                    // Get Data
                     $data = InvestorRelation::where('email', $email)->first();
@@ -265,7 +265,7 @@ class InvestorRelationController extends Controller
                 $message = $error;
             }
 
-            
+
         } catch (\Throwable $th) {
             $data = [];
             $message = $th->getMessage();
@@ -279,7 +279,7 @@ class InvestorRelationController extends Controller
     }
 
     public function investorInterestPayload (Request $req)
-    {   
+    {
         try {
         $validator=Validator::make($req->all(),[
               'button' => 'required'
@@ -290,7 +290,7 @@ class InvestorRelationController extends Controller
         $data=$post->investment_document;
         $message='success';
         $status=200;
-              
+
 
          }else{
              $data=[];
@@ -301,7 +301,7 @@ class InvestorRelationController extends Controller
         } catch (\Throwable $th){
             $data = [];
             $message = $th->getMessage();
-            $status = 400;    
+            $status = 400;
         }
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
@@ -406,7 +406,7 @@ class InvestorRelationController extends Controller
         // TODO 4:: Check if TODO 3 exists with DATA...
         // TODO 5:: If exists with data, Make file accessible and disable express interest button in the view
         // TODO 6:: Else Do not make file accessible
-      
+
 
         try {
             $users=InvestorRelation::where('apiToken', $req->apiToken)->first();
@@ -422,10 +422,8 @@ class InvestorRelationController extends Controller
 
             $userId=$users->id;
 
-            // dd($userId);
+            $getInterest = ExpressInterest::where('postId', $req->postId)->where('userId', $userId)->first();
 
-            $getInterest = ExpressInterest::where('id', $req->postId)->where('userId', $userId)->first();
-                
             if(isset($getInterest)){
 
                 $data = $getInterest->investment_document;
@@ -437,11 +435,11 @@ class InvestorRelationController extends Controller
                 $message = 'Not Available';
                 $status = 200;
             }
-            
 
 
-            
-            
+
+
+
         } catch (\Throwable $th) {
             //throw $th;
             $data = [];
@@ -451,7 +449,7 @@ class InvestorRelationController extends Controller
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
-        
+
 
     }
 
@@ -480,14 +478,6 @@ class InvestorRelationController extends Controller
 
     return $this->returnJSON($resData, $status);
 
-  
-  }
-  
-   
-      
-   
-
- 
-   
 }
 
+}

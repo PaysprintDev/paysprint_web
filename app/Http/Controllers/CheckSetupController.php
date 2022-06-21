@@ -57,7 +57,7 @@ class CheckSetupController extends Controller
                 $info = $this->accountInfo($value->id);
 
                 if ($value->approval == 0) {
-                    $approval = "<li>Upload a copy of Government Issued Photo ID</li>";
+                    $approval = "<li>Upload a copy of Government Issued Photo ID, Utility bill and Selfie of yourself taking with your Government issued photo ID</li>";
                 } else {
                     $approval = "";
                 }
@@ -67,6 +67,12 @@ class CheckSetupController extends Controller
                     $transaction = "<li>Set Up Transaction Pin-You will need the PIN to Send Money, Pay Invoice/Bill or Withdraw Money from Your PaySprint Account</li>";
                 } else {
                     $transaction = "";
+                }
+
+                if ($value->avatar == null) {
+                    $avatar = "<li>Upload a selfie of yourself</li>";
+                } else {
+                    $avatar = "";
                 }
                 if ($value->securityQuestion == null) {
                     $security = "<li>Set up Security Question and Answer-You will need this to reset your PIN code or Login Password</li>";
@@ -92,12 +98,12 @@ class CheckSetupController extends Controller
                     $this->email = $value->email;
                     $this->subject = "You have some incomplete information on your PaySprint account";
 
-                    $this->message = '<p>We noticed you are yet to properly complete the set-up your PaySprint Account. You need to provide the outstanding information and complete the quick set up in order to enjoy the full benefits of a PaySprint Account.</p><p><ul>' . $approval . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card . '</ul></p><p>Kindly complete these important steps in your profile. <a href=' . route('profile') . ' class="text-primary" style="text-decoration: underline">Click here to login to your account</a></p>';
+                    $this->message = '<p>We noticed you are yet to properly complete the set-up your PaySprint Account. You need to provide the outstanding information and complete the quick set up in order to enjoy the full benefits of a PaySprint Account.</p><p><ul>' . $approval . '' . $avatar . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card . '</ul></p><p>Kindly complete these important steps in your profile. <a href=' . route('profile') . ' class="text-primary" style="text-decoration: underline">Click here to login to your account</a></p>';
 
 
-                    $this->mailListCategorize($this->name, $this->email, $value->address, $value->telephone, 'Quick Setup', $value->country, 'Subscription');
+                    // $this->mailListCategorize($this->name, $this->email, $value->address, $value->telephone, 'Quick Setup', $value->country, 'Subscription');
 
-                    // $this->sendEmail($this->email, "Incomplete Setup");
+                    $this->sendEmail($this->email, "Incomplete Setup");
                     // $this->sendCampaign($this->subject, $this->message, $this->email, $this->name);
 
                     // Log::info('Quick wallet set up cron sent to '.$this->name);
@@ -1103,7 +1109,7 @@ class CheckSetupController extends Controller
                     RequestRefund::where('user_id', $value->id)->update(['country' => $value->country]);
                 }
             } else {
-                // 
+                //
             }
         } catch (\Throwable $th) {
             // Log::error($th->getMessage());
@@ -1294,7 +1300,134 @@ class CheckSetupController extends Controller
             $this->slack('EXBC Card Request Error Module checkExbcCardRequest() line 1235: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
 
-        
+
+    }
+
+    public function idvNotifationMessage(){
+        try{
+
+            // Get the IDV Completed Pending User
+            $getUsers = User::where('account_check', 1)->inRandomOrder()->take(500)->get();
+
+            foreach ($getUsers as $value) {
+                // Send Mail...
+
+                $info = $this->accountInfo($value->id);
+
+                if ($value->approval == 0) {
+                    $approval = "<li>Upload a copy of Government Issued Photo ID, Utility bill and Selfie of yourself taking with your Government issued photo ID</li>";
+                } else {
+                    $approval = "";
+                }
+
+
+                if ($value->transaction_pin == null) {
+                    $transaction = "<li>Set Up Transaction Pin-You will need the PIN to Send Money, Pay Invoice/Bill or Withdraw Money from Your PaySprint Account</li>";
+                } else {
+                    $transaction = "";
+                }
+
+                if ($value->avatar == null) {
+                    $avatar = "<li>Upload a selfie of yourself</li>";
+                } else {
+                    $avatar = "";
+                }
+                if ($value->securityQuestion == null) {
+                    $security = "<li>Set up Security Question and Answer-You will need this to reset your PIN code or Login Password</li>";
+                } else {
+                    $security = "";
+                }
+                if ($value->country == "Nigeria" && $value->bvn_verification == null) {
+                    $bankVerify = "<li>Verify your account with your bank verification number</li>";
+                } else {
+                    $bankVerify = "";
+                }
+                if ($info == 0) {
+                    $card = "<li>Add Credit Card/Prepaid Card/Bank Account-You need this to add money to your PaySprint Wallet.</li>";
+                } else {
+                    $card = "";
+                }
+
+                if ($value->approval == 0 || $value->transaction_pin == null || $value->securityQuestion == null || $info == 0) {
+
+
+                    $sendMsg = 'Your PaySprint Account is Ready for Approval. Kindly upload the below listed files now. ' . $approval . '' . $avatar . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card . '. Try uploading on www.paysprint.ca if you have difficulty in uploading on the mobile app. Compliance Team';
+
+                    $this->createNotification($value->ref_code, $sendMsg);
+
+
+                }
+
+            }
+
+
+            echo "Done uploading!";
+
+
+        }
+        catch(\Throwable $th){
+
+        }
+    }
+
+
+
+    // Notify User of Merchants Shop
+
+    public function merchantsShopService(){
+        try {
+            //Get Clients, order by industry and mail customers with clients with complete info....
+            $client = ClientInfo::where('description', '!=', NULL)->inRandomOrder()->groupBy('industry')->take(10)->get();
+
+
+
+            $table = "";
+            $tabledetails = "";
+
+            foreach($client as $clients){
+                $business_name = $clients->business_name;
+                $industry = $clients->industry;
+                $telephone = $clients->telephone;
+                $email = $clients->email;
+                $nature_of_business = $clients->nature_of_business;
+                $address = $clients->address;
+                $state = $clients->state;
+                $country = $clients->country;
+                $description = $clients->description;
+
+
+                $tabledetails = "<tr><td><strong>Business Name:</strong> ".$business_name."</td></tr><tr><td><strong>Industry:</strong> ".$industry."</td></tr><tr><td><strong>Nature of Business:</strong> ".$nature_of_business."</td></tr><tr><td><strong>Telephone:</strong> ".$telephone."</td><td><strong>Email:</strong> ".$email."</td></tr><tr><td><strong>Address:</strong> ".$address."</td></tr><tr><td><strong>State:</strong> ".$state."</td></tr><tr><td><strong>Country:</strong> ".$country."</td></tr><tr><td><strong>Description of Business:</strong> ".$description."</td></tr>";
+
+                $table .= $tabledetails."<hr>";
+
+
+            }
+
+
+                // Get Customers Information
+
+
+                $users = User::where('accountType', '!=', 'Merchant')->inRandomOrder()->take(500)->get();
+
+                foreach ($users as $user) {
+                    $this->name = $user->name;
+                    $this->email = $user->email;
+                    // $this->email = 'adenugaadebambo41@gmail.com';
+                    $this->subject = "Merchants on PaySprint";
+
+                    $this->message = "<p>Here are the list of Merchants that may interest you this week: </p><p><table>".$table."<tbody></tbody></table></p>";
+
+
+                    $this->sendEmail($this->email, "Incomplete Setup");
+                }
+
+
+
+                echo "Done";
+
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 
 
@@ -1306,7 +1439,7 @@ class CheckSetupController extends Controller
 
 
             foreach($getUsers as $user){
-                
+
                 $getthis = $this->getTransRec($user->transactionRecordId);
 
 
@@ -1314,7 +1447,7 @@ class CheckSetupController extends Controller
 
                 if(gettype($getthis) == 'string' || gettype($getthis) == NULL){
                     $newresponse = $this->transStatus($user->transactionRecordId);
-                    
+
                     $checker = $this->getTransRec($newresponse->TransactionRecordId);
 
 
@@ -1363,7 +1496,7 @@ class CheckSetupController extends Controller
     public function moveFromFailedToPass(){
 
         try {
-            
+
             $getFailedUsers = User::where([['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->where('country', 'Nigeria')->get();
 
 
@@ -1389,7 +1522,7 @@ class CheckSetupController extends Controller
 
                 }
 
-                
+
             }
 
 
@@ -1404,11 +1537,8 @@ class CheckSetupController extends Controller
     public function moveFromPassedToCompletedPending(){
 
         try {
-            
+
             $getPassedUsers = User::where([['accountLevel', '=', 2], ['approval', '=', 1], ['account_check', '=', 0]])->where('country', 'India')->get();
-
-            dd($getPassedUsers);
-
 
             if(count($getPassedUsers) > 0){
                 foreach($getPassedUsers as $users){
@@ -1432,7 +1562,7 @@ class CheckSetupController extends Controller
 
                 }
 
-                
+
             }
 
 
@@ -1453,16 +1583,22 @@ class CheckSetupController extends Controller
 
                 foreach($getMerchants as $users){
 
+                    // Get Business Profile Information...
+
+                    $client = ClientInfo::where('user_id', $users->ref_code)->first();
+
 
                     $this->name = $users->name;
                     $this->email = $users->email;
                     // $this->email = 'adenugaadebambo41@gmail.com';
                     $this->subject = "Complete your business profile today";
 
-                    $this->message = "<p>Do you know that merchants with complete profile has 20x chance of driving more traffic to their business on PaySprint.</p><p>Complete your business profile today and drive more traffic to your business page.</p><br><p>Thank you for choosing us.</p>";
+                    // $this->message = "<p>Do you know that merchants with complete profile has 20x chance of driving more traffic to their business on PaySprint.</p><p>Complete your business profile today and drive more traffic to your business page.</p><br><p>Thank you for choosing us.</p>";
+                    $this->message = "<p>We want to inform you that your business page on PaySprint is receiving below the average visitors' traffic when compared to other businesses listed
+in the your business category.</p> <p>This means your competitors are receiving more business leads from PaySprint.</p><br><p>The information provided on your business page is as shown below:</p><div class='container-box'> <div class='small-box'> <h4>Business Name: ".$client->business_name."</h4> <p><b>Industry:</b> (".$client->industry.") </p> <p><b>Tel:</b> ".$client->telephone." </p> <p><b>Website:</b> $client->website</p> </div> <div class='content-box'> <p class='address'><b>Address:</b> ".$client->address."</p> <p class='location'><b>Location:</b> ".$client->state.", ".$client->country." </p>  <div class='description'><b>Description:</b> ".$client->description." </div> </div> </div><br><p>Visitors to your business page need to know more about you and your business.</p><p><a href='".route('AdminLogin')."'>Click HERE to Login to your merchant account</a> and complete the business profile today</p>";
 
 
-                    $this->sendEmail($this->email, "Incomplete Setup");
+                    $this->sendEmail($this->email, "Business Page Setup");
 
 
                     echo "Sent Mail To ".$users->name."<hr>";
@@ -1554,7 +1690,7 @@ class CheckSetupController extends Controller
 
     public function giveAccountCheckUpgrade(){
         $users = User::where('account_check', 2)->where('plan', 'basic')->get();
-        
+
         if(count($users) > 0){
             foreach($users as $user){
                 // Update to Classic
@@ -1622,7 +1758,7 @@ class CheckSetupController extends Controller
 
                 $getUsers = User::where('country', $merchants->country)->get();
 
-                    
+
 
 
                 for($i = 0; $i < count($getUsers); $i++){
@@ -1930,6 +2066,8 @@ class CheckSetupController extends Controller
                         $this->mailprocess($email, $name, $subject, $message);
                     }
                 }
+
+                 $this->slack('Monthly Transaction Cron triggered', $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
             } else {
 
                 // Do nothing
@@ -1962,7 +2100,7 @@ class CheckSetupController extends Controller
 
                     if (count($myStatement) > 0) {
 
-                        // Do Nothing ... 
+                        // Do Nothing ...
 
                     }
                     else{
@@ -1998,11 +2136,13 @@ class CheckSetupController extends Controller
 
 
                         $this->mailprocess($email, $name, $subject, $message);
-                        
+
                     }
                 }
 
                 echo "Done";
+
+                $this->slack('Monthly Transaction Cron triggered', $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
             } else {
 
                 // Do nothing
@@ -2187,6 +2327,33 @@ class CheckSetupController extends Controller
         echo "Upgraded Account";
     }
 
+        //public function for merchant test mode
+
+        public function merchantTestMode()
+        {
+            $getUsers=ClientInfo::where('accountMode', 'test')->inRandomOrder()->take(15)->get();
+
+            foreach ($getUsers as $users){
+
+                $this->mailListCategorize($users->business_name, $users->email, $users->address, $users->telephone, "Test Mode Merchant", $users->country, 'Subscription');
+            }
+
+            echo "Done";
+        }
+
+        //public function for merchant Live mode
+
+        public function merchantLiveMode()
+        {
+            $getUsers=ClientInfo::where('accountMode', 'live')->inRandomOrder()->take(15)->get();
+
+            foreach ($getUsers as $users){
+
+                $this->mailListCategorize($users->business_name, $users->email, $users->address, $users->telephone, "Live Mode Merchant", $users->country, 'Subscription');
+            }
+            echo "Done";
+        }
+
 
 
     public function mailprocess($email, $name, $subject, $message)
@@ -2267,7 +2434,7 @@ class CheckSetupController extends Controller
         $objDemo = new \stdClass();
         $objDemo->purpose = $purpose;
 
-        if ($purpose == 'Incomplete Setup') {
+        if ($purpose == 'Incomplete Setup' || $purpose == 'Business Page Setup') {
             $objDemo->name = $this->name;
             $objDemo->email = $this->email;
             $objDemo->subject = $this->subject;

@@ -595,13 +595,13 @@
                                     $.each(res, function(v, k) {
                                         $('#card_id').append(
                                             `<option value="${k.id}">${k.bankName} - ${k.accountNumber}</option>`
-                                            );
+                                        );
                                     });
                                 } else {
                                     $.each(res, function(v, k) {
                                         $('#card_id').append(
-                                            `<option value="${k.id}">${k.card_number} - ${k.card_provider}</option>`
-                                            );
+                                            `<option value="${k.id}">${cardHide(k.card_number)} - ${k.card_provider}</option>`
+                                        );
                                     });
                                 }
 
@@ -624,6 +624,19 @@
 
                 });
 
+            }
+
+
+            function cardHide(card) {
+                let hideNum = [];
+                for (let i = 0; i < card.length; i++) {
+                    if (i < card.length - 4) {
+                        hideNum.push("*");
+                    } else {
+                        hideNum.push(card[i]);
+                    }
+                }
+                return hideNum.join("");
             }
 
 
@@ -684,7 +697,7 @@
                                     " will be deducted from your Wallet. You have a discount of {{ $data['currencyCode']->currencySymbol }}" +
                                     result.data.walletDiscount.toFixed(2) +
                                     " on your {{ strtoupper(Request::get('billername')) }}. Thanks for choosing PaySprint.</span></li></li></ul>"
-                                    );
+                                );
 
                                 $("#amounttosend").val(result.data.walletCharge);
                                 $("#commissiondeduct").val(result.data.walletDiscount);
@@ -1038,7 +1051,7 @@
                                                             dataType: 'JSON',
                                                             success: function(
                                                                 result
-                                                                ) {
+                                                            ) {
 
                                                                 var newAmount =
                                                                     result
@@ -1051,16 +1064,17 @@
                                                                     newAmount
                                                                     .toFixed(
                                                                         2
-                                                                        );
+                                                                    );
 
 
                                                                 if (checkerItem ==
                                                                     "AIRTIME: ₦0 (-)"
-                                                                    ) {
+                                                                ) {
                                                                     getAmount
                                                                         =
                                                                         $(
-                                                                            "#amount")
+                                                                            "#amount"
+                                                                            )
                                                                         .val();
                                                                 } else {
 
@@ -1072,28 +1086,30 @@
 
                                                                 if (payInput ==
                                                                     "amount"
-                                                                    ) {
+                                                                ) {
                                                                     $("#" +
-                                                                            payInput)
+                                                                            payInput
+                                                                            )
                                                                         .val(
                                                                             getAmount
-                                                                            );
+                                                                        );
 
                                                                 } else {
                                                                     $("#amount")
                                                                         .val(
                                                                             getAmount
-                                                                            );
+                                                                        );
                                                                 }
 
 
                                                                 $('#typedAmount')
                                                                     .text(
                                                                         getAmount
-                                                                        );
+                                                                    );
                                                                 currencyConvert
                                                                     (
-                                                                        getAmount);
+                                                                        getAmount
+                                                                        );
 
                                                                 runCommission
                                                                     ();
