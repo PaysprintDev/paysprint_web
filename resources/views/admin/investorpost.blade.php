@@ -24,7 +24,7 @@
                 <div class="box-body">
 
                     {{-- Provide Form --}}
-                    <form role="form" action="{{ route('create investor post') }}" method="POST">
+                    <form role="form" action="{{ route('create investor news') }}" method="POST">
                         @csrf
                         <div class="box-body">
 
