@@ -145,33 +145,53 @@
                         </li>
                     @endauth
 
+
+
+
                     <li class="dropdown submenu">
-                        {{-- <a href="{{ route('payorganization') }}">Send Money</a> --}}
-                        {{-- COnver to Modal popup --}}
-                        @if (Auth::check() == true)
-                            @if (Auth::user()->accountType != 'Individual')
-                                <a href="{{ route('merchant send money', 'type=local') }}">Money Transfer</a>
-                            @else
-                                <a href="javascript:void()" onclick="$('#sendMoney').click()">Money Transfer</a>
-                            @endif
-                        @else
-                            <a href="javascript:void()" onclick="$('#sendMoney').click()">Money Transfer</a>
-                        @endif
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Services<span
+                                class="caret"></span></a>
+
+                        <ul class="dropdown-menu other_dropdwn">
+                            <li class="dropdown submenu">
+                                {{-- <a href="{{ route('payorganization') }}">Send Money</a> --}}
+                                {{-- COnver to Modal popup --}}
+                                @if (Auth::check() == true)
+                                    @if (Auth::user()->accountType != 'Individual')
+                                        <a href="{{ route('merchant send money', 'type=local') }}">Money
+                                            Transfer</a>
+                                    @else
+                                        <a href="javascript:void()" onclick="$('#sendMoney').click()">Money
+                                            Transfer</a>
+                                    @endif
+                                @else
+                                    <a href="javascript:void()" onclick="$('#sendMoney').click()">Money Transfer</a>
+                                @endif
 
 
 
+                            </li>
+
+                            <li class="dropdown submenu">
+
+                                <a
+                                    {{ Auth::user()->accountType != 'Individual' ? 'href=' . route('create single invoice') : 'href=' . route('invoice') }}>Pay
+                                    Invoice</a>
+
+                            </li>
+                        </ul>
+                    </li>
+
+
+
+                    <li class="dropdown submenu">
+                        <a
+                            {{ Auth::user()->accountType != 'Individual' ? 'href=' . route('getStatement') : 'href=' . route('statement') }}>Report</a>
                     </li>
 
                     <li class="dropdown submenu">
-
                         <a
-                            {{ Auth::user()->accountType != 'Individual'? 'href=' . route('create single invoice'): 'href=' . route('invoice') }}>Invoice</a>
-
-                    </li>
-
-                    <li class="dropdown submenu">
-                        <a
-                            {{ Auth::user()->accountType != 'Individual' ? 'href=' . route('getStatement') : 'href=' . route('statement') }}>Transaction</a>
+                            {{ Auth::user()->accountType != 'Individual' ? 'href=' . route('merchant profile') : 'href=' . route('profile') }}>Profile</a>
                     </li>
 
 

@@ -12346,7 +12346,7 @@ class AdminController extends Controller
 
             $data = [
                 'claim' => ReferralClaim::where('status','completed')->get(),
-                
+
             ];
 
 
@@ -12375,11 +12375,7 @@ class AdminController extends Controller
                 $referralclaim=$consumerfee/2;
                 $userinfo= User::where('id',$client)->first();
                 $walletbalance=$userinfo->wallet_balance;
-<<<<<<< HEAD
-                   $bonus=$walletbalance + $referralclaim;
-=======
-                   $totalwalletbalance=$walletbalance + $referralclaim;  
->>>>>>> 72e86089a669f13f841b787774c4156b15989ee5
+                   $totalwalletbalance=$walletbalance + $referralclaim;
 
                 User::where('id',$client)->update([
                     'wallet_balance' => $totalwalletbalance,
@@ -12397,7 +12393,7 @@ class AdminController extends Controller
 <<<<<<< HEAD
                $bonus=$walletbalance + $referralclaim;
 =======
-               $totalwalletbalance=$walletbalance + $referralclaim;  
+               $totalwalletbalance=$walletbalance + $referralclaim;
 >>>>>>> 72e86089a669f13f841b787774c4156b15989ee5
             User::where('id',$client)->update([
                 'wallet_balance' => $totalwalletbalance,
@@ -12415,10 +12411,10 @@ class AdminController extends Controller
             // $this->email = "youngskima@gmail.com";
             $this->to = $userinfo->email;
             $this->subject = "PaySprint Wallet Referral Bonus";
-    
+
             $this->message = $message;
-    
-    
+
+
             $this->sendEmail($this->to, "Refund Request");
             $this->createNotification($userinfo->ref_code, $message);
             $activity = 'Wallet credit of '.$userinfo->currencyCode.''.$referralclaim.'in wallet for referral ';
@@ -12431,27 +12427,27 @@ class AdminController extends Controller
             $action = "Wallet credit";
             $regards = $userinfo->ref_code;
             $statement_route = "wallet";
-    
+
             // Senders statement
             $this->insStatement($userinfo->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $userinfo->country, 0);
-    
-    
-    
+
+
+
             $usersPhone = User::where('email', $userinfo->email)->where('telephone', 'LIKE', '%+%')->first();
-    
+
             if (isset($usersPhone)) {
-    
+
                 $recipients = $userinfo->telephone;
             } else {
                 $recipients = "+" . $userinfo->code . $userinfo->telephone;
             }
-    
-    
-    
+
+
+
             if ($userinfo->country == "Nigeria") {
-    
+
                 $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
-    
+
                 $this->sendSms($message, $correctPhone);
             } else {
                 $this->sendMessage($message, $recipients);

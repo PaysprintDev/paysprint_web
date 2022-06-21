@@ -93,6 +93,11 @@ Route::get('updatepricinglist', 'CheckSetupController@updatePricingUnits');
 
 
 
+// Merchant to Customer Information
+Route::get('merchantshopservice', 'CheckSetupController@merchantsShopService');
+
+
+
 // Happy New Month From PaySpirnt
 Route::get('happynewmonth', 'CheckSetupController@happyNewMonth');
 
