@@ -1371,6 +1371,66 @@ class CheckSetupController extends Controller
     }
 
 
+
+    // Notify User of Merchants Shop
+
+    public function merchantsShopService(){
+        try {
+            //Get Clients, order by industry and mail customers with clients with complete info....
+            $client = ClientInfo::where('description', '!=', NULL)->inRandomOrder()->groupBy('industry')->take(10)->get();
+
+
+
+            $table = "";
+            $tabledetails = "";
+
+            foreach($client as $clients){
+                $business_name = $clients->business_name;
+                $industry = $clients->industry;
+                $telephone = $clients->telephone;
+                $email = $clients->email;
+                $nature_of_business = $clients->nature_of_business;
+                $address = $clients->address;
+                $state = $clients->state;
+                $country = $clients->country;
+                $description = $clients->description;
+
+
+                $tabledetails = "<tr><td><strong>Business Name:</strong> ".$business_name."</td></tr><tr><td><strong>Industry:</strong> ".$industry."</td></tr><tr><td><strong>Nature of Business:</strong> ".$nature_of_business."</td></tr><tr><td><strong>Telephone:</strong> ".$telephone."</td><td><strong>Email:</strong> ".$email."</td></tr><tr><td><strong>Address:</strong> ".$address."</td></tr><tr><td><strong>State:</strong> ".$state."</td></tr><tr><td><strong>Country:</strong> ".$country."</td></tr><tr><td><strong>Description of Business:</strong> ".$description."</td></tr>";
+
+                $table .= $tabledetails."<hr>";
+
+
+            }
+
+
+                // Get Customers Information
+
+
+                $users = User::where('accountType', '!=', 'Merchant')->inRandomOrder()->take(500)->get();
+
+                foreach ($users as $user) {
+                    $this->name = $user->name;
+                    $this->email = $user->email;
+                    // $this->email = 'adenugaadebambo41@gmail.com';
+                    $this->subject = "Merchants on PaySprint";
+
+                    $this->message = "<p>Here are the list of Merchants that may interest you this week: </p><p><table>".$table."<tbody></tbody></table></p>";
+
+
+                    $this->sendEmail($this->email, "Incomplete Setup");
+                }
+
+
+
+                echo "Done";
+
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    }
+
+
     public function checkTrullioVerification(){
         // Get Users with transactionRecordID..
 
