@@ -133,13 +133,14 @@ use App\Traits\PaysprintPoint;
 use App\Traits\IDVCheck;
 use App\Traits\SpecialInfo;
 use App\Traits\AccountNotify;
+use App\Traits\SecurityChecker;
 
 use Throwable;
 
 class MonerisController extends Controller
 {
 
-    use PaymentGateway, PaystackPayment, ExpressPayment, ElavonPayment, Xwireless, PaysprintPoint, IDVCheck, SpecialInfo, AccountNotify;
+    use PaymentGateway, PaystackPayment, ExpressPayment, ElavonPayment, Xwireless, PaysprintPoint, IDVCheck, SpecialInfo, AccountNotify,SecurityChecker;
 
     public $to;
     public $name;
@@ -5088,6 +5089,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $status = 400;
 
                                 // Log::critical('Oops!! '.$thisuser->name.' '.$message);
+
+
+                                // TODO:: Add the security checker trait module here and pass the userId...
+                                $this->checkTransaction($thisuser->id, $response->responseData['Message']);
 
                                 $this->slack('Oops!, ' . $thisuser->name . ' ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
