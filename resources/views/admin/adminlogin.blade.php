@@ -72,7 +72,6 @@
         .disp-0 {
             display: none !important;
         }
-
     </style>
 
 </head>
@@ -137,6 +136,17 @@
             <strong><a href="{{ route('adminpasswordreset') }}">I forgot my password</a></strong><br><br>
             <a href="{{ route('AdminRegister') }}" class="text-center btn btn-danger btn-block" type="button">I don't
                 have an account. Register</a>
+
+            <br>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <p style="font-size: 16px; font-weight: 600; text-align: center;"><img
+                            src="https://img.icons8.com/cute-clipart/40/undefined/security-checked.png" />
+                        Protected by bank-level security</p>
+                </div>
+
+            </div>
 
         </div>
         <!-- /.login-box-body -->

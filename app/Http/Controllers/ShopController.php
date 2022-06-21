@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Intervention\Image\Facades\Image;
+
 use App\User;
 use App\StoreCart;
 use App\StoreOrders;
@@ -34,6 +36,7 @@ class ShopController extends Controller
 
     public $to;
     public $name;
+    public $email;
     public $subject;
     public $message;
 
@@ -95,7 +98,8 @@ class ShopController extends Controller
                 'file' => 'required',
                 'description' => 'required',
                 'category' => 'required',
-                'deliveryDate' => 'required'
+                'deliveryDate' => 'required',
+                'deliveryTime' => 'required'
 
             ]);
 
@@ -104,7 +108,7 @@ class ShopController extends Controller
 
                 $routing = Auth::user()->businessname . "/myproduct";
 
-                $docPath = $this->uploadImageFile($req->file('file'), $routing);
+                $docPath = $this->uploadImageFile($req->file('file'), $routing, 300, 300);
 
 
                 $category = $req->category == 'Other' ? $req->specifyCategory : $req->category;
@@ -125,7 +129,8 @@ class ShopController extends Controller
                     'image' => $docPath,
                     'description' => $req->description,
                     'category' => $category,
-                    'deliveryDate' => $req->deliveryDate
+                    'deliveryDate' => $req->deliveryDate,
+                    'deliveryTime' => $req->deliveryTime
                 ];
 
                 // Insert record
@@ -198,7 +203,7 @@ class ShopController extends Controller
 
 
 
-            return redirect()->route('estore payment', ['merchantId' => $cartItem->merchantId, 'userId' => $req->userId, 'country' => $req->country]);
+            return redirect()->route('estore payment', ['merchantId' => $cartItem->merchantId, 'userId' => $req->userId, 'country' => $req->country, 'fee' => base64_encode($req->shippingCharge)]);
         } catch (\Throwable $th) {
             $status = 'error';
             $message = $th->getMessage();
@@ -280,7 +285,7 @@ class ShopController extends Controller
 
                     $routing = Auth::user()->businessname . "/myproduct";
 
-                    $docPath = $this->uploadImageFile($req->file('file'), $routing);
+                    $docPath = $this->uploadImageFile($req->file('file'), $routing, 300, 300);
                 } else {
 
                     $docPath = $getProduct->image;
@@ -305,7 +310,8 @@ class ShopController extends Controller
                     'image' => $docPath,
                     'description' => $req->description,
                     'category' => $category,
-                    'deliveryDate' => $req->deliveryDate
+                    'deliveryDate' => $req->deliveryDate,
+                    'deliveryTime' => $req->deliveryTime
                 ];
 
 
@@ -423,6 +429,7 @@ class ShopController extends Controller
             $validator = Validator::make($req->all(), [
                 'address' => 'required',
                 'state' => 'required',
+                'city' => 'required',
                 'deliveryRate' => 'required'
             ]);
 
@@ -434,6 +441,7 @@ class ShopController extends Controller
                     'merchantId' => Auth::id(),
                     'address' => $req->address,
                     'state' => $req->state,
+                    'city' => $req->city,
                     'deliveryRate' => $req->deliveryRate
                 ];
 
@@ -441,6 +449,47 @@ class ShopController extends Controller
 
                 $status = 'success';
                 $message = 'Pickup address successfully setup for ' . $req->state;
+            } else {
+                $status = 'error';
+                $message = implode(",", $validator->messages()->all());
+            }
+        } catch (\Throwable $th) {
+            $status = 'error';
+            $message = $th->getMessage();
+        }
+
+
+        return redirect()->back()->with($status, $message);
+    }
+
+    public function editStorePickupAddress(Request $req, $id)
+    {
+        try {
+
+            // Validate
+            $validator = Validator::make($req->all(), [
+                'address' => 'required',
+                'state' => 'required',
+                'city' => 'required',
+                'deliveryRate' => 'required'
+            ]);
+
+
+            if ($validator->passes()) {
+
+                // Store the address...
+                $query =  [
+                    'merchantId' => Auth::id(),
+                    'address' => $req->address,
+                    'state' => $req->state,
+                    'city' => $req->city,
+                    'deliveryRate' => $req->deliveryRate
+                ];
+
+                StorePickup::where('id', $id)->update($query);
+
+                $status = 'success';
+                $message = 'Pickup address successfully updated for ' . $req->state;
             } else {
                 $status = 'error';
                 $message = implode(",", $validator->messages()->all());
@@ -478,13 +527,60 @@ class ShopController extends Controller
                     'state' => $req->state,
                     'city' => $req->city,
                     'currencyCode' => $req->currencyCode,
-                    'deliveryRate' => $req->deliveryRate
+                    'deliveryRate' => $req->deliveryRate,
+                    'created_at' => now(),
+                    'updated_at' => now()
                 ];
 
                 StoreShipping::insert($query);
 
                 $status = 'success';
                 $message = 'Shipping address successfully setup for ' . $req->city.', '.$req->state;
+            } else {
+                $status = 'error';
+                $message = implode(",", $validator->messages()->all());
+            }
+        } catch (\Throwable $th) {
+            $status = 'error';
+            $message = $th->getMessage();
+        }
+
+
+        return redirect()->back()->with($status, $message);
+    }
+
+
+    public function editStoreShippingAddress(Request $req, $id)
+    {
+        try {
+
+            // Validate
+            $validator = Validator::make($req->all(), [
+                'country' => 'required',
+                'state' => 'required',
+                'city' => 'required',
+                'currencyCode' => 'required',
+                'deliveryRate' => 'required'
+            ]);
+
+
+            if ($validator->passes()) {
+
+                // Store the address...
+                $query =  [
+                    'merchantId' => Auth::id(),
+                    'country' => $req->country,
+                    'state' => $req->state,
+                    'city' => $req->city,
+                    'currencyCode' => $req->currencyCode,
+                    'deliveryRate' => $req->deliveryRate,
+                    'updated_at' => now()
+                ];
+
+                StoreShipping::where('id', $id)->update($query);
+
+                $status = 'success';
+                $message = 'Shipping address successfully updated for ' . $req->city.', '.$req->state;
             } else {
                 $status = 'error';
                 $message = implode(",", $validator->messages()->all());
@@ -560,10 +656,7 @@ class ShopController extends Controller
                 $headContentImage = "";
                 $advertSectionImage = "";
 
-                $businessLogo = $this->uploadImageFile($req->file('businessLogo'), $routing . "/logo");
-
-
-
+                $businessLogo = $this->uploadImageFile($req->file('businessLogo'), $routing . "/logo", 100, 100);
 
 
                 if (count($req->file('headerContent')) > 3) {
@@ -579,10 +672,10 @@ class ShopController extends Controller
 
                         foreach ($req->file('headerContent') as $headerContentFile) {
 
-                            $headContentImage .= $this->uploadImageFile($headerContentFile, $routing . "/headsection") . ", ";
+                            $headContentImage .= $this->uploadImageFile($headerContentFile, $routing . "/headsection", 1900, 800) . ", ";
                         }
                     } else {
-                        $headContentImage = $this->uploadImageFile($req->file('headerContent')[0], $routing . "/headsection");
+                        $headContentImage = $this->uploadImageFile($req->file('headerContent')[0], $routing . "/headsection", 1900, 800);
                     }
                 }
 
@@ -603,10 +696,10 @@ class ShopController extends Controller
 
                             foreach ($req->file('advertSectionImage') as $advertSectionFile) {
 
-                                $advertSectionImage .= $this->uploadImageFile($advertSectionFile, $routing . "/advertsection") . ", ";
+                                $advertSectionImage .= $this->uploadImageFile($advertSectionFile, $routing . "/advertsection", 400, 400) . ", ";
                             }
                         } else {
-                            $advertSectionImage = $this->uploadImageFile($req->file('advertSectionImage')[0], $routing . "/advertsection");
+                            $advertSectionImage = $this->uploadImageFile($req->file('advertSectionImage')[0], $routing . "/advertsection", 400, 400);
                         }
                     }
                 }
@@ -747,6 +840,34 @@ class ShopController extends Controller
     }
 
 
+    public function loadMyCart(Request $req)
+    {
+
+        try {
+
+            $data = StoreCart::where('userId', $req->userId)->orderBy('created_at', 'DESC')->get();
+
+            if(count($data) > 0){
+            $merchant = User::where('id', $data[0]->merchantId)->first();
+
+            }
+            else{
+                $merchant = [];
+            }
+
+
+           $status = 200;
+            $resData = ['data' => $data, 'message' => 'Success', 'merchant' => $merchant ];
+        } catch (\Throwable $th) {
+            $status = 400;
+            $resData = ['data' => [], 'message' => $th->getMessage()];
+        }
+
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
 
     public function outForDelivery(Request $req)
     {
@@ -782,15 +903,22 @@ class ShopController extends Controller
 
                 // SEND MAIL......
                 $getUser = User::where('id', $getOrder->userId)->first();
+
+
                 $getMerchant = User::where('id', $getOrder->merchantId)->first();
 
+
+                $stop_date = date('Y-m-d');
+                $expDate = date('Y-m-d', strtotime($stop_date . ' +'.$getProduct->deliveryDate));
+
+
                 $this->subject = 'Your item ' . $getProduct->productName . ' is out for delivery';
-                $this->message = '<p>We have just dispatched your items from your order ' . $req->orderId . '.</p><p>The package will be delivered by our delivery agent once it gets to the delivery hub at the following address: ' . $getBilling->shippingAddress . ' </p><p>Kindly click on the link: ' . $link . ' and enter the code: <b>' . $code . '</b> to confirm your package as soon as our delivery associate get them to you. This code expires on ' . date('d/m/Y') . ' (3 days) if order is not verified.</p>';
+                $this->message = '<p>We have just dispatched your items from your order ' . $req->orderId . '.</p><p>The package will be delivered by our delivery agent once it gets to the delivery hub at the following address: ' . $getBilling->shippingAddress . ' </p><p>Kindly click on the link: ' . $link . ' and enter the code: <b>' . $code . '</b> to confirm your package as soon as our delivery associate get them to you. This code expires on ' . date('d/m/Y', strtotime($expDate)) . ' ('.$getProduct->deliveryDate.') if order is not verified.</p>';
 
 
 
 
-                $sendMsg = "Hi " . $getUser->name . ", We have just dispatched your items from your order " . $req->orderId . ". Kindly click on the link: " . $link . " and enter the code: " . $code . " to confirm your package as soon as our delivery associate get them to you. This code expires in " . date('d/m/Y') . " (3 days)  if order is not verified." . $getMerchant->businessname;
+                $sendMsg = "Hi " . $getUser->name . ", We have just dispatched your items from your order " . $req->orderId . ". Kindly click on the link: " . $link . " and enter the code: " . $code . " to confirm your package as soon as our delivery associate get them to you. This code expires in " . date('d/m/Y', strtotime($expDate)) . " (".$getProduct->deliveryDate.")  if order is not verified." . $getMerchant->businessname;
 
                 $getPhone = User::where('email', $getUser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -821,10 +949,42 @@ class ShopController extends Controller
                 $resData = ['data' => [], 'message' => 'Order not found'];
             }
         } catch (\Throwable $th) {
+
             $status = 400;
             $resData = ['data' => [], 'message' => $th->getMessage()];
         }
 
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+    public function deliveryOptionDetails(Request $req){
+        try {
+            if($req->userSelection == "Home Delivery"){
+                $data = StoreShipping::where('merchantId', $req->merchantId)->where('city', $req->city)->orWhere('state', $req->state)->first();
+                $message = 'Success';
+            }
+            elseif($req->userSelection == "In Store Pick Up"){
+                $data = StorePickup::where('merchantId', $req->merchantId)->first();
+                $message = 'Success';
+            }
+            else{
+                $data = [];
+                $message = 'No delivery options available';
+            }
+
+
+            // Fetch data information...
+
+            $status = 200;
+            $resData = ['data' => $data, 'message' => $message];
+
+
+        } catch (\Throwable $th) {
+            $status = 400;
+            $resData = ['data' => [], 'message' => $th->getMessage()];
+        }
 
         return $this->returnJSON($resData, $status);
     }
@@ -969,7 +1129,29 @@ class ShopController extends Controller
     }
 
 
-    public function uploadImageFile($file, $fileroute)
+    public function removeCartItem(Request $req){
+        try {
+
+            // Delete This Cart Item...
+
+            StoreCart::where('id', $req->id)->delete();
+
+
+            $resData = ['data' => true, 'message' => 'Deleted'];
+            $status = 200;
+
+        } catch (\Throwable $th) {
+            $status = 400;
+            $resData = ['data' => [], 'message' => $th->getMessage()];
+        }
+
+        return $this->returnJSON($resData, $status);
+
+
+    }
+
+
+    public function uploadImageFile($file, $fileroute, $width = null, $height = null)
     {
 
         //Get filename with extension
@@ -981,8 +1163,13 @@ class ShopController extends Controller
         // Filename to store
         $fileNameToStore = rand() . '_' . time() . '.' . $extension;
 
+        $img = Image::make($file)->fit($width, $height);
 
-        $file->move(public_path('../../shopstore/' . $fileroute . '/'), $fileNameToStore);
+        $img->save('shopstore/' . $fileroute . '/'.$fileNameToStore);
+        // $img->save('shopstore/' . $fileroute . '/'.$fileNameToStore);
+
+
+        // $file->move(public_path('../../shopstore/' . $fileroute . '/'), $fileNameToStore);
 
 
         $docPath = route('home') . "/shopstore/" . $fileroute . "/" . $fileNameToStore;
@@ -1015,6 +1202,9 @@ class ShopController extends Controller
     {
         $objDemo = new \stdClass();
         $objDemo->purpose = $purpose;
+
+
+
 
         if ($purpose == 'Fund remittance') {
             $objDemo->name = $this->name;

@@ -11,7 +11,8 @@
         integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
     <!-- Favicon -->
-    <link rel="icon" href="https://res.cloudinary.com/pilstech/image/upload/v1602675914/paysprint_icon_png_ol2z3u.png"
+    <link rel="icon"
+        href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_icon_png_rhxm1e_sqhgj0.png"
         type="image/x-icon" />
 
     <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
@@ -102,7 +103,7 @@
                                     <div class="col-md-12">
 
                                         <p>
-                                            {{ date('A') == 'AM'? 'Good Morning! Welcome to PaySprint developers community.☕': 'Good day! Welcome to PaySprint developers community.👏' }}
+                                            {{ date('A') == 'AM' ? 'Good Morning! Welcome to PaySprint developers community.☕' : 'Good day! Welcome to PaySprint developers community.👏' }}
                                         </p>
                                     </div>
 
@@ -184,9 +185,7 @@
                                                         </nav>
                                                     </div>
                                                 </div>
-
                                             @else
-
                                                 <div class="card">
 
                                                     <div class="card-body">

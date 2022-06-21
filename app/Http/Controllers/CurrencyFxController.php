@@ -49,7 +49,7 @@ class CurrencyFxController extends Controller
             return redirect()->back();
         }
 
-        
+
         $checker = $this->checkImt(Auth::user()->country);
 
         if($checker == "false"){
@@ -65,7 +65,7 @@ class CurrencyFxController extends Controller
     {
 
 
-        
+
 
 
         if ($req->session()->has('email') == false) {
@@ -89,7 +89,7 @@ class CurrencyFxController extends Controller
 
 
         if(isset($client) && $client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -250,7 +250,7 @@ class CurrencyFxController extends Controller
         return view('currencyexchange.invoices');
     }
 
-    
+
         // Get My Client Info
     public function getMyClientInfo($ref_code)
     {
@@ -613,11 +613,11 @@ class CurrencyFxController extends Controller
 
             Auth::login($user);
         }
-        
+
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         if(isset($client) && $client->accountMode == "test"){
-            
+
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
 
@@ -654,6 +654,29 @@ class CurrencyFxController extends Controller
         }
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+    public function getCrossBorderBeneficiaries(){
+        $data = $this->getBeneficiaries();
+
+            $message = 'success';
+            $status = 200;
+
+         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+    public function paysprintAccountDetails(){
+         $data = $this->getPSAccountDetails();
+
+            $message = 'success';
+            $status = 200;
+
+         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
     }
@@ -743,6 +766,30 @@ class CurrencyFxController extends Controller
 
         try {
             $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+
+
+                    // Check if User has a forex account
+        $checkUser = User::where('id', $thisuser->id)->first()->forexAccount;
+
+
+
+        if (count($checkUser) <= 0) {
+            // Create Escrow Account
+            EscrowAccount::insert(['user_id' => $thisuser->id, 'escrow_id' => 'ES_' . uniqid() . '_' . strtoupper(date('D')), 'currencyCode' => $thisuser->currencyCode, 'currencySymbol' => $thisuser->currencySymbol, 'wallet_balance' => "0.00", 'country' => $thisuser->country, 'active' => "true"]);
+        }
+
+
+        $checker = $this->checkImt($thisuser->country);
+
+        if($checker == "false"){
+            $data = [];
+            $message = 'This feature is not yet available for your country';
+            $status = 400;
+            $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+            return $this->returnJSON($resData, $status);
+        }
+
 
             if (isset($req->country)) {
                 $getmywallet = EscrowAccount::where('user_id', $thisuser->id)->where('country', $req->country)->get();
@@ -895,7 +942,6 @@ class CurrencyFxController extends Controller
     public function makeABid(Request $req)
     {
 
-
         try {
             // Check who is in
             $thisuser = User::where('api_token', $req->bearerToken())->first();
@@ -933,6 +979,7 @@ class CurrencyFxController extends Controller
                         } else {
 
                             $mywalletCheck = EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $market->buy_currencyCode)->first();
+
 
                             if (isset($mywalletCheck)) {
 
@@ -1043,13 +1090,28 @@ class CurrencyFxController extends Controller
     public function refreshBids()
     {
         // Get all expired bids in market place...
-        $today = Carbon::now()->subDay();
-        $getMarkets = MarketPlace::whereDate('expiry', '<=', $today)->where('status', 'Bid Pending')->get();
+        // $today = Carbon::now()->subDay();
+
+        $today = date('Y-m-d');
+
+
+        // $getMarkets = MarketPlace::whereDate('expiry', '<=', $today)->where('status', 'Bid Pending')->get();
+        $getMarkets = MarketPlace::where('status', 'Bid Pending')->get();
+
+
 
         if (count($getMarkets) > 0) {
 
             foreach ($getMarkets as $value) {
 
+
+                $expiry = date('Y-m-d', strtotime($value->expiry));
+
+                $now = time();
+                $your_date = strtotime($expiry);
+                $datediff = $your_date - $now;
+
+                if($datediff <= 0){
 
                 $thisuser = User::where('id', $value->user_id)->first();
 
@@ -1057,7 +1119,7 @@ class CurrencyFxController extends Controller
 
                 $walletBal = $getescrow->wallet_balance;
 
-                // Credit Wallet 
+                // Credit Wallet
                 $creditWallet = $walletBal + $value->sell;
 
 
@@ -1069,7 +1131,7 @@ class CurrencyFxController extends Controller
                 $transaction_id = "es-wallet-" . date('dmY') . time();
 
                 // Insert Escrow Statement
-                $activity = "Wallet credit of " . $thisuser->currencyCode . " " . number_format($value->sell, 2) . " from PaySprint wallet to FX wallet ";
+                $activity = "Wallet deposit of " . $thisuser->currencyCode . " " . number_format($value->sell, 2) . " for a bid has been refunded back to your (".$thisuser->currencyCode.") wallet on PaySprint FX";
                 $credit = $value->sell;
                 $debit = 0;
                 $reference_code = $transaction_id;
@@ -1086,7 +1148,6 @@ class CurrencyFxController extends Controller
                 $this->insFXStatement($getescrow->escrow_id, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $thisuser->country, "confirmed");
 
 
-                MarketPlace::whereDate('expiry', '<=', $today)->where('user_id', $value->user_id)->where('status', 'Bid Pending')->delete();
 
 
                 // This works even if bid is accepted but still pending...
@@ -1151,12 +1212,20 @@ class CurrencyFxController extends Controller
                 }
 
 
+                MarketPlace::where('order_id', $value->order_id)->where('user_id', $value->user_id)->where('status', 'Bid Pending')->delete();
+
+
+
                 Log::info("Currency exchange transaction of " . $getWallet->currencyCode . " " . number_format($value->sell, 2) . " by " . $thisuser->name . " returned back to wallet");
 
                 $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $sendMsg);
 
-                echo "Done";
+                echo "Done for ".$expiry."<hr>";
+                }
+
             }
+
+            echo "Finally done";
         } else {
             Log::info('No expired market today: ' . $today);
 
@@ -1602,22 +1671,29 @@ class CurrencyFxController extends Controller
                     }
 
 
-                    if ($toWallet->currencyCode == 'USD' || $toWallet->currencyCode == 'EUR' || $toWallet->currencyCode == 'GBP') {
-                        //Convert Money
-                        $getconvertion = $this->getOfficialConversionRate($toWallet->currencyCode, $fromWallet->currencyCode);
+                    // if ($toWallet->currencyCode == 'USD' || $toWallet->currencyCode == 'EUR' || $toWallet->currencyCode == 'GBP') {
+                    //     //Convert Money
+                    //     $getconvertion = $this->getOfficialConversionRate($toWallet->currencyCode, $fromWallet->currencyCode);
 
-                        // Mark up here ...
+                    //     // Mark up here ...
 
-                        $convInfo = $markValue * ($req->amount / $getconvertion);
-                    } else {
-                        //Convert Money
-                        $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
+                    //     $convInfo = $markValue * ($req->amount / $getconvertion);
+                    // } else {
+                    //     //Convert Money
+                    //     $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
 
-                        // Mark down here ...
+                    //     // Mark down here ...
 
-                        $convInfo = ($getconvertion * $req->amount) / $markValue;
-                    }
+                    //     $convInfo = ($getconvertion * $req->amount) / $markValue;
+                    // }
 
+                    //Convert Money
+                    $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
+
+                    // Mark down here ...
+
+                    // $convInfo = ($getconvertion * $req->amount) / $markValue;
+                    $convInfo = ($getconvertion * $req->amount);
 
 
                     $respData = [
@@ -1695,6 +1771,7 @@ class CurrencyFxController extends Controller
     {
         try {
 
+
             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
             if (isset($thisuser)) {
@@ -1731,21 +1808,29 @@ class CurrencyFxController extends Controller
                         $markValue = (1 + ($markuppercent[0]->percentage / 100));
 
 
-                        if ($toWallet->currencyCode == 'USD' || $toWallet->currencyCode == 'EUR' || $toWallet->currencyCode == 'GBP') {
-                            //Convert Money
-                            $getconvertion = $this->getOfficialConversionRate($toWallet->currencyCode, $fromWallet->currencyCode);
+                        // if ($toWallet->currencyCode == 'USD' || $toWallet->currencyCode == 'EUR' || $toWallet->currencyCode == 'GBP') {
+                        //     //Convert Money
+                        //     $getconvertion = $this->getOfficialConversionRate($toWallet->currencyCode, $fromWallet->currencyCode);
 
-                            // Mark up here ...
+                        //     // Mark up here ...
 
-                            $convamount = $markValue * ($req->amount / $getconvertion);
-                        } else {
-                            //Convert Money
-                            $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
+                        //     $convamount = $markValue * ($req->amount / $getconvertion);
+                        // } else {
+                        //     //Convert Money
+                        //     $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
+
+                        //     // Mark down here ...
+
+                        //     $convamount = ($getconvertion * $req->amount) / $markValue;
+                        // }
+
+                        //Convert Money
+                            $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode, 'transferfx');
 
                             // Mark down here ...
 
-                            $convamount = ($getconvertion * $req->amount) / $markValue;
-                        }
+                            // $convamount = ($getconvertion * $req->amount) / $markValue;
+                            $convamount = ($getconvertion * $req->amount);
 
 
 
@@ -1823,32 +1908,46 @@ class CurrencyFxController extends Controller
 
                         // Markup value to sender local currency i.e USD/NGN = 584.33
 
-                        $markedupRate = $this->getConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
+                        // $markedupRate = $this->getConversionRate($fromWallet->currencyCode, $toWallet->currencyCode, 'transferfx');
 
                         // Customer Official rate i.e USD/CAD = 1.22
-                        $officialRate = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
+                        // $officialRate = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode, 'transferfx');
+
+
+
 
 
                         // Get Rate to Merchant currency
-                        $convertedRate = $markedupRate / $officialRate;
-
-
-                        $newProfit = $markedupRate - $convertedRate;
+                        // $convertedRate = $markedupRate / $officialRate;
 
 
 
-                        $profit_sender = $markedupRate - $getconvertion;
 
-                        $profit_receiver = $markedupRate / $profit_sender;
+                        // $newProfit = $markedupRate - $convertedRate;
+                        $newProfit = $getconvertion;
+
+
+
+
+
+
+                        // $profit_sender = $markedupRate - $getconvertion;
+                        $profit_sender = $getconvertion;
+
+                        $profit_receiver = $newProfit / $profit_sender;
+
 
 
                         // Insert Commission Info
                         $commissionQuery = [
-                            'invoice_no' => $fromWallet->escrow_id, 'sender' => $thisuser->name, 'receiver' => $thisuser->name, 'invoice_amount' => $req->amount, 'invoiced_currency' => $fromWallet->currencyCode, 'official_rate' => $getconvertion, 'markedup_rate' => $markedupRate, 'profit_sender' => $newProfit, 'sender_currency' => $thisuser->currencyCode, 'profit_receiver' => $profit_receiver, 'receiver_currency' => $thisuser->currencyCode, 'holder' => 'currency fx'
+                            'invoice_no' => $fromWallet->escrow_id, 'sender' => $thisuser->name, 'receiver' => $thisuser->name, 'invoice_amount' => $req->amount, 'invoiced_currency' => $fromWallet->currencyCode, 'official_rate' => $getconvertion, 'markedup_rate' => $getconvertion, 'profit_sender' => $newProfit, 'sender_currency' => $thisuser->currencyCode, 'profit_receiver' => $profit_receiver, 'receiver_currency' => $thisuser->currencyCode, 'holder' => 'currency fx'
                         ];
 
 
                         InvoiceCommission::insert($commissionQuery);
+
+
+                        $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
                         $data = true;
@@ -2355,7 +2454,7 @@ class CurrencyFxController extends Controller
 
                         $newData[] = $value;
                     }
-                    
+
                 }
 
 

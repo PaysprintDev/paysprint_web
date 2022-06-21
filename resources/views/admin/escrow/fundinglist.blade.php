@@ -4,6 +4,7 @@
 
 
     <?php use App\Http\Controllers\User; ?>
+    <?php use App\Http\Controllers\UserClosed; ?>
     <?php use App\Http\Controllers\FxPayment; ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -58,7 +59,9 @@
                                         <th>Bank Account Name</th>
                                         <th>Date</th>
                                         <th>Status</th>
+                                        <th>&nbsp;</th>
                                         <th>Action</th>
+                                        <th>&nbsp;</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -68,7 +71,6 @@
                                             <tr>
 
                                                 @if ($money = \App\FxPayment::where('escrow_id', $data->user_id)->first())
-
                                                     @php
                                                         $referenceno = $money->reference_number;
                                                         $escrowNumber = $money->escrow_id;
@@ -94,6 +96,22 @@
                                                     <td>{{ strtoupper($data->confirmation) }}</td>
 
 
+
+                                                    <td>
+                                                        @if ($user = \App\User::where('ref_code', $data->regards)->first())
+                                                            <a target="_blank"
+                                                                href="{{ route('user more detail', $user->id) }}"
+                                                                type="button" class="btn btn-success">View profile</a>
+                                                        @elseif($user = \App\UserClosed::where('ref_code', $data->regards)->first())
+                                                            <a target="_blank"
+                                                                href="{{ route('user more detail', $user->id) }}"
+                                                                type="button" class="btn btn-success">View profile</a>
+                                                        @endif
+
+                                                    </td>
+
+
+
                                                     <td>
 
                                                         <form
@@ -105,8 +123,17 @@
                                                             onclick="confirmEsPay('{{ $escrowNumber }}')"
                                                             class="btn btn-primary">Confirm Payment</a>
                                                     </td>
+                                                    <td>
 
+                                                        <form
+                                                            action="{{ route('delete es pay', 'escrow_id=' . $escrowNumber) }}"
+                                                            method="post" id="delthisform{{ $escrowNumber }}"
+                                                            style="visibility: hidden;">@csrf</form>
 
+                                                        <a href="#" type="button" class="btn btn-danger"
+                                                            onclick="declineEsPay('{{ $escrowNumber }}')">Decline
+                                                            payment</a>
+                                                    </td>
                                                 @endif
 
 
@@ -116,10 +143,9 @@
 
                                             </tr>
                                         @endforeach
-
                                     @else
                                         <tr>
-                                            <td colspan="11" align="center">No record available</td>
+                                            <td colspan="13" align="center">No record available</td>
                                         </tr>
                                     @endif
                                 </tbody>

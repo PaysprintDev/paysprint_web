@@ -120,7 +120,7 @@
                                                     value="{{ $data['post']->investment_document }}">
                                             </div><br>
                                             <div class="col-md-4 ">
-                                                <input type="checkbox" class="form-check-input" id="activate_this_post">
+                                                <input type="checkbox" name="activate_post" class="form-check-input" id="activate_this_post">
                                                 <label class="form-check-label" for="activate_this_post">Activate This
                                                     Post</label>
                                             </div>

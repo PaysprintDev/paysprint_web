@@ -2,40 +2,43 @@
 
 namespace App\Http\Controllers\api\v1;
 
+use App\Points;
+use App\Building;
+use Carbon\Carbon;
+use App\UpgradePlan;
+use App\User as User;
+
+use App\ClaimedPoints;
+
+use App\HistoryReport;
+
+use App\Admin as Admin;
+use App\Mail\sendEmail;
+use App\Traits\Trulioo;
+use App\Traits\Xwireless;
+use App\BVNVerificationList;
 use Illuminate\Http\Request;
+use App\Traits\AccountNotify;
+use App\Traits\PaymentGateway;
+use App\Traits\PaysprintPoint;
+use App\AnonUsers as AnonUsers;
+use App\Statement as Statement;
+use App\Traits\PaystackPayment;
+use App\ClientInfo as ClientInfo;
+use App\MonthlyFee as MonthlyFee;
+
+use App\LinkAccount as LinkAccount;
+use App\ListOfBanks as ListOfBanks;
+use App\ServiceType as ServiceType;
+use App\Traits\MailChimpNewsLetter;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-
-use Illuminate\Support\Facades\Log;
-
 use Illuminate\Support\Facades\Mail;
-
-use App\User as User;
-use App\AnonUsers as AnonUsers;
-use App\Statement as Statement;
-use App\ServiceType as ServiceType;
-use App\Admin as Admin;
-use App\ClientInfo as ClientInfo;
 use App\AllCountries as AllCountries;
-use App\Building;
-use App\BVNVerificationList;
-use App\LinkAccount as LinkAccount;
-use App\ListOfBanks as ListOfBanks;
-use App\Mail\sendEmail;
+use Illuminate\Support\Facades\Validator;
 use App\TransactionCost as TransactionCost;
-use App\MonthlyFee as MonthlyFee;
-
-use App\Traits\Trulioo;
-use App\Traits\AccountNotify;
-use App\Traits\PaystackPayment;
-use App\Traits\Xwireless;
-use App\Traits\PaymentGateway;
-use App\Traits\MailChimpNewsLetter;
-use App\Traits\PaysprintPoint;
-use App\UpgradePlan;
-use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -612,7 +615,7 @@ class UserController extends Controller
                     }
 
 
-                    $data = User::where('api_token', $request->bearerToken())->first();;
+                    $data = User::where('api_token', $request->bearerToken())->first();
                     $status = 200;
                     $message = 'Account successfully updated.';
                 } else {
@@ -628,6 +631,32 @@ class UserController extends Controller
         }
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+    public function getMySubscription(Request $request)
+    {
+
+        try{
+            $thisuser = User::where('api_token', $request->bearerToken())->first();
+
+            $data = UpgradePlan::where('userId', $thisuser->ref_code)->first();
+
+
+            $status = 200;
+            $message = 'Success';
+
+        }
+         catch (\Throwable $th) {
+            $data = [];
+            $status = 400;
+            $message = $th->getMessage();
+        }
+
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
 
         return $this->returnJSON($resData, $status);
     }
@@ -1312,7 +1341,7 @@ class UserController extends Controller
 
     public function bvnVerification(Request $req)
     {
-        
+
 
         try {
 
@@ -1609,6 +1638,114 @@ class UserController extends Controller
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
+    }
+
+
+    public function acquiredPoints(Request $req){
+        try{
+
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            $data = $this->getAcquiredPoints($thisuser->id);
+
+            $status = 200;
+            $message = "Success";
+        }
+        catch(\Throwable $th){
+            $data = [];
+            $status = 400;
+            $message = $th->getMessage();
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+    public function claimMyPoints(Request $req)
+    {
+
+        try {
+
+         $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            // Get Bill
+        $getPoint = Points::where('user_id', $thisuser->id)->first();
+
+
+
+        if (isset($getPoint)) {
+
+            if ($thisuser->accountType == "Merchant") {
+
+                $max = 7000;
+            } else {
+
+                $max = 5000;
+            }
+
+
+            $totPointLeft = $getPoint->points_acquired - $max;
+
+            $pointtoget = $max - $getPoint->points_acquired;
+
+            // Process claims and update user
+
+            if ($getPoint->points_acquired >= $max) {
+
+                // This is when you can claim points...
+                Points::where('user_id', $thisuser->id)->update(['add_money' => 0, 'send_money' => 0, 'receive_money' => 0, 'pay_invoice' => 0, 'pay_bills' => 0, 'create_and_send_invoice' => 0, 'active_rental_property' => 0, 'quick_set_up' => 0, 'identity_verification' => 0, 'business_verification' => 0, 'promote_business' => 0, 'activate_ordering_system' => 0, 'identify_verification' => 0, 'activate_rpm' => 0, 'activate_currency_exchange' => 0, 'activate_cash_advance' => 0, 'activate_crypto_currency_account' => 0, 'approved_customers' => 0, 'approved_merchants' => 0, 'points_acquired' => $totPointLeft, 'current_point' => $getPoint->points_acquired]);
+
+
+
+                ClaimedPoints::updateOrCreate(['user_id' => $thisuser->id], [
+                    'user_id' => $thisuser->id,
+                    'points_acquired' => $getPoint->points_acquired,
+                    'points_left' => $totPointLeft,
+                    'status' => 'pending'
+                ]);
+
+                HistoryReport::insert([
+                    'user_id' => Auth::user()->id,
+                    'points' => $getPoint->points_acquired,
+                    'point_activity' => "You have claimed " . $getPoint->points_acquired . " points today " . date('d/m/y')
+
+                ]);
+
+                $data = $getPoint;
+                $status = 200;
+                $message = 'Your points claimed has been submitted successfully. The reward will be processed within the next 24hrs';
+
+            } else {
+
+                $data = [];
+                $status = 200;
+                $message = 'You need to have ' . $pointtoget . ' to be able to claim reward';
+            }
+        } else {
+
+            $data = [];
+            $status = 200;
+            $message = 'You do not have any acquired points';
+        }
+
+        }
+        catch(\Throwable $th){
+            $data = [];
+            $status = 400;
+            $message = $th->getMessage();
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+
+
+
+
+
+
     }
 
 

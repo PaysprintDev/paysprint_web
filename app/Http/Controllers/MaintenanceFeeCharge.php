@@ -159,12 +159,13 @@ class MaintenanceFeeCharge extends Controller
 
                     $users = User::where('ref_code', $value->userId)->first();
 
-                    if ($users->accountType == "Individual") {
+                    if(isset($users)){
+                        if ($users->accountType == "Individual") {
                         $subType = "Consumer Monthly Subscription";
-                        
+
                     } else {
                         $subType = "Merchant Monthly Subscription";
-                        
+
                     }
 
                     $today = date('Y-m-d');
@@ -246,7 +247,7 @@ class MaintenanceFeeCharge extends Controller
                             $this->sendMessage($sendMsg, $sendPhone);
                         }
                     } else {
-                        
+
                         if($users->country == "Canada" || $users->country == "United States") {
                             // Put account to basic plan
                             User::where('id', $users->id)->update(['plan' => 'basic']);
@@ -260,11 +261,14 @@ class MaintenanceFeeCharge extends Controller
                             UpgradePlan::updateOrInsert(['userId' => $users->ref_code], ['userId' => $users->ref_code, 'plan' => 'classic', 'amount' => "0", 'duration' => $duration, 'expire_date' => $expire_date]);
                         }
 
-                        
+
                     }
 
 
                     echo "Done";
+                    }
+
+
                 }
             } else {
                 $this->slack('No expired subscription today: ' . $todaysDate, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));

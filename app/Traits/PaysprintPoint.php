@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use App\Points as Points;
 use App\ClaimedPoints as ClaimedPoints;
 use App\User;
+use App\ReferralClaim;
 
 trait PaysprintPoint
 {
@@ -323,6 +324,33 @@ trait PaysprintPoint
     {
         $data = Points::where('user_id', $id)->first();
 
+        return $data;
+    }
+
+    public function referral($id){
+        $data = User::where('referred_by',$id)->get();
+            return count($data);
+    }
+
+    public function referralPoints($id){
+        $data = user::where('id',$id)->first();
+        return $data;
+    }
+
+    public function pointsClaimed($id){
+        $data = ReferralClaim::where('user_id',$id)->first();
+        if(isset($data)){
+            $result =  ReferralClaim::where('user_id',$id)->get()->sum('points_claimed');
+        }
+        else{
+            $result = 0;
+        }
+
+        return $result;
+    }
+
+    public function pointHistory($id){
+        $data=ReferralClaim::where('user_id',$id)->get();
         return $data;
     }
 }

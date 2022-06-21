@@ -2,118 +2,120 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
+use Session;
+use App\MarkUp;
+use App\Tax as Tax;
+use App\FxStatement;
 
 //Session
-use Session;
-
-use App\Notifications;
-use App\Admin as Admin;
-use App\ImportExcel as ImportExcel;
-use App\ImportExcelLink as ImportExcelLink;
-use App\InvoicePayment as InvoicePayment;
-use App\Mail\sendEmail;
+use App\Traits\MyFX;
 
 use App\User as User;
+use App\EscrowAccount;
+use App\Notifications;
+use App\StoreCategory;
+use App\StoreDelivery;
+use App\StoreMainShop;
+use App\ActivationEstore;
 
-use App\CreateEvent as CreateEvent;
+use App\Admin as Admin;
+
+use App\Mail\sendEmail;
+
+
+
+use App\Traits\Trulioo;
+
+
+
+use App\Traits\Xwireless;
+
+
+
+use App\InvoiceCommission;
+
+use App\AddBank as AddBank;
+
+use App\AddCard as AddCard;
+
+use App\Traits\FlagPayment;
+
+use App\Traits\SpecialInfo;
+
+use Illuminate\Http\Request;
+
+use App\Aml_compliance_guide;
+
+use App\Traits\AccountNotify;
+
+use App\Traits\PaymentGateway;
+
+use App\Traits\PaysprintPoint;
+
+use App\AnonUsers as AnonUsers;
+
+use App\Statement as Statement;
+
+use App\Traits\PaystackPayment;
+
+use App\CardIssuer as CardIssuer;
+
+use App\ClientInfo as ClientInfo;
+
+use App\MonthlyFee as MonthlyFee;
 
 
 
 use App\SuperAdmin as SuperAdmin;
 
+use App\UserClosed as UserClosed;
+
+use Illuminate\Support\Facades\DB;
+
+use App\CreateEvent as CreateEvent;
+use App\ImportExcel as ImportExcel;
+use App\ServiceType as ServiceType;
+use App\Traits\MailChimpNewsLetter;
 
 
-use App\ClientInfo as ClientInfo;
-
-
-
-use App\OrganizationPay as OrganizationPay;
-
+use Illuminate\Support\Facades\Auth;
+use App\AllCountries as AllCountries;
+use App\CcWithdrawal as CcWithdrawal;
+use App\DeletedCards as DeletedCards;
 use App\Epaywithdraw as Epaywithdraw;
 
-use App\PaycaWithdraw as PaycaWithdraw;
-
-use App\TransactionCost as TransactionCost;
-
-use App\CollectionFee as CollectionFee;
-
-use App\ServiceType as ServiceType;
-
-use App\Statement as Statement;
-
-use App\BankWithdrawal as BankWithdrawal;
-
-use App\CcWithdrawal as CcWithdrawal;
-
-use App\AddBank as AddBank;
-
-use App\CardIssuer as CardIssuer;
-
-use App\AddCard as AddCard;
-
-use App\DeletedCards as DeletedCards;
-
-use App\MerchantService as MerchantService;
-
-use App\BVNVerificationList as BVNVerificationList;
-
-use App\AnonUsers as AnonUsers;
-
-
-
-use App\RequestRefund as RequestRefund;
-
-use App\MonthlyFee as MonthlyFee;
-
-use App\Tax as Tax;
-
-use App\AllCountries as AllCountries;
-use App\EscrowAccount;
-use App\FxStatement;
 use App\InAppMessage as InAppMessage;
 
 
-use App\InvoiceCommission;
-use App\StoreMainShop;
-use App\StoreCategory;
-use App\StoreDelivery;
-use App\MonerisActivity as MonerisActivity;
-
-use App\SupportActivity as SupportActivity;
-
-
-use App\UserClosed as UserClosed;
+use App\MailCampaign as MailCampaign;
 
 use App\PricingSetup as PricingSetup;
 
-use App\MailCampaign as MailCampaign;
-use App\MarkUp;
+use Intervention\Image\Facades\Image;
+use App\CollectionFee as CollectionFee;
 
-use App\Aml_compliance_guide;
+use App\PaycaWithdraw as PaycaWithdraw;
 
-use App\Traits\Trulioo;
+use App\RequestRefund as RequestRefund;
 
-use App\Traits\AccountNotify;
+use App\BankWithdrawal as BankWithdrawal;
 
-use App\Traits\SpecialInfo;
+use App\InvoicePayment as InvoicePayment;
 
-use App\Traits\PaystackPayment;
+use Illuminate\Support\Facades\Validator;
 
-use App\Traits\PaymentGateway;
+use App\ImportExcelLink as ImportExcelLink;
 
-use App\Traits\FlagPayment;
+use App\MerchantService as MerchantService;
 
-use App\Traits\Xwireless;
+use App\MonerisActivity as MonerisActivity;
 
-use App\Traits\MailChimpNewsLetter;
+use App\OrganizationPay as OrganizationPay;
 
-use App\Traits\PaysprintPoint;
+use App\SupportActivity as SupportActivity;
 
-use App\Traits\MyFX;
+use App\TransactionCost as TransactionCost;
+use App\BVNVerificationList as BVNVerificationList;
 
 class StoreController extends Controller
 {
@@ -192,9 +194,12 @@ class StoreController extends Controller
                 'getCard' => $this->getUserCard(session('myID')),
                 'getBank' => $this->getUserBank(session('myID')),
                 'getTax' => $this->getTax(session('myID')),
+                'stores'=> StoreMainShop::get()->count('merchantid'),
+                'activate' =>ActivationEstore::get()->count('user_id'),
                 // 'listbank' => $this->getBankList(),
                 // 'escrowfund' => $this->getEscrowFunding(),
             );
+
 
 
 
@@ -305,6 +310,97 @@ class StoreController extends Controller
         }
     }
 
+    //Activate E-store
+    public function activateEstore(Request $req)
+    {
+
+        // dd(Session::all());
+
+
+
+        if ($req->session()->has('username') == true) {
+
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $invoiceLinkImport = ImportExcelLink::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = OrganizationPay::orderBy('created_at', 'DESC')->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $invoiceLinkImport = ImportExcelLink::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = OrganizationPay::where('coy_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $this->recurBills(session('user_id'));
+            }
+
+
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+            $transCost = $this->transactionCost();
+            $allusers = $this->allUsers();
+
+            $getUserDetail = $this->getmyPersonalDetail(session('user_id'));
+
+            $getCard = $this->getUserCard(session('myID'));
+            $getBank = $this->getUserBank(session('myID'));
+
+            $getTax = $this->getTax(session('myID'));
+
+
+            $withdraws = [
+                'bank' => $this->requestFromBankWithdrawal(),
+                'purchase' => $this->purchaseRefundSentback(),
+                'credit' => $this->requestFromCardWithdrawal(),
+                'prepaid' => $this->pendingRequestFromPrepaidWithdrawal(),
+                // 'specialInfo' => $this->getthisInfo(session('country')),
+            ];
+
+
+            $pending = [
+                'transfer' => $this->pendingTransferTransactions(),
+                'texttotransfer' => $this->textToTransferUsers(),
+            ];
+
+            $refund = [
+                'requestforrefund' => $this->requestForAllRefund(),
+            ];
+
+            $allcountries = $this->getAllCountries();
+
+            $received = [
+                'payInvoice' => $this->payInvoice(session('email')),
+            ];
+
+            $data = array(
+                'getuserDetail' => $this->getmyPersonalDetail(session('user_id')),
+                'getbusinessDetail' => $this->getmyBusinessDetail(session('user_id')),
+                'merchantservice' => $this->_merchantServices(),
+                'getCard' => $this->getUserCard(session('myID')),
+                'getBank' => $this->getUserBank(session('myID')),
+                'getTax' => $this->getTax(session('myID')),
+                'stores' => ActivationEstore::get(),
+                // 'listbank' => $this->getBankList(),
+                // 'escrowfund' => $this->getEscrowFunding(),
+            );
+
+
+
+
+
+            return view('estore.activateestore')->with(['pages' => 'Estore Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'invoiceLinkImport' => $invoiceLinkImport, 'transCost' => $transCost]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
     //suspended stores
     public function suspendedStores(Request $req)
     {
@@ -386,7 +482,7 @@ class StoreController extends Controller
                 // 'escrowfund' => $this->getEscrowFunding(),
             );
 
-               
+
 
 
 
@@ -761,7 +857,7 @@ class StoreController extends Controller
 
         $data=StoreMainShop::withTrashed()->find($id)->restore();
 
-        return back()->with("msg","<div class='alert alert-success'>Store Suspended Successfully</div>");
+        return back()->with("msg","<div class='alert alert-success'>Store restored Successfully</div>");
     }
 
     //delete productCategory
@@ -807,7 +903,7 @@ class StoreController extends Controller
 
 
                 if($req->hasFile('businessLogo')){
-                    $businessLogo = $this->uploadImageFile($req->file('businessLogo'), $routing . "/logo");
+                    $businessLogo = $this->uploadImageFile($req->file('businessLogo'), $routing . "/logo", 100, 100);
                 }
                 else{
                     $businessLogo = $storeId->businessLogo;
@@ -823,10 +919,10 @@ class StoreController extends Controller
 
                             foreach ($req->file('headerContent') as $headerContentFile) {
 
-                                $headContentImage .= $this->uploadImageFile($headerContentFile, $routing . "/headsection") . ", ";
+                                $headContentImage .= $this->uploadImageFile($headerContentFile, $routing . "/headsection", 1900, 800 ) . ", ";
                             }
                         } else {
-                            $headContentImage = $this->uploadImageFile($req->file('headerContent'), $routing . "/headsection");
+                            $headContentImage = $this->uploadImageFile($req->file('headerContent'), $routing . "/headsection", 1900, 800);
                         }
                     }
                 }
@@ -846,10 +942,10 @@ class StoreController extends Controller
 
                             foreach ($req->file('advertimage') as $advertSectionFile) {
 
-                                $advertSectionImage .= $this->uploadImageFile($advertSectionFile, $routing . "/advertsection") . ", ";
+                                $advertSectionImage .= $this->uploadImageFile($advertSectionFile, $routing . "/advertsection", 400, 400) . ", ";
                             }
                         } else {
-                            $advertSectionImage = $this->uploadImageFile($req->file('advertimage'), $routing . "/advertsection");
+                            $advertSectionImage = $this->uploadImageFile($req->file('advertimage'), $routing . "/advertsection", 400, 400);
                         }
                     }
                 }
@@ -886,7 +982,7 @@ class StoreController extends Controller
         return redirect()->route('review e-store')->with($status, $message);
     }
 
-    public function uploadImageFile($file, $fileroute)
+    public function uploadImageFile($file, $fileroute, $width = null, $height = null)
     {
         //Get filename with extension
         $filenameWithExt = $file->getClientOriginalName();
@@ -898,7 +994,12 @@ class StoreController extends Controller
         $fileNameToStore = rand() . '_' . time() . '.' . $extension;
 
 
-        $file->move(public_path('../../shopstore/' . $fileroute . '/'), $fileNameToStore);
+        $img = Image::make($file)->fit($width, $height);
+
+        $img->save('shopstore/' . $fileroute . '/'.$fileNameToStore);
+
+
+        // $file->move(public_path('../../shopstore/' . $fileroute . '/'), $fileNameToStore);
 
 
         $docPath = route('home') . "/shopstore/" . $fileroute . "/" . $fileNameToStore;

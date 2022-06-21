@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Route; 
+use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -77,8 +77,8 @@ Route::prefix('/v1')->group(function () {
         // TODO 2:: Do a post route to send payload to the controller ...
         Route::post('investor/interestpayload',['uses' => 'api\v1\InvestorRelationController@investorInterestPayload']);
 
-        
-        // TODO 3:: Do a get specific for the users interest.. 
+
+        // TODO 3:: Do a get specific for the users interest..
         Route::get('investor/get-specific',['uses' => 'api\v1\InvestorRelationController@investorGetSpecificPost']);
         Route::get('investor/express-interest',['uses' => 'api\v1\InvestorRelationController@investorExpressInteret']);
 
@@ -91,7 +91,14 @@ Route::prefix('/v1')->group(function () {
 
         Route::post('profile',  ['uses' => 'api\v1\UserController@updateProfile'])->name('update profile');
 
+        // Points and Reward
+        Route::get('/acquiredpoints', ['uses' => 'api\v1\UserController@acquiredPoints', 'as' => 'acquired points']);
+
+        Route::post('/claimmypoints', ['uses' => 'api\v1\UserController@claimMyPoints', 'as' => 'claim my points']);
+
         Route::post('changeplan',  ['uses' => 'api\v1\UserController@changePlan'])->name('change plan');
+
+        Route::get('getsubscriptionplan',  ['uses' => 'api\v1\UserController@getMySubscription'])->name('get my subscription');
 
 
         Route::post('linkaccount',  ['uses' => 'api\v1\UserController@linkAccount'])->name('link account');
@@ -341,6 +348,11 @@ Route::prefix('/v1')->group(function () {
         Route::get('/getallcrossborderpayment', ['uses' => 'CurrencyFxController@getAllCrossBorderPayment', 'as' => 'currency fx get all cross border payment']);
         Route::get('/getpendingcrossborderpayment', ['uses' => 'CurrencyFxController@getPendingCrossBorderPayment', 'as' => 'currency fx get pending cross border payment']);
 
+
+
+        Route::get('/cross-border-beneficiary', ['uses' => 'CurrencyFxController@getCrossBorderBeneficiaries', 'as' => 'get cross border beneficiary']);
+
+
         // Convert Money to Send
 
         Route::post('/convertmoneytosend', ['uses' => 'CurrencyFxController@convertMoneyToTransfer', 'as' => 'currency fx convert money to transfer']);
@@ -361,7 +373,12 @@ Route::prefix('/v1')->group(function () {
         // Shop
         Route::post('/shop/product/addtowishlist', ['uses' => 'ShopController@addToWishList', 'as' => 'add to wish list']);
         Route::post('/shop/product/addtocart', ['uses' => 'ShopController@addToCart', 'as' => 'add to cart']);
+        Route::get('/shop/product/loadmycart', ['uses' => 'ShopController@loadMyCart', 'as' => 'load my cart']);;
 
+        Route::post('/shop/product/deliveryoption', ['uses' => 'ShopController@deliveryOptionDetails', 'as' => 'delivery option details']);
+
+
+        Route::post('/shop/product/removecartitem', ['uses' => 'ShopController@removeCartItem', 'as' => 'remove cart item']);
 
 
         // Estore
@@ -389,4 +406,7 @@ Route::prefix('/v1')->group(function () {
     Route::post('walletbalance',  ['uses' => 'api\v1\MerchantApiController@getMyWalletBalance', 'as' => 'check customer wallet balance']);
 
     Route::get('/userdata', ['uses' => 'CurrencyFxController@getUserData', 'as' => 'currency user data']);
+
+    Route::get('/ps-account-details', ['uses' => 'CurrencyFxController@paysprintAccountDetails', 'as' => 'get paysprint account details']);
+
 });

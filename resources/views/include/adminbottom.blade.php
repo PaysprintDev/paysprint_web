@@ -30,6 +30,8 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     $.widget.bridge('uibutton', $.ui.button);
 </script>
 
+<!-- bootstrap js-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="{{ asset('ext/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
 
@@ -182,6 +184,23 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         $('#example3').DataTable({
             'paging': true,
             'pageLength': 200,
+            'lengthChange': true,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': true,
+            dom: 'Bfrtip',
+            buttons: [
+                'copyHtml5',
+                'excelHtml5',
+                'csvHtml5',
+                'pdfHtml5'
+            ]
+        });
+
+        $('#promousers').DataTable({
+            'paging': true,
+            'pageLength': 20,
             'lengthChange': true,
             'searching': true,
             'ordering': true,
@@ -1719,6 +1738,26 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                 if (willDelete) {
 
                     $("#thisform" + escrow_id).submit();
+
+                } else {
+
+                }
+            });
+    }
+
+
+    function declineEsPay(escrow_id) {
+        swal({
+                title: "Are you sure?",
+                text: "Click on OK to decline",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+
+                    $("#delthisform" + escrow_id).submit();
 
                 } else {
 
@@ -4796,7 +4835,7 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     }
 
 
-    function deleteInvestorPost() {
+    function deleteInvestorPost(id) {
 
         swal({
                 title: "Are you sure?",
@@ -4807,12 +4846,30 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
             })
             .then((willDelete) => {
                 if (willDelete) {
-                    $('#delete').submit();
+                    $('#deletepost'+id).submit();
                 }
             });
 
 
     }
+
+    function deleteInvestorNews(id) {
+
+swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this news!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            $('#deletenews'+id).submit();
+        }
+    });
+
+
+}
 
     function deleteStore(id) {
 
@@ -4825,7 +4882,62 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
             })
             .then((willDelete) => {
                 if (willDelete) {
-                    $('#deletestore'+id).submit();
+                    $('#deletestore' + id).submit();
+                }
+            });
+
+
+    }
+
+    function deleteClaim(id) {
+
+swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this claim!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            $('#deleteclaim' + id).submit();
+        }
+    });
+
+
+}
+
+function restoreClaim(id) {
+
+swal({
+        title: "Are you sure?",
+        text: "You are about to restore this Claim!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            $('#restoreclaim' + id).submit();
+        }
+    });
+
+
+}
+
+
+    function integration(id) {
+
+        swal({
+                title: "Are you sure?",
+                text: "Click on OK to continue",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $('#integration' + id).submit();
                 }
             });
 
@@ -4843,7 +4955,7 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
             })
             .then((willDelete) => {
                 if (willDelete) {
-                    $('#deletecategory'+id).submit();
+                    $('#deletecategory' + id).submit();
                 }
             });
 
@@ -4878,7 +4990,7 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
             })
             .then((willDelete) => {
                 if (willDelete) {
-                    $('#activation').submit();
+                    $('#activation'+ id).submit();
                 }
             });
     }

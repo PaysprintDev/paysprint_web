@@ -10,7 +10,7 @@
                     {{-- <div class="col-lg-6">
                         <h3>Plugin DataTable</h3>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="../dashboard.html">Home</a></li>
+                            <li class="breadcrumb-item"><a href="../{{ route('dashboard') }}">Home</a></li>
                             <li class="breadcrumb-item">Tables</li>
                             <li class="breadcrumb-item">Data Tables</li>
                             <li class="breadcrumb-item active">Plug in</li>
@@ -64,7 +64,7 @@
                                     @csrf
                                     <div class="box-body">
 
-                                        
+
 
                                         <div class="row">
                                             <div class=" col-md-6 ">
@@ -161,16 +161,16 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>s
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td style="font-weight: bold; color: black;">Total: </td>
-                                                    <td style="font-weight: bold; color: navy;">₦16,135</td>
-                                                    <td style="font-weight: bold; color: green;">+₦16,135</td>
-                                                    <td style="font-weight: bold; color: red;">₦0.00</td>
-                                                    </tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td style="font-weight: bold; color: black;">Total: </td>
+                                                <td style="font-weight: bold; color: navy;">₦16,135</td>
+                                                <td style="font-weight: bold; color: green;">+₦16,135</td>
+                                                <td style="font-weight: bold; color: red;">₦0.00</td>
+                                            </tr>
                                         </tfoot>
                                     </table>
                                 </div>

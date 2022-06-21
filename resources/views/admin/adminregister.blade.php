@@ -80,7 +80,6 @@
             color: red;
             font-weight: bold;
         }
-
     </style>
 
 </head>
@@ -769,6 +768,17 @@
                         href="{{ route('AdminLogin') }}">Login</a></small></strong><br>
 
 
+
+            <br>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <p style="font-size: 16px; font-weight: 600; text-align: center;"><img
+                            src="https://img.icons8.com/cute-clipart/40/undefined/security-checked.png" />
+                        Protected by bank-level security</p>
+                </div>
+
+            </div>
 
 
         </div>

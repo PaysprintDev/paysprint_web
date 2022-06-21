@@ -8,6 +8,7 @@
         border-radius: 20px;
     }
 
+
     .banner-content {
         background-color: #fff;
         padding: 10px;
@@ -23,9 +24,12 @@
             <div class="home5-slider swiper-container">
                 <div class="swiper-wrapper">
 
+
                     @for ($i = 0; $i < count(array_filter(explode(', ', $data['mystore']->headerContent))); $i++)
                         @if (count(array_filter(explode(', ', $data['mystore']->headerTitle))) == count(array_filter(explode(', ', $data['mystore']->headerContent))) && count(array_filter(explode(', ', $data['mystore']->headerSubtitle))) == count(array_filter(explode(', ', $data['mystore']->headerContent))) && array_key_exists($i, array_filter(explode(', ', $data['mystore']->headerContent))))
                             <div class="swiper-slide">
+
+
 
 
                                 @if (array_key_exists($i, array_filter(explode(', ', $data['mystore']->headerContent))))
@@ -81,9 +85,12 @@
                                     style="background-image:url('{{ array_filter(explode(', ', $data['mystore']->headerContent))[0] }}');">
                                     <div class="h-s-content">
 
-                                        <h1>{{ array_filter(explode(', ', $data['mystore']->headerTitle))[0] }}</h1>
+                                        <h1>{{ count(array_filter(explode(', ', $data['mystore']->headerTitle))) > 0 ? array_filter(explode(', ', $data['mystore']->headerTitle))[0] : '' }}
+                                        </h1>
 
-                                        <h3>{{ array_filter(explode(', ', $data['mystore']->headerSubtitle))[0] }}</h3>
+                                        <h3>
+                                            {{ count(array_filter(explode(', ', $data['mystore']->headerSubtitle))) > 0 ? array_filter(explode(', ', $data['mystore']->headerSubtitle))[0] : '' }}
+                                        </h3>
 
                                         <a href="#">Shop now</a>
                                     </div>
@@ -144,8 +151,11 @@
                                                 style="width: 100%; height: 280px; object-fit:cover;">
                                         </a>
                                         <div class="banner-content">
-                                            <span>{{ array_filter(explode(', ', $data['mystore']->advertTitle))[0] }}</span>
-                                            <h2>{{ array_filter(explode(', ', $data['mystore']->advertSubtitle))[0] }}
+                                            <span>
+                                                {{ count(array_filter(explode(', ', $data['mystore']->advertTitle))) > 0 ? array_filter(explode(', ', $data['mystore']->advertTitle))[0] : '' }}
+                                            </span>
+                                            <h2>{{ count(array_filter(explode(', ', $data['mystore']->advertSubtitle))) > 0 ? array_filter(explode(', ', $data['mystore']->advertSubtitle))[0] : '' }}
+                                            </h2>
                                             </h2>
                                             <a href="#">Shop now <i class="fa fa-angle-right"></i></a>
                                         </div>
@@ -182,14 +192,34 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="service-box">
+                        <div class="service-box" style="cursor: pointer;">
                             <div class="s-box">
                                 <i class="ti-money"></i>
-                                <div class="service-content">
+                                <div class="service-content" data-bs-toggle="modal" data-bs-target="#refundModal">
                                     <span>Return & refund</span>
-                                    <p>Money back guarantee</p>
+                                    <p>Click to read</p>
                                 </div>
                             </div>
+
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="refundModal" tabindex="-1" aria-labelledby="refundModalLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="refundModalLabel">Return & refund</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            {!! $data['mystore']->refundPolicy !!}
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                         <div class="service-box">
                             <div class="s-box">
@@ -301,14 +331,14 @@
 
 
                                             @foreach ($data['myproduct'] as $product)
-                                                <div class="swiper-slide">
+                                                <div class="swiper-slideqqq" style="padding: 10px 10px 50px;">
                                                     <div class="tab-product">
                                                         <div class="tred-pro">
                                                             <div class="tr-pro-img">
                                                                 <a href="#">
-                                                                    <img src="{{ $product->image }}" alt="pro-img1"
-                                                                        class="img-fluid"
-                                                                        style="width: 100%;height: auto;object-fit: contain;">
+                                                                    <img src="{{ $product->image }}"
+                                                                        alt="{{ $product->productName }}"
+                                                                        class="img-fluid">
                                                                     <img src="{{ $product->image }}"
                                                                         alt="additional image"
                                                                         class="img-fluid additional-image">
@@ -322,15 +352,16 @@
 
 
                                                                 @guest
-                                                                    <a href="javascript:void(0)" class="w-c-q-icn"
+                                                                    <a title="add to wishlist" href="javascript:void(0)"
+                                                                        class="w-c-q-icn"
                                                                         onclick="addWishlist('{{ $product->id }}', 0)"><i
                                                                             class="fa fa-heart"></i></a>
-                                                                    <a href="javascript:void(0)"
+                                                                    <a title="add to cart" href="javascript:void(0)"
                                                                         onclick="addCart('{{ $product->id }}', 0)"
                                                                         class="w-c-q-icn"><i
                                                                             class="fa fa-shopping-bag"></i></a>
-                                                                    <a href="javascript:void(0)" class="w-c-q-icn"
-                                                                        data-bs-toggle="modal"
+                                                                    <a title="view product" href="javascript:void(0)"
+                                                                        class="w-c-q-icn" data-bs-toggle="modal"
                                                                         data-bs-target="#productModal{{ $product->id }}"><i
                                                                             class="fa fa-eye"></i></a>
 
@@ -338,16 +369,16 @@
 
 
                                                                 @auth
-                                                                    <a href="javascript:void(0)"
+                                                                    <a title="add to wishlist" href="javascript:void(0)"
                                                                         class="w-c-q-icn wishes{{ $product->id }}"
                                                                         onclick="addWishlist('{{ $product->id }}', {{ Auth::id() }})"><i
                                                                             class="fa fa-heart"></i></a>
-                                                                    <a href="javascript:void(0)"
+                                                                    <a title="add to cart" href="javascript:void(0)"
                                                                         onclick="addCart('{{ $product->id }}', {{ Auth::id() }})"
                                                                         class="w-c-q-icn carty{{ $product->id }}"><i
                                                                             class="fa fa-shopping-bag "></i></a>
-                                                                    <a href="javascript:void(0)" class="w-c-q-icn"
-                                                                        data-bs-toggle="modal"
+                                                                    <a title="view product" href="javascript:void(0)"
+                                                                        class="w-c-q-icn" data-bs-toggle="modal"
                                                                         data-bs-target="#productModal{{ $product->id }}"><i
                                                                             class="fa fa-eye"></i></a>
 
@@ -385,24 +416,12 @@
                                             @endforeach
 
 
-
-
-
-
-
-
-
-
-
-
-
-
                                         </div>
                                     </div>
-                                    <div class="swiper-buttons">
+                                    {{-- <div class="swiper-buttons">
                                         <div class="swiper-button-prev"></div>
                                         <div class="swiper-button-next"></div>
-                                    </div>
+                                    </div> --}}
                                 </div>
 
                             </div>
@@ -1051,6 +1070,7 @@
         {{-- Product Open Modal Here --}}
         <section class="quick-view">
 
+
             @for ($i = 0; $i < count($data['myproduct']); $i++)
                 <div class="modal fade" id="productModal{{ $data['myproduct'][$i]->id }}" tabindex="-1"
                     aria-labelledby="productModalLabel" aria-hidden="true">
@@ -1145,12 +1165,10 @@
 
         </section>
 
-
-
-
-
         {{-- End Product Open Modal Here --}}
     @endif
+
+
 
 
 @endsection

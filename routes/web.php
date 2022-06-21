@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\MerchantPageController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\WalletCreditController;
+use App\Http\Controllers\AdminController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,6 +26,10 @@ use App\Http\Controllers\ShopController;
 // App Logger
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
+
+Route::get('testrazor', 'MonerisController@testRazor');
+
+
 // Route::get('feecharge', 'MaintenanceFeeCharge@monthlyMaintenaceFee');
 Route::get('renewsub', 'MaintenanceFeeCharge@renewSubscription');
 Route::get('refreshbid', 'CurrencyFxController@refreshBids');
@@ -34,6 +40,8 @@ Route::get('accountactivity', 'CheckSetupController@checkAccountAcvtivity');
 Route::get('updatestatementcountry', 'CheckSetupController@statementCountry');
 Route::get('chargefee', 'CheckSetupController@chargeFee');
 Route::get('insertcountry', 'CheckSetupController@insertCountry');
+Route::get('merchanttest', 'CheckSetupController@merchantTestMode');
+Route::get('merchantlive', 'CheckSetupController@merchantLiveMode');
 Route::get('reportstatus', 'CheckSetupController@reportStatus');
 Route::get('updatefee', 'CheckSetupController@updateMonthlyFee');
 Route::get('refundbycountryupdate', 'CheckSetupController@refundbyCountry');
@@ -60,6 +68,10 @@ Route::get('giveaccountcheck', 'CheckSetupController@giveAccountCheckUpgrade');
 Route::get('downcheckmerchant', 'CheckSetupController@downcheckMerchants');
 
 
+// In-App Notifications Controller
+Route::get('idvnotificationmessage', 'CheckSetupController@idvNotifationMessage');
+
+
 // Send Notice to Users and Merchants...
 Route::get('publicizemerchant', 'CheckSetupController@publicizeMerchantToConsumer');
 Route::get('notify-merchant-page', 'CheckSetupController@notifyMerchantPage');
@@ -78,6 +90,11 @@ Route::get('bvnlistupdate', 'CheckSetupController@bvnListUpdate');
 
 
 Route::get('updatepricinglist', 'CheckSetupController@updatePricingUnits');
+
+
+
+// Merchant to Customer Information
+Route::get('merchantshopservice', 'CheckSetupController@merchantsShopService');
 
 
 
@@ -159,11 +176,14 @@ Route::get('/clear', function () {
 
 // Major Routes
 
+
 Route::get('/', ['uses' => 'HomeController@homePage', 'as' => 'home']);
+Route::get('/estore', ['uses' => 'HomeController@estores', 'as' => 'paysprint estore']);
 
 Route::get('/merchant-home', ['uses' => 'HomeController@merchantIndex', 'as' => 'merchant home']);
 
 Route::get('/home', ['uses' => 'HomeController@authIndex', 'as' => 'user home']);
+Route::get('/referred', ['uses' => 'HomeController@referredDetails', 'as' => 'referred details']);
 
 
 
@@ -204,6 +224,12 @@ Route::prefix('product')->group(function () {
 	Route::post('/place-order', ['uses' => 'ShopController@placeOrder', 'as' => 'place order']);
 	Route::get('payment', ['uses' => 'HomeController@estorePayment', 'as' => 'estore payment']);
 	Route::get('/shop', ['uses' => 'MerchantPageController@merchantShopPage', 'as' => 'product shop']);
+	Route::get('/orders', ['uses' => 'MerchantPageController@merchantOrders', 'as' => 'orders']);
+	Route::get('/order-details', ['uses' => 'MerchantPageController@singleOrder', 'as' => 'single orders']);
+	Route::get('/wishlist', ['uses' => 'MerchantPageController@wishlist', 'as' => 'wishlist']);
+	Route::post('/deletelist/{id}', ['uses' => 'MerchantPageController@deleteWishlist', 'as' => 'delete wishlist']);
+
+
 });
 
 
@@ -364,6 +390,8 @@ Route::prefix('merchant')->group(function () {
 	Route::get('/invoicepage', [MerchantPageController::class, 'invoicePage'])->name('invoice page');
 	Route::get('/paymentgateway', [MerchantPageController::class, 'paymentGateway'])->name('new merchant payment gateway');
 	Route::get('/estore', [MerchantPageController::class, 'orderingSystem'])->name('ordering system');
+	Route::get('/storepickupaddress', [MerchantPageController::class, 'storepickupAddress'])->name('storepickup address');
+	Route::get('/deliverypickupaddress', [MerchantPageController::class, 'deliverypickupAddress'])->name('deliverypickup address');;
 
 
 	Route::get('businessprofile/{id}', [MerchantPageController::class, 'businessProfile'])->name('merchant business profile');
@@ -377,7 +405,9 @@ Route::prefix('merchant')->group(function () {
 	Route::post('/updatediscount/{id}', [ShopController::class, 'updateDiscount'])->name('update discount');
 	Route::post('/deletediscount/{id}', [ShopController::class, 'deleteDiscount'])->name('delete discount');
 	Route::post('/storepickupaddress', [ShopController::class, 'storePickupAddress'])->name('store pickup address');
+	Route::post('/editstorepickupaddress/{id}', [ShopController::class, 'editStorePickupAddress'])->name('edit pickup address');
 	Route::post('/storeshippingaddress', [ShopController::class, 'storeShippingAddress'])->name('store shipping address');
+	Route::post('/editstoreshippingaddress/{id}', [ShopController::class, 'editStoreShippingAddress'])->name('edit shipping address');
 	Route::post('/storeproducttax', [ShopController::class, 'storeProductTax'])->name('store product tax');
 	Route::post('/editproducttax/{id}', [ShopController::class, 'editProductTax'])->name('edit product tax');
 
@@ -580,6 +610,8 @@ Route::prefix('Admin/wallet')->group(function () {
 
 	Route::post('confirmespay', ['uses' => 'AdminController@confirmEsPay', 'as' => 'confirm es pay']);
 
+	Route::post('deleteespay', ['uses' => 'AdminController@deleteEsPay', 'as' => 'delete es pay']);
+
 	Route::get('refundmoneyrequestbycountry', ['uses' => 'AdminController@refundMoneyRequestByCountry', 'as' => 'refund details by country']);
 	Route::get('processedrefund', ['uses' => 'AdminController@processedRefundMoneyRequest', 'as' => 'refund processed']);
 
@@ -757,12 +789,17 @@ Route::prefix('Admin/')->group(function () {
 		Route::get('newpost', ['uses' => 'AdminController@newInvestorPost', 'as' => 'new investors post']);
 		Route::get('subscribers', ['uses' => 'AdminController@investorSubscriber', 'as' => 'new investor subscriber']);
 		Route::get('investorposts', ['uses' => 'AdminController@investorPosts', 'as' => 'investorposts']);
+		Route::post('createnews', ['uses' => 'AdminController@createInvestorNews', 'as' => 'create investor news']);
 		Route::get('createpost', ['uses' => 'AdminController@createInvestorPost', 'as' => 'create investor post']);
 		Route::get('createnews', ['uses' => 'AdminController@createInvestorNews', 'as' => 'create investor news']);
 		Route::post('createpost', ['uses' => 'AdminController@createInvestorPosts', 'as' => 'create investor posts']);
         Route::get('editpost/{id}', ['uses' => 'AdminController@editInvestorPost', 'as' => 'edit investor post' ]);
         Route::post('editpost/{id}', ['uses' => 'AdminController@editInvestorPosts', 'as' => 'edit investor posts' ]);
-        Route::post('deletepost/{id}', ['uses' => 'AdminController@deleteInvestorPosts', 'as' => 'delete investor post' ]);
+        Route::post('deletepost/{id}', ['uses' => 'AdminController@deleteInvestorPost', 'as' => 'delete investor post' ]);
+		Route::get('/investorsnews',['uses' => 'AdminController@FetchInvestorNews', 'as' => 'investors news' ] );
+		Route::get('editnews/{id}', ['uses' => 'AdminController@editInvestorNews', 'as' => 'edit investor news' ]);
+		Route::post('updatenews/{id}', ['uses' => 'AdminController@updateInvestorNews', 'as' => 'update investor news' ]);
+		Route::post('deletenews/{id}', ['uses' => 'AdminController@deleteInvestorNews', 'as' => 'delete investor news' ]);
 
 	});
 
@@ -774,12 +811,14 @@ Route::prefix('Admin/')->group(function () {
 	// Routes for claiming points
 
 	Route::post('claimpoints', ['uses' => 'HomeController@claimedPoints', 'as' => 'claim point']);
+	Route::post('claimreferralpoints', ['uses' => 'HomeController@claimedReferralPoints', 'as' => 'claim referral point']);
 
 	Route::post('claimpointsadmin', ['uses' => 'AdminController@claimedPointsAdmin', 'as' => 'claim point admin']);
 
 	Route::get('claimpointhistory', ['uses' => 'HomeController@claimedHistory', 'as' => 'claim history']);
 
 	Route::get('claimpointhistoryadmin', ['uses' => 'HomeController@claimedHistoryAdmin', 'as' => 'claim history admin']);
+
 
 
 
@@ -838,6 +877,7 @@ Route::prefix('Admin/')->group(function () {
 
 	Route::get('gatewayactivity', ['uses' => 'AdminController@gatewayActivity', 'as' => 'gateway activity']);
 	Route::get('bvncheckdetails', ['uses' => 'AdminController@bvnCheckDetails', 'as' => 'bvncheckdetails']);
+	Route::get('utilityandbills', ['uses' => 'AdminController@utilityAndBills', 'as' => 'utilityandbills']);
 	Route::get('checktransaction/{id}', ['uses' => 'AdminController@checkTransaction', 'as' => 'check transaction']);
 	Route::get('supportactivity', ['uses' => 'AdminController@supportPlatformActivity', 'as' => 'support activity']);
 	Route::get('activityperday', ['uses' => 'AdminController@platformActivityPerDay', 'as' => 'activity per day']);
@@ -852,6 +892,7 @@ Route::prefix('Admin/')->group(function () {
 	Route::post('generateusersupportagent', ['uses' => 'AdminController@generateSupportAgent', 'as' => 'generate account for support']);
 	Route::post('editthisusersupportagent', ['uses' => 'AdminController@editThisSupportAgent', 'as' => 'edit account for support']);
 	Route::post('deletesupport/{id}', ['uses' => 'AdminController@deleteSupportAgent', 'as' => 'delete support agent']);
+	Route::post('integrationaction/{id}', ['uses' => 'AdminController@integrationAction', 'as' => 'integration action']);
 
 
 	// Create referrers
@@ -861,6 +902,7 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('editreferreragent/{id}', ['uses' => 'AdminController@editReferrerAgent', 'as' => 'edit referrer agent']);
 	Route::post('editthisreferreragent', ['uses' => 'AdminController@editThisReferrerAgent', 'as' => 'edit account for referrer']);
 	Route::post('deletereferrer/{id}', ['uses' => 'AdminController@deleteReferrerAgent', 'as' => 'delete referrer agent']);
+
 
 
 	Route::post('flagthismoney', ['uses' => 'AdminController@flagThisMoney', 'as' => 'flag this money']);
@@ -942,6 +984,26 @@ Route::post('create_facility', ['uses' => 'BuildingController@createFacility', '
 Route::post('exporttoExcel', ['uses' => 'HomeController@exportToExcel', 'as' => 'export to excel']);
 Route::post('exportstatementtoExcel', ['uses' => 'AdminController@exportStatementToExcel', 'as' => 'export statement to excel']);
 Route::post('exporttoPdf', ['uses' => 'HomeController@exportToPdf', 'as' => 'export to pdf']);
+
+
+//testng upload excel to DB skima
+Route::get('/promopage',['uses' => 'AdminController@promoPage', 'as' => 'promo page']);
+Route::post('/uploadpromousers',['uses' => 'AdminController@uploadPromoUsers', 'as' => 'upload promo users']);
+Route::get('/promousers',['uses' => 'AdminController@promoUsers', 'as' => 'promo users']);
+Route::get('/promoreport',['uses' => 'AdminController@promoReport', 'as' => 'promo report']);
+Route::post('/topup',['uses' => 'AdminController@topUpWallet', 'as' => 'top up']);
+Route::get('/viewreport',['uses' => 'AdminController@viewReport', 'as' => 'view report']);
+Route::get('/referralclaim', ['uses' => 'AdminController@referralClaim', 'as' => 'referral claim']);
+Route::get('/referralreport', ['uses' => 'AdminController@referralReport', 'as' => 'referral report']);
+Route::get('/viewreferralreport',['uses' => 'AdminController@viewReferralReport', 'as' => 'view referral report']);
+Route::get('/referraldetails',['uses' => 'AdminController@viewReferralDetails', 'as' => 'view referral details']);
+Route::post('/processreferralclaim',['uses' => 'AdminController@processReferralClaim', 'as' => 'process referral claim']);
+Route::post('/processpointclaim',['uses' => 'AdminController@processPointClaim', 'as' => 'process point claim']);
+Route::get('/successfulreferralclaim',['uses' => 'AdminController@successfulReferralClaim', 'as' => 'successful referral claim']);
+Route::post('/deleteclaim/{id}',['uses' => 'AdminController@deleteClaim', 'as' => 'delete claim']);
+Route::post('/restoreclaim/{id}',['uses' => 'AdminController@restoreClaim', 'as' => 'restore claim']);
+Route::get('/suspendedreferralclaim', ['uses' => 'AdminController@suspendedReferralClaim', 'as' => 'suspended referral claim']);
+
 
 
 
@@ -1036,6 +1098,7 @@ Route::prefix('Admin/estore')->group(function () {
 	Route::post('/deletecategory/{id}',['uses' => 'StoreController@deleteCategory', 'as' => 'delete category']);
 	Route::post('/updatestate/{id}',['uses' => 'StoreController@updateState', 'as' => 'update state']);
 	Route::post('/activate/{id}',['uses' => 'StoreController@activateStore', 'as' => 'activate store']);
+	Route::get('/activatestore', ['uses' => 'StoreController@activateEstore', 'as' => 'activate e-store']);
 });
 
 
