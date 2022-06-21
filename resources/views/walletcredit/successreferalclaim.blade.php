@@ -59,7 +59,7 @@
                                                                 <th>Phone</th>
                                                                 <th>Country</th>
                                                                 <th>Account Type</th>
-                                                                <th>Date</th>
+                                                                <th>Date Processed</th>
                                                                 {{-- <th>Points Claimed</th> --}}
                                                                 {{-- <th>Remaining Points</th> --}}
                                                                 {{-- <th>Action</th> --}}

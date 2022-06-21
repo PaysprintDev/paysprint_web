@@ -12433,6 +12433,7 @@ class AdminController extends Controller
             $consumerfee=$consumer->fixed;
             $merchantfee= $merchant->fixed;
             $country= $consumer->country;
+            $merchantcountry=$merchant->country;
        
 
 
@@ -12451,7 +12452,7 @@ class AdminController extends Controller
                 ]);          
         }
     
-        if( $usertype == 'Merchant' && $country==$usercountry){
+        if( $usertype == 'Merchant' && $merchantcountry==$usercountry){
             $referralclaim=$merchantfee/2;
             $userinfo= User::where('id',$client)->first();
             $walletbalance=$userinfo->wallet_balance;
@@ -12464,60 +12465,161 @@ class AdminController extends Controller
             ]);          
     }
 
-            // Send SMS
+     // Send SMS
 
-            $message = 'Congratulations!, You have received a wallet credit of ' . $userinfo->currencyCode . ' ' . number_format($referralclaim, 2) . ' from PaySprint as referral bonus' . '. Your wallet balance is ' .$userinfo->currencyCode.' '.number_format($totalwalletbalance, 2) . '. Thanks for Choosing PaySprint.';
+     $message = 'Congratulations!, You have received a wallet credit of ' . $userinfo->currencyCode . ' ' . number_format($referralclaim, 2) . ' from PaySprint as referral bonus' . '. Your wallet balance is ' .$userinfo->currencyCode.' '.number_format($totalwalletbalance, 2) . '. Thanks for Choosing PaySprint.';
 
-            $this->name = $userinfo->name;
-            // $this->email = "youngskima@gmail.com";
-            $this->to = $userinfo->email;
-            $this->subject = "PaySprint Wallet Referral Bonus";
-    
-            $this->message = $message;
-    
-    
-            $this->sendEmail($this->to, "Refund Request");
-            $this->createNotification($userinfo->ref_code, $message);
-            $activity = 'Wallet credit of '.$userinfo->currencyCode.''.$referralclaim.'in wallet for referral ';
-            $credit = $referralclaim;
-            $debit = 0;
-            $reference_number = "wallet-" . date('dmY') . time();
-            $balance = 0;
-            $trans_date = date('Y-m-d');
-            $status = "Delivered";
-            $action = "Wallet credit";
-            $regards = $userinfo->ref_code;
-            $statement_route = "wallet";
-    
-            // Senders statement
-            $this->insStatement($userinfo->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $userinfo->country, 0);
-    
-    
-    
-            $usersPhone = User::where('email', $userinfo->email)->where('telephone', 'LIKE', '%+%')->first();
-    
-            if (isset($usersPhone)) {
-    
-                $recipients = $userinfo->telephone;
-            } else {
-                $recipients = "+" . $userinfo->code . $userinfo->telephone;
-            }
-    
-    
-    
-            if ($userinfo->country == "Nigeria") {
-    
-                $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
-    
-                $this->sendSms($message, $correctPhone);
-            } else {
-                $this->sendMessage($message, $recipients);
-            }
+     $this->name = $userinfo->name;
+     // $this->email = "youngskima@gmail.com";
+     $this->to = $userinfo->email;
+     $this->subject = "PaySprint Wallet Referral Bonus";
+
+     $this->message = $message;
 
 
-        return back()->with("msg","<div class='alert alert-success'>Referral Claim Successful</div>");
-    }
+     $this->sendEmail($this->to, "Refund Request");
+     $this->createNotification($userinfo->ref_code, $message);
+     $activity = 'Wallet credit of '.$userinfo->currencyCode.''.$referralclaim.'in wallet for referral ';
+     $credit = $referralclaim;
+     $debit = 0;
+     $reference_number = "wallet-" . date('dmY') . time();
+     $balance = 0;
+     $trans_date = date('Y-m-d');
+     $status = "Delivered";
+     $action = "Wallet credit";
+     $regards = $userinfo->ref_code;
+     $statement_route = "wallet";
 
+     // Senders statement
+     $this->insStatement($userinfo->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $userinfo->country, 0);
+
+
+
+     $usersPhone = User::where('email', $userinfo->email)->where('telephone', 'LIKE', '%+%')->first();
+
+     if (isset($usersPhone)) {
+
+         $recipients = $userinfo->telephone;
+     } else {
+         $recipients = "+" . $userinfo->code . $userinfo->telephone;
+     }
+
+
+
+     if ($userinfo->country == "Nigeria") {
+
+         $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+
+         $this->sendSms($message, $correctPhone);
+     } else {
+         $this->sendMessage($message, $recipients);
+     }
+
+
+ return back()->with("msg","<div class='alert alert-success'>Referral Claim Successful</div>");
+}
+
+
+
+//process point claim
+public function processPointClaim(Request $req){
+    $user=$req->id;
+    $data=ClaimedPoints::where('id',$user)->first();
+    $client=$data->user_id;
+    $users=User::where('id',$client)->first();
+    $usertype=$users->accountType;
+    $usercountry=$users->country;
+$consumer=TransactionCost::where('country', $usercountry)->where('structure','Consumer Monthly Subscription')->first();
+$merchant=TransactionCost::where('country', $usercountry)->where('structure','Merchant Monthly Subscription')->first();
+ $consumerfee=$consumer->fixed;
+ $merchantfee= $merchant->fixed;
+ $country= $consumer->country;
+$merchantcountry=$merchant->country;
+
+
+
+if( $usertype == 'Individual' && $country==$usercountry){
+     $pointclaim=$consumerfee/2;
+     $userinfo= User::where('id',$client)->first();
+     $walletbalance=$userinfo->wallet_balance;
+        $totalwalletbalance=$walletbalance + $pointclaim;  
+
+     User::where('id',$client)->update([
+         'wallet_balance' => $totalwalletbalance,
+     ]);
+
+     ClaimedPoints::where('id',$user)->update([
+         'status' => 'Completed',
+     ]);          
+}
+
+if( $usertype == 'Merchant' && $merchantcountry==$usercountry){
+ $referralclaim=$merchantfee/2;
+ $userinfo= User::where('id',$client)->first();
+ $walletbalance=$userinfo->wallet_balance;
+    $totalwalletbalance=$walletbalance + $referralclaim;  
+ User::where('id',$client)->update([
+     'wallet_balance' => $totalwalletbalance,
+ ]);
+ ClaimedPoints::where('id',$user)->update([
+     'status' => 'Completed',
+ ]);          
+}
+// Send SMS
+
+$message = 'Congratulations!, You have received a wallet credit of ' . $userinfo->currencyCode . ' ' . number_format($pointclaim, 2) . ' from PaySprint as claimed points bonus' . '. Your wallet balance is ' .$userinfo->currencyCode.' '.number_format($totalwalletbalance, 2) . '. Thanks for Choosing PaySprint.';
+
+$this->name = $userinfo->name;
+// $this->email = "youngskima@gmail.com";
+$this->to = $userinfo->email;
+$this->subject = "PaySprint Wallet ClaimedPoints Credit";
+
+$this->message = $message;
+
+
+$this->sendEmail($this->to, "Refund Request");
+$this->createNotification($userinfo->ref_code, $message);
+$activity = 'Wallet credit of '.$userinfo->currencyCode.''.$pointclaim.'in wallet for claimed points  ';
+$credit = $pointclaim;
+$debit = 0;
+$reference_number = "wallet-" . date('dmY') . time();
+$balance = 0;
+$trans_date = date('Y-m-d');
+$status = "Delivered";
+$action = "Wallet credit";
+$regards = $userinfo->ref_code;
+$statement_route = "wallet";
+
+// Senders statement
+$this->insStatement($userinfo->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $userinfo->country, 0);
+
+
+
+$usersPhone = User::where('email', $userinfo->email)->where('telephone', 'LIKE', '%+%')->first();
+
+if (isset($usersPhone)) {
+
+    $recipients = $userinfo->telephone;
+} else {
+    $recipients = "+" . $userinfo->code . $userinfo->telephone;
+}
+
+
+
+if ($userinfo->country == "Nigeria") {
+
+    $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+
+    $this->sendSms($message, $correctPhone);
+} else {
+    $this->sendMessage($message, $recipients);
+}
+
+
+return back()->with("msg","<div class='alert alert-success'>Point Claim Successful</div>");
+}
+
+           
 
     //Referral Report
     public function referralReport(Request $req)
