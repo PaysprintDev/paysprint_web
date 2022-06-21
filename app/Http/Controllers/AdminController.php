@@ -12306,6 +12306,71 @@ class AdminController extends Controller
         }
     }
 
+    //suspend claim
+    public function deleteClaim(Request $req, $id){
+        $data=ReferralClaim::where('id',$id)->delete();
+
+        return back()->with("msg","<div class='alert alert-success'>Claim Suspended Successfully</div>");
+    }
+
+        //suspended referral claims
+        public function suspendedReferralClaim(Request $req)
+        {
+
+            if ($req->session()->has('username') == true) {
+                // dd(Session::all());
+
+                if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                    $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                    $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                    $payInvoice = DB::table('client_info')
+                        ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                        ->orderBy('invoice_payment.created_at', 'DESC')
+                        ->get();
+
+                    $otherPays = DB::table('organization_pay')
+                        ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                        ->orderBy('organization_pay.created_at', 'DESC')
+                        ->get();
+                } else {
+                    $adminUser = Admin::where('username', session('username'))->get();
+                    $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                    $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                    $otherPays = DB::table('invoice_payment')
+                        ->select(DB::raw('invoice_payment.transactionid, invoice_payment.name, invoice_payment.email, import_excel.amount as invoice_amount, invoice_payment.invoice_no, invoice_payment.service, invoice_payment.created_at as transaction_date, import_excel.description as description, invoice_payment.remaining_balance as runningbalance, invoice_payment.amount as amount_paid, import_excel.status, invoice_payment.mystatus'))->distinct()
+                        ->join('import_excel', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')
+                        ->where('import_excel.uploaded_by', session('user_id'))
+                        ->orderBy('invoice_payment.created_at', 'DESC')->get();
+                }
+
+
+                $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+                $transCost = $this->transactionCost();
+
+                $servicetypes = $this->getServiceTypes();
+
+                $data = [
+                    'claim' => ReferralClaim::onlyTrashed()->get()
+
+                ];
+
+
+                return view('walletcredit.suspendedclaim')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes, 'data' => $data]);
+            } else {
+                return redirect()->route('AdminLogin');
+            }
+        }
+
+
+    //restore claims
+    public function restoreClaim(Request $req, $id){
+
+        $data=ReferralClaim::withTrashed()->find($id)->restore();
+
+        return back()->with("msg","<div class='alert alert-success'>Claim restored Successfully</div>");
+    }
     //successful referral claims
     public function successfulReferralClaim(Request $req)
     {
@@ -12368,6 +12433,7 @@ class AdminController extends Controller
             $consumerfee=$consumer->fixed;
             $merchantfee= $merchant->fixed;
             $country= $consumer->country;
+            $merchantcountry=$merchant->country;
 
 
 
@@ -12375,7 +12441,7 @@ class AdminController extends Controller
                 $referralclaim=$consumerfee/2;
                 $userinfo= User::where('id',$client)->first();
                 $walletbalance=$userinfo->wallet_balance;
-                   $totalwalletbalance=$walletbalance + $referralclaim;
+                $totalwalletbalance=$walletbalance + $referralclaim;
 
                 User::where('id',$client)->update([
                     'wallet_balance' => $totalwalletbalance,
@@ -12386,15 +12452,19 @@ class AdminController extends Controller
                 ]);
         }
 
-        if( $usertype == 'Merchant' && $country==$usercountry){
+        if( $usertype == 'Merchant' && $merchantcountry==$usercountry){
             $referralclaim=$merchantfee/2;
             $userinfo= User::where('id',$client)->first();
             $walletbalance=$userinfo->wallet_balance;
+<<<<<<< HEAD
 <<<<<<< HEAD
                $bonus=$walletbalance + $referralclaim;
 =======
                $totalwalletbalance=$walletbalance + $referralclaim;
 >>>>>>> 72e86089a669f13f841b787774c4156b15989ee5
+=======
+               $totalwalletbalance=$walletbalance + $referralclaim;
+>>>>>>> d7dee03207219d5aa9a1b3b3860e5b527b2ea126
             User::where('id',$client)->update([
                 'wallet_balance' => $totalwalletbalance,
             ]);
@@ -12403,10 +12473,11 @@ class AdminController extends Controller
             ]);
     }
 
-            // Send SMS
+     // Send SMS
 
-            $message = 'Congratulations!, You have received a wallet credit of ' . $userinfo->currencyCode . ' ' . number_format($referralclaim, 2) . ' from PaySprint as referral bonus' . '. Your wallet balance is ' .$userinfo->currencyCode.' '.number_format($totalwalletbalance, 2) . '. Thanks for Choosing PaySprint.';
+     $message = 'Congratulations!, You have received a wallet credit of ' . $userinfo->currencyCode . ' ' . number_format($referralclaim, 2) . ' from PaySprint as referral bonus' . '. Your wallet balance is ' .$userinfo->currencyCode.' '.number_format($totalwalletbalance, 2) . '. Thanks for Choosing PaySprint.';
 
+<<<<<<< HEAD
             $this->name = $userinfo->name;
             // $this->email = "youngskima@gmail.com";
             $this->to = $userinfo->email;
@@ -12452,10 +12523,158 @@ class AdminController extends Controller
             } else {
                 $this->sendMessage($message, $recipients);
             }
+=======
+     $this->name = $userinfo->name;
+     // $this->email = "youngskima@gmail.com";
+     $this->to = $userinfo->email;
+     $this->subject = "PaySprint Wallet Referral Bonus";
+
+     $this->message = $message;
+>>>>>>> d7dee03207219d5aa9a1b3b3860e5b527b2ea126
 
 
-        return back()->with("msg","<div class='alert alert-success'>Referral Claim Successful</div>");
-    }
+     $this->sendEmail($this->to, "Refund Request");
+     $this->createNotification($userinfo->ref_code, $message);
+     $activity = 'Wallet credit of '.$userinfo->currencyCode.''.$referralclaim.'in wallet for referral ';
+     $credit = $referralclaim;
+     $debit = 0;
+     $reference_number = "wallet-" . date('dmY') . time();
+     $balance = 0;
+     $trans_date = date('Y-m-d');
+     $status = "Delivered";
+     $action = "Wallet credit";
+     $regards = $userinfo->ref_code;
+     $statement_route = "wallet";
+
+     // Senders statement
+     $this->insStatement($userinfo->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $userinfo->country, 0);
+
+
+
+     $usersPhone = User::where('email', $userinfo->email)->where('telephone', 'LIKE', '%+%')->first();
+
+     if (isset($usersPhone)) {
+
+         $recipients = $userinfo->telephone;
+     } else {
+         $recipients = "+" . $userinfo->code . $userinfo->telephone;
+     }
+
+
+
+     if ($userinfo->country == "Nigeria") {
+
+         $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+
+         $this->sendSms($message, $correctPhone);
+     } else {
+         $this->sendMessage($message, $recipients);
+     }
+
+
+ return back()->with("msg","<div class='alert alert-success'>Referral Claim Successful</div>");
+}
+
+
+
+//process point claim
+public function processPointClaim(Request $req){
+    $user=$req->id;
+    $data=ClaimedPoints::where('id',$user)->first();
+    $client=$data->user_id;
+    $users=User::where('id',$client)->first();
+    $usertype=$users->accountType;
+    $usercountry=$users->country;
+$consumer=TransactionCost::where('country', $usercountry)->where('structure','Consumer Monthly Subscription')->first();
+$merchant=TransactionCost::where('country', $usercountry)->where('structure','Merchant Monthly Subscription')->first();
+ $consumerfee=$consumer->fixed;
+ $merchantfee= $merchant->fixed;
+ $country= $consumer->country;
+$merchantcountry=$merchant->country;
+
+
+
+if( $usertype == 'Individual' && $country==$usercountry){
+     $pointclaim=$consumerfee/2;
+     $userinfo= User::where('id',$client)->first();
+     $walletbalance=$userinfo->wallet_balance;
+        $totalwalletbalance=$walletbalance + $pointclaim;
+
+     User::where('id',$client)->update([
+         'wallet_balance' => $totalwalletbalance,
+     ]);
+
+     ClaimedPoints::where('id',$user)->update([
+         'status' => 'Completed',
+     ]);
+}
+
+if( $usertype == 'Merchant' && $merchantcountry==$usercountry){
+ $referralclaim=$merchantfee/2;
+ $userinfo= User::where('id',$client)->first();
+ $walletbalance=$userinfo->wallet_balance;
+    $totalwalletbalance=$walletbalance + $referralclaim;
+ User::where('id',$client)->update([
+     'wallet_balance' => $totalwalletbalance,
+ ]);
+ ClaimedPoints::where('id',$user)->update([
+     'status' => 'Completed',
+ ]);
+}
+// Send SMS
+
+$message = 'Congratulations!, You have received a wallet credit of ' . $userinfo->currencyCode . ' ' . number_format($pointclaim, 2) . ' from PaySprint as claimed points bonus' . '. Your wallet balance is ' .$userinfo->currencyCode.' '.number_format($totalwalletbalance, 2) . '. Thanks for Choosing PaySprint.';
+
+$this->name = $userinfo->name;
+// $this->email = "youngskima@gmail.com";
+$this->to = $userinfo->email;
+$this->subject = "PaySprint Wallet ClaimedPoints Credit";
+
+$this->message = $message;
+
+
+$this->sendEmail($this->to, "Refund Request");
+$this->createNotification($userinfo->ref_code, $message);
+$activity = 'Wallet credit of '.$userinfo->currencyCode.''.$pointclaim.'in wallet for claimed points  ';
+$credit = $pointclaim;
+$debit = 0;
+$reference_number = "wallet-" . date('dmY') . time();
+$balance = 0;
+$trans_date = date('Y-m-d');
+$status = "Delivered";
+$action = "Wallet credit";
+$regards = $userinfo->ref_code;
+$statement_route = "wallet";
+
+// Senders statement
+$this->insStatement($userinfo->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $userinfo->country, 0);
+
+
+
+$usersPhone = User::where('email', $userinfo->email)->where('telephone', 'LIKE', '%+%')->first();
+
+if (isset($usersPhone)) {
+
+    $recipients = $userinfo->telephone;
+} else {
+    $recipients = "+" . $userinfo->code . $userinfo->telephone;
+}
+
+
+
+if ($userinfo->country == "Nigeria") {
+
+    $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+
+    $this->sendSms($message, $correctPhone);
+} else {
+    $this->sendMessage($message, $recipients);
+}
+
+
+return back()->with("msg","<div class='alert alert-success'>Point Claim Successful</div>");
+}
+
 
 
     //Referral Report
@@ -12785,6 +13004,7 @@ class AdminController extends Controller
                 'report' => $report,
                 'start_date' => $startDate,
                 'end_date' => $endDate,
+                'promo_type' => $promotype,
             ];
 
 

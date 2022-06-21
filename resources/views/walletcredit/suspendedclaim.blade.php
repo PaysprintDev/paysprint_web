@@ -11,11 +11,11 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Successful Referral Claims
+                Referral Claims Reward
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li class="active">Successful Referral Claims</li>
+                <li class="active">Referral Claims Reward</li>
             </ol>
         </section>
 
@@ -59,10 +59,11 @@
                                                                 <th>Phone</th>
                                                                 <th>Country</th>
                                                                 <th>Account Type</th>
-                                                                <th>Date Processed</th>
-                                                                {{-- <th>Points Claimed</th> --}}
+                                                                <th>Date</th>
+                                                                <th>Points Claimed</th>
                                                                 {{-- <th>Remaining Points</th> --}}
-                                                                {{-- <th>Action</th> --}}
+                                                                <th>Action</th>
+                                                              
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -84,7 +85,7 @@ echo $output; ?>
                                                                     <td>{{$userdata->country}}</td>
                                                                     <td>{{$userdata->accountType}}</td>
                                                                     <td>{{ date('d/M/Y', strtotime($points->created_at)) }}</td>
-                                                                    {{-- <td>{{ $points->points_claimed }}</td> --}}
+                                                                    <td>{{ $points->points_claimed }}</td>
                                                                     {{-- <td>{{ $points->points_left }}</td> --}}
                                                                     {{-- <td>
                                                                         <form action="{{route('process referral claim')}}" method="post">
@@ -94,6 +95,18 @@ echo $output; ?>
                                                                                 claim</button>
                                                                             </form>
                                                                     </td> --}}
+                                                                    <td>
+                                                                        <button class="btn btn-danger" id="btns{{ $points->id }}"
+                                                                            onclick="restoreClaim('{{ $points->id }}');">Restore
+                                                                            Claim</button>
+                                                                        <form action="{{ route('restore claim', $points->id) }}"
+                                                                            method="post" style="visibility: hidden"
+                                                                            id="restoreclaim{{ $points->id }}">
+                                                                            @csrf
+                                                                            <input type="hidden" name="claimid"
+                                                                                value="{{ $points->id }}">
+                                                                        </form>
+                                                                    </td>
                                                                 </tr>
 
                                                             @endif
