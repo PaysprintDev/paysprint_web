@@ -45,6 +45,7 @@
                             <th>S/N</th>
                             <th>Date</th>
                             <th>Email</th>
+                            <th>Reason</th>
                             <th>Country</th>
                             <th>Action</th>
                         </tr>
@@ -61,6 +62,7 @@
                             <td>{{ $counter++}}</td>
                             <td>{{ $promousers->created_at}}</td>
                             <td>{{ $promousers->email}}</td>
+                            <td>{{ $promousers->reason}}</td>
                             <td>{{$user->country}}</td>
                             <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop{{ $promousers->id }}">Credit Wallet</button></td>
                         </tr>

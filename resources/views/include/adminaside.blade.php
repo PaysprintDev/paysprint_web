@@ -475,20 +475,21 @@
                                  </a>
                                  <ul class="treeview-menu">
                                      <li title="Credit/Debit Card"><a href="{{ route('promo page') }}"><i
-                                                 class="fa fa-circle-o text-red"></i>Import Promo Users</a></li>
+                                                 class="fa fa-circle-o text-red"></i>Import List</a></li>
                                      <li title="prepaid Card"><a href="{{ route('promo users') }}"><i
-                                                 class="fa fa-circle-o text-red"></i>List Promo User</a></li>
-                                     <li title="prepaid Card"><a href="{{ route('promo report') }}"><i
-                                                 class="fa fa-circle-o text-red"></i>Report</a></li>
+                                                 class="fa fa-circle-o text-red"></i>View List</a></li>
                                      <li title="prepaid Card"><a href="{{ route('claim reward') }}"><i
                                                  class="fa fa-circle-o text-red"></i>Points Claimed</a></li>
                                      <li title="prepaid Card"><a href="{{ route('referral claim') }}"><i
                                                  class="fa fa-circle-o text-red"></i>Referral Claims</a></li>
+                                                 <li title="prepaid Card"><a href="{{ route('suspended referral claim') }}"><i
+                                                    class="fa fa-circle-o text-red"></i>Suspended Referral Claims</a></li>
+                                     <li title="prepaid Card"><a href="{{ route('successful referral claim') }}"><i
+                                                    class="fa fa-circle-o text-red"></i>Successful Referral Claims</a></li>
+                                    <li title="prepaid Card"><a href="{{ route('promo report') }}"><i
+                                                    class="fa fa-circle-o text-red"></i>Imported List Report</a></li>
                                      <li title="prepaid Card"><a href="{{ route('referral report') }}"><i
-                                                    class="fa fa-circle-o text-red"></i>Referral Reports</a></li>
-                                      <li title="prepaid Card"><a href="{{ route('successful referral claim') }}"><i
-                                                        class="fa fa-circle-o text-red"></i>Successful Referral Claims</a></li>
-                                                 
+                                                    class="fa fa-circle-o text-red"></i>Referral Reports</a></li>           
                                  </ul>
                              </li>
                          @endif
@@ -581,7 +582,7 @@
 
                      @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access to Level 1 and 2 only')
 
-                         @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only')
+                         {{-- @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only')
                              <li class="treeview">
                                  <a href="#">
                                      <i class="far fa-handshake"></i>
@@ -603,7 +604,7 @@
                                                  class="fa fa-circle-o text-red"></i>Referral Claims</a></li>
                                  </ul>
                              </li>
-                         @endif
+                         @endif --}}
 
 
                          <li class="treeview">

@@ -47,10 +47,10 @@
                           <label>Wallet-Credit Type</label>
                           <select name="topup_type" class="form-control">
                             <option value="">Select A Reason</option>
-                            <option value="promo">Promo</option>
-                            <option value="survey">Survey</option>
-                            <option value="referral">Referral</option>
-                            <option value="reward">Reward</option>
+                            <option value="Promo">Promo</option>
+                            <option value="Survey">Survey</option>
+                            <option value="Referral">Referral</option>
+                            <option value="Reward">Reward</option>
                         </select>
                         </div>
                         <div class="col-md-6" style="margin-top: 10px; ">
@@ -76,7 +76,7 @@
                     <h1>Start Date:{{$data['start_date']}} - End Date:{{$data['end_date']}} </h1>
                     <hr>
                   @endif
-                  @endif --}}
+                  @endif --}}s
                   <table class="table table-responsive table-striped" id="promousers">
                       <thead>
                         <tr>
@@ -89,6 +89,11 @@
                         </tr>
                       </thead>
                       <tbody>
+                        @if($data['start_date'] != "null" && $data['end_date'] != "null")
+                        <p class="text-center mb-2" style="font-size: 25px; font-weight:bold"> <span>{{$data['promo_type'].' '.'Report Between '}}</span><span>{{$data['start_date']}}</span><span>  -  </span><span>{{$data['end_date']}}</span></p>
+                             @else
+                               <p></p>
+                             @endif
                         @php
                         $counter=1;
                       @endphp
@@ -100,7 +105,7 @@
                      {{-- User Data table... --}}
                      @if($user= \App\User::where('id',$reports->user_id)->first())
                       
-                     
+
                      <tr>
                       <td>{{ $counter++}}</td>
                       <td>{{$user->ref_code}}</td>

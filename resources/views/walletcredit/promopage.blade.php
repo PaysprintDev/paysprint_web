@@ -43,14 +43,16 @@
                 <form action="{{route('upload promo users')}}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="col-md-12 mb-2">
-                        <label>Import Promo Users</label>
+                        <label>Import List</label>
                         <input type="file" name="promo_docs" class="form-control" >
                     </div>
                     <div class="col-md-12 mt-3" style="margin-top: 30px; margin-bottom:10px">
-                        <button type="submit" class="btn btn-success form-control">Import</button>
+                        <button type="submit" class="btn btn-success form-control">Import List</button>
                     </div>
-               
                 </form>
+            </div>
+            <div class="col-md-12">
+              <p><a href="images/file_sample.PNG" target="_blank">Click here to view sample of excel format</a></p>
             </div>
                 
             </div>

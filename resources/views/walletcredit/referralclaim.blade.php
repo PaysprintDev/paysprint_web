@@ -62,7 +62,8 @@
                                                                 <th>Date</th>
                                                                 <th>Points Claimed</th>
                                                                 {{-- <th>Remaining Points</th> --}}
-                                                                <th>Action</th>
+                                                                <th colspan="2" class="text-center">Action</th>
+                                                              
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -93,6 +94,18 @@ echo $output; ?>
                                                                             <button type="submit" class="btn btn-primary btn-block">Process
                                                                                 claim</button>
                                                                             </form>
+                                                                    </td>
+                                                                    <td>
+                                                                        <button class="btn btn-danger" id="btns{{ $points->id }}"
+                                                                            onclick="deleteClaim('{{ $points->id }}');">Suspend
+                                                                            Claim</button>
+                                                                        <form action="{{ route('delete claim', $points->id) }}"
+                                                                            method="post" style="visibility: hidden"
+                                                                            id="deleteclaim{{ $points->id }}">
+                                                                            @csrf
+                                                                            <input type="hidden" name="claimid"
+                                                                                value="{{ $points->id }}">
+                                                                        </form>
                                                                     </td>
                                                                 </tr>
 
