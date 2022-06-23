@@ -1124,8 +1124,7 @@ class ShopController extends Controller
             $action = 'error';
         }
 
-
-        return redirect()->route('epsresponseback')->with($action, $message);
+         return redirect()->route('epsresponseback', 'status='.$action.'&message='.$message)->with($action, $message);
     }
 
 

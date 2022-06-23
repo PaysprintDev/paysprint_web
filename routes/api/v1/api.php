@@ -20,6 +20,9 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('/v1')->group(function () {
 
 
+    Route::get('epspayinvoicelink',  ['uses' => 'MonerisController@epspayInvoiceLink'])->name('eps pay invoice link from gateway');
+
+
     Route::group(['middleware' => ['appkey']], function () {
 
         // Registration
@@ -48,6 +51,7 @@ Route::prefix('/v1')->group(function () {
 
         // pay Invoice
         Route::post('payinvoicelink',  ['uses' => 'MonerisController@payInvoiceLink'])->name('pay invoice link from gateway');
+
 
         Route::post('payinshop',  ['uses' => 'MonerisController@paymentInShop'])->name('pay in shop');
 

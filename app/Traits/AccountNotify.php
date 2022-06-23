@@ -160,10 +160,14 @@ trait AccountNotify
             $auth_token = env("TWILIO_AUTH_TOKEN");
             $twilio_number = env("TWILIO_NUMBER");
             $client = new Client($account_sid, $auth_token);
-            $client->messages->create(
-                $recipients,
-                ['from' => $twilio_number, 'body' => $message]
-            );
+
+
+            if (env('APP_ENV') != "local") {
+                $client->messages->create(
+                    $recipients,
+                    ['from' => $twilio_number, 'body' => $message]
+                );
+            }
         } catch (\Throwable $th) {
             Log::error('Error: ' . $th->getMessage());
         }
