@@ -1154,7 +1154,8 @@ class ShopController extends Controller
     public function uploadImageFile($file, $fileroute, $width = null, $height = null)
     {
 
-        //Get filename with extension
+        try {
+                    //Get filename with extension
         $filenameWithExt = $file->getClientOriginalName();
         // Get just filename
         $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
@@ -1166,15 +1167,35 @@ class ShopController extends Controller
         $img = Image::make($file)->fit($width, $height);
 
         $img->save('shopstore/' . $fileroute . '/'.$fileNameToStore);
-        // $img->save('shopstore/' . $fileroute . '/'.$fileNameToStore);
-
 
         // $file->move(public_path('../../shopstore/' . $fileroute . '/'), $fileNameToStore);
 
 
         $docPath = route('home') . "/shopstore/" . $fileroute . "/" . $fileNameToStore;
 
+        } catch (\Throwable $th) {
+            //Get filename with extension
+        $filenameWithExt = $file->getClientOriginalName();
+        // Get just filename
+        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        // Get just extension
+        $extension = $file->getClientOriginalExtension();
+        // Filename to store
+        $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+
+
+        $path = $file->move(public_path('../../shopstore/' . $fileroute . '/'), $fileNameToStore);
+
+
+        $docPath = route('home') . "/shopstore/" . $fileroute . "/" . $fileNameToStore;
+
+
+        }
+
         return $docPath;
+
+
+
     }
 
     public function getPaymentGateway($country)
