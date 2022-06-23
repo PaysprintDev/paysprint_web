@@ -41,8 +41,12 @@ trait Xwireless{
                 "ClientId" => env('X_WIRELESS_CLIENT_ID')
             ]);
 
+            if(env('APP_ENV') != "local"){
         $data = $this->thisPostCurl();
-        
+
+            }
+
+
 
         return $data;
     }
@@ -51,7 +55,7 @@ trait Xwireless{
     // Get sent SMS
     public function getSentSmsList(){
 
-        
+
 
         if(env('APP_ENV') == "local"){
             $this->x_baseUrl = $this->x_url."/SMS?ApiKey=".env('X_WIRELESS_API_KEY')."&ClientId=".env('X_WIRELESS_CLIENT_ID')."&start=1&length=100&fromdate=".date("2021-08-d")."&enddate=".date('Y-m-d');
@@ -62,8 +66,8 @@ trait Xwireless{
         }
 
         $data = $this->thisGetCurl();
-        
-        
+
+
 
         return $data;
     }
@@ -81,12 +85,12 @@ trait Xwireless{
         }
 
         $data = $this->thisGetCurl();
-        
+
 
         return $data;
     }
 
-    // Manage SMS Groups 
+    // Manage SMS Groups
 
     // - GET Group List
     public function getGroupList(){
@@ -100,7 +104,7 @@ trait Xwireless{
         }
 
         $data = $this->thisGetCurl();
-        
+
 
         return $data;
     }
@@ -124,7 +128,7 @@ trait Xwireless{
             ]);
 
         $data = $this->thisPostCurl();
-        
+
 
         return $data;
     }
