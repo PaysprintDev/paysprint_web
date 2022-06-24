@@ -194,8 +194,8 @@ class StoreController extends Controller
                 'getCard' => $this->getUserCard(session('myID')),
                 'getBank' => $this->getUserBank(session('myID')),
                 'getTax' => $this->getTax(session('myID')),
-                'stores'=> StoreMainShop::get()->count('merchantid'),
-                'activate' =>ActivationEstore::get()->count('user_id'),
+                'stores' => StoreMainShop::get()->count('merchantid'),
+                'activate' => ActivationEstore::get()->count('user_id'),
                 // 'listbank' => $this->getBankList(),
                 // 'escrowfund' => $this->getEscrowFunding(),
             );
@@ -492,8 +492,9 @@ class StoreController extends Controller
             return redirect()->route('AdminLogin');
         }
     }
-        //view images
-    public function viewImages(Request $req, $id){
+    //view images
+    public function viewImages(Request $req, $id)
+    {
         if ($req->session()->has('username') == true) {
 
 
@@ -562,7 +563,7 @@ class StoreController extends Controller
                 'getCard' => $this->getUserCard(session('myID')),
                 'getBank' => $this->getUserBank(session('myID')),
                 'getTax' => $this->getTax(session('myID')),
-                'images' => StoreMainShop::where('id',$id)->first(),
+                'images' => StoreMainShop::where('id', $id)->first(),
                 // 'listbank' => $this->getBankList(),
                 // 'escrowfund' => $this->getEscrowFunding(),
             );
@@ -574,90 +575,91 @@ class StoreController extends Controller
             return redirect()->route('AdminLogin');
         }
     }
-        //advert images
-        public function viewAdvertImages(Request $req, $id){
-            if ($req->session()->has('username') == true) {
+    //advert images
+    public function viewAdvertImages(Request $req, $id)
+    {
+        if ($req->session()->has('username') == true) {
 
 
-                if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
-                    $adminUser = Admin::orderBy('created_at', 'DESC')->get();
-                    $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
-                    $invoiceLinkImport = ImportExcelLink::orderBy('created_at', 'DESC')->get();
-                    $payInvoice = DB::table('client_info')
-                        ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
-                        ->orderBy('invoice_payment.created_at', 'DESC')
-                        ->get();
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $invoiceLinkImport = ImportExcelLink::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
 
-                    $otherPays = OrganizationPay::orderBy('created_at', 'DESC')->get();
-                } else {
-                    $adminUser = Admin::where('username', session('username'))->get();
-                    $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
-                    $invoiceLinkImport = ImportExcelLink::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
-                    $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
-                    $otherPays = OrganizationPay::where('coy_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
-
-                    $this->recurBills(session('user_id'));
-                }
-
-
-
-                $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
-                $transCost = $this->transactionCost();
-                $allusers = $this->allUsers();
-
-                $getUserDetail = $this->getmyPersonalDetail(session('user_id'));
-
-                $getCard = $this->getUserCard(session('myID'));
-                $getBank = $this->getUserBank(session('myID'));
-
-                $getTax = $this->getTax(session('myID'));
-
-
-                $withdraws = [
-                    'bank' => $this->requestFromBankWithdrawal(),
-                    'purchase' => $this->purchaseRefundSentback(),
-                    'credit' => $this->requestFromCardWithdrawal(),
-                    'prepaid' => $this->pendingRequestFromPrepaidWithdrawal(),
-                    // 'specialInfo' => $this->getthisInfo(session('country')),
-                ];
-
-
-                $pending = [
-                    'transfer' => $this->pendingTransferTransactions(),
-                    'texttotransfer' => $this->textToTransferUsers(),
-                ];
-
-                $refund = [
-                    'requestforrefund' => $this->requestForAllRefund(),
-                ];
-
-                $allcountries = $this->getAllCountries();
-
-                $received = [
-                    'payInvoice' => $this->payInvoice(session('email')),
-                ];
-
-                $data = array(
-                    'getuserDetail' => $this->getmyPersonalDetail(session('user_id')),
-                    'getbusinessDetail' => $this->getmyBusinessDetail(session('user_id')),
-                    'merchantservice' => $this->_merchantServices(),
-                    'getCard' => $this->getUserCard(session('myID')),
-                    'getBank' => $this->getUserBank(session('myID')),
-                    'getTax' => $this->getTax(session('myID')),
-                    'images' => StoreMainShop::where('id',$id)->first(),
-                    // 'listbank' => $this->getBankList(),
-                    // 'escrowfund' => $this->getEscrowFunding(),
-                );
-
-
-
-                return view('estore.viewimages')->with(['pages' => 'Estore Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'invoiceLinkImport' => $invoiceLinkImport, 'transCost' => $transCost]);
+                $otherPays = OrganizationPay::orderBy('created_at', 'DESC')->get();
             } else {
-                return redirect()->route('AdminLogin');
-            }
-        }
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $invoiceLinkImport = ImportExcelLink::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = OrganizationPay::where('coy_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
 
-        //get stores
+                $this->recurBills(session('user_id'));
+            }
+
+
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+            $transCost = $this->transactionCost();
+            $allusers = $this->allUsers();
+
+            $getUserDetail = $this->getmyPersonalDetail(session('user_id'));
+
+            $getCard = $this->getUserCard(session('myID'));
+            $getBank = $this->getUserBank(session('myID'));
+
+            $getTax = $this->getTax(session('myID'));
+
+
+            $withdraws = [
+                'bank' => $this->requestFromBankWithdrawal(),
+                'purchase' => $this->purchaseRefundSentback(),
+                'credit' => $this->requestFromCardWithdrawal(),
+                'prepaid' => $this->pendingRequestFromPrepaidWithdrawal(),
+                // 'specialInfo' => $this->getthisInfo(session('country')),
+            ];
+
+
+            $pending = [
+                'transfer' => $this->pendingTransferTransactions(),
+                'texttotransfer' => $this->textToTransferUsers(),
+            ];
+
+            $refund = [
+                'requestforrefund' => $this->requestForAllRefund(),
+            ];
+
+            $allcountries = $this->getAllCountries();
+
+            $received = [
+                'payInvoice' => $this->payInvoice(session('email')),
+            ];
+
+            $data = array(
+                'getuserDetail' => $this->getmyPersonalDetail(session('user_id')),
+                'getbusinessDetail' => $this->getmyBusinessDetail(session('user_id')),
+                'merchantservice' => $this->_merchantServices(),
+                'getCard' => $this->getUserCard(session('myID')),
+                'getBank' => $this->getUserBank(session('myID')),
+                'getTax' => $this->getTax(session('myID')),
+                'images' => StoreMainShop::where('id', $id)->first(),
+                // 'listbank' => $this->getBankList(),
+                // 'escrowfund' => $this->getEscrowFunding(),
+            );
+
+
+
+            return view('estore.viewimages')->with(['pages' => 'Estore Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'invoiceLinkImport' => $invoiceLinkImport, 'transCost' => $transCost]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+    //get stores
     public function getStores()
     {
         $store = StoreMainShop::get();
@@ -845,27 +847,30 @@ class StoreController extends Controller
     }
 
     //delete store
-    public function deleteStore(Request $req, $id){
+    public function deleteStore(Request $req, $id)
+    {
 
-        $data=StoreMainShop::where('id', $id)->delete();
+        $data = StoreMainShop::where('id', $id)->delete();
 
-        return back()->with("msg","<div class='alert alert-success'>Store Suspended Successfully</div>");
+        return back()->with("msg", "<div class='alert alert-success'>Store Suspended Successfully</div>");
     }
 
     //restore store
-    public function restoreStore(Request $req, $id){
+    public function restoreStore(Request $req, $id)
+    {
 
-        $data=StoreMainShop::withTrashed()->find($id)->restore();
+        $data = StoreMainShop::withTrashed()->find($id)->restore();
 
-        return back()->with("msg","<div class='alert alert-success'>Store restored Successfully</div>");
+        return back()->with("msg", "<div class='alert alert-success'>Store restored Successfully</div>");
     }
 
     //delete productCategory
-    public function deleteCategory(Request $req, $id){
+    public function deleteCategory(Request $req, $id)
+    {
 
-        $data=StoreCategory::where('id', $id)->delete();
+        $data = StoreCategory::where('id', $id)->delete();
 
-        return back()->with("msg","<div class='alert alert-success'>Category Deleted Successfully</div>");
+        return back()->with("msg", "<div class='alert alert-success'>Category Deleted Successfully</div>");
     }
 
     //update Store
@@ -902,10 +907,9 @@ class StoreController extends Controller
 
 
 
-                if($req->hasFile('businessLogo')){
+                if ($req->hasFile('businessLogo')) {
                     $businessLogo = $this->uploadImageFile($req->file('businessLogo'), $routing . "/logo", 100, 100);
-                }
-                else{
+                } else {
                     $businessLogo = $storeId->businessLogo;
                 }
 
@@ -919,14 +923,13 @@ class StoreController extends Controller
 
                             foreach ($req->file('headerContent') as $headerContentFile) {
 
-                                $headContentImage .= $this->uploadImageFile($headerContentFile, $routing . "/headsection", 1900, 800 ) . ", ";
+                                $headContentImage .= $this->uploadImageFile($headerContentFile, $routing . "/headsection", 1900, 800) . ", ";
                             }
                         } else {
                             $headContentImage = $this->uploadImageFile($req->file('headerContent'), $routing . "/headsection", 1900, 800);
                         }
                     }
-                }
-                else{
+                } else {
                     $headContentImage = $storeId->headerContent;
                 }
 
@@ -948,8 +951,7 @@ class StoreController extends Controller
                             $advertSectionImage = $this->uploadImageFile($req->file('advertimage'), $routing . "/advertsection", 400, 400);
                         }
                     }
-                }
-                else{
+                } else {
                     $advertSectionImage = $storeId->advertSectionImage;
                 }
 
@@ -968,12 +970,10 @@ class StoreController extends Controller
 
                 $status = 'success';
                 $message = "Successfully stored";
-            }
-            else{
+            } else {
                 $status = 'error';
                 $message = implode(",", $validator->messages()->all());
             }
-
         } catch (\Throwable $th) {
             $status = 'error';
             $message = $th->getMessage();
@@ -982,30 +982,51 @@ class StoreController extends Controller
         return redirect()->route('review e-store')->with($status, $message);
     }
 
+
+
     public function uploadImageFile($file, $fileroute, $width = null, $height = null)
     {
-        //Get filename with extension
-        $filenameWithExt = $file->getClientOriginalName();
-        // Get just filename
-        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-        // Get just extension
-        $extension = $file->getClientOriginalExtension();
-        // Filename to store
-        $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+
+        try {
+            //Get filename with extension
+            $filenameWithExt = $file->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just extension
+            $extension = $file->getClientOriginalExtension();
+            // Filename to store
+            $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+
+            $img = Image::make($file)->fit($width, $height);
+
+            $img->save('shopstore/' . $fileroute . '/' . $fileNameToStore);
+
+            // $file->move(public_path('../../shopstore/' . $fileroute . '/'), $fileNameToStore);
 
 
-        $img = Image::make($file)->fit($width, $height);
+            $docPath = route('home') . "/shopstore/" . $fileroute . "/" . $fileNameToStore;
+        } catch (\Throwable $th) {
+            //Get filename with extension
+            $filenameWithExt = $file->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just extension
+            $extension = $file->getClientOriginalExtension();
+            // Filename to store
+            $fileNameToStore = rand() . '_' . time() . '.' . $extension;
 
-        $img->save('shopstore/' . $fileroute . '/'.$fileNameToStore);
+
+            $path = $file->move(public_path('../../shopstore/' . $fileroute . '/'), $fileNameToStore);
 
 
-        // $file->move(public_path('../../shopstore/' . $fileroute . '/'), $fileNameToStore);
-
-
-        $docPath = route('home') . "/shopstore/" . $fileroute . "/" . $fileNameToStore;
+            $docPath = route('home') . "/shopstore/" . $fileroute . "/" . $fileNameToStore;
+        }
 
         return $docPath;
     }
+
+
+
     public function getEstoreCategory()
     {
         $products = StoreCategory::all();
@@ -1375,17 +1396,16 @@ class StoreController extends Controller
     public function updateCategory(Request $req, $id)
     {
 
-        $validator=Validator::make($req->all(), [
+        $validator = Validator::make($req->all(), [
             'category_name' => 'required',
         ]);
 
-        if( $validator -> passes()){
+        if ($validator->passes()) {
 
-        StoreCategory::where('id', $id)->update([
-         'category' => $req->category_name,
-        ]);
-        }else{
-
+            StoreCategory::where('id', $id)->update([
+                'category' => $req->category_name,
+            ]);
+        } else {
         }
 
         return back()->with("msg", "<div class='alert alert-success'> Category Name updated Successfully</div>");
@@ -1397,9 +1417,9 @@ class StoreController extends Controller
 
 
 
-            $catState = $req->category_state == 1 ? false : true;
+        $catState = $req->category_state == 1 ? false : true;
 
-            $data=StoreCategory::where('id', $id)->update(['state' => $catState]);
+        $data = StoreCategory::where('id', $id)->update(['state' => $catState]);
 
 
         return back()->with("msg", "<div class='alert alert-success'> Category State updated Successfully</div>");
@@ -1409,9 +1429,9 @@ class StoreController extends Controller
     public function activateStore(Request $req, $id)
     {
 
-            $storeStatus = $req->status == 'not active' ? 'active' : 'not active';
+        $storeStatus = $req->status == 'not active' ? 'active' : 'not active';
 
-            $data=StoreMainShop::where('id', $id)->update(['status' => $storeStatus]);
+        $data = StoreMainShop::where('id', $id)->update(['status' => $storeStatus]);
 
 
         return back()->with("msg", "<div class='alert alert-success'> Store Status updated Successfully</div>");

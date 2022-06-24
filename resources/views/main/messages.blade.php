@@ -31,15 +31,17 @@
                 <div class="card mt-5">
                     <h5 class="card-header">System Message</h5>
                     <div class="card-body">
-                        <p class="card-text alert {{ session('success') ? 'alert-success' : 'alert-danger' }}">
-                            {{ session('success') ? session('success') : session('error') }}</p>
+                        <p
+                            class="card-text alert {{ Request::get('status') == 'success' ? 'alert-success' : 'alert-danger' }}">
+                            {{ Request::get('message') }}
+                        </p>
                         </p>
 
                         <div class="d-grid gap-2 col-md-12">
 
-                            @if (session('success') && session('success') != 'Delivery confirmed!')
+                            @if (Request::get('message') && Request::get('message') != 'Delivery confirmed!')
                                 <a href="{{ route('my account') }}" class="btn btn-primary ">Goto Wallet</a>
-                            @elseif (session('success') && session('success') == 'Delivery confirmed!')
+                            @elseif (Request::get('message') && Request::get('message') == 'Delivery confirmed!')
                                 <a href="{{ route('home') }}" class="btn btn-success ">Goto Homepage</a>
                             @else
                                 <a href="{{ url()->previous() }}" class="btn btn-danger ">Go back</a>

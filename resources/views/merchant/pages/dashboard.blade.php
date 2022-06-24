@@ -9,7 +9,6 @@
         .nav-item {
             margin: 5px !important;
         }
-
     </style>
 
 
@@ -58,6 +57,12 @@
                                             class="toprightarrow-primary fa fa-arrow-up me-2"></i>{{ round(Auth::user()->wallet_balance / $data['statementCount'] / 100, 2) }}%
                                     </a> --}}
 
+                                    <!-- ShareThis BEGIN -->
+                                    <p><strong>Share link to receive payment:</strong></p>
+                                    <div class="sharethis-inline-share-buttons"
+                                        data-url="{{ route('home') . '/merchant/' . Auth::user()->businessname . '/' . Auth::user()->ref_code }}">
+                                    </div><!-- ShareThis END -->
+
                                     <div class="parrten">
                                         <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
                                             xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -81,14 +86,19 @@
                                     </div>
                                 </div>
                             </div>
+
+
+                            {{-- Share payment link with customers on PaySprint and Not on PaySprint --}}
+
                         </div>
                         <div class="col-xl-6 col-md-3 col-sm-6 box-col-3 des-xl-25 rate-sec">
                             <div class="card income-card card-secondary">
                                 <div class="card-body text-center">
                                     <div class="round-box">
                                         <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
-                                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewbox="0 0 512 512"
-                                            style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                            viewbox="0 0 512 512" style="enable-background:new 0 0 512 512;"
+                                            xml:space="preserve">
                                             <g>
                                                 <g>
                                                     <path
@@ -114,8 +124,9 @@
                                     </a>
                                     <div class="parrten">
                                         <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
-                                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewbox="0 0 512 512"
-                                            style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                            viewbox="0 0 512 512" style="enable-background:new 0 0 512 512;"
+                                            xml:space="preserve">
                                             <g>
                                                 <g>
                                                     <path
@@ -368,7 +379,8 @@
                                         <code>{{ $data['clientInfo']->api_secrete_key }}</code>
                                     </p>
 
-                                    <a type="button" class="btn btn-light mb-3" href="{{ route('api integration') }}">API
+                                    <a type="button" class="btn btn-light mb-3"
+                                        href="{{ route('api integration') }}">API
                                         Integration</a>
 
                                 </div>
@@ -527,7 +539,8 @@
 
                                                     <hr>
 
-                                                    <a href="#" style="color: navy; font-weight: 700;">Learn more about
+                                                    <a href="#" style="color: navy; font-weight: 700;">Learn more
+                                                        about
                                                         trading
                                                         on PaySprint</a>
 
@@ -535,9 +548,9 @@
                                             </div>
                                             <div class="parrten">
                                                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
-                                                    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                                    viewbox="0 0 512 512" style="enable-background:new 0 0 512 512;"
-                                                    xml:space="preserve">
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+                                                    y="0px" viewbox="0 0 512 512"
+                                                    style="enable-background:new 0 0 512 512;" xml:space="preserve">
                                                     <g>
                                                         <g>
                                                             <path
@@ -595,106 +608,106 @@
                 @else
                     <div class="col-xl-7 box-col-12 des-xl-100 dashboard-sec">
 
-                            <div class="row">
+                        <div class="row">
 
-                                @if ($data['specialInfo'] != null)
-                                    <div class="col-12">
-                                        <div class="card income-card">
-                                            <div class="card-header">
-                                                <div class="header-top d-sm-flex align-items-center">
-                                                    <h5>Special Information</h5>
-                                                </div>
-                                            </div>
-                                            <div class="card-body p-10">
-                                                {!! $data['specialInfo']->information !!}
+                            @if ($data['specialInfo'] != null)
+                                <div class="col-12">
+                                    <div class="card income-card">
+                                        <div class="card-header">
+                                            <div class="header-top d-sm-flex align-items-center">
+                                                <h5>Special Information</h5>
                                             </div>
                                         </div>
-                                    </div>
-                                @endif
-
-
-                                <div class="col-xl-6 col-md-3 col-sm-6 box-col-3 des-xl-25 rate-sec">
-                                    <div class="card income-card card-primary">
-                                        <div class="card-body text-center">
-
-                                            <div class="round-box">
-
-                                                <img src="https://img.icons8.com/ios/50/000000/home--v3.png" />
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-12">
-
-                                                    <a href="javascript:void()"
-                                                        onclick="whatyouOffer('{{ Auth::user()->email }}')"
-                                                        style="color: navy; font-weight: 700;"> Click to activate Manage
-                                                        Rental
-                                                        Property, MRP</a>
-
-                                                    {{-- <a href="{{ route('rentalManagementAdmin') }}" style="color: navy; font-weight: 700;">Rental Property Management</a> --}}
-                                                </div>
-                                            </div>
-
-                                            <div class="parrten">
-                                                <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
-                                                    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                                    viewbox="0 0 448.057 448.057"
-                                                    style="enable-background:new 0 0 448.057 448.057;" xml:space="preserve">
-                                                    <g>
-                                                        <g>
-                                                            <path
-                                                                d="M404.562,7.468c-0.021-0.017-0.041-0.034-0.062-0.051c-13.577-11.314-33.755-9.479-45.069,4.099                                            c-0.017,0.02-0.034,0.041-0.051,0.062l-135.36,162.56L88.66,11.577C77.35-2.031,57.149-3.894,43.54,7.417                                            c-13.608,11.311-15.471,31.512-4.16,45.12l129.6,155.52h-40.96c-17.673,0-32,14.327-32,32s14.327,32,32,32h64v144                                            c0,17.673,14.327,32,32,32c17.673,0,32-14.327,32-32v-180.48l152.64-183.04C419.974,38.96,418.139,18.782,404.562,7.468z">
-                                                            </path>
-                                                        </g>
-                                                    </g>
-                                                    <g>
-                                                        <g>
-                                                            <path
-                                                                d="M320.02,208.057h-16c-17.673,0-32,14.327-32,32s14.327,32,32,32h16c17.673,0,32-14.327,32-32                                            S337.694,208.057,320.02,208.057z">
-                                                            </path>
-                                                        </g>
-                                                    </g>
-                                                </svg>
-                                            </div>
+                                        <div class="card-body p-10">
+                                            {!! $data['specialInfo']->information !!}
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-6 col-md-3 col-sm-6 box-col-3 des-xl-25 rate-sec">
-                                    <div class="card income-card card-secondary">
-                                        <div class="card-body text-center">
-                                            <div class="round-box">
+                            @endif
 
-                                                <img src="https://img.icons8.com/pastel-glyph/50/000000/user-female.png" />
+
+                            <div class="col-xl-6 col-md-3 col-sm-6 box-col-3 des-xl-25 rate-sec">
+                                <div class="card income-card card-primary">
+                                    <div class="card-body text-center">
+
+                                        <div class="round-box">
+
+                                            <img src="https://img.icons8.com/ios/50/000000/home--v3.png" />
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+
+                                                <a href="javascript:void()"
+                                                    onclick="whatyouOffer('{{ Auth::user()->email }}')"
+                                                    style="color: navy; font-weight: 700;"> Click to activate Manage
+                                                    Rental
+                                                    Property, MRP</a>
+
+                                                {{-- <a href="{{ route('rentalManagementAdmin') }}" style="color: navy; font-weight: 700;">Rental Property Management</a> --}}
                                             </div>
-                                            <div class="row">
-                                                <div class="col-md-12">
+                                        </div>
 
-                                                    <a href="javascript:void()"
-                                                        onclick="viewConsultant('{{ Auth::user()->email }}')"
-                                                        style="color: navy; font-weight: 700;">Click to Access MRP as a
-                                                        Service
-                                                        Provider</a>
-
-                                                    {{-- <a href="{{ route('rentalManagementAdmin') }}" style="color: navy; font-weight: 700;">Rental Property Management</a> --}}
-                                                </div>
-                                            </div>
-                                            <div class="parrten">
-                                                <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
-                                                    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                                    viewbox="0 0 512 512" style="enable-background:new 0 0 512 512;"
-                                                    xml:space="preserve">
+                                        <div class="parrten">
+                                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+                                                xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                viewbox="0 0 448.057 448.057"
+                                                style="enable-background:new 0 0 448.057 448.057;" xml:space="preserve">
+                                                <g>
                                                     <g>
-                                                        <g>
-                                                            <path
-                                                                d="M256,0C114.615,0,0,114.615,0,256s114.615,256,256,256s256-114.615,256-256S397.385,0,256,0z M96,100.16                                            c50.315,35.939,80.124,94.008,80,155.84c0.151,61.839-29.664,119.919-80,155.84C11.45,325.148,11.45,186.851,96,100.16z M256,480                                            c-49.143,0.007-96.907-16.252-135.84-46.24C175.636,391.51,208.14,325.732,208,256c0.077-69.709-32.489-135.434-88-177.6                                            c80.1-61.905,191.9-61.905,272,0c-98.174,75.276-116.737,215.885-41.461,314.059c11.944,15.577,25.884,29.517,41.461,41.461                                            C353.003,463.884,305.179,480.088,256,480z M416,412v-0.16c-86.068-61.18-106.244-180.548-45.064-266.616                                            c12.395-17.437,27.627-32.669,45.064-45.064C500.654,186.871,500.654,325.289,416,412z">
-                                                            </path>
-                                                        </g>
+                                                        <path
+                                                            d="M404.562,7.468c-0.021-0.017-0.041-0.034-0.062-0.051c-13.577-11.314-33.755-9.479-45.069,4.099                                            c-0.017,0.02-0.034,0.041-0.051,0.062l-135.36,162.56L88.66,11.577C77.35-2.031,57.149-3.894,43.54,7.417                                            c-13.608,11.311-15.471,31.512-4.16,45.12l129.6,155.52h-40.96c-17.673,0-32,14.327-32,32s14.327,32,32,32h64v144                                            c0,17.673,14.327,32,32,32c17.673,0,32-14.327,32-32v-180.48l152.64-183.04C419.974,38.96,418.139,18.782,404.562,7.468z">
+                                                        </path>
                                                     </g>
-                                                </svg>
-                                            </div>
+                                                </g>
+                                                <g>
+                                                    <g>
+                                                        <path
+                                                            d="M320.02,208.057h-16c-17.673,0-32,14.327-32,32s14.327,32,32,32h16c17.673,0,32-14.327,32-32                                            S337.694,208.057,320.02,208.057z">
+                                                        </path>
+                                                    </g>
+                                                </g>
+                                            </svg>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-xl-6 col-md-3 col-sm-6 box-col-3 des-xl-25 rate-sec">
+                                <div class="card income-card card-secondary">
+                                    <div class="card-body text-center">
+                                        <div class="round-box">
+
+                                            <img src="https://img.icons8.com/pastel-glyph/50/000000/user-female.png" />
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+
+                                                <a href="javascript:void()"
+                                                    onclick="viewConsultant('{{ Auth::user()->email }}')"
+                                                    style="color: navy; font-weight: 700;">Click to Access MRP as a
+                                                    Service
+                                                    Provider</a>
+
+                                                {{-- <a href="{{ route('rentalManagementAdmin') }}" style="color: navy; font-weight: 700;">Rental Property Management</a> --}}
+                                            </div>
+                                        </div>
+                                        <div class="parrten">
+                                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+                                                xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                viewbox="0 0 512 512" style="enable-background:new 0 0 512 512;"
+                                                xml:space="preserve">
+                                                <g>
+                                                    <g>
+                                                        <path
+                                                            d="M256,0C114.615,0,0,114.615,0,256s114.615,256,256,256s256-114.615,256-256S397.385,0,256,0z M96,100.16                                            c50.315,35.939,80.124,94.008,80,155.84c0.151,61.839-29.664,119.919-80,155.84C11.45,325.148,11.45,186.851,96,100.16z M256,480                                            c-49.143,0.007-96.907-16.252-135.84-46.24C175.636,391.51,208.14,325.732,208,256c0.077-69.709-32.489-135.434-88-177.6                                            c80.1-61.905,191.9-61.905,272,0c-98.174,75.276-116.737,215.885-41.461,314.059c11.944,15.577,25.884,29.517,41.461,41.461                                            C353.003,463.884,305.179,480.088,256,480z M416,412v-0.16c-86.068-61.18-106.244-180.548-45.064-266.616                                            c12.395-17.437,27.627-32.669,45.064-45.064C500.654,186.871,500.654,325.289,416,412z">
+                                                        </path>
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         @if (Auth::user()->plan == 'classic')
                             <div class="row">
@@ -717,7 +730,8 @@
 
                                                     <hr>
 
-                                                    <a href="#" style="color: navy; font-weight: 700;">Learn more about
+                                                    <a href="#" style="color: navy; font-weight: 700;">Learn more
+                                                        about
                                                         trading
                                                         on PaySprint</a>
 
@@ -725,9 +739,9 @@
                                             </div>
                                             <div class="parrten">
                                                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
-                                                    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                                    viewbox="0 0 512 512" style="enable-background:new 0 0 512 512;"
-                                                    xml:space="preserve">
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+                                                    y="0px" viewbox="0 0 512 512"
+                                                    style="enable-background:new 0 0 512 512;" xml:space="preserve">
                                                     <g>
                                                         <g>
                                                             <path
@@ -869,9 +883,8 @@
                             </li>
 
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
-                                    data-bs-target="#contact" type="button" role="tab" aria-controls="contact"
-                                    aria-selected="false">
+                                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact"
+                                    type="button" role="tab" aria-controls="contact" aria-selected="false">
                                     <h6>Invoice to Link Customers</h6>
                                 </button>
                             </li>
@@ -908,8 +921,7 @@
                                                 @foreach ($data['allPaidInvoice'] as $payInvoices)
                                                     <tr>
                                                         <td>
-                                                            <div class="media"><img
-                                                                    class="img-fluid rounded-circle"
+                                                            <div class="media"><img class="img-fluid rounded-circle"
                                                                     src=" {{ asset('merchantassets/assets/images/dashboard/icons8-invoice-30.png') }}"
                                                                     alt="" data-original-title="" title="">
                                                                 <div class="media-body"><a
@@ -1089,8 +1101,7 @@
                                                 @foreach ($data['invoiceLink'] as $invoiceLinkImports)
                                                     <tr>
                                                         <td>
-                                                            <div class="media"><img
-                                                                    class="img-fluid rounded-circle"
+                                                            <div class="media"><img class="img-fluid rounded-circle"
                                                                     src=" {{ asset('merchantassets/assets/images/dashboard/icons8-invoice-30.png') }}"
                                                                     alt="" data-original-title="" title="">
                                                                 <div class="media-body"><a
@@ -1267,8 +1278,8 @@
                                                 <td>{{ date('d/M/Y', strtotime($invoiceImports->payment_due_date)) }}
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('customer', $invoiceImports->id) }}" type="button"
-                                                        class="btn btn-primary text-white">details</a>
+                                                    <a href="{{ route('customer', $invoiceImports->id) }}"
+                                                        type="button" class="btn btn-primary text-white">details</a>
                                                 </td>
                                             </tr>
                                         @endforeach
