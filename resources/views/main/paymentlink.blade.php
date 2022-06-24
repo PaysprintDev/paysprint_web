@@ -28,9 +28,10 @@
 
     @if ($data['currencyCode']->gateway == 'PayPal')
         <script
-                src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ $data['currencyCode']->currencyCode }}">
+            src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ $data['currencyCode']->currencyCode }}">
         </script>
     @endif
+
 
     <title>PaySprint | Invoice Payment</title>
 
@@ -62,7 +63,6 @@
         .disp-0 {
             display: none !important;
         }
-
     </style>
 
 </head>
@@ -198,9 +198,9 @@
 
                                         @if ($countryBase != $data['currencyCode']->name)
                                             <div class="form-group converter"> <label for="netwmount">
-                                                    <h6>Currency Conversion <br><small
-                                                            class="text-info"><b>Exchange rate </b> <br> <span
-                                                                id="rateToday"></span> </small></h6>
+                                                    <h6>Currency Conversion <br><small class="text-info"><b>Exchange
+                                                                rate </b> <br> <span id="rateToday"></span> </small>
+                                                    </h6>
                                                     {{-- <p style="font-weight: bold;">
                                                 {{ $data['currencyCode']->currencyCode }} <=> {{ $data['othercurrencyCode']->currencyCode }}
                                             </p> --}}
@@ -253,12 +253,14 @@
                                                 <input type="hidden"
                                                     value="{{ $data['currencyCode']->currencyCode }}"
                                                     name="currencyCode">
-                                                <input type="hidden" value="{{ $merchantPay }}" name="merchantpay">
+                                                <input type="hidden" value="{{ $merchantPay }}"
+                                                    name="merchantpay">
                                                 <div class="input-group"> <span class="input-group-text text-muted">
                                                         {{ $data['currencyCode']->currencySymbol }} </span> <input
-                                                        type="number" min="0.00" step="0.01" name="amountinvoiced"
-                                                        id="amountinvoiced" placeholder="50.00" class="form-control"
-                                                        value="{{ $amountInvoiced }}" readonly>
+                                                        type="number" min="0.00" step="0.01"
+                                                        name="amountinvoiced" id="amountinvoiced" placeholder="50.00"
+                                                        class="form-control" value="{{ $amountInvoiced }}"
+                                                        readonly>
                                                     <div class="input-group-append"> </div>
                                                 </div>
                                             </div>
@@ -290,9 +292,10 @@
                                                     name="currencyCode">
                                                 <div class="input-group"> <span class="input-group-text text-muted">
                                                         {{ $data['currencyCode']->currencySymbol }} </span> <input
-                                                        type="number" min="0.00" step="0.01" name="amountinvoiced"
-                                                        id="amountinvoiced" placeholder="50.00" class="form-control"
-                                                        value="{{ $amountInvoiced }}" readonly>
+                                                        type="number" min="0.00" step="0.01"
+                                                        name="amountinvoiced" id="amountinvoiced" placeholder="50.00"
+                                                        class="form-control" value="{{ $amountInvoiced }}"
+                                                        readonly>
                                                     <div class="input-group-append"> </div>
                                                 </div>
                                             </div>
@@ -341,8 +344,8 @@
                                                         <div class="input-group"> <span
                                                                 class="input-group-text text-muted">
                                                                 {{ $data['currencyCode']->currencySymbol }} </span>
-                                                            <input type="number" min="0.00" step="0.01" name="amount"
-                                                                id="typepayamount" placeholder="50.00"
+                                                            <input type="number" min="0.00" step="0.01"
+                                                                name="amount" id="typepayamount" placeholder="50.00"
                                                                 class="form-control" value="{{ $amountInvoiced }}">
                                                             <div class="input-group-append"> </div>
                                                         </div>
@@ -373,8 +376,8 @@
                                                         <div class="input-group"> <span
                                                                 class="input-group-text text-muted">
                                                                 {{ $data['currencyCode']->currencySymbol }} </span>
-                                                            <input type="number" min="0.00" step="0.01" name="amount"
-                                                                id="typepayamount" placeholder="50.00"
+                                                            <input type="number" min="0.00" step="0.01"
+                                                                name="amount" id="typepayamount" placeholder="50.00"
                                                                 class="form-control" value="{{ $amountInvoiced }}">
                                                             <div class="input-group-append"> </div>
                                                         </div>
@@ -409,8 +412,8 @@
                                                     <div class="input-group"> <span
                                                             class="input-group-text text-muted">
                                                             {{ $data['currencyCode']->currencySymbol }} </span>
-                                                        <input type="number" min="0.00" step="0.01" name="amount"
-                                                            id="typepayamount" placeholder="50.00"
+                                                        <input type="number" min="0.00" step="0.01"
+                                                            name="amount" id="typepayamount" placeholder="50.00"
                                                             class="form-control" value="{{ $amountInvoiced }}">
                                                         <div class="input-group-append"> </div>
                                                     </div>
@@ -483,8 +486,8 @@
                                                     <div class="form-group"> <label><span class="hidden-xs">
                                                                 <h6>Month</h6>
                                                             </span></label>
-                                                        <div class="input-group"> <select name='month' id="paymonth"
-                                                                class='form-control'>
+                                                        <div class="input-group"> <select name='month'
+                                                                id="paymonth" class='form-control'>
                                                                 <option selected value='01'>January</option>
                                                                 <option value='02'>February</option>
                                                                 <option value='03'>March</option>
@@ -509,7 +512,8 @@
                                                                 <h6>Year</h6>
                                                             </span></label>
                                                         <div class="input-group">
-                                                            <select name='expirydate' id="payyear" class='form-control'>
+                                                            <select name='expirydate' id="payyear"
+                                                                class='form-control'>
                                                                 @for ($i = 21; $i <= 50; $i++)
                                                                     <option value='{{ $i }}'>
                                                                         {{ $i }}</option>
@@ -545,8 +549,8 @@
                                             <input type="hidden" name="name" class="form-control" id="nameInput"
                                                 value="{{ $name }}" readonly>
 
-                                            <input type="hidden" name="email" class="form-control" id="emailInput"
-                                                value="{{ $email }}" readonly>
+                                            <input type="hidden" name="email" class="form-control"
+                                                id="emailInput" value="{{ $email }}" readonly>
 
                                             <div class="form-group"> <label for="card-elemet">
                                                     <h6>Card Detail</h6>
@@ -600,10 +604,16 @@
 
 
 
-                                            <div class="card-footer"> <button type="button"
+                                            {{-- <div class="card-footer"> <button type="button"
                                                     onclick="payWithPaystack('{{ $email }}')"
                                                     class="subscribe btn btn-info btn-block shadow-sm {{ $countryBase == $data['currencyCode']->name ? 'cardSubmit' : 'sendmoneyBtn' }}">
-                                                    Pay Invoice </button></div>
+                                                    Pay Invoice </button></div> --}}
+
+                                            <div class="card-footer"> <button type="button"
+                                                    onclick="payWithEPS('{{ $email }}')"
+                                                    class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
+                                                    Pay Invoice
+                                                </button></div>
                                         @endif
 
 
@@ -632,12 +642,13 @@
 
         {{-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> --}}
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
+            integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
         </script>
 
         <script src="{{ asset('pace/pace.min.js') }}"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://js.paystack.co/v1/inline.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js"></script>
 
 
         @if ($data['currencyCode']->gateway == 'PayPal')
@@ -1018,7 +1029,7 @@
                     currency: "NGN",
                     ref: '' + Math.floor((Math.random() * 1000000000) +
                         1
-                        ), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+                    ), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
                     metadata: {
                         custom_fields: [{
                                 display_name: "Full Name",
@@ -1052,6 +1063,116 @@
                     }
                 });
                 handler.openIframe();
+            }
+
+
+
+            // EPS Integration...
+
+            async function payWithEPS(email) {
+
+                $('.cardSubmit').text('Please wait...');
+
+                try {
+
+
+                    var callbackUrl;
+
+                    var netamount = $('#amountinvoiced').val();
+                    var feeamount = "0.00";
+                    var amount = (+netamount + +feeamount).toFixed(2);
+                    var paymentToken = '' + Math.floor((Math.random() * 1000000000) + 1);
+                    var publicKey =
+                        `{{ env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_KEY_DEV') : env('EPXRESS_PAYMENT_KEY_PROD') }}`;
+                    var name = "{{ $name }}";
+                    var currencyCode = `{{ $data['currencyCode']->currencyCode }}`;
+                    var merchantpay = "{{ $merchantPay }}";
+                    var service = "{{ $data['getinvoice'][0]->service }}";
+                    var invoice_no = `{{ $data['getinvoice'][0]->invoice_no }}`;
+                    var payment_method = "Express Payment Solution";
+
+
+                    if (`{{ env('APP_ENV') }}` != "local") {
+                        callbackUrl =
+                            `{{ env('APP_URL') }}/api/v1/epspayinvoicelink?paymentToken=${paymentToken}&invoice_no=${invoice_no}&amountinvoiced=${netamount}&merchantpay=${merchantpay}&name=${name}&email=${email}&currencyCode=${currencyCode}&amount=${amount}&service=${service}&payment_method=${payment_method}`;
+                    } else {
+                        callbackUrl =
+                            `http://localhost:9090/api/v1/epspayinvoicelink?paymentToken=${paymentToken}&invoice_no=${invoice_no}&amountinvoiced=${netamount}&merchantpay=${merchantpay}&name=${name}&email=${email}&currencyCode=${currencyCode}&amount=${amount}&service=${service}&payment_method=${payment_method}`;
+                    }
+
+                    var productId = invoice_no;
+                    var description = "Paid invoice of {{ $currencySymb }}" + netamount +
+                        " for {{ $data['getinvoice'][0]->service }} to {{ $data['getinvoice'][0]->merchantName }}."
+
+                    var data = JSON.stringify({
+                        "amount": amount,
+                        "transactionId": paymentToken,
+                        "email": email,
+                        "publicKey": publicKey,
+                        "currency": "NGN",
+                        "mode": "Debug",
+                        "callbackUrl": callbackUrl,
+                        "productId": productId,
+                        "applyConviniencyCharge": true,
+                        "productDescription": description,
+                        "bodyColor": "#0000",
+                        "buttonColor": "#0000",
+                        "footerText": "Powered by Pro-filr Nig. LTD",
+                        "footerLink": "https://paysprint.ca",
+                        "footerLogo": "https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png",
+                        "metadata": [{
+                            "name": "name",
+                            "value": "{{ $name }}"
+                        }, {
+                            "name": "description",
+                            "value": "Paid invoice of {{ $currencySymb }}" + netamount +
+                                " for {{ $data['getinvoice'][0]->service }} to {{ $data['getinvoice'][0]->merchantName }}."
+                        }, {
+                            "name": "invoice",
+                            "value": "Invoice number {{ $data['getinvoice'][0]->invoice_no }}."
+                        }]
+                    });
+
+
+                    var config = {
+                        method: 'post',
+                        url: `{{ env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_URL_DEV') : env('EPXRESS_PAYMENT_URL_PROD') }}api/Payments/Initialize`,
+                        headers: {
+                            'Authorization': `bearer {{ env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_KEY_DEV') : env('EPXRESS_PAYMENT_KEY_PROD') }}`,
+                            'Content-Type': 'application/json'
+                        },
+                        data: data
+                    };
+
+                    // console.log(config);
+
+                    const response = await axios(config);
+
+                    $('.cardSubmit').text('Pay Invoice');
+
+                    // console.log({
+                    //     data: response.data,
+                    //     url: response.data.data.paymentUrl
+                    // });
+
+
+
+                    setTimeout(() => {
+                        location.href = response.data.data.paymentUrl;
+                    }, 1000);
+
+
+
+                } catch (error) {
+
+                    console.log(error);
+
+                    $('.cardSubmit').text('Pay Invoice');
+                    swal('Oops!', error.response.data.responseMessage, 'error');
+                }
+
+
+
             }
 
 
