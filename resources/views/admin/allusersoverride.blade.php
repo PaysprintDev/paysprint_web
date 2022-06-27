@@ -277,9 +277,9 @@
 
 
                                                             <a href="{{ route('send message', 'id=' . $datainfo->id . '&route=') }}"
-                                                                class="text-info"><i
-                                                                    class="far fa-envelope text-success"
-                                                                    style="font-size: 20px;" title="Send Mail"></i></a> <br>
+                                                                class="text-info"><i class="far fa-envelope text-success"
+                                                                    style="font-size: 20px;" title="Send Mail"></i></a>
+                                                            <br>
 
 
                                                             <a href="javascript:void(0)"
@@ -293,8 +293,8 @@
                                                                 onclick="closeAccount('{{ $datainfo->id }}')"
                                                                 class="text-danger"><i
                                                                     class="far fa-trash-alt text-danger"
-                                                                    style="font-size: 20px;" title="Close Account"></i> <img
-                                                                    class="spinclose{{ $datainfo->id }} disp-0"
+                                                                    style="font-size: 20px;" title="Close Account"></i>
+                                                                <img class="spinclose{{ $datainfo->id }} disp-0"
                                                                     src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
                                                                     style="width: 20px; height: 20px;"></a>
 
@@ -309,7 +309,8 @@
 
 
                                                     <!-- Button trigger modal -->
-                                                    <button type="button" class="btn btn-primary disp-0" data-toggle="modal"
+                                                    <button type="button" class="btn btn-primary disp-0"
+                                                        data-toggle="modal"
                                                         data-target="#launchFileUpload{{ $datainfo->id }}"
                                                         id="launchButton{{ $datainfo->id }}">
                                                         Launch demo modal
@@ -325,7 +326,8 @@
                                                             id="launchFileUpload{{ $datainfo->id }}" tabindex="-1"
                                                             role="dialog" aria-labelledby="launchFileUploadTitle"
                                                             aria-hidden="true">
-                                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                            <div class="modal-dialog modal-dialog-centered"
+                                                                role="document">
 
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
@@ -440,7 +442,8 @@
                                                         <td align="center">
 
                                                             <a href="{{ route('user more detail', $data->id) }}"><i
-                                                                    class="far fa-eye text-primary" style="font-size: 20px;"
+                                                                    class="far fa-eye text-primary"
+                                                                    style="font-size: 20px;"
                                                                     title="More details"></i></strong></a>
                                                             <a href="javascript:void(0)"
                                                                 onclick="checkverification('{{ $data->id }}')"><i

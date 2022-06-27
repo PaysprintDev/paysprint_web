@@ -1261,15 +1261,15 @@ class MoneyTransferController extends Controller
                 $walletBal = $getescrow->wallet_balance;
                 // Check if User has sufficient sell
                 if ($walletBal < $req->sellAmount) {
-                    $status = 201;
+                    $status = 400;
 
                     $resData = ['data' => [], 'message' => 'You do not have sufficient balance for this transaction', 'status' => $status];
                 } elseif ($req->sellAmount < 0) {
-                    $status = 201;
+                    $status = 400;
 
                     $resData = ['data' => [], 'message' => 'You cannot enter a negative value', 'status' => $status];
                 } elseif ($walletBal <= 0) {
-                    $status = 201;
+                    $status = 400;
 
                     $resData = ['data' => [], 'message' => 'You do not have sufficient balance for this transaction', 'status' => $status];
                 } else {
