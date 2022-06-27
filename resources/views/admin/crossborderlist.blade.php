@@ -51,7 +51,7 @@
                                     </div>
                                     <tr>
                                         <th>S/N</th>
-                                        <th>Transaction ID</th>
+                                        <th></th>
                                         <th>Receivers Name</th>
                                         <th>Senders Name</th>
                                         <th>Purpose</th>
