@@ -31,11 +31,11 @@
 
         @if (env('APP_ENV') == 'local')
             <script
-                        src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_LOCAL_CLIENT_ID') }}&currency={{ $data['currencyCode']->currencyCode }}">
+                src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_LOCAL_CLIENT_ID') }}&currency={{ $data['currencyCode']->currencyCode }}">
             </script>
         @else
             <script
-                        src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ $data['currencyCode']->currencyCode }}">
+                src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ $data['currencyCode']->currencyCode }}">
             </script>
         @endif
 
@@ -72,7 +72,6 @@
         .disp-0 {
             display: none !important;
         }
-
     </style>
 
 </head>
@@ -283,8 +282,8 @@
                                                                         class="input-group-text text-muted">
                                                                         {{ $data['currencyCode']->currencySymbol }}</span>
                                                                 </div>
-                                                                <input type="text" name="amount" class="form-control"
-                                                                    id="amount"
+                                                                <input type="text" name="amount"
+                                                                    class="form-control" id="amount"
                                                                     value="{{ sprintf('%.2f', $totalCost) }}"
                                                                     placeholder="0.00" readonly>
                                                             </div>
@@ -305,8 +304,8 @@
 
                                                                 <input type="text" name="conversionamount"
                                                                     class="form-control conversionamount"
-                                                                    id="conversionamount" value="" placeholder="0.00"
-                                                                    readonly>
+                                                                    id="conversionamount" value=""
+                                                                    placeholder="0.00" readonly>
                                                             </div>
                                                         </div>
 
@@ -316,12 +315,12 @@
                                                             <div class="input-group">
                                                                 <input type="text" name="commissiondeduct"
                                                                     class="form-control commissiondeduct"
-                                                                    id="commissiondeduct" value="" placeholder="0.00"
-                                                                    readonly>
+                                                                    id="commissiondeduct" value=""
+                                                                    placeholder="0.00" readonly>
 
                                                                 <input type="hidden" name="totalcharge"
-                                                                    class="form-control" id="totalcharge" value=""
-                                                                    placeholder="0.00" readonly>
+                                                                    class="form-control" id="totalcharge"
+                                                                    value="" placeholder="0.00" readonly>
 
                                                             </div>
                                                         </div>
@@ -338,8 +337,8 @@
                                                                         <img
                                                                             src="https://img.icons8.com/nolan/25/shopping-cart-promotion.png" /></span>
                                                                 </div>
-                                                                <input type="text" name="purpose" class="form-control"
-                                                                    id="purpose"
+                                                                <input type="text" name="purpose"
+                                                                    class="form-control" id="purpose"
                                                                     value="Purchase of {{ count($data['getCart']) }} items from {{ $data['paymentorg']->businessname }}"
                                                                     readonly>
                                                             </div>
@@ -419,7 +418,8 @@
                                                                         id="firstname" class="form-control"
                                                                         placeholder="First Name:" required>
 
-                                                                    <input type="hidden" name="route" value="estore">
+                                                                    <input type="hidden" name="route"
+                                                                        value="estore">
                                                                     <input type="hidden" name="accountNumber"
                                                                         value="{{ Auth::user()->ref_code }}">
                                                                     <input type="hidden" name="mode"
@@ -447,7 +447,8 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-group"> <label for="email">
-                                                                    <h6><span style="color: red;">*</span> Email Address
+                                                                    <h6><span style="color: red;">*</span> Email
+                                                                        Address
                                                                     </h6>
                                                                 </label>
                                                                 <div class="input-group">
@@ -456,8 +457,8 @@
                                                                             class="input-group-text text-muted">
                                                                             <img
                                                                                 src="https://img.icons8.com/color/25/000000/email-sign.png" /></span>
-                                                                    </div> <input type="email" name="email" id="email"
-                                                                        class="form-control"
+                                                                    </div> <input type="email" name="email"
+                                                                        id="email" class="form-control"
                                                                         placeholder="Email Address:" required>
                                                                 </div>
                                                             </div>
@@ -471,8 +472,8 @@
                                                                             class="input-group-text text-muted">
                                                                             <img
                                                                                 src="https://img.icons8.com/external-icongeek26-flat-icongeek26/25/000000/external-phone-essentials-icongeek26-flat-icongeek26.png" /></span>
-                                                                    </div> <input type="text" name="phone" id="phone"
-                                                                        class="form-control"
+                                                                    </div> <input type="text" name="phone"
+                                                                        id="phone" class="form-control"
                                                                         placeholder="Phone Number:" required>
                                                                 </div>
                                                             </div>
@@ -615,7 +616,8 @@
                                                                                 </div>
                                                                                 <select name="cardType" id="cardType"
                                                                                     class="form-control" required>
-                                                                                    <option value="">Select Card Type
+                                                                                    <option value="">Select Card
+                                                                                        Type
                                                                                     </option>
                                                                                     <option value="Credit Card">Credit
                                                                                         Card
@@ -642,7 +644,8 @@
                                                                                         <img
                                                                                             src="https://img.icons8.com/external-prettycons-flat-prettycons/25/000000/external-payment-method-shopping-prettycons-flat-prettycons.png" /></span>
                                                                                 </div>
-                                                                                <input type="number" name="cardNumber"
+                                                                                <input type="number"
+                                                                                    name="cardNumber"
                                                                                     class="form-control"
                                                                                     id="cardNumber" value=""
                                                                                     placeholder="5411331234212345">
@@ -670,8 +673,8 @@
                                                                                 <input type="number" name="cardMonth"
                                                                                     class="form-control"
                                                                                     id="cardMonth" value=""
-                                                                                    placeholder="Expiry Month:" min="01"
-                                                                                    step="01">
+                                                                                    placeholder="Expiry Month:"
+                                                                                    min="01" step="01">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -693,8 +696,8 @@
                                                                                 <input type="number" name="cardYear"
                                                                                     class="form-control"
                                                                                     id="cardYear" value=""
-                                                                                    placeholder="Expiry Year:" min="01"
-                                                                                    step="01">
+                                                                                    placeholder="Expiry Year:"
+                                                                                    min="01" step="01">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -745,8 +748,7 @@
                                                                 </div>
                                                             @elseif($data['paymentgateway']->gateway == 'PayPal')
                                                                 {{-- PayPal --}}
-                                                                <div class="card-footer"
-                                                                    id="paypal-button-container">
+                                                                <div class="card-footer" id="paypal-button-container">
                                                                 </div>
                                                             @else
                                                                 <div class="form-group mt-4">
@@ -805,7 +807,8 @@
 
                                                         <p>
                                                             <a type="button" class="btn btn-primary"
-                                                                href="{{ route('register') }}" target="_blank">Create
+                                                                href="{{ route('register') }}"
+                                                                target="_blank">Create
                                                                 Consumer Account</a> <a type="button"
                                                                 class="btn btn-success"
                                                                 href="{{ route('AdminRegister') }}"
@@ -1349,11 +1352,19 @@
                             $(".wallet-info").html(result.walletCheck);
                             $('.withWallet').removeClass('disp-0');
 
+
+
+
                             if (result.walletCheck != "") {
                                 $(".sendmoneyBtn").attr("disabled", true);
 
 
                             } else {
+                                $(".sendmoneyBtn").attr("disabled", false);
+                            }
+
+
+                            if ($('#cardType').val() == "Debit Card") {
                                 $(".sendmoneyBtn").attr("disabled", false);
                             }
 
