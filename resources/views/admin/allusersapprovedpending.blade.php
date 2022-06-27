@@ -268,8 +268,7 @@
                                                         @if ($datainfo->approval == 2 && $datainfo->accountLevel > 0 && $datainfo->account_check == 2)
                                                             <a href="javascript:void()"
                                                                 onclick="downgradetoLevel1('{{ $datainfo->id }}')"
-                                                                class="text-danger"><i
-                                                                    class="fas fa-arrow-down text-info"
+                                                                class="text-danger"><i class="fas fa-arrow-down text-info"
                                                                     style="font-size: 20px;"
                                                                     title="Downgrade to Level 1"></i> <img
                                                                     class="spindowngrade{{ $datainfo->id }} disp-0"
@@ -298,7 +297,8 @@
                                                                 onclick="disapproveaccount('{{ $datainfo->id }}')"
                                                                 class="text-danger"><i
                                                                     class="fas fa-power-off text-danger"
-                                                                    style="font-size: 20px;" title="Disapprove Account"></i>
+                                                                    style="font-size: 20px;"
+                                                                    title="Disapprove Account"></i>
                                                                 <img class="spindis{{ $datainfo->id }} disp-0"
                                                                     src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
                                                                     style="width: 20px; height: 20px;"></a>
@@ -316,7 +316,8 @@
                                                                 onclick="disapproveaccount('{{ $datainfo->id }}')"
                                                                 class="text-danger"><i
                                                                     class="fas fa-power-off text-danger"
-                                                                    style="font-size: 20px;" title="Disapprove Account"></i>
+                                                                    style="font-size: 20px;"
+                                                                    title="Disapprove Account"></i>
                                                                 <img class="spindis{{ $datainfo->id }} disp-0"
                                                                     src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
                                                                     style="width: 20px; height: 20px;"></a>
@@ -334,6 +335,11 @@
                                                         <a href="{{ route('send message', 'id=' . $datainfo->id . '&route=') }}"
                                                             class="text-info"><i class="far fa-envelope text-success"
                                                                 style="font-size: 20px;" title="Send Mail"></i></a>
+
+                                                        <a href="javascript:void(0)"
+                                                            onclick="$('#launchButton{{ $datainfo->id }}').click()"
+                                                            class="text-info"><i class="fas fa-paperclip"
+                                                                style="font-size: 20px;" title="Attachment"></i> </a>
 
                                                         <a href="javascript:void()"
                                                             onclick="closeAccount('{{ $datainfo->id }}')"
@@ -432,6 +438,69 @@
                                                         </div>
                                                     </div>
                                                 @endif
+
+
+
+                                                {{-- Start Modal --}}
+
+
+
+                                                <!-- Button trigger modal -->
+                                                <button type="button" class="btn btn-primary disp-0" data-toggle="modal"
+                                                    data-target="#launchFileUpload{{ $datainfo->id }}"
+                                                    id="launchButton{{ $datainfo->id }}">
+                                                    Launch demo modal
+                                                </button>
+
+
+                                                <form action="{{ route('upload user doc') }}" method="POST"
+                                                    enctype="multipart/form-data"
+                                                    id="uploadthisform{{ $datainfo->id }}">
+                                                    @csrf
+                                                    <!-- Modal -->
+                                                    <div class="modal fade" id="launchFileUpload{{ $datainfo->id }}"
+                                                        tabindex="-1" role="dialog"
+                                                        aria-labelledby="launchFileUploadTitle" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h3 class="modal-title" id="exampleModalLongTitle">
+                                                                        {{ $datainfo->name }}</h3>
+                                                                    <button type="button" class="close"
+                                                                        data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+
+                                                                <div class="modal-body">
+                                                                    <input type="file" name="image"
+                                                                        id="uploadContent{{ $datainfo->id }}"
+                                                                        class="form-control">
+                                                                    <input type="hidden" name="user_id"
+                                                                        value="{{ $datainfo->id }}">
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-dismiss="modal">Close</button>
+                                                                    <button type="button" class="btn btn-primary"
+                                                                        id="uploadBtn{{ $datainfo->id }}"
+                                                                        onclick="uploadDocsForUser('uploadthisform', '{{ $datainfo->id }}')">Upload</button>
+                                                                </div>
+
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+
+                                                </form>
+
+
+
+
+
+                                                {{-- End Modal --}}
                                             @endforeach
                                         @else
                                             <tr>
