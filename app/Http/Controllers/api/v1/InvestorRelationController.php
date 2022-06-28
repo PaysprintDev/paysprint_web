@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use App\InvestorPost;
 use App\Createpost;
 use App\ExpressInterest;
@@ -410,6 +411,9 @@ class InvestorRelationController extends Controller
         try {
             $users=InvestorRelation::where('apiToken', $req->apiToken)->first();
 
+            dd($users);
+          
+
             if(!$users){
                 $resData = ['data' => [], 'message' => 'Invalid authorization. Please login', 'status' => 400];
 
@@ -473,7 +477,6 @@ class InvestorRelationController extends Controller
     $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
     return $this->returnJSON($resData, $status);
-
 
 }
 

@@ -67,6 +67,8 @@ Route::prefix('/v1')->group(function () {
         // Investor login
         Route::post('investorlogin', ['uses' => 'api\v1\InvestorRelationController@investorLogin']);
 
+       
+
         // Investor Password Reset
         Route::post('investor/forgot-password', ['uses' => 'api\v1\InvestorRelationController@investorForgotPassword']);
         Route::post('investor/reset-password', ['uses' => 'api\v1\InvestorRelationController@investorResetPassword']);
@@ -84,7 +86,7 @@ Route::prefix('/v1')->group(function () {
         Route::get('investor/get-specific',['uses' => 'api\v1\InvestorRelationController@investorGetSpecificPost']);
         Route::get('investor/express-interest',['uses' => 'api\v1\InvestorRelationController@investorExpressInteret']);
 
-
+        Route::get('investor/logout',['uses' => 'api\v1\InvestorRelationController@logout']);
 
     });
 

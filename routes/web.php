@@ -791,6 +791,7 @@ Route::prefix('Admin/')->group(function () {
 		Route::get('investorposts', ['uses' => 'AdminController@investorPosts', 'as' => 'investorposts']);
 		Route::post('createnews', ['uses' => 'AdminController@createInvestorNews', 'as' => 'create investor news']);
 		Route::get('createpost', ['uses' => 'AdminController@createInvestorPost', 'as' => 'create investor post']);
+		Route::get('createnews', ['uses' => 'AdminController@createInvestorNews', 'as' => 'create investor news']);
 		Route::post('createpost', ['uses' => 'AdminController@createInvestorPosts', 'as' => 'create investor posts']);
         Route::get('editpost/{id}', ['uses' => 'AdminController@editInvestorPost', 'as' => 'edit investor post' ]);
         Route::post('editpost/{id}', ['uses' => 'AdminController@editInvestorPosts', 'as' => 'edit investor posts' ]);
