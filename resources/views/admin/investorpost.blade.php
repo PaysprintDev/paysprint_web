@@ -24,7 +24,11 @@
                 <div class="box-body">
                             {!! session('msg') !!}
                     {{-- Provide Form --}}
+<<<<<<< HEAD
+                    <form role="form" action="{{ route('create investor news') }}" method="POST">
+=======
                     <form role="form" action="{{ route('create investor news') }}" method="POST" enctype="multipart/form-data">
+>>>>>>> 869bd8d10cdb364f2edafc3dec74112364bc5618
                         @csrf
                         <div class="box-body">
 

@@ -1507,7 +1507,7 @@ class AdminController extends Controller
 
 
 
-            return view('admin.investorpost')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'data' => $data]);
+;            return view('admin.investorpost')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'data' => $data]);
         } else {
             return redirect()->route('AdminLogin');
         }
@@ -1559,11 +1559,19 @@ class AdminController extends Controller
             $getxPay = $this->getxpayTrans();
 
 
+
+
+
             return view('admin.investorpost')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay]);
         } else {
             return redirect()->route('AdminLogin');
         }
+
+
+
     }
+
+
 
     public function investorSubscriber(Request $req)
     {
@@ -16773,7 +16781,7 @@ class AdminController extends Controller
             $message = "<p>Your PaySprint Account is temporarily suspended as our system is unable to match the details on your profile with the details on the Bank Card added which
 is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the temporary suspension on your account, kindly take the following steps:</p><p>a.  Delete and desist from using a Bank Card with details that are different from your PaySprint profile and Government issued photo ID</p><p>b. Send us a copy of a Utility Bill with address that matches the address on your profile. Please send the copy of utility bill to: info@paysprint.ca</p><p>c. Upload a selfie of yourself (if you are yet to do so)</p><p>Kindly login to www.paysprint.ca and upload Items B and C above when the suspension on your PaySprint Account is removed.</p><p>We thank you for your understanding</p><p>Compliance Team at paysprint.ca</p>";
         } else {
-            $user->where('id', $req->id)->update(['flagged' => 0, 'accountLevel' => 3]);
+            $user->where('id', $req->id)->update(['flagged' => 0, 'accountLevel' => 3, 'flagcount' => 0]);
             $subject = "Review of PaySprint Account";
             $message = "We have completed the review of your PaySprint Account. Your PaySprint account has been enabled and you will be able to access the services both on the Mobile and Web platforms. Thank you for your patience. If you have any concern, please send us a message on : compliance@paysprint.ca";
         }
