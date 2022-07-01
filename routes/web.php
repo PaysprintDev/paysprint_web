@@ -1015,6 +1015,7 @@ Route::get('/referraldetails',['uses' => 'AdminController@viewReferralDetails', 
 Route::post('/processreferralclaim',['uses' => 'AdminController@processReferralClaim', 'as' => 'process referral claim']);
 Route::post('/processpointclaim',['uses' => 'AdminController@processPointClaim', 'as' => 'process point claim']);
 Route::get('/successfulreferralclaim',['uses' => 'AdminController@successfulReferralClaim', 'as' => 'successful referral claim']);
+Route::get('/successfulpointclaim',['uses' => 'AdminController@successfulPointClaim', 'as' => 'successful point claim']);
 Route::post('/deleteclaim/{id}',['uses' => 'AdminController@deleteClaim', 'as' => 'delete claim']);
 Route::post('/restoreclaim/{id}',['uses' => 'AdminController@restoreClaim', 'as' => 'restore claim']);
 Route::get('/suspendedreferralclaim', ['uses' => 'AdminController@suspendedReferralClaim', 'as' => 'suspended referral claim']);
