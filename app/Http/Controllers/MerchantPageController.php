@@ -48,7 +48,7 @@ class MerchantPageController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth')->except(['businessProfile', 'merchantShop']);
+        $this->middleware('auth')->except(['businessProfile', 'merchantShop', 'merchantService']);
     }
 
     public function index()
@@ -211,6 +211,7 @@ class MerchantPageController extends Controller
     // Setup Shop Here...
     public function merchantShop($merchant){
 
+
         // Get merchant...
         $thismerchant = ClientInfo::where('business_name', $merchant)->first();
 
@@ -259,6 +260,72 @@ class MerchantPageController extends Controller
                 // dd($data);
 
                 return view('merchant.pages.shop.index')->with(['pages' => $merchant.' Shop', 'data' => $data]);
+            }
+            else{
+                return view('errors.comingsoon')->with(['pages' => $merchant.' Shop']);
+            }
+
+        }
+        else{
+            return view('errors.comingsoon')->with(['pages' => $merchant.' Shop']);
+        }
+
+
+
+
+    }
+
+
+    public function merchantService($merchant){
+
+        // Get merchant...
+        $thismerchant = ClientInfo::where('business_name', $merchant)->first();
+
+        if(isset($thismerchant)){
+                $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
+
+
+                if(Auth::check() == true){
+                    $userId = Auth::id();
+                }
+                else{
+                    $userId = 0;
+                }
+
+                if($userId == $getMerchantId->id){
+                    // If Has Main Store setup
+                $merchantStore = $this->checkMyStore($getMerchantId->id);
+                }
+                else{
+                    // If Has Main Store setup
+                    if(session('role')){
+                        $merchantStore = $this->checkMyStore($getMerchantId->id);
+                    }
+                    else{
+            $merchantStore = $this->getMyStore($getMerchantId->id);
+
+                    }
+                }
+
+
+
+
+            if(isset($merchantStore)){
+
+
+
+                $data = [
+                    'mystore' => $merchantStore,
+                    'myproduct' => $this->getProducts($getMerchantId->id),
+                    'user' => $getMerchantId,
+                    'mywishlist' => $this->getMyWishlist($userId),
+                    'mycartlist' => $this->getMyCartlist($userId),
+                ];
+
+
+                // dd($data);
+
+                return view('merchant.pages.service.index')->with(['pages' => $merchant.' Shop', 'data' => $data]);
             }
             else{
                 return view('errors.comingsoon')->with(['pages' => $merchant.' Shop']);
@@ -844,7 +911,7 @@ class MerchantPageController extends Controller
         ActivationEstore::updateOrCreate([
             'user_id' => Auth::user()->id,
         ]);
-       
+
         return view('merchant.pages.orderingsystem')->with(['pages' => 'estore', 'data' => $data]);
     }
 

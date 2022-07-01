@@ -212,9 +212,18 @@ Route::post('/storeanswer', ['uses' => 'HomeController@storeSubMessage', 'as' =>
 
 Route::prefix('shop')->group(function () {
 	Route::get('/{merchant}', ['uses' => 'MerchantPageController@merchantShop', 'as' => 'merchant shop now']);
-
-
 });
+
+Route::prefix('service')->group(function () {
+	Route::get('/{merchant}', ['uses' => 'MerchantPageController@merchantService', 'as' => 'merchant service now']);
+});
+
+
+Route::prefix('merchant')->group(function () {
+	Route::get('/services/{id}', ['uses' => 'ServiceController@merchantPlatformService', 'as' => 'merchant platform service']);
+	Route::get('/pricing/{id}', ['uses' => 'ServiceController@merchantPlatformPricing', 'as' => 'merchant platform pricing']);
+});
+
 
 
 Route::prefix('product')->group(function () {
@@ -413,6 +422,12 @@ Route::prefix('merchant')->group(function () {
 
 
 	Route::post('/setupestore', [ShopController::class, 'setupEstore'])->name('setup estore');
+
+
+
+
+
+
 
 });
 

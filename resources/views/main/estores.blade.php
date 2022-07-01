@@ -104,7 +104,11 @@
                                                             class="card-img-top" alt="{{ $user->businessname }}">
                                                         <div class="card-body">
                                                             <h5 class="card-title">{{ $user->businessname }}</h5>
-                                                            <p class="card-text">{{ $items->headerTitle }}</p>
+                                                            <p class="card-text">{{ $items->headerTitle }} - <span
+                                                                    class="card-text text-info"
+                                                                    style="font-weight: 700">({{ $user->country }})</span>
+                                                            </p>
+
                                                             <a href="{{ route('merchant shop now', $user->businessname) }}"
                                                                 class="btn btn-primary">Goto store</a>
                                                         </div>
@@ -146,7 +150,7 @@
 
 
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"
-                        integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
+                integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
             </script>
             <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 

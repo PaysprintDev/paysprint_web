@@ -240,6 +240,7 @@ class HomeController extends Controller
             ];
 
 
+
              return view('main.estores')->with(['pages' => 'e-Store', 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
