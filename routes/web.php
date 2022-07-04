@@ -297,6 +297,12 @@ Route::prefix('expresspay')->group(function () {
 });
 
 
+// Dusupay Payment Callback
+Route::prefix('dusupay')->group(function(){
+	Route::get('/resp', ['uses' => 'MonerisController@dusuPayCallback', 'as' => 'dusupay callback']);
+});
+
+
 // Currency FX Page
 Route::prefix('currencyfx')->group(function () {
 	Route::get('/start', ['uses' => 'CurrencyFxController@start', 'as' => 'paysprint currency exchange start']);

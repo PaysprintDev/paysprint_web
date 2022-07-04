@@ -1436,7 +1436,7 @@ class HomeController extends Controller
 
     public function processMoney(Request $req)
     {
-
+            dd($req->all());
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
                 $this->page = 'Add Money To Wallet';

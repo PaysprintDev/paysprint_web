@@ -17,17 +17,17 @@ use Razorpay\Api\Api;
 
 trait dusupay{
 
-    public $DusuBaseUrl;
+    public $DusuBaseUrl = "https://sandbox.dusupay.com/v1";
     public $Dusuurl;
     public $DusuCurlPost;
 
     
     public function collectPayment($currencyCode,$amount,$reason){
 
-        $this->DusuBaseUrl="https://sandbox.dusupay.com/v1/collections";
+        $this->Dusuurl=$this->DusuBaseUrl."/collections";
 
         $this->DusuCurlPost = json_encode([
-            'api_key' => 'PUBK-2022ea52d25cf3defae72e56b0d88b200',
+            'api_key' => env('DUSU_PAY_DEV_KEY_ID'),
             'currency' => $currencyCode,
             'amount' => $amount,
             'method' => 'CARD',
@@ -39,7 +39,6 @@ trait dusupay{
 
         $data = $this->doPost();
 
-
         return $data;
 
     }
@@ -47,7 +46,7 @@ trait dusupay{
 
     public function getProviders($code,$currencyCode){
 
-        $this->Dusuurl="https://sandbox.dusupay.com/v1/payment-options/collection/card/".$code."?api_key=PUBK-2022ea52d25cf3defae72e56b0d88b200";
+        $this->Dusuurl= $this->DusuBaseUrl."/payment-options/collection/card/".$code."?api_key=PUBK-2022ea52d25cf3defae72e56b0d88b200";
 
 
         $this->DusuCurlPost=json_encode([
@@ -71,7 +70,7 @@ trait dusupay{
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => $this->DusuBaseUrl,
+            CURLOPT_URL => $this->Dusuurl,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -98,7 +97,7 @@ trait dusupay{
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => $this->DusuBaseUrl,
+            CURLOPT_URL => $this->Dusuurl,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
