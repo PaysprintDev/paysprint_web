@@ -832,11 +832,44 @@
 
             }
 
+                //dusupay providers Id
+                async function getDusupayProviderId(){
+
+                    try {
+                        var publicKey= `{{ env('APP_ENV') == 'local' ? env('DUSU_PAY_DEV_KEY_ID') : env('DUSU_PAY_KEY_PROD') }}`;
+
+                        var secretKey=`{{ env('APP_ENV') == 'local' ? env('DUSU_PAY_DEV_SECRET_KEY') : env('DUSU_PAY_PROD_SECRET_KEY') }}`
+
+                        var currencyCode=`{{ $data['currencyCode']->code }}`;
+                        
+                        var dusuUrl = 'https://sandbox.dusupay.com/v1/payment-options/collection/card/'+currencyCode.toLowerCase()+'?api_key='+publicKey;
+
+                        var config = {
+                         method: 'get',
+                         url: dusuUrl,
+                         headers: {
+                           'Content-Type': 'application/json',
+                           'secret-key': secretKey,
+                         },
+    
+                        };
+
+                        var response= await axios(config);
+
+                        return response.data.data[0].id;
+                        
+                    } catch (error) {
+                        console.log(error.response);
+                    }
+                }
+
                     //Dusupay Integration
                 async function payWithDusupay(email) {
                 $('.cardSubmit').text('Please wait...');
 
                 try {
+
+                    var providerId = await getDusupayProviderId();
 
                 var callbackUrl;
 
@@ -869,7 +902,7 @@
                 "api_key": publicKey,
                 "redirect_url": callbackUrl,
                 "method": "CARD",
-                "provider_id":"international_ghs",
+                "provider_id": providerId,
                 "merchant_reference":paymentToken,
                 "narration":"Added {{ $data['currencyCode']->currencyCode }}" +
                 netamount +
