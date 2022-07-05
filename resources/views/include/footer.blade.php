@@ -30,6 +30,11 @@
 <script src="{{ asset('pace/pace.min.js') }}"></script>
 
 <script src="{{ asset('ext/plugins/countrycode/js/jquery.ccpicker.js') }}"></script>
+ <!-- Sharethis script -->
+{{-- <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=62bad1f7ffa4ba00198f3c70&product=inline-share-buttons" async="async"></script> --}}
+<script type='text/javascript'
+        src='https://platform-api.sharethis.com/js/sharethis.js#property=62837dc55d7558001495d1e7&product=sop'
+        async='async'></script>
 
 
 <script language="javascript">

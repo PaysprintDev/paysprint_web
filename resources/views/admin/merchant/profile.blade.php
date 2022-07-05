@@ -331,7 +331,8 @@
 
 
                             <div class="active tab-pane" id="business">
-                                <form action="#" method="post" class="form-horizontal" id="formElemBusinessProfile">
+                                <form action="#" method="post" class="form-horizontal"
+                                    id="formElemBusinessProfile">
                                     <div class="form-group">
                                         <label for="inputName" class="col-sm-3 control-label">Legal Entity Name</label>
 
@@ -379,7 +380,8 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="inputName" class="col-sm-3 control-label">Date of Incorporation</label>
+                                        <label for="inputName" class="col-sm-3 control-label">Date of
+                                            Incorporation</label>
 
                                         <div class="col-sm-9">
                                             <input type="date" class="form-control" name="dateOfIncorporation"
@@ -480,7 +482,8 @@
                                                 <option value="Capital Markets/Hedge Fund/Private Equity">Capital
                                                     Markets/Hedge Fund/Private Equity</option>
                                                 <option value="Chemicals">Chemicals</option>
-                                                <option value="Civic/Social Organization">Civic/Social Organization</option>
+                                                <option value="Civic/Social Organization">Civic/Social Organization
+                                                </option>
                                                 <option value="Civil Engineering">Civil Engineering</option>
                                                 <option value="Commercial Real Estate">Commercial Real Estate</option>
                                                 <option value="Computer Games">Computer Games</option>
@@ -488,7 +491,8 @@
                                                 <option value="Computer Networking">Computer Networking</option>
                                                 <option value="Computer Software/Engineering">Computer Software/Engineering
                                                 </option>
-                                                <option value="Computer/Network Security">Computer/Network Security</option>
+                                                <option value="Computer/Network Security">Computer/Network Security
+                                                </option>
                                                 <option value="Construction">Construction</option>
                                                 <option value="Consumer Electronics">Consumer Electronics</option>
                                                 <option value="Consumer Goods">Consumer Goods</option>
@@ -517,11 +521,14 @@
                                                 <option value="Furniture">Furniture</option>
                                                 <option value="Gambling/Casinos">Gambling/Casinos</option>
                                                 <option value="Glass/Ceramics/Concrete">Glass/Ceramics/Concrete</option>
-                                                <option value="Government Administration">Government Administration</option>
+                                                <option value="Government Administration">Government Administration
+                                                </option>
                                                 <option value="Government Relations">Government Relations</option>
-                                                <option value="Graphic Design/Web Design">Graphic Design/Web Design</option>
+                                                <option value="Graphic Design/Web Design">Graphic Design/Web Design
+                                                </option>
                                                 <option value="Health/Fitness">Health/Fitness</option>
-                                                <option value="Higher Education/Acadamia">Higher Education/Acadamia</option>
+                                                <option value="Higher Education/Acadamia">Higher Education/Acadamia
+                                                </option>
                                                 <option value="Hospital/Health Care">Hospital/Health Care</option>
                                                 <option value="Hospitality">Hospitality</option>
                                                 <option value="Human Resources/HR">Human Resources/HR</option>
@@ -530,7 +537,8 @@
                                                 </option>
                                                 <option value="Industrial Automation">Industrial Automation</option>
                                                 <option value="Information Services">Information Services</option>
-                                                <option value="Information Technology/IT">Information Technology/IT</option>
+                                                <option value="Information Technology/IT">Information Technology/IT
+                                                </option>
                                                 <option value="Insurance">Insurance</option>
                                                 <option value="International Affairs">International Affairs</option>
                                                 <option value="International Trade/Development">International
@@ -648,7 +656,8 @@
 
 
                                     <div class="form-group">
-                                        <label for="inputCorporationDocument" class="col-sm-3 control-label">&nbsp;</label>
+                                        <label for="inputCorporationDocument"
+                                            class="col-sm-3 control-label">&nbsp;</label>
 
                                         <div class="col-sm-9">
                                             <small class="text-danger"><strong>Articles of
@@ -658,7 +667,8 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="inputCorporationDocument" class="col-sm-3 control-label">&nbsp;</label>
+                                        <label for="inputCorporationDocument"
+                                            class="col-sm-3 control-label">&nbsp;</label>
 
                                         <div class="col-sm-9">
                                             <small class="text-danger"><strong>Register of Directors</strong></small>
@@ -667,7 +677,8 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="inputCorporationDocument" class="col-sm-3 control-label">&nbsp;</label>
+                                        <label for="inputCorporationDocument"
+                                            class="col-sm-3 control-label">&nbsp;</label>
 
                                         <div class="col-sm-9">
                                             <small class="text-danger"><strong>Register of Shareholders</strong></small>
@@ -676,7 +687,8 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="inputCorporationDocument" class="col-sm-3 control-label">&nbsp;</label>
+                                        <label for="inputCorporationDocument"
+                                            class="col-sm-3 control-label">&nbsp;</label>
 
                                         <div class="col-sm-9">
                                             <small class="text-danger"><strong>Proof of Identity - 1
@@ -686,7 +698,8 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="inputCorporationDocument" class="col-sm-3 control-label">&nbsp;</label>
+                                        <label for="inputCorporationDocument"
+                                            class="col-sm-3 control-label">&nbsp;</label>
 
                                         <div class="col-sm-9">
                                             <small class="text-danger"><strong>Proof of Identity - 1
@@ -696,7 +709,8 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="inputCorporationDocument" class="col-sm-3 control-label">&nbsp;</label>
+                                        <label for="inputCorporationDocument"
+                                            class="col-sm-3 control-label">&nbsp;</label>
 
                                         <div class="col-sm-9">
                                             <small class="text-danger"><strong>AML Policy and
@@ -706,7 +720,8 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="inputCorporationDocument" class="col-sm-3 control-label">&nbsp;</label>
+                                        <label for="inputCorporationDocument"
+                                            class="col-sm-3 control-label">&nbsp;</label>
 
                                         <div class="col-sm-9">
                                             <small class="text-danger"><strong>Latest Compliance External Audit
@@ -716,7 +731,8 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="inputCorporationDocument" class="col-sm-3 control-label">&nbsp;</label>
+                                        <label for="inputCorporationDocument"
+                                            class="col-sm-3 control-label">&nbsp;</label>
 
                                         <div class="col-sm-9">
                                             <small class="text-danger"><strong>Organizational Chart (including details
@@ -727,7 +743,8 @@
 
 
                                     <div class="form-group">
-                                        <label for="inputCorporationDocument" class="col-sm-3 control-label">&nbsp;</label>
+                                        <label for="inputCorporationDocument"
+                                            class="col-sm-3 control-label">&nbsp;</label>
 
                                         <div class="col-sm-9">
                                             <small class="text-danger"><strong>Proof of Financial
@@ -834,7 +851,8 @@
 
                                         <div class="col-sm-10">
                                             <input type="number" class="form-control" name="telephone"
-                                                placeholder="Telephone" value="{{ $data['getuserDetail']->telephone }}">
+                                                placeholder="Telephone"
+                                                value="{{ $data['getuserDetail']->telephone }}">
                                         </div>
                                     </div>
 
@@ -954,8 +972,8 @@
                                         <label for="inputName" class="col-sm-2 control-label">Postal Code</label>
 
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control" name="zip" placeholder="Zip Code"
-                                                value="{{ $data['getuserDetail']->zip }}">
+                                            <input type="text" class="form-control" name="zip"
+                                                placeholder="Zip Code" value="{{ $data['getuserDetail']->zip }}">
                                         </div>
                                     </div>
 
@@ -1003,18 +1021,29 @@
                                         <label for="inputPassport" class="col-sm-2 control-label">Passport</label>
 
                                         <div class="col-sm-5">
-                                            <input type="file" class="form-control" name="international_passport_front">
+                                            <input type="file" class="form-control"
+                                                name="international_passport_front">
                                             <small class="text-danger"><strong>Upload International Passport
                                                     (FRONT)</strong></small>
                                         </div>
                                         <div class="col-sm-5">
-                                            <input type="file" class="form-control" name="international_passport_back">
+                                            <input type="file" class="form-control"
+                                                name="international_passport_back">
                                             <small class="text-danger"><strong>Upload International Passport
                                                     (BACK)</strong></small>
                                         </div>
                                     </div>
 
 
+                                    <div class="form-group">
+                                        <label for="inputDocument" class="col-sm-2 control-label">Document</label>
+
+                                        <div class="col-sm-10">
+                                            <input type="file" class="form-control" name="incorporation_doc_front">
+                                            <small class="text-danger"><strong>Utility Bill</strong></small>
+                                        </div>
+
+                                    </div>
 
 
 
@@ -1055,8 +1084,8 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="confirmpin">Confirm Pin</label>
-                                            <input type="password" name="confirmpin" id="confirmpin" class="form-control"
-                                                placeholder="Confirm Pin" maxlength="4">
+                                            <input type="password" name="confirmpin" id="confirmpin"
+                                                class="form-control" placeholder="Confirm Pin" maxlength="4">
                                         </div>
 
                                         <div class="form-group">
@@ -1075,8 +1104,8 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="confirmpin">Confirm Pin</label>
-                                            <input type="password" name="confirmpin" id="confirmpin" class="form-control"
-                                                placeholder="Confirm Pin" maxlength="4">
+                                            <input type="password" name="confirmpin" id="confirmpin"
+                                                class="form-control" placeholder="Confirm Pin" maxlength="4">
                                         </div>
                                         <div class="form-group">
                                             <button type="button" class="btn btn-primary btn-block" id="transactionBtn"
@@ -1137,8 +1166,8 @@
 
                                         <div class="form-group">
                                             <label for="account_name">Account Name</label>
-                                            <input type="text" name="account_name" id="account_name" class="form-control"
-                                                value="" readonly>
+                                            <input type="text" name="account_name" id="account_name"
+                                                class="form-control" value="" readonly>
                                         </div>
 
 
@@ -1232,8 +1261,8 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="securityAnswer">Answer</label>
-                                        <input type="text" name="securityAnswer" id="securityAnswer" class="form-control"
-                                            placeholder="Answer">
+                                        <input type="text" name="securityAnswer" id="securityAnswer"
+                                            class="form-control" placeholder="Answer">
                                     </div>
                                     <div class="form-group">
                                         <button type="button" class="btn btn-primary btn-block" id="securityBtn"

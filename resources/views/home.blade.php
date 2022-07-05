@@ -135,7 +135,6 @@
 </section>
 <!-- End Professional Builde -->
 
-
 <!-- Professional Builde -->
 <section class="professional_builder row">
     <div class="container">
@@ -198,8 +197,7 @@
             </div>
         @endif
 
-        <div class="row">
-
+        <div class="row">                
             <div @if (Auth::user()->plan == 'classic') class="col-md-4" @else class="col-md-6" @endif>
                 <div class="card" style="width: 100%;">
 
