@@ -58,6 +58,15 @@
     <br>
     <div class="container">
         <div class="row">
+            <div class="col-md-12">
+                <!-- ShareThis BEGIN -->
+
+               <p><strong>Share link to invite your friends:</strong></p>
+                <div class="sharethis-inline-share-buttons mb-3"
+                data-url="{{ route('home') . '/register?ref_code='. Auth::user()->ref_code }}">
+                </div><!-- ShareThis END -->
+
+           </div>
             <div class="col-xs-12 col-sm-6 col-md-6">
                 <div class="well well-sm">
                     <div class="row">

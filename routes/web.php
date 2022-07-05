@@ -212,9 +212,18 @@ Route::post('/storeanswer', ['uses' => 'HomeController@storeSubMessage', 'as' =>
 
 Route::prefix('shop')->group(function () {
 	Route::get('/{merchant}', ['uses' => 'MerchantPageController@merchantShop', 'as' => 'merchant shop now']);
-
-
 });
+
+Route::prefix('service')->group(function () {
+	Route::get('/{merchant}', ['uses' => 'MerchantPageController@merchantService', 'as' => 'merchant service now']);
+});
+
+
+Route::prefix('merchant')->group(function () {
+	Route::get('/services/{id}', ['uses' => 'ServiceController@merchantPlatformService', 'as' => 'merchant platform service']);
+	Route::get('/pricing/{id}', ['uses' => 'ServiceController@merchantPlatformPricing', 'as' => 'merchant platform pricing']);
+});
+
 
 
 Route::prefix('product')->group(function () {
@@ -413,6 +422,12 @@ Route::prefix('merchant')->group(function () {
 
 
 	Route::post('/setupestore', [ShopController::class, 'setupEstore'])->name('setup estore');
+
+
+
+
+
+
 
 });
 
@@ -1000,6 +1015,7 @@ Route::get('/referraldetails',['uses' => 'AdminController@viewReferralDetails', 
 Route::post('/processreferralclaim',['uses' => 'AdminController@processReferralClaim', 'as' => 'process referral claim']);
 Route::post('/processpointclaim',['uses' => 'AdminController@processPointClaim', 'as' => 'process point claim']);
 Route::get('/successfulreferralclaim',['uses' => 'AdminController@successfulReferralClaim', 'as' => 'successful referral claim']);
+Route::get('/successfulpointclaim',['uses' => 'AdminController@successfulPointClaim', 'as' => 'successful point claim']);
 Route::post('/deleteclaim/{id}',['uses' => 'AdminController@deleteClaim', 'as' => 'delete claim']);
 Route::post('/restoreclaim/{id}',['uses' => 'AdminController@restoreClaim', 'as' => 'restore claim']);
 Route::get('/suspendedreferralclaim', ['uses' => 'AdminController@suspendedReferralClaim', 'as' => 'suspended referral claim']);

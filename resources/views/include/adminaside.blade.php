@@ -486,6 +486,8 @@
                                                     class="fa fa-circle-o text-red"></i>Suspended Referral Claims</a></li>
                                      <li title="prepaid Card"><a href="{{ route('successful referral claim') }}"><i
                                                     class="fa fa-circle-o text-red"></i>Successful Referral Claims</a></li>
+                                                    <li title="prepaid Card"><a href="{{ route('successful point claim') }}"><i
+                                                        class="fa fa-circle-o text-red"></i>Successful Points Claims</a></li>
                                     <li title="prepaid Card"><a href="{{ route('promo report') }}"><i
                                                     class="fa fa-circle-o text-red"></i>Imported List Report</a></li>
                                      <li title="prepaid Card"><a href="{{ route('referral report') }}"><i

@@ -59,7 +59,6 @@
         .fas {
             font-size: 12px;
         }
-
     </style>
 
 </head>
@@ -125,7 +124,7 @@
 
                                         <div class="card" style="width: 100%;">
 
-                                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1629977135/Flag-Nigeria_dofzva.jpg"
+                                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1656590760/assets/Flag_of_Nigeria_mhpzym.svg"
                                                 class="card-img-top" alt="Nigeria"
                                                 style="width: 100%; height: 200px;object-fit: contain;">
 
@@ -143,7 +142,7 @@
 
                                         <div class="card" style="width: 100%;">
 
-                                            <img src="https://res.cloudinary.com/pilstech/image/upload/v1645614320/not_available_d7rrc2.jpg"
+                                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1656591099/assets/not-available-red-rubber-stamp-over-white-background-87242466_odd8qc.jpg"
                                                 class="card-img-top" alt="Nigeria"
                                                 style="width: 100%; height: 200px;object-fit: contain;">
 
@@ -176,7 +175,7 @@
 
 
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"
-                        integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
+                integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
             </script>
             <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 
