@@ -242,6 +242,7 @@ Route::get('Ticket', ['uses' => 'HomeController@ticket', 'as' => 'ticket']);
 
 
 Route::get('profile', ['uses' => 'HomeController@profile', 'as' => 'profile']);
+Route::get('referrallink', ['uses' => 'HomeController@referralLink', 'as' => 'referral link']);
 
 
 Route::get('verification', ['uses' => 'HomeController@verifyAuthentication', 'as' => 'verification page']);

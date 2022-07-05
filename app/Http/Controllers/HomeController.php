@@ -4072,6 +4072,56 @@ class HomeController extends Controller
         return view('main.profile')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
+    //Referral link
+
+    public function referralLink(){
+        if (Auth::check() == true) {
+
+            if (Auth::user()->accountType == "Individual") {
+                $this->page = 'Landing';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'sendReceive' => $this->sendAndReceive(Auth::user()->email),
+                    'payInvoice' => $this->payInvoice(Auth::user()->email),
+                    'walletTrans' => $this->sendAndReceive(Auth::user()->email),
+                    'urgentnotification' => $this->urgentNotification(Auth::user()->email),
+                    'currencyCode' => $this->getCountryCode(Auth::user()->country),
+                    'getCard' => $this->getUserCard(),
+                    'getBank' => $this->getUserBank(),
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'getmerchantsByCategory' => $this->getMerchantsByCategory(),
+                    'specialInfo' => $this->getthisInfo(Auth::user()->country),
+                    'continent' => $this->timezone[0],
+                    'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+                    'pointsclaim' => $this->getClaimedHistory(Auth::user()->id),
+                    'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
+                    'imtAccess' => AllCountries::where('name', Auth::user()->country)->first(),
+                    'referred' => $this->referral(Auth::user()->ref_code)
+                );
+
+                $view = 'home';
+            } else {
+
+                // return redirect()->route('Admin');
+                return redirect()->route('dashboard');
+            }
+        } else {
+            $this->page = 'Homepage';
+            $this->name = '';
+            $view = 'main.newpage.shade-pro.index';
+            $data = [
+                'continent' => $this->timezone[0]
+            ];
+        }
+
+        // dd($data);
+
+
+
+        return view('main.referrallink')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
 
 
     public function sendAndReceive($email)
