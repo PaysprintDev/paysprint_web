@@ -33,6 +33,7 @@
         "rap2hpoutre/fast-excel": "^1.7",
         "rap2hpoutre/laravel-log-viewer": "^1.7",
         "razorpay/razorpay": "2.*",
+        "sendgrid/sendgrid": "^8.0",
         "simplesoftwareio/simple-qrcode": "~4",
         "spatie/laravel-newsletter": "^4.10",
         "spatie/laravel-permission": "4.4.0",

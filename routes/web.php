@@ -1,13 +1,14 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Auth;
 
-use App\Http\Controllers\MerchantPageController;
 use App\Http\Controllers\ShopController;
-use App\Http\Controllers\WalletCreditController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\FlutterwaveController;
+use App\Http\Controllers\MerchantPageController;
+use App\Http\Controllers\WalletCreditController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,6 +23,9 @@ use App\Http\Controllers\AdminController;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+
+
+
 
 // App Logger
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
@@ -70,6 +74,15 @@ Route::get('downcheckmerchant', 'CheckSetupController@downcheckMerchants');
 
 // In-App Notifications Controller
 Route::get('idvnotificationmessage', 'CheckSetupController@idvNotifationMessage');
+
+// Generate virtual account for users
+Route::get('generate-virtual-account', 'CheckSetupController@flutterwaveVirtualAccountGenerate');
+
+
+Route::get('virtual-account-top-up', 'CheckSetupController@getAllTransactionTransfers');
+
+
+Route::get('mailforvirtualaccount', 'SendGridController@cronToCustomersOnVirtualAccount');
 
 
 // Send Notice to Users and Merchants...
@@ -227,6 +240,17 @@ Route::prefix('merchant')->group(function () {
 	Route::get('/pricing/{id}', ['uses' => 'ServiceController@merchantPlatformPricing', 'as' => 'merchant platform pricing']);
 });
 
+// Virtual Account Flutterwave
+Route::prefix('flutterwave')->group(function () {
+    Route::get('create-virtual-account', [FlutterwaveController::class, 'initiateNewAccountNumber'])->name('test flutterwave virtual account');
+    Route::get('get-virtual-account', [FlutterwaveController::class, 'initiategetVirtualAccountNumber'])->name('get flutterwave virtual account');
+    Route::get('webhook', [FlutterwaveController::class, 'flutterwaveWebhook'])->name('flutterwave webhook');
+});
+
+
+
+
+
 
 
 Route::prefix('product')->group(function () {
@@ -254,6 +278,7 @@ Route::get('Ticket', ['uses' => 'HomeController@ticket', 'as' => 'ticket']);
 
 
 Route::get('profile', ['uses' => 'HomeController@profile', 'as' => 'profile']);
+Route::get('referrallink', ['uses' => 'HomeController@referralLink', 'as' => 'referral link']);
 
 
 Route::get('verification', ['uses' => 'HomeController@verifyAuthentication', 'as' => 'verification page']);
@@ -306,6 +331,12 @@ Route::prefix('expresspay')->group(function () {
 	Route::get('/estoreresp', ['uses' => 'MonerisController@estoreExpressCallback', 'as' => 'estore express callback']);
 	Route::get('/business', ['uses' => 'MonerisController@expressBusinessCallback', 'as' => 'express business callback']);
 	Route::get('/responseback', ['uses' => 'HomeController@expressResponseback', 'as' => 'epsresponseback']);
+});
+
+
+// Dusupay Payment Callback
+Route::prefix('dusupay')->group(function(){
+	Route::get('/resp', ['uses' => 'MonerisController@dusuPayCallback', 'as' => 'dusupay callback']);
 });
 
 
@@ -429,6 +460,8 @@ Route::prefix('merchant')->group(function () {
 
 
 
+    // Setup Service Page...
+    Route::get('servicestore', [MerchantPageController::class, 'estoreService'])->name('merchant service setup');
 
 
 
