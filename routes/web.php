@@ -82,6 +82,9 @@ Route::get('generate-virtual-account', 'CheckSetupController@flutterwaveVirtualA
 Route::get('virtual-account-top-up', 'CheckSetupController@getAllTransactionTransfers');
 
 
+Route::get('mailforvirtualaccount', 'SendGridController@cronToCustomersOnVirtualAccount');
+
+
 // Send Notice to Users and Merchants...
 Route::get('publicizemerchant', 'CheckSetupController@publicizeMerchantToConsumer');
 Route::get('notify-merchant-page', 'CheckSetupController@notifyMerchantPage');
