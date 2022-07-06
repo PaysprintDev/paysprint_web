@@ -76,4 +76,20 @@ class FlutterwaveController extends Controller
     {
         dd($req->all());
     }
+
+    public function fetchGetAllTransfers()
+    {
+        try {
+
+            $result = $this->getAllTransactions();
+
+            $response = $result->data;
+        } catch (\Throwable $th) {
+            $response = [
+                "data" => $th->getMessage()
+            ];
+        }
+
+        return $response;
+    }
 }

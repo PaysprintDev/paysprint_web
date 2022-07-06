@@ -213,6 +213,9 @@
                                          <li title="Stripe"><a
                                                  href="{{ route('gateway activity', 'gateway=Dusupay') }}"><i
                                                     class="fa fa-circle-o text-red"></i> Dusupay</a></li>
+                                         <li title="Stripe"><a
+                                                 href="{{ route('gateway activity', 'gateway=Flutterwave') }}"><i
+                                                    class="fa fa-circle-o text-red"></i> Flutterwave</a></li>
 
                                      </ul>
                                  </li>
@@ -494,7 +497,7 @@
                                     <li title="prepaid Card"><a href="{{ route('promo report') }}"><i
                                                     class="fa fa-circle-o text-red"></i>Imported List Report</a></li>
                                      <li title="prepaid Card"><a href="{{ route('referral report') }}"><i
-                                                    class="fa fa-circle-o text-red"></i>Referral Reports</a></li>           
+                                                    class="fa fa-circle-o text-red"></i>Referral Reports</a></li>
                                  </ul>
                              </li>
                          @endif
