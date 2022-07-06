@@ -1,13 +1,14 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Auth;
 
-use App\Http\Controllers\MerchantPageController;
 use App\Http\Controllers\ShopController;
-use App\Http\Controllers\WalletCreditController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\FlutterwaveController;
+use App\Http\Controllers\MerchantPageController;
+use App\Http\Controllers\WalletCreditController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,6 +23,9 @@ use App\Http\Controllers\AdminController;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+
+
+
 
 // App Logger
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
@@ -70,6 +74,9 @@ Route::get('downcheckmerchant', 'CheckSetupController@downcheckMerchants');
 
 // In-App Notifications Controller
 Route::get('idvnotificationmessage', 'CheckSetupController@idvNotifationMessage');
+
+// Generate virtual account for users
+Route::get('generate-virtual-account', 'CheckSetupController@flutterwaveVirtualAccountGenerate');
 
 
 // Send Notice to Users and Merchants...
@@ -223,6 +230,17 @@ Route::prefix('merchant')->group(function () {
 	Route::get('/services/{id}', ['uses' => 'ServiceController@merchantPlatformService', 'as' => 'merchant platform service']);
 	Route::get('/pricing/{id}', ['uses' => 'ServiceController@merchantPlatformPricing', 'as' => 'merchant platform pricing']);
 });
+
+// Virtual Account Flutterwave
+Route::prefix('flutterwave')->group(function () {
+    Route::get('create-virtual-account', [FlutterwaveController::class, 'initiateNewAccountNumber'])->name('test flutterwave virtual account');
+    Route::get('get-virtual-account', [FlutterwaveController::class, 'initiategetVirtualAccountNumber'])->name('get flutterwave virtual account');
+    Route::get('webhook', [FlutterwaveController::class, 'flutterwaveWebhook'])->name('flutterwave webhook');
+});
+
+
+
+
 
 
 
@@ -426,6 +444,8 @@ Route::prefix('merchant')->group(function () {
 
 
 
+    // Setup Service Page...
+    Route::get('servicestore', [MerchantPageController::class, 'estoreService'])->name('merchant service setup');
 
 
 

@@ -889,7 +889,6 @@ class MerchantPageController extends Controller
 
     public function orderingSystem()
     {
-
         // $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
 
@@ -913,6 +912,28 @@ class MerchantPageController extends Controller
         ]);
 
         return view('merchant.pages.orderingsystem')->with(['pages' => 'estore', 'data' => $data]);
+    }
+
+    public function estoreService()
+    {
+
+
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
+            'myProducts' => $this->getMyProducts(Auth::user()->id),
+            'myOrders' => $this->getMyOrders(Auth::user()->id),
+            'myDiscounts' => $this->getMyDiscounts(Auth::user()->id),
+            'myStore' => $this->checkMyStore(Auth::user()->id),
+            'myProductTax' => $this->checkMyProductTax(Auth::user()->id),
+            'productcategory' => $this->getProductCategory(),
+            'storepickup' => $this->getStorePickupCount(Auth::user()->id),
+            'deliverypickup' => $this->getDeliveryPickupCount(Auth::user()->id),
+            'activeCountry' => $this->getActiveCountries(),
+        ];
+
+        return view('merchant.pages.servicesetup')->with(['pages' => 'Service setup', 'data' => $data]);
     }
 
 

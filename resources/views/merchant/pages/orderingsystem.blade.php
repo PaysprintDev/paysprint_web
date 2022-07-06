@@ -59,9 +59,9 @@
                     <button class="nav-link" id="nav-refund-tab" data-bs-toggle="tab" data-bs-target="#nav-refund"
                         type="button" role="tab" aria-controls="nav-refund" aria-selected="false">Refund <span
                             class="text-danger">[coming soon]</span></button>
-                    <button class="nav-link" id="nav-discount-tab" data-bs-toggle="tab"
-                        data-bs-target="#nav-discounts" type="button" role="tab" aria-controls="nav-discounts"
-                        aria-selected="false">Discount codes <span class="text-danger">[coming soon]</span></button>
+                    <button class="nav-link" id="nav-discount-tab" data-bs-toggle="tab" data-bs-target="#nav-discounts"
+                        type="button" role="tab" aria-controls="nav-discounts" aria-selected="false">Discount codes
+                        <span class="text-danger">[coming soon]</span></button>
                     {{-- <button class="nav-link" id="nav-discount-tab" data-bs-toggle="tab"
                         data-bs-target="#nav-discount" type="button" role="tab" aria-controls="nav-discount"
                         aria-selected="false">Discount codes <span class="text-danger">[coming soon]</span></button> --}}
@@ -129,13 +129,14 @@
                                                                 </form>
 
                                                                 <button class="btn btn-danger btn-xs" type="button"
-                                                                    data-original-title="btn btn-danger btn-xs" title=""
+                                                                    data-original-title="btn btn-danger btn-xs"
+                                                                    title=""
                                                                     onclick="deleteProduct({{ $product->id }})">Delete</button>
 
 
                                                                 <button class="btn btn-primary btn-xs" type="button"
-                                                                    data-original-title="btn btn-danger btn-xs" title=""
-                                                                    data-bs-toggle="modal"
+                                                                    data-original-title="btn btn-danger btn-xs"
+                                                                    title="" data-bs-toggle="modal"
                                                                     data-bs-target="#editProductModal{{ $product->id }}">Edit</button>
                                                             </td>
                                                         </tr>
@@ -147,7 +148,8 @@
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
                                                                         <h5 class="modal-title"
-                                                                            id="editexampleModalLongTitle">Edit product</h5>
+                                                                            id="editexampleModalLongTitle">Edit product
+                                                                        </h5>
                                                                         <button class="btn-close" type="button"
                                                                             data-dismiss="modal" aria-label="Close"
                                                                             onclick="$('.modal').modal('hide')"></button>
@@ -193,23 +195,24 @@
 
                                                                             <div class="form-group">
                                                                                 <label for="amount">New Amount</label>
-                                                                                <input type="number" min="0.00" step="0.01"
-                                                                                    name="amount" class="form-control"
-                                                                                    id="amount"
+                                                                                <input type="number" min="0.00"
+                                                                                    step="0.01" name="amount"
+                                                                                    class="form-control" id="amount"
                                                                                     aria-describedby="amountHelp"
                                                                                     placeholder="Enter amount"
                                                                                     value="{{ $product->amount }}"
                                                                                     required>
                                                                                 <small id="amountHelp"
-                                                                                    class="form-text text-muted">This amount
+                                                                                    class="form-text text-muted">This
+                                                                                    amount
                                                                                     would be stated in your
                                                                                     local currency</small>
                                                                             </div>
                                                                             <div class="form-group">
                                                                                 <label for="previousAmount">Previous
                                                                                     Amount</label>
-                                                                                <input type="number" min="0.00" step="0.01"
-                                                                                    name="previousAmount"
+                                                                                <input type="number" min="0.00"
+                                                                                    step="0.01" name="previousAmount"
                                                                                     class="form-control"
                                                                                     id="previousAmount"
                                                                                     aria-describedby="previousAmountHelp"
@@ -225,12 +228,14 @@
                                                                                 <label for="stock">Stock</label>
                                                                                 <input type="number" min="1"
                                                                                     class="form-control" name="stock"
-                                                                                    id="stock" aria-describedby="stockHelp"
+                                                                                    id="stock"
+                                                                                    aria-describedby="stockHelp"
                                                                                     placeholder="Enter quantity in stock"
                                                                                     value="{{ $product->stock }}"
                                                                                     required>
                                                                                 <small id="stockHelp"
-                                                                                    class="form-text text-muted">How many do
+                                                                                    class="form-text text-muted">How many
+                                                                                    do
                                                                                     you have in stock</small>
                                                                             </div>
 
@@ -239,7 +244,8 @@
                                                                                 <select name="category" id="category"
                                                                                     class="form-control form-select prodCategory">
                                                                                     @if (count($data['productcategory']) > 0)
-                                                                                        <option value="">Select category
+                                                                                        <option value="">Select
+                                                                                            category
                                                                                         </option>
 
                                                                                         @foreach ($data['productcategory'] as $itemCat)
@@ -279,10 +285,10 @@
                                                                             </div>
 
                                                                             <div class="form-group">
-                                                                                <label for="description">Description</label>
+                                                                                <label
+                                                                                    for="description">Description</label>
                                                                                 <textarea class="form-control store_description" name="description" aria-describedby="descriptionHelp"
-                                                                                    placeholder="Enter product description"
-                                                                                    required>{{ $product->description }}</textarea>
+                                                                                    placeholder="Enter product description" required>{{ $product->description }}</textarea>
                                                                                 <small id="descriptionHelp"
                                                                                     class="form-text text-muted">Give your
                                                                                     customers the
@@ -605,13 +611,14 @@
                                                                     </form>
 
                                                                     <button class="btn btn-danger btn-xs" type="button"
-                                                                        data-original-title="btn btn-danger btn-xs" title=""
+                                                                        data-original-title="btn btn-danger btn-xs"
+                                                                        title=""
                                                                         onclick="deleteDiscount({{ $discounts->discountId }})">Delete</button>
 
 
                                                                     <button class="btn btn-primary btn-xs" type="button"
-                                                                        data-original-title="btn btn-danger btn-xs" title=""
-                                                                        data-bs-toggle="modal"
+                                                                        data-original-title="btn btn-danger btn-xs"
+                                                                        title="" data-bs-toggle="modal"
                                                                         data-bs-target="#editDiscountModal{{ $discounts->discountId }}">Edit</button>
                                                                 </td>
                                                             </tr>
@@ -622,7 +629,8 @@
                                                                     <div class="modal-content">
                                                                         <div class="modal-header">
                                                                             <h5 class="modal-title"
-                                                                                id="editexampleModalLongTitle">Edit discount
+                                                                                id="editexampleModalLongTitle">Edit
+                                                                                discount
                                                                             </h5>
                                                                             <button class="btn-close" type="button"
                                                                                 data-dismiss="modal" aria-label="Close"
@@ -633,20 +641,22 @@
                                                                         <div class="modal-body">
                                                                             <form
                                                                                 action="{{ route('update discount', $discounts->discountId) }}"
-                                                                                method="post" enctype="multipart/form-data">
+                                                                                method="post"
+                                                                                enctype="multipart/form-data">
 
                                                                                 @csrf
 
                                                                                 <div class="form-group">
-                                                                                    <label for="code">Discount code </label>
+                                                                                    <label for="code">Discount code
+                                                                                    </label>
                                                                                     <span class="float-end"><a
                                                                                             href="javascript:void(0)"
                                                                                             class="text-primary"
                                                                                             onclick="generateDiscountCode()">Generate
                                                                                             code</a></span>
                                                                                     <input type="text"
-                                                                                        class="form-control" name="code"
-                                                                                        id="code"
+                                                                                        class="form-control"
+                                                                                        name="code" id="code"
                                                                                         aria-describedby="codeHelp"
                                                                                         placeholder="Enter a discount code"
                                                                                         value="{{ $discounts->code }}">
@@ -658,13 +668,16 @@
 
 
                                                                                 <div class="form-group">
-                                                                                    <label for="code">Apply discount code
+                                                                                    <label for="code">Apply discount
+                                                                                        code
                                                                                         per product</label>
 
-                                                                                    <select name="productId" id="productId"
+                                                                                    <select name="productId"
+                                                                                        id="productId"
                                                                                         class="form-control form-select">
                                                                                         @if (count($data['myProducts']) > 0)
-                                                                                            <option value="">Select product
+                                                                                            <option value="">Select
+                                                                                                product
                                                                                             </option>
 
                                                                                             @foreach ($data['myProducts'] as $product)
@@ -674,7 +687,8 @@
                                                                                                 </option>
                                                                                             @endforeach
                                                                                         @else
-                                                                                            <option value="">Add a product
+                                                                                            <option value="">Add a
+                                                                                                product
                                                                                             </option>
                                                                                         @endif
 
@@ -698,7 +712,8 @@
                                                                                                 id="valueType"
                                                                                                 class="form-control form-select"
                                                                                                 required>
-                                                                                                <option value="">Select a
+                                                                                                <option value="">
+                                                                                                    Select a
                                                                                                     value</option>
                                                                                                 <option value="Fixed"
                                                                                                     {{ $discounts->valueType == 'Fixed' ? 'selected' : '' }}>
@@ -724,8 +739,10 @@
 
                                                                                                         {{ $discounts->valueType == 'Fixed' ? Auth::user()->currencySymbol : '%' }}
                                                                                                     </span>
-                                                                                                </div> <input type="number"
-                                                                                                    min="0.00" step="0.01"
+                                                                                                </div> <input
+                                                                                                    type="number"
+                                                                                                    min="0.00"
+                                                                                                    step="0.01"
                                                                                                     name="amount"
                                                                                                     id="discountAmount"
                                                                                                     class="form-control"
@@ -854,7 +871,8 @@
                                                     <div class="product-box">
                                                         <div class="product-img">
                                                             <img class="img-fluid" src="{{ $categories->image }}"
-                                                                alt="" style="width: 100%; object-fit: contain;" />
+                                                                alt=""
+                                                                style="width: 100%; object-fit: contain;" />
                                                             <div class="product-hover">
                                                                 <ul>
 
@@ -874,7 +892,8 @@
                                                                         <div class="product-box row">
                                                                             <div class="product-img col-lg-6"><img
                                                                                     class="img-fluid"
-                                                                                    src="{{ $categories->image }}" alt=""
+                                                                                    src="{{ $categories->image }}"
+                                                                                    alt=""
                                                                                     style="width: 100%; object-fit: contain;" />
                                                                             </div>
                                                                             <div
@@ -985,14 +1004,17 @@
                                                 target="_blank" class="text-primary"
                                                 style="font-weight: bold;">{{ route('home') . '/shop/' . Auth::user()->businessname }}
                                                 <span class="svg-icon"><svg width="10" height="10"
-                                                        viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        viewBox="0 0 10 10" fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg">
                                                         <path
                                                             d="M4.16675 5.41667C4.34569 5.65589 4.57398 5.85383 4.83614 5.99707C5.09831 6.1403 5.38821 6.22547 5.68619 6.24681C5.98416 6.26815 6.28324 6.22516 6.56314 6.12075C6.84304 6.01634 7.09721 5.85295 7.30841 5.64167L8.55841 4.39167C8.93791 3.99875 9.1479 3.4725 9.14315 2.92625C9.13841 2.38001 8.9193 1.85748 8.53304 1.47122C8.14677 1.08495 7.62424 0.865848 7.078 0.861102C6.53176 0.856355 6.0055 1.06634 5.61258 1.44584L4.89591 2.15834"
-                                                            stroke="#2D9CDB" stroke-linecap="round" stroke-linejoin="round">
+                                                            stroke="#2D9CDB" stroke-linecap="round"
+                                                            stroke-linejoin="round">
                                                         </path>
                                                         <path
                                                             d="M5.83342 4.58333C5.65448 4.34411 5.42618 4.14617 5.16402 4.00293C4.90186 3.8597 4.61196 3.77453 4.31398 3.75319C4.016 3.73185 3.71692 3.77484 3.43702 3.87925C3.15712 3.98366 2.90295 4.14705 2.69175 4.35833L1.44175 5.60833C1.06225 6.00125 0.852266 6.5275 0.857012 7.07374C0.861759 7.61999 1.08086 8.14251 1.46713 8.52878C1.85339 8.91505 2.37592 9.13415 2.92216 9.1389C3.46841 9.14364 3.99466 8.93365 4.38758 8.55416L5.10008 7.84166"
-                                                            stroke="#2D9CDB" stroke-linecap="round" stroke-linejoin="round">
+                                                            stroke="#2D9CDB" stroke-linecap="round"
+                                                            stroke-linejoin="round">
                                                         </path>
                                                     </svg></span></a>
                                             <!-- ShareThis BEGIN -->
@@ -1012,10 +1034,25 @@
                                                         <button class="btn btn-primary" style="width: 100%;"
                                                             data-bs-toggle="modal" data-bs-target="#editStoreModal">Update
                                                             eStore</button>
+
+                                                        {{-- Do this for the service page --}}
+                                                        <a href="{{ route('merchant service setup') }}"
+                                                            class="btn btn-success" style="width: 100%;">Update
+                                                            eStore</a>
                                                     @else
-                                                        <button class="btn btn-success" style="width: 100%;"
-                                                            data-bs-toggle="modal" data-bs-target="#createStoreModal">Setup
-                                                            eStore (For Sale of Goods only)</button>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <button class="btn btn-success" style="width: 100%;"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#createStoreModal">Setup
+                                                                    eStore (For Sale of Goods only)</button>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <a href="{{ route('merchant service setup') }}"
+                                                                    class="btn btn-success" style="width: 100%;">Setup
+                                                                    eStore (For Service only)</a>
+                                                            </div>
+                                                        </div>
                                                     @endisset
                                                     <p>
                                                         You can now setup your store for your customers to see how your
@@ -1151,14 +1188,15 @@
 
 
                                                                         <div class="form-group">
-                                                                            <label for="instore_state">Delivery Rate</label>
+                                                                            <label for="instore_state">Delivery
+                                                                                Rate</label>
                                                                             <input type="number" class="form-control"
                                                                                 name="deliveryRate"
                                                                                 id="instore_deliveryRate"
                                                                                 aria-describedby="instore_deliveryRateHelp"
                                                                                 placeholder="Enter delivery rate"
-                                                                                value="0.00" min="0.00" step="0.00"
-                                                                                required>
+                                                                                value="0.00" min="0.00"
+                                                                                step="0.00" required>
                                                                             <small id="instore_addressHelp"
                                                                                 class="form-text text-muted">Please set
                                                                                 your store delivery rate</small>
@@ -1241,8 +1279,8 @@
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="exampleModalLongTitle">
                                                                 Shipping Regions & Rates (Delivery Service)</h5>
-                                                            <button class="btn-close" type="button"
-                                                                data-dismiss="modal" aria-label="Close"
+                                                            <button class="btn-close" type="button" data-dismiss="modal"
+                                                                aria-label="Close"
                                                                 onclick="$('.modal').modal('hide')"></button>
                                                         </div>
                                                         <div class="modal-body">
@@ -1301,8 +1339,8 @@
 
                                                                 <div class="form-group">
                                                                     <label for="instore_city">City</label>
-                                                                    <input type="text" class="form-control" name="city"
-                                                                        id="delivery_city"
+                                                                    <input type="text" class="form-control"
+                                                                        name="city" id="delivery_city"
                                                                         aria-describedby="instore_cityHelp"
                                                                         placeholder="Enter delivery city" required>
                                                                     <small id="instore_cityHelp"
@@ -1345,7 +1383,8 @@
 
                                                     @isset($data['myProductTax'])
                                                         <button class="btn btn-success" style="width: 100%;"
-                                                            data-bs-toggle="modal" data-bs-target="#editProductTax"><small>Edit
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#editProductTax"><small>Edit
                                                                 Product
                                                                 Tax</small></button>
                                                     @else
@@ -1387,8 +1426,8 @@
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="exampleModalLongTitle">
                                                                 Add Product Tax</h5>
-                                                            <button class="btn-close" type="button"
-                                                                data-dismiss="modal" aria-label="Close"
+                                                            <button class="btn-close" type="button" data-dismiss="modal"
+                                                                aria-label="Close"
                                                                 onclick="$('.modal').modal('hide')"></button>
                                                         </div>
                                                         <div class="modal-body">
@@ -1440,8 +1479,8 @@
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title" id="exampleModalLongTitle">
                                                                     Edit Product Tax</h5>
-                                                                <button class="btn-close" type="button"
-                                                                    data-dismiss="modal" aria-label="Close"
+                                                                <button class="btn-close" type="button" data-dismiss="modal"
+                                                                    aria-label="Close"
                                                                     onclick="$('.modal').modal('hide')"></button>
                                                             </div>
                                                             <div class="modal-body">
@@ -1579,8 +1618,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="previousAmount">Previous Amount</label>
-                                <input type="number" min="0.00" step="0.01" name="previousAmount" class="form-control"
-                                    id="previousAmount" aria-describedby="previousAmountHelp"
+                                <input type="number" min="0.00" step="0.01" name="previousAmount"
+                                    class="form-control" id="previousAmount" aria-describedby="previousAmountHelp"
                                     placeholder="Enter previous amount" value="0.00">
                                 <small id="previousAmountHelp" class="form-text text-muted">This previous amount would be
                                     stated in your
@@ -1661,8 +1700,8 @@
                                         href="javascript:void(0)" class="text-primary"
                                         onclick="generateDiscountCode()">Auto Generate
                                         code</a></span>
-                                <input type="text" class="form-control" name="code" id="code" aria-describedby="codeHelp"
-                                    placeholder="Enter a discount code" required>
+                                <input type="text" class="form-control" name="code" id="code"
+                                    aria-describedby="codeHelp" placeholder="Enter a discount code" required>
 
                             </div>
 
@@ -1699,7 +1738,8 @@
                                     <div class="form-group">
                                         <label for="valueType">Discount value type</label>
 
-                                        <select name="valueType" id="valueType" class="form-control form-select" required>
+                                        <select name="valueType" id="valueType" class="form-control form-select"
+                                            required>
                                             <option value="">Select a value</option>
                                             <option value="Fixed">Fixed</option>
                                             <option value="Percentage">Percentage</option>
@@ -1715,8 +1755,8 @@
                                             <div class="input-group-append"> <span
                                                     class="input-group-text text-muted symbolText">
                                                     {{ Auth::user()->currencySymbol }} </span> </div> <input
-                                                type="number" min="0.00" step="0.01" name="amount" id="discountAmount"
-                                                class="form-control" value="0.00" required>
+                                                type="number" min="0.00" step="0.01" name="amount"
+                                                id="discountAmount" class="form-control" value="0.00" required>
 
                                         </div>
                                     </div>
@@ -1777,7 +1817,8 @@
                                 <input type="file" class="form-control" name="headerContent[]" id="headerContent"
                                     aria-describedby="headerContentHelp" required multiple>
 
-                                <small id="headerContentHelp" class="form-text text-muted">Upload your header content for
+                                <small id="headerContentHelp" class="form-text text-muted">Upload your header content
+                                    for
                                     your shop. <strong>MAX 3 pictures will be uploaded</strong> <br> <span
                                         class="text-danger">Please note
                                         JPG, PNG and SVG formats are
@@ -1802,7 +1843,8 @@
                                 <input type="text" class="form-control" name="headerSubtitle" id="headerSubtitle"
                                     aria-describedby="headerSubtitleHelp" placeholder="Enter header sub-title" required>
 
-                                <small id="headerSubtitleHelp" class="form-text text-muted">If HEADER CONTENT IMAGE is more
+                                <small id="headerSubtitleHelp" class="form-text text-muted">If HEADER CONTENT IMAGE is
+                                    more
                                     than one (1), separate by comma (,)</small>
 
                             </div>
@@ -1813,7 +1855,8 @@
                                 <input type="file" class="form-control" name="advertSectionImage[]"
                                     id="advertSectionImage" aria-describedby="advertSectionImageHelp" multiple>
 
-                                <small id="advertSectionImageHelp" class="form-text text-muted">Upload your advert section
+                                <small id="advertSectionImageHelp" class="form-text text-muted">Upload your advert
+                                    section
                                     image for
                                     your shop. <strong>MAX 3 pictures will be uploaded</strong> <br> <span
                                         class="text-danger">Please note
@@ -1840,7 +1883,8 @@
                                 <input type="text" class="form-control" name="advertSubtitle" id="advertSubtitle"
                                     aria-describedby="advertSubtitleHelp" placeholder="Enter advert sub-title">
 
-                                <small id="advertSubtitleHelp" class="form-text text-muted">If ADVERT CONTENT IMAGE is more
+                                <small id="advertSubtitleHelp" class="form-text text-muted">If ADVERT CONTENT IMAGE is
+                                    more
                                     than one (1), separate by comma (,)</small>
 
                             </div>
@@ -1897,7 +1941,8 @@
 
 
 
-                            <input type="submit" class="btn btn-danger" name="savePreview" value="Save and Preview">
+                            <input type="submit" class="btn btn-danger" name="savePreview"
+                                value="Save and Preview">
                             <input type="submit" class="btn btn-success" name="publishStore" value="Publish Store">
 
                         </form>
@@ -1940,7 +1985,8 @@
                                     <input type="file" class="form-control" name="headerContent[]" id="headerContent"
                                         aria-describedby="headerContentHelp" required multiple>
 
-                                    <small id="headerContentHelp" class="form-text text-muted">Upload your header content for
+                                    <small id="headerContentHelp" class="form-text text-muted">Upload your header content
+                                        for
                                         your shop. <strong>MAX 3 pictures will be uploaded</strong> <br> <span
                                             class="text-danger">Please note
                                             JPG, PNG and SVG formats are
@@ -1967,7 +2013,8 @@
                                         aria-describedby="headerSubtitleHelp" placeholder="Enter header sub-title"
                                         value="{{ $data['myStore']->headerSubtitle }}" required>
 
-                                    <small id="headerSubtitleHelp" class="form-text text-muted">If HEADER CONTENT IMAGE is more
+                                    <small id="headerSubtitleHelp" class="form-text text-muted">If HEADER CONTENT IMAGE is
+                                        more
                                         than one (1), separate by comma (,)</small>
 
                                 </div>
@@ -1978,7 +2025,8 @@
                                     <input type="file" class="form-control" name="advertSectionImage[]"
                                         id="advertSectionImage" aria-describedby="advertSectionImageHelp" multiple>
 
-                                    <small id="advertSectionImageHelp" class="form-text text-muted">Upload your advert section
+                                    <small id="advertSectionImageHelp" class="form-text text-muted">Upload your advert
+                                        section
                                         image for
                                         your shop. <strong>MAX 3 pictures will be uploaded</strong> <br> <span
                                             class="text-danger">Please note
@@ -2007,7 +2055,8 @@
                                         aria-describedby="advertSubtitleHelp" placeholder="Enter advert sub-title"
                                         value="{{ $data['myStore']->advertSubtitle }}">
 
-                                    <small id="advertSubtitleHelp" class="form-text text-muted">If ADVERT CONTENT IMAGE is more
+                                    <small id="advertSubtitleHelp" class="form-text text-muted">If ADVERT CONTENT IMAGE is
+                                        more
                                         than one (1), separate by comma (,)</small>
 
                                 </div>
@@ -2018,8 +2067,7 @@
                                 <div class="form-group">
                                     <label for="advertSubtitle">Return and Refund Policy </label>
 
-                                    <textarea name="refundPolicy" id="refundPolicy" cols="30" rows="10"
-                                        class="form-control">{{ $data['myStore']->refundPolicy }}</textarea>
+                                    <textarea name="refundPolicy" id="refundPolicy" cols="30" rows="10" class="form-control">{{ $data['myStore']->refundPolicy }}</textarea>
 
                                     <small id="advertSubtitleHelp" class="form-text text-muted">Here is to assertain your
                                         customers of your return and refund policy</small>
@@ -2072,7 +2120,8 @@
 
 
 
-                                <input type="submit" class="btn btn-danger" name="savePreview" value="Save and Preview">
+                                <input type="submit" class="btn btn-danger" name="savePreview"
+                                    value="Save and Preview">
                                 <input type="submit" class="btn btn-success" name="publishStore" value="Publish Store">
 
                             </form>
