@@ -269,6 +269,7 @@ Route::get('Ticket', ['uses' => 'HomeController@ticket', 'as' => 'ticket']);
 
 
 Route::get('profile', ['uses' => 'HomeController@profile', 'as' => 'profile']);
+Route::get('referrallink', ['uses' => 'HomeController@referralLink', 'as' => 'referral link']);
 
 
 Route::get('verification', ['uses' => 'HomeController@verifyAuthentication', 'as' => 'verification page']);
@@ -321,6 +322,12 @@ Route::prefix('expresspay')->group(function () {
 	Route::get('/estoreresp', ['uses' => 'MonerisController@estoreExpressCallback', 'as' => 'estore express callback']);
 	Route::get('/business', ['uses' => 'MonerisController@expressBusinessCallback', 'as' => 'express business callback']);
 	Route::get('/responseback', ['uses' => 'HomeController@expressResponseback', 'as' => 'epsresponseback']);
+});
+
+
+// Dusupay Payment Callback
+Route::prefix('dusupay')->group(function(){
+	Route::get('/resp', ['uses' => 'MonerisController@dusuPayCallback', 'as' => 'dusupay callback']);
 });
 
 
