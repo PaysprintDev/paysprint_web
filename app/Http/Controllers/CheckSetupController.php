@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Mail\sendEmail;
 use App\User as User;
+use App\FlutterwaveModel;
 use App\AddCard as AddCard;
 use App\AddBank as AddBank;
 use App\Statement as Statement;
@@ -31,6 +32,7 @@ use App\Traits\Xwireless;
 use App\Traits\PaymentGateway;
 use App\Traits\MailChimpNewsLetter;
 use App\Traits\Trulioo;
+use App\Traits\Flutterwave;
 
 class CheckSetupController extends Controller
 {
@@ -40,7 +42,7 @@ class CheckSetupController extends Controller
     public $subject;
     public $message;
 
-    use ExpressPayment, AccountNotify, Xwireless, PaymentGateway, MailChimpNewsLetter, Trulioo;
+    use ExpressPayment, AccountNotify, Xwireless, PaymentGateway, MailChimpNewsLetter, Trulioo, Flutterwave;
     // Check user quick wallet setup
 
     public function updateQuickSetup()
@@ -2407,6 +2409,40 @@ in the your business category.</p> <p>This means your competitors are receiving 
         }
 
         $this->slack('Monthly Transaction Limit Executed: ' . date('F/Y'), $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+    }
+
+
+
+    // Generate Account Number
+    public function flutterwaveVirtualAccountGenerate()
+    {
+
+        try{
+
+            $flutterwave = new FlutterwaveController();
+
+        // Get all the users in Nigeria with BVN...
+        $users = User::where('country', 'Nigeria')->where('bvn_number', '!=', NULL)->where('virtual_account', NULL)->get();
+
+        if(count($users) == 0){
+            return "No new virtual account to generate";
+        }
+
+
+        foreach($users as $user){
+            $username = explode(" ",$user->name);
+            $flutterwave->initiateNewAccountNumber($user->email, $user->bvn_number, $user->telephone, $username[0], $username[1], $user->ref_code);
+        }
+
+
+        echo "Account Number Generated";
+
+        }
+        catch (\Throwable $th){
+            echo $th->getMessage();
+        }
+
+
     }
 
 
