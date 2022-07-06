@@ -79,6 +79,9 @@ Route::get('idvnotificationmessage', 'CheckSetupController@idvNotifationMessage'
 Route::get('generate-virtual-account', 'CheckSetupController@flutterwaveVirtualAccountGenerate');
 
 
+Route::get('virtual-account-top-up', 'CheckSetupController@getAllTransactionTransfers');
+
+
 // Send Notice to Users and Merchants...
 Route::get('publicizemerchant', 'CheckSetupController@publicizeMerchantToConsumer');
 Route::get('notify-merchant-page', 'CheckSetupController@notifyMerchantPage');

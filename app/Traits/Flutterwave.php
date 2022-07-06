@@ -32,9 +32,18 @@ trait Flutterwave
     public function getVirtualAccountNumber($order_ref)
     {
 
-
         $this->flutterUrl = config("constants.flutterwave.baseurl") . "/virtual-account-numbers/{$order_ref}";
 
+
+        $result = $this->flutterWaveGetCurl();
+
+        return $result;
+    }
+
+
+    public function getAllTransactions()
+    {
+        $this->flutterUrl = config("constants.flutterwave.baseurl") . "/transactions";
 
         $result = $this->flutterWaveGetCurl();
 

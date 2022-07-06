@@ -166,9 +166,6 @@ class MonerisController extends Controller
     // public $url = "http://localhost:4000/api/v1/points/earnpoint";
     public $curl_data;
 
-    public function __construct(Request $request)
-    {
-    }
 
     public function testRazor()
     {
@@ -8734,9 +8731,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                 $getGateway = AllCountries::where('name', $thisuser->country)->first();
 
-             
+
                  $gateway = ucfirst($getGateway->gateway);
-                
+
 
 
                 $referenced_code = $req->paymentToken;
