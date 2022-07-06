@@ -281,6 +281,16 @@
                                                 class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
                                                 Confirm
                                             </button></div>
+                                        
+                                    @elseif($data['paymentgateway']->gateway == 'Dusupay')
+                                    <div class="card-footer"> 
+                                    <button type="button"
+                                        onclick="payWithDusupay('{{ Auth::user()->email }}')"
+                                        class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
+                                        Confirm
+                                    </button>
+                                     </div>
+
                                     @elseif($data['paymentgateway']->gateway == 'Stripe')
                                         <div class="card-footer"> <button type="submit"
                                                 class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Pay
@@ -822,6 +832,119 @@
 
             }
 
+                //dusupay providers Id
+                async function getDusupayProviderId(){
+
+                    try {
+                        var publicKey= `{{ env('APP_ENV') == 'local' ? env('DUSU_PAY_DEV_KEY_ID') : env('DUSU_PAY_KEY_PROD') }}`;
+
+                        var secretKey=`{{ env('APP_ENV') == 'local' ? env('DUSU_PAY_DEV_SECRET_KEY') : env('DUSU_PAY_PROD_SECRET_KEY') }}`
+
+                        var currencyCode=`{{ $data['currencyCode']->code }}`;
+                        
+                        var dusuUrl = 'https://sandbox.dusupay.com/v1/payment-options/collection/card/'+currencyCode.toLowerCase()+'?api_key='+publicKey;
+
+                        var config = {
+                         method: 'get',
+                         url: dusuUrl,
+                         headers: {
+                           'Content-Type': 'application/json',
+                           'secret-key': secretKey,
+                         },
+    
+                        };
+
+                        var response= await axios(config);
+
+                        return response.data.data[0].id;
+                        
+                    } catch (error) {
+                        console.log(error.response);
+                    }
+                }
+
+                    //Dusupay Integration
+                async function payWithDusupay(email) {
+                $('.cardSubmit').text('Please wait...');
+
+                try {
+
+                    var providerId = await getDusupayProviderId();
+
+                var callbackUrl;
+
+                var netamount = $('#amounttosend').val();
+                var feeamount = $('#commissiondeduct').val();
+                var amount = (+netamount + +feeamount).toFixed(2);
+                var paymentToken = '' + Math.floor((Math.random() * 1000000000) + 1);
+                var publicKey = `{{ env('APP_ENV') == 'local' ? env('DUSU_PAY_DEV_KEY_ID') : env('DUSU_PAY_KEY_PROD') }}`;
+                var commission = $('#commission').val();
+                var currencyCode = `{{ $data['currencyCode']->currencyCode }}`;
+                var conversionamount = $('#conversionamount').val();
+                var api_token = `{{ Auth::user()->api_token }}`;
+
+
+                if (`{{ env('APP_ENV') }}` != "local") {
+                        callbackUrl =
+                            `{{ env('APP_URL') }}/dusupay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
+                    } else {
+                        callbackUrl =
+                            `http://localhost:8000/dusupay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
+                    }
+
+                var productId = "{{ Auth::user()->ref_code }}";
+                var description = "Added {{ $data['currencyCode']->currencyCode }}" + netamount +
+                " to PaySprint Wallet and a Fee of " + feeamount + " inclusive.";
+
+                var data = {
+                "amount": parseFloat(amount),
+                "currency":currencyCode,
+                "api_key": publicKey,
+                "redirect_url": callbackUrl,
+                "method": "CARD",
+                "provider_id": providerId,
+                "merchant_reference":paymentToken,
+                "narration":"Added {{ $data['currencyCode']->currencyCode }}" +
+                netamount +
+                " to PaySprint Wallet and a Fee of " + feeamount + " inclusive.",
+            
+};
+
+
+
+var config = {
+    method: 'post',
+    url: `{{env('DUSUPAY_PAYMENT_URL_DEV')}}`,
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    data: data
+};
+
+const response = await axios(config);
+
+console.log(response);
+
+$('.cardSubmit').text('Confirm');
+
+
+
+setTimeout(() => {
+    location.href = response.data.data.payment_url;
+}, 1000);
+
+
+
+} catch (error) {
+
+    // console.log(error.response);
+
+$('.cardSubmit').text('Confirm');
+swal('Oops!', error.response.data.message, 'error');
+}
+
+
+            }
 
 
             // PayStack Integration

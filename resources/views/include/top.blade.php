@@ -260,7 +260,7 @@
                             </li>
                             <li>
                                 <a
-                                    {{ Auth::user()->accountType != 'Individual' ? 'href=' . route('merchant profile') : 'href=' . route('profile') }}>Share Referral Link</a>
+                                    {{ Auth::user()->accountType != 'Individual' ? 'href=' . route('merchant profile') : 'href=' . route('referral link') }}>Share Referral Link</a>
                             </li>
                             {{-- <li><a href="https://exbc.ca/Product">Goto EXBC</a></li> --}}
                             <li><a href="{{ route('logout') }}"
