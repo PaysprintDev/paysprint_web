@@ -85,6 +85,9 @@ Route::get('docpendinglist', 'CheckSetupController@docPendingList');
 Route::get('suspendedaccountlist', 'CheckSetupController@suspendedAccountList');
 Route::get('upgradedaccountlist', 'CheckSetupController@upgradedAccounts');
 
+// Statement Mail SendMail
+Route::get('mailstatement' , 'StatementMailController@useStatement');
+
 // Update BVN List
 Route::get('bvnlistupdate', 'CheckSetupController@bvnListUpdate');
 
