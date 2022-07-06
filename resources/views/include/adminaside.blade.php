@@ -210,6 +210,9 @@
                                          <li title="Stripe"><a
                                                  href="{{ route('gateway activity', 'gateway=Stripe') }}"><i
                                                      class="fa fa-circle-o text-red"></i> Stripe</a></li>
+                                         <li title="Stripe"><a
+                                                 href="{{ route('gateway activity', 'gateway=Dusupay') }}"><i
+                                                    class="fa fa-circle-o text-red"></i> Dusupay</a></li>
 
                                      </ul>
                                  </li>
