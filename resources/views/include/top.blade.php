@@ -216,7 +216,7 @@
                                             $useraccount = \App\User::where('ref_code', $item->link_ref_code)->first();
                                         @endphp
 
-                                        <li><a href="{{ route('sign out', $useraccount->id) }}">ACCOUNT NO:
+                                        <li><a href="{{ route('sign out', $useraccount->id) }}">PS ACCOUNT NO:
                                                 {{ $item->link_ref_code }}</a></li>
                                     @endforeach
                                 @else
@@ -229,7 +229,7 @@
                                             @php
                                                 $useraccount = \App\User::where('ref_code', $item->ref_code)->first();
                                             @endphp
-                                            <li><a href="{{ route('sign out', $useraccount->id) }}">ACCOUNT NO:
+                                            <li><a href="{{ route('sign out', $useraccount->id) }}">PS ACCOUNT NO:
                                                     {{ $item->ref_code }}</a></li>
                                         @endforeach
                                     @else
@@ -253,14 +253,19 @@
                                 class="caret"></span></a>
 
                         <ul class="dropdown-menu other_dropdwn">
-                            <li><a href="javascript:void()">Account NO: {{ Auth::user()->ref_code }}</a></li>
+                            <li><a href="javascript:void()">PS Account NO: {{ Auth::user()->ref_code }}</a></li>
+                            @if (Auth::user()->country == 'Nigeria')
+                                <li><a href="javascript:void()">Bank Account NO:
+                                        {{ Auth::user()->virtual_account }}</a></li>
+                            @endif
                             <li>
                                 <a
                                     {{ Auth::user()->accountType != 'Individual' ? 'href=' . route('merchant profile') : 'href=' . route('profile') }}>Profile</a>
                             </li>
                             <li>
                                 <a
-                                    {{ Auth::user()->accountType != 'Individual' ? 'href=' . route('merchant profile') : 'href=' . route('referral link') }}>Share Referral Link</a>
+                                    {{ Auth::user()->accountType != 'Individual' ? 'href=' . route('merchant profile') : 'href=' . route('referral link') }}>Share
+                                    Referral Link</a>
                             </li>
                             {{-- <li><a href="https://exbc.ca/Product">Goto EXBC</a></li> --}}
                             <li><a href="{{ route('logout') }}"

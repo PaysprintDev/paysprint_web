@@ -66,9 +66,13 @@ class CheckSetupController extends Controller
 
                 $info = $this->accountInfo($value->id);
 
-                if ($value->approval == 0) {
+                if ($value->approval == 0 && $value->country != "Nigeria") {
                     $approval = "<li>Upload a copy of Government Issued Photo ID, Utility bill and Selfie of yourself taking with your Government issued photo ID</li>";
-                } else {
+                }
+                elseif ($value->approval == 0 && $value->country == "Nigeria") {
+                    $approval = "<li>Upload a copy of Government Issued Photo ID and Selfie of yourself taking with your Government issued photo ID</li>";
+                }
+                else {
                     $approval = "";
                 }
 
@@ -194,6 +198,85 @@ class CheckSetupController extends Controller
 
 
         $this->slack('userAccountArchive Cron Completed', $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+    }
+
+
+
+    public function oneUserQuickSetup($id)
+    {
+        // Get User
+        $user = User::where('id', $id)->first();
+
+        try {
+
+
+                $info = $this->accountInfo($user->id);
+
+                if ($user->approval == 0 && $user->country != "Nigeria") {
+                    $approval = "<li>Upload a copy of Government Issued Photo ID, Utility bill and Selfie of yourself taking with your Government issued photo ID</li>";
+                }
+                elseif ($user->approval == 0 && $user->country == "Nigeria") {
+                    $approval = "<li>Upload a copy of Government Issued Photo ID and Selfie of yourself taking with your Government issued photo ID</li>";
+                }
+                else {
+                    $approval = "";
+                }
+
+
+                if ($user->transaction_pin == null) {
+                    $transaction = "<li>Set Up Transaction Pin-You will need the PIN to Send Money, Pay Invoice/Bill or Withdraw Money from Your PaySprint Account</li>";
+                } else {
+                    $transaction = "";
+                }
+
+                if ($user->avatar == null) {
+                    $avatar = "<li>Upload a selfie of yourself</li>";
+                } else {
+                    $avatar = "";
+                }
+                if ($user->securityQuestion == null) {
+                    $security = "<li>Set up Security Question and Answer-You will need this to reset your PIN code or Login Password</li>";
+                } else {
+                    $security = "";
+                }
+                if ($user->country == "Nigeria" && $user->bvn_verification == null) {
+                    $bankVerify = "<li>Verify your account with your bank verification number</li>";
+                } else {
+                    $bankVerify = "";
+                }
+                if ($info == 0) {
+                    $card = "<li>Add Credit Card/Prepaid Card/Bank Account-You need this to add money to your PaySprint Wallet.</li>";
+                } else {
+                    $card = "";
+                }
+
+                // Send Mail
+
+                if ($user->approval == 0 || $user->transaction_pin == null || $user->securityQuestion == null || $info == 0) {
+
+                    $this->name = $user->name;
+                    $this->email = $user->email;
+                    $this->subject = "You have some incomplete information on your PaySprint account";
+
+                    $this->message = '<p>We noticed you are yet to properly complete the set-up of your PaySprint Account. You need to provide the outstanding information and complete the quick set up in order to enjoy the full benefits of a PaySprint Account.</p><p><ul>' . $approval . '' . $avatar . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card . '</ul></p><p>Kindly complete these important steps in your profile. <a href=' . route('profile') . ' class="text-primary" style="text-decoration: underline">Click here to login to your account</a></p>';
+
+
+                    // $this->mailListCategorize($this->name, $this->email, $value->address, $value->telephone, 'Quick Setup', $value->country, 'Subscription');
+
+                    $this->sendEmail($this->email, "Incomplete Setup");
+                    // $this->sendCampaign($this->subject, $this->message, $this->email, $this->name);
+
+                    // Log::info('Quick wallet set up cron sent to '.$this->name);
+
+                    // $this->slack('Quick wallet set up cron sent to ' . $this->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                }
+
+        } catch (\Throwable $th) {
+            // Log::critical('Cannot send quick setup mail '.$th->getMessage());
+
+            $this->slack('Cannot send quick setup mail ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+        }
     }
 
 
@@ -1324,9 +1407,13 @@ class CheckSetupController extends Controller
 
                 $info = $this->accountInfo($value->id);
 
-                if ($value->approval == 0) {
+                if ($value->approval == 0 && $value->country != "Nigeria") {
                     $approval = "<li>Upload a copy of Government Issued Photo ID, Utility bill and Selfie of yourself taking with your Government issued photo ID</li>";
-                } else {
+                }
+                elseif ($value->approval == 0 && $value->country == "Nigeria") {
+                    $approval = "<li>Upload a copy of Government Issued Photo ID and Selfie of yourself taking with your Government issued photo ID</li>";
+                }
+                else {
                     $approval = "";
                 }
 
@@ -2468,6 +2555,7 @@ in the your business category.</p> <p>This means your competitors are receiving 
                 foreach($data as $record){
                     $referenced_code = $record->tx_ref;
                     $gateway = "Flutterwave";
+
                     $email = $record->customer->email;
 
                     $thisuser = User::where('email', $email)->first();
@@ -2583,6 +2671,10 @@ in the your business category.</p> <p>This means your competitors are receiving 
                         $this->sendEmail($this->email, "Fund remittance");
 
                         $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount: " . $record->currency . ' ' . number_format($record->amount_settled, 2) . "</p><p>Status: Successful</p>";
+
+                        if($thisuser->account_check < 2){
+                            $this->oneUserQuickSetup($thisuser->id);
+                        }
 
                         $moneris->notifyAdmin($gateway . " inflow", $adminMessage);
                     }
