@@ -45,6 +45,9 @@ class FlutterwaveController extends Controller
 
 
     }
+
+
+
     public function initiategetVirtualAccountNumber($refCode)
     {
         try {
@@ -72,10 +75,6 @@ class FlutterwaveController extends Controller
 
     }
 
-    public function flutterwaveWebhook(Request $req)
-    {
-        dd($req->all());
-    }
 
     public function fetchGetAllTransfers()
     {
