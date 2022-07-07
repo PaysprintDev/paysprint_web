@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FlutterwaveController;
+use App\Http\Controllers\DusupayController;
 use App\Http\Controllers\MerchantPageController;
 use App\Http\Controllers\WalletCreditController;
 /*
@@ -334,6 +335,7 @@ Route::prefix('expresspay')->group(function () {
 // Dusupay Payment Callback
 Route::prefix('dusupay')->group(function(){
 	Route::get('/resp', ['uses' => 'MonerisController@dusuPayCallback', 'as' => 'dusupay callback']);
+	Route::get('/bankcode/{id}',['uses' => 'DusupayController@getDusuBankCode', 'as' => 'dusupay bankcode'] );
 });
 
 
