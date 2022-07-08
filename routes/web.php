@@ -332,7 +332,7 @@ Route::prefix('expresspay')->group(function () {
 });
 
 
-// Dusupay Payment Callback
+// Dusupay Payment
 Route::prefix('dusupay')->group(function(){
 	Route::get('/resp', ['uses' => 'MonerisController@dusuPayCallback', 'as' => 'dusupay callback']);
 	Route::get('/bankcode/{id}',['uses' => 'DusupayController@getDusuBankCode', 'as' => 'dusupay bankcode'] );
