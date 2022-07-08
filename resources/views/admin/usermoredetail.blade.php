@@ -96,7 +96,15 @@
                                         @if ($getthisuser->country == 'Nigeria')
                                             <tr>
                                                 <td>Bank Verification Number</td>
-                                                <td class="mainText">{{ $getthisuser->bvn_number }}</td>
+                                                <td class="mainText">
+
+                                                    @if ($getthisuser->bvn_number != '')
+                                                        {{ wordwrap(substr($getthisuser->bvn_number, 0, 2) . str_repeat('*', strlen($getthisuser->bvn_number) - 3) . substr($getthisuser->bvn_number, -3), 4, '*', true) }}
+                                                    @endif
+
+
+
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>Bank Name</td>
@@ -104,7 +112,14 @@
                                             </tr>
                                             <tr>
                                                 <td>Bank Account Number</td>
-                                                <td class="mainText">{{ $getthisuser->bvn_account_number }}</td>
+                                                <td class="mainText">
+
+                                                    @if ($getthisuser->bvn_account_number != '')
+                                                        {{ wordwrap(substr($getthisuser->bvn_account_number, 0, 2) . str_repeat('*', strlen($getthisuser->bvn_account_number) - 3) . substr($getthisuser->bvn_account_number, -3), 4, '*', true) }}
+                                                    @endif
+
+
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>Account Name</td>
@@ -492,7 +507,8 @@
                                                                     Limit</label><br>
                                                                 <input type="number" class="form-control"
                                                                     name="withdrawal_per_transaction"
-                                                                    id="withdrawal_per_transaction" placeholder="New Limit">
+                                                                    id="withdrawal_per_transaction"
+                                                                    placeholder="New Limit">
                                                                 <input type="hidden" name="id"
                                                                     value="{{ $getthisuser->id }}">
                                                             </div>
