@@ -26,7 +26,8 @@
 
                      <p>{{ session('businessname') != null ? $usersBusiness : $usersName }}</p>
                      @if (session('role') != 'Super' && session('role') != 'Access to Level 1 only' && session('role') != 'Access to Level 1 and 2 only' && session('role') != 'Customer Marketing')
-                         <a href="#"><i class="fa fa-circle text-success"></i> Account No: {{ session('user_id') }}</a>
+                         <a href="#"><i class="fa fa-circle text-success"></i> Account No:
+                             {{ session('user_id') }}</a>
                      @endif
                  </div>
              </div>
@@ -53,8 +54,7 @@
                          </span>
                      </a>
                      <ul class="treeview-menu">
-                         <li class="active"><a href="{{ route('Admin') }}"><i
-                                     class="fa fa-circle-o text-red"></i>
+                         <li class="active"><a href="{{ route('Admin') }}"><i class="fa fa-circle-o text-red"></i>
                                  Dashboard</a></li>
                          <li><a href="{{ route('merchant home') }}"><i class="fa fa-circle-o text-primary"></i> Main
                                  Page</a></li>
@@ -212,10 +212,10 @@
                                                      class="fa fa-circle-o text-red"></i> Stripe</a></li>
                                          <li title="Stripe"><a
                                                  href="{{ route('gateway activity', 'gateway=Dusupay') }}"><i
-                                                    class="fa fa-circle-o text-red"></i> Dusupay</a></li>
+                                                     class="fa fa-circle-o text-red"></i> Dusupay</a></li>
                                          <li title="Stripe"><a
                                                  href="{{ route('gateway activity', 'gateway=Flutterwave') }}"><i
-                                                    class="fa fa-circle-o text-red"></i> Flutterwave</a></li>
+                                                     class="fa fa-circle-o text-red"></i> Flutterwave</a></li>
 
                                      </ul>
                                  </li>
@@ -323,7 +323,8 @@
                                              class="fa fa-circle-o text-red"></i> Invoice</a></li>
                                  <li title="PaySprint FX"><a href="#"><i class="fa fa-circle-o text-red"></i>
                                          PaySprint FX</a></li>
-                                 <li title="Move Money Commission"><a href="#"><i class="fa fa-circle-o text-red"></i>
+                                 <li title="Move Money Commission"><a href="#"><i
+                                             class="fa fa-circle-o text-red"></i>
                                          Move
                                          Money</a></li>
                              </ul>
@@ -335,7 +336,7 @@
                      @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only' || session('role') == 'Access to Level 1 only')
 
 
-                         @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only')
+                         @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only' || session('role') == 'Access to Level 1 only')
                              <li>
                                  <a href="{{ route('all countries') }}">
                                      <i class="fa fa-book"></i>
@@ -399,7 +400,8 @@
                                      <li><a href="{{ route('paycaremittance') }}"><i
                                                  class="fa fa-circle-o text-green"></i>
                                              Invoice </a></li>
-                                     <li><a href="{{ route('remittance') }}"><i class="fa fa-circle-o text-red"></i>
+                                     <li><a href="{{ route('remittance') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>
                                              Money
                                              Transfer</a></li>
                                      {{-- <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li> --}}
@@ -461,7 +463,8 @@
                                      <li title="Credit/Debit Card"><a
                                              href="{{ route('card request withdrawal') }}"><i
                                                  class="fa fa-circle-o text-red"></i> Credit/Debit Card</a></li>
-                                     <li title="prepaid Card"><a href="{{ route('prepaid request withdrawal') }}"><i
+                                     <li title="prepaid Card"><a
+                                             href="{{ route('prepaid request withdrawal') }}"><i
                                                  class="fa fa-circle-o text-red"></i> Prepaid Card</a></li>
                                      <li title="Bank Account"><a href="{{ route('bank request withdrawal') }}"><i
                                                  class="fa fa-circle-o text-red"></i> Bank Account</a></li>
@@ -488,16 +491,17 @@
                                                  class="fa fa-circle-o text-red"></i>Points Claimed</a></li>
                                      <li title="prepaid Card"><a href="{{ route('referral claim') }}"><i
                                                  class="fa fa-circle-o text-red"></i>Referral Claims</a></li>
-                                                 <li title="prepaid Card"><a href="{{ route('suspended referral claim') }}"><i
-                                                    class="fa fa-circle-o text-red"></i>Suspended Referral Claims</a></li>
+                                     <li title="prepaid Card"><a href="{{ route('suspended referral claim') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>Suspended Referral Claims</a></li>
                                      <li title="prepaid Card"><a href="{{ route('successful referral claim') }}"><i
-                                                    class="fa fa-circle-o text-red"></i>Successful Referral Claims</a></li>
-                                                    <li title="prepaid Card"><a href="{{ route('successful point claim') }}"><i
-                                                        class="fa fa-circle-o text-red"></i>Successful Points Claims</a></li>
-                                    <li title="prepaid Card"><a href="{{ route('promo report') }}"><i
-                                                    class="fa fa-circle-o text-red"></i>Imported List Report</a></li>
+                                                 class="fa fa-circle-o text-red"></i>Successful Referral Claims</a>
+                                     </li>
+                                     <li title="prepaid Card"><a href="{{ route('successful point claim') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>Successful Points Claims</a></li>
+                                     <li title="prepaid Card"><a href="{{ route('promo report') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>Imported List Report</a></li>
                                      <li title="prepaid Card"><a href="{{ route('referral report') }}"><i
-                                                    class="fa fa-circle-o text-red"></i>Referral Reports</a></li>
+                                                 class="fa fa-circle-o text-red"></i>Referral Reports</a></li>
                                  </ul>
                              </li>
                          @endif
@@ -589,7 +593,6 @@
                      @endif
 
                      @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access to Level 1 and 2 only')
-
                          {{-- @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only')
                              <li class="treeview">
                                  <a href="#">
@@ -709,7 +712,8 @@
                              <ul class="treeview-menu">
                                  <li><a href="{{ route('xreceivemoney') }}"><i class="fa fa-circle-o text-red"></i>
                                          Receive Money</a></li>
-                                 <li><a href="{{ route('xpaytrans') }}"><i class="fa fa-circle-o text-red"></i> Send
+                                 <li><a href="{{ route('xpaytrans') }}"><i class="fa fa-circle-o text-red"></i>
+                                         Send
                                          Money</a></li>
 
                              </ul>
@@ -790,9 +794,11 @@
                              </span>
                          </a>
                          <ul class="treeview-menu">
-                             <li><a href="{{ route('sent invoice') }}"><i class="fa fa-circle-o text-info"></i> Sent
+                             <li><a href="{{ route('sent invoice') }}"><i class="fa fa-circle-o text-info"></i>
+                                     Sent
                                      Invoice</a></li>
-                             <li><a href="{{ route('paid invoice') }}"><i class="fa fa-circle-o text-info"></i> Paid
+                             <li><a href="{{ route('paid invoice') }}"><i class="fa fa-circle-o text-info"></i>
+                                     Paid
                                      Invoice</a></li>
                              <li><a href="{{ route('unpaid invoice') }}"><i class="fa fa-circle-o text-info"></i>
                                      Unpaid
@@ -804,7 +810,8 @@
                              <li><a href="{{ route('invoice type') }}"><i class="fa fa-circle-o text-info"></i>
                                      Invoice
                                      Type Report</a></li>
-                             <li><a href="{{ route('recurring invoice') }}"><i class="fa fa-circle-o text-info"></i>
+                             <li><a href="{{ route('recurring invoice') }}"><i
+                                         class="fa fa-circle-o text-info"></i>
                                      Recurring invoice report</a></li>
                          </ul>
                      </li>
@@ -1260,8 +1267,10 @@
                              <li onclick="openModal('create_event')"><a href="#"><i
                                          class="fa fa-circle-o text-red"></i>
                                      Create Ticket</a></li>
-                             <li><a href="#"><i class="fa fa-circle-o text-info"></i> Check Sold Tickets</a></li>
-                             <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a></li>
+                             <li><a href="#"><i class="fa fa-circle-o text-info"></i> Check Sold Tickets</a>
+                             </li>
+                             <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Check Event Status</a>
+                             </li>
                          </ul>
                      </li>
 
@@ -1275,7 +1284,8 @@
                          </a>
                          <ul class="treeview-menu">
                              <li><a href="#"><i class="fa fa-circle-o text-purple"></i> Upload Billings</a></li>
-                             <li><a href="#"><i class="fa fa-circle-o text-success"></i> view All Billings</a></li>
+                             <li><a href="#"><i class="fa fa-circle-o text-success"></i> view All Billings</a>
+                             </li>
 
                          </ul>
                      </li>
