@@ -125,7 +125,8 @@ trait dusupay{
             CURLOPT_CUSTOMREQUEST => 'GET',
             CURLOPT_POSTFIELDS => $this->DusuCurlPost,
             CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json'
+                'Content-Type: application/json',
+                'secret-key:SECK-2022f6da520945cbf9693f7ff0817d5d3',
             ),
         ));
 

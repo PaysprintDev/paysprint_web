@@ -99,7 +99,7 @@
                                 <h5 align='right' class="text-success">Total Users Referred:
                                     {{ isset($data['referred']) ? $data['referred'] : 0 }}
                                     </h5>
-                                <h5 align='right' class="text-success">Total Points Earned:
+                                <h5 align='right' class="text-success">Total Refer & Earn Points:
                                     <?php
                                             if(isset($data['referred']) ? $data['referred'] : 0){
                                                 $number=$data['referred'];
@@ -112,10 +112,12 @@
                                            
                                     ?>
                                 </h5>
-                                <h5 align='right' class="text-success">Total  Referral Points Claimed:
-                                    {{ isset($data['point claimed']) ? $data['point claimed'] : 0 }}</h5>
-                                <h5 align='right' class="text-success">Referral Points Balance:
-                                    {{ isset($data['referral point']) ? $data['referral point']->referral_points : 0 }}</h5>
+                                <h5 align='right' class="text-success">Total Refer & Earn Points Redeemed:
+                                    {{ isset($data['point claimed']) ? $data['point claimed'] : 0 }}
+                                </h5>
+                                <h5 align='right' class="text-success">Total Refer & Earn Point Balance:
+                                    {{ isset($data['referral point']) ? $data['referral point']->referral_points : 0 }}
+                                </h5>
 
                                     
 
@@ -149,7 +151,7 @@
                                 <div id="credit-card" class="tab-pane fade show active pt-3">
 
                                     <div class="table table-responsive">
-                                            <h3>Claimed Point History</h3>
+                                            <h3>Redeemed Points History</h3>
                                         <table class="table table-bordered table-striped" id="example3">
                                             <thead>
                                                 <tr>
@@ -157,7 +159,7 @@
                                                         <h5>Date</h5>
                                                     </td>
                                                     <td>
-                                                        <h5>Points Claimed</h5>
+                                                        <h5>Points Redeemed</h5>
                                                     </td>
                                                     <td>
                                                         <h5>Balance</h5>
