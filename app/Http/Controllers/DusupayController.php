@@ -20,7 +20,8 @@ class DusupayController extends Controller
             $countrycode=AllCountries::where('currencyCode', $usercountry)->first();
             $code=$countrycode->code;
            $data= $this->getBankCode($code);
-           dd($data);
+           $provider=$this->getProviders($code,$usercountry);
+           dd($provider);
 
     }
 }
