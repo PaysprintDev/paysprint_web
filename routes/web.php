@@ -569,6 +569,7 @@ Route::get('suspendedusers', ['uses' => 'AdminController@allSuspendedUsers', 'as
 Route::get('newusers', ['uses' => 'AdminController@allNewusers', 'as' => 'newusers']);
 Route::get('newmerchants', ['uses' => 'AdminController@allNewMerchants', 'as' => 'newmerchants']);
 Route::get('archiveduserslist', ['uses' => 'AdminController@archivedUsersList', 'as' => 'archiveduserslist']);
+Route::get('/addtowatchlist/{id}',['uses' => 'AdminController@addTowatchlist', 'as' => 'addtowatchlist']);
 
 
 Route::get('Admin/x-wireless', ['uses' => 'AdminController@smsWirelessPlatform', 'as' => 'sms wireless platform']);
@@ -1092,6 +1093,9 @@ Route::prefix('Admin/aml')->group(function () {
 	Route::post('/gettechnology', ['uses' => 'AmlController@gettechnology', 'as' => 'gettechnology']);
 	Route::get('/bankrequestamlwithdrawalbycountry', ['uses' => 'AmlController@requestForWithdrawalToBank', 'as' => 'Request aml for Withdrawal to bank']);
 
+	Route::get('/watchlist', ['uses' => 'AmlController@watchList', 'as' => 'watchlist']);
+	Route::get('/getwatchlist', ['uses' => 'AmlController@getWatchList', 'as' => 'getwatchlist']);
+	Route::get('/viewwatchlist', ['uses' => 'AmlController@viewWatchList', 'as' => 'viewwatchlist']);
 	Route::get('/view', ['uses' => 'AmlController@view', 'as' => 'View']);
 	Route::get('/upload', ['uses' => 'AmlController@upload', 'as' => 'Upload']);
     Route::post('/uploads', ['uses' => 'AmlController@uploads', 'as' => 'Uploads']);

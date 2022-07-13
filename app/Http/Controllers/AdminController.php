@@ -27,6 +27,8 @@ use App\ReferredUsers;
 
 use App\ReferralClaim;
 
+use App\watchlist;
+
 use App\Admin as Admin;
 
 use App\Mail\sendEmail;
@@ -3895,6 +3897,20 @@ class AdminController extends Controller
         }
     }
 
+    public function addTowatchlist(Request $req, $id){
+            $id=$req->id;
+            $user=User::where('id', $id)->first();
+          
+            watchlist::create([
+                'user_id' => $user->id,
+                'ref_code' => $user->ref_code,
+                'name' =>$user->name,
+                'country' =>$user->country
+            ]);
+
+            return back()->with("msg", "<div class='alert alert-success'>User Added to Watchlist</div>");
+
+    }
 
     public function allLevelTwoUsers(Request $req)
     {

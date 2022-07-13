@@ -20,6 +20,8 @@ use App\User as User;
 
 use App\CreateEvent as CreateEvent;
 
+use App\watchlist;
+
 
 
 use App\SuperAdmin as SuperAdmin;
@@ -483,7 +485,175 @@ class AmlController extends Controller
         return view('aml.transactionreview')->with(['pages' => 'AML Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'transCost' => $transCost, 'data' => $data]);
     }
 
+    //watchlist
 
+    public function watchlist(Request $req){
+        if ($req->session()->has('username') == true) {
+
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $invoiceLinkImport = ImportExcelLink::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = OrganizationPay::orderBy('created_at', 'DESC')->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $invoiceLinkImport = ImportExcelLink::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = OrganizationPay::where('coy_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $this->recurBills(session('user_id'));
+            }
+
+
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+            $transCost = $this->transactionCost();
+            $allusers = $this->allUsers();
+
+            $getUserDetail = $this->getmyPersonalDetail(session('user_id'));
+
+            $getCard = $this->getUserCard(session('myID'));
+            $getBank = $this->getUserBank(session('myID'));
+
+            $getTax = $this->getTax(session('myID'));
+
+
+            $withdraws = [
+                'bank' => $this->requestFromBankWithdrawal(),
+                'purchase' => $this->purchaseRefundSentback(),
+                'credit' => $this->requestFromCardWithdrawal(),
+                'prepaid' => $this->pendingRequestFromPrepaidWithdrawal(),
+                // 'specialInfo' => $this->getthisInfo(session('country')),
+            ];
+
+
+            $pending = [
+                'transfer' => $this->pendingTransferTransactions(),
+                'texttotransfer' => $this->textToTransferUsers(),
+            ];
+
+            $refund = [
+                'requestforrefund' => $this->requestForAllRefund(),
+            ];
+
+            $allcountries = $this->getAllCountries();
+
+            $received = [
+                'payInvoice' => $this->payInvoice(session('email')),
+            ];
+
+            $data = array(
+                'getuserDetail' => $this->getmyPersonalDetail(session('user_id')),
+                'getbusinessDetail' => $this->getmyBusinessDetail(session('user_id')),
+                'merchantservice' => $this->_merchantServices(),
+                'getCard' => $this->getUserCard(session('myID')),
+                'getBank' => $this->getUserBank(session('myID')),
+                'getTax' => $this->getTax(session('myID')),
+                'listbank' => $this->getBankList(),
+                'escrowfund' => $this->getEscrowFunding(),
+                'watchlist' => watchlist::orderBy('created_at', 'DESC')->groupBy('country')->get(),
+            );
+
+
+
+
+
+            return view('aml.watchlist')->with(['pages' => 'AML Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'invoiceImport' => $invoiceImport , 'payInvoice' => $payInvoice, 'invoiceLinkImport' => $invoiceLinkImport, 'transCost' => $transCost]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+        //getwatchlist
+
+    public function getWatchList(Request $req){
+
+            if ($req->session()->has('username') == true) {
+    
+    
+                if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                    $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                    $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                    $invoiceLinkImport = ImportExcelLink::orderBy('created_at', 'DESC')->get();
+                    $payInvoice = DB::table('client_info')
+                        ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                        ->orderBy('invoice_payment.created_at', 'DESC')
+                        ->get();
+    
+                    $otherPays = OrganizationPay::orderBy('created_at', 'DESC')->get();
+                } else {
+                    $adminUser = Admin::where('username', session('username'))->get();
+                    $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                    $invoiceLinkImport = ImportExcelLink::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                    $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                    $otherPays = OrganizationPay::where('coy_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+    
+                    $this->recurBills(session('user_id'));
+                }
+    
+    
+    
+                $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+                $transCost = $this->transactionCost();
+                $allusers = $this->allUsers();
+    
+                $getUserDetail = $this->getmyPersonalDetail(session('user_id'));
+    
+                $getCard = $this->getUserCard(session('myID'));
+                $getBank = $this->getUserBank(session('myID'));
+    
+                $getTax = $this->getTax(session('myID'));
+    
+    
+                $withdraws = [
+                    'bank' => $this->requestFromBankWithdrawal(),
+                    'purchase' => $this->purchaseRefundSentback(),
+                    'credit' => $this->requestFromCardWithdrawal(),
+                    'prepaid' => $this->pendingRequestFromPrepaidWithdrawal(),
+                    // 'specialInfo' => $this->getthisInfo(session('country')),
+                ];
+    
+    
+                $pending = [
+                    'transfer' => $this->pendingTransferTransactions(),
+                    'texttotransfer' => $this->textToTransferUsers(),
+                ];
+    
+                $refund = [
+                    'requestforrefund' => $this->requestForAllRefund(),
+                ];
+    
+                $allcountries = $this->getAllCountries();
+    
+                $received = [
+                    'payInvoice' => $this->payInvoice(session('email')),
+                ];
+    
+                $data = array(
+                    'getuserDetail' => $this->getmyPersonalDetail(session('user_id')),
+                    'getbusinessDetail' => $this->getmyBusinessDetail(session('user_id')),
+                    'merchantservice' => $this->_merchantServices(),
+                    'getCard' => $this->getUserCard(session('myID')),
+                    'getBank' => $this->getUserBank(session('myID')),
+                    'getTax' => $this->getTax(session('myID')),
+                    'listbank' => $this->getBankList(),
+                    'escrowfund' => $this->getEscrowFunding(),
+                    'watchlist' => watchlist::where('country', $req->country)->get(),
+                );
+
+                    // dd($data['watchlist']);
+                return view('aml.viewwatchlist')->with(['pages' => 'AML Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'invoiceImport' => $invoiceImport , 'payInvoice' => $payInvoice, 'invoiceLinkImport' => $invoiceLinkImport, 'transCost' => $transCost]);
+            } else {
+                return redirect()->route('AdminLogin');
+            }
+    }
 
     public function reports()
     {
@@ -2483,4 +2653,6 @@ class AmlController extends Controller
 
         return $data;
     }
+
+
 }
