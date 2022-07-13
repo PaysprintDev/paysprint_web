@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Collection;
+
 use Session;
 use App\MarkUp;
 use App\Points;
@@ -14668,7 +14670,7 @@ class AdminController extends Controller
 
                     // Check if account is flagged or pass security level
 
-                    if ($getMerchant->flagged == 1) {
+                    if (isset($getMerchant->flagged) && $getMerchant->flagged == 1) {
 
                         $resData = ['res' => 'Hello ' . $adminCheck[0]['firstname'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact', 'message' => 'error'];
 
@@ -17781,6 +17783,21 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     {
 
         $data = AllCountries::where('approval', 1)->get();
+
+        return $data;
+    }
+
+    public function getActiveCountriesNeededDetails()
+    {
+
+        $info = AllCountries::where('approval', 1)->get();
+
+        $data = $info->map(function ($country) {
+        return collect($country->toArray())
+            ->only(['id', 'name', 'code', 'callingCode', 'currencyCode', 'currencySymbol'])
+            ->all();
+    });
+
 
         return $data;
     }

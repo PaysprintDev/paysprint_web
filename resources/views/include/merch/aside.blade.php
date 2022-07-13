@@ -13,8 +13,11 @@
                 <p class="mb-0 font-roboto">{{ 'PS Account Number: ' . Auth::user()->ref_code }}</p>
 
                 @if (Auth::user()->country == 'Nigeria' && Auth::user()->virtual_account != null)
-                    <p class="card card-body mb-0 font-roboto">
-                        {{ 'Bank Account Number: ' . Auth::user()->virtual_account }}</p>
+                    <p class="card card-body mb-0 font-roboto" style="background: antiquewhite;
+    font-weight: 600;">
+                        {{ 'Bank Account Number: ' . Auth::user()->virtual_account }}
+                        <br>{{ 'Bank Name: WEMA BANK' }}
+                    </p>
                 @endif
 
                 <ul>
@@ -23,7 +26,9 @@
                         <p>Logins</p>
                     </li>
                     <li>
-                        <span>{!! Auth::user()->bvn_verification > 0 ? '<img src="https://img.icons8.com/external-tal-revivo-green-tal-revivo/20/000000/external-verification-tick-mark-for-digital-certification-document-basic-green-tal-revivo.png"/>' : '<img src="https://img.icons8.com/fluency/20/000000/cancel.png"/>' !!}</span>
+                        <span>{!! Auth::user()->bvn_verification > 0
+                            ? '<img src="https://img.icons8.com/external-tal-revivo-green-tal-revivo/20/000000/external-verification-tick-mark-for-digital-certification-document-basic-green-tal-revivo.png"/>'
+                            : '<img src="https://img.icons8.com/fluency/20/000000/cancel.png"/>' !!}</span>
                         <p>&nbsp;</p>
                     </li>
                     <li>

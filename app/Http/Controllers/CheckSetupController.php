@@ -68,11 +68,9 @@ class CheckSetupController extends Controller
 
                 if ($value->approval == 0 && $value->country != "Nigeria") {
                     $approval = "<li>Upload a copy of Government Issued Photo ID, Utility bill and Selfie of yourself taking with your Government issued photo ID</li>";
-                }
-                elseif ($value->approval == 0 && $value->country == "Nigeria") {
+                } elseif ($value->approval == 0 && $value->country == "Nigeria") {
                     $approval = "<li>Upload a copy of Government Issued Photo ID and Selfie of yourself taking with your Government issued photo ID</li>";
-                }
-                else {
+                } else {
                     $approval = "";
                 }
 
@@ -210,68 +208,94 @@ class CheckSetupController extends Controller
         try {
 
 
-                $info = $this->accountInfo($user->id);
+            $info = $this->accountInfo($user->id);
 
-                if ($user->approval == 0 && $user->country != "Nigeria") {
-                    $approval = "<li>Upload a copy of Government Issued Photo ID, Utility bill and Selfie of yourself taking with your Government issued photo ID</li>";
-                }
-                elseif ($user->approval == 0 && $user->country == "Nigeria") {
-                    $approval = "<li>Upload a copy of Government Issued Photo ID and Selfie of yourself taking with your Government issued photo ID</li>";
-                }
-                else {
-                    $approval = "";
-                }
-
-
-                if ($user->transaction_pin == null) {
-                    $transaction = "<li>Set Up Transaction Pin-You will need the PIN to Send Money, Pay Invoice/Bill or Withdraw Money from Your PaySprint Account</li>";
-                } else {
-                    $transaction = "";
-                }
-
-                if ($user->avatar == null) {
-                    $avatar = "<li>Upload a selfie of yourself</li>";
-                } else {
-                    $avatar = "";
-                }
-                if ($user->securityQuestion == null) {
-                    $security = "<li>Set up Security Question and Answer-You will need this to reset your PIN code or Login Password</li>";
-                } else {
-                    $security = "";
-                }
-                if ($user->country == "Nigeria" && $user->bvn_verification == null) {
-                    $bankVerify = "<li>Verify your account with your bank verification number</li>";
-                } else {
-                    $bankVerify = "";
-                }
-                if ($info == 0) {
-                    $card = "<li>Add Credit Card/Prepaid Card/Bank Account-You need this to add money to your PaySprint Wallet.</li>";
-                } else {
-                    $card = "";
-                }
-
-                // Send Mail
-
-                if ($user->approval == 0 || $user->transaction_pin == null || $user->securityQuestion == null || $info == 0) {
-
-                    $this->name = $user->name;
-                    $this->email = $user->email;
-                    $this->subject = "You have some incomplete information on your PaySprint account";
-
-                    $this->message = '<p>We noticed you are yet to properly complete the set-up of your PaySprint Account. You need to provide the outstanding information and complete the quick set up in order to enjoy the full benefits of a PaySprint Account.</p><p><ul>' . $approval . '' . $avatar . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card . '</ul></p><p>Kindly complete these important steps in your profile. <a href=' . route('profile') . ' class="text-primary" style="text-decoration: underline">Click here to login to your account</a></p>';
+            if ($user->approval == 0 && $user->country != "Nigeria") {
+                $approval = "<li>Upload a copy of Government Issued Photo ID, Utility bill and Selfie of yourself taking with your Government issued photo ID</li>";
+                $approvalSms = "Upload a copy of Government Issued Photo ID, Utility bill and Selfie of yourself taking with your Government issued photo ID";
+            } elseif ($user->approval == 0 && $user->country == "Nigeria") {
+                $approval = "<li>Upload a copy of Government Issued Photo ID and Selfie of yourself taking with your Government issued photo ID</li>";
+                $approvalSms = "Upload a copy of Government Issued Photo ID and Selfie of yourself taking with your Government issued photo ID";
+            } else {
+                $approval = "";
+                $approvalSms = "";
+            }
 
 
-                    // $this->mailListCategorize($this->name, $this->email, $value->address, $value->telephone, 'Quick Setup', $value->country, 'Subscription');
+            if ($user->transaction_pin == null) {
+                $transaction = "<li>Set Up Transaction Pin-You will need the PIN to Send Money, Pay Invoice/Bill or Withdraw Money from Your PaySprint Account</li>";
+                $transactionSms = "Set Up Transaction Pin-You will need the PIN to Send Money, Pay Invoice/Bill or Withdraw Money from Your PaySprint Account";
+            } else {
+                $transaction = "";
+                $transactionSms = "";
+            }
 
-                    $this->sendEmail($this->email, "Incomplete Setup");
-                    // $this->sendCampaign($this->subject, $this->message, $this->email, $this->name);
+            if ($user->avatar == null) {
+                $avatar = "<li>Upload a selfie of yourself</li>";
+                $avatarSms = "Upload a selfie of yourself";
+            } else {
+                $avatar = "";
+                $avatarSms = "";
+            }
+            if ($user->securityQuestion == null) {
+                $security = "<li>Set up Security Question and Answer-You will need this to reset your PIN code or Login Password</li>";
+                $securitySms = "Set up Security Question and Answer-You will need this to reset your PIN code or Login Password";
+            } else {
+                $security = "";
+                $securitySms = "";
+            }
+            if ($user->country == "Nigeria" && $user->bvn_verification == null) {
+                $bankVerify = "<li>Verify your account with your bank verification number</li>";
+                $bankVerifySms = "Verify your account with your bank verification number";
+            } else {
+                $bankVerify = "";
+                $bankVerifySms = "";
+            }
+            if ($info == 0) {
+                $card = "<li>Add Credit Card/Prepaid Card/Bank Account-You need this to add money to your PaySprint Wallet.</li>";
+                $cardSms = "Add Credit Card/Prepaid Card/Bank Account-You need this to add money to your PaySprint Wallet.";
+            } else {
+                $card = "";
+                $cardSms = "";
+            }
 
-                    // Log::info('Quick wallet set up cron sent to '.$this->name);
+            // Send Mail
 
-                    // $this->slack('Quick wallet set up cron sent to ' . $this->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+            if ($user->approval == 0 || $user->transaction_pin == null || $user->securityQuestion == null || $info == 0) {
 
-                }
+                $this->name = $user->name;
+                $this->email = $user->email;
+                $this->subject = "(PENDING ACTION). We Need Your Help to Deposit your funds to your PaySprint Wallet";
 
+                $this->message = '<p> We have received your funds transferred through the PaySprint Bank Account with Wema Bank. However, we need you to properly complete the set-up of
+your PaySprint Account.</p><p>You need to provide the outstanding information and complete the quick set up in order for us to deposit the funds into your Wallet.</p><p><ul>' . $approval . '' . $avatar . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card . '</ul></p><p>Kindly complete these important tasks to enable us proceed with processing the deposit into your PaySprint Wallet.</p><p>a href=' . route('profile') . ' class="text-primary" style="text-decoration: underline">Click here to login to your account</a></p>';
+
+
+$sendMsg = ' We have received your funds transferred through the PaySprint Bank Account with Wema Bank. However, we need you to properly complete the set-up of
+your PaySprint Account.You need to provide the outstanding information and complete the quick set up in order for us to deposit the funds into your Wallet.'.$approval.' ' . $avatar . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card .'Kindly complete these important tasks to enable us proceed with processing the deposit into your PaySprint Wallet. Click here to login to your PaySprint account '.route('profile');
+
+                $this->sendEmail($this->email, "Incomplete Setup");
+
+                $userPhone = User::where('email', $user->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                        if (isset($userPhone)) {
+
+                            $sendPhone = $user->telephone;
+                        } else {
+                            $sendPhone = "+" . $user->code . $user->telephone;
+                        }
+
+                        if ($user->country == "Nigeria") {
+
+                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                            $this->sendSms($sendMsg, $correctPhone);
+                        } else {
+                            $this->sendMessage($sendMsg, $sendPhone);
+                        }
+
+                $this->slack($this->subject.' to ' . $this->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+            }
         } catch (\Throwable $th) {
             // Log::critical('Cannot send quick setup mail '.$th->getMessage());
 
@@ -1350,54 +1374,50 @@ class CheckSetupController extends Controller
         // }
 
 
-        try{
+        try {
 
             $url = "https://exbc.ca/api/v1/paysprint/cardrequest";
 
-        $curl = curl_init();
+            $curl = curl_init();
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => array(
-                'Authorization: Bearer base64:HgMO6FDHGziGl01OuLH9mh7CeP095shB6uuDUUClhks='
-            ),
-        ));
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => array(
+                    'Authorization: Bearer base64:HgMO6FDHGziGl01OuLH9mh7CeP095shB6uuDUUClhks='
+                ),
+            ));
 
-        $response = curl_exec($curl);
-
-
-        curl_close($curl);
-
-        $result = json_decode($response);
+            $response = curl_exec($curl);
 
 
+            curl_close($curl);
 
-        if (count($result->data)) {
-            foreach ($result->data as $key => $value) {
-                User::where('ref_code', '!=', $value->ref_code)->update(['cardRequest' => 0]);
+            $result = json_decode($response);
+
+
+
+            if (count($result->data)) {
+                foreach ($result->data as $key => $value) {
+                    User::where('ref_code', '!=', $value->ref_code)->update(['cardRequest' => 0]);
+                }
+            } else {
+                $result = [];
             }
-        }
-        else{
-            $result = [];
-        }
-
-        }
-        catch(\Throwable $th){
+        } catch (\Throwable $th) {
             $this->slack('EXBC Card Request Error Module checkExbcCardRequest() line 1235: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
-
-
     }
 
-    public function idvNotifationMessage(){
-        try{
+    public function idvNotifationMessage()
+    {
+        try {
 
             // Get the IDV Completed Pending User
             $getUsers = User::where('account_check', 1)->inRandomOrder()->take(500)->get();
@@ -1409,11 +1429,9 @@ class CheckSetupController extends Controller
 
                 if ($value->approval == 0 && $value->country != "Nigeria") {
                     $approval = "<li>Upload a copy of Government Issued Photo ID, Utility bill and Selfie of yourself taking with your Government issued photo ID</li>";
-                }
-                elseif ($value->approval == 0 && $value->country == "Nigeria") {
+                } elseif ($value->approval == 0 && $value->country == "Nigeria") {
                     $approval = "<li>Upload a copy of Government Issued Photo ID and Selfie of yourself taking with your Government issued photo ID</li>";
-                }
-                else {
+                } else {
                     $approval = "";
                 }
 
@@ -1451,19 +1469,12 @@ class CheckSetupController extends Controller
                     $sendMsg = 'Your PaySprint Account is Ready for Approval. Kindly upload the below listed files now. ' . $approval . '' . $avatar . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card . '. Try uploading on www.paysprint.ca if you have difficulty in uploading on the mobile app. Compliance Team';
 
                     $this->createNotification($value->ref_code, $sendMsg);
-
-
                 }
-
             }
 
 
             echo "Done uploading!";
-
-
-        }
-        catch(\Throwable $th){
-
+        } catch (\Throwable $th) {
         }
     }
 
@@ -1471,7 +1482,8 @@ class CheckSetupController extends Controller
 
     // Notify User of Merchants Shop
 
-    public function merchantsShopService(){
+    public function merchantsShopService()
+    {
         try {
             //Get Clients, order by industry and mail customers with clients with complete info....
             $client = ClientInfo::where('description', '!=', NULL)->inRandomOrder()->groupBy('industry')->take(10)->get();
@@ -1481,7 +1493,7 @@ class CheckSetupController extends Controller
             $table = "";
             $tabledetails = "";
 
-            foreach($client as $clients){
+            foreach ($client as $clients) {
                 $business_name = $clients->business_name;
                 $industry = $clients->industry;
                 $telephone = $clients->telephone;
@@ -1493,112 +1505,94 @@ class CheckSetupController extends Controller
                 $description = $clients->description;
 
 
-                $tabledetails = "<tr><td><strong>Business Name:</strong> ".$business_name."</td></tr><tr><td><strong>Industry:</strong> ".$industry."</td></tr><tr><td><strong>Nature of Business:</strong> ".$nature_of_business."</td></tr><tr><td><strong>Telephone:</strong> ".$telephone."</td><td><strong>Email:</strong> ".$email."</td></tr><tr><td><strong>Address:</strong> ".$address."</td></tr><tr><td><strong>State:</strong> ".$state."</td></tr><tr><td><strong>Country:</strong> ".$country."</td></tr><tr><td><strong>Description of Business:</strong> ".$description."</td></tr>";
+                $tabledetails = "<tr><td><strong>Business Name:</strong> " . $business_name . "</td></tr><tr><td><strong>Industry:</strong> " . $industry . "</td></tr><tr><td><strong>Nature of Business:</strong> " . $nature_of_business . "</td></tr><tr><td><strong>Telephone:</strong> " . $telephone . "</td><td><strong>Email:</strong> " . $email . "</td></tr><tr><td><strong>Address:</strong> " . $address . "</td></tr><tr><td><strong>State:</strong> " . $state . "</td></tr><tr><td><strong>Country:</strong> " . $country . "</td></tr><tr><td><strong>Description of Business:</strong> " . $description . "</td></tr>";
 
-                $table .= $tabledetails."<hr>";
-
-
+                $table .= $tabledetails . "<hr>";
             }
 
 
-                // Get Customers Information
+            // Get Customers Information
 
 
-                $users = User::where('accountType', '!=', 'Merchant')->inRandomOrder()->take(500)->get();
+            $users = User::where('accountType', '!=', 'Merchant')->inRandomOrder()->take(500)->get();
 
-                foreach ($users as $user) {
-                    $this->name = $user->name;
-                    $this->email = $user->email;
-                    // $this->email = 'adenugaadebambo41@gmail.com';
-                    $this->subject = "Merchants on PaySprint";
+            foreach ($users as $user) {
+                $this->name = $user->name;
+                $this->email = $user->email;
+                // $this->email = 'adenugaadebambo41@gmail.com';
+                $this->subject = "Merchants on PaySprint";
 
-                    $this->message = "<p>Here are the list of Merchants that may interest you this week: </p><p><table>".$table."<tbody></tbody></table></p>";
-
-
-                    $this->sendEmail($this->email, "Incomplete Setup");
-                }
+                $this->message = "<p>Here are the list of Merchants that may interest you this week: </p><p><table>" . $table . "<tbody></tbody></table></p>";
 
 
+                $this->sendEmail($this->email, "Incomplete Setup");
+            }
 
-                echo "Done";
 
+
+            echo "Done";
         } catch (\Throwable $th) {
             //throw $th;
         }
     }
 
 
-    public function checkTrullioVerification(){
+    public function checkTrullioVerification()
+    {
         // Get Users with transactionRecordID..
 
-        try{
+        try {
             $getUsers = User::where('transactionRecordId', '!=', NULL)->inRandomOrder()->take(15)->get();
 
 
-            foreach($getUsers as $user){
+            foreach ($getUsers as $user) {
 
                 $getthis = $this->getTransRec($user->transactionRecordId);
 
 
 
 
-                if(gettype($getthis) == 'string' || gettype($getthis) == NULL){
+                if (gettype($getthis) == 'string' || gettype($getthis) == NULL) {
                     $newresponse = $this->transStatus($user->transactionRecordId);
 
                     $checker = $this->getTransRec($newresponse->TransactionRecordId);
+                } else {
 
 
-                }
-                else{
-
-
-                $checker = $getthis;
-
+                    $checker = $getthis;
                 }
 
 
 
-                    $userData = $user->name." | ".$checker->Record->RecordStatus;
+                $userData = $user->name . " | " . $checker->Record->RecordStatus;
 
-                if($checker->Record->RecordStatus == "match"){
+                if ($checker->Record->RecordStatus == "match") {
                     User::where('transactionRecordId', $user->transactionRecordId)->update(['bvn_verification' => 1]);
-                }
-                else{
+                } else {
                     User::where('transactionRecordId', $user->transactionRecordId)->update(['bvn_verification' => 0]);
                 }
 
 
-            echo $userData."<hr>";
-
-
+                echo $userData . "<hr>";
             }
-
-
-
-        }
-        catch(\Throwable $th){
+        } catch (\Throwable $th) {
             $this->slack('Trullio Verification Check Error Module checkTrullioVerification() line 1295: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
-
-
-
-
-
-
     }
 
 
 
     // Move From IDV Failed TO IDV Passed and send a message of no document ...
-    public function moveFromFailedToPass(){
+    public function moveFromFailedToPass()
+    {
 
         try {
 
             $getFailedUsers = User::where([['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->where('country', 'Nigeria')->get();
 
 
-            if(count($getFailedUsers) > 0){
-                foreach($getFailedUsers as $users){
+            if (count($getFailedUsers) > 0) {
+                foreach ($getFailedUsers as $users) {
                     // Move them to passed...
                     User::where('id', $users->id)->update(['approval' => 1]);
 
@@ -1615,15 +1609,9 @@ class CheckSetupController extends Controller
                     $this->sendEmail($this->email, "Incomplete Setup");
 
 
-                    echo "Moved for ".$users->name."<hr>";
-
+                    echo "Moved for " . $users->name . "<hr>";
                 }
-
-
             }
-
-
-
         } catch (\Throwable $th) {
             $this->slack('Move From IDV Failed To Pass Error Module moveFromFailedToPass() line 1367: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
@@ -1631,18 +1619,19 @@ class CheckSetupController extends Controller
 
 
     // Move From IDV Passed TO IDV Completed Pending
-    public function moveFromPassedToCompletedPending(){
+    public function moveFromPassedToCompletedPending()
+    {
 
         try {
 
             $getPassedUsers = User::where([['accountLevel', '=', 2], ['approval', '=', 1], ['account_check', '=', 0]])->where('country', 'India')->get();
 
-            if(count($getPassedUsers) > 0){
-                foreach($getPassedUsers as $users){
+            if (count($getPassedUsers) > 0) {
+                foreach ($getPassedUsers as $users) {
                     // Move them to passed...
                     User::where('id', $users->id)->update(['account_check' => 1]);
 
-                                        // Send Mail...
+                    // Send Mail...
 
                     $this->name = $users->name;
                     $this->email = $users->email;
@@ -1655,15 +1644,9 @@ class CheckSetupController extends Controller
                     $this->sendEmail($this->email, "Incomplete Setup");
 
 
-                    echo "Moved for ".$users->name."<hr>";
-
+                    echo "Moved for " . $users->name . "<hr>";
                 }
-
-
             }
-
-
-
         } catch (\Throwable $th) {
             $this->slack('Move From IDV Passed To Completed Pending Error Module moveFromPassedToCompletedPending() line 1439: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
@@ -1672,13 +1655,14 @@ class CheckSetupController extends Controller
 
     // Send Message to merchants
 
-    public function cronToMerchant(){
+    public function cronToMerchant()
+    {
         try {
             $getMerchants = User::where('accountType', 'Merchant')->where([['accountLevel', '=', 2], ['approval', '<=', 1], ['account_check', '<=', 1]])->get();
 
-            if(count($getMerchants) > 0){
+            if (count($getMerchants) > 0) {
 
-                foreach($getMerchants as $users){
+                foreach ($getMerchants as $users) {
 
                     // Get Business Profile Information...
 
@@ -1692,18 +1676,15 @@ class CheckSetupController extends Controller
 
                     // $this->message = "<p>Do you know that merchants with complete profile has 20x chance of driving more traffic to their business on PaySprint.</p><p>Complete your business profile today and drive more traffic to your business page.</p><br><p>Thank you for choosing us.</p>";
                     $this->message = "<p>We want to inform you that your business page on PaySprint is receiving below the average visitors' traffic when compared to other businesses listed
-in the your business category.</p> <p>This means your competitors are receiving more business leads from PaySprint.</p><br><p>The information provided on your business page is as shown below:</p><div class='container-box'> <div class='small-box'> <h4>Business Name: ".$client->business_name."</h4> <p><b>Industry:</b> (".$client->industry.") </p> <p><b>Tel:</b> ".$client->telephone." </p> <p><b>Website:</b> $client->website</p> </div> <div class='content-box'> <p class='address'><b>Address:</b> ".$client->address."</p> <p class='location'><b>Location:</b> ".$client->state.", ".$client->country." </p>  <div class='description'><b>Description:</b> ".$client->description." </div> </div> </div><br><p>Visitors to your business page need to know more about you and your business.</p><p><a href='".route('AdminLogin')."'>Click HERE to Login to your merchant account</a> and complete the business profile today</p>";
+in the your business category.</p> <p>This means your competitors are receiving more business leads from PaySprint.</p><br><p>The information provided on your business page is as shown below:</p><div class='container-box'> <div class='small-box'> <h4>Business Name: " . $client->business_name . "</h4> <p><b>Industry:</b> (" . $client->industry . ") </p> <p><b>Tel:</b> " . $client->telephone . " </p> <p><b>Website:</b> $client->website</p> </div> <div class='content-box'> <p class='address'><b>Address:</b> " . $client->address . "</p> <p class='location'><b>Location:</b> " . $client->state . ", " . $client->country . " </p>  <div class='description'><b>Description:</b> " . $client->description . " </div> </div> </div><br><p>Visitors to your business page need to know more about you and your business.</p><p><a href='" . route('AdminLogin') . "'>Click HERE to Login to your merchant account</a> and complete the business profile today</p>";
 
 
                     $this->sendEmail($this->email, "Business Page Setup");
 
 
-                    echo "Sent Mail To ".$users->name."<hr>";
-
+                    echo "Sent Mail To " . $users->name . "<hr>";
                 }
-
             }
-
         } catch (\Throwable $th) {
             $this->slack('Cron to Merchant Error Module cronToMerchant() line 1473: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
@@ -1711,13 +1692,14 @@ in the your business category.</p> <p>This means your competitors are receiving 
 
 
     // Send Messages to consumers...
-    public function cronToConsumers(){
-        try{
+    public function cronToConsumers()
+    {
+        try {
             $getConsumers = User::where('accountType', 'Individual')->where([['accountLevel', '=', 2], ['approval', '<=', 1], ['account_check', '<=', 1]])->get();
 
-            if(count($getConsumers) > 0){
+            if (count($getConsumers) > 0) {
 
-                foreach($getConsumers as $users){
+                foreach ($getConsumers as $users) {
 
 
                     $this->name = $users->name;
@@ -1734,14 +1716,10 @@ in the your business category.</p> <p>This means your competitors are receiving 
                     $this->sendEmail($this->email, "Incomplete Setup");
 
 
-                    echo "Sent Mail To ".$users->name."<hr>";
-
+                    echo "Sent Mail To " . $users->name . "<hr>";
                 }
-
             }
-
-        }
-         catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             $this->slack('Cron to Consumers Error Module cronToConsumers() line 1507: ' . $th->getMessage(), $room = "error-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
     }
@@ -1785,11 +1763,12 @@ in the your business category.</p> <p>This means your competitors are receiving 
 
 
 
-    public function giveAccountCheckUpgrade(){
+    public function giveAccountCheckUpgrade()
+    {
         $users = User::where('account_check', 2)->where('plan', 'basic')->get();
 
-        if(count($users) > 0){
-            foreach($users as $user){
+        if (count($users) > 0) {
+            foreach ($users as $user) {
                 // Update to Classic
                 User::where('id', $user->id)->update(['plan' => 'classic']);
 
@@ -1808,49 +1787,48 @@ in the your business category.</p> <p>This means your competitors are receiving 
                 UpgradePlan::updateOrInsert(['userId' => $user->ref_code], ['userId' => $user->ref_code, 'plan' => 'classic', 'amount' => $amount, 'duration' => "monthly", 'expire_date' => $expire_date]);
 
 
-                echo "Updated: ".$user->name." next expiry set for ".$expire_date;
+                echo "Updated: " . $user->name . " next expiry set for " . $expire_date;
             }
         }
     }
 
-    public function downcheckMerchants(){
+    public function downcheckMerchants()
+    {
         $users = User::where('account_check', 2)->where('accountType', 'Merchant')->where('plan', 'classic')->get();
 
-        if(count($users) > 0){
-            foreach($users as $user){
+        if (count($users) > 0) {
+            foreach ($users as $user) {
 
                 // Get Client Information
                 $getClient = ClientInfo::where('user_id', $user->ref_code)->first();
 
-                if(isset($getClient) && $getClient->accountMode == "test"){
+                if (isset($getClient) && $getClient->accountMode == "test") {
 
                     // Downgrade to basic...
 
                     User::where('ref_code', $getClient->user_id)->update(['plan' => 'basic']);
 
 
-                    echo "Updated: ".$getClient->business_name;
-
+                    echo "Updated: " . $getClient->business_name;
                 }
-
             }
         }
-
     }
 
 
 
     // publicizeMerchantToConsumer
-    public function publicizeMerchantToConsumer(Request $req){
+    public function publicizeMerchantToConsumer(Request $req)
+    {
 
         $template = "";
 
         // Get Merchant's with description....
         $getClient = ClientInfo::where('description', '!=', NULL)->get();
 
-        if(count($getClient) > 0){
+        if (count($getClient) > 0) {
 
-            foreach($getClient as $merchants){
+            foreach ($getClient as $merchants) {
                 // Get Users in the country...
 
                 $getUsers = User::where('country', $merchants->country)->get();
@@ -1858,19 +1836,13 @@ in the your business category.</p> <p>This means your competitors are receiving 
 
 
 
-                for($i = 0; $i < count($getUsers); $i++){
+                for ($i = 0; $i < count($getUsers); $i++) {
                     // echo $getUsers[$i]->name.' | '.$getUsers[$i]->country.' | '.$getUsers[$i]->email."<hr>";
 
 
                 }
-
-
-
             }
-
         }
-
-
     }
 
 
@@ -2164,7 +2136,7 @@ in the your business category.</p> <p>This means your competitors are receiving 
                     }
                 }
 
-                 $this->slack('Monthly Transaction Cron triggered', $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                $this->slack('Monthly Transaction Cron triggered', $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
             } else {
 
                 // Do nothing
@@ -2199,9 +2171,8 @@ in the your business category.</p> <p>This means your competitors are receiving 
 
                         // Do Nothing ...
 
-                    }
-                    else{
-                                                // Send Mail
+                    } else {
+                        // Send Mail
 
                         $walletBalance = $value->wallet_balance;
                         $currencyCode = $value->currencyCode;
@@ -2224,7 +2195,7 @@ in the your business category.</p> <p>This means your competitors are receiving 
 		    			<td>Delivered</td>
 		    			</tr>";
 
-                            $table .= $tabledetails;
+                        $table .= $tabledetails;
 
 
                         $message = "<p>Below is the statement of your transactions on PaySprint for this month.</p> <br> <table width='700' border='1' cellpadding='1' cellspacing='0'><thead><tr><th>Trans. Date</th><th>Desc.</th><th>Amount</th><th>Status</th></tr></thead><tbody>" . $table . "</tbody></table> <br><br> Thanks <br><br> Client Services Team <br> PaySprint <br><br>";
@@ -2233,7 +2204,6 @@ in the your business category.</p> <p>This means your competitors are receiving 
 
 
                         $this->mailprocess($email, $name, $subject, $message);
-
                     }
                 }
 
@@ -2424,32 +2394,32 @@ in the your business category.</p> <p>This means your competitors are receiving 
         echo "Upgraded Account";
     }
 
-        //public function for merchant test mode
+    //public function for merchant test mode
 
-        public function merchantTestMode()
-        {
-            $getUsers=ClientInfo::where('accountMode', 'test')->inRandomOrder()->take(15)->get();
+    public function merchantTestMode()
+    {
+        $getUsers = ClientInfo::where('accountMode', 'test')->inRandomOrder()->take(15)->get();
 
-            foreach ($getUsers as $users){
+        foreach ($getUsers as $users) {
 
-                $this->mailListCategorize($users->business_name, $users->email, $users->address, $users->telephone, "Test Mode Merchant", $users->country, 'Subscription');
-            }
-
-            echo "Done";
+            $this->mailListCategorize($users->business_name, $users->email, $users->address, $users->telephone, "Test Mode Merchant", $users->country, 'Subscription');
         }
 
-        //public function for merchant Live mode
+        echo "Done";
+    }
 
-        public function merchantLiveMode()
-        {
-            $getUsers=ClientInfo::where('accountMode', 'live')->inRandomOrder()->take(15)->get();
+    //public function for merchant Live mode
 
-            foreach ($getUsers as $users){
+    public function merchantLiveMode()
+    {
+        $getUsers = ClientInfo::where('accountMode', 'live')->inRandomOrder()->take(15)->get();
 
-                $this->mailListCategorize($users->business_name, $users->email, $users->address, $users->telephone, "Live Mode Merchant", $users->country, 'Subscription');
-            }
-            echo "Done";
+        foreach ($getUsers as $users) {
+
+            $this->mailListCategorize($users->business_name, $users->email, $users->address, $users->telephone, "Live Mode Merchant", $users->country, 'Subscription');
         }
+        echo "Done";
+    }
 
 
 
@@ -2512,32 +2482,28 @@ in the your business category.</p> <p>This means your competitors are receiving 
     public function flutterwaveVirtualAccountGenerate()
     {
 
-        try{
+        try {
 
 
 
-        // Get all the users in Nigeria with BVN...
-        $users = User::where('country', 'Nigeria')->where('bvn_number', '!=', NULL)->where('virtual_account', NULL)->get();
+            // Get all the users in Nigeria with BVN...
+            $users = User::where('country', 'Nigeria')->where('bvn_number', '!=', NULL)->where('virtual_account', NULL)->get();
 
-        if(count($users) == 0){
-            return "No new virtual account to generate";
-        }
-
-
-        foreach($users as $user){
-            $username = explode(" ",$user->name);
-            $this->flutterwave->initiateNewAccountNumber($user->email, $user->bvn_number, $user->telephone, $username[0], $username[1], $user->ref_code);
-        }
+            if (count($users) == 0) {
+                return "No new virtual account to generate";
+            }
 
 
-        echo "Account Number Generated";
+            foreach ($users as $user) {
+                $username = explode(" ", $user->name);
+                $this->flutterwave->initiateNewAccountNumber($user->email, $user->bvn_number, $user->telephone, $username[0], $username[1], $user->ref_code);
+            }
 
-        }
-        catch (\Throwable $th){
+
+            echo "Account Number Generated";
+        } catch (\Throwable $th) {
             echo $th->getMessage();
         }
-
-
     }
 
 
@@ -2546,13 +2512,13 @@ in the your business category.</p> <p>This means your competitors are receiving 
     public function getAllTransactionTransfers()
     {
         $moneris = new MonerisController();
-        try{
+        try {
             $data = $this->flutterwave->fetchGetAllTransfers();
 
             // TODO 1:: Get the response data...
 
-            if(count($data) > 0){
-                foreach($data as $record){
+            if (count($data) > 0) {
+                foreach ($data as $record) {
                     $referenced_code = $record->tx_ref;
                     $gateway = "Flutterwave";
 
@@ -2562,7 +2528,7 @@ in the your business category.</p> <p>This means your competitors are receiving 
                     // Insert Flutterwave transaction fee record...
                     $recordedPayment = FlutterwavePaymentRecord::where('recordId', $record->id)->first();
 
-                    if(isset($recordedPayment) && $recordedPayment->status == 'successful'){
+                    if (isset($recordedPayment) && $recordedPayment->status == 'successful') {
                         // Update the record and move...
                         FlutterwavePaymentRecord::where('recordId', $record->id)->update([
                             'userId' => $thisuser->ref_code,
@@ -2585,38 +2551,37 @@ in the your business category.</p> <p>This means your competitors are receiving 
                             'account_id' => $record->account_id,
                             'meta' => json_encode($record->meta)
                         ]);
-                    }
-                    else{
+                    } else {
 
-                     FlutterwavePaymentRecord::insert([
-                        'userId' => $thisuser->ref_code,
-                        'recordId' => $record->id,
-                        'tx_ref' => $record->tx_ref,
-                        'tx_ref' => $record->tx_ref,
-                        'flw_ref' => $record->flw_ref,
-                        'amount' => $record->amount,
-                        'currency' => $record->currency,
-                        'charged_amount' => $record->charged_amount,
-                        'app_fee' => $record->app_fee,
-                        'merchant_fee' => $record->merchant_fee,
-                        'processor_response' => $record->processor_response,
-                        'auth_model' => $record->auth_model,
-                        'narration' => $record->narration,
-                        'status' => $record->status,
-                        'payment_type' => $record->payment_type,
-                        'amount_settled' => $record->amount_settled,
-                        'customer' => json_encode($record->customer),
-                        'account_id' => $record->account_id,
-                        'meta' => json_encode($record->meta)
-                    ]);
+                        FlutterwavePaymentRecord::insert([
+                            'userId' => $thisuser->ref_code,
+                            'recordId' => $record->id,
+                            'tx_ref' => $record->tx_ref,
+                            'tx_ref' => $record->tx_ref,
+                            'flw_ref' => $record->flw_ref,
+                            'amount' => $record->amount,
+                            'currency' => $record->currency,
+                            'charged_amount' => $record->charged_amount,
+                            'app_fee' => $record->app_fee,
+                            'merchant_fee' => $record->merchant_fee,
+                            'processor_response' => $record->processor_response,
+                            'auth_model' => $record->auth_model,
+                            'narration' => $record->narration,
+                            'status' => $record->status,
+                            'payment_type' => $record->payment_type,
+                            'amount_settled' => $record->amount_settled,
+                            'customer' => json_encode($record->customer),
+                            'account_id' => $record->account_id,
+                            'meta' => json_encode($record->meta)
+                        ]);
 
-                    $walletBal = $thisuser->wallet_balance;
-                    $holdBal = $thisuser->hold_balance + $record->amount_settled;
+                        $walletBal = $thisuser->wallet_balance;
+                        $holdBal = $thisuser->hold_balance + $record->amount_settled;
 
-                     User::where('email', $email)->update(['wallet_balance' => $walletBal, 'hold_balance' => $holdBal]);
+                        User::where('email', $email)->update(['wallet_balance' => $walletBal, 'hold_balance' => $holdBal]);
 
 
-                     $activity = "Added " . $record->currency . '' . number_format($record->amount_settled, 2) . " to Wallet including a fee charge of " . $record->currency . '' . number_format($record->app_fee, 2) . " was deducted from your Wallet";
+                        $activity = "Added " . $record->currency . '' . number_format($record->amount_settled, 2) . " to Wallet including a fee charge of " . $record->currency . '' . number_format($record->app_fee, 2) . " was deducted from your Wallet";
                         $credit = $record->amount_settled;
                         $debit = 0;
                         $reference_code = $referenced_code;
@@ -2631,13 +2596,13 @@ in the your business category.</p> <p>This means your competitors are receiving 
                         $moneris->getfeeTransaction($reference_code, $thisuser->ref_code, $record->amount, $record->app_fee, $record->amount_settled);
 
 
-                         $this->name = $thisuser->name;
+                        $this->name = $thisuser->name;
                         $this->email = $thisuser->email;
                         $this->subject = $record->currency . ' ' . number_format($record->amount_settled, 2) . " now added to your wallet with PaySprint";
 
-                        $this->message = '<p>Bank transfer of <strong>' . $record->currency . ' ' . number_format($record->amount_settled, 2) . '</strong> <em>(Gross Amount of ' . $record->currency . ' ' . number_format($record->amount, 2) . ' less transaction fee ' . $record->currency . ' ' . number_format($record->app_fee, 2) . ')</em> successfully sent to your wallet with PaySprint by '.$record->meta->originatorname.' '.$record->meta->bankname.' '.$record->meta->originatoraccountnumber.'. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have <strong>' . $record->currency . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                        $this->message = '<p>Bank transfer of <strong>' . $record->currency . ' ' . number_format($record->amount_settled, 2) . '</strong> <em>(Gross Amount of ' . $record->currency . ' ' . number_format($record->amount, 2) . ' less transaction fee ' . $record->currency . ' ' . number_format($record->app_fee, 2) . ')</em> successfully sent to your wallet with PaySprint by ' . $record->meta->originatorname . ' ' . $record->meta->bankname . ' ' . $record->meta->originatoraccountnumber . '. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have <strong>' . $record->currency . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                        $sendMsg = 'Bank transfer of ' . $record->currency . ' ' . number_format($record->amount_settled, 2) . ' (Gross Amount of ' . $record->currency . ' ' . number_format($record->amount, 2) . ' less transaction fee ' . $record->currency . ' ' . number_format($record->app_fee, 2) . ') successfully sent to your wallet with PaySprint by '.$record->meta->originatorname.' '.$record->meta->bankname.' '.$record->meta->originatoraccountnumber.'. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have ' . $record->currency . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                        $sendMsg = 'Bank transfer of ' . $record->currency . ' ' . number_format($record->amount_settled, 2) . ' (Gross Amount of ' . $record->currency . ' ' . number_format($record->amount, 2) . ' less transaction fee ' . $record->currency . ' ' . number_format($record->app_fee, 2) . ') successfully sent to your wallet with PaySprint by ' . $record->meta->originatorname . ' ' . $record->meta->bankname . ' ' . $record->meta->originatoraccountnumber . '. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have ' . $record->currency . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
                         $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -2672,26 +2637,18 @@ in the your business category.</p> <p>This means your competitors are receiving 
 
                         $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount: " . $record->currency . ' ' . number_format($record->amount_settled, 2) . "</p><p>Status: Successful</p>";
 
-                        if($thisuser->account_check < 2){
+                        if ($thisuser->account_check < 2) {
                             $this->oneUserQuickSetup($thisuser->id);
                         }
 
                         $moneris->notifyAdmin($gateway . " inflow", $adminMessage);
                     }
-
-
-
-
-
-
-
                 }
             }
 
 
             echo "Process complete!";
-        }
-        catch(\Throwable $th){
+        } catch (\Throwable $th) {
             echo $th->getMessage();
         }
     }
