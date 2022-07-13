@@ -44,15 +44,16 @@
                                         <tr>
                                             <td class="mainText" colspan="2" align="left">
                                                 @if ($getthisuser->avatar != null)
-                                                    <a href="{{ $getthisuser->avatar }}">
-                                                        <img src="{{ $getthisuser->avatar }}"
-                                                            alt="{{ $getthisuser->avatar }}" srcset=""
+                                                    <a href="{{ str_replace('http', 'https', $getthisuser->avatar) }}">
+                                                        <img src="{{ str_replace('http', 'https', $getthisuser->avatar) }}"
+                                                            alt="{{ str_replace('http', 'https', $getthisuser->avatar) }}"
+                                                            srcset=""
                                                             style="width: 150px; height: 150px; border-radius: 100%; object-fit: contain;">
                                                     </a>
                                                 @else
                                                     <a href="#">
-                                                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_2_w4hzub.jpg"
-                                                            alt="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_2_w4hzub.jpg"
+                                                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
+                                                            alt="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
                                                             srcset=""
                                                             style="width: 150px; height: 150px; border-radius: 100%; object-fit: contain;">
                                                     </a>

@@ -67,7 +67,7 @@ Route::prefix('/v1')->group(function () {
         // Investor login
         Route::post('investorlogin', ['uses' => 'api\v1\InvestorRelationController@investorLogin']);
 
-       
+
 
         // Investor Password Reset
         Route::post('investor/forgot-password', ['uses' => 'api\v1\InvestorRelationController@investorForgotPassword']);
@@ -385,6 +385,13 @@ Route::prefix('/v1')->group(function () {
         Route::post('/shop/product/removecartitem', ['uses' => 'ShopController@removeCartItem', 'as' => 'remove cart item']);
 
 
+
+
+
+        // Services.....
+         Route::post('/service/setup', ['uses' => 'ServiceController@setupService', 'as' => 'setup service']);
+
+
         // Estore
          Route::post('/order/out-for-delivery', ['uses' => 'ShopController@outForDelivery', 'as' => 'out for delivery or pickup']);
     });
@@ -402,6 +409,10 @@ Route::prefix('/v1')->group(function () {
         Route::prefix('transaction')->group(function () {
             Route::post('/initialize', ['uses' => 'api\v1\CheckoutController@initialize', 'as' => 'initialize transaction']);
         });
+
+
+        // Handahske...
+        Route::post('sync/handshake',  ['uses' => 'ThirdPartyHandshakeController@handshakeRegistration']);
     });
 
         // Get Currency value
@@ -412,5 +423,8 @@ Route::prefix('/v1')->group(function () {
     Route::get('/userdata', ['uses' => 'CurrencyFxController@getUserData', 'as' => 'currency user data']);
 
     Route::get('/ps-account-details', ['uses' => 'CurrencyFxController@paysprintAccountDetails', 'as' => 'get paysprint account details']);
+
+    Route::get('sync/countries',  ['uses' => 'ThirdPartyHandshakeController@availableCountriesonPS']);
+
 
 });

@@ -1145,6 +1145,15 @@ class HomeController extends Controller
         // $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
         // Insert Record for cash advance and redirect to cash advance page
+
+        if(Auth::user()->country != 'Canada'){
+
+            $resData = "Your country is not eligible for this feature";
+            $resp = "error";
+
+            return redirect()->back()->with($resp, $resData);
+        }
+
         CashAdvance::updateOrInsert([
             'merchantId' => Auth::user()->id
         ], [

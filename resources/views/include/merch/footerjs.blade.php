@@ -6,8 +6,8 @@
 <script src=" {{ asset('merchantassets/assets/js/jquery-3.5.1.min.js') }}"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js"
-integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ=="
-crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- feather icon js-->
 <script src=" {{ asset('merchantassets/assets/js/icons/feather-icon/feather.min.js') }}"></script>
 <script src=" {{ asset('merchantassets/assets/js/icons/feather-icon/feather-icon.js') }}"></script>
@@ -70,7 +70,9 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ asset('merchantassets/assets/js/theme-customizer/customizer.js') }}"></script>
 <!-- Plugin used-->
 <script src="{{ asset('js/country-state-select.js') }}"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+    integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script language="javascript">
     populateCountries("delivery_country", "delivery_state");
@@ -78,6 +80,9 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
     $(document).ready(function() {
+
+
+
         $('.invoicetable').DataTable({
             'pageLength': 20,
         });
@@ -1715,6 +1720,69 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
             }
         }
     };
+
+
+
+    // Service Store AJAX...
+
+    async function serviceSetup(id, value) {
+        try {
+            var formData;
+
+            if (value === 'header') {
+                formData = new FormData(formElemHead);
+            }
+            if (value === 'about') {
+                formData = new FormData(formElemAbout);
+            }
+            if (value === 'service') {
+                formData = new FormData(formElemService);
+            }
+            if (value === 'pricing') {
+                formData = new FormData(formElemPricing);
+            }
+            if (value === 'testimonial') {
+                formData = new FormData(formElemTestimonial);
+            }
+            if (value === 'contact') {
+                formData = new FormData(formElemContact);
+            }
+
+
+
+            var headers = {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                'Authorization': 'Bearer {{ Auth::user()->api_token }}'
+            };
+
+            const config = {
+                method: 'POST',
+                url: "{{ URL('/api/v1/service/setup') }}",
+                headers: headers,
+                data: formData
+            }
+
+            const response = await axios(config);
+
+            console.log(response);
+
+            iziMessage(true, 'Good', `${value+' - '+id}`);
+        } catch (error) {
+            console.log(error);
+            iziMessage(false, 'Error', 'Something went wrong. Please try again later.');
+        }
+    }
+
+
+    function iziMessage(status, title, message) {
+
+        return iziToast.show({
+            title,
+            message,
+            backgroundColor: status === false ? '#f7a3a3' : '#dbeddd',
+            position: 'topRight'
+        });
+    }
 </script>
 
 </body>
