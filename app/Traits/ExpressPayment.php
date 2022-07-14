@@ -291,6 +291,7 @@ trait ExpressPayment
         $thisuser = User::where('api_token', $bearerToken)->first();
 
 
+
         $minBal = $this->minimumWithBal($thisuser->country);
 
         $wallBal = $thisuser->wallet_balance - $minBal;
@@ -305,9 +306,9 @@ trait ExpressPayment
             $inputamount = $data['commissiondeduct'] + $data['amounttosend'];
         } else {
             $myamount = ($data['commissiondeduct'] + 0.01) + $data['amounttosend'];
-
             // Convert currency to Dollar
             $inputamount = $this->payBillCurrencyConvert("NGN", $thisuser->currencyCode, $myamount, 'utilitypurchase');
+
         }
 
 
@@ -352,7 +353,10 @@ trait ExpressPayment
                 }
             } else {
 
-
+                // dd([
+                //     'walletBalance' => $walletBalance,
+                //     'myamount'  => $myamount
+                // ]);
 
                 if ($walletBalance >= $myamount) {
 

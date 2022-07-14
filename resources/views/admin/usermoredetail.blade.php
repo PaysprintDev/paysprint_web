@@ -44,15 +44,16 @@
                                         <tr>
                                             <td class="mainText" colspan="2" align="left">
                                                 @if ($getthisuser->avatar != null)
-                                                    <a href="{{ $getthisuser->avatar }}">
-                                                        <img src="{{ $getthisuser->avatar }}"
-                                                            alt="{{ $getthisuser->avatar }}" srcset=""
+                                                    <a href="{{ str_replace('http', 'https', $getthisuser->avatar) }}">
+                                                        <img src="{{ str_replace('http', 'https', $getthisuser->avatar) }}"
+                                                            alt="{{ str_replace('http', 'https', $getthisuser->avatar) }}"
+                                                            srcset=""
                                                             style="width: 150px; height: 150px; border-radius: 100%; object-fit: contain;">
                                                     </a>
                                                 @else
                                                     <a href="#">
-                                                        <img src="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_2_w4hzub.jpg"
-                                                            alt="https://res.cloudinary.com/pilstech/image/upload/v1617797524/paysprint_asset/paysprint_jpeg_black_bk_2_w4hzub.jpg"
+                                                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
+                                                            alt="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
                                                             srcset=""
                                                             style="width: 150px; height: 150px; border-radius: 100%; object-fit: contain;">
                                                     </a>
@@ -96,7 +97,15 @@
                                         @if ($getthisuser->country == 'Nigeria')
                                             <tr>
                                                 <td>Bank Verification Number</td>
-                                                <td class="mainText">{{ $getthisuser->bvn_number }}</td>
+                                                <td class="mainText">
+
+                                                    @if ($getthisuser->bvn_number != '')
+                                                        {{ wordwrap(substr($getthisuser->bvn_number, 0, 2) . str_repeat('*', strlen($getthisuser->bvn_number) - 3) . substr($getthisuser->bvn_number, -3), 4, '*', true) }}
+                                                    @endif
+
+
+
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>Bank Name</td>
@@ -104,7 +113,14 @@
                                             </tr>
                                             <tr>
                                                 <td>Bank Account Number</td>
-                                                <td class="mainText">{{ $getthisuser->bvn_account_number }}</td>
+                                                <td class="mainText">
+
+                                                    @if ($getthisuser->bvn_account_number != '')
+                                                        {{ wordwrap(substr($getthisuser->bvn_account_number, 0, 2) . str_repeat('*', strlen($getthisuser->bvn_account_number) - 3) . substr($getthisuser->bvn_account_number, -3), 4, '*', true) }}
+                                                    @endif
+
+
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>Account Name</td>
@@ -492,7 +508,8 @@
                                                                     Limit</label><br>
                                                                 <input type="number" class="form-control"
                                                                     name="withdrawal_per_transaction"
-                                                                    id="withdrawal_per_transaction" placeholder="New Limit">
+                                                                    id="withdrawal_per_transaction"
+                                                                    placeholder="New Limit">
                                                                 <input type="hidden" name="id"
                                                                     value="{{ $getthisuser->id }}">
                                                             </div>

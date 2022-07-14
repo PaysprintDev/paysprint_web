@@ -7228,7 +7228,6 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     {
 
 
-
         if ($req->totalcharge < 0) {
             $data = [];
             $message = "Please enter a positive amount";

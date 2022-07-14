@@ -147,7 +147,7 @@
             <br>
             <br>
             <div class="col-md-12 mt-3">
-                <p class="text-center"><strong>Invite your friends and Family to start using the paysprint App today and enjoy unlimited services to send and receive money in minutes.</strong></p>
+                <p class="text-center"><strong>Invite your friends and families to sign up for free on PaySprint App. Send and receive money in minutes and for free .</strong></p>
             </div>
             <br>
             <br>

@@ -42,13 +42,13 @@ trait Xwireless{
             ]);
 
             if(env('APP_ENV') != "local"){
-        $data = $this->thisPostCurl();
+                $data = $this->thisPostCurl();
 
+                return $data;
             }
 
 
 
-        return $data;
     }
 
 

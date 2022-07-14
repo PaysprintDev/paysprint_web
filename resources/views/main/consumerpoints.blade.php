@@ -66,7 +66,7 @@
         <!-- For demo purpose -->
         <div class="row mb-4">
             <div class="col-lg-10 mx-auto text-center">
-                <h1 class="display-4">Paysprint Point</h1>
+                <h1 class="display-4">PaySprint Reward Points</h1>
             </div>
         </div> <!-- End -->
         <div class="row">
@@ -96,11 +96,9 @@
 
                                 </ul>
 
-                                <h5 align='right' class="text-success">Point Balance
-                                    {{ isset($data['mypoints']) ? $data['mypoints']->points_acquired : 0 }}</h5>
-                                <h5 align='right' class="text-success">Redeemed Point:
-                                    {{ isset($data['mypoints']) ? $data['mypoints']->current_point : 0 }}</h5>
-                                <h5 align='right' class="text-success">Total Points:
+                               
+                             
+                                <h5 align='right' class="text-success">Total Points Accumulated:
                                     <?php
 
                                     $first_number = $data['mypoints']->points_acquired;
@@ -112,6 +110,10 @@
 
                                     ?></td>
                                 </h5>
+                                <h5 align='right' class="text-success">Total Points Redeemed:
+                                    {{ isset($data['mypoints']) ? $data['mypoints']->current_point : 0 }}</h5>
+                                <h5 align='right' class="text-success">Total Points Balance
+                                    {{ isset($data['mypoints']) ? $data['mypoints']->points_acquired : 0 }}</h5>
                                 <div class="row">
                                     <div class="col-md-2">
                                         {{-- <button href="#">Claim Points</button> --}}
@@ -125,9 +127,7 @@
                                     <div class="col-md-3">
 
 
-                                        <a href="{{ route('claim history') }}" class="btn btn-success btn-block">View
-                                            Claim
-                                            History</a>
+                                        <a href="{{ route('claim history') }}" class="btn btn-success btn-block">View Redeemed Points</a>
 
 
                                     </div>

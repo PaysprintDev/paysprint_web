@@ -1036,9 +1036,12 @@
                                                             eStore</button>
 
                                                         {{-- Do this for the service page --}}
-                                                        <a href="{{ route('merchant service setup') }}"
-                                                            class="btn btn-success" style="width: 100%;">Update
-                                                            eStore</a>
+
+                                                        @if (env('APP_ENV') == 'local')
+                                                            <a href="{{ route('merchant service setup') }}"
+                                                                class="btn btn-success" style="width: 100%;">Update
+                                                                eStore</a>
+                                                        @endif
                                                     @else
                                                         <div class="row">
                                                             <div class="col-md-6">
@@ -1047,11 +1050,16 @@
                                                                     data-bs-target="#createStoreModal">Setup
                                                                     eStore (For Sale of Goods only)</button>
                                                             </div>
-                                                            <div class="col-md-6">
-                                                                <a href="{{ route('merchant service setup') }}"
-                                                                    class="btn btn-success" style="width: 100%;">Setup
-                                                                    eStore (For Service only)</a>
-                                                            </div>
+
+                                                            @if (env('APP_ENV') == 'local')
+                                                                <div class="col-md-6">
+                                                                    <a href="{{ route('merchant service setup') }}"
+                                                                        class="btn btn-success" style="width: 100%;">Setup
+                                                                        eStore (For Service only)</a>
+                                                                </div>
+                                                            @endif
+
+
                                                         </div>
                                                     @endisset
                                                     <p>
