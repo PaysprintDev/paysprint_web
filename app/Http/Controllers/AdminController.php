@@ -1506,12 +1506,8 @@ class AdminController extends Controller
 
             $data = array(
                 'users' => $this->investor_relations()
-            );
-
-
-
-
-;            return view('admin.investorpost')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'data' => $data]);
+            );;
+            return view('admin.investorpost')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'data' => $data]);
         } else {
             return redirect()->route('AdminLogin');
         }
@@ -1570,9 +1566,6 @@ class AdminController extends Controller
         } else {
             return redirect()->route('AdminLogin');
         }
-
-
-
     }
 
 
@@ -3897,20 +3890,40 @@ class AdminController extends Controller
         }
     }
 
-    public function addTowatchlist(Request $req, $id){
-            $id=$req->id;
-            $user=User::where('id', $id)->first();
-          
-            watchlist::create([
-                'user_id' => $user->id,
-                'ref_code' => $user->ref_code,
-                'name' =>$user->name,
-                'country' =>$user->country
-            ]);
+    public function addTowatchlist(Request $req, $id)
+    {
+        $id = $req->id;
+        $user = User::where('id', $id)->first();
 
-            return back()->with("msg", "<div class='alert alert-success'>User Added to Watchlist</div>");
+        watchlist::create([
+            'user_id' => $user->id,
+            'ref_code' => $user->ref_code,
+            'name' => $user->name,
+            'country' => $user->country
+        ]);
 
+        User::where('id', $user->id)->update([
+            'watchlist' => '1'
+        ]);
+
+        return back()->with("msg", "<div class='alert alert-success'>User Added to Watchlist</div>");
     }
+
+    //removefromwatchlist
+    public function removeFromWatchList(Request $req, $id)
+    {
+        $id = $req->id;
+        $user = User::where('id', $id)->first();
+
+        watchlist::where('user_id', $req->id)->delete();
+
+        User::where('id', $user->id)->update([
+            'watchlist' => '0'
+        ]);
+
+        return back()->with("msg", "<div class='alert alert-success'>User Successfully  Removed from  Watchlist</div>");
+    }
+
 
     public function allLevelTwoUsers(Request $req)
     {
@@ -17809,10 +17822,10 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
         $info = AllCountries::where('approval', 1)->get();
 
         $data = $info->map(function ($country) {
-        return collect($country->toArray())
-            ->only(['id', 'name', 'code', 'callingCode', 'currencyCode', 'currencySymbol'])
-            ->all();
-    });
+            return collect($country->toArray())
+                ->only(['id', 'name', 'code', 'callingCode', 'currencyCode', 'currencySymbol'])
+                ->all();
+        });
 
 
         return $data;
