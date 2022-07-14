@@ -99,7 +99,9 @@ Route::get('suspendedaccountlist', 'CheckSetupController@suspendedAccountList');
 Route::get('upgradedaccountlist', 'CheckSetupController@upgradedAccounts');
 
 // Statement Mail SendMail
-Route::get('mailstatement' , 'StatementMailController@useStatement');
+Route::get('mailstatement' , 'SendGridController@cronToCustomersOnCustomerStatement');
+Route::get('rewardpoint', 'SendGridController@cronToCustomersOnRewardStatement');
+Route::get('mailtocustomer','SendGridController@cronToPublicizeMerchantToConsumer');
 
 // Update BVN List
 Route::get('bvnlistupdate', 'CheckSetupController@bvnListUpdate');
