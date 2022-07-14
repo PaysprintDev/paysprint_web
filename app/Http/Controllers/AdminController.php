@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Collection;
+
 use Session;
 use App\MarkUp;
 use App\Points;
@@ -24,6 +26,10 @@ use App\HistoryReport;
 use App\ReferredUsers;
 
 use App\ReferralClaim;
+
+use App\Walletcredit;
+
+use App\watchlist;
 
 use App\Admin as Admin;
 
@@ -1502,12 +1508,8 @@ class AdminController extends Controller
 
             $data = array(
                 'users' => $this->investor_relations()
-            );
-
-
-
-
-;            return view('admin.investorpost')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'data' => $data]);
+            );;
+            return view('admin.investorpost')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'data' => $data]);
         } else {
             return redirect()->route('AdminLogin');
         }
@@ -1566,9 +1568,6 @@ class AdminController extends Controller
         } else {
             return redirect()->route('AdminLogin');
         }
-
-
-
     }
 
 
@@ -3891,6 +3890,40 @@ class AdminController extends Controller
         } else {
             return redirect()->route('AdminLogin');
         }
+    }
+
+    public function addTowatchlist(Request $req, $id)
+    {
+        $id = $req->id;
+        $user = User::where('id', $id)->first();
+
+        watchlist::create([
+            'user_id' => $user->id,
+            'ref_code' => $user->ref_code,
+            'name' => $user->name,
+            'country' => $user->country
+        ]);
+
+        User::where('id', $user->id)->update([
+            'watchlist' => '1'
+        ]);
+
+        return back()->with("msg", "<div class='alert alert-success'>User Added to Watchlist</div>");
+    }
+
+    //removefromwatchlist
+    public function removeFromWatchList(Request $req, $id)
+    {
+        $id = $req->id;
+        $user = User::where('id', $id)->first();
+
+        watchlist::where('user_id', $req->id)->delete();
+
+        User::where('id', $user->id)->update([
+            'watchlist' => '0'
+        ]);
+
+        return back()->with("msg", "<div class='alert alert-success'>User Successfully  Removed from  Watchlist</div>");
     }
 
 
@@ -12895,6 +12928,13 @@ class AdminController extends Controller
             'credit_reason' => $req->topup_reason
         ]);
 
+        Walletcredit::insert([
+            'user_id' => $req->userid,
+            'wallet_credit' => $req->topup_credit,
+            'reason' => $req->topup_reason,
+        ]);
+
+
         // Send Mail...
 
 
@@ -12911,7 +12951,7 @@ class AdminController extends Controller
         $this->message = $message;
 
 
-        $this->sendEmail($this->to, "Refund Request");
+        $this->sendEmail($this->to, "Reward Credit");
         $this->createNotification($user->ref_code, $message);
         $activity = 'Wallet credit of ' . $user->currencyCode . '' . $req->topup_credit . 'in wallet for ' . $reason;
         $credit = $req->topup_credit;
@@ -14668,7 +14708,7 @@ class AdminController extends Controller
 
                     // Check if account is flagged or pass security level
 
-                    if ($getMerchant->flagged == 1) {
+                    if (isset($getMerchant->flagged) && $getMerchant->flagged == 1) {
 
                         $resData = ['res' => 'Hello ' . $adminCheck[0]['firstname'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact', 'message' => 'error'];
 
@@ -17785,6 +17825,21 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
         return $data;
     }
 
+    public function getActiveCountriesNeededDetails()
+    {
+
+        $info = AllCountries::where('approval', 1)->get();
+
+        $data = $info->map(function ($country) {
+            return collect($country->toArray())
+                ->only(['id', 'name', 'code', 'callingCode', 'currencyCode', 'currencySymbol'])
+                ->all();
+        });
+
+
+        return $data;
+    }
+
     public function getInvoiceCommission()
     {
         $data = InvoiceCommission::orderBy('created_at', 'DESC')->get();
@@ -18158,6 +18213,15 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     public function getMyClientInfo($ref_code)
     {
         $data = ClientInfo::where('user_id', $ref_code)->first();
+
+        return $data;
+    }
+
+    // Get Transaction Charge fee
+
+    public function transactionChargeFees($country, $structure = null, $method)
+    {
+        $data = TransactionCost::select('fixed as fixedAmount', 'variable as chargePercentage', 'method', 'country')->where('country', $country)->where('method', $method)->where('structure', $structure)->first();
 
         return $data;
     }

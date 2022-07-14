@@ -29,6 +29,7 @@
             </ol>
         </section>
 
+                {!! session('msg') !!}
         <!-- Main content -->
         <section class="content">
             <div class="row">
@@ -82,6 +83,9 @@
                                         @if (count($allusersdata) > 0)
                                             <?php $i = 1; ?>
                                             @foreach ($allusersdata as $datainfo)
+                                            {{-- @php
+                                                print_r($datainfo);
+                                            @endphp --}}
                                                 <tr>
                                                     <td>{{ $i++ }}</td>
 
@@ -304,9 +308,16 @@
                                                                 class="spinclose{{ $datainfo->id }} disp-0"
                                                                 src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
                                                                 style="width: 20px; height: 20px;"></a>
-
-
-
+                                                            <!-- watchlist -->
+                                                           @if ($datainfo->watchlist === 0)
+                                                               <a href="{{ route('addtowatchlist',$datainfo->id) }}"><i
+                                                            class="far fa-eye text-primary" style="font-size: 20px;"
+                                                            title="Add to Watchlist"></i></strong></a>
+                                                           @else
+                                                               <a href="{{ route('removefromwatchlist',$datainfo->id) }}"><i
+                                                            class="far fa-eye-slash text-primary" style="font-size: 20px;"
+                                                            title="Remove from Watchlist"></i></strong></a>
+                                                           @endif
                                                     </td>
 
 
@@ -393,6 +404,7 @@
                                                                 class="spinvery{{ $data->id }} disp-0"
                                                                 src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
                                                                 style="width: 20px; height: 20px;"></a>
+                                               
                                                         @if ($data->approval == 1)
                                                             <a href="javascript:void()"
                                                                 onclick="approveaccount('{{ $data->id }}')"

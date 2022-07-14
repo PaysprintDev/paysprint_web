@@ -31,7 +31,7 @@ class SendGridController extends Controller
                 $receiver = $user->email;
                 $data = [
                     "name"  => $username[0],
-                    "message" => "<p>We are glad to inform you of your PaySprint <strong>VIRTUAL ACCOUNT NUMBER!</strong>. The Virtual Account provides you additional channel to Top-up PaySprint Wallet directly from your Bank Account without bank debit card.</p><p>Below is your account details: </p><hr/><p><strong>ACCOUNT NUMBER: {$user->virtual_account}</strong></p><p><strong>BANK NAME: WEMA BANK</strong></p><p><strong>ACCOUNT NAME: {$user->name}</strong></p><br><p>Simply add the details above to your bank account as Beneficiaries and you can Top up Wallet with ease.</p><br><p>Thanks for choosing PaySprint.</p>",
+                    "message" => "<p>We are glad to inform you of your PaySprint <strong>BANK ACCOUNT NUMBER!</strong>. The PaySprint Bank Account provides you with additional channel to Top-up PaySprint Wallet directly from your existing Bank Account without a debit or credit card.</p><p>Below is your PaySprint Bank Account details: </p><hr/><p><strong>ACCOUNT NUMBER: {$user->virtual_account}</strong></p><p><strong>BANK NAME: WEMA BANK</strong></p><p><strong>ACCOUNT NAME: {$user->name}</strong></p><br><p>Simply add the details above as Beneficiary to your existing bank account and start to Top up your PaySprint Wallet with ease.</p><br><p>Thanks for choosing PaySprint.</p>",
                 ];
 
                 $template_id = config('constants.sendgrid.virtual_account');

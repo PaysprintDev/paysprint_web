@@ -53,7 +53,13 @@
     <!-- small box -->
     <div class="small-box bg-blue">
         <div class="inner">
-            <h3>@if ($override = \App\User::where([['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->count()) {{ $override }}  @else 0 @endif</h3>
+            <h3>
+                @if ($override = \App\User::where([['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->count())
+                    {{ $override }}
+                @else
+                    0
+                @endif
+            </h3>
 
             <p>IDV Failed</p>
 
@@ -62,6 +68,51 @@
             <i class="ion ion-person-add"></i>
         </div>
         <a href="{{ route('override users by country') }}" class="small-box-footer">View all <i
+                class="fa fa-arrow-circle-right"></i></a>
+    </div>
+</div>
+
+<div class="col-lg-3 col-xs-6">
+    <!-- small box -->
+    <div class="small-box bg-orange">
+        <div class="inner">
+            <h3>
+                @if ($matchedUsers = \App\User::where([['accountLevel', '>=', 2], ['approval', '>=', 1], ['account_check', '=', 0]])->count())
+                    {{ $matchedUsers }}
+                @else
+                    0
+                @endif
+            </h3>
+
+            <p>IDV Passed - (Set restriction)</p>
+        </div>
+        <div class="icon">
+            <i class="ion ion-person-add"></i>
+        </div>
+        <a href="{{ route('matched users by country') }}" class="small-box-footer">View all <i
+                class="fa fa-arrow-circle-right"></i></a>
+    </div>
+</div>
+
+<div class="col-lg-3 col-xs-6">
+    <!-- small box -->
+    <div class="small-box bg-purple">
+        <div class="inner">
+            {{-- <h3>@if ($approvedpendingusers = \App\User::where('accountLevel', '<=', 3)->where('approval', '<=', 2)->where('account_check', '<=', 1)->count()) {{ $approvedpendingusers }} @else 0 @endif</h3> --}}
+            <h3>
+                @if ($approvedpendingusers = \App\User::where('account_check', 1)->count())
+                    {{ $approvedpendingusers }}
+                @else
+                    0
+                @endif
+            </h3>
+
+            <p>IDV Completed - Pending</p>
+        </div>
+        <div class="icon">
+            <i class="ion ion-person-add"></i>
+        </div>
+        <a href="{{ route('approved pending users by country') }}" class="small-box-footer">View all <i
                 class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>

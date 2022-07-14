@@ -9,7 +9,16 @@
                 <a href="{{ route('profile') }}">
                     <h6 class="mt-3 f-14 f-w-600">{{ Auth::user()->businessname }}</h6>
                 </a>
-                <p class="mb-0 font-roboto">{{ 'Account Number: ' . Auth::user()->ref_code }}</p>
+                <br />
+                <p class="mb-0 font-roboto">{{ 'PS Account Number: ' . Auth::user()->ref_code }}</p>
+
+                @if (Auth::user()->country == 'Nigeria' && Auth::user()->virtual_account != null)
+                    <p class="card card-body mb-0 font-roboto" style="background: antiquewhite;
+    font-weight: 600;">
+                        {{ 'Bank Account Number: ' . Auth::user()->virtual_account }}
+                        <br>{{ 'Bank Name: WEMA BANK' }}
+                    </p>
+                @endif
 
                 <ul>
                     <li>
@@ -17,7 +26,9 @@
                         <p>Logins</p>
                     </li>
                     <li>
-                        <span>{!! Auth::user()->bvn_verification > 0 ? '<img src="https://img.icons8.com/external-tal-revivo-green-tal-revivo/20/000000/external-verification-tick-mark-for-digital-certification-document-basic-green-tal-revivo.png"/>' : '<img src="https://img.icons8.com/fluency/20/000000/cancel.png"/>' !!}</span>
+                        <span>{!! Auth::user()->bvn_verification > 0
+                            ? '<img src="https://img.icons8.com/external-tal-revivo-green-tal-revivo/20/000000/external-verification-tick-mark-for-digital-certification-document-basic-green-tal-revivo.png"/>'
+                            : '<img src="https://img.icons8.com/fluency/20/000000/cancel.png"/>' !!}</span>
                         <p>&nbsp;</p>
                     </li>
                     <li>
@@ -122,16 +133,14 @@
 
                                     <li class="disp-0">
                                         <a class="sub-title " href="{{ route('create single invoice') }}">
-                                            Single<span class="sub-arrow"><i
-                                                    class="fa fa-chevron-right"></i></span>
+                                            Single<span class="sub-arrow"><i class="fa fa-chevron-right"></i></span>
                                         </a>
                                         <ul class="nav-sub-childmenu submenu-content">
                                             <li><a href="{{ route('create single invoice') }}"
                                                     class="">Customer
                                                     on PS
                                                 </a></li>
-                                            <li><a href="{{ route('create link invoice') }}"
-                                                    class="">Customer
+                                            <li><a href="{{ route('create link invoice') }}" class="">Customer
                                                     not on PS</a>
                                             </li>
                                         </ul>
@@ -300,8 +309,7 @@
                                             Invoice</a></li>
                                     {{-- <li><a href="{{ route('pending invoice') }}" class="">Unpaid
                                             Invoice</a></li> --}}
-                                    <li><a href="{{ route('customer balance report') }}"
-                                            class="">Customer
+                                    <li><a href="{{ route('customer balance report') }}" class="">Customer
                                             Balance Report</a></li>
                                     {{-- <li><a href="{{ route('balance report') }}" class="">Customer
                                             Balance Report</a></li> --}}

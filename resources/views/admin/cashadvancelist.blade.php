@@ -58,17 +58,15 @@
                                         <th>Email</th>
                                         <th>Telephone</th>
                                         <th>Address</th>
+                                        <th>Account Type</th>
+                                        <th>Country</th>
                                     </tr>
                                 </thead>
                                 <tbody>
 
                                     @if (count($data['cashadvance']) > 0)
-
                                         @foreach ($data['cashadvance'] as $user)
-
                                             @if ($allusersdata = \App\User::where('id', $user->merchantId)->first())
-
-
                                                 <?php $i = 1; ?>
                                                 <tr>
                                                     <td>{{ $i++ }}</td>
@@ -89,17 +87,25 @@
                                                     <td>{{ $allusersdata->telephone }}</td>
                                                     <td>{{ $allusersdata->address }}</td>
 
+                                                    @if ($userInfo = \App\User::where('email', $allusersdata->email)->first())
+                                                        <td>
+                                                            {{ $userInfo->accountType }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $userInfo->country }}
+                                                        </td>
+                                                    @else
+                                                        <td>-</td>
+                                                        <td>-</td>
+                                                    @endif
+
 
                                                 </tr>
-
-
                                             @endif
-
                                         @endforeach
-
                                     @else
                                         <tr>
-                                            <td colspan="8" align="center">No record available</td>
+                                            <td colspan="10" align="center">No record available</td>
                                         </tr>
                                     @endif
 

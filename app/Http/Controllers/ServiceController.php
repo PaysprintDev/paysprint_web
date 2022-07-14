@@ -83,15 +83,20 @@ class ServiceController extends Controller
     }
 
 
-
-
-
-
     public function getPaymentGateway($country)
     {
 
         $data = AllCountries::where('name', $country)->first();
 
         return $data;
+    }
+
+
+
+
+    // API methods for Shop setup
+    public function setupService(Request $req)
+    {
+        dd($req->all());
     }
 }

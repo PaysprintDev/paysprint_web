@@ -13,7 +13,7 @@ use App\User as User;
 use App\AllCountries;
 
 use App\Mail\sendEmail;
-use Razorpay\Api\Api;
+
 
 trait dusupay{
 
@@ -44,13 +44,14 @@ trait dusupay{
     }
 
 
+
     public function getProviders($code,$currencyCode){
 
         $this->Dusuurl= $this->DusuBaseUrl."/payment-options/collection/card/".$code."?api_key=PUBK-2022ea52d25cf3defae72e56b0d88b200";
 
 
         $this->DusuCurlPost=json_encode([
-            'api_key' => 'PUBK-2022ea52d25cf3defae72e56b0d88b200',
+            'api_key' => env('DUSU_PAY_DEV_KEY_ID'),
             'transaction_type' => 'COLLECTION',
             'method' => 'CARD',
             'country' => $currencyCode
@@ -60,6 +61,22 @@ trait dusupay{
 
         return $data;
 
+    }
+
+
+
+    public function getBankCode($code){
+        $this->Dusuurl= $this->DusuBaseUrl."/payment-options/payout/bank/".$code."?api_key=PUBK-2022ea52d25cf3defae72e56b0d88b200";
+        
+        $this->DusuCurlPost=json_encode([
+            'api_key' => env('DUSU_PAY_DEV_KEY_ID'),
+            'method' => 'PAYOUT',
+            'country_code' => $code
+        ]);
+
+        $data=$this->dusuGetBankCode();
+
+        return $data;
     }
 
 
@@ -91,6 +108,7 @@ trait dusupay{
     }
 
 
+
     public function dusuGet()
     {
 
@@ -107,7 +125,8 @@ trait dusupay{
             CURLOPT_CUSTOMREQUEST => 'GET',
             CURLOPT_POSTFIELDS => $this->DusuCurlPost,
             CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json'
+                'Content-Type: application/json',
+                'secret-key:SECK-2022f6da520945cbf9693f7ff0817d5d3',
             ),
         ));
 
@@ -115,6 +134,37 @@ trait dusupay{
 
         curl_close($curl);
         return json_decode($response);
+    }
+
+
+
+
+    public function dusuGetBankCode()
+    {
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $this->Dusuurl,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_POSTFIELDS =>$this->DusuCurlPost,
+             CURLOPT_HTTPHEADER => array(
+              'secret-key: SECK-2022f6da520945cbf9693f7ff0817d5d3',
+              'Content-Type: application/json'
+  ),
+));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        return json_decode($response);
+
     }
 
 
