@@ -6,6 +6,7 @@ use App\User;
 use App\ClientInfo;
 use App\ReferralClaim;
 use App\Points;
+use App\Walletcredit;
 
 use App\Traits\SendgridMail;
 use Illuminate\Http\Request;
@@ -129,21 +130,32 @@ class SendGridController extends Controller
             $thisuser=User::get();
     
          if (count($thisuser) > 0) {
+            
+            $setCreditClaimed = 0;
+            $setPointAquired = 0;
+            $setCurrentBalance=0;
 
             foreach ($thisuser as $user) {
                 $username = explode(" ", $user->name);
                 $points=Points::where('user_id', $user->id)->first();
-                $aquired_point = $points->points_acquired;
-                $redeemed_point = $points->current_point;
-                $credit_total=
-
+                if(isset($points)){
+                    $setPointAquired = $points->points_acquired;
+                    $setCurrentBalance = $points->current_point;
+                     
+                }
+                $aquired_point = $setPointAquired;
+              
+                $redeemed_point = $setCurrentBalance;
                 $total_point = $aquired_point + $redeemed_point;
-              
-              
+               
+                $credit_total=Walletcredit::where('user_id', $user->id)->first();
+                if(isset($credit_total)){
+                    $setCreditClaimed = $credit_total->wallet_credit;
+                }
+                $credit_balance = $setCreditClaimed;
 
-                
-
-                $receiver = $user->email;
+               
+               $receiver = $user->email;
                
                 $date=date('d/M/Y', strtotime($user->created_at));
 
@@ -153,21 +165,21 @@ class SendGridController extends Controller
                        <p>Date Joined : $date  </p><hr/><br>
                     <table>
                     <tr>
-                      <td>Total Points Accumulated - </td>
+                      <td>Total Reward Points Earned - </td>
                       <td> $aquired_point</td>
                     </tr>
                     <tr>
-                      <td>Total Points Redeemed - </td>
+                      <td>Total Reward Points Redeemed - </td>
                       <td>$redeemed_point</td>
                     </tr>
                     <tr>
-                      <td>Total Points Balance - </td>
+                      <td>Total Reward Points Balance - </td>
                       <td>$total_point</td>
                     </tr>
                     <br>
                      <tr>
-                       <td>Total Reward Credit</td>
-                       <td>$redeemed_point</td>
+                       <td>Total Wallet Credit Received</td>
+                       <td>$credit_balance</td>
                       </tr>
                    
                    
