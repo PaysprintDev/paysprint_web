@@ -426,5 +426,7 @@ Route::prefix('/v1')->group(function () {
 
     Route::get('sync/countries',  ['uses' => 'ThirdPartyHandshakeController@availableCountriesonPS']);
 
+    Route::get('/transaction-fee',  ['uses' => 'ThirdPartyHandshakeController@transactionFeeCharge']);
+
 
 });

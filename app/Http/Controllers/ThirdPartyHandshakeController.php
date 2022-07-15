@@ -415,4 +415,24 @@ class ThirdPartyHandshakeController extends Controller
 
         return $this->returnJSON($resData, $status);
     }
+
+    public function transactionFeeCharge(Request $req)
+    {
+        try {
+            $record = new AdminController();
+
+            $data = $record->transactionChargeFees($req->country, 'Add Funds/Money', $req->method);
+            $message = 'Success';
+            $status = 200;
+
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
 }
