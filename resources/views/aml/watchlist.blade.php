@@ -49,6 +49,7 @@
                 <tr>
                   <th>S/N</th>
                   <th>Country</th>
+                  <th>Total Count</th>
                   <th>Action</th>
                 </tr>
                 </thead>
@@ -63,6 +64,12 @@
                                   <td>{{ $i++ }}</td>
 
                                   <td>{{ $data->country }}</td>
+
+                                  <td>
+                                      @if($total=\App\watchlist::where('country',$data->country)->count())
+                                          {{ $total }}
+                                      @endif
+                                  </td>
 
                                       <td>
                                           <a href="{{ route('getwatchlist', 'country='.$data->country) }}" class="btn btn-primary" type="button">View details</a>
