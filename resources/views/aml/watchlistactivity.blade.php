@@ -11,11 +11,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         Watchlist
+         Watchlist Activity
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">View Watch List</li>
+        <li class="active">View Watch List Activities</li>
       </ol>
     </section>
 
@@ -49,30 +49,23 @@
                 <tr>
                   <th>S/N</th>
                   <th>Account Number</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                 <th>Phone-Number</th>
-                 <th>Wallet Balance</th>
-                 <th>Action</th>
+                  <th>Period</th>
+                  <th>Activity</th>
+                  <th>platform</th>
                 </tr>
                 </thead>
                 <tbody>
                   
-                    @if (count($data['watchlist']) > 0)
+                    @if (count($data['activities']) > 0)
                     <?php $i = 1;?>
-                        @foreach ($data['watchlist'] as $item)
-                        @if($user = \App\User::where('id', $item->user_id)->first())
-                        
+                        @foreach ($data['activities'] as $activity)
                             <tr>
                                   <td>{{ $i++ }}</td>
-                                  <td>{{$item->ref_code}}</td>
-                                  <td>{{$user->name}}</td>
-                                  <td>{{$user->email}}</td>
-                                  <td>{{$user->telephone}}</td>
-                                  <td>{{ $user->currencyCode.number_format($user->wallet_balance, 2)}}</td>
-                                  <td><a class="btn btn-primary" href="{{route('viewwatchlist', 'refcode='.$item->ref_code)}}">View Activities</a></td>
+                                  <td>{{$activity->ref_code}}</td>
+                                  <td>{{$activity->period}}</td>
+                                  <td>{{$activity->activity}}</td>
+                                  <td>{{$activity->platform}}</td>
                               </tr>
-                              @endif
                         @endforeach
                        
                     @else
