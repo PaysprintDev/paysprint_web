@@ -49,7 +49,6 @@
         .disp-0 {
             display: none !important;
         }
-
     </style>
 
 </head>
@@ -109,7 +108,7 @@
 
 
 
-                                        @if (count($data['getCard']) > 0)
+                                        @if (count($data['getCard']) > 0 || count($data['getBank']) > 0)
                                             <div class="form-group"> <label for="card_id">
                                                     <h6>Select Card Type/ Bank Account</h6>
                                                 </label>
@@ -157,8 +156,8 @@
                                                         <label for="card_number">Card Number</label>
 
                                                         <div class="input-group"> <input type="text"
-                                                                name="card_number" id="card_number"
-                                                                class="form-control" maxlength="16" required>
+                                                                name="card_number" id="card_number" class="form-control"
+                                                                maxlength="16" required>
                                                             <div class="input-group-append">
                                                                 <span class="input-group-text text-muted"> <i
                                                                         class="fas fa-money-check mx-1"></i> <i
@@ -200,8 +199,8 @@
                                                                 <label for="year">Year</label>
 
                                                                 <div class="input-group">
-                                                                    <select name="year" id="year" class="form-control"
-                                                                        required>
+                                                                    <select name="year" id="year"
+                                                                        class="form-control" required>
                                                                         @for ($i = date('y'); $i <= date('y') + 10; $i++)
                                                                             <option value="{{ $i }}">
                                                                                 {{ '20' . $i }}</option>
@@ -219,8 +218,9 @@
                                                                         digit at the back of your card</small></label>
 
                                                                 <div class="input-group">
-                                                                    <input type="password" name="cvv" id="cvv"
-                                                                        class="form-control" maxlength="3" required>
+                                                                    <input type="password" name="cvv"
+                                                                        id="cvv" class="form-control"
+                                                                        maxlength="3" required>
                                                                     <div class="input-group-append">
                                                                         <span class="input-group-text text-muted"> <i
                                                                                 class="fas fa-closed-captioning"></i>
@@ -258,8 +258,8 @@
                                                 <div class="input-group-append"> <span
                                                         class="input-group-text text-muted">
                                                         {{ $data['currencyCode']->currencySymbol }} </span> </div>
-                                                <input type="number" min="0.00" max="10000.00" step="0.01" name="amount"
-                                                    id="amount" class="form-control" required>
+                                                <input type="number" min="0.00" max="10000.00" step="0.01"
+                                                    name="amount" id="amount" class="form-control" required>
 
                                             </div>
                                         </div>
@@ -398,8 +398,8 @@
                                             id="curCurrency" value="{{ $data['currencyCode']->currencyCode }}"
                                             readonly>
 
-                                        <input type="hidden" name="mode" class="form-control" id="mode" value="live"
-                                            readonly>
+                                        <input type="hidden" name="mode" class="form-control" id="mode"
+                                            value="live" readonly>
 
                                         <div class="card-footer">
 
@@ -437,7 +437,7 @@
 
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"
-                integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
+            integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
         </script>
 
         <script src="{{ asset('pace/pace.min.js') }}"></script>
@@ -546,6 +546,7 @@
                 } else {
                     structure = $("#card_type").val();
                 }
+
 
 
 

@@ -5437,6 +5437,7 @@ class HomeController extends Controller
 
 
 
+
             if (isset($data) == true) {
 
                 if ($thisuser->country == "Nigeria" && $req->amount <= 2500) {
@@ -5529,14 +5530,16 @@ class HomeController extends Controller
             $subminType = "Merchant Monthly Subscription";
         }
 
-        $minimumBal = TransactionCost::where('structure', $subminType)->where('country', $thisuser->country)->first();
+        // Change to Classic plan...
+        // $minimumBal = TransactionCost::where('structure', $subminType)->where('country', $thisuser->country)->first();
 
-        if (isset($minimumBal)) {
-            $available = $minimumBal->fixed;
-        } else {
-            $available = 5;
-        }
 
+        // if (isset($minimumBal)) {
+        //     $available = $minimumBal->fixed;
+        // } else {
+        //     $available = 5;
+        // }
+        $available = 0;
         // Check if Wallet is chosen
         $walletCheck = "";
 
@@ -5561,7 +5564,6 @@ class HomeController extends Controller
 
         $resData = ['data' => $amountReceive, 'message' => 'success', 'state' => $state, 'collection' => $collection, 'walletCheck' => $walletCheck, ''];
 
-        // dd($resData);
 
         return $this->returnJSON($resData, 200);
     }
