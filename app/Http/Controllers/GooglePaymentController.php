@@ -134,6 +134,7 @@ class GooglePaymentController extends Controller
     {
 
 
+
         if ($req->amount < 0) {
             $resData = ['res' => 'Please enter a positive amount to send', 'message' => 'error', 'title' => 'Oops!'];
 
@@ -165,6 +166,8 @@ class GooglePaymentController extends Controller
                     $checking = $this->checkUsersPassAccount($user->id);
 
 
+
+
                     if (in_array("send money", $checking['access'])) {
                         // $client = ClientInfo::where('user_id', $req->user_id)->get();
 
@@ -172,6 +175,8 @@ class GooglePaymentController extends Controller
 
 
                         if ($req->amount > $withdrawLimit['withdrawal_per_day']) {
+
+
 
                             $message = "Transaction limit per day is " . $user->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try a lesser amount";
 
@@ -296,6 +301,8 @@ class GooglePaymentController extends Controller
 
 
 
+
+
                                             if ($req->payment_method == "Wallet") {
 
                                                 $wallet_balance = $user->wallet_balance - $req->totalcharge;
@@ -308,6 +315,9 @@ class GooglePaymentController extends Controller
                                                 $status = "Delivered";
                                                 $action = "Wallet debit";
                                                 $requestReceive = 2;
+
+
+
                                             } else {
 
                                                 if ($req->localcurrency != $req->currency) {
@@ -355,6 +365,9 @@ class GooglePaymentController extends Controller
 
 
                                             $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $req->user_id, 'user_id' => $userID, 'purpose' => $service, 'amount' => $req->localcurrency . ' ' . $req->amount, 'withdraws' => $req->localcurrency . ' ' . $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $dataInfo, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission, 'amountindollars' => $req->currency . ' ' . $req->conversionamount, 'request_receive' => $requestReceive]);
+
+
+
 
                                             if ($insertPay == true) {
 
@@ -459,6 +472,9 @@ class GooglePaymentController extends Controller
                                                 }
 
 
+
+
+
                                                 $this->createNotification($user->ref_code, $sendMsg);
 
                                                 $this->createNotification($client->ref_code, $recMsg);
@@ -503,6 +519,9 @@ class GooglePaymentController extends Controller
                                                 $monerisactivity = $sendMsg;
 
                                                 $this->keepRecord($reference_code, "WALLET APPROVED", $monerisactivity, "PaySprint", $user->country);
+
+
+                                            // dd($monerisactivity);
 
 
                                                 try {
