@@ -18208,6 +18208,15 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
         return $data;
     }
 
+    // Get Transaction Charge fee
+
+    public function transactionChargeFees($country, $structure = null, $method)
+    {
+        $data = TransactionCost::select('fixed as fixedAmount', 'variable as chargePercentage', 'method', 'country')->where('country', $country)->where('method', $method)->where('structure', $structure)->first();
+
+        return $data;
+    }
+
 
 
     public function sendEmail($objDemoa, $purpose)
