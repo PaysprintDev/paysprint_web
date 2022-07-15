@@ -226,6 +226,8 @@ trait ExpressPayment
             $checks = $this->checkAccount($postRequest, $bearerToken);
 
 
+
+
             if ($checks == true) {
                 $this->Base_Url = env('EXPRESS_PAY_ENDPOINT_URL') . '/process-transaction';
                 $transaction = [];
@@ -249,7 +251,6 @@ trait ExpressPayment
                         ];
                     }
                 }
-
 
 
                 $this->curlPost = json_encode([
@@ -353,12 +354,9 @@ trait ExpressPayment
                 }
             } else {
 
-                // dd([
-                //     'walletBalance' => $walletBalance,
-                //     'myamount'  => $myamount
-                // ]);
 
                 if ($walletBalance >= $myamount) {
+
 
 
                     if ($data['fieldName'] != null) {
@@ -371,6 +369,8 @@ trait ExpressPayment
                             } else {
                                 $response = false;
                             }
+
+
                         }
 
                         // For DSTV and GOTV
@@ -617,7 +617,7 @@ trait ExpressPayment
 
 
             $actualRate = $result->quotes->$currency * $convertLocal;
-                $convRate = $actualRate * 95/100;
+                // $convRate = $actualRate * 95/100;
 
 
                 $this->calculateBufferedTransaction($actualRate, $convRate, $route);
