@@ -27,6 +27,8 @@ use App\ReferredUsers;
 
 use App\ReferralClaim;
 
+use App\Walletcredit;
+
 use App\watchlist;
 
 use App\Admin as Admin;
@@ -12926,6 +12928,13 @@ class AdminController extends Controller
             'credit_reason' => $req->topup_reason
         ]);
 
+        Walletcredit::insert([
+            'user_id' => $req->userid,
+            'wallet_credit' => $req->topup_credit,
+            'reason' => $req->topup_reason,
+        ]);
+
+
         // Send Mail...
 
 
@@ -12942,7 +12951,7 @@ class AdminController extends Controller
         $this->message = $message;
 
 
-        $this->sendEmail($this->to, "Refund Request");
+        $this->sendEmail($this->to, "Reward Credit");
         $this->createNotification($user->ref_code, $message);
         $activity = 'Wallet credit of ' . $user->currencyCode . '' . $req->topup_credit . 'in wallet for ' . $reason;
         $credit = $req->topup_credit;
