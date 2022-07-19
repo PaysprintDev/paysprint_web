@@ -502,6 +502,8 @@
                                                  class="fa fa-circle-o text-red"></i>Imported List Report</a></li>
                                      <li title="prepaid Card"><a href="{{ route('referral report') }}"><i
                                                  class="fa fa-circle-o text-red"></i>Referral Reports</a></li>
+                                    <li title="prepaid Card"><a href="{{ route('promo date')}}"><i
+                                                    class="fa fa-circle-o text-red"></i>Promo Date</a></li>
                                  </ul>
                              </li>
                          @endif
