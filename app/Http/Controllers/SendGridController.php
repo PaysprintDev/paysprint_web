@@ -128,6 +128,7 @@ class SendGridController extends Controller
         try {
 
             $thisuser=User::get();
+         
     
          if (count($thisuser) > 0) {
             
@@ -156,6 +157,8 @@ class SendGridController extends Controller
 
                
                $receiver = $user->email;
+           
+               
                
                 $date=date('d/M/Y', strtotime($user->created_at));
 
@@ -203,57 +206,125 @@ class SendGridController extends Controller
 
     // publicize merchant to customer mail
 
-    public function cronToPublicizeMerchantToConsumer(){
-        try {
-         $getClient = ClientInfo::where('description', '!=', NULL)->get();
-         $name = $getClient->business_name;
-         $address = $getClient->address;
-         $telephone = $getClient->telephone;
-         $email = $getClient->email;
-         $description = $getClient->description;
-         $industry = $getClient->industry;
+    public function cronToPublicizeMerchantToConsumers(){
 
+       
+        try {
+         
+            
+         $getClient = ClientInfo::where('description', '!=', NULL)->take(5)->get();
+        
          if(count($getClient) > 0){
 
             foreach($getClient as $merchants){
                 // Get Users in the country...
+              
+
+                $name = $merchants->business_name;
+                $address = $merchants->address;
+                $telephone = $merchants->telephone;
+                $email = $merchants->email;
+                $description = $merchants->description;
+                $industry = $merchants->industry;
+
+
+                $data = [
+                    "name"  => $name,
+                    "address" => $address,
+                    "telephone" => $telephone,
+                    "email" => $email,
+                    "description" => $description,
+                    "industry" => $industry
+                ];
 
                 $getUsers = User::where('country', $merchants->country)->get();
-                
-                for($i = 0; $i < count($getUsers); $i++){
-                    // echo $getUsers[$i]->name.' | '.$getUsers[$i]->country.' | '.$getUsers[$i]->email."<hr>";
-
-                            // $receiver = $user->email;
-                        $receiver = "olasunkanmimunirat@gmail.com";
-
-                        $data = [
-                            "name"  => "$name",
-                            "address" => "$address",
-                            "telephone" => "$telephone",
-                            "email" => "$email",
-                            "description" => "$description",
-                            "industry" => "$industry",
-                        ];
-
-                        $template_id = config('constants.sendgrid.publicize_merchant');
-
-                        $response = $this->sendGridDynamicMail($receiver, $data, $template_id);
-                                // dd($response);
-                        echo $response;
-
-                }
 
 
+                // foreach($getUsers as $user){
 
+                    
+
+                    $receiver = "olasunkanmimunirat@gmail.com";
+                       
+
+                    $template_id = config('constants.sendgrid.publicize_merchant');
+
+                    $response = $this->sendGridDynamicMail($receiver, $data, $template_id);
+                            // dd($response);
+                    echo $response;
+
+
+                // }
             }
+
+        
 
         }
             
         } catch (\Throwable $th) {
-            //throw $th;
+            throw $th;
         }
     }
 
+
+    // publicize merchant to customer mail
+
+    public function cronToPublicizeMerchantToConsumer(){
+
+        $data = [];
+
+        $allusers= User::take(5)->get();
+
+           if(count($allusers) > 0){
+
+            foreach( $allusers as $users){
+
+                $usercountry= $users->country;
+                
+                $merchant= ClientInfo::where('description', '!=', NULL)->where('country', $usercountry)->take(4)->get();
+
+                foreach( $merchant as $merchants){
+
+                    $name = $merchants->business_name;
+                    $address = $merchants->address;
+                    $telephone = $merchants->telephone;
+                    $email = $merchants->email;
+                    $description = $merchants->description;
+                    $industry = $merchants->industry;
+    
+    
+                    $respData = [
+                        "name"  => $name,
+                        "address" => $address,
+                        "telephone" => $telephone,
+                        "email" => $email,
+                        "description" => $description,
+                        "industry" => $industry
+                    ];
+
+
+                    $data []= $respData;
+                }
+
+
+
+
+                $receiver = "olasunkanmimunirat@gmail.com";
+                       
+    
+                    $template_id = config('constants.sendgrid.publicize_merchant');
+    
+                    $response = $this->sendGridDynamicMail($receiver, (object)$data, $template_id);
+                            dd($response);
+                    echo $response;
+            }
+            
+
+           }
+
+       
+        
+    }
 
 
 
