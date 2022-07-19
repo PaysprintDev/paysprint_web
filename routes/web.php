@@ -194,6 +194,7 @@ Route::get('/clear', function () {
 
 
 Route::get('/', ['uses' => 'HomeController@homePage', 'as' => 'home']);
+Route::get('/userjourney', ['uses' => 'HomeController@userJourney', 'as' => 'user journey']);
 Route::get('/estore', ['uses' => 'HomeController@estores', 'as' => 'paysprint estore']);
 
 Route::get('/merchant-home', ['uses' => 'HomeController@merchantIndex', 'as' => 'merchant home']);

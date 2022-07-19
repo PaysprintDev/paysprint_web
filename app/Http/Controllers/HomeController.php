@@ -221,27 +221,27 @@ class HomeController extends Controller
     }
 
 
-    public function estores(){
+    public function estores()
+    {
 
-        if(Auth::check() == true){
+        if (Auth::check() == true) {
             $this->page = 'e-Store';
             $this->name = Auth::user()->name;
             $this->email = Auth::user()->email;
-        }
-        else{
+        } else {
             $this->page = 'e-Store';
             $this->name = '';
             $this->email = '';
         }
 
 
-            $data = [
-                'activeStores' => $this->activeStores(),
-            ];
+        $data = [
+            'activeStores' => $this->activeStores(),
+        ];
 
 
 
-             return view('main.estores')->with(['pages' => 'e-Store', 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+        return view('main.estores')->with(['pages' => 'e-Store', 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
     public function merchantIndex()
@@ -803,55 +803,50 @@ class HomeController extends Controller
                 // International Transaction
                 $merchant = User::where('ref_code', $invDetails[0]->uploaded_by)->first();
 
-                if(isset($merchant)){
+                if (isset($merchant)) {
 
                     if ($invDetails[0]->remaining_balance > 0) {
-                    if ($merchant->country != base64_decode($country)) {
-                        $dataInfo = $this->convertCurrencyRate($getCurrencyCode->currencyCode, $merchant->currencyCode, $invDetails[0]->remaining_balance);
-                        $dataTot = $this->convertCurrencyRate($getCurrencyCode->currencyCode, $merchant->currencyCode, $invDetails[0]->total_amount);
+                        if ($merchant->country != base64_decode($country)) {
+                            $dataInfo = $this->convertCurrencyRate($getCurrencyCode->currencyCode, $merchant->currencyCode, $invDetails[0]->remaining_balance);
+                            $dataTot = $this->convertCurrencyRate($getCurrencyCode->currencyCode, $merchant->currencyCode, $invDetails[0]->total_amount);
 
-                        $totalInvoice = $dataInfo;
-                        $totalAmt = $dataTot;
+                            $totalInvoice = $dataInfo;
+                            $totalAmt = $dataTot;
+                        } else {
+                            $totalInvoice = $invDetails[0]->remaining_balance;
+                            $totalAmt = $invDetails[0]->total_amount;
+                        }
                     } else {
-                        $totalInvoice = $invDetails[0]->remaining_balance;
-                        $totalAmt = $invDetails[0]->total_amount;
+
+                        $remBal = $invDetails[0]->total_amount + $invDetails[0]->remaining_balance;
+
+                        if ($merchant->country != base64_decode($country)) {
+                            $dataInfo = $this->convertCurrencyRate($getCurrencyCode->currencyCode, $merchant->currencyCode, $remBal);
+                            $dataTot = $this->convertCurrencyRate($getCurrencyCode->currencyCode, $merchant->currencyCode, $invDetails[0]->total_amount);
+                            $totalInvoice = $dataInfo;
+                            $totalAmt = $dataTot;
+                        } else {
+                            $totalInvoice = $remBal;
+                            $totalAmt = $invDetails[0]->total_amount;
+                        }
                     }
+
+                    $data = array(
+                        'getinvoice' => $this->getthisLinkInvoice($invoice, $country),
+                        'currencyCode' => $this->getCountryCode($getCurrencyCode->name),
+                        'continent' => $this->timezone[0],
+                        'remaining_invoice' => $totalInvoice,
+                        'total_invoice' => $totalAmt
+
+                    );
+
+
+
+                    return view('main.paymentlink')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
                 } else {
-
-                    $remBal = $invDetails[0]->total_amount + $invDetails[0]->remaining_balance;
-
-                    if ($merchant->country != base64_decode($country)) {
-                        $dataInfo = $this->convertCurrencyRate($getCurrencyCode->currencyCode, $merchant->currencyCode, $remBal);
-                        $dataTot = $this->convertCurrencyRate($getCurrencyCode->currencyCode, $merchant->currencyCode, $invDetails[0]->total_amount);
-                        $totalInvoice = $dataInfo;
-                        $totalAmt = $dataTot;
-                    } else {
-                        $totalInvoice = $remBal;
-                        $totalAmt = $invDetails[0]->total_amount;
-                    }
-                }
-
-                $data = array(
-                    'getinvoice' => $this->getthisLinkInvoice($invoice, $country),
-                    'currencyCode' => $this->getCountryCode($getCurrencyCode->name),
-                    'continent' => $this->timezone[0],
-                    'remaining_invoice' => $totalInvoice,
-                    'total_invoice' => $totalAmt
-
-                );
-
-
-
-                return view('main.paymentlink')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
-
-                }
-                else{
                     // Redirect to Login
                     return redirect()->route('epsresponseback')->with('error', 'Unable to detect your country. Invoice payment cannot be processed');
                 }
-
-
-
             } else {
                 // Redirect to Login
                 return redirect()->route('epsresponseback')->with('error', 'Unable to detect your country. Invoice payment cannot be processed');
@@ -1146,7 +1141,7 @@ class HomeController extends Controller
 
         // Insert Record for cash advance and redirect to cash advance page
 
-        if(Auth::user()->country != 'Canada'){
+        if (Auth::user()->country != 'Canada') {
 
             $resData = "Your country is not eligible for this feature";
             $resp = "error";
@@ -1171,7 +1166,7 @@ class HomeController extends Controller
     {
 
 
-        if (Auth::user()->accountType == "Individual"){
+        if (Auth::user()->accountType == "Individual") {
             if ($req->session()->has('email') == false) {
                 if (Auth::check() == true) {
                     $this->page = 'My Wallet';
@@ -1199,8 +1194,7 @@ class HomeController extends Controller
             );
 
             // dd($data);
-        }
-        else{
+        } else {
             return redirect()->route('dashboard');
         }
 
@@ -1446,7 +1440,7 @@ class HomeController extends Controller
 
     public function processMoney(Request $req)
     {
-            dd($req->all());
+        dd($req->all());
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
                 $this->page = 'Add Money To Wallet';
@@ -1521,9 +1515,9 @@ class HomeController extends Controller
             $this->email = session('email');
         }
 
-                $client = $this->getMyClientInfo(Auth::user()->ref_code);
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if(isset($client) && $client->accountMode == "test"){
+        if (isset($client) && $client->accountMode == "test") {
 
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -1729,7 +1723,7 @@ class HomeController extends Controller
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
 
-        if(isset($client) && $client->accountMode == "test"){
+        if (isset($client) && $client->accountMode == "test") {
 
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -1773,7 +1767,7 @@ class HomeController extends Controller
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if(isset($client) && $client->accountMode == "test"){
+        if (isset($client) && $client->accountMode == "test") {
 
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -3778,8 +3772,6 @@ class HomeController extends Controller
             $data = [
                 'continent' => $this->timezone[0]
             ];
-
-
         };
 
 
@@ -3792,10 +3784,10 @@ class HomeController extends Controller
 
         // dd($request->all());
 
-        try{
+        try {
             $path = NULL;
 
-            if($request->hasFile('file')){
+            if ($request->hasFile('file')) {
 
                 // Do your file upload here and set $path
 
@@ -3817,12 +3809,11 @@ class HomeController extends Controller
 
                 $request->file('file')->move(public_path('../../communityfile/'), $fileToStore);
 
-                $path = route('home').'/communityfile/'.$fileNameToStore;
-
+                $path = route('home') . '/communityfile/' . $fileNameToStore;
             }
 
 
-            if($request->categories == "others"){
+            if ($request->categories == "others") {
                 $categories = $request->specify_categories;
             } else {
                 $categories = $request->categories;
@@ -3833,12 +3824,10 @@ class HomeController extends Controller
             ]);
 
             $resData = 'Submitted successfully';
-                $resp = "success";
+            $resp = "success";
 
-                return redirect()->route('community');
-        }
-
-        catch (\Throwable $th) {
+            return redirect()->route('community');
+        } catch (\Throwable $th) {
             $resData = $th->getMessage();
             $resp = "error";
 
@@ -3847,7 +3836,7 @@ class HomeController extends Controller
 
 
 
-            //return redirect(route('community'));
+        //return redirect(route('community'));
 
 
 
@@ -3905,27 +3894,22 @@ class HomeController extends Controller
 
         // dd($request->all());
 
-        try{
+        try {
 
             Answer::insert([
                 'questionId' => $request->questionId, 'comment' => $request->comment, 'name' => $request->name,
             ]);
 
             $resData = 'Success';
-                $resp = "success";
-        }
-
-        catch (\Throwable $th) {
+            $resp = "success";
+        } catch (\Throwable $th) {
             $resData = $th->getMessage();
             $resp = "error";
         }
 
 
 
-            return redirect()->route('submessage', $request->questionId);
-
-
-
+        return redirect()->route('submessage', $request->questionId);
     }
 
     public function service(Request $req)
@@ -4084,7 +4068,8 @@ class HomeController extends Controller
 
     //Referral link
 
-    public function referralLink(){
+    public function referralLink()
+    {
         if (Auth::check() == true) {
 
             if (Auth::user()->accountType == "Individual") {
@@ -4130,6 +4115,58 @@ class HomeController extends Controller
 
 
         return view('main.referrallink')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+    //user journey
+    public function userJourney()
+    {
+        if (
+            Auth::check() == true
+        ) {
+
+            if (Auth::user()->accountType == "Individual") {
+                $this->page = 'Landing';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'sendReceive' => $this->sendAndReceive(Auth::user()->email),
+                    'payInvoice' => $this->payInvoice(Auth::user()->email),
+                    'walletTrans' => $this->sendAndReceive(Auth::user()->email),
+                    'urgentnotification' => $this->urgentNotification(Auth::user()->email),
+                    'currencyCode' => $this->getCountryCode(Auth::user()->country),
+                    'getCard' => $this->getUserCard(),
+                    'getBank' => $this->getUserBank(),
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'getmerchantsByCategory' => $this->getMerchantsByCategory(),
+                    'specialInfo' => $this->getthisInfo(Auth::user()->country),
+                    'continent' => $this->timezone[0],
+                    'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+                    'pointsclaim' => $this->getClaimedHistory(Auth::user()->id),
+                    'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
+                    'imtAccess' => AllCountries::where('name', Auth::user()->country)->first(),
+                    'referred' => $this->referral(Auth::user()->ref_code)
+                );
+
+                $view = 'home';
+            } else {
+
+                // return redirect()->route('Admin');
+                return redirect()->route('dashboard');
+            }
+        } else {
+            $this->page = 'Homepage';
+            $this->name = '';
+            $view = 'main.newpage.shade-pro.index';
+            $data = [
+                'continent' => $this->timezone[0]
+            ];
+        }
+
+        // dd($data);
+
+
+
+        return view('main.userjourney')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
 
@@ -4399,25 +4436,20 @@ class HomeController extends Controller
                     $this->sendEmail($this->email, "Fund remittance");
 
 
-                    if($req->country == "India"){
+                    if ($req->country == "India") {
 
                         $this->name = $req->fname . ' ' . $req->lname;
                         // $this->email = "bambo@vimfile.com";
                         $this->email = $req->email;
                         $this->subject = "Special Notice";
 
-                        $mailmessage = "Dear ".$req->fname.", If you are presenting India Aadhaar Card as the form of identification, kindly upload your India Permanent Account Number card as well using same icon.Thanks";
+                        $mailmessage = "Dear " . $req->fname . ", If you are presenting India Aadhaar Card as the form of identification, kindly upload your India Permanent Account Number card as well using same icon.Thanks";
 
                         $this->message = '<p>' . $mailmessage . '</p>';
 
 
                         $this->sendEmail($this->email, "Fund remittance");
-
-
-
                     }
-
-
                 } else {
 
                     $message = "error";
@@ -4763,8 +4795,8 @@ class HomeController extends Controller
 
                 ]);
 
-                User::where('id',Auth::user()->id)->update([
-                    'referral_points'=>$totPointLeft,
+                User::where('id', Auth::user()->id)->update([
+                    'referral_points' => $totPointLeft,
                 ]);
 
                 $resData = 'Your points claimed has been submitted successfully. The reward will be processed within the next 24hrs';
@@ -4904,7 +4936,7 @@ class HomeController extends Controller
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'referred' => $this->referral(Auth::user()->ref_code),
             'referral point' => $this->referralPoints(Auth::user()->id),
-            'point claimed'=> $this->pointsClaimed(Auth::user()->id),
+            'point claimed' => $this->pointsClaimed(Auth::user()->id),
             'points_history' => $this->pointHistory(Auth::user()->id),
 
         );
@@ -5384,7 +5416,7 @@ class HomeController extends Controller
     }
 
 
-        // Get My Client Info
+    // Get My Client Info
     public function getMyClientInfo($ref_code)
     {
         $data = ClientInfo::where('user_id', $ref_code)->first();
