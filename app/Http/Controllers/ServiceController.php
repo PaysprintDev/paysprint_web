@@ -97,6 +97,7 @@ class ServiceController extends Controller
     // API methods for Shop setup
     public function setupService(Request $req)
     {
+        // Upload Header Content....
         dd($req->all());
     }
 }

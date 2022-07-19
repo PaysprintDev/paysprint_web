@@ -1748,7 +1748,7 @@
                 formData = new FormData(formElemContact);
             }
 
-
+            formData.append('value', value);
 
             var headers = {
                 'X-CSRF-TOKEN': "{{ csrf_token() }}",
