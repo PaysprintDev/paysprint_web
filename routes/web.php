@@ -1057,6 +1057,11 @@ Route::get('/successfulpointclaim', ['uses' => 'AdminController@successfulPointC
 Route::post('/deleteclaim/{id}', ['uses' => 'AdminController@deleteClaim', 'as' => 'delete claim']);
 Route::post('/restoreclaim/{id}', ['uses' => 'AdminController@restoreClaim', 'as' => 'restore claim']);
 Route::get('/suspendedreferralclaim', ['uses' => 'AdminController@suspendedReferralClaim', 'as' => 'suspended referral claim']);
+Route::get('/promodate', ['uses' => 'AdminController@promoDate', 'as' => 'promo date']);
+Route::post('/promodate', ['uses' => 'AdminController@insertPromoDate', 'as' => 'insert promo date']);
+Route::get('/editpromodate/{id}', ['uses' => 'AdminController@editPromoDate', 'as' => 'edit promo']);
+Route::post('/updatepromodate{id}', ['uses' => 'AdminController@updatePromoDate', 'as' => 'update promo date']);
+Route::get('/deletepromodate/{id}', ['uses' => 'AdminController@deletePromoDate', 'as' => 'delete promo']);
 
 
 
