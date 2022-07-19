@@ -29,7 +29,7 @@
             </ol>
         </section>
 
-                {!! session('msg') !!}
+        {!! session('msg') !!}
         <!-- Main content -->
         <section class="content">
             <div class="row">
@@ -77,13 +77,18 @@
                                 <tbody>
 
 
-                                    @if ($allusersdata = \App\User::where([['country', '=', Request::get('country')], ['accountLevel', '>=', 2], ['approval', '>=', 1], ['account_check', '=', 0]])->get())
+                                    @if ($allusersdata = \App\User::where([
+                                        ['country', '=', Request::get('country')],
+                                        ['accountLevel', '>=', 2],
+                                        ['approval', '>=', 1],
+                                        ['account_check', '=', 0],
+                                    ])->get())
 
 
                                         @if (count($allusersdata) > 0)
                                             <?php $i = 1; ?>
                                             @foreach ($allusersdata as $datainfo)
-                                            {{-- @php
+                                                {{-- @php
                                                 print_r($datainfo);
                                             @endphp --}}
                                                 <tr>
@@ -252,8 +257,7 @@
                                                         @if ($datainfo->approval == 2 && $datainfo->accountLevel > 0)
                                                             <a href="javascript:void()"
                                                                 onclick="downgradetoLevel1('{{ $datainfo->id }}')"
-                                                                class="text-danger"><i
-                                                                    class="fas fa-power-off text-danger"
+                                                                class="text-danger"><i class="fas fa-power-off text-danger"
                                                                     style="font-size: 20px;"
                                                                     title="Downgrade to Level 1"></i> <img
                                                                     class="spindowngrade{{ $datainfo->id }} disp-0"
@@ -273,7 +277,8 @@
                                                                 onclick="disapproveaccount('{{ $datainfo->id }}')"
                                                                 class="text-danger"><i
                                                                     class="fas fa-power-off text-danger"
-                                                                    style="font-size: 20px;" title="Disapprove Account"></i>
+                                                                    style="font-size: 20px;"
+                                                                    title="Disapprove Account"></i>
                                                                 <img class="spindis{{ $datainfo->id }} disp-0"
                                                                     src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
                                                                     style="width: 20px; height: 20px;"></a>
@@ -308,16 +313,18 @@
                                                                 class="spinclose{{ $datainfo->id }} disp-0"
                                                                 src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
                                                                 style="width: 20px; height: 20px;"></a>
-                                                            <!-- watchlist -->
-                                                           @if ($datainfo->watchlist === 0)
-                                                               <a href="{{ route('addtowatchlist',$datainfo->id) }}"><i
-                                                            class="far fa-eye text-primary" style="font-size: 20px;"
-                                                            title="Add to Watchlist"></i></strong></a>
-                                                           @else
-                                                               <a href="{{ route('removefromwatchlist',$datainfo->id) }}"><i
-                                                            class="far fa-eye-slash text-primary" style="font-size: 20px;"
-                                                            title="Remove from Watchlist"></i></strong></a>
-                                                           @endif
+                                                        <!-- watchlist -->
+                                                        @if ($datainfo->watchlist == false)
+                                                            <a href="{{ route('addtowatchlist', $datainfo->id) }}"><i
+                                                                    class="far fa-eye text-primary"
+                                                                    style="font-size: 20px;"
+                                                                    title="Add to Watchlist"></i></strong></a>
+                                                        @else
+                                                            <a href="{{ route('removefromwatchlist', $datainfo->id) }}"><i
+                                                                    class="far fa-eye-slash text-primary"
+                                                                    style="font-size: 20px;"
+                                                                    title="Remove from Watchlist"></i></strong></a>
+                                                        @endif
                                                     </td>
 
 
@@ -404,7 +411,7 @@
                                                                 class="spinvery{{ $data->id }} disp-0"
                                                                 src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif"
                                                                 style="width: 20px; height: 20px;"></a>
-                                               
+
                                                         @if ($data->approval == 1)
                                                             <a href="javascript:void()"
                                                                 onclick="approveaccount('{{ $data->id }}')"

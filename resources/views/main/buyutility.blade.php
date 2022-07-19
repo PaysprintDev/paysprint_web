@@ -49,7 +49,6 @@
         .disp-0 {
             display: none !important;
         }
-
     </style>
 
 </head>
@@ -153,8 +152,8 @@
                                                         <label for="card_number">Card Number</label>
 
                                                         <div class="input-group"> <input type="text"
-                                                                name="card_number" id="card_number"
-                                                                class="form-control" maxlength="16" required>
+                                                                name="card_number" id="card_number" class="form-control"
+                                                                maxlength="16" required>
                                                             <div class="input-group-append">
                                                                 <span class="input-group-text text-muted"> <i
                                                                         class="fas fa-money-check mx-1"></i> <i
@@ -196,8 +195,8 @@
                                                                 <label for="year">Year</label>
 
                                                                 <div class="input-group">
-                                                                    <select name="year" id="year" class="form-control"
-                                                                        required>
+                                                                    <select name="year" id="year"
+                                                                        class="form-control" required>
                                                                         @for ($i = date('y'); $i <= date('y') + 10; $i++)
                                                                             <option value="{{ $i }}">
                                                                                 {{ '20' . $i }}</option>
@@ -215,8 +214,9 @@
                                                                         digit at the back of your card</small></label>
 
                                                                 <div class="input-group">
-                                                                    <input type="password" name="cvv" id="cvv"
-                                                                        class="form-control" maxlength="3" required>
+                                                                    <input type="password" name="cvv"
+                                                                        id="cvv" class="form-control"
+                                                                        maxlength="3" required>
                                                                     <div class="input-group-append">
                                                                         <span class="input-group-text text-muted"> <i
                                                                                 class="fas fa-closed-captioning"></i>
@@ -296,8 +296,8 @@
                                                         @endif
                                                     @else
                                                         @if ($dataProduct->FieldName == 'Email')
-                                                            <div class="input-group-append"> </div> <input type="text"
-                                                                name="fieldValue[]"
+                                                            <div class="input-group-append"> </div> <input
+                                                                type="text" name="fieldValue[]"
                                                                 id="{{ $dataProduct->PaymentInputKey }}"
                                                                 class="form-control" readonly
                                                                 value="{{ Auth::user()->email }}">
@@ -311,8 +311,8 @@
                                                                 id="{{ $dataProduct->PaymentInputKey }}"
                                                                 class="form-control" required>
                                                         @else
-                                                            <div class="input-group-append"> </div> <input type="text"
-                                                                name="fieldValue[]"
+                                                            <div class="input-group-append"> </div> <input
+                                                                type="text" name="fieldValue[]"
                                                                 id="{{ $dataProduct->PaymentInputKey }}"
                                                                 class="form-control" required>
                                                         @endif
@@ -325,7 +325,25 @@
                                         @endforeach
 
 
-                                        @if (Request::get('billername') == 'DSTV2' || Request::get('billername') == 'GOTV2' || Request::get('billername') == 'DSTV1' || Request::get('billername') == 'GOTV1' || Request::get('billername') == 'ABUJA POSTPAID' || Request::get('billername') == 'ABUJA PREPAID' || Request::get('billername') == 'EKO ELECTRIC POSTPAID' || Request::get('billername') == 'EKO ELECTRIC PREPAID' || Request::get('billername') == 'GOTV2' || Request::get('billername') == 'IKEJA ELECTRIC POSTPAID' || Request::get('billername') == 'IKEJA ELECTRIC PREPAID' || Request::get('billername') == 'JOS ELECTRIC POSTPAID' || Request::get('billername') == 'JOS ELECTRIC PREPAID' || Request::get('billername') == 'KADUNA ELECTRIC POSTPAID' || Request::get('billername') == 'KADUNA ELECTRIC PREPAID' || Request::get('billername') == 'KANO POSTPAID' || Request::get('billername') == 'KANO PREPAID' || Request::get('billername') == 'PHED2' || Request::get('billername') == 'STARTIMES')
+                                        @if (Request::get('billername') == 'DSTV2' ||
+                                            Request::get('billername') == 'GOTV2' ||
+                                            Request::get('billername') == 'DSTV1' ||
+                                            Request::get('billername') == 'GOTV1' ||
+                                            Request::get('billername') == 'ABUJA POSTPAID' ||
+                                            Request::get('billername') == 'ABUJA PREPAID' ||
+                                            Request::get('billername') == 'EKO ELECTRIC POSTPAID' ||
+                                            Request::get('billername') == 'EKO ELECTRIC PREPAID' ||
+                                            Request::get('billername') == 'GOTV2' ||
+                                            Request::get('billername') == 'IKEJA ELECTRIC POSTPAID' ||
+                                            Request::get('billername') == 'IKEJA ELECTRIC PREPAID' ||
+                                            Request::get('billername') == 'JOS ELECTRIC POSTPAID' ||
+                                            Request::get('billername') == 'JOS ELECTRIC PREPAID' ||
+                                            Request::get('billername') == 'KADUNA ELECTRIC POSTPAID' ||
+                                            Request::get('billername') == 'KADUNA ELECTRIC PREPAID' ||
+                                            Request::get('billername') == 'KANO POSTPAID' ||
+                                            Request::get('billername') == 'KANO PREPAID' ||
+                                            Request::get('billername') == 'PHED2' ||
+                                            Request::get('billername') == 'STARTIMES')
                                             <hr>
                                             <button class="btn btn-success" onclick="getaccountLookup()"
                                                 id="verifyAccount">Verify Account</button>
@@ -537,7 +555,7 @@
 
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"
-                integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
+            integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
         </script>
 
         <script src="{{ asset('pace/pace.min.js') }}"></script>
@@ -975,6 +993,7 @@
                             },
                             success: function(result) {
 
+
                                 $('.payutilityBtn').removeClass('btn-danger');
                                 $('.payutilityBtn').addClass('btn-primary');
                                 $('.payutilityBtn').attr('disabled', false);
@@ -1025,7 +1044,12 @@
                                                     ': ₦' + j.Amount + ' (' + j
                                                     .ItemDesc + ')';
 
+                                                console.log(checkerItem,
+                                                    selectedOption);
+
+
                                                 if (checkerItem == selectedOption) {
+
 
                                                     if (currencySymbol != "₦") {
 
@@ -1042,6 +1066,8 @@
                                                             val: "send",
                                                             localcurrency: localcurrency
                                                         };
+
+
 
                                                         setHeaders();
                                                         jQuery.ajax({
@@ -1074,7 +1100,7 @@
                                                                         =
                                                                         $(
                                                                             "#amount"
-                                                                            )
+                                                                        )
                                                                         .val();
                                                                 } else {
 
@@ -1089,7 +1115,7 @@
                                                                 ) {
                                                                     $("#" +
                                                                             payInput
-                                                                            )
+                                                                        )
                                                                         .val(
                                                                             getAmount
                                                                         );
@@ -1109,7 +1135,7 @@
                                                                 currencyConvert
                                                                     (
                                                                         getAmount
-                                                                        );
+                                                                    );
 
                                                                 runCommission
                                                                     ();
@@ -1160,6 +1186,140 @@
                                                     }
 
 
+                                                } else {
+                                                    if (currencySymbol != "₦") {
+
+                                                        // convert Amount to other currency and pass to price amount
+
+                                                        var currency =
+                                                            "{{ $data['currencyCode']->currencyCode }}";
+                                                        var localcurrency = "NGN";
+                                                        var route =
+                                                            "{{ URL('Ajax/getconversion') }}";
+                                                        var thisdata = {
+                                                            currency: currency,
+                                                            amount: j.Amount,
+                                                            val: "send",
+                                                            localcurrency: localcurrency
+                                                        };
+
+
+
+                                                        setHeaders();
+                                                        jQuery.ajax({
+                                                            url: route,
+                                                            method: 'post',
+                                                            data: thisdata,
+                                                            dataType: 'JSON',
+                                                            success: function(
+                                                                result
+                                                            ) {
+
+                                                                var newAmount =
+                                                                    result
+                                                                    .data *
+                                                                    1.02 *
+                                                                    numberOfMonths;
+
+                                                                getAmount
+                                                                    =
+                                                                    newAmount
+                                                                    .toFixed(
+                                                                        2
+                                                                    );
+
+
+                                                                if (checkerItem ==
+                                                                    "AIRTIME: ₦0 (-)"
+                                                                ) {
+                                                                    getAmount
+                                                                        =
+                                                                        $(
+                                                                            "#amount"
+                                                                        )
+                                                                        .val();
+                                                                } else {
+
+                                                                    getAmount
+                                                                        =
+                                                                        getAmount;
+                                                                }
+
+
+                                                                if (payInput ==
+                                                                    "amount"
+                                                                ) {
+                                                                    $("#" +
+                                                                            payInput
+                                                                        )
+                                                                        .val(
+                                                                            getAmount
+                                                                        );
+
+                                                                } else {
+                                                                    $("#amount")
+                                                                        .val(
+                                                                            getAmount
+                                                                        );
+                                                                }
+
+
+                                                                $('#typedAmount')
+                                                                    .text(
+                                                                        getAmount
+                                                                    );
+                                                                currencyConvert
+                                                                    (
+                                                                        getAmount
+                                                                    );
+
+                                                                runCommission
+                                                                    ();
+
+                                                            }
+
+                                                        });
+
+                                                    } else {
+
+                                                        if (checkerItem ==
+                                                            "AIRTIME: ₦0 (-)") {
+
+
+
+                                                            var myAmount = $(
+                                                                "#amount").val();
+
+                                                            getAmount = myAmount *
+                                                                numberOfMonths;
+
+                                                            if (payInput ==
+                                                                "amount") {
+                                                                $("#" + payInput)
+                                                                    .val(getAmount);
+                                                            } else {
+                                                                $("#amount").val(
+                                                                    getAmount);
+                                                            }
+
+                                                        } else {
+
+                                                            getAmount = j.Amount *
+                                                                numberOfMonths;
+
+                                                            if (payInput ==
+                                                                "amount") {
+                                                                $("#" + payInput)
+                                                                    .val(getAmount);
+                                                            } else {
+                                                                $("#amount").val(
+                                                                    getAmount);
+                                                            }
+                                                        }
+
+
+
+                                                    }
                                                 }
 
 
