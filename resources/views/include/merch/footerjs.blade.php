@@ -112,6 +112,28 @@
             ]
         });
 
+
+        $('#aboutUs, #testimonialDescription').summernote({
+            tabsize: 2,
+            height: 160,
+            toolbar: [
+                ['font', ['bold', 'underline', 'clear']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['insert', ['link']],
+                ['view', ['help']]
+            ]
+        });
+        $('#pricingOffer1, #pricingOffer2, #pricingOffer3, #serviceBenefits1, #serviceBenefits2, #serviceBenefits3, #serviceBenefits4, #serviceBenefits5, #serviceBenefits6').summernote({
+            tabsize: 2,
+            height: 120,
+            toolbar: [
+                ['font', ['bold', 'underline', 'clear']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['insert', ['link']],
+                ['view', ['help']]
+            ]
+        });
+
     });
 
     $('#single_service').change(function() {
@@ -1727,6 +1749,10 @@
 
     async function serviceSetup(id, value) {
         try {
+
+            $('.'+value).removeClass('disp-0');
+            $('.'+value+id).addClass('disp-0');
+
             var formData;
 
             if (value === 'header') {
@@ -1749,6 +1775,7 @@
             }
 
             formData.append('value', value);
+            formData.append('merchantId', id);
 
             var headers = {
                 'X-CSRF-TOKEN': "{{ csrf_token() }}",
@@ -1762,15 +1789,25 @@
                 data: formData
             }
 
-
             const response = await axios(config);
 
-            console.log(response);
+            $('.'+value).addClass('disp-0');
+            $('.'+value+id).removeClass('disp-0');
 
-            iziMessage(true, 'Good', `${value+' - '+id}`);
+            iziMessage(true, 'Good', response.data.message);
+
         } catch (error) {
-            console.log(error);
-            iziMessage(false, 'Error', 'Something went wrong. Please try again later.');
+
+            $('.'+value).addClass('disp-0');
+            $('.'+value+id).removeClass('disp-0');
+
+            if (error.response) {
+                iziMessage(false, 'Error', error.response.data.message);
+            } else {
+                iziMessage(false, 'Error', error.message);
+            }
+
+
         }
     }
 

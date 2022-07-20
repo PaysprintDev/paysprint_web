@@ -387,7 +387,6 @@ Route::prefix('/v1')->group(function () {
         // Services.....
          Route::post('/service/setup', ['uses' => 'ServiceController@setupService', 'as' => 'setup service']);
 
-
         // Estore
          Route::post('/order/out-for-delivery', ['uses' => 'ShopController@outForDelivery', 'as' => 'out for delivery or pickup']);
     });

@@ -7,11 +7,27 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Mitech - Technology IT Solutions HTML Template</title>
+    <title>
+
+        @isset($data['myServiceStore'])
+        {{ $data['user']->businessname }}
+        @else
+        PaySprint | Merchant Service
+        @endisset
+
+
+    </title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
-    <link rel="icon" href="{{ asset('merchantassets/service/assets/images/favicon.webp') }}">
+
+    @isset($data['myServiceStore']->businessLogo)
+        <link rel="icon" href="{{ $data['myServiceStore']->businessLogo }}">
+        @else
+       <link rel="icon" href="{{ asset('merchantassets/service/assets/images/favicon.webp') }}">
+        @endisset
+
+
 
     <!-- CSS
         ============================================ -->
