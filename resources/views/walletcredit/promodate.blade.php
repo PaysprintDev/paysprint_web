@@ -55,14 +55,19 @@
                           <input type="date" class="form-control" id="enddate" name="enddate">
                         </div>
                         <br>
-                        <button type="submit" class="btn btn-primary form-control">Start Promo</button>
+                        <div class="mb-3">
+                          <label for="enddate" class="form-label">Promo Amount</label>
+                          <input type="text" class="form-control" id="enddate" name="amount" placeholder="kindly input promo amount">
+                        </div>
+                        <br>
+                        <button type="submit" class="btn btn-primary form-control">Create Promo</button>
                  </form>
                 </div>
 
                 <!-- The tables -->
                 <div class="row">
                     <div class="col-md-12 mt-4">
-                        <h3 class="text-center" style="font-weight: bold">PROMO DATES</h3>
+                        <h3 class="text-center" style="font-weight: bold">SPECIAL PROMO DATES</h3>
                         <hr>
                         <table class="table table-striped table-responsive" id="promousers">
                             <thead>
@@ -70,6 +75,7 @@
                                     <th>S/N</th>
                                     <th>Promo Start Date</th>
                                     <th>Promo End Date</th>
+                                    <th>Promo Amount</th>
                                     <th>Action</th>
                                     <th>Action</th>
                                 </tr>
@@ -83,7 +89,8 @@
                                         <tr>
                                             <td>{{ $counter++}}</td>
                                             <td>{{ $promo->start_date}}</td>
-                                            <td>{{ $promo->end_date}}</td>
+                                            <td>{{ $promo->end_date}} </td>
+                                            <td>{{ $promo->amount }}</td>
                                             <td><a href="{{route('edit promo',$promo->id)}}" class="btn btn-primary">Edit</a></td>
                                             <td><a href="{{route('delete promo',$promo->id)}}" class="btn btn-danger">Delete</a></td>
                                         </tr>
