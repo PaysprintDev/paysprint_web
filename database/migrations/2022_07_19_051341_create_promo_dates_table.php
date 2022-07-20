@@ -17,6 +17,7 @@ class CreatePromoDatesTable extends Migration
             $table->id();
             $table->string('start_date');
             $table->string('end_date');
+            $table->string('amount');
             $table->timestamps();
         });
     }
