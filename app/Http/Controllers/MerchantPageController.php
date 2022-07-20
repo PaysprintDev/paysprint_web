@@ -35,6 +35,7 @@ use App\Traits\SpecialInfo;
 use Illuminate\Http\Request;
 use App\Traits\PointsHistory;
 use App\Traits\PaysprintPoint;
+use App\Traits\ServiceStoreShop;
 use App\ImportExcel as ImportExcel;
 use Illuminate\Support\Facades\Auth;
 use App\InvoicePayment as InvoicePayment;
@@ -44,7 +45,7 @@ use App\StoreShipping;
 class MerchantPageController extends Controller
 {
 
-    use PaysprintPoint, PointsHistory, SpecialInfo, MyEstore;
+    use PaysprintPoint, PointsHistory, SpecialInfo, MyEstore, ServiceStoreShop;
 
     public function __construct()
     {
@@ -294,15 +295,15 @@ class MerchantPageController extends Controller
 
                 if($userId == $getMerchantId->id){
                     // If Has Main Store setup
-                $merchantStore = $this->checkMyStore($getMerchantId->id);
+                $merchantStore = $this->getServiceStore($getMerchantId->id);
                 }
                 else{
                     // If Has Main Store setup
                     if(session('role')){
-                        $merchantStore = $this->checkMyStore($getMerchantId->id);
+                        $merchantStore = $this->getServiceStore($getMerchantId->id);
                     }
                     else{
-            $merchantStore = $this->getMyStore($getMerchantId->id);
+            $merchantStore = $this->getMyServiceStore($getMerchantId->id);
 
                     }
                 }
@@ -312,18 +313,16 @@ class MerchantPageController extends Controller
 
             if(isset($merchantStore)){
 
-
-
                 $data = [
-                    'mystore' => $merchantStore,
                     'myproduct' => $this->getProducts($getMerchantId->id),
                     'user' => $getMerchantId,
                     'mywishlist' => $this->getMyWishlist($userId),
                     'mycartlist' => $this->getMyCartlist($userId),
+                    'myServiceStore' => $merchantStore,
+                    'myServiceTestimony' => $this->getServiceTestimony($userId),
                 ];
 
 
-                // dd($data);
 
                 return view('merchant.pages.service.index')->with(['pages' => $merchant.' Shop', 'data' => $data]);
             }
@@ -905,6 +904,7 @@ class MerchantPageController extends Controller
             'storepickup' => $this->getStorePickupCount(Auth::user()->id),
             'deliverypickup' => $this->getDeliveryPickupCount(Auth::user()->id),
             'activeCountry' => $this->getActiveCountries(),
+            'myserviceStore' => $this->getServiceStore(Auth::user()->id)
         ];
 
         ActivationEstore::updateOrCreate([
@@ -931,6 +931,7 @@ class MerchantPageController extends Controller
             'storepickup' => $this->getStorePickupCount(Auth::user()->id),
             'deliverypickup' => $this->getDeliveryPickupCount(Auth::user()->id),
             'activeCountry' => $this->getActiveCountries(),
+            'myserviceStore' => $this->getServiceStore(Auth::user()->id)
         ];
 
         return view('merchant.pages.servicesetup')->with(['pages' => 'Service setup', 'data' => $data]);

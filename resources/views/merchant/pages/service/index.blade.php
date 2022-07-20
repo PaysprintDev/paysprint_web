@@ -10,14 +10,45 @@
                         <!--baseline-->
                         <div class="col-lg-8 col-md-7">
                             <div class="processing-hero-text wow move-up">
-                                <h6>IT Software and design </h6>
-                                <h1 class="font-weight--reguler mb-15">Virtual technology in a <span
-                                        class="text-color-secondary">Refined IT System</span></h1>
-                                <p>Set the trends for desktop & server virtualization technology</p>
+                                <h6>
+                                    @isset($data['myServiceStore']->businessWelcome)
+                                    {{ $data['myServiceStore']->businessWelcome }}
+                                    @else
+                                    IT Software and design
+                                    @endisset
+
+                                     </h6>
+                                <h1 class="font-weight--reguler mb-15">
+
+                                    @isset($data['myServiceStore']->businessWhatWeAre)
+                                    {{ $data['myServiceStore']->businessWhatWeAre }}
+                                        @else
+                                    Virtual technology in a
+                                    <span
+                                        class="text-color-secondary">Refined IT System</span>
+                                    @endisset
+
+
+                                    </h1>
+                                <p>
+
+                                    @isset($data['myServiceStore']->businessSlogan)
+                                    {{ $data['myServiceStore']->businessSlogan }}
+                                        @else
+                                   Set the trends for desktop & server virtualization technology
+                                    @endisset
+
+
+                                </p>
                                 <div class="hero-button mt-30">
-                                    <a href="#" class="btn btn--secondary">Free Sample</a>
+
+                                    @isset($data['myServiceStore']->website)
+                                    <a href="{{ $data['myServiceStore']->website }}" target="_blank" class="btn btn--secondary">Visit our website</a>
+                                    @endif
+
+                                    @isset($data['myServiceStore']->youtubeLink)
                                     <div class="hero-popup-video video-popup">
-                                        <a href="https://www.youtube.com/watch?v=vqZuSUtczbU" class="video-link">
+                                        <a  href="{{ $data['myServiceStore']->youtubeLink }}" class="video-link">
                                             <div class="video-content">
                                                 <div class="video-play">
                                                     <span class="video-play-icon">
@@ -28,15 +59,23 @@
                                             </div>
                                         </a>
                                     </div>
+                                    @endif
+
+
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-md-5">
+                        <div class="col-lg-4 col-md-5 ">
                             <div class="processing-hero-images-wrap wow move-up">
                                 <div class="processing-hero-images">
-                                    <img class="img-fluid"
-                                        src="/merchantassets/service/assets/images/hero/slider-processing-slide-01-image-01.webp"
+
+                                    @isset($data['myServiceStore']->aboutImportantImage)
+                                        <img class="img-fluid" src="{{ asset('merchantassets/service/assets/images/hero/slider-processing-slide-01-image-01.webp') }}"
                                         alt="">
+                                        @else
+                                    <img class="img-fluid" src="{{ asset('merchantassets/service/assets/images/hero/slider-processing-slide-01-image-01.webp') }}"
+                                        alt="">
+                                        @endif
                                 </div>
                             </div>
                         </div>
@@ -53,20 +92,36 @@
 
                                 <div class="section-title section-space--mb_40">
                                     <h6 class="section-sub-title mb-20">Our company</h6>
-                                    <h3 class="heading">Share the joy of achieving <span class="text-color-primary">
-                                            glorious moments</span> & climbed up the top.
+
+
+
+                                    <h3 class="heading">
+
+                                        @isset($data['myServiceStore']->aboutUs)
+                                        {!! $data['myServiceStore']->aboutUs !!}
+
+                                        @else
+
+                                        Share the joy of achieving <span class="text-color-primary">
+                                            glorious moments</span> & climb up the top.
+                                        @endif
+
+
                                     </h3>
 
                                 </div>
 
                                 <div id="accordion">
+
+                                    @isset($data['myServiceStore']->aboutUsQ1)
                                     <div class="card">
                                         <div class="card-header" id="headingOne">
                                             <h5 class="mb-0">
                                                 <button class="btn-link" data-bs-toggle="collapse"
                                                     data-bs-target="#collapseOne" aria-expanded="true"
                                                     aria-controls="collapseOne">
-                                                    How can we help your business? <span> <i
+
+                                                    {{ $data['myServiceStore']->aboutUsQ1 }} <span> <i
                                                             class="fas fa-chevron-down"></i>
                                                         <i class="fas fa-chevron-up"></i> </span>
                                                 </button>
@@ -76,20 +131,21 @@
                                         <div id="collapseOne" class="show" aria-labelledby="headingOne"
                                             data-bs-parent="#accordion">
                                             <div class="card-body">
-                                                <p>Through the collaboration with customers in discussing needs and
-                                                    demand, we're able to attain mutual understanding, gain customer
-                                                    trust to offer appropriate advice, and bring about suggestions on
-                                                    suitable technology to transform your business. </p>
+                                                <p>{{ $data['myServiceStore']->aboutUsA1 }} </p>
                                             </div>
                                         </div>
                                     </div>
+
+                                    @endisset
+
+                                    @isset($data['myServiceStore']->aboutUsQ2)
                                     <div class="card">
                                         <div class="card-header" id="headingTwo">
                                             <h5 class="mb-0">
                                                 <button class="btn-link collapsed" data-bs-toggle="collapse"
                                                     data-bs-target="#collapseTwo" aria-expanded="false"
                                                     aria-controls="collapseTwo">
-                                                    What are the advantages of Mitech?<span> <i
+                                                    {{ $data['myServiceStore']->aboutUsQ2 }}<span> <i
                                                             class="fas fa-chevron-down"></i>
                                                         <i class="fas fa-chevron-up"></i> </span>
                                                 </button>
@@ -98,20 +154,20 @@
                                         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
                                             data-bs-parent="#accordion">
                                             <div class="card-body">
-                                                <p>Mitech takes into consideration every little detail to make sure the
-                                                    system run smoothly and responsively. Mitech employs a new technique
-                                                    called Minified Technology for securing customers' database &
-                                                    building up highly confidential firewalls. </p>
+                                                <p>{{ $data['myServiceStore']->aboutUsA2 }} </p>
                                             </div>
                                         </div>
                                     </div>
+                                    @endisset
+
+                                    @isset($data['myServiceStore']->aboutUsQ3)
                                     <div class="card">
                                         <div class="card-header" id="headingThree">
                                             <h5 class="mb-0">
                                                 <button class="btn-link collapsed" data-bs-toggle="collapse"
                                                     data-bs-target="#collapseThree" aria-expanded="false"
                                                     aria-controls="collapseThree">
-                                                    How working process is simplified? <span> <i
+                                                    {{ $data['myServiceStore']->aboutUsQ3 }} <span> <i
                                                             class="fas fa-chevron-down"></i>
                                                         <i class="fas fa-chevron-up"></i> </span>
                                                 </button>
@@ -120,13 +176,12 @@
                                         <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
                                             data-bs-parent="#accordion">
                                             <div class="card-body">
-                                                <p>We reduce redundant complex calculations and lengthy erroneous code
-                                                    texts with simpler ones to ensure Mitech would run seamlessly and
-                                                    the design is reserved in its best form when viewed from a wide
-                                                    range of mobile devices & browsers. </p>
+                                                <p>{{ $data['myServiceStore']->aboutUsA3 }} </p>
                                             </div>
                                         </div>
                                     </div>
+                                    @endisset
+
                                 </div>
 
                             </div>

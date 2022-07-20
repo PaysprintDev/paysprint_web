@@ -1035,15 +1035,19 @@
                                                             data-bs-toggle="modal" data-bs-target="#editStoreModal">Update
                                                             eStore</button>
 
-                                                        {{-- Do this for the service page --}}
 
-                                                        @if (env('APP_ENV') == 'local')
+                                                    @endisset
+
+                                                    @isset($data['myserviceStore'])
                                                             <a href="{{ route('merchant service setup') }}"
                                                                 class="btn btn-success" style="width: 100%;">Update
                                                                 eStore</a>
-                                                        @endif
-                                                    @else
-                                                        <div class="row">
+
+                                                    @endisset
+
+                                                    @if (!$data['myStore'] && !$data['myserviceStore'])
+
+                                                     <div class="row">
                                                             <div class="col-md-6">
                                                                 <button class="btn btn-success" style="width: 100%;"
                                                                     data-bs-toggle="modal"
@@ -1051,17 +1055,19 @@
                                                                     eStore (For Sale of Goods only)</button>
                                                             </div>
 
-                                                            @if (env('APP_ENV') == 'local')
-                                                                <div class="col-md-6">
+                                                            <div class="col-md-6">
                                                                     <a href="{{ route('merchant service setup') }}"
-                                                                        class="btn btn-success" style="width: 100%;">Setup
+                                                                        class="btn btn-danger" style="width: 100%;">Setup
                                                                         eStore (For Service only)</a>
                                                                 </div>
-                                                            @endif
 
 
                                                         </div>
-                                                    @endisset
+
+                                                    @endif
+
+
+
                                                     <p>
                                                         You can now setup your store for your customers to see how your
                                                         estore look like
