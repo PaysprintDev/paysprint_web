@@ -483,27 +483,88 @@
                                      </span>
                                  </a>
                                  <ul class="treeview-menu">
-                                     <li title="Credit/Debit Card"><a href="{{ route('promo page') }}"><i
-                                                 class="fa fa-circle-o text-red"></i>Import List</a></li>
-                                     <li title="prepaid Card"><a href="{{ route('promo users') }}"><i
-                                                 class="fa fa-circle-o text-red"></i>View List</a></li>
-                                     <li title="prepaid Card"><a href="{{ route('claim reward') }}"><i
-                                                 class="fa fa-circle-o text-red"></i>Points Claimed</a></li>
-                                     <li title="prepaid Card"><a href="{{ route('referral claim') }}"><i
+                                    <!-- referral menu -->
+                                    <li class="treeview">
+                                         <a href="#">
+                                     <i class="fa fa-book"></i>
+                                     <span>Referral</span>
+                                     <span class="pull-right-container">
+                                         <i class="fa fa-angle-left pull-right"></i>
+                                     </span>
+                                    </a>
+                                    <!--referral sub-menus -->
+                                    <ul class="treeview-menu">
+                                        <li title="prepaid Card"><a href="{{ route('referral claim') }}"><i
                                                  class="fa fa-circle-o text-red"></i>Referral Claims</a></li>
                                      <li title="prepaid Card"><a href="{{ route('suspended referral claim') }}"><i
                                                  class="fa fa-circle-o text-red"></i>Suspended Referral Claims</a></li>
                                      <li title="prepaid Card"><a href="{{ route('successful referral claim') }}"><i
                                                  class="fa fa-circle-o text-red"></i>Successful Referral Claims</a>
                                      </li>
-                                     <li title="prepaid Card"><a href="{{ route('successful point claim') }}"><i
-                                                 class="fa fa-circle-o text-red"></i>Successful Points Claims</a></li>
-                                     <li title="prepaid Card"><a href="{{ route('promo report') }}"><i
-                                                 class="fa fa-circle-o text-red"></i>Imported List Report</a></li>
                                      <li title="prepaid Card"><a href="{{ route('referral report') }}"><i
                                                  class="fa fa-circle-o text-red"></i>Referral Reports</a></li>
+                                    </ul>
+                                    <!--referral sub menu ends -->
+                                    </li>
+                                    <!-- Reward Menu Starts -->
+                                    <li class="treeview">
+                                         <a href="#">
+                                     <i class="fa fa-book"></i>
+                                     <span>Reward</span>
+                                     <span class="pull-right-container">
+                                         <i class="fa fa-angle-left pull-right"></i>
+                                     </span>
+                                    </a>
+                                    <!-- Reward Sub Menu Starts -->
+                                    <ul class="treeview-menu">
+                                        <li title="prepaid Card"><a href="{{ route('claim reward') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>Points Claimed</a></li>
+                                     
+                                     <li title="prepaid Card"><a href="{{ route('successful point claim') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>Successful Points Claims</a></li>
+                                    </ul>
+                                    <!-- Reward Sub-Menu Ends -->
+                                    </li>
+                                    <!-- Reward Menu Ends -->
+                                    <!-- Promo menu starts -->
+                                    <li class="treeview">
+                                          <a href="#">
+                                     <i class="fa fa-book"></i>
+                                     <span>Promo</span>
+                                     <span class="pull-right-container">
+                                         <i class="fa fa-angle-left pull-right"></i>
+                                     </span>
+                                    </a>
+                                    <!--Promo sub menu starts -->
+                                        <ul class="treeview-menu">
+                                            <li title="Credit/Debit Card"><a href="{{ route('promo page') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>Import List</a></li>
+                                     <li title="prepaid Card"><a href="{{ route('promo users') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>View List</a></li>
+                                        </ul>
+                                    <!-- promo sub-menu ends -->
+                                    </li>
+                                    <!-- promo menu ends -->
+                                     <!--Report starts-->
+                                         <li class="treeview">
+                                          <a href="#">
+                                     <i class="fa fa-book"></i>
+                                     <span>Reports</span>
+                                     <span class="pull-right-container">
+                                         <i class="fa fa-angle-left pull-right"></i>
+                                     </span>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        <li title="prepaid Card"><a href="{{ route('promo report') }}"><i
+                                                 class="fa fa-circle-o text-red"></i>Wallet Credit Report</a></li>
+                                    </ul>
+                                    </li>
+                                     <!-- Report ends -->
+                                     
+                                     
+                                     
                                     <li title="prepaid Card"><a href="{{ route('promo date')}}"><i
-                                                    class="fa fa-circle-o text-red"></i>Promo Date</a></li>
+                                                    class="fa fa-circle-o text-red"></i>Special Promo</a></li>
                                  </ul>
                              </li>
                          @endif

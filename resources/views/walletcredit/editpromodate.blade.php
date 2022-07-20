@@ -46,13 +46,18 @@
                     
                         <div class="mb-3">
                           <label for="startdate" class="form-label">Start Date</label>
-                          <input type="date" class="form-control" id="startdate" name="startdate">
+                          <input type="date" class="form-control" id="startdate" name="startdate" value="{{ $data['data']->start_date }}">
                          
                         </div>
                         <br>
                         <div class="mb-3">
                           <label for="enddate" class="form-label">End date</label>
-                          <input type="date" class="form-control" id="enddate" name="enddate">
+                          <input type="date" class="form-control" id="enddate" name="enddate" value="{{ $data['data']->end_date }}">
+                        </div>
+                        <br>
+                          <div class="mb-3">
+                          <label for="enddate" class="form-label">Promo Amount</label>
+                          <input type="text" class="form-control" id="enddate" name="amount" value="{{ $data['data']->amount}}">
                         </div>
                         <br>
                         <button type="submit" class="btn btn-primary form-control">Save Promo</button>
