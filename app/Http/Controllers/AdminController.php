@@ -12467,8 +12467,9 @@ class AdminController extends Controller
         }
     }
     // promo date
-    public function promoDate(Request $req){
-      
+    public function promoDate(Request $req)
+    {
+
         if ($req->session()->has('username') == true) {
             // dd(Session::all());
 
@@ -12515,35 +12516,41 @@ class AdminController extends Controller
         }
     }
     //  inserting promo date to database
-    public function insertPromoDate(Request $req){
-       $validation = $req->validate([
-        'startdate' => 'required',
-        'enddate' => 'required'
-       ]);
+    public function insertPromoDate(Request $req)
+    {
+        $validation = $req->validate([
+            'startdate' => 'required',
+            'enddate' => 'required',
+            'amount' => 'required'
+        ]);
 
-       PromoDate::insert([
-        'start_date' => $req->startdate,
-        'end_date' => $req->enddate
-       ]);
+        PromoDate::insert([
+            'start_date' => $req->startdate,
+            'end_date' => $req->enddate,
+            'amount' => $req->amount
+        ]);
 
-       return back()->with("msg", "<div class='alert alert-success'>Promo Date Successfully Created</div> ");
+        return back()->with("msg", "<div class='alert alert-success'>Promo Date Successfully Created</div> ");
     }
     //update promo page
-    public function updatePromoDate(Request $req, $id){
+    public function updatePromoDate(Request $req, $id)
+    {
 
         $validation = $req->validate([
-         'startdate' => 'required',
-         'enddate' => 'required'
+            'startdate' => 'required',
+            'enddate' => 'required',
+            'amount' => 'required'
         ]);
 
- 
+
         PromoDate::where('id', $id)->update([
-         'start_date' => $req->startdate,
-         'end_date' => $req->enddate,
+            'start_date' => $req->startdate,
+            'end_date' => $req->enddate,
+            'amount' => $req->amount
         ]);
- 
+
         return redirect()->route('promo date')->with("msg", "<div class='alert alert-success'>Promo Date Successfully Updated</div> ");
-     }
+    }
 
     //Delete promo
 
@@ -12552,10 +12559,10 @@ class AdminController extends Controller
         PromoDate::where('id', $id)->delete();
 
         return redirect()->route('promo date')->with("msg", "<div class='alert alert-success'>Promo Date Successfully Deleted</div> ");
-
     }
-//   edit promo code
-    public function editPromoDate(Request $req, $id){
+    //   edit promo code
+    public function editPromoDate(Request $req, $id)
+    {
 
         if ($req->session()->has('username') == true) {
             // dd(Session::all());
@@ -12593,7 +12600,6 @@ class AdminController extends Controller
 
             $data = [
                 'data' => PromoDate::where('id', $id)->first(),
-
             ];
 
 
