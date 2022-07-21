@@ -6,6 +6,7 @@ use App\User;
 use App\ClientInfo;
 use App\ReferralClaim;
 use App\Points;
+use App\PromoDate;
 use App\Walletcredit;
 
 use App\Traits\SendgridMail;
@@ -47,16 +48,25 @@ class SendGridController extends Controller
         }
 
 
-     }
+    }
    
    
-     //  refer and earn mail to customers
+     
+     
+     
+     
+    //  refer and earn mail to customers
     public function cronToCustomersOnCustomerStatement()
     {
        
         try {
 
             $thisuser=User::take(2)->get();
+             $promodate=PromoDate::first();
+            //  dd($promodate);
+            
+              $startdate = $promodate->start_date;
+              $enddate = $promodate->end_date;
     
         if (count($thisuser) > 0) {
 
@@ -84,33 +94,48 @@ class SendGridController extends Controller
 
                 $data = [
                     "name"  => $username[0],
-                    "message" => "<p><strong>Below is your monthly point statement:</strong></p><hr/><br>
+                    "message" => "<p><strong>Here is the Summary of Your Refer and Earn Points for the month:</strong></p><hr/><br>
                     <table>
                     <tr>
                       <td>Total Users Referred</td>
                       <td>$referreduser</td>
                     </tr>
                     <tr>
-                      <td>Total Referral Points Earned</td>
+                      <td>Total Referral Points Earned-</td>
                       <td> $referralpoint</td>
                     </tr>
                     <tr>
-                      <td>Total Referral Points Redeemed</td>
+                      <td>Total Referral Points Redeemed-</td>
                       <td>$point_acquired</td>
                     </tr>
                     <tr>
-                      <td>Referral Points Balance</td>
+                      <td>Referral Points Balance-</td>
                       <td>$referralbalance</td>
                      </tr>
                    
-                  </table>",
+                    </table><br>",
+                    "promotion" => "<p><strong>PaySprint promo: </strong></p>
+                    <table>
+                    <tr>
+                        <td>Promo Start Date:</td>
+                        <td>$startdate</td>
+                        
+                    </tr>
+                    <tr>
+                        <td>Promo End Date</td>
+                        <td>$enddate</td>
+                    </tr>
+                  
+                    
+                    </table>"
+            
                 ];
 
                 $template_id = config('constants.sendgrid.refer_earn');
 
                 $response = $this->sendGridDynamicMail($receiver, $data, $template_id);
-                        // dd($response);
-                echo $response;
+                        dd($response);
+                // echo $response;
             }
         }
         } catch (\Throwable $th) {
@@ -206,16 +231,17 @@ class SendGridController extends Controller
 
     // publicize merchant to customer mail
 
-    public function cronToPublicizeMerchantToConsumers(){
+    public function cronToPublicizeMerchantToConsumer(){
 
        
         try {
          
-            
+         $user = [];   
          $getClient = ClientInfo::where('description', '!=', NULL)->take(5)->get();
+         
         
          if(count($getClient) > 0){
-
+          $businesses = ['businesses'=>[]];
             foreach($getClient as $merchants){
                 // Get Users in the country...
               
@@ -227,7 +253,11 @@ class SendGridController extends Controller
                 $description = $merchants->description;
                 $industry = $merchants->industry;
 
-
+                $getUsers = User::where('country', $merchants->country)->first();
+                
+                // $username = explode(" ", $getUsers->name);
+                // "username" => $username[0],
+                
                 $data = [
                     "name"  => $name,
                     "address" => $address,
@@ -236,29 +266,36 @@ class SendGridController extends Controller
                     "description" => $description,
                     "industry" => $industry
                 ];
+              
+                $businesses['businesses'][]=$data;
+                //dd($businesses['businesses']);
 
-                $getUsers = User::where('country', $merchants->country)->get();
+                $user []= ['name' => $getUsers->name, 'email' => $getUsers->email];
+               
+            }
 
 
-                // foreach($getUsers as $user){
 
-                    
 
-                    $receiver = "olasunkanmimunirat@gmail.com";
-                       
+            for ($i=0; $i < count($user); $i++) { 
+
+
+                // $receiver = $user[$i]['email'];
+                  $receiver = "olasunkanmimunirat@gmail.com ";
+
+                $businesses['name'] = $user[$i]['name'];
+
+
 
                     $template_id = config('constants.sendgrid.publicize_merchant');
 
-                    $response = $this->sendGridDynamicMail($receiver, $data, $template_id);
-                            // dd($response);
-                    echo $response;
-
-
-                // }
+                    $response = $this->sendGridDynamicMail($receiver, $businesses, $template_id);
+                
             }
 
-        
-
+            
+                            // dd($businesses);
+             echo $response;
         }
             
         } catch (\Throwable $th) {
@@ -267,64 +304,7 @@ class SendGridController extends Controller
     }
 
 
-    // publicize merchant to customer mail
-
-    public function cronToPublicizeMerchantToConsumer(){
-
-        $data = [];
-
-        $allusers= User::take(5)->get();
-
-           if(count($allusers) > 0){
-
-            foreach( $allusers as $users){
-
-                $usercountry= $users->country;
-                
-                $merchant= ClientInfo::where('description', '!=', NULL)->where('country', $usercountry)->take(4)->get();
-
-                foreach( $merchant as $merchants){
-
-                    $name = $merchants->business_name;
-                    $address = $merchants->address;
-                    $telephone = $merchants->telephone;
-                    $email = $merchants->email;
-                    $description = $merchants->description;
-                    $industry = $merchants->industry;
-    
-    
-                    $respData = [
-                        "name"  => $name,
-                        "address" => $address,
-                        "telephone" => $telephone,
-                        "email" => $email,
-                        "description" => $description,
-                        "industry" => $industry
-                    ];
-
-
-                    $data []= $respData;
-                }
-
-
-
-
-                $receiver = "olasunkanmimunirat@gmail.com";
-                       
-    
-                    $template_id = config('constants.sendgrid.publicize_merchant');
-    
-                    $response = $this->sendGridDynamicMail($receiver, (object)$data, $template_id);
-                            dd($response);
-                    echo $response;
-            }
-            
-
-           }
-
-       
-        
-    }
+  
 
 
 
