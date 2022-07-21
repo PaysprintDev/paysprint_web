@@ -100,9 +100,9 @@ Route::get('suspendedaccountlist', 'CheckSetupController@suspendedAccountList');
 Route::get('upgradedaccountlist', 'CheckSetupController@upgradedAccounts');
 
 // Statement Mail SendMail
-Route::get('mailstatement' , 'SendGridController@cronToCustomersOnCustomerStatement');
+Route::get('mailstatement', 'SendGridController@cronToCustomersOnCustomerStatement');
 Route::get('rewardpoint', 'SendGridController@cronToCustomersOnRewardStatement');
-Route::get('mailtocustomer','SendGridController@cronToPublicizeMerchantToConsumer');
+Route::get('mailtocustomer', 'SendGridController@cronToPublicizeMerchantToConsumer');
 
 // Update BVN List
 Route::get('bvnlistupdate', 'CheckSetupController@bvnListUpdate');
@@ -1063,6 +1063,8 @@ Route::post('/promodate', ['uses' => 'AdminController@insertPromoDate', 'as' => 
 Route::get('/editpromodate/{id}', ['uses' => 'AdminController@editPromoDate', 'as' => 'edit promo']);
 Route::post('/updatepromodate{id}', ['uses' => 'AdminController@updatePromoDate', 'as' => 'update promo date']);
 Route::get('/deletepromodate/{id}', ['uses' => 'AdminController@deletePromoDate', 'as' => 'delete promo']);
+Route::get('/joinpromo/{id}', ['uses' => 'AdminController@joinPromo', 'as' => 'join promo']);
+Route::get('/specialpromos', ['uses' => 'HomeController@specialPromo', 'as' => 'special promo']);
 
 
 

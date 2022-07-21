@@ -21,6 +21,8 @@ use App\PromoDate;
 
 use App\ClaimedPoints;
 
+use App\SpecialPromo;
+
 use App\EscrowAccount;
 
 use App\HistoryReport;
@@ -12521,13 +12523,15 @@ class AdminController extends Controller
         $validation = $req->validate([
             'startdate' => 'required',
             'enddate' => 'required',
-            'amount' => 'required'
+            'amount' => 'required',
+            'promo_details' => 'required'
         ]);
 
         PromoDate::insert([
             'start_date' => $req->startdate,
             'end_date' => $req->enddate,
-            'amount' => $req->amount
+            'amount' => $req->amount,
+            'promo_details' => $req->promo_details
         ]);
 
         return back()->with("msg", "<div class='alert alert-success'>Promo Date Successfully Created</div> ");
@@ -12560,7 +12564,33 @@ class AdminController extends Controller
 
         return redirect()->route('promo date')->with("msg", "<div class='alert alert-success'>Promo Date Successfully Deleted</div> ");
     }
-    //   edit promo code
+
+    //join Pormo
+
+    public function joinPromo(Request $req, $id)
+    {
+
+        $id = Auth::id();
+        $user = User::where('id', $id)->first();
+        $email = $user->email;
+        $existinguser=SpecialPromo::where('user_id',$id)->first();
+        $existeduserid=$existinguser->user_id;
+
+        if( $existeduserid == $id){
+            return back()->with("msg", "<div class='alert alert-danger'>You are already participating in the promo</div> ");
+        }
+
+        SpecialPromo::create([
+            'user_id' => $id,
+            'email' => $email,
+            'activated' => 'yes',
+            'special_promo_id' => $id,
+        ]);
+
+        return back()->with("msg", "<div class='alert alert-success'>Successfully Joined the Special-Promo</div> ");
+    }
+
+    //  edit promo code
     public function editPromoDate(Request $req, $id)
     {
 

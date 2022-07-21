@@ -4,7 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PromoDate extends Model
+class SpecialPromo extends Model
 {
     //
+    protected $guarded = [];
 }

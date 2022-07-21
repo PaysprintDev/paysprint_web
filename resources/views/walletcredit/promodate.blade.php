@@ -60,6 +60,11 @@
                           <input type="text" class="form-control" id="enddate" name="amount" placeholder="kindly input promo amount">
                         </div>
                         <br>
+                        <div class="mb-3">
+                          <label for="enddate" class="form-label">Promo Details</label>
+                          <input type="text" class="form-control" id="enddate" name="promo_details" placeholder="kindly write some details about the promo">
+                        </div>
+                        <br>
                         <button type="submit" class="btn btn-primary form-control">Create Promo</button>
                  </form>
                 </div>
@@ -76,6 +81,7 @@
                                     <th>Promo Start Date</th>
                                     <th>Promo End Date</th>
                                     <th>Promo Amount</th>
+                                    <th>Promo Details</th>
                                     <th>Action</th>
                                     <th>Action</th>
                                 </tr>
@@ -91,6 +97,7 @@
                                             <td>{{ $promo->start_date}}</td>
                                             <td>{{ $promo->end_date}} </td>
                                             <td>{{ $promo->amount }}</td>
+                                            <td>{{ $promo->promo_details }}</td>
                                             <td><a href="{{route('edit promo',$promo->id)}}" class="btn btn-primary">Edit</a></td>
                                             <td><a href="{{route('delete promo',$promo->id)}}" class="btn btn-danger">Delete</a></td>
                                         </tr>
