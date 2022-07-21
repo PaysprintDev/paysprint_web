@@ -1,10 +1,11 @@
 @extends('layouts.merch.services.app')
 
+
 @section('content')
     <div id="main-wrapper">
         <div class="site-wrapper-reveal">
             <!--============ Infotechno Hero Start ============-->
-            <div class="processing-hero processing-hero-bg">
+            <div class="processing-hero processing-hero-bg" style="background-image: url(@isset($data['myServiceStore']->backdropImage) {{ $data['myServiceStore']->backdropImage }} @else {{ asset('merchantassets/service/assets/images/hero/slider-processing-slide-01-bg.webp') }}  @endisset) !important">
                 <div class="container">
                     <div class="row align-items-center">
                         <!--baseline-->
@@ -67,15 +68,15 @@
                         </div>
                         <div class="col-lg-4 col-md-5 ">
                             <div class="processing-hero-images-wrap wow move-up">
-                                <div class="processing-hero-images">
+                                <div class="processing-hero-images" style="height: 75vh">
 
-                                    @isset($data['myServiceStore']->aboutImportantImage)
+                                    {{-- @isset($data['myServiceStore']->aboutImportantImage)
                                         <img class="img-fluid" src="{{ asset('merchantassets/service/assets/images/hero/slider-processing-slide-01-image-01.webp') }}"
                                         alt="">
                                         @else
                                     <img class="img-fluid" src="{{ asset('merchantassets/service/assets/images/hero/slider-processing-slide-01-image-01.webp') }}"
                                         alt="">
-                                        @endif
+                                        @endif --}}
                                 </div>
                             </div>
                         </div>
@@ -190,24 +191,18 @@
                         <div class="col-lg-6">
                             <div class="rv-video-section">
 
-                                <div class="ht-banner-01 ">
-                                    <img class="img-fluid border-radus-5 animation_images one wow fadeInDown"
-                                        src="/merchantassets/service/assets/images/banners/home-processing-video-intro-slider-slide-01-image-02.webp"
-                                        alt="">
-                                </div>
+                                @isset($data['myServiceStore']->aboutImportantImage)
 
-                                <div class="ht-banner-02">
-                                    <img class="img-fluid border-radus-5 animation_images two wow fadeInDown"
-                                        src="/merchantassets/service/assets/images/banners/home-processing-video-intro-slider-slide-01-image-03.webp"
-                                        alt="">
-                                </div>
 
-                                <div class="main-video-box video-popup">
-                                    <a href="https://www.youtube.com/watch?v=9No-FiEInLA" class="video-link  mt-30">
+
+
+                                @isset($data['myServiceStore']->youtubeLink)
+                                    <div class="main-video-box video-popup">
+                                    <a href="{{ $data['myServiceStore']->youtubeLink }}" class="video-link  mt-30">
                                         <div class="single-popup-wrap">
                                             <img class="img-fluid border-radus-5"
-                                                src="/merchantassets/service/assets/images/banners/home-processing-video-intro-slider-slide-01-image-01.webp"
-                                                alt="">
+                                                src="{{ $data['myServiceStore']->aboutImportantImage }}"
+                                                alt="" style="border-radius: 10px">
                                             <div class="ht-popup-video video-button">
                                                 <div class="video-mark">
                                                     <div class="wave-pulse wave-pulse-1"></div>
@@ -222,19 +217,14 @@
                                         </div>
                                     </a>
                                 </div>
+                                    @endif
 
 
-                                <div class="ht-banner-03">
-                                    <img class="img-fluid border-radus-5 animation_images three wow fadeInDown"
-                                        src="/merchantassets/service/assets/images/banners/home-processing-video-intro-slider-slide-01-image-04.webp"
-                                        alt="">
-                                </div>
 
-                                <div class="ht-banner-04">
-                                    <img class="img-fluid border-radus-5 animation_images four wow fadeInDown"
-                                        src="/merchantassets/service/assets/images/banners/home-processing-video-intro-slider-slide-01-image-05.webp"
-                                        alt="">
-                                </div>
+
+                                @endisset
+
+
 
 
                             </div>
@@ -257,7 +247,7 @@
                             <div class="section-title-wrap text-center section-space--mb_10">
                                 <h6 class="section-sub-title mb-20">Our services</h6>
                                 <h3 class="heading">For your very specific industry, <br> we have <span
-                                        class="text-color-primary"> highly-tailored IT solutions.</span></h3>
+                                        class="text-color-primary"> highly-tailored solutions.</span></h3>
                             </div>
                             <!-- section-title-wrap Start -->
                         </div>
@@ -267,6 +257,9 @@
                         <div class="col-12">
                             <div class="feature-images__two small-mt__10">
                                 <div class="modern-grid-image-box row row--30">
+
+
+                                    @isset($data['myServiceStore']->services1)
 
                                     <div
                                         class="single-item wow move-up col-lg-4 col-md-6 section-space--mt_60  small-mt__40">
@@ -279,12 +272,17 @@
                                                         alt="">
                                                 </div>
                                                 <div class="content">
-                                                    <h6 class="heading">Backup and recovery </h6>
+                                                    <h6 class="heading">{{ $data['myServiceStore']->services1 }}</h6>
                                                 </div>
                                             </div>
                                         </a>
                                         <!-- ht-box-icon End -->
                                     </div>
+
+                                    @endisset
+
+
+                                    @isset($data['myServiceStore']->services2)
 
                                     <div class="single-item wow move-up col-lg-4 col-md-6 section-space--mt_60">
                                         <!-- ht-box-icon Start -->
@@ -296,13 +294,16 @@
                                                         alt="">
                                                 </div>
                                                 <div class="content">
-                                                    <h6 class="heading">Cloud Managed Services</h6>
+                                                    <h6 class="heading">{{ $data['myServiceStore']->services2 }}</h6>
                                                 </div>
                                             </div>
                                         </a>
                                         <!-- ht-box-icon End -->
                                     </div>
 
+                                    @endisset
+
+                                    @isset($data['myServiceStore']->services3)
                                     <div class="single-item wow move-up col-lg-4 col-md-6 section-space--mt_60">
                                         <!-- ht-box-icon Start -->
                                         <a href="#" class="ht-box-images style-02">
@@ -313,13 +314,17 @@
                                                         alt="">
                                                 </div>
                                                 <div class="content">
-                                                    <h6 class="heading">IT Security & Compliance</h6>
+                                                    <h6 class="heading">{{ $data['myServiceStore']->services3 }}</h6>
                                                 </div>
                                             </div>
                                         </a>
                                         <!-- ht-box-icon End -->
                                     </div>
 
+                                    @endisset
+
+
+                                    @isset($data['myServiceStore']->services4)
                                     <div class="single-item wow move-up col-lg-4 col-md-6 section-space--mt_60">
                                         <!-- ht-box-icon Start -->
                                         <a href="#" class="ht-box-images style-02">
@@ -330,13 +335,17 @@
                                                         alt="">
                                                 </div>
                                                 <div class="content">
-                                                    <h6 class="heading">Software Development</h6>
+                                                    <h6 class="heading">{{ $data['myServiceStore']->services4 }}</h6>
                                                 </div>
                                             </div>
                                         </a>
                                         <!-- ht-box-icon End -->
                                     </div>
 
+                                    @endisset
+
+
+                                    @isset($data['myServiceStore']->services5)
                                     <div class="single-item wow move-up col-lg-4 col-md-6 section-space--mt_60">
                                         <!-- ht-box-icon Start -->
                                         <a href="#" class="ht-box-images style-02">
@@ -347,13 +356,17 @@
                                                         alt="">
                                                 </div>
                                                 <div class="content">
-                                                    <h6 class="heading">Managed IT Services</h6>
+                                                    <h6 class="heading">{{ $data['myServiceStore']->services5 }}</h6>
                                                 </div>
                                             </div>
                                         </a>
                                         <!-- ht-box-icon End -->
                                     </div>
 
+                                    @endisset
+
+
+                                    @isset($data['myServiceStore']->services6)
                                     <div class="single-item wow move-up col-lg-4 col-md-6 section-space--mt_60">
                                         <!-- ht-box-icon Start -->
                                         <a href="#" class="ht-box-images style-02">
@@ -364,18 +377,18 @@
                                                         alt="">
                                                 </div>
                                                 <div class="content">
-                                                    <h6 class="heading">IT consultancy</h6>
+                                                    <h6 class="heading">{{ $data['myServiceStore']->services6 }}</h6>
                                                 </div>
                                             </div>
                                         </a>
                                         <!-- ht-box-icon End -->
                                     </div>
+                                    @endisset
 
                                 </div>
                             </div>
 
-                            <div class="section-under-heading text-center section-space--mt_60">Challenges are just
-                                opportunities in disguise. <a href="#">Take the challenge!</a></div>
+                            <div class="section-under-heading text-center section-space--mt_60">Do you need some extra hands? <a href="#contact">Contact us TODAY</a></div>
 
                         </div>
                     </div>
@@ -400,7 +413,6 @@
                                 <div class="section-title-wrapper text-center section-space--mb_60 wow move-down">
                                     <h6 class="section-sub-title mb-20">Pricing and plan</h6>
                                     <h3 class="section-title">1 monthly fee for <span class="text-color-primary">all
-                                            IT
                                             services.</span> </h3>
                                 </div>
                             </div>
@@ -410,17 +422,21 @@
                 <div class="pricing-table-content-area">
                     <div class="container">
                         <div class="row pricing-table-one">
+
+
+                            @isset($data['myServiceStore']->pricing1)
+
                             <div class="col-12 col-md-6 col-lg-4 col-xl-4 pricing-table wow move-up">
                                 <div class="pricing-table__inner">
                                     <div class="pricing-table__header">
-                                        <h6 class="sub-title">Basic</h6>
+                                        <h6 class="sub-title">{{ $data['myServiceStore']->pricing1 }}</h6>
                                         <div class="pricing-table__image">
                                             <img src="/merchantassets/service/assets/images/icons/mitech-pricing-box-icon-01-90x90.webp"
                                                 class="img-fluid" alt="">
                                         </div>
                                         <div class="pricing-table__price-wrap">
-                                            <h6 class="currency">$</h6>
-                                            <h6 class="price">19</h6>
+                                            <h6 class="currency">{{ $data['user']->currencySymbol }}</h6>
+                                            <h6 class="price" style="font-size: 45px !important;">{{ number_format($data['myServiceStore']->pricingPlan1, 2) }}</h6>
                                             <h6 class="period">/mo</h6>
                                         </div>
                                     </div>
@@ -429,13 +445,16 @@
                                             <a href="#" class="ht-btn ht-btn-md ht-btn--outline">Order now</a>
                                         </div>
                                         <ul class="pricing-table__list text-left">
-                                            <li>03 projects</li>
-                                            <li>Quality &amp; Customer Experience</li>
-                                            <li><span class="featured">Try for free, forever!</span></li>
+                                            {!! $data['myServiceStore']->pricingOffer1 !!}
                                         </ul>
                                     </div>
                                 </div>
                             </div>
+
+                            @endif
+
+
+                            @isset($data['myServiceStore']->pricing2)
                             <div
                                 class="col-12 col-md-6 col-lg-4 col-xl-4 pricing-table pricing-table--popular wow move-up">
                                 <div class="pricing-table__inner">
@@ -443,14 +462,14 @@
                                         <span>Popular Choice</span>
                                     </div>
                                     <div class="pricing-table__header">
-                                        <h6 class="sub-title">Professional</h6>
+                                        <h6 class="sub-title">{{ $data['myServiceStore']->pricing2 }}</h6>
                                         <div class="pricing-table__image">
                                             <img src="/merchantassets/service/assets/images/icons/mitech-pricing-box-icon-02-88x88.webp"
                                                 class="img-fluid" alt="">
                                         </div>
                                         <div class="pricing-table__price-wrap">
-                                            <h6 class="currency">$</h6>
-                                            <h6 class="price">59</h6>
+                                            <h6 class="currency">{{ $data['user']->currencySymbol }}</h6>
+                                            <h6 class="price" style="font-size: 45px !important;">{{ number_format($data['myServiceStore']->pricingPlan2, 2) }}</h6>
                                             <h6 class="period">/mo</h6>
                                         </div>
                                     </div>
@@ -459,25 +478,26 @@
                                             <a href="#" class="ht-btn  ht-btn-md ">Order now</a>
                                         </div>
                                         <ul class="pricing-table__list text-left">
-                                            <li>Unlimited project</li>
-                                            <li>Power And Predictive Dialing</li>
-                                            <li>Quality &amp; Customer Experience</li>
-                                            <li>24/7 phone and email support</li>
+                                            {!! $data['myServiceStore']->pricingOffer2 !!}
                                         </ul>
                                     </div>
                                 </div>
                             </div>
+
+                            @endisset
+
+                            @isset($data['myServiceStore']->pricing3)
                             <div class="col-12 col-md-6 col-lg-4 col-xl-4 pricing-table wow move-up">
                                 <div class="pricing-table__inner">
                                     <div class="pricing-table__header">
-                                        <h6 class="sub-title">Professional</h6>
+                                        <h6 class="sub-title">{{ $data['myServiceStore']->pricing3 }}</h6>
                                         <div class="pricing-table__image">
                                             <img src="/merchantassets/service/assets/images/icons/mitech-pricing-box-icon-03-90x90.webp"
                                                 class="img-fluid" alt="">
                                         </div>
                                         <div class="pricing-table__price-wrap">
-                                            <h6 class="currency">$</h6>
-                                            <h6 class="price">29</h6>
+                                            <h6 class="currency">{{ $data['user']->currencySymbol }}</h6>
+                                            <h6 class="price" style="font-size: 45px !important;">{{ number_format($data['myServiceStore']->pricingPlan3, 2) }}</h6>
                                             <h6 class="period">/mo</h6>
                                         </div>
                                     </div>
@@ -486,13 +506,12 @@
                                             <a href="#" class="ht-btn ht-btn-md ht-btn--outline">Order now</a>
                                         </div>
                                         <ul class="pricing-table__list text-left">
-                                            <li>10 projects</li>
-                                            <li>Power And Predictive Dialing </li>
-                                            <li>Quality &amp; Customer Experience </li>
+                                            {!! $data['myServiceStore']->pricingOffer3 !!}
                                         </ul>
                                     </div>
                                 </div>
                             </div>
+                            @endisset
                         </div>
                     </div>
                 </div>
@@ -501,7 +520,7 @@
 
 
 
-
+            @if(count($data['myServiceTestimony']) > 0)
             <!--====================  testimonial section ====================-->
             <div class="testimonial-slider-area bg-gray section-space--ptb_100">
                 <div class="container">
@@ -510,131 +529,47 @@
                             <div class="section-title-wrap text-center section-space--mb_40">
                                 <h6 class="section-sub-title mb-20">Testimonials</h6>
                                 <h3 class="heading">What do people praise about <span class="text-color-primary">
-                                        Mitech?</span></h3>
+                                        {{ $data['user']->businessname }}</span></h3>
                             </div>
                             <div class="testimonial-slider">
                                 <div class="swiper-container testimonial-slider__container">
                                     <div class="swiper-wrapper testimonial-slider__wrapper">
-                                        <div class="swiper-slide">
+
+                                        @foreach ($data['myServiceTestimony'] as $testimonial)
+                                           <div class="swiper-slide">
                                             <div class="testimonial-slider__one wow move-up">
 
                                                 <div class="testimonial-slider--info">
                                                     <div class="testimonial-slider__media">
-                                                        <img src="/merchantassets/service/assets/images/testimonial/mitech-testimonial-avata-02-90x90.webp"
-                                                            class="img-fluid" alt="">
+                                                        <img src="{{ $testimonial->testimonialImage }}"
+                                                            class="img-fluid" alt="" style="width: 70px; height: 70px; border-radius: 100%">
                                                     </div>
 
                                                     <div class="testimonial-slider__author">
                                                         <div class="testimonial-rating">
+
+                                                            @for ($i = 0; $i < $testimonial->testimonialRating; $i++)
                                                             <span class="fa fa-star"></span>
-                                                            <span class="fa fa-star"></span>
-                                                            <span class="fa fa-star"></span>
-                                                            <span class="fa fa-star"></span>
-                                                            <span class="fa fa-star"></span>
+                                                            @endfor
+
                                                         </div>
                                                         <div class="author-info">
-                                                            <h6 class="name">Abbie Ferguson</h6>
-                                                            <span class="designation">Marketing</span>
+                                                            <h6 class="name">{{ $testimonial->testimonialName }}</h6>
+                                                            {{-- <span class="designation">Marketing</span> --}}
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <div class="testimonial-slider__text">I’ve been working with over 35 IT
-                                                    companies on more than 200 projects of our company, but @Mitech is
-                                                    one of the most impressive to me.</div>
+                                                <div class="testimonial-slider__text">{!! $testimonial->testimonialDescription !!}</div>
 
                                             </div>
                                         </div>
-                                        <div class="swiper-slide">
-                                            <div class="testimonial-slider__one wow move-up">
+                                        @endforeach
 
-                                                <div class="testimonial-slider--info">
-                                                    <div class="testimonial-slider__media">
-                                                        <img src="/merchantassets/service/assets/images/testimonial/mitech-testimonial-avata-03-90x90.webp"
-                                                            class="img-fluid" alt="">
-                                                    </div>
 
-                                                    <div class="testimonial-slider__author">
-                                                        <div class="testimonial-rating">
-                                                            <span class="fa fa-star"></span>
-                                                            <span class="fa fa-star"></span>
-                                                            <span class="fa fa-star"></span>
-                                                            <span class="fa fa-star"></span>
-                                                            <span class="fa fa-star"></span>
-                                                        </div>
-                                                        <div class="author-info">
-                                                            <h6 class="name">Monica Blews</h6>
-                                                            <span class="designation">Web designer</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
 
-                                                <div class="testimonial-slider__text">I’ve been working with over 35 IT
-                                                    companies on more than 200 projects of our company, but @Mitech is
-                                                    one of the most impressive to me.</div>
 
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="testimonial-slider__one wow move-up">
 
-                                                <div class="testimonial-slider--info">
-                                                    <div class="testimonial-slider__media">
-                                                        <img src="/merchantassets/service/assets/images/testimonial/mitech-testimonial-avata-04-90x90.webp"
-                                                            class="img-fluid" alt="">
-                                                    </div>
-
-                                                    <div class="testimonial-slider__author">
-                                                        <div class="testimonial-rating">
-                                                            <span class="fa fa-star"></span>
-                                                            <span class="fa fa-star"></span>
-                                                            <span class="fa fa-star"></span>
-                                                            <span class="fa fa-star"></span>
-                                                            <span class="fa fa-star"></span>
-                                                        </div>
-                                                        <div class="author-info">
-                                                            <h6 class="name">Abbie Ferguson</h6>
-                                                            <span class="designation">WEB DESIGNER</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="testimonial-slider__text">I’ve been working with over 35 IT
-                                                    companies on more than 200 projects of our company, but @Mitech is
-                                                    one of the most impressive to me.</div>
-
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="testimonial-slider__one wow move-up">
-
-                                                <div class="testimonial-slider--info">
-                                                    <div class="testimonial-slider__media">
-                                                        <img src="/merchantassets/service/assets/images/testimonial/mitech-testimonial-avata-01-90x90.webp"
-                                                            class="img-fluid" alt="">
-                                                    </div>
-
-                                                    <div class="testimonial-slider__author">
-                                                        <div class="testimonial-rating">
-                                                            <span class="fa fa-star"></span>
-                                                            <span class="fa fa-star"></span>
-                                                            <span class="fa fa-star"></span>
-                                                            <span class="fa fa-star"></span>
-                                                            <span class="fa fa-star"></span>
-                                                        </div>
-                                                        <div class="author-info">
-                                                            <h6 class="name">Abbie Ferguson</h6>
-                                                            <span class="designation">WEB DESIGNER</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="testimonial-slider__text">I’ve been working with over 35 IT
-                                                    companies on more than 200 projects of our company, but @Mitech is
-                                                    one of the most impressive to me.</div>
-
-                                            </div>
-                                        </div>
                                     </div>
                                     <div class="swiper-pagination swiper-pagination-t01 section-space--mt_30"></div>
                                 </div>
@@ -645,10 +580,12 @@
             </div>
             <!--====================  End of testimonial section  ====================-->
 
+            @endif
+
 
 
             <!--============ Contact Us Area Start =================-->
-            <div class="contact-us-area service-contact-bg section-space--ptb_100">
+            <div class="contact-us-area service-contact-bg section-space--ptb_100" id="contact">
                 <div class="container">
                     <div class="row align-items-center">
 
@@ -656,7 +593,7 @@
                             <div class="contact-info sytle-one service-contact text-left">
 
                                 <div class="contact-info-title-wrap text-center">
-                                    <h3 class="heading text-white mb-10">4.9/5.0</h3>
+                                    <h3 class="heading text-white mb-10">5.0</h3>
                                     <div class="ht-star-rating lg-style">
                                         <span class="fa fa-star"></span>
                                         <span class="fa fa-star"></span>
@@ -664,11 +601,11 @@
                                         <span class="fa fa-star"></span>
                                         <span class="fa fa-star"></span>
                                     </div>
-                                    <p class="sub-text">by 700+ customers for 3200+ clients</p>
+                                    {{-- <p class="sub-text">by 700+ customers for 3200+ clients</p> --}}
                                 </div>
 
                                 <div class="contact-list-item">
-                                    <a href="tel:190068668" class="single-contact-list">
+                                    <a href="tel:{{ $data['myServiceStore']->contactNumber }}" class="single-contact-list">
                                         <div class="content-wrap">
                                             <div class="content">
                                                 <div class="icon">
@@ -676,12 +613,12 @@
                                                 </div>
                                                 <div class="main-content">
                                                     <h6 class="heading">Call for advice now!</h6>
-                                                    <div class="text">1900 68668</div>
+                                                    <div class="text">{{ $data['myServiceStore']->contactNumber }}</div>
                                                 </div>
                                             </div>
                                         </div>
                                     </a>
-                                    <a href="mailto:hello@mitech.com" class="single-contact-list">
+                                    <a href="mailto:{{ $data['myServiceStore']->contactEmail }}" class="single-contact-list">
                                         <div class="content-wrap">
                                             <div class="content">
                                                 <div class="icon">
@@ -689,7 +626,7 @@
                                                 </div>
                                                 <div class="main-content">
                                                     <h6 class="heading">Say hello</h6>
-                                                    <div class="text">hello@mitech.com</div>
+                                                    <div class="text">{{ $data['myServiceStore']->contactEmail }}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -708,21 +645,22 @@
 
                                 <!-- <form class="contact-form" id="contact-form-2" action="https://whizthemes.com/mail-php/jowel/mitech/php/services-mail.php" method="post"> -->
                                 <form class="contact-form" id="contact-form-2"
-                                    action="https://htmldemo.net/mitech//merchantassets/service/assets/php/services-mail.php"
+                                    action="{{ route('contact merchant', $data['user']->id) }}"
                                     method="post">
+                                    @csrf
                                     <div class="contact-form__two">
                                         <div class="contact-input">
                                             <div class="contact-inner">
-                                                <input name="con_name" type="text" placeholder="Name *">
+                                                <input name="con_name" type="text" placeholder="Name *" required>
                                             </div>
                                             <div class="contact-inner">
-                                                <input name="con_email" type="email" placeholder="Email *">
+                                                <input name="con_email" type="email" placeholder="Email *" required>
                                             </div>
                                         </div>
                                         <div class="contact-select">
                                             <div class="form-item contact-inner">
                                                 <span class="inquiry">
-                                                    <select id="Visiting" name="Visiting">
+                                                    <select id="Visiting" name="Visiting" required>
                                                         <option disabled selected>Select Department to email</option>
                                                         <option value="Your inquiry about">Your inquiry about</option>
                                                         <option value="General Information Request">General Information
@@ -737,7 +675,7 @@
                                             </div>
                                         </div>
                                         <div class="contact-inner contact-message">
-                                            <textarea name="con_message" placeholder="Please describe what you need."></textarea>
+                                            <textarea name="con_message" placeholder="Please describe what you need." required></textarea>
                                         </div>
                                         <div class="comment-submit-btn">
                                             <button class="ht-btn ht-btn-md" type="submit">Send message</button>

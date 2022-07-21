@@ -244,6 +244,8 @@ Route::prefix('service')->group(function () {
 Route::prefix('merchant')->group(function () {
 	Route::get('/services/{id}', ['uses' => 'ServiceController@merchantPlatformService', 'as' => 'merchant platform service']);
 	Route::get('/pricing/{id}', ['uses' => 'ServiceController@merchantPlatformPricing', 'as' => 'merchant platform pricing']);
+
+	Route::post('/contactus/{id}', ['uses' => 'ServiceController@contactMerchant', 'as' => 'contact merchant']);
 });
 
 // Virtual Account Flutterwave

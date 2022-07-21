@@ -26,7 +26,7 @@
             <nav class="offcanvas-navigation">
                 <ul>
                     <li class="">
-                        <a href="#">Home</a>
+                        <a href="{{ route('merchant service now', $data['user']->businessname) }}">Home</a>
 
                     </li>
                     <li class="">
