@@ -12570,18 +12570,19 @@ class AdminController extends Controller
     public function joinPromo(Request $req, $id)
     {
 
-        $id = Auth::id();
-        $user = User::where('id', $id)->first();
+        $userid = Auth::id();
+        $user = User::where('id', $userid)->first();
         $email = $user->email;
-        $existinguser=SpecialPromo::where('user_id',$id)->first();
-        $existeduserid=$existinguser->user_id;
+        $existinguser = SpecialPromo::where('user_id', $userid)->where('special_promo_id', $id)->first();
 
-        if( $existeduserid == $id){
+        //$existeduserid = $existinguser['special_promo_id'];
+        //dd($existeduserid);
+        if ($existinguser) {
             return back()->with("msg", "<div class='alert alert-danger'>You are already participating in the promo</div> ");
         }
 
         SpecialPromo::create([
-            'user_id' => $id,
+            'user_id' => $userid,
             'email' => $email,
             'activated' => 'yes',
             'special_promo_id' => $id,

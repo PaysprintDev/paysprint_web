@@ -124,6 +124,8 @@ use App\InvoicePayment as InvoicePayment;
 
 use App\PromoDate;
 
+use App\SpecialPromo;
+
 use App\OrganizationPay as OrganizationPay;
 use App\TransactionCost as TransactionCost;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -4147,7 +4149,7 @@ class HomeController extends Controller
                     'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
                     'imtAccess' => AllCountries::where('name', Auth::user()->country)->first(),
                     'referred' => $this->referral(Auth::user()->ref_code),
-                    'specialpromo' => PromoDate::orderBy('created_at', 'desc')->get(),
+                    'specialpromo' => PromoDate::latest()->get(),
                 );
 
                 $view = 'home';

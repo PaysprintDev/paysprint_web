@@ -161,6 +161,9 @@
                     @endphp
                 @if(count($data['specialpromo']) > 0)
                   @foreach ($data['specialpromo'] as $specialpromo )
+                  @php
+                      $exist = \App\SpecialPromo::where('user_id', Auth::id())->where('special_promo_id', $specialpromo->id)->first();
+                  @endphp
                     <tr>
                         <td>{{ $counter++ }}</td>
                         <td>{{ $specialpromo->promo_details }}</td>
@@ -168,13 +171,12 @@
                         <td>{{ $specialpromo->end_date }}</td>
                         <td>
                             
-
-                            @if (new DateTime(date('Y-m-d')) >= new DateTime($specialpromo->enddate))
-
-                                <a href="javascript:void()" class="btn btn-secondary">Promo Ended</a>
-                                
+ 
+                            @if (new DateTime(date('Y-m-d')) <= new DateTime($specialpromo->end_date))
+                                 <a href="{{ route('join promo',$specialpromo->id) }}" class="btn btn-success {{ $exist ? 'disabled' : '' }}" >{{ $exist ? 'Joined' : 'Join Promo' }}</a>
                             @else
-                            <a href="{{ route('join promo',$specialpromo->id) }}" class="btn btn-success" >Join Promo</a>
+                             <a href="javascript:void()" class="btn btn-danger">Promo Ended</a>
+                           
                             @endif
                                 
                         </td>
