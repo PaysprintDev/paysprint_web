@@ -197,7 +197,7 @@
             </div>
         @endif
 
-        <div class="row">                
+        <div class="row">
             <div @if (Auth::user()->plan == 'classic') class="col-md-4" @else class="col-md-6" @endif>
                 <div class="card" style="width: 100%;">
 
@@ -314,6 +314,10 @@
                         </ul>
                     </div>
                 </div>
+
+
+                @else
+
             @endif
 
 
