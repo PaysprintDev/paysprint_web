@@ -1,6 +1,5 @@
 @extends('layouts.merch.services.app')
 
-
 @section('content')
     <div id="main-wrapper">
         <div class="site-wrapper-reveal">
