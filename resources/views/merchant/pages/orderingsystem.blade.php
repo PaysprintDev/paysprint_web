@@ -1039,18 +1039,12 @@
                                                     @endisset
 
 
-                                                    @if (env('APP_ENV') === 'local')
                                                     @isset($data['myserviceStore'])
                                                             <a href="{{ route('merchant service setup') }}"
                                                                 class="btn btn-success" style="width: 100%;">Update
                                                                 eStore</a>
 
                                                     @endisset
-                                                    @endif
-
-                                                    @if (!$data['myStore'] && !$data['myserviceStore'])
-
-                                                     <div class="row">
                                                             <div class="col-md-6">
                                                                 <button class="btn btn-success" style="width: 100%;"
                                                                     data-bs-toggle="modal"
@@ -1058,13 +1052,11 @@
                                                                     eStore (For Sale of Goods only)</button>
                                                             </div>
 
-                                                            @if (env('APP_ENV') === 'local')
                                                                 <div class="col-md-6">
                                                                     <a href="{{ route('merchant service setup') }}"
                                                                         class="btn btn-danger" style="width: 100%;">Setup
                                                                         eStore (For Service only)</a>
                                                                 </div>
-                                                            @endif
 
 
 

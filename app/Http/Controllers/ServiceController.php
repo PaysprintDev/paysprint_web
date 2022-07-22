@@ -6,6 +6,7 @@ use Intervention\Image\Facades\Image;
 
 use App\User;
 use App\ServiceMainStore;
+use App\ContactMerchant;
 use App\ServiceStoreTestimony;
 use App\AllCountries;
 use App\Mail\sendEmail;
@@ -204,6 +205,55 @@ class ServiceController extends Controller
             $message = $th->getMessage();
         }
 
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+    // Contact The Merchant
+    public function contactMerchant(Request $req, $id)
+    {
+        try {
+
+            $admin = new AdminController();
+
+            $thisuser = User::where('id', $id)->first();
+            // Mail the merchant ...
+            $query = [
+                'name' => $req->con_name,
+                'email' => $req->con_email,
+                'subject' => $req->Visiting,
+                'message' => $req->con_message,
+                'merchantId' => $id,
+                'businessName' => $thisuser->businessname,
+                'created_at' => now(),
+                'updated_at' => now()
+            ];
+
+            ContactMerchant::insert($query);
+
+            // Send Mail...
+
+
+            $admin->name = $thisuser->businessname;
+            $admin->to = $thisuser->email;
+            $admin->subject = $req->Visiting;
+            $admin->message = "<p>There is a new message from Visitors to your Business Website on PaySprint eStore.</p><p>Below is the mail information</p><hr><p>Name: <strong>".$req->con_name."</strong></p><p>Email: ".$req->con_email."</p><p>Subject: <strong>".$req->Visiting."</strong></p><p>Message: ".$req->con_message."</p><p>You can respond directly to their email <a href='mailto:{$req->con_email}'>{$req->con_email}</a></p>";
+
+            $admin->sendEmail($admin->to, "Account is credited");
+
+            $data = true;
+            $status = 200;
+            $message = "Message Sent Successfully";
+
+        } catch (\Throwable $th) {
+
+            $data = false;
+            $status = 400;
+            $message = $th->getMessage();
+        }
 
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
