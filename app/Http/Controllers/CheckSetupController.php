@@ -1466,11 +1466,12 @@ your PaySprint Account.You need to provide the outstanding information and compl
                 if ($value->approval == 0 || $value->transaction_pin == null || $value->securityQuestion == null || $info == 0) {
 
 
-                    $sendMsg = 'Your PaySprint Account is Ready for Approval. Kindly upload the below listed files now. ' . $approval . '' . $avatar . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card . '. Try uploading on www.paysprint.ca if you have difficulty in uploading on the mobile app. Compliance Team';
+                    $sendMsg = 'Your PaySprint Account is Ready for Approval. Kindly complete the outstanding task now. ' . $approval . '' . $avatar . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card . '. Try uploading on www.paysprint.ca if you have difficulty in uploading on the mobile app. Compliance Team';
 
                     $this->createNotification($value->ref_code, $sendMsg);
                 }
             }
+
 
 
             echo "Done uploading!";

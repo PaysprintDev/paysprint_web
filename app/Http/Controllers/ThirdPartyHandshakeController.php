@@ -57,14 +57,17 @@ class ThirdPartyHandshakeController extends Controller
             $api_token = uniqid() . md5($req->email) . time();
 
             // Check Admin for existing username...
-            $getUsername = Admin::where('username', $generatedUsername)->first();
+            // $getUsername = Admin::where('username', $generatedUsername)->first();
 
-            if (isset($getUsername)) {
-                $generatedUsername = $req->firstname . '' . time();
-            }
+            // if (isset($getUsername)) {
+            //     $generatedUsername = $req->firstname . '' . time();
+            // }
 
 
-            $transCost = TransactionCost::where('method', "Merchant Minimum Withdrawal")->where('country', $req->country)->first();
+
+
+            // $transCost = TransactionCost::where('method', "Merchant Minimum Withdrawal")->where('country', $req->country)->first();
+            $transCost = TransactionCost::where('method', "Consumer Minimum Withdrawal")->where('country', $req->country)->first();
 
             if (isset($transCost)) {
                 $transactionLimit = $transCost->fixed;
@@ -153,13 +156,13 @@ class ThirdPartyHandshakeController extends Controller
                     if (isset($getanonuser)) {
                         // Insert
 
-                        if (getallheaders()["dev_mode"] != 'test') {
-                            $insClient = ClientInfo::insert(['user_id' => $ref_code, 'business_name' => $businessName, 'address' => '', 'corporate_type' => '', 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'email' => $getanonuser->email, 'country' => $req->country, 'state' => '', 'city' => '', 'zip_code' => '', 'industry' => '', 'telephone' => $req->telephone, 'website' => '', 'api_secrete_key' => md5(uniqid($generatedUsername, true)) . date('dmY') . time(), 'type_of_service' => '']);
+                        // if (getallheaders()["dev_mode"] != 'test') {
+                        //     $insClient = ClientInfo::insert(['user_id' => $ref_code, 'business_name' => $businessName, 'address' => '', 'corporate_type' => '', 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'email' => $getanonuser->email, 'country' => $req->country, 'state' => '', 'city' => '', 'zip_code' => '', 'industry' => '', 'telephone' => $req->telephone, 'website' => '', 'api_secrete_key' => md5(uniqid($generatedUsername, true)) . date('dmY') . time(), 'type_of_service' => '']);
 
-                            $insAdmin = Admin::insert(['user_id' => $ref_code, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $generatedUsername, 'password' => $generatedPassword, 'role' => 'Merchant', 'email' => $getanonuser->email]);
-                        } else {
-                            $insAdmin = ['user_id' => $ref_code, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $generatedUsername, 'password' => $generatedPassword, 'role' => 'Merchant', 'email' => $getanonuser->email];
-                        }
+                        //     $insAdmin = Admin::insert(['user_id' => $ref_code, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $generatedUsername, 'password' => $generatedPassword, 'role' => 'Merchant', 'email' => $getanonuser->email]);
+                        // } else {
+                        //     $insAdmin = ['user_id' => $ref_code, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $generatedUsername, 'password' => $generatedPassword, 'role' => 'Merchant', 'email' => $getanonuser->email];
+                        // }
 
 
 
@@ -177,7 +180,7 @@ class ThirdPartyHandshakeController extends Controller
                         }
 
 
-                        if (isset($insAdmin)) {
+                        // if (isset($insAdmin)) {
                             // Set session
                             $getMerchant = User::where('ref_code', $ref_code)->first();
 
@@ -193,7 +196,7 @@ class ThirdPartyHandshakeController extends Controller
 
                             AnonUsers::where('ref_code', $ref_code)->delete();
 
-                            $this->slack("New merchant registration via " . $bearer->business_name . " api as: " . $req->firstname . ' ' . $req->lastname . " from " . $req->country, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                            $this->slack("New consumer registration via " . $bearer->business_name . " api as: " . $req->firstname . ' ' . $req->lastname . " from " . $req->country, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
 
                             $countryApproval = AllCountries::where('name', $req->country)->where('approval', 1)->first();
@@ -254,12 +257,12 @@ class ThirdPartyHandshakeController extends Controller
                             }
 
                             $this->slack("New merchant registration via " . $bearer->business_name . " api as: " . $req->firstname . ' ' . $req->lastname . " from " . $req->country, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                        } else {
+                        // } else {
 
-                            $data = [];
-                            $message = 'Can not create user account';
-                            $status = 400;
-                        }
+                        //     $data = [];
+                        //     $message = 'Can not create user account';
+                        //     $status = 400;
+                        // }
                     } else {
                         $ref = User::all();
 
