@@ -197,7 +197,7 @@
             </div>
         @endif
 
-        <div class="row">                
+        <div class="row">
             <div @if (Auth::user()->plan == 'classic') class="col-md-4" @else class="col-md-6" @endif>
                 <div class="card" style="width: 100%;">
 
@@ -314,6 +314,39 @@
                         </ul>
                     </div>
                 </div>
+
+                @else
+
+                <div class="col-md-4">
+                    <div class="card" style="width: 100%;">
+
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                Trade FX with PaySprint <br><br>
+
+                                @if ($data['imtAccess']->imt == 'false')
+                                    <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit"
+                                        disabled>PaySprint
+                                        FX</a>
+
+                                    <hr>
+
+                                    <a href="#">COMING SOON!!!</a>
+                                @else
+                                    <a type="button" class="btn btn-primary"
+                                        href="javascript:void(0)" id="cardSubmit">PaySprint
+                                        FX</a>
+
+                                    <hr>
+
+                                    <a href="#">Availaible on CLASSIC plan</a>
+                                @endif
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+
             @endif
 
 
