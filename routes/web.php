@@ -1048,6 +1048,7 @@ Route::post('/uploadpromousers', ['uses' => 'AdminController@uploadPromoUsers', 
 Route::get('/promousers', ['uses' => 'AdminController@promoUsers', 'as' => 'promo users']);
 Route::get('/promoreport', ['uses' => 'AdminController@promoReport', 'as' => 'promo report']);
 Route::post('/topup', ['uses' => 'AdminController@topUpWallet', 'as' => 'top up']);
+Route::post('/topupreferrralpoint', ['uses' => 'AdminController@topupReferralPoint', 'as' => 'topup referral point']);
 Route::get('/viewreport', ['uses' => 'AdminController@viewReport', 'as' => 'view report']);
 Route::get('/referralclaim', ['uses' => 'AdminController@referralClaim', 'as' => 'referral claim']);
 Route::get('/referralreport', ['uses' => 'AdminController@referralReport', 'as' => 'referral report']);
@@ -1067,6 +1068,8 @@ Route::post('/updatepromodate{id}', ['uses' => 'AdminController@updatePromoDate'
 Route::get('/deletepromodate/{id}', ['uses' => 'AdminController@deletePromoDate', 'as' => 'delete promo']);
 Route::get('/joinpromo/{id}', ['uses' => 'AdminController@joinPromo', 'as' => 'join promo']);
 Route::get('/specialpromos', ['uses' => 'HomeController@specialPromo', 'as' => 'special promo']);
+Route::get('/specialpromousers', ['uses' => 'AdminController@specialPromoUsers', 'as' => 'special promo users']);
+Route::get('/promoparticipant/{id}', ['uses' => 'AdminController@promoParticipants', 'as' => 'promo participant']);
 
 
 

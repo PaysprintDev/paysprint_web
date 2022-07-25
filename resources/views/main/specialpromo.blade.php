@@ -181,8 +181,15 @@
                                 
                         </td>
                     </tr>
-                    @endforeach  
-                 @endif
+                @endforeach
+                 
+                   @else
+                   <tr>
+                    <td colspan="5" style="text-align: center">
+                         <div class="col-md-12 text-center"> No Promo available</div> 
+                    </td>
+                   </tr>
+                @endif
                 </tbody>
             </table>
         </div>

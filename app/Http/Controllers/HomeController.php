@@ -2035,6 +2035,8 @@ class HomeController extends Controller
     public function statement(Request $req)
     {
 
+        
+
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
                 $this->page = 'Statement';
