@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePromoDatesTable extends Migration
+class CreateSpecialPromosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreatePromoDatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('promo_dates', function (Blueprint $table) {
+        Schema::create('special_promos', function (Blueprint $table) {
             $table->id();
-            $table->string('start_date');
-            $table->string('end_date');
-            $table->string('amount');
+            $table->integer('user_id');
+            $table->string('email');
+            $table->string('activated');
+            $table->integer('special_promo_id');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreatePromoDatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('promo_dates');
+        Schema::dropIfExists('special_promos');
     }
 }

@@ -62,6 +62,7 @@
                                 <select name="invoiceService" class="form-control billinginput_box" id="invoiceService">
                                     <option value="">--Select--</option>
                                     <option value="Wallet">Wallet</option>
+                                    <option value="Promo">Promo</option>
                                     @if(count($data['service']) > 0)
                                         @foreach($data['service'] as $services)
                                             <option value="{{ $services->name }}">{{ $services->name }}</option>

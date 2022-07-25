@@ -60,6 +60,11 @@
                           <input type="text" class="form-control" id="enddate" name="amount" value="{{ $data['data']->amount}}">
                         </div>
                         <br>
+                        <div class="mb-3">
+                          <label for="enddate" class="form-label">Promo Details</label>
+                          <input type="text" class="form-control" id="enddate" name="promo_details" value="{{ $data['data']->promo_details}}">
+                        </div>
+                        <br>
                         <button type="submit" class="btn btn-primary form-control">Save Promo</button>
                  </form>
                 </div>

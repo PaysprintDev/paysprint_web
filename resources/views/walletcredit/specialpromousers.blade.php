@@ -40,39 +40,10 @@
            
             <div class="container-fluid">
                 {!! session('msg') !!}
-                <div class="row">
-                <form action="{{route('insert promo date')}}" method="post">
-                    @csrf
-                    
-                        <div class="mb-3">
-                          <label for="startdate" class="form-label">Start Date</label>
-                          <input type="date" class="form-control" id="startdate" name="startdate">
-                         
-                        </div>
-                        <br>
-                        <div class="mb-3">
-                          <label for="enddate" class="form-label">End date</label>
-                          <input type="date" class="form-control" id="enddate" name="enddate">
-                        </div>
-                        <br>
-                        <div class="mb-3">
-                          <label for="enddate" class="form-label">Promo Point</label>
-                          <input type="text" class="form-control" id="enddate" name="amount" placeholder="kindly input promo amount">
-                        </div>
-                        <br>
-                        <div class="mb-3">
-                          <label for="enddate" class="form-label">Promo Details</label>
-                          <input type="text" class="form-control" id="enddate" name="promo_details" placeholder="kindly write some details about the promo">
-                        </div>
-                        <br>
-                        <button type="submit" class="btn btn-primary form-control">Create Promo</button>
-                 </form>
-                </div>
-
                 <!-- The tables -->
                 <div class="row">
                     <div class="col-md-12 mt-4">
-                        <h3 class="text-center" style="font-weight: bold">SPECIAL PROMO DATES</h3>
+                        <h3 class="text-center" style="font-weight: bold">SPECIAL PROMO REPORT</h3>
                         <hr>
                         <table class="table table-striped table-responsive" id="promousers">
                             <thead>
@@ -82,8 +53,7 @@
                                     <th>Promo End Date</th>
                                     <th>Promo Amount</th>
                                     <th>Promo Details</th>
-                                    <th>Action</th>
-                                    <th>Action</th>
+                                    <th>View Participants</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -98,8 +68,7 @@
                                             <td>{{ $promo->end_date}} </td>
                                             <td>{{ $promo->amount }}</td>
                                             <td>{{ $promo->promo_details }}</td>
-                                            <td><a href="{{route('edit promo',$promo->id)}}" class="btn btn-primary">Edit</a></td>
-                                            <td><a href="{{route('delete promo',$promo->id)}}" class="btn btn-danger">Delete</a></td>
+                                            <td><a href="{{route('promo participant',$promo->id.'?start='.$promo->start_date.'&end='.$promo->end_date)}}" class="btn btn-primary">View Participants</a></td>
                                         </tr>
                                     @endforeach
                                 @endif
