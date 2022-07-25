@@ -62,22 +62,26 @@
                                 @if (count($data['promo']) > 0)
                                     @foreach ( $data['promo'] as $promo )
                                     @if($user= \App\User::where('id',$promo->user_id)->first())
-                                    @if($totalreferred= \App\User::where('referred_by', $user->ref_code)->whereBetween('created_at', [Request::get('start'), Request::get('end')])->get()) 
+                                    
                                         <tr>
                                             <td> {{ $counter++}} </td>
                                             <td> {{ $user->name}} </td>
                                             <td> {{ $user->country}} </td>
-                                            <td> {{ count($totalreferred) }} </td>
+
+                                            @if($totalreferred= \App\User::where('referred_by', $user->ref_code)->whereBetween('created_at', [Request::get('start'), Request::get('end')])->get())
+                                            <td> {{ count($totalreferred) }}  </td>
                                             <td>
-                                              @if(count($totalreferred) >= $data['promo']->amount )
+                                              @if(count($totalreferred) >= $data['promodata']->amount )
                                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop{{ $promo->id }}">Top-up Referral Point</button>
                                                 <!-- else less than 50 points -->
                                                 @else
                                                 <a href="javascript:void()" class="btn btn-danger">Didnt Meetup Referrals for the Promo</a>
                                             @endif
                                           </td>
+
+                                          @endif
                                         </tr> 
-                                      @endif 
+                                    
                                      @endif
                                   <!-- modal starts -->
                                                        <!-- Modal -->

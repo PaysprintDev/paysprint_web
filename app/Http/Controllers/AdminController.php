@@ -12610,10 +12610,11 @@ class AdminController extends Controller
             $servicetypes = $this->getServiceTypes();
 
             $data = [
-                'promo' => SpecialPromo::where('id', $id)->where('activated', 'yes')->get(),
+                'promo' => SpecialPromo::where('special_promo_id', $id)->where('activated', 'yes')->get(),
                 'promodata' => PromoDate::where('id', $id)->first()
             ];
 
+            // dd($data['promo']);
 
             return view('walletcredit.promoparticipants')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes, 'data' => $data]);
         } else {
