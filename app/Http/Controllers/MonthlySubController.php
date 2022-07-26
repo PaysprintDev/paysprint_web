@@ -85,7 +85,6 @@ class MonthlySubController extends Controller
                     $trans_date = date('Y-m-d');
                     $status = "Delivered";
                     $action = "Escrow Wallet credit";
-                    $action2 = "Wallet debit";
                     $regards = $thisuser->ref_code;
                     $statement_route = "escrow wallet";
                     $statement_route2 = "wallet";
@@ -96,7 +95,7 @@ class MonthlySubController extends Controller
 
                     $currencyFX->insFXStatement($myaccount->escrow_id, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $myaccount->country, 'confirmed');
 
-                    $currencyFX->insStatement($thisuser->email, $reference_code, $activity, $debit, $credit, $balance, $trans_date, $status, $action2, $regards, 1, $statement_route2, 'on', $thisuser->country);
+                    $currencyFX->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route2, 'on', $thisuser->country);
 
                     $sendMsg = "Hi " . $thisuser->name . ", You have " . $activity . " Your current fx wallet balance is " . $myaccount->currencyCode . ' ' . number_format($fxBalance, 2) . ".";
 
