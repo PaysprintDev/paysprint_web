@@ -775,6 +775,10 @@ class UserController extends Controller
             $this->uploadDocument($user->id, $request->file('financial_license'), 'document/financial_license', 'financial_license');
             $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your Proof of Financial License");
         }
+        if ($request->hasFile('other_documents')) {
+            $this->uploadDocument($user->id, $request->file('other_documents'), 'document/other_documents', 'other_documents');
+            $this->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your other Documents");
+        }
 
 
         $data = $clientinfo->where('email', $user->email)->first();
