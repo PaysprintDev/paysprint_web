@@ -18,12 +18,14 @@ class CreateThirdPartyHandshakesTable extends Migration
             $table->string('firstname');
             $table->string('lastname');
             $table->string('email');
-            $table->string('callingCode')->default('NULL');
             $table->string('telephone')->default('NULL');
             $table->string('country');
-            $table->string('businessName')->default('NULL');
             $table->string('platform')->default('NULL');
             $table->string('invited_userId')->default('NULL');
+            $table->string('national_id_card')->default('NULL');
+            $table->string('drivers_license')->default('NULL');
+            $table->string('international_passport')->default('NULL');
+            $table->string('utility_bill')->default('NULL');
             $table->timestamps();
         });
     }

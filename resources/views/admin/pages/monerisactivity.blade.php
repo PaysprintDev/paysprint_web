@@ -146,7 +146,7 @@
                                                                             class="fa fa-spin spinFee{{ $data->transaction_id }} disp-0"></a>
                                                                 @else
                                                                     <a type="button" class="btn btn-primary"
-                                                                        href="javascript:void(0)" disabled>Release
+                                                                        href="javascript:void(0)" onclick="releaseFee('{{ $data->transaction_id }}')">Release
                                                                         <img src="https://img.icons8.com/office/20/000000/spinner-frame-4.png"
                                                                             class="fa fa-spin spinFee{{ $data->transaction_id }} disp-0"></a>
                                                                 @endif
