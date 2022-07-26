@@ -139,6 +139,9 @@ Route::get('numberofwithdrawalsformerchant', 'CheckSetupController@updateMerchan
 Route::get('reversal', 'CheckSetupController@reverseFund');
 
 
+Route::get('creditsubscription', 'MonthlySubController@creditSubAccount');
+
+
 
 
 // Generate Shop Links...
